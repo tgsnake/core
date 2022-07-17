@@ -1,0 +1,4 @@
+export class {{ CONSTRUCTOR-NAME }} extends {{ PARENT-NAME }} {
+  id:string = {{ ID }}
+  message:string = {{ MESSAGE }}
+}

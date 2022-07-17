@@ -1,0 +1,25 @@
+/**
+ * tgsnake - Telegram MTProto framework for nodejs.
+ * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * 
+ * THIS FILE IS PART OF TGSNAKE
+ * 
+ * tgsnake is a free software : you can redistribute it and/or modify
+ * it under the terms of the MIT License as published.
+*/
+
+/***********************************************************
+*                         Warning!!                        *
+*               This file is auto generate.                *
+*         All change made in this file will be lost!       *
+***********************************************************/
+
+export const Object = {
+  0xbc799737 : "Primitive.BoolFalse",
+  0x997275b5 : "Primitive.BoolTrue",
+  0x1cb5c415 : "Primitive.Vector",
+  0x73f1f8dc : "MsgContainer",
+  0x3072cfa1 : "GzipPacked",
+  0x5bb8e511 : "Message",
+{{ ALL-OBJECT }}
+}

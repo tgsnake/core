@@ -1,0 +1,41 @@
+/**
+ * tgsnake - Telegram MTProto framework for nodejs.
+ * Copyright (C) {{ Copyright-Date }} butthx <https://github.com/butthx>
+ * 
+ * THIS FILE IS PART OF TGSNAKE
+ * 
+ * tgsnake is a free software : you can redistribute it and/or modify
+ * it under the terms of the MIT License as published.
+*/
+
+/***********************************************************
+*                         Warning!!                        *
+*               This file is auto generate.                *
+*         All change made in this file will be lost!       *
+***********************************************************/
+import { TLObject, BytesIO, Primitive } from "./core";
+
+/**
+  * This is a telegram schema, so you can see the documentation in https://core.telegram.org/schema.
+  * All schema wrapped in Raw namespace.
+*/
+export namespace Raw {
+  type X = TLObject;
+  type Type = TLObject;
+  type Bool = boolean;
+  type int = number; 
+  type double = number;
+  type float = number;
+  type int128 = bigint;
+  type int256 = bigint;
+  type long = bigint;
+  type bytes = Buffer;
+  type Vector<T> = Array<T>;
+  /**
+    * The Telegram layer we using.
+  */
+  export const Layer:number = {{ TL-Layer }};
+  // Start telegram schema
+{{ Classes }}
+  // End telegram schema
+}

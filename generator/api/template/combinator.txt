@@ -1,0 +1,24 @@
+export class {{ CLASS-NAME }} extends TLObject {
+{{ TYPES }}
+  constructor ({{ PARAMETERS }}) {
+    super(); 
+    {{ CONSTRUCTOR-VALUES }}
+  }
+  /**
+    * Generate the TLObject from buffer. 
+    * @param data {Object} - BytesIO class from TLObject will be convert to TLObject class.
+  */
+  static read(b:BytesIO,...args:Array<any>) : Raw.{{ CLASS-NAME-WITH-NAMESPACE }} {
+    {{ READER }}
+    return new Raw.{{ CLASS-NAME-WITH-NAMESPACE }}({{ VARIABLE }})
+  }
+  /**
+    * Generate buffer from TLObject.
+  */
+  write() : Buffer {
+    let b:BytesIO = new BytesIO()
+    b.write((Primitive.Int.write(this.constructorId,false)) as unknown as Buffer)
+    {{ WRITER }}
+    return b.buffer
+  }
+}
