@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-export const version = '1.0.0';
-export const isBeta = false;
-export const isPrivate = false;
+export const version = '1.0.1';
+export const isBeta = true;
+export const isPrivate = true;
 export function getType() {
   if (isBeta) {
     if (isPrivate) {

@@ -15,7 +15,7 @@ export class WebSocket {
   private _data!: Buffer;
   private _read!: boolean | Promise<boolean>;
   private _promisedReading!: (value?: any) => void;
-  private _connectionClosed!: boolean;
+  _connectionClosed!: boolean;
   constructor() {
     this._data = Buffer.alloc(0);
     this._connectionClosed = true;

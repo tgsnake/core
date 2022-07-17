@@ -177,12 +177,12 @@ export class Client {
     if (!this._isConnected) {
       Logger.info(`Using version: ${Version.version} - ${Version.getType()}`);
       await this._loadSession();
-      let _this = this;
+
       this._session = new Session(
-        _this,
-        _this._storage.dcId,
-        _this._storage.authKey,
-        _this._storage.testMode
+        this,
+        this._storage.dcId,
+        this._storage.authKey,
+        this._storage.testMode
       );
       await this._session.start();
       this._isConnected = true;
@@ -203,7 +203,7 @@ export class Client {
             apiHash: this._apiHash,
             flags: 0,
           }),
-          1
+          0
         );
       } catch (error: any) {
         if (error instanceof Errors.Exceptions.SeeOther.UserMigrate) {
@@ -219,12 +219,11 @@ export class Client {
           this._storage.setAddress(error.value as unknown as number, ip, port, this._testMode);
           this._storage.setApiId(this._apiId);
           this._storage.setAuthKey(await auth.create(), this._storage.dcId);
-          let _this = this;
           this._session = new Session(
-            _this,
-            _this._storage.dcId,
-            _this._storage.authKey,
-            _this._storage.testMode
+            this,
+            this._storage.dcId,
+            this._storage.authKey,
+            this._storage.testMode
           );
           await this._session.start();
         } else {
@@ -365,7 +364,7 @@ export class Client {
             apiHash: this._apiHash,
             settings: new Raw.CodeSettings({}),
           }),
-          1
+          0
         );
         return r;
       } catch (error: any) {
@@ -384,12 +383,12 @@ export class Client {
           this._storage.setAddress(error.value as unknown as number, ip, port, this._testMode);
           this._storage.setApiId(this._apiId);
           this._storage.setAuthKey(await auth.create(), this._storage.dcId);
-          let _this = this;
+
           this._session = new Session(
-            _this,
-            _this._storage.dcId,
-            _this._storage.authKey,
-            _this._storage.testMode
+            this,
+            this._storage.dcId,
+            this._storage.authKey,
+            this._storage.testMode
           );
           await this._session.start();
         } else {
@@ -415,7 +414,7 @@ export class Client {
         phoneCodeHash,
         phoneCode,
       }),
-      1
+      0
     );
     if (r instanceof Raw.auth.AuthorizationSignUpRequired) {
       if (r.termsOfService) {
@@ -437,7 +436,7 @@ export class Client {
       new Raw.auth.RecoverPassword({
         code: code,
       }),
-      1
+      0
     );
     await this._storage.setUserId(r.user.id);
     await this._storage.setIsBot(false);
@@ -447,7 +446,7 @@ export class Client {
    * Send the recovery code to cennected email to reset the 2FA.
    */
   async sendRecoveryCode(): Promise<string> {
-    let r = await this.invoke(new Raw.auth.RequestPasswordRecovery(), 1);
+    let r = await this.invoke(new Raw.auth.RequestPasswordRecovery(), 0);
     return r.emailPattern;
   }
   /**
@@ -458,11 +457,11 @@ export class Client {
     let r = await this.invoke(
       new Raw.auth.CheckPassword({
         password: computePasswordCheck(
-          await this.invoke(new Raw.account.GetPassword(), 1),
+          await this.invoke(new Raw.account.GetPassword(), 0),
           password
         ),
       }),
-      1
+      0
     );
     await this._storage.setUserId(r.user.id);
     await this._storage.setIsBot(false);
@@ -486,7 +485,7 @@ export class Client {
    * Get hint of 2FA password.
    */
   async getPasswordHint(): Promise<string> {
-    let r = await this.invoke(new Raw.account.GetPassword(), 1);
+    let r = await this.invoke(new Raw.account.GetPassword(), 0);
     return r.hint;
   }
   /**

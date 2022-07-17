@@ -36,9 +36,9 @@ export class Session {
   START_TIMEOUT: number = 1000;
   WAIT_TIMEOUT: number = 15000;
   SLEEP_THRESHOLD: number = 10000;
-  MAX_RETRIES: number = 5;
+  MAX_RETRIES!: number;
   ACKS_THRESHOLD: number = 8;
-  PING_INTERVAL: number = 15000;
+  PING_INTERVAL: number = 5000;
 
   private _dcId!: number;
   private _authKey!: Buffer;
@@ -57,6 +57,7 @@ export class Session {
   private _results: Map<bigint, Results> = new Map<bigint, Results>();
   private _isConnected: boolean = false;
   private _pendingAcks: Set<any> = new Set<any>();
+  private _networkTask: boolean = true;
 
   constructor(
     client: Client,
@@ -71,6 +72,7 @@ export class Session {
     this._testMode = testMode;
     this._isMedia = isMedia;
     this._authKeyId = crypto.createHash('sha1').update(this._authKey).digest().slice(-8);
+    this.MAX_RETRIES = client._maxRetries ?? 5;
   }
 
   private async _handlePacket(packet: Buffer) {
@@ -246,6 +248,10 @@ export class Session {
   private async _networkWorker() {
     Logger.debug(`Network worker started.`);
     while (true) {
+      if (!this._networkTask) {
+        Logger.debug(`Network worker ended`);
+        break;
+      }
       let packet = await this._connection.recv();
       if (packet === undefined || packet.length === 4) {
         if (packet) {
@@ -259,13 +265,13 @@ export class Session {
       // @ts-ignore
       this._handlePacket(packet);
     }
-    Logger.debug(`Network worker ended`);
   }
   async stop() {
     this._isConnected = false;
     clearTimeout(this._pingTask);
-    this._connection.close();
+    await this._connection.close();
     this._results.clear();
+    this._networkTask = false;
     Logger.info(`Session stopped.`);
   }
   restart() {
@@ -316,8 +322,7 @@ export class Session {
           }
           if (retries < 2) {
             Logger.warning(
-              `[${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${error.message}`,
-              error
+              `[${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${error.message}`
             );
           } else {
             Logger.info(

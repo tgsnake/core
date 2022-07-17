@@ -27,6 +27,9 @@ export class RPCError extends Error {
   message!: string;
   name!: string;
   value?: number | string | Raw.RpcError;
+  _isSigned?: boolean;
+  _isUnknown?: boolean;
+  _rpcName?: string;
   constructor(
     value?: number | string | Raw.RpcError,
     rpcName?: string,
@@ -35,11 +38,9 @@ export class RPCError extends Error {
   ) {
     super();
     Logger.debug(`Creating new instance RPCError(${rpcName ?? this.name})`);
-    this.message = `Telegram Says: [${isSigned ? '-' : ''}${this.code} ${
-      this.id || this.name
-    }] - ${this.message.replace(/\{value\}/g, String(value))} ${
-      rpcName ? `(caused by ${rpcName})` : ''
-    }`;
+    this._isSigned = isSigned;
+    this._isUnknown = isUnknown;
+    this._rpcName = rpcName;
     if (!Number.isNaN(value)) {
       this.value = Number(value);
     } else {
@@ -49,6 +50,16 @@ export class RPCError extends Error {
       Logger.debug(`UnknownError : ${this.name}`);
       // TODO: write UnknownError.txt file
     }
+  }
+  /**
+   * Formating the error messages.
+   */
+  protected _format() {
+    this.message = `Telegram Says: [${this._isSigned ? '-' : ''}${this.code} ${
+      this.id || this.name
+    }] - ${this.message.replace(/\{value\}/g, String(this.value))} ${
+      this._rpcName ? `(caused by ${this._rpcName})` : ''
+    }`;
   }
   static raise(rpcError: Raw.RpcError, rpcType: TLObject) {
     let code = rpcError.errorCode;
@@ -62,11 +73,13 @@ export class RPCError extends Error {
     let id = message.replace(/\_\d+/gm, '_X');
     if (!(id in Exceptions[code])) {
       let modules = getModule(Exceptions[code]['_']);
-      //@ts-ignore
-      throw new modules(`[${code} ${message}]`, name, true, isSigned);
+      // @ts-ignore
+      let _module = new modules(`[${code} ${message}]`, name, true, isSigned);
+      // @ts-ignore
+      _module._format();
+      throw _module;
     }
     let value = message.match(/\_(\d+)/gm);
-    console.log('value ', value, 'message', message);
     if (value) {
       //@ts-ignore
       value = value[0].replace(/\_/g, '');
@@ -77,7 +90,10 @@ export class RPCError extends Error {
     //@ts-ignore
     let modules = getModule(Exceptions[code][id]);
     //@ts-ignore
-    throw new modules(value, name, false, isSigned);
+    let _module = new modules(value, name, false, isSigned);
+    //@ts-ignore
+    _module._format();
+    throw _module;
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {

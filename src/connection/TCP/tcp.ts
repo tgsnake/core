@@ -9,13 +9,14 @@
  */
 import { WebSocket } from '../webSocket';
 import { runWithTimeout } from '../../helpers';
+import { Logger } from '../../Logger';
 
 export class TCP {
   private _client!: WebSocket;
   timeout!: number;
   constructor() {
     this._client = new WebSocket();
-    this.timeout = 60 * 1000;
+    this.timeout = 10 * 1000;
   }
   async connect(ip: string, port: number) {
     return await this._client.connect(ip, port);
@@ -28,8 +29,14 @@ export class TCP {
   }
   async recv(length: number = 0) {
     let data = Buffer.alloc(0);
-    while (data.length < length) {
-      let chunk = await runWithTimeout(this._client.read(length - data.length), this.timeout);
+    while (!this._client._connectionClosed && data.length < length) {
+      let chunk = await runWithTimeout(
+        this._client.read(length - data.length),
+        this.timeout,
+        () => {
+          return Logger.error(`Timeout when trying to receive data.`);
+        }
+      );
       if (chunk) {
         data = Buffer.concat([data, chunk as Buffer]);
       } else {
