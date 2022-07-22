@@ -1,6 +1,6 @@
 {
   "name": "@tgsnake/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "core framework for tgsnake for connecting to telegram api",
   "main": "./lib/index.js",
   "devDependencies": {
