@@ -132,6 +132,10 @@ export abstract class AbstractSession {
    */
   abstract delete(): Promise<void>;
   /**
+   * Save the session to storage
+   */
+  abstract save(): Promise<void>;
+  /**
    * Move session from instance to another instance.
    * @param session {Object} - Another instance which will be migrated there.
    */

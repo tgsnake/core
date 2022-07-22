@@ -99,6 +99,7 @@ export class BaseSession extends AbstractSession {
 
   async load() {}
   async delete() {}
+  async save() {}
   async move(session: AbstractSession) {
     Logger.info(`Moving session from ${this.constructor.name} to ${session.constructor.name}.`);
     await session.setAddress(this._dcId, this._ip, this._port, this._testMode);
