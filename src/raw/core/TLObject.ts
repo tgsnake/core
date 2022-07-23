@@ -70,8 +70,6 @@ export class TLObject {
         if (ignore.includes(key)) continue;
         if (!key.startsWith('_')) {
           toPrint[key] = value;
-        } else {
-          toPrint[key.replace('_', '')] = value;
         }
       }
     }
@@ -88,8 +86,6 @@ export class TLObject {
         if (ignore.includes(key)) continue;
         if (!key.startsWith('_')) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        } else {
-          toPrint[key.replace('_', '')] = typeof value === 'bigint' ? String(value) : value;
         }
       }
     }

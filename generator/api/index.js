@@ -204,18 +204,18 @@ function start(source, template) {
       if (typeSubclassMap.has(crc32(results))) {
         typeSubclassMap.set(
           crc32(results),
-          `${typeSubclassMap.get(crc32(results))} | ${namespace ?? ''}${name}`
+          `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
         );
         if (Uppercase(full) === results) {
           typeSubclassMap.set(
             crc32(camelToSnakeCase(full)),
-            `${typeSubclassMap.get(crc32(results))} | ${namespace ?? ''}${name}`
+            `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
           );
         }
       } else {
-        typeSubclassMap.set(crc32(results), `${namespace ?? ''}${name}`);
+        typeSubclassMap.set(crc32(results), `Raw.${namespace ?? ''}${name}`);
         if (Uppercase(full) === results) {
-          typeSubclassMap.set(crc32(camelToSnakeCase(full)), `${namespace ?? ''}${name}`);
+          typeSubclassMap.set(crc32(camelToSnakeCase(full)), `Raw.${namespace ?? ''}${name}`);
         }
       }
       for (let [argFull, argName, argType] of execAll(line.trim(), reArgs)) {
@@ -412,7 +412,7 @@ function generate() {
   const combinator = fs.readFileSync(path.join(__dirname, './template/combinator.txt'), 'utf8');
   const namespace = fs.readFileSync(path.join(__dirname, './template/namespace.txt'), 'utf8');
   const tl = fs.readFileSync(path.join(__dirname, './template/allTlObject.txt'), 'utf8');
-  let results = start(mtproto + '\n' + schema, combinator);
+  let results = start(mtproto + '\n---types---\n' + schema, combinator);
   fs.writeFileSync(
     path.join(__dirname, '../../src/raw/Raw.ts'),
     replacer(namespace, {

@@ -59,6 +59,18 @@ export interface ClientInterface {
    * Connenting to cdn telegram server.
    */
   isCdn?: boolean;
+  /**
+   * Pass true to disable incoming updates.<br/>
+   * When updates are disabled the client can't receive messages or other updates.<br/>
+   * Useful for batch programs that don't need to deal with updates.
+   */
+  noUpdates?: boolean;
+  /**
+   * Pass true to let the client use a takeout session instead of a normal one, implies `noUpdates : true`.<br/>
+   * Useful for exporting Telegram data. Methods invoked inside a takeout session (such as get_chat_history,download_media, ...) are less prone to throw FloodWait exceptions.<br/>
+   * Only available for users, bots will ignore this parameter.
+   */
+  takeout?: boolean;
 }
 export interface SigInBot {
   /**
@@ -111,7 +123,10 @@ export class Client {
   _maxRetries!: number;
   _isCdn!: boolean;
   _sleepTreshold!: number;
+  _takeout!: boolean;
+  _noUpdates!: boolean;
 
+  _takeoutId!: bigint;
   _dcId!: string;
   _session!: Session;
   _isConnected!: boolean;
@@ -143,6 +158,8 @@ export class Client {
     this._sleepTreshold = clientInterface?.sleepTreshold ?? 10000;
     this._maxRetries = clientInterface?.maxRetries ?? 5;
     this._isCdn = clientInterface?.isCdn ?? false;
+    this._noUpdates = clientInterface?.noUpdates ?? false;
+    this._takeout = clientInterface?.takeout ?? false;
   }
   /**
    * Load the session.
@@ -514,7 +531,7 @@ export class Client {
     return r.user;
   }
   /**
-   * Starting client with getMe.
+   * Starting client.
    * @param auth {Object} - Do you want to login with the user or with the bot.
    */
   async start(auth?: SigInBot | SigInUser): Promise<Raw.users.UserFull> {
@@ -529,8 +546,13 @@ export class Client {
         await this._siginUser({ ...auth });
       }
     }
-    const me = await this.getMe();
-    return me;
+    if (!this._storage.isBot && this._takeout) {
+      let takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
+      this._takeoutId = takeout.id;
+      Logger.warning(`Takeout session ${this._takeoutId} initiated.`);
+    }
+    await this.invoke(new Raw.updates.GetState());
+    return await this.getMe();
   }
   /**
    * Logout and kill the client.
@@ -580,6 +602,12 @@ export class Client {
     if (!this._isConnected) {
       throw new Errors.ClientDisconnected();
     }
+    if (this._noUpdates) {
+      query = new Raw.InvokeWithoutUpdates({ query });
+    }
+    if (this._takeoutId) {
+      query = new Raw.InvokeWithTakeout({ query, takeoutId: this._takeoutId });
+    }
     const r = await this._session.invoke(query, retries, timeout, sleepTreshold);
     await this.fetchPeers(r.users ?? []);
     await this.fetchPeers(r.chats ?? []);
@@ -589,11 +617,13 @@ export class Client {
    * Handling new updates from telegram.
    */
   async handleUpdate(update: Raw.Updates): Promise<Raw.Updates> {
-    await this.fetchPeers(update.users ?? []);
-    await this.fetchPeers(update.users ?? []);
-    this._handler.forEach((callback) => {
-      return callback(update);
-    });
+    if (!this._noUpdates) {
+      await this.fetchPeers(update.users ?? []);
+      await this.fetchPeers(update.users ?? []);
+      this._handler.forEach((callback) => {
+        return callback(update);
+      });
+    }
     return update;
   }
   /**

@@ -7,10 +7,11 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+import packages from '../package.json';
 
-export const version = '1.0.2';
-export const isBeta = true;
-export const isPrivate = true;
+export const version = packages.version;
+export const isBeta = packages.isBeta;
+export const isPrivate = packages.isPrivate;
 export function getType() {
   if (isBeta) {
     if (isPrivate) {
