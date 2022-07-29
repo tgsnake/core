@@ -8,20 +8,23 @@
  * it under the terms of the MIT License as published.
  */
 import { WebSocket } from '../webSocket';
-import { runWithTimeout } from '../../helpers';
+import { Timeout } from '../../Timeout';
 import { Logger } from '../../Logger';
 
 export class TCP {
   private _client!: WebSocket;
+  private _task!: Timeout;
   timeout!: number;
   constructor() {
     this._client = new WebSocket();
+    this._task = new Timeout();
     this.timeout = 10 * 1000;
   }
   async connect(ip: string, port: number) {
     return await this._client.connect(ip, port);
   }
   async close() {
+    this._task.clear();
     setTimeout(this._client.destroy, 1);
   }
   async send(data: Buffer) {
@@ -30,13 +33,7 @@ export class TCP {
   async recv(length: number = 0) {
     let data = Buffer.alloc(0);
     while (!this._client._connectionClosed && data.length < length) {
-      let chunk = await runWithTimeout(
-        this._client.read(length - data.length),
-        this.timeout,
-        () => {
-          return Logger.error(`Timeout when trying to receive data.`);
-        }
-      );
+      let chunk = await this._task.run(this._client.read(length - data.length), this.timeout);
       if (chunk) {
         data = Buffer.concat([data, chunk as Buffer]);
       } else {

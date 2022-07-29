@@ -18,7 +18,8 @@ import * as Errors from '../errors';
 import { MsgId } from './internals/MsgId';
 import { MsgFactory } from './internals/MsgFactory';
 import { BaseSession } from '../storage';
-import { runWithTimeout, sleep } from '../helpers';
+import { sleep } from '../helpers';
+import { Timeout } from '../Timeout';
 import type { Client } from '../Client';
 
 class Results {
@@ -57,6 +58,7 @@ export class Session {
   private _results: Map<bigint, Results> = new Map<bigint, Results>();
   private _isConnected: boolean = false;
   private _pendingAcks: Set<any> = new Set<any>();
+  private _task: Timeout = new Timeout();
   private _networkTask: boolean = true;
 
   constructor(
@@ -196,7 +198,7 @@ export class Session {
     if (waitResponse && promises !== undefined) {
       let response;
       try {
-        response = await runWithTimeout(promises.value, timeout, () => {});
+        response = await this._task.run(promises.value, timeout, () => {});
         // response = await promises.value
       } catch (error: any) {
         Logger.error(`Got error when waiting response:`, error);
@@ -271,6 +273,7 @@ export class Session {
     clearTimeout(this._pingTask);
     await this._connection.close();
     this._results.clear();
+    this._task.clear();
     this._networkTask = false;
     Logger.info(`Session stopped.`);
   }

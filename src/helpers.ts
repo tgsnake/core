@@ -8,7 +8,6 @@
  * it under the terms of the MIT License as published.
  */
 import bigInt from 'big-integer';
-import { TimeoutError } from './errors';
 // https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
 export function bigintToBuffer(
   int: bigint,
@@ -111,27 +110,6 @@ export function crc32(str: Buffer | string) {
     crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
   }
   return (crc ^ -1) >>> 0;
-}
-export function runWithTimeout(
-  job: Promise<any>,
-  time: number,
-  whenTimout: { (timeout: number): any } = (timeout: number) => {
-    throw new TimeoutError(timeout);
-  }
-) {
-  if (time === Infinity) return job;
-  return new Promise((res, rej) => {
-    let timeout = setTimeout(() => {
-      whenTimout(time);
-      job.finally(() => {
-        return 'Running timeout';
-      });
-    }, time);
-    job
-      .then(res)
-      .catch(rej)
-      .finally(() => clearTimeout(timeout));
-  });
 }
 export function sleep(ms) {
   return new Promise((resolve) => {

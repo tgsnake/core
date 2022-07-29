@@ -1,6 +1,6 @@
 {
   "name": "@tgsnake/core",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "core framework for tgsnake for connecting to telegram api",
   "main": "./lib/src/index.js",
   "devDependencies": {
@@ -37,6 +37,6 @@
     "@tgsnake/log": "latest",
     "big-integer": "1.6.51"
   },
-  "isBeta": true,
-  "isPrivate": true
+  "isBeta": false,
+  "isPrivate": false
 }
