@@ -32,7 +32,13 @@
     "lib/**/**"
   ],
   "license": "MIT",
-  "packageManager": "yarn@3.2.1",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0",
+    "yarn": ">=1.0.0"
+  },
+  "packageManager": "yarn@3.2.1"
   "dependencies": {
     "@tgsnake/log": "latest",
     "big-integer": "1.6.51"
