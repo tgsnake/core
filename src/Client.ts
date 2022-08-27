@@ -76,7 +76,7 @@ export interface SigInBot {
   /**
    * Bot token from bot father.
    */
-  botToken: string;
+  botToken: string | Promise<string>;
 }
 export interface SigInUser {
   /**
@@ -540,7 +540,7 @@ export class Client {
       // @ts-ignore
       if (auth.botToken) {
         // @ts-ignore
-        await this._siginBot(auth.botToken);
+        await this._siginBot(await auth.botToken);
       } else {
         // @ts-ignore
         await this._siginUser({ ...auth });
