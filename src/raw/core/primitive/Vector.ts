@@ -20,7 +20,7 @@ export class Vector extends TLObject {
     b.write(Int.write(value.length) as unknown as Buffer);
     for (let i of value) {
       if (t) {
-        b.write(new t(i));
+        b.write(t.write(i));
       } else {
         b.write(i.write());
       }
