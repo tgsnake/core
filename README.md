@@ -1,11 +1,15 @@
 # tgsnake core
 
-This is a core framework for tgsnake for connecting to telegram server.
+<center>  
+  <b>Layer 149</b>  
+</center>
 
-- Using less dependencies to make it fast.
-- Open Source, you can contribute to make this framework better.
-- Using Pure Telegram Raw Api, all JSON object is pure from telegram, nothing has changed at all. So that it makes it easier for you to learn the [telegram schema](https://core.telegram.org/schema) docs.
-- Typescript Support.
+Pure Telegram MTProto framework for nodejs.
+
+⚡ Using less dependencies to make it fast.  
+🔓 Open Source, you can contribute to make this framework better.  
+🗒️ Using Pure Telegram Raw Api, all JSON object is pure from telegram, nothing has changed at all. So that it makes it easier for you to learn the [telegram schema](https://core.telegram.org/schema) docs.  
+⛓️ Typescript Support.
 
 ## Example use
 
@@ -46,3 +50,5 @@ For exporting string session, use `client.exportSession()`. It will be return `P
 - For more questions, ask on telegram group ([@tgsnake](https://t.me/tgsnake)) or open github issue.
 
 ## MIT License
+
+Build with ♥️ by [tgsnake dev](https://t.me/tgsnakechat).
