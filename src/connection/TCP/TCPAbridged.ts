@@ -38,6 +38,6 @@ export class TCPAbridged extends TCP {
       _length = await super.recv(3);
       if (!_length) return;
     }
-    return await super.recv(_length.readInt32LE(0) * 4);
+    return await super.recv(_length[0] * 4);
   }
 }
