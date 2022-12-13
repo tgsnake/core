@@ -10,7 +10,7 @@
 import { Logger } from '@tgsnake/log';
 const log = new Logger({
   name: '@tgsnake/core',
-  level: 'debug',
+  level: ['debug'],
 });
 
 export { log as Logger };
