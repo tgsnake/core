@@ -79,7 +79,10 @@ export function unpack(
   const data = new BytesIO(ige256Decrypt(Buffer.from(b.read()), aesKey, aesIv));
   data.read(8); // salt
   // https://core.telegram.org/mtproto/security_guidelines#checking-session-id
-  new SecurityCheckMismatch(Buffer.from(data.read(8)).equals(sessionId),'Provided session id is not equal with expected one.');
+  new SecurityCheckMismatch(
+    Buffer.from(data.read(8)).equals(sessionId),
+    'Provided session id is not equal with expected one.'
+  );
   let message;
   try {
     message = Message.read(data);
@@ -98,38 +101,50 @@ export function unpack(
   }
   // https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
   new SecurityCheckMismatch(
-    msgKey.equals(sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer])).slice(8, 24),'Provided msg key is not equal with expected one')
+    msgKey.equals(
+      sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer])).slice(8, 24)
+    ),
+    'Provided msg key is not equal with expected one'
   );
   // https://core.telegram.org/mtproto/security_guidelines#checking-message-length
   data.seek(32); // Get to the payload, skip salt (8) + session_id (8) + msg_id (8) + seq_no (4) + length (4)
   const payload = data.read();
   const padding = payload.slice(message.write().length);
   // @ts-ignore
-  new SecurityCheckMismatch(12 <= padding.length <= 1024,'Payload padding is lower than 12 or bigger than 1024');
-  new SecurityCheckMismatch(mod(padding.length, 4) === 0,'Mod of padding length with 4 is equal with zero');
+  new SecurityCheckMismatch(
+    12 <= padding.length <= 1024,
+    'Payload padding is lower than 12 or bigger than 1024'
+  );
+  new SecurityCheckMismatch(
+    mod(padding.length, 4) === 0,
+    'Mod of padding length with 4 is equal with zero'
+  );
   // https://core.telegram.org/mtproto/security_guidelines#checking-msg-id
-  new SecurityCheckMismatch(bigIntMod(message.msgId, BigInt(2)) !== BigInt(0),'Mod of msgId with 2 is not equal with zero');
+  new SecurityCheckMismatch(
+    bigIntMod(message.msgId, BigInt(2)) !== BigInt(0),
+    'Mod of msgId with 2 is not equal with zero'
+  );
   if (storedMsgId.length > STORED_MSG_IDS_MAX_SIZE) {
     storedMsgId.splice(0, Math.floor(STORED_MSG_IDS_MAX_SIZE / 2));
   }
   if (storedMsgId.length) {
     // Ignored message: msg_id is lower than all of the stored values
     if (message.msgId < storedMsgId[0]) {
-      throw new SecurityCheckMismatch(true,'Msg id is lower than all of the stored values');
+      throw new SecurityCheckMismatch(true, 'Msg id is lower than all of the stored values');
     }
     // Ignored message: msg_id is equal to any of the stored values
     if (storedMsgId.includes(message.msgId)) {
-      throw new SecurityCheckMismatch(true,'Msg id is equal to any of the stored values');
+      throw new SecurityCheckMismatch(true, 'Msg id is equal to any of the stored values');
     }
     let msgId = new MsgId();
     let timeDiff = (message.msgId - msgId.getMsgId()) / BigInt(2 ** 32);
     // Ignored message: msg_id belongs over 30 seconds in the future
     if (timeDiff > BigInt(30)) {
-      throw new SecurityCheckMismatch(true,'Msg id belongs over 30 seconds in the future');
+      throw new SecurityCheckMismatch(true, 'Msg id belongs over 30 seconds in the future');
     }
     // Ignored message: msg_id belongs over 300 seconds in the past
     if (timeDiff < BigInt(-300)) {
-      throw new SecurityCheckMismatch(true,'Msg id belongs over 300 seconds in the past');
+      throw new SecurityCheckMismatch(true, 'Msg id belongs over 300 seconds in the past');
     }
   }
   storedMsgId.push(message.msgId);
