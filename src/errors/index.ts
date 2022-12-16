@@ -62,10 +62,10 @@ export class BadMsgNotification extends Error {
 export class SecurityError extends Error {
   name: string = 'SecurityError';
   message!: string;
-  description?:string;
-  constructor(cond: boolean, description?:string) {
+  description?: string;
+  constructor(cond: boolean, description?: string) {
     super();
-    this.description = description
+    this.description = description;
     if (!cond) throw this;
   }
 }

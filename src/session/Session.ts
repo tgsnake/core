@@ -90,7 +90,11 @@ export class Session {
       );
     } catch (error: any) {
       if (error instanceof Errors.SecurityCheckMismatch) {
-        Logger.error(`Invalid to unpack ${packet.length} bytes packet cause: ${error.description ?? error.message}`)
+        Logger.error(
+          `Invalid to unpack ${packet.length} bytes packet cause: ${
+            error.description ?? error.message
+          }`
+        );
         return;
       }
       throw error;
