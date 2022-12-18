@@ -33,7 +33,11 @@ export class TCP {
   async recv(length: number = 0) {
     let data = Buffer.alloc(0);
     while (!this._client._connectionClosed && data.length < length) {
-      let chunk = await this._task.run(this._client.read(length - data.length), this.timeout);
+      let chunk = await this._task.run(
+        this._client.read(length - data.length),
+        this.timeout,
+        () => {}
+      );
       if (chunk) {
         data = Buffer.concat([data, chunk as Buffer]);
       } else {
