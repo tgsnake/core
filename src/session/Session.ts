@@ -203,7 +203,7 @@ export class Session {
     if (waitResponse && promises !== undefined) {
       let response;
       try {
-        response = await this._task.run(promises.value, timeout, () => {});
+        response = await this._task.run(promises.value, timeout);
         // response = await promises.value
       } catch (error: any) {
         Logger.error(`Got error when waiting response:`, error);
@@ -353,6 +353,7 @@ export class Session {
         this._isMedia,
         this._client._connectionMode
       );
+      this._networkTask = true;
       try {
         Logger.debug(`Connecting to telegram server`);
         await this._connection.connect();
@@ -379,7 +380,8 @@ export class Session {
                 query: new Raw.help.GetConfig(),
               }),
             }),
-            false // don't wait a response, because this function is always return miss match msgKey, idk it's bug or not, i can't fix it.
+            true,
+            this.START_TIMEOUT
           );
         }
         Logger.info(`Session initialized: Layer ${Raw.Layer}`);
@@ -392,8 +394,15 @@ export class Session {
         Logger.info('Session Started');
         break;
       } catch (error) {
-        await this.stop();
-        throw error;
+        if (error instanceof Errors.Exceptions.NotAcceptable.AuthKeyDuplicated) {
+          await this.stop();
+          throw error;
+        } else if (error instanceof Errors.TimeoutError || error instanceof Errors.RPCError) {
+          await sleep(1000);
+          await this.stop();
+        } else {
+          break;
+        }
       }
     }
   }
