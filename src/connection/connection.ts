@@ -42,7 +42,7 @@ export class Connection {
     test: boolean,
     ipv6: boolean,
     media: boolean = false,
-    mode: number = 2
+    mode: number = 1
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;
