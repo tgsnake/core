@@ -9,8 +9,13 @@
  */
 import * as crypto from 'crypto';
 import { Logger } from '../Logger';
-
-import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers';
+import {
+  range,
+  mod,
+  bigintToBuffer as toBuffer,
+  bufferToBigint as toBigint,
+  convertToLittle,
+} from '../helpers';
 /**
  * Encrypt content with AES-256-IGE mode.
  * @param data {Buffer} - Content will be encrypted.
@@ -19,6 +24,10 @@ import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } fr
  */
 export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
   Logger.debug(`Encrypting ${data.length} bytes data with AES-256-IGE`);
+  const pad = mod(data.length, 16);
+  if (pad) {
+    data = Buffer.concat([data, crypto.randomBytes(16 - pad)]);
+  }
   return ige(data, key, iv, true);
 }
 /**
@@ -36,22 +45,20 @@ export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
  * @param data {Buffer} - Content will be encrypted.
  * @param key {Buffer} - Key for encrypting content.
  * @param iv {Buffer} - Initial Vector for encrypting content.
- * @param state {Buffer} - State encryption.
  */
-export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer, state?: Buffer) {
+export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer) {
   Logger.debug(`Encrypting ${data.length} bytes data with AES-256-CTR`);
-  return ctr(data, key, iv, state ?? Buffer.alloc(1));
+  return ctr(data, key, iv, true);
 }
 /**
  * Decrypt content with AES-256-CTR mode.
  * @param data {Buffer} - Content will be decrypting.
  * @param key {Buffer} - Key for decrypting content.
  * @param iv {Buffer} - Initial Vector for decrypting content.
- * @param state {Buffer} - State decryption.
  */
-export function ctr256Decrypt(data: Buffer, key: Buffer, iv: Buffer, state?: Buffer) {
+export function ctr256Decrypt(data: Buffer, key: Buffer, iv: Buffer) {
   Logger.debug(`Decrypting ${data.length} bytes data with AES-256-CTR`);
-  return ctr(data, key, iv, state ?? Buffer.alloc(1));
+  return ctr(data, key, iv, false);
 }
 /**
  * Xor the A bytes with B bytes.
@@ -106,28 +113,10 @@ function ige(data: Buffer, key: Buffer, iv: Buffer, encrypt: boolean): Buffer {
 /**
  * Make AES-256-CTR mode.
  */
-function ctr(data: Buffer, key: Buffer, iv: Buffer, state: Buffer) {
-  const cipher = AES(key);
-  let out = Buffer.from(data);
-  let chunk = cipher.encrypt(iv);
-  for (let i of range(0, data.length, 16)) {
-    for (let j of range(0, Math.min(data.length - i, 16))) {
-      out[i + j] ^= chunk[state[0]];
-      state[0] += 1;
-      if (state[0] >= 16) {
-        state[0] = 0;
-      }
-      if (state[0] === 0) {
-        for (let k of range(15, -1, -1)) {
-          try {
-            iv[k] += 1;
-          } catch (error) {
-            iv[k] = 0;
-          }
-        }
-        chunk = cipher.encrypt(iv);
-      }
-    }
+function ctr(data: Buffer, key: Buffer, iv: Buffer, encrypt: boolean) {
+  if (encrypt) {
+    return crypto.createCipheriv('AES-256-CTR', key, iv).update(data);
+  } else {
+    return crypto.createDecipheriv('AES-256-CTR', key, iv).update(data);
   }
-  return out;
 }
