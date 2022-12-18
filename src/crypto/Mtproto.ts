@@ -73,7 +73,10 @@ export function unpack(
   authKeyId: Buffer,
   storedMsgId: Array<bigint>
 ) {
-  new SecurityCheckMismatch(Buffer.from(b.read(8)).equals(authKeyId));
+  new SecurityCheckMismatch(
+    Buffer.from(b.read(8)).equals(authKeyId),
+    'Provided auth key id is not equal with expected one.'
+  );
   const msgKey = b.read(16);
   const [aesKey, aesIv] = kdf(authKey, msgKey, false);
   const data = new BytesIO(ige256Decrypt(Buffer.from(b.read()), aesKey, aesIv));
@@ -101,18 +104,15 @@ export function unpack(
   }
   // https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
   new SecurityCheckMismatch(
-    msgKey.equals(
-      sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer])).slice(8, 24)
-    ),
+    msgKey.equals(sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer])).slice(8, 24)),
     'Provided msg key is not equal with expected one'
   );
   // https://core.telegram.org/mtproto/security_guidelines#checking-message-length
   data.seek(32); // Get to the payload, skip salt (8) + session_id (8) + msg_id (8) + seq_no (4) + length (4)
   const payload = data.read();
   const padding = payload.slice(message.write().length);
-  // @ts-ignore
   new SecurityCheckMismatch(
-    12 <= padding.length <= 1024,
+    padding.length >= 12 && padding.length <= 1024,
     'Payload padding is lower than 12 or bigger than 1024'
   );
   new SecurityCheckMismatch(
