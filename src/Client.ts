@@ -294,31 +294,38 @@ export class Client {
             await auth.authError(error);
           }
         } else if (error instanceof Errors.Exceptions.Unauthorized.SessionPasswordNeeded) {
+          let trying = 1;
           while (true) {
             try {
-              if (auth.recoveryCode) {
-                let emailPattern = await this.sendRecoveryCode();
-                Logger.info(`The recovery code has been sent to ${emailPattern}`);
-                while (true) {
-                  let recoveryCode = await auth.recoveryCode();
-                  try {
-                    return await this.recoverPassword(recoveryCode);
-                  } catch (error: any) {
-                    if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
-                      Logger.error(error);
-                      if (auth.authError) {
-                        await auth.authError(error);
-                      }
-                    } else {
-                      throw error;
-                    }
-                  }
-                }
-              } else {
+              if (trying <= 3) {
                 if (!auth.password) {
                   throw new Error('2FA password required');
                 }
                 return await this.checkPassword(await auth.password(await this.getPasswordHint()));
+              } else {
+                Logger.info('Look you are forgotten the password');
+                if (auth.recoveryCode) {
+                  let emailPattern = await this.sendRecoveryCode();
+                  Logger.info(`The recovery code has been sent to ${emailPattern}`);
+                  while (true) {
+                    let recoveryCode = await auth.recoveryCode();
+                    try {
+                      return await this.recoverPassword(recoveryCode);
+                    } catch (error: any) {
+                      if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
+                        Logger.error(error);
+                        if (auth.authError) {
+                          await auth.authError(error);
+                        }
+                      } else {
+                        throw error;
+                      }
+                    }
+                  }
+                } else {
+                  // do something soon
+                  break;
+                }
               }
             } catch (error: any) {
               if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
@@ -326,6 +333,7 @@ export class Client {
                 if (auth.authError) {
                   await auth.authError(error);
                 }
+                trying++;
               } else {
                 throw error;
               }
