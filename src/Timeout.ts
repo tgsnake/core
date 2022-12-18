@@ -13,7 +13,7 @@ export interface OnTimeout {
   /**
    * Handle when function is got timeout.
    * @param timeout {Number} - Passed time for running the function.
-   * @param index {Number} - Position the function.
+   * @param index {Number} - Position of task.
    */
   (timeout: number, index: number): any;
 }
@@ -26,18 +26,16 @@ export class Timeout {
    * @param time {Number} - Max time execution for function.
    * @param onTimeout {Function} - When function running more than time, this function will be called.
    */
-  run(
-    task: Promise<any>,
-    time: number,
-    onTimeout: OnTimeout = (timeout: number) => {
-      throw new TimeoutError(timeout);
-    }
-  ) {
+  run(task: Promise<any>, time: number, onTimeout?: OnTimeout) {
     if (time === Infinity) return task;
     return new Promise((res, rej) => {
       let index = this._task.length;
       let timeout = setTimeout(() => {
-        onTimeout(time, index);
+        if (onTimeout) {
+          onTimeout(time, index);
+        } else {
+          rej(new TimeoutError(time));
+        }
         task.finally(() => {
           return 'Running timeout';
         });
