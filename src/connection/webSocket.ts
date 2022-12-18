@@ -46,7 +46,8 @@ export class WebSocket {
       this._read = new Promise((resolve: { (value?: any): void }) => {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
-      return await this._client.destroy();
+      await this._client.destroy();
+      return await this._client.unref();
     }
   }
   async recv() {
