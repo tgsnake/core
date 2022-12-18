@@ -13,8 +13,7 @@ import {
   range,
   mod,
   bigintToBuffer as toBuffer,
-  bufferToBigint as toBigint,
-  convertToLittle,
+  bufferToBigint as toBigint
 } from '../helpers';
 /**
  * Encrypt content with AES-256-IGE mode.
