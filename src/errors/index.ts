@@ -9,6 +9,7 @@
  */
 export { RPCError, UnknownError } from './RpcError';
 export * as Exceptions from './exceptions';
+export * as WSError from './WebSocket';
 export class TimeoutError extends Error {
   message!: string;
   timeout!: number;
@@ -21,12 +22,74 @@ export class TimeoutError extends Error {
     this.timeout = timeout;
     this.description = `The function is running too long, until it reaches the time limit that has been given.`;
   }
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toJSON(): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toString(): string {
+    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
+  }
 }
 export class ClientDisconnected extends Error {
   name: string = 'ClientDisconnected';
   message: string = "Can't send request to telegram when client is unconnected.";
   description: string =
     'The provided telegram client is unconnected, make sure to start the telegram client firsy before sending request.';
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toJSON(): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toString(): string {
+    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
+  }
 }
 export class NotAFunctionClass extends Error {
   name: string = 'NotAFunctionClass';
@@ -37,6 +100,37 @@ export class NotAFunctionClass extends Error {
     super();
     this.message = this.message.replace('{value}', className);
     this.description = this.description.replace('{value}', className);
+  }
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toJSON(): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toString(): string {
+    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }
 export class BadMsgNotification extends Error {
@@ -58,6 +152,37 @@ export class BadMsgNotification extends Error {
     };
     super(`[${code}] ${description[code] ?? 'Unknown Error'}`);
   }
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toJSON(): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toString(): string {
+    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
+  }
 }
 export class SecurityError extends Error {
   name: string = 'SecurityError';
@@ -67,6 +192,37 @@ export class SecurityError extends Error {
     super();
     this.description = description;
     if (!cond) throw this;
+  }
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toJSON(): { [key: string]: any } {
+    const toPrint: { [key: string]: any } = {
+      _: this.constructor.name,
+    };
+    for (const key in this) {
+      if (this.hasOwnProperty(key)) {
+        const value = this[key];
+        if (!key.startsWith('_')) {
+          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
+        }
+      }
+    }
+    return toPrint;
+  }
+  toString(): string {
+    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }
 export class SecurityCheckMismatch extends SecurityError {

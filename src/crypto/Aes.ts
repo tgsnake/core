@@ -9,12 +9,7 @@
  */
 import * as crypto from 'crypto';
 import { Logger } from '../Logger';
-import {
-  range,
-  mod,
-  bigintToBuffer as toBuffer,
-  bufferToBigint as toBigint
-} from '../helpers';
+import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers';
 /**
  * Encrypt content with AES-256-IGE mode.
  * @param data {Buffer} - Content will be encrypted.

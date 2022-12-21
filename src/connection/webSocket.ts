@@ -9,6 +9,7 @@
  */
 import * as net from 'net';
 import { Logger } from '../Logger';
+import { WSError } from '../errors';
 
 export class WebSocket {
   private _client!: any;
@@ -31,7 +32,9 @@ export class WebSocket {
         this.recv();
         resolve(this);
       });
-      this._client.on('error', reject);
+      this._client.on('error', (error: any) => {
+        return error.message ? reject(new WSError.WebSocketError(error.message)) : reject(error);
+      });
       this._client.on('close', () => {
         if (this._client.destroyed) {
           if (this._promisedReading) this._promisedReading(false);
@@ -58,23 +61,23 @@ export class WebSocket {
         if (this._promisedReading) this._promisedReading(true);
       });
     } else {
-      throw new Error('Unconnected!');
+      throw new WSError.Disconnected();
     }
   }
   async send(data: Buffer) {
     if (this._client && !this._connectionClosed) {
       this._client.write(data);
     } else {
-      throw new Error('Unconnected!');
+      throw new WSError.Disconnected();
     }
   }
   async read(length: number) {
     if (this._connectionClosed) {
-      throw new Error('Connection closed when reading data');
+      throw new WSError.ReadClosed();
     }
     await this._read;
     if (this._connectionClosed) {
-      throw new Error('Connection closed when reading data');
+      throw new WSError.ReadClosed();
     }
     let tr = this._data.slice(0, length);
     this._data = this._data.slice(length);
@@ -95,7 +98,7 @@ export class WebSocket {
         if (!length) return data;
       }
     } else {
-      throw new Error('Connection closed when reading data');
+      throw new WSError.ReadClosed();
     }
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
