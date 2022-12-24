@@ -34,11 +34,15 @@ export class TimeoutError extends Error {
         }
       }
     }
+    Object.setPrototypeOf(toPrint,{
+      stack : this.stack
+    })
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
+      stack : this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -71,11 +75,15 @@ export class ClientDisconnected extends Error {
         }
       }
     }
+    Object.setPrototypeOf(toPrint,{
+      stack : this.stack
+    })
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
+      stack : this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -113,11 +121,15 @@ export class NotAFunctionClass extends Error {
         }
       }
     }
+    Object.setPrototypeOf(toPrint,{
+      stack : this.stack
+    })
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
+      stack : this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -164,11 +176,15 @@ export class BadMsgNotification extends Error {
         }
       }
     }
+    Object.setPrototypeOf(toPrint,{
+      stack : this.stack
+    })
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
+      stack : this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -205,11 +221,15 @@ export class SecurityError extends Error {
         }
       }
     }
+    Object.setPrototypeOf(toPrint,{
+      stack : this.stack
+    })
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
+      stack : this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {

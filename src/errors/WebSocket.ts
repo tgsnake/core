@@ -28,11 +28,15 @@ export class WebSocketError extends Error {
         }
       }
     }
+    Object.setPrototypeOf(toPrint,{
+      stack : this.stack
+    })
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
+      stack : this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
