@@ -134,10 +134,10 @@ export class Client {
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
    * Client Constructor.
-   * @param session {Object} - What the session will be used for login to telegram.
-   * @param apiHash {String} - Your api hash, got it from my.telegram.org.
-   * @param apiId {Number} - Your api id, got it from my.telegram.org.
-   * @param clientInterface {Object} - Client options for initializing client.
+   * @param {Object} session - What the session will be used for login to telegram.
+   * @param {String} apiHash - Your api hash, got it from my.telegram.org.
+   * @param {Number} apiId - Your api id, got it from my.telegram.org.
+   * @param {Object} clientInterface - Client options for initializing client.
    */
   constructor(
     session: AbstractSession,
@@ -207,7 +207,7 @@ export class Client {
   }
   /**
    * Sigin as bot.
-   * @param botToken {String} - Bot token from bot father.
+   * @param {String} botToken - Bot token from bot father.
    */
   private async _siginBot(botToken: string): Promise<Raw.User> {
     while (true) {
@@ -257,7 +257,7 @@ export class Client {
   }
   /**
    * Sigin as user.
-   * @param auth {Object} - The required parameter to be used for creating account or login.
+   * @param {Object} auth - The required parameter to be used for creating account or login.
    */
   private async _siginUser(auth: SigInUser): Promise<Raw.User> {
     let phoneNumber;
@@ -376,7 +376,7 @@ export class Client {
   }
   /**
    * Sending telegram OTP code.
-   * @param phoneNumber {String} - The phone number will be using to receive a OTP code.
+   * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
    */
   async sendCode(phoneNumber: string): Promise<Raw.auth.SentCode> {
     phoneNumber = phoneNumber.replace(/\+/g, '').trim();
@@ -424,9 +424,9 @@ export class Client {
   }
   /**
    * Authorize a user in Telegram with a valid confirmation code.
-   * @param phoneNumber {String} - Phone number in international format (includes the country prefix).
-   * @param phoneCodeHash {String} - Code identifier taken from the result of sendCode.
-   * @param phoneCode {String} - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
+   * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
+   * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
+   * @param {String} phoneCode - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
    */
   async sigin(
     phoneNumber: string,
@@ -454,7 +454,7 @@ export class Client {
   }
   /**
    * Recover your password with recovery code and login.
-   * @param code {String} - The recovery code has been send in connected email with 2FA.
+   * @param {String} code - The recovery code has been send in connected email with 2FA.
    */
   async recoverPassword(code: string): Promise<Raw.User> {
     let r = await this.invoke(
@@ -476,7 +476,7 @@ export class Client {
   }
   /**
    * Check the givens password is correct or not.
-   * @param password {String} - Password will be check.
+   * @param {String} password - Password will be check.
    */
   async checkPassword(password: string): Promise<Raw.User> {
     let r = await this.invoke(
@@ -494,7 +494,7 @@ export class Client {
   }
   /**
    * Accepting Terms Of Service for creating a account.
-   * @param id {Object} - TOS Id,The terms of service identifier.
+   * @param {String} id - TOS Id,The terms of service identifier.
    */
   async acceptTOS(id: string): Promise<boolean> {
     let r = await this.invoke(
@@ -515,10 +515,10 @@ export class Client {
   }
   /**
    * Sigin and create a new fresh account.
-   * @param phoneNumber {String} - Phone number in international format (includes the country prefix).
-   * @param phoneCodeHash {String} - Code identifier taken from the result of sendCode.
-   * @param firstname {String} - New user firstname.
-   * @param lastname {String} - New user lastname.
+   * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
+   * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
+   * @param {String} firstname - New user firstname.
+   * @param {String} lastname - New user lastname.
    */
   async signup(
     phoneNumber: string,
@@ -540,7 +540,7 @@ export class Client {
   }
   /**
    * Starting client.
-   * @param auth {Object} - Do you want to login with the user or with the bot.
+   * @param {Object} auth - Do you want to login with the user or with the bot.
    */
   async start(auth?: SigInBot | SigInUser): Promise<Raw.users.UserFull> {
     await this.connect();
@@ -596,10 +596,10 @@ export class Client {
   /**
    * Sending request to telegram. <br/>
    * Only telegram method can be invoked.
-   * @param query {Object} - Raw class from telegram method.
-   * @param retries {Number} - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
-   * @param timeout {Number} - How long to wait for the function to finish. default is 15s.
-   * @param sleepTreshold {Number} - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
+   * @param {Object} query - Raw class from telegram method.
+   * @param {Number} retries - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
+   * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
+   * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
    */
   async invoke(
     query: TLObject,
@@ -642,7 +642,7 @@ export class Client {
   }
   /**
    * Fetch the peer into session.
-   * @param peers {Array} - Peers will be fetched.
+   * @param {Array} peers - Peers will be fetched.
    */
   async fetchPeers(peers: Array<Raw.TypeUser | Raw.TypeChat>): Promise<boolean> {
     let isMin = false;
@@ -684,7 +684,7 @@ export class Client {
   }
   /**
    * Get the valid peer.
-   * @param peerId {String|BigInt} - The provided peer id will be resolve to a valid peer object.
+   * @param {String|BigInt} peerId - The provided peer id will be resolve to a valid peer object.
    */
   async resolvePeer(
     peerId: bigint | string

@@ -28,8 +28,8 @@ export function xor(a: Buffer, b: Buffer) {
 }
 /**
  * Compute passowrd with PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
- * @param algo {Object} - The PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
- * @param password {String} - The plain password will be encrypt with algo.
+ * @param {Object} algo - The PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
+ * @param {String} password - The plain password will be encrypt with algo.
  */
 export function computePasswordHash(
   algo: Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
@@ -46,8 +46,8 @@ export function computePasswordHash(
 }
 /**
  * Check the plain password with current password.
- * @param r {Object} - Current password.
- * @parame password {String} - Plain password will be check with current password.
+ * @param {Object} r - Current password.
+ * @parame {String} password - Plain password will be check with current password.
  */
 export function computePasswordCheck(
   r: Raw.account.Password,
@@ -110,14 +110,14 @@ export function computePasswordCheck(
 }
 /**
  * Make a Big number from buffer.
- * @param b {Buffer} - Buffer will be converted to big number.
+ * @param {Buffer} b - Buffer will be converted to big number.
  */
 function btoi(b: Buffer): bigint {
   return bufferToBigint(b, false);
 }
 /**
  * Make a large bytes from big number.
- * @param i {BigInt} - Big Number will be converted to large bytes.
+ * @param {BigInt} i - Big Number will be converted to large bytes.
  */
 function itob(i: bigint): Buffer {
   return bigintToBuffer(i, 256, false);

@@ -20,17 +20,17 @@ import { TLObject, BytesIO, Primitive } from "./core";
   * All schema wrapped in Raw namespace.
 */
 export namespace Raw {
-  type X = TLObject;
-  type Type = TLObject;
-  type Bool = boolean;
-  type int = number; 
-  type double = number;
-  type float = number;
-  type int128 = bigint;
-  type int256 = bigint;
-  type long = bigint;
-  type bytes = Buffer;
-  type Vector<T> = Array<T>;
+  export type X = TLObject;
+  export type Type = TLObject;
+  export type Bool = boolean;
+  export type int = number; 
+  export type double = number;
+  export type float = number;
+  export type int128 = bigint;
+  export type int256 = bigint;
+  export type long = bigint;
+  export type bytes = Buffer;
+  export type Vector<T> = Array<T>;
   /**
     * The Telegram layer we using.
   */

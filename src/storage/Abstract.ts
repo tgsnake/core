@@ -51,31 +51,31 @@ export abstract class AbstractSession {
   /**
    * Sets the information of the data center address, port, and test mode.<br/>
    * The library should connect to, as well as the data center ID.
-   * @param dcId {Number}
-   * @param ip {String}
-   * @param port {Number}
-   * @param testMode {Boolean}
+   * @param {Number} dcId
+   * @param {String} ip
+   * @param {Number} port
+   * @param {Boolean} testMode
    */
   abstract setAddress(dcId: number, ip: string, port: number, testMode: boolean): Promise<void>;
   /**
    * Set user AuthKey.
-   * @param authKey {Buffer}
-   * @param dcId {Number}
+   * @param {Buffer} authKey
+   * @param {Number} dcId
    */
   abstract setAuthKey(authKey: Buffer, dcId: number): Promise<void>;
   /**
    * Set apiId, got it from my.telegram.org.
-   * @param apiId {Number}
+   * @param {Number} apiId
    */
   abstract setApiId(apiId: number): Promise<void>;
   /**
    * Set the user type, is bot or not.
-   * @param isbot {Boolean}
+   * @param {Boolean} isbot
    */
   abstract setIsBot(isbot: boolean): Promise<void>;
   /**
    * Set the id of logined user.
-   * @param userId {BigInt}
+   * @param {BigInt} userId
    */
   abstract setUserId(userId: bigint): Promise<void>;
   /**
@@ -137,12 +137,12 @@ export abstract class AbstractSession {
   abstract save(): Promise<void>;
   /**
    * Move session from instance to another instance.
-   * @param session {Object} - Another instance which will be migrated there.
+   * @param {Object} session - Another instance which will be migrated there.
    */
   abstract move(session: AbstractSession): Promise<void>;
   /**
    * Save peer into cache.
-   * @param peers {Array} - Collection of peers will be saved to cache.
+   * @param {Array} peers - Collection of peers will be saved to cache.
    */
   abstract updatePeers(
     peers: Array<
@@ -151,21 +151,21 @@ export abstract class AbstractSession {
   ): Promise<void>;
   /**
    * Get peer by their given id from cache.
-   * @param id {BigInt} - User id will be search on cache.
+   * @param {BigInt} id - User id will be search on cache.
    */
   abstract getPeerById(
     id: bigint
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Get peer by their given username from cache.
-   * @param username {String} - Username will be search on cache.
+   * @param {String} username - Username will be search on cache.
    */
   abstract getPeerByUsername(
     username: string
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Get peer by their given phone number from cache.
-   * @param phoneNumber {String} - Phone number will be search on cache.
+   * @param {String} phoneNumber - Phone number will be search on cache.
    */
   abstract getPeerByPhoneNumber(
     phoneNumber: string

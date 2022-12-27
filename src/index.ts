@@ -19,3 +19,5 @@ export * as Sessions from './session';
 export * as Storages from './storage';
 export * as Versions from './Version';
 export * as Helpers from './helpers';
+export * as Timeouts from './Timeout';
+import * as Loggers from './Logger';

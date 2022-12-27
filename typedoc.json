@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "../docs",
+  "name": "@tgsnake/core",
+  "includeVersion": true,
+  "hideGenerator": true,
+  "emit": "both",
+  "logger": "error",
+  "sort": "alphabetical"
+}

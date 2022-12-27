@@ -12,7 +12,7 @@ jobs:
     name: Setup Go
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@master
       - uses: actions/setup-go@main
         with:
           go-version: 'stable'

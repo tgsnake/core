@@ -12,9 +12,9 @@ import { Logger } from '../Logger';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers';
 /**
  * Encrypt content with AES-256-IGE mode.
- * @param data {Buffer} - Content will be encrypted.
- * @param key {Buffer} - Key for encrypting content.
- * @param iv {Buffer} - Initial Vector for encrypting content.
+ * @param {Buffer} data - Content will be encrypted.
+ * @param {Buffer} key - Key for encrypting content.
+ * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
   Logger.debug(`Encrypting ${data.length} bytes data with AES-256-IGE`);
@@ -26,9 +26,9 @@ export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
 }
 /**
  * Decrypt content with AES-256-IGE mode.
- * @param data {Buffer} - Content will be decrypting.
- * @param key {Buffer} - Key for decrypting content.
- * @param iv {Buffer} - Initial Vector for decrypting content.
+ * @param {Buffer} data - Content will be decrypting.
+ * @param {Buffer} key - Key for decrypting content.
+ * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
   Logger.debug(`Decrypting ${data.length} bytes data with AES-256-IGE`);
@@ -36,9 +36,9 @@ export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
 }
 /**
  * Encrypt content with AES-256-CTR mode.
- * @param data {Buffer} - Content will be encrypted.
- * @param key {Buffer} - Key for encrypting content.
- * @param iv {Buffer} - Initial Vector for encrypting content.
+ * @param {Buffer} data - Content will be encrypted.
+ * @param {Buffer} key - Key for encrypting content.
+ * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer) {
   Logger.debug(`Encrypting ${data.length} bytes data with AES-256-CTR`);
@@ -46,9 +46,9 @@ export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer) {
 }
 /**
  * Decrypt content with AES-256-CTR mode.
- * @param data {Buffer} - Content will be decrypting.
- * @param key {Buffer} - Key for decrypting content.
- * @param iv {Buffer} - Initial Vector for decrypting content.
+ * @param {Buffer} data - Content will be decrypting.
+ * @param {Buffer} key - Key for decrypting content.
+ * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ctr256Decrypt(data: Buffer, key: Buffer, iv: Buffer) {
   Logger.debug(`Decrypting ${data.length} bytes data with AES-256-CTR`);

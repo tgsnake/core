@@ -1,0 +1,35 @@
+name: Building Docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  typedoc:
+    name: Setup NodeJS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Building docs using typedoc
+        run: |
+          yarn install
+          yarn build:api
+          yarn build:error
+          yarn prettier
+          yarn build:docs
+      - name: Completed Building
+        working-directory: '../docs'
+        run: | 
+          git init -b gh-pages
+          git remote add origin git@github.com:tgsnake/core -m gh-pages
+          git config user.email github-actions@github.com
+          git config user.name github-actions
+          git add .
+          git commit -am 'sync docs with latest version'
+          git checkout gh-pages
+          git pull origin gh-pages
+          git push origin gh-pages

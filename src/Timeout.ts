@@ -12,8 +12,8 @@ import { TimeoutError } from './errors';
 export interface OnTimeout {
   /**
    * Handle when function is got timeout.
-   * @param timeout {Number} - Passed time for running the function.
-   * @param index {Number} - Position of task.
+   * @param {Number} timeout - Passed time for running the function.
+   * @param {Number} index - Position of task.
    */
   (timeout: number, index: number): any;
 }
@@ -22,9 +22,9 @@ export class Timeout {
   constructor() {}
   /**
    * Run the promised function with timeout, it will be throw TimeoutError when function running more than given time.
-   * @param task {Promise} - Function will be running.
-   * @param time {Number} - Max time execution for function.
-   * @param onTimeout {Function} - When function running more than time, this function will be called.
+   * @param {Promise} task - Function will be running.
+   * @param {Number} time - Max time execution for function.
+   * @param {Function} onTimeout - When function running more than time, this function will be called.
    */
   run(task: Promise<any>, time: number, onTimeout?: OnTimeout) {
     if (time === Infinity) return task;

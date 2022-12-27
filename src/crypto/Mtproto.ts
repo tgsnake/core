@@ -18,8 +18,8 @@ import { Logger } from '../Logger';
 const STORED_MSG_IDS_MAX_SIZE = 1000 * 2;
 
 async function sha256(data: Buffer): Promise<Buffer> {
-  const hash = await crypto.createHash('sha256')
-  await hash.update(data)
+  const hash = await crypto.createHash('sha256');
+  await hash.update(data);
   return await hash.digest();
 }
 function toBytes(value: bigint): Buffer {
@@ -35,7 +35,11 @@ function toBytes(value: bigint): Buffer {
 /**
  * Encrypt content with kdf
  */
-export async function kdf(authKey: Buffer, msgKey: Buffer, outgoing: boolean): Promise<Array<Buffer>> {
+export async function kdf(
+  authKey: Buffer,
+  msgKey: Buffer,
+  outgoing: boolean
+): Promise<Array<Buffer>> {
   // https://core.telegram.org/mtproto/description#defining-aes-key-and-initialization-vector
   const x = outgoing ? 0 : 8;
   const sha256A = await sha256(Buffer.concat([msgKey, authKey.slice(x, x + 36)]));
@@ -105,7 +109,7 @@ export async function unpack(
     throw new Error(`The server sent an unknown constructor: ${Buffer.from(error.args[0]).toString("hex")}\n${left}`)*/
   }
   // https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
-  const hash = await sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer]))
+  const hash = await sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer]));
   SecurityCheckMismatch.check(
     msgKey.equals(hash.slice(8, 24)),
     'Provided msg key is not equal with expected one'

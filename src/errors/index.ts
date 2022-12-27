@@ -34,15 +34,15 @@ export class TimeoutError extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -75,15 +75,15 @@ export class ClientDisconnected extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -121,15 +121,15 @@ export class NotAFunctionClass extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -176,15 +176,15 @@ export class BadMsgNotification extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -208,7 +208,7 @@ export class SecurityError extends Error {
     super();
     this.description = description;
   }
-  static check(cond:bool,description?:string){
+  static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityError(description);
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
@@ -223,15 +223,15 @@ export class SecurityError extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -250,14 +250,14 @@ export class SecurityError extends Error {
 export class SecurityCheckMismatch extends SecurityError {
   name: string = 'SecurityCheckMismatch';
   message: string = 'A security check mismatch has occurred.';
-  static check(cond:bool,description?:string){
+  static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityCheckMismatch(description);
   }
 }
 export class CDNFileHashMismatch extends SecurityError {
   name: string = 'CDNFileHashMismatch';
   message: string = 'A CDN file hash mismatch has occurred.';
-  static check(cond:bool,description?:string){
+  static check(cond: boolean, description?: string) {
     if (!cond) throw new CDNFileHashMismatch(description);
   }
 }

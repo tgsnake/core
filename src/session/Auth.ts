@@ -208,35 +208,24 @@ export class Auth {
         let gA = toBigint(serverDhInnerData.gA, false);
         let authKey = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
         // Security Check
-        new SecurityCheckMismatch(dhPrime === Prime.CURRENT_DH_PRIME);
+        SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
         Logger.debug('DH parameters check: OK');
 
         // https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
         // TSError : Operator '<' cannot be applied to types 'boolean' and 'bigint'.
-        new SecurityCheckMismatch(
-          //@ts-ignore
-          BigInt(1) < g < dhPrime - BigInt(1)
+        SecurityCheckMismatch.check(BigInt(1) < g && g < dhPrime - BigInt(1));
+        SecurityCheckMismatch.check(BigInt(1) < gA && gA < dhPrime - BigInt(1));
+        SecurityCheckMismatch.check(BigInt(1) < gB && gB < dhPrime - BigInt(1));
+        SecurityCheckMismatch.check(
+          BigInt(2) ** BigInt(2048 - 64) < gA && gA < dhPrime - BigInt(2) ** BigInt(2048 - 64)
         );
-        new SecurityCheckMismatch(
-          //@ts-ignore
-          BigInt(1) < gA < dhPrime - BigInt(1)
-        );
-        new SecurityCheckMismatch(
-          //@ts-ignore
-          BigInt(1) < gB < dhPrime - BigInt(1)
-        );
-        new SecurityCheckMismatch(
-          //@ts-ignore
-          BigInt(2) ** BigInt(2048 - 64) < gA < dhPrime - BigInt(2) ** BigInt(2048 - 64)
-        );
-        new SecurityCheckMismatch(
-          // @ts-ignore
-          BigInt(2) ** BigInt(2048 - 64) < gB < dhPrime - BigInt(2) ** BigInt(2048 - 64)
+        SecurityCheckMismatch.check(
+          BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64)
         );
         Logger.debug('gA and gB validation: OK');
 
         // https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
-        new SecurityCheckMismatch(
+        SecurityCheckMismatch.check(
           answerWithHash
             .slice(0, 20)
             .equals(crypto.createHash('sha1').update(serverDhInnerData.write()).digest())
@@ -244,11 +233,11 @@ export class Auth {
         Logger.debug('SHA1 hash values check: OK');
 
         //https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
-        new SecurityCheckMismatch(nonce === resPq.nonce);
-        new SecurityCheckMismatch(resPq.nonce === serverDh.nonce);
-        new SecurityCheckMismatch(resPq.serverNonce === serverDh.serverNonce);
-        new SecurityCheckMismatch(resPq.nonce === setClientDhParamsAnswer.nonce);
-        new SecurityCheckMismatch(resPq.serverNonce === setClientDhParamsAnswer.serverNonce);
+        SecurityCheckMismatch.check(nonce === resPq.nonce);
+        SecurityCheckMismatch.check(resPq.nonce === serverDh.nonce);
+        SecurityCheckMismatch.check(resPq.serverNonce === serverDh.serverNonce);
+        SecurityCheckMismatch.check(resPq.nonce === setClientDhParamsAnswer.nonce);
+        SecurityCheckMismatch.check(resPq.serverNonce === setClientDhParamsAnswer.serverNonce);
         Logger.debug('Nonce fields check: OK');
 
         // Step 9

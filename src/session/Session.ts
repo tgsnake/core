@@ -23,7 +23,7 @@ import { sleep } from '../helpers';
 import { Timeout } from '../Timeout';
 import type { Client } from '../Client';
 
-class Results {
+export class Results {
   value!: Promise<unknown>;
   reject!: { (reason: any): any };
   resolve!: { (value: any): any };
@@ -133,7 +133,7 @@ export class Session {
           msgId = msg.body.msgId;
         } else {
           Logger.debug(`Handling update ${msg.body.constructor.name}.`);
-          this._client.handleUpdate(msg.body);
+          this._client.handleUpdate(msg.body as unknown as Raw.Updates);
         }
 
         if (msgId !== undefined) {
@@ -263,8 +263,8 @@ export class Session {
     }
     let packet = await this._connection.recv();
     if (packet !== undefined && packet.length !== 4) {
-      await this._handlePacket(packet)
-    }else{
+      await this._handlePacket(packet);
+    } else {
       if (packet) {
         Logger.warning(`Server sent "${packet.readInt32LE(0)}"`);
       }
@@ -272,7 +272,7 @@ export class Session {
         return this.restart();
       }
     }
-    return this._networkWorker()
+    return this._networkWorker();
   }
   async stop() {
     const release = await this._mutex.acquire();

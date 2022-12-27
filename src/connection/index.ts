@@ -9,5 +9,6 @@
  */
 
 import * as TCP from './TCP';
+export * as Connections from './connection';
 export { WebSocket } from './webSocket';
 export { TCP };

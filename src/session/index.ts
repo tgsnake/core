@@ -12,6 +12,6 @@ import * as DataCenter from './internals/DataCenter';
 export { SeqNo } from './internals/SeqNo';
 export { DataCenter };
 export { Auth } from './Auth';
-export { Session } from './Session';
+export { Session, Results } from './Session';
 export { MsgFactory } from './internals/MsgFactory';
 export { MsgId } from './internals/MsgId';
