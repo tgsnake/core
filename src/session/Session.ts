@@ -10,6 +10,7 @@
 
 import * as crypto from 'crypto';
 import * as os from 'os';
+import { Mutex } from 'async-mutex';
 import { Logger } from '../Logger';
 import { Connection } from '../connection/connection';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw';
@@ -33,6 +34,7 @@ class Results {
     });
   }
 }
+
 export class Session {
   START_TIMEOUT: number = 1000;
   WAIT_TIMEOUT: number = 15000;
@@ -60,6 +62,7 @@ export class Session {
   private _pendingAcks: Set<any> = new Set<any>();
   private _task: Timeout = new Timeout();
   private _networkTask: boolean = true;
+  private _mutex: Mutex = new Mutex();
 
   constructor(
     client: Client,
@@ -79,15 +82,87 @@ export class Session {
 
   private async _handlePacket(packet: Buffer) {
     Logger.debug(`Unpacking ${packet.length} bytes packet.`);
-    let data;
     try {
-      data = await Mtproto.unpack(
+      let data = await Mtproto.unpack(
         new BytesIO(packet),
         this._sessionId,
         this._authKey,
         this._authKeyId,
         this._storedMsgId
       );
+      let message = data.body instanceof MsgContainer ? data.body.messages : [data];
+      Logger.debug(`Reveive ${message.length} data.`);
+
+      for (let msg of message) {
+        if (msg.seqNo % 2 === 0) {
+          Logger.debug(`Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
+          this._msgId.setServerTime(msg.msgId / BigInt(2 ** 32));
+        } else {
+          if (this._pendingAcks.has(msg.msgId)) {
+            Logger.debug(`Skiping pending acks msg id: ${msg.msgId}.`);
+            continue;
+          } else {
+            Logger.debug(`Add msg id ${msg.msgId} to pending acks.`);
+            this._pendingAcks.add(msg.msgId);
+          }
+        }
+        if (msg.body instanceof Raw.MsgDetailedInfo || msg.body instanceof Raw.MsgNewDetailedInfo) {
+          Logger.debug(
+            `Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`
+          );
+          this._pendingAcks.add(msg.body.answerMsgId);
+          continue;
+        }
+        if (msg.body instanceof Raw.NewSessionCreated) {
+          Logger.debug(`Got ${msg.body.constructor.name} and skiping.`);
+          continue;
+        }
+        let msgId;
+        if (msg.body instanceof Raw.BadMsgNotification || msg.body instanceof Raw.BadServerSalt) {
+          Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`);
+          msgId = msg.body.badMsgId;
+        } else if (msg.body instanceof Raw.FutureSalts || msg.body instanceof Raw.RpcResult) {
+          Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`);
+          msgId = msg.body.reqMsgId;
+          if (msg.body instanceof Raw.RpcResult) {
+            msg.body as Raw.RpcResult;
+            msg.body = msg.body.result;
+          }
+        } else if (msg.body instanceof Raw.Pong) {
+          Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.msgId}.`);
+          msgId = msg.body.msgId;
+        } else {
+          Logger.debug(`Handling update ${msg.body.constructor.name}.`);
+          this._client.handleUpdate(msg.body);
+        }
+
+        if (msgId !== undefined) {
+          let promises = this._results.get(BigInt(msgId));
+          if (promises !== undefined) {
+            Logger.debug(`Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`);
+            promises.resolve(msg.body);
+          }
+        }
+      }
+      if (this._pendingAcks.size >= this.ACKS_THRESHOLD) {
+        Logger.debug(`Sending ${this._pendingAcks.size} pending aks.`);
+        try {
+          await this._send(
+            new Raw.MsgsAck({
+              msgIds: Array.from(this._pendingAcks),
+            }),
+            false
+          );
+          Logger.debug(`Clearing all pending acks`);
+          this._pendingAcks.clear();
+        } catch (error: any) {
+          if (!(error instanceof Errors.TimeoutError)) {
+            Logger.debug(`Clearing all pending acks`);
+            this._pendingAcks.clear();
+          }
+          Logger.error(`Got error when sending pending acks:`, error);
+        }
+      }
     } catch (error: any) {
       if (error instanceof Errors.SecurityCheckMismatch) {
         Logger.error(
@@ -98,78 +173,6 @@ export class Session {
         return;
       }
       throw error;
-    }
-    let message = data.body instanceof MsgContainer ? data.body.messages : [data];
-    Logger.debug(`Reveive ${message.length} data.`);
-    for (let msg of message) {
-      if (msg.seqNo % 2 === 0) {
-        Logger.debug(`Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
-        this._msgId.setServerTime(msg.msgId / BigInt(2 ** 32));
-      } else {
-        if (this._pendingAcks.has(msg.msgId)) {
-          Logger.debug(`Skiping pending acks msg id: ${msg.msgId}.`);
-          continue;
-        } else {
-          Logger.debug(`Add msg id ${msg.msgId} to pending acks.`);
-          this._pendingAcks.add(msg.msgId);
-        }
-      }
-      if (msg.body instanceof Raw.MsgDetailedInfo || msg.body instanceof Raw.MsgNewDetailedInfo) {
-        Logger.debug(
-          `Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`
-        );
-        this._pendingAcks.add(msg.body.answerMsgId);
-        continue;
-      }
-      if (msg.body instanceof Raw.NewSessionCreated) {
-        Logger.debug(`Got ${msg.body.constructor.name} and skiping.`);
-        continue;
-      }
-      let msgId;
-      if (msg.body instanceof Raw.BadMsgNotification || msg.body instanceof Raw.BadServerSalt) {
-        Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`);
-        msgId = msg.body.badMsgId;
-      } else if (msg.body instanceof Raw.FutureSalts || msg.body instanceof Raw.RpcResult) {
-        Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`);
-        msgId = msg.body.reqMsgId;
-        if (msg.body instanceof Raw.RpcResult) {
-          msg.body as Raw.RpcResult;
-          msg.body = msg.body.result;
-        }
-      } else if (msg.body instanceof Raw.Pong) {
-        Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.msgId}.`);
-        msgId = msg.body.msgId;
-      } else {
-        Logger.debug(`Handling update ${msg.body.constructor.name}.`);
-        this._client.handleUpdate(msg.body);
-      }
-
-      if (msgId !== undefined) {
-        let promises = this._results.get(BigInt(msgId));
-        if (promises !== undefined) {
-          Logger.debug(`Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`);
-          promises.resolve(msg.body);
-        }
-      }
-    }
-    if (this._pendingAcks.size >= this.ACKS_THRESHOLD) {
-      Logger.debug(`Sending ${this._pendingAcks.size} pending aks.`);
-      try {
-        await this._send(
-          new Raw.MsgsAck({
-            msgIds: Array.from(this._pendingAcks),
-          }),
-          false
-        );
-        Logger.debug(`Clearing all pending acks`);
-        this._pendingAcks.clear();
-      } catch (error: any) {
-        if (!(error instanceof Errors.TimeoutError)) {
-          Logger.debug(`Clearing all pending acks`);
-          this._pendingAcks.clear();
-        }
-        Logger.error(`Got error when sending pending acks:`, error);
-      }
     }
   }
   private async _send(
@@ -254,33 +257,36 @@ export class Session {
   }
   private async _networkWorker() {
     Logger.debug(`Network worker started.`);
-    while (true) {
-      if (!this._networkTask) {
-        Logger.debug(`Network worker ended`);
-        break;
-      }
-      let packet = await this._connection.recv();
-      if (packet === undefined || packet.length === 4) {
-        if (packet) {
-          Logger.warning(`Server sent "${packet.readInt32LE(0)}"`);
-        }
-        if (this._isConnected) {
-          this.restart();
-          break;
-        }
-      }
-      // @ts-ignore
-      this._handlePacket(packet);
+    if (!this._networkTask) {
+      Logger.debug(`Network worker ended`);
+      return;
     }
+    let packet = await this._connection.recv();
+    if (packet !== undefined && packet.length !== 4) {
+      await this._handlePacket(packet)
+    }else{
+      if (packet) {
+        Logger.warning(`Server sent "${packet.readInt32LE(0)}"`);
+      }
+      if (this._isConnected) {
+        return this.restart();
+      }
+    }
+    return this._networkWorker()
   }
   async stop() {
-    this._isConnected = false;
-    clearTimeout(this._pingTask);
-    await this._connection.close();
-    this._results.clear();
-    this._task.clear();
-    this._networkTask = false;
-    Logger.info(`Session stopped.`);
+    const release = await this._mutex.acquire();
+    try {
+      this._isConnected = false;
+      clearTimeout(this._pingTask);
+      await this._connection.close();
+      this._results.clear();
+      this._task.clear();
+      this._networkTask = false;
+      Logger.info(`Session stopped.`);
+    } finally {
+      release();
+    }
   }
   restart() {
     Logger.debug(`Restarting client`);
