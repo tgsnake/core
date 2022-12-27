@@ -204,10 +204,12 @@ export class SecurityError extends Error {
   name: string = 'SecurityError';
   message!: string;
   description?: string;
-  constructor(cond: boolean, description?: string) {
+  constructor(description?: string) {
     super();
     this.description = description;
-    if (!cond) throw this;
+  }
+  static check(cond:bool,description?:string){
+    if (!cond) throw new SecurityError(description);
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
@@ -248,8 +250,14 @@ export class SecurityError extends Error {
 export class SecurityCheckMismatch extends SecurityError {
   name: string = 'SecurityCheckMismatch';
   message: string = 'A security check mismatch has occurred.';
+  static check(cond:bool,description?:string){
+    if (!cond) throw new SecurityCheckMismatch(description);
+  }
 }
 export class CDNFileHashMismatch extends SecurityError {
   name: string = 'CDNFileHashMismatch';
   message: string = 'A CDN file hash mismatch has occurred.';
+  static check(cond:bool,description?:string){
+    if (!cond) throw new CDNFileHashMismatch(description);
+  }
 }
