@@ -10,6 +10,7 @@
 import { Raw } from '../raw';
 import * as crypto from 'crypto';
 import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers';
+
 /**
  * Create a sha256 hash.
  */
@@ -31,6 +32,7 @@ export function xor(a: Buffer, b: Buffer) {
  * @param {Object} algo - The PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
  * @param {String} password - The plain password will be encrypt with algo.
  */
+
 export function computePasswordHash(
   algo: Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
   password: string

@@ -7,6 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { Connection } from '../connection/connection';
 import * as AES from '../crypto/Aes';
 import * as Prime from '../crypto/Prime';

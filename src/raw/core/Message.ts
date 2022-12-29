@@ -7,6 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { BytesIO } from './BytesIO';
 import { TLObject } from './TLObject';
 import * as Primitive from './primitive';

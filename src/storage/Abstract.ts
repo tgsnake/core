@@ -7,7 +7,13 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { Raw } from '../raw';
+
+/**
+ * @class AbstractSession
+ * Schema of a valid session. Creating a class session must extend this class so that the class is valid.
+ */
 export abstract class AbstractSession {
   /**
    * Telegram Server IP address.
@@ -174,6 +180,8 @@ export abstract class AbstractSession {
    * Export session to valid string.
    */
   abstract exportString(): string;
+  /** @hidden */
   abstract toJSON(): { [key: string]: any };
+  /** @hidden */
   abstract toString(): string;
 }

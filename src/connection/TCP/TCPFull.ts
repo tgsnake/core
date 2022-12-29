@@ -7,11 +7,18 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { TCP } from './tcp';
 import { crc32 } from '../../helpers';
 import { Primitive } from '../../raw';
 
+/**
+ * @class TCPFull
+ * One of the TCP classes that implements basic MTProto transport protocol.
+ * see https://core.telegram.org/mtproto/mtproto-transports#full
+ */
 export class TCPFull extends TCP {
+  /** @hidden */
   private _seq!: number;
   constructor() {
     super();

@@ -23,7 +23,7 @@ jobs:
           yarn build:docs
       - name: Completed Building
         working-directory: '../docs'
-        run: | 
+        run: |
           git init -b gh-pages
           git remote add origin git@github.com:tgsnake/core -m gh-pages
           git config user.email github-actions@github.com

@@ -7,9 +7,15 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { TCP } from './tcp';
 import { bigintToBuffer } from '../../helpers';
 
+/**
+ * @class TCPAbridged
+ * One of the TCP classes that implements The lightest protocol available.
+ * see https://core.telegram.org/mtproto/mtproto-transports#abridged
+ */
 export class TCPAbridged extends TCP {
   constructor() {
     super();

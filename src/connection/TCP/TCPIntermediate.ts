@@ -7,8 +7,14 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { TCP } from './tcp';
 
+/**
+ * @class TCPIntermediate
+ * One of the TCP classes that implements simple level connection.
+ * see https://core.telegram.org/mtproto/mtproto-transports#intermediate
+ */
 export class TCPIntermediate extends TCP {
   constructor() {
     super();

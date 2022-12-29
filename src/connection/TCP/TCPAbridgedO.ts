@@ -7,14 +7,23 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { TCP } from './tcp';
 import { includesBuffer, sliceBuffer, bigintToBuffer } from '../../helpers';
 import * as crypto from 'crypto';
 import { ctr256Encrypt, ctr256Decrypt } from '../../crypto/Aes';
 
+/**
+ * @class TCPAbridgedO
+ * The TCPObfuscated wraped with TCPAbridged.
+ * see https://core.telegram.org/mtproto/mtproto-transports#transport-obfuscation
+ */
 export class TCPAbridgedO extends TCP {
+  /** @hidden */
   private _reserved!: Array<Buffer>;
+  /** @hidden */
   private _encrypt!: Array<Buffer>;
+  /** @hidden */
   private _decrypt!: Array<Buffer>;
   constructor() {
     super();

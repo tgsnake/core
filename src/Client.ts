@@ -110,27 +110,47 @@ export interface SigInUser {
 }
 
 export class Client {
+  /** @hidden */
   _apiId!: number;
+  /** @hidden */
   _apiHash!: string;
+  /** @hidden */
   _storage!: AbstractSession;
+  /** @hidden */
   _testMode!: boolean;
+  /** @hidden */
   _ipv6!: boolean;
+  /** @hidden */
   _deviceModel!: string;
+  /** @hidden */
   _systemVersion!: string;
+  /** @hidden */
   _appVersion!: string;
+  /** @hidden */
   _systemLangCode!: string;
+  /** @hidden */
   _langCode!: string;
+  /** @hidden */
   _maxRetries!: number;
+  /** @hidden */
   _isCdn!: boolean;
+  /** @hidden */
   _sleepTreshold!: number;
+  /** @hidden */
   _takeout!: boolean;
+  /** @hidden */
   _noUpdates!: boolean;
-
+  /** @hidden */
   _takeoutId!: bigint;
+  /** @hidden */
   _dcId!: string;
+  /** @hidden */
   _session!: Session;
+  /** @hidden */
   _isConnected!: boolean;
+  /** @hidden */
   _connectionMode: number = 2;
+  /** @hidden */
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
    * Client Constructor.
@@ -842,6 +862,7 @@ export class Client {
     }
     return toPrint;
   }
+  /** @hidden */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

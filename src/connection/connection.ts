@@ -7,11 +7,16 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import * as TCP from './TCP';
 import { DataCenter } from '../session';
 import { sleep } from '../helpers';
 import { Logger } from '../Logger';
+import { Mutex } from 'async-mutex';
 
+/**
+ * Several TCP models are available.
+ */
 export const TCPModes = {
   0: TCP.TCPFull,
   1: TCP.TCPAbridged,
@@ -28,15 +33,29 @@ export type TypeTCP =
   | TCP.TCPIntermediateO;
 
 export class Connection {
+  /**
+   * Limitations of attempts that must be made to connect to the telegram data center server using the available TCP Modes.
+   * If it exceeds the specified amount, it will return an error.
+   */
   maxRetries!: number;
+  /** @hidden */
   private _dcId!: number;
+  /** @hidden */
   private _test!: boolean;
+  /** @hidden */
   private _ipv6!: boolean;
+  /** @hidden */
   private _media!: boolean;
+  /** @hidden */
   private _mode!: TypeTCP;
+  /** @hidden */
   private _address!: [ip: string, port: number];
+  /** @hidden */
   private _protocol!: TypeTCP;
+  /** @hidden */
   private _connected!: boolean;
+  /** @hidden */
+  private _mutex: Mutex = new Mutex();
   constructor(
     dcId: number,
     test: boolean,
@@ -84,7 +103,8 @@ export class Connection {
     await this._protocol.send(data);
   }
   async recv() {
-    return await this._protocol.recv();
+    const data = await this._protocol.recv();
+    return data;
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
@@ -100,6 +120,7 @@ export class Connection {
     }
     return toPrint;
   }
+  /** @hidden */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -114,6 +135,7 @@ export class Connection {
     }
     return toPrint;
   }
+  /** @hidden */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

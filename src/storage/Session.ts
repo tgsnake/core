@@ -7,10 +7,18 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { Logger } from '../Logger';
 import { AbstractSession } from './Abstract';
 import { Raw } from '../raw';
 import { getChannelId } from '../helpers';
+
+/**
+ * Get a valid InputPeer from the available data session.
+ * @param {BigInt} id - id of user or channel or group or bot which will be changed to a valid InputPeer.
+ * @param {BigInt} accessHash - access hash of user or channel or group or bot which will be changed to a valid InputPeer.
+ * @param {Boolean} type - Type of InputPeer to be assigned. The type must be `user` or `bot` or `group` or `channel` or `supergroup`
+ */
 export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
   if (type === 'bot' || type === 'user') {
     return new Raw.InputPeerUser({
@@ -31,6 +39,10 @@ export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
   }
 }
 
+/**
+ * @class BaseSession
+ * A class that is the parent of all existing session classes.Any session class can extend this class to get all the functionality it needs.
+ */
 export class BaseSession extends AbstractSession {
   protected _ip!: string;
   protected _dcId: number = 2;
@@ -175,6 +187,7 @@ export class BaseSession extends AbstractSession {
     }
     return toPrint;
   }
+  /** @hidden */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -189,6 +202,7 @@ export class BaseSession extends AbstractSession {
     }
     return toPrint;
   }
+  /** @hidden */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

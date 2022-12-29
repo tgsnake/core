@@ -7,10 +7,16 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { Logger } from '../Logger';
 import { BaseSession } from './Session';
 import { BytesIO } from '../raw';
 
+/**
+ * @class StringSession
+ * Convert valid base64 string to telegram session.
+ * This class supports several session strings from popular frameworks. Such as Telethon, Pyrogram, and GramJS.
+ */
 export class StringSession extends BaseSession {
   constructor(session: string) {
     super();

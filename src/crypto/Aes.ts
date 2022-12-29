@@ -7,9 +7,11 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import * as crypto from 'crypto';
 import { Logger } from '../Logger';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers';
+
 /**
  * Encrypt content with AES-256-IGE mode.
  * @param {Buffer} data - Content will be encrypted.

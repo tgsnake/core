@@ -7,20 +7,39 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import * as net from 'net';
 import { Logger } from '../Logger';
 import { WSError } from '../errors';
+import { Mutex } from 'async-mutex';
 
+const mutex = new Mutex();
+
+/**
+ * Promised version of @link {net.Socket}
+ */
 export class WebSocket {
+  /** @hidden */
   private _client!: any;
+  /** @hidden */
   private _data!: Buffer;
+  /** @hidden */
   private _read!: boolean | Promise<boolean>;
+  /** @hidden */
   private _promisedReading!: (value?: any) => void;
+  /**
+   * Whether the current connection is running or not.
+   */
   _connectionClosed!: boolean;
   constructor() {
     this._data = Buffer.alloc(0);
     this._connectionClosed = true;
   }
+  /**
+   * Connecting @link {net.Socket} to the server asynchronously.
+   * @param {String} ip - IP Server
+   * @param {Number} port - Port server
+   */
   async connect(ip: string, port: number) {
     this._client = new net.Socket();
     this._connectionClosed = false;
@@ -43,6 +62,9 @@ export class WebSocket {
       });
     });
   }
+  /**
+   * Disconnect @link {net.Socket} from server.
+   */
   async destroy() {
     if (this._client && !this._connectionClosed) {
       this._connectionClosed = true;
@@ -53,24 +75,48 @@ export class WebSocket {
       return await this._client.unref();
     }
   }
+  /**
+   * Receive data updates from the server asynchronously.
+   * If the client is not connected to the client, it will return an @link {WSError.Disconnected} error.
+   */
   async recv() {
     if (this._client && !this._connectionClosed) {
-      this._client.on('data', (data: Buffer) => {
-        Logger.debug(`Receive ${data.length} bytes data`);
-        this._data = Buffer.concat([this._data, data]);
-        if (this._promisedReading) this._promisedReading(true);
+      this._client.on('data', async (data: Buffer) => {
+        const release = await mutex.acquire();
+        try {
+          Logger.debug(`Receive ${data.length} bytes data`);
+          this._data = Buffer.concat([this._data, data]);
+          if (this._promisedReading) this._promisedReading(true);
+        } finally {
+          release();
+        }
       });
     } else {
       throw new WSError.Disconnected();
     }
   }
+  /**
+   * Send request to the server asynchronously.
+   * If the client is not connected to the client, it will return an @link {WSError.Disconnected} error.
+   * @param {Buffer} data - The request will be sent to the server. Data must be a buffer.
+   */
   async send(data: Buffer) {
     if (this._client && !this._connectionClosed) {
-      this._client.write(data);
+      const release = await mutex.acquire();
+      try {
+        this._client.write(data);
+      } finally {
+        release();
+      }
     } else {
       throw new WSError.Disconnected();
     }
   }
+  /**
+   * Read data updates from the server asynchronously.
+   * If the client is not connected to the client, it will return an @link {WSError.ReadClosed} error.
+   * @param {Number} length - How many bytes of data to read.
+   */
   async read(length: number) {
     if (this._connectionClosed) {
       throw new WSError.ReadClosed();
@@ -88,6 +134,11 @@ export class WebSocket {
     }
     return tr;
   }
+  /**
+   * Read data updates from the server asynchronously.
+   * If the client is not connected to the client, it will return an @link {WSError.ReadClosed} error.
+   * @param {Number} length - How many bytes of data to read.
+   */
   async reading(length: number) {
     if (this._client && !this._connectionClosed) {
       let data = Buffer.alloc(0);
@@ -115,6 +166,7 @@ export class WebSocket {
     }
     return toPrint;
   }
+  /** @hidden */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -129,6 +181,7 @@ export class WebSocket {
     }
     return toPrint;
   }
+  /** @hidden */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
