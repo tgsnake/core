@@ -12,7 +12,7 @@ import { Mutex } from 'async-mutex';
 import { WebSocket } from '../webSocket';
 import { Timeout } from '../../Timeout';
 import { Logger } from '../../Logger';
-import { sleep } from '../../helpers'
+import { sleep } from '../../helpers';
 /**
  * @class TCP
  * This class is for connecting to telegram server.
@@ -25,7 +25,7 @@ export class TCP {
   /** @hidden */
   private _task!: Timeout;
   /** @hidden */
-  private _mutex:Mutex = new Mutex();
+  private _mutex: Mutex = new Mutex();
   /**
    * The timeout used to run the function of the @link {WebSocket}. If more than the time has been found, it will return a TimeoutError error.
    */
@@ -41,11 +41,11 @@ export class TCP {
    * @param {Number} port - Port for connecting to telegram data center.
    */
   async connect(ip: string, port: number) {
-    const release = await this._mutex.acquire()
-    try{
+    const release = await this._mutex.acquire();
+    try {
       await this._client.connect(ip, port);
     } finally {
-      release()
+      release();
     }
   }
   /**
@@ -53,7 +53,7 @@ export class TCP {
    */
   async close() {
     await this._task.clear();
-    await sleep(1)
+    await sleep(1);
     return await this._client.destroy();
   }
   /**

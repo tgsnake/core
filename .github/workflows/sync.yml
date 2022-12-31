@@ -1,0 +1,23 @@
+name: Sync the TLSchema
+on:
+  schedule:
+    - cron: '0 */5 * * *'
+
+jobs:
+  sync-tl:
+    name: Setup NodeJS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Sync TLSchema
+        run: |
+          yarn install
+          yarn build:sync
+          git config user.email github-actions@github.com
+          git config user.name github-actions
+          git pull origin master
+          git commit -am "Update TLSchema"
+          git push origin master
