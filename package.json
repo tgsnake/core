@@ -4,7 +4,7 @@
   "description": "Pure Telegram MTProto framework for nodejs",
   "main": "./lib/src/index.js",
   "devDependencies": {
-    "@types/node": "18.11.17",
+    "@types/node": "18.11.18",
     "fast-csv": "4.3.6",
     "prettier": "2.8.1",
     "ts-node": "10.9.1",

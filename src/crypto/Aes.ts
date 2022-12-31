@@ -19,7 +19,7 @@ import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } fr
  * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`Encrypting ${data.length} bytes data with AES-256-IGE`);
+  Logger.debug(`[4] Encrypting ${data.length} bytes data with AES-256-IGE`);
   const pad = mod(data.length, 16);
   if (pad) {
     data = Buffer.concat([data, crypto.randomBytes(16 - pad)]);
@@ -33,7 +33,7 @@ export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
  * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`Decrypting ${data.length} bytes data with AES-256-IGE`);
+  Logger.debug(`[5] Decrypting ${data.length} bytes data with AES-256-IGE`);
   return ige(data, key, iv, false);
 }
 /**
@@ -43,7 +43,7 @@ export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
  * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer) {
-  Logger.debug(`Encrypting ${data.length} bytes data with AES-256-CTR`);
+  Logger.debug(`[6] Encrypting ${data.length} bytes data with AES-256-CTR`);
   return ctr(data, key, iv, true);
 }
 /**
@@ -53,7 +53,7 @@ export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer) {
  * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ctr256Decrypt(data: Buffer, key: Buffer, iv: Buffer) {
-  Logger.debug(`Decrypting ${data.length} bytes data with AES-256-CTR`);
+  Logger.debug(`[7] Decrypting ${data.length} bytes data with AES-256-CTR`);
   return ctr(data, key, iv, false);
 }
 /**

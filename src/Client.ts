@@ -212,7 +212,7 @@ export class Client {
    */
   async connect(): Promise<void> {
     if (!this._isConnected) {
-      Logger.info(`Using version: ${Version.version} - ${Version.getType()}`);
+      Logger.info(`[100] Using version: ${Version.version} - ${Version.getType()}`);
       await this._loadSession();
 
       this._session = new Session(
@@ -300,7 +300,7 @@ export class Client {
         }
       }
     }
-    Logger.info('The confirmation code has been sent.');
+    Logger.info('[101] The confirmation code has been sent.');
     while (true) {
       let code = await auth.code();
       try {
@@ -323,10 +323,10 @@ export class Client {
                 }
                 return await this.checkPassword(await auth.password(await this.getPasswordHint()));
               } else {
-                Logger.info('Look you are forgotten the password');
+                Logger.info('[102] Look you are forgotten the password');
                 if (auth.recoveryCode) {
                   let emailPattern = await this.sendRecoveryCode();
-                  Logger.info(`The recovery code has been sent to ${emailPattern}`);
+                  Logger.info(`[103] The recovery code has been sent to ${emailPattern}`);
                   while (true) {
                     let recoveryCode = await auth.recoveryCode();
                     try {
@@ -577,7 +577,7 @@ export class Client {
     if (!this._storage.isBot && this._takeout) {
       let takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
       this._takeoutId = takeout.id;
-      Logger.warning(`Takeout session ${this._takeoutId} initiated.`);
+      Logger.warning(`[104] Takeout session ${this._takeoutId} initiated.`);
     }
     await this.invoke(new Raw.updates.GetState());
     return await this.getMe();
@@ -588,7 +588,7 @@ export class Client {
   async logout(): Promise<any> {
     await this.invoke(new Raw.auth.LogOut());
     await this._storage.delete();
-    Logger.info(`Logged out.`);
+    Logger.info(`[105] Logged out.`);
     return process.exit(0); // kill the process
   }
   /**
@@ -628,7 +628,7 @@ export class Client {
     sleepTreshold: number = this._sleepTreshold
   ) {
     if (!this._isConnected) {
-      throw new Errors.ClientDisconnected();
+      throw new Errors.ClientError.ClientDisconnected();
     }
     if (this._noUpdates) {
       query = new Raw.InvokeWithoutUpdates({ query });
@@ -710,7 +710,7 @@ export class Client {
     peerId: bigint | string
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | Raw.InputUserSelf> {
     if (!this._isConnected) {
-      throw new Errors.ClientDisconnected();
+      throw new Errors.ClientError.ClientDisconnected();
     }
     if (typeof peerId === 'bigint') {
       peerId as bigint;

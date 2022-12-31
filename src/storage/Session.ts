@@ -113,17 +113,19 @@ export class BaseSession extends AbstractSession {
   async delete() {}
   async save() {}
   async move(session: AbstractSession) {
-    Logger.info(`Moving session from ${this.constructor.name} to ${session.constructor.name}.`);
+    Logger.info(
+      `[73] Moving session from ${this.constructor.name} to ${session.constructor.name}.`
+    );
     await session.setAddress(this._dcId, this._ip, this._port, this._testMode);
     await session.setAuthKey(this._authKey, this._dcId);
     await session.setApiId(this._apiId);
     await session.setIsBot(this._isBot);
     await session.setUserId(this._userId);
     Logger.info(
-      `Successfully move session from ${this.constructor.name} to ${session.constructor.name}.`
+      `[74] Successfully move session from ${this.constructor.name} to ${session.constructor.name}.`
     );
     Logger.debug(
-      `Deleting current session, cause: moved to another instance (${session.constructor.name}).`
+      `[75] Deleting current session, cause: moved to another instance (${session.constructor.name}).`
     );
     await this.delete();
   }
@@ -132,20 +134,20 @@ export class BaseSession extends AbstractSession {
       [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
     >
   ) {
-    Logger.debug(`Updating ${peers.length} peers`);
+    Logger.debug(`[76] Updating ${peers.length} peers`);
     for (let peer of peers) {
       this._peers.set(peer[0], peer);
     }
   }
   async getPeerById(id: bigint) {
-    Logger.debug(`Getting peer by id: ${id}`);
+    Logger.debug(`[77] Getting peer by id: ${id}`);
     let peer = this._peers.get(id);
     if (peer) {
       return getInputPeer(peer[0], peer[1], peer[2]);
     }
   }
   async getPeerByUsername(username: string) {
-    Logger.debug(`Getting peer by username: ${username}`);
+    Logger.debug(`[78] Getting peer by username: ${username}`);
     for (let [id, peer] of this._peers) {
       if (peer[3] && peer[3] === username) {
         return getInputPeer(peer[0], peer[1], peer[2]);
@@ -153,7 +155,7 @@ export class BaseSession extends AbstractSession {
     }
   }
   async getPeerByPhoneNumber(phoneNumber: string) {
-    Logger.debug(`Getting peer by phone number: ${phoneNumber}`);
+    Logger.debug(`[79] Getting peer by phone number: ${phoneNumber}`);
     for (let [id, peer] of this._peers) {
       if (peer[4] && peer[4] === phoneNumber) {
         return getInputPeer(peer[0], peer[1], peer[2]);
@@ -170,7 +172,7 @@ export class BaseSession extends AbstractSession {
     bytes = Buffer.concat([bytes, packLong(this._userId)]); // 270
     bytes = Buffer.concat([bytes, Buffer.alloc(1)]);
     bytes.writeUInt8(this._isBot ? 1 : 0, 270); // 271
-    Logger.debug(`Exporting ${bytes.length} bytes of session`);
+    Logger.debug(`[80] Exporting ${bytes.length} bytes of session`);
     return bytes.toString('base64url').replace(/=/g, '');
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {

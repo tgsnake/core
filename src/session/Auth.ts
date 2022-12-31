@@ -24,6 +24,7 @@ import {
   bigIntPow,
 } from '../helpers';
 import { Logger } from '../Logger';
+
 export class Auth {
   MAX_RETRIES: number = 5;
   dcId!: number;
@@ -63,31 +64,31 @@ export class Auth {
       // using TCPIntermediate
       this.connection = new Connection(this.dcId, this.testMode, this.ipv6);
       try {
-        Logger.debug(`Start creating a new auth key on DC${this.dcId}`);
+        Logger.debug(`[11] Start creating a new auth key on DC${this.dcId}`);
         await this.connection.connect();
 
         // step 1 - 2
         let nonce = toBigint(Buffer.from(crypto.randomBytes(16)), false, true);
-        Logger.debug(`Send ResPq: ${nonce}`);
+        Logger.debug(`[12] Send ResPq: ${nonce}`);
         let resPq: Raw.ResPQ = await this.invoke(new Raw.ReqPqMulti({ nonce }));
-        Logger.debug(`Got ResPq: ${resPq.serverNonce}`);
-        Logger.debug(`Server public key fingerprints: ${resPq.serverPublicKeyFingerprints}`);
+        Logger.debug(`[13] Got ResPq: ${resPq.serverNonce}`);
+        Logger.debug(`[14] Server public key fingerprints: ${resPq.serverPublicKeyFingerprints}`);
         let fingerprints;
         if (!resPq.serverPublicKeyFingerprints || !resPq.serverPublicKeyFingerprints.length)
           throw new Error('Public key not found');
         for (let i of resPq.serverPublicKeyFingerprints) {
           if (RSA.PublicKey.get(BigInt(i))) {
-            Logger.debug(`Using fingerprint: ${i}`);
+            Logger.debug(`[15] Using fingerprint: ${i}`);
             fingerprints = BigInt(i);
             break;
           } else {
-            Logger.debug(`Fingerprint unknown: ${i}`);
+            Logger.debug(`[16] Fingerprint unknown: ${i}`);
           }
         }
 
         // step 3
         let pq = toBigint(resPq.pq, false);
-        Logger.debug(`Start PQ factorization: ${pq}`);
+        Logger.debug(`[17] Start PQ factorization: ${pq}`);
         let start = Math.floor(Date.now() / 1000);
         let g = Prime.decompose(pq);
         let [p, q] = [BigInt(g), BigInt(pq / g)].sort((a: bigint, b: bigint) => {
@@ -96,7 +97,9 @@ export class Auth {
           return 0;
         });
         Logger.debug(
-          `Done PQ factorization (${Math.round(Math.floor(Date.now() / 1000) - start)}s): ${p} ${q}`
+          `[18] Done PQ factorization (${Math.round(
+            Math.floor(Date.now() / 1000) - start
+          )}s): ${p} ${q}`
         );
 
         // step 4
@@ -115,11 +118,11 @@ export class Auth {
         let padding = Buffer.from(crypto.randomBytes(mod(-(data.length + sha.length), 255)));
         let hash = Buffer.concat([sha, data, padding]);
         let encryptedData = RSA.encrypt(hash, fingerprints);
-        Logger.debug(`Length of encrypted data: ${encryptedData.length}`);
-        Logger.debug(`Done encrypt data with RSA`);
+        Logger.debug(`[19] Length of encrypted data: ${encryptedData.length}`);
+        Logger.debug(`[20] Done encrypt data with RSA`);
 
         // Step 5. TODO: Handle "ServerDhParamsFail". Code assumes response is ok
-        Logger.debug(`Send ReqDhParams`);
+        Logger.debug(`[21] Send ReqDhParams`);
         let serverDh = await this.invoke(
           new Raw.ReqDhParams({
             nonce: nonce,
@@ -174,11 +177,11 @@ export class Auth {
         let answer = new BytesIO(answerWithHash);
         answer.seek(20, 1); // skip hash
         let serverDhInnerData = TLObject.read(answer);
-        Logger.debug('Done decrypting answer');
+        Logger.debug('[22] Done decrypting answer');
 
         let dhPrime = toBigint(serverDhInnerData.dhPrime, false);
         let deltaTime = serverDhInnerData.serverTime - Math.floor(Date.now() / 1000);
-        Logger.debug(`Delta time: ${deltaTime}`);
+        Logger.debug(`[23] Delta time: ${deltaTime}`);
 
         // step 6
         let b = toBigint(Buffer.from(crypto.randomBytes(256)), false);
@@ -193,8 +196,8 @@ export class Auth {
         padding = Buffer.from(crypto.randomBytes(mod(-(data.length + sha.length), 16)));
         hash = Buffer.concat([sha, data, padding]);
         encryptedData = AES.ige256Encrypt(hash, tempAesKey, tempAesIv);
-        Logger.debug(`Length of encrypted data: ${encryptedData.length}`);
-        Logger.debug(`Send SetClientDhParams`);
+        Logger.debug(`[24] Length of encrypted data: ${encryptedData.length}`);
+        Logger.debug(`[25] Send SetClientDhParams`);
 
         let setClientDhParamsAnswer = await this.invoke(
           new Raw.SetClientDhParams({
@@ -210,7 +213,7 @@ export class Auth {
         let authKey = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
         // Security Check
         SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
-        Logger.debug('DH parameters check: OK');
+        Logger.debug('[26] DH parameters check: OK');
 
         // https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
         // TSError : Operator '<' cannot be applied to types 'boolean' and 'bigint'.
@@ -223,7 +226,7 @@ export class Auth {
         SecurityCheckMismatch.check(
           BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64)
         );
-        Logger.debug('gA and gB validation: OK');
+        Logger.debug('[27] gA and gB validation: OK');
 
         // https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
         SecurityCheckMismatch.check(
@@ -231,7 +234,7 @@ export class Auth {
             .slice(0, 20)
             .equals(crypto.createHash('sha1').update(serverDhInnerData.write()).digest())
         );
-        Logger.debug('SHA1 hash values check: OK');
+        Logger.debug('[28] SHA1 hash values check: OK');
 
         //https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
         SecurityCheckMismatch.check(nonce === resPq.nonce);
@@ -239,18 +242,18 @@ export class Auth {
         SecurityCheckMismatch.check(resPq.serverNonce === serverDh.serverNonce);
         SecurityCheckMismatch.check(resPq.nonce === setClientDhParamsAnswer.nonce);
         SecurityCheckMismatch.check(resPq.serverNonce === setClientDhParamsAnswer.serverNonce);
-        Logger.debug('Nonce fields check: OK');
+        Logger.debug('[29] Nonce fields check: OK');
 
         // Step 9
         let serverSalt = AES.xor(
           toBuffer(newNonce, 32, true, true).slice(0, 8),
           toBuffer(resPq.serverNonce, 16, true, true).slice(0, 8)
         );
-        Logger.debug(`Server salt: ${toBigint(serverSalt, true)}`);
-        Logger.debug(`Done auth key exchange: ${setClientDhParamsAnswer.className}`);
+        Logger.debug(`[30] Server salt: ${toBigint(serverSalt, true)}`);
+        Logger.debug(`[31] Done auth key exchange: ${setClientDhParamsAnswer.className}`);
         return authKey;
       } catch (error: any) {
-        Logger.error('Error when trying to make auth key: ', error);
+        Logger.error('[32] Error when trying to make auth key: ', error);
         if (retries > 0) {
           retries--;
         } else {

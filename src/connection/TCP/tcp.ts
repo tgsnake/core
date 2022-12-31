@@ -8,9 +8,11 @@
  * it under the terms of the MIT License as published.
  */
 
+import { Mutex } from 'async-mutex';
 import { WebSocket } from '../webSocket';
 import { Timeout } from '../../Timeout';
 import { Logger } from '../../Logger';
+import { sleep } from '../../helpers'
 /**
  * @class TCP
  * This class is for connecting to telegram server.
@@ -18,14 +20,12 @@ import { Logger } from '../../Logger';
  * You can extend this class to make the MTProto transport (see https://core.telegram.org/mtproto/mtproto-transports)
  */
 export class TCP {
-  /**
-   * @hidden
-   */
+  /** @hidden */
   private _client!: WebSocket;
-  /**
-   * @hidden
-   */
+  /** @hidden */
   private _task!: Timeout;
+  /** @hidden */
+  private _mutex:Mutex = new Mutex();
   /**
    * The timeout used to run the function of the @link {WebSocket}. If more than the time has been found, it will return a TimeoutError error.
    */
@@ -41,14 +41,20 @@ export class TCP {
    * @param {Number} port - Port for connecting to telegram data center.
    */
   async connect(ip: string, port: number) {
-    return await this._client.connect(ip, port);
+    const release = await this._mutex.acquire()
+    try{
+      await this._client.connect(ip, port);
+    } finally {
+      release()
+    }
   }
   /**
    * Disconnect from telegram data center.
    */
   async close() {
     await this._task.clear();
-    this._client.destroy();
+    await sleep(1)
+    return await this._client.destroy();
   }
   /**
    * Send requests to telegram using websocket. The message must be of bytes supported by telegram for the message to be valid.

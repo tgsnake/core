@@ -72,8 +72,9 @@ export class WebSocket {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
       await this._client.destroy();
-      return await this._client.unref();
+      await this._client.unref();
     }
+    return this._connectionClosed;
   }
   /**
    * Receive data updates from the server asynchronously.
@@ -84,7 +85,7 @@ export class WebSocket {
       this._client.on('data', async (data: Buffer) => {
         const release = await mutex.acquire();
         try {
-          Logger.debug(`Receive ${data.length} bytes data`);
+          Logger.debug(`[3] Receive ${data.length} bytes data`);
           this._data = Buffer.concat([this._data, data]);
           if (this._promisedReading) this._promisedReading(true);
         } finally {

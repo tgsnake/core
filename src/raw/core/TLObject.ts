@@ -47,7 +47,7 @@ export class TLObject {
   }
   static read(data: BytesIO, ...args: Array<any>): any {
     const id = data.readUInt32LE(4);
-    Logger.debug(`Reading TLObject with id: ${id.toString(16)} (${Object[id]})`);
+    Logger.debug(`[10] Reading TLObject with id: ${id.toString(16)} (${Object[id]})`);
     return getModule(Object[id]).read(data, ...args);
   }
   static write(...args: Array<any>): Buffer {

@@ -13,6 +13,7 @@ import { DataCenter } from '../session';
 import { sleep } from '../helpers';
 import { Logger } from '../Logger';
 import { Mutex } from 'async-mutex';
+import { ClientError } from '../errors';
 
 /**
  * Several TCP models are available.
@@ -35,7 +36,7 @@ export type TypeTCP =
 export class Connection {
   /**
    * Limitations of attempts that must be made to connect to the telegram data center server using the available TCP Modes.
-   * If it exceeds the specified amount, it will return an error.
+   * If it exceeds the specified amount, it will return an @link {ClientError.ClientFailed} error.
    */
   maxRetries!: number;
   /** @hidden */
@@ -73,11 +74,14 @@ export class Connection {
     this._connected = false;
   }
   async connect() {
+    if (this._protocol && this._connected) {
+      throw new ClientError.ClientReady();
+    }
     for (let i = 0; i < this.maxRetries; i++) {
       //@ts-ignore
       this._protocol = new this._mode();
       try {
-        Logger.debug(`Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`);
+        Logger.debug(`[1] Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`);
         await this._protocol.connect(this._address[0], this._address[1]);
         this._connected = true;
         break;
@@ -87,24 +91,26 @@ export class Connection {
       }
     }
     if (!this._connected) {
-      throw new Error('Connection Failed.');
+      throw new ClientError.ClientFailed();
     }
     return this._connected;
   }
   async close() {
     if (!this._protocol || !this._connected) {
-      throw new Error('Already unconnected.');
+      throw new ClientError.ClientNotReady();
     }
-    await this._protocol.close();
     this._connected = false;
+    await this._protocol.close();
   }
   async send(data: Buffer) {
-    Logger.debug(`Sending ${data.length} bytes data`);
+    Logger.debug(`[2] Sending ${data.length} bytes data.`);
     await this._protocol.send(data);
   }
   async recv() {
-    const data = await this._protocol.recv();
-    return data;
+    if (!this._connected) {
+      throw new ClientError.ClientDisconnected();
+    }
+    return await this._protocol.recv();
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
