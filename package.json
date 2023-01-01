@@ -17,7 +17,7 @@
     "build:api": "node ./generator/api",
     "build:license": "node ./generator/license",
     "build:error": "node ./generator/error",
-    "build:sync" : "node ./generator/sync-tl",
+    "build:sync": "node ./generator/sync-tl",
     "build:docs": "NODE_OPTIONS=--max_old_space_size=4096 typedoc",
     "prepare": "yarn build",
     "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."
