@@ -43,38 +43,41 @@ client.start({
 
 ### Exporting Session.
 
-For exporting string session, use `client.exportSession()`. It will be return `Promise<string>`.   
+For exporting string session, use `client.exportSession()`. It will be return `Promise<string>`.
 
 ```typescript
-const exported = await client.exportSession()
-```  
-  
-----  
-  
+const exported = await client.exportSession();
+```
+
+---
+
 ## Development Guidelines
-- Cloning Repository  
+
+- Cloning Repository
 
 ```bash
 $ git clone https://github.com/tgsnake/core
-```  
-- Installing Dependencies  
+```
 
-> Required to use yarn!  
-  
+- Installing Dependencies
+
+> Required to use yarn!
+
 ```bash
 $ yarn install
-```  
+```
+
 - Building TLSchema and Error class
 
 ```bash
-$ yarn build:api 
+$ yarn build:api
 $ yarn build:error
-```  
-- Testing your app!
-Create `test` folder and you can create `index.js` file for testing the app. This folder will automatically ignored and not pushing to GitHub.  
-   
-----  
-  
+```
+
+- Testing your app! Create `test` folder and you can create `index.js` file for testing the app. This folder will automatically ignored and not pushing to GitHub.
+
+---
+
 ## Notes
 
 - This framework is porting of pyrogram for connecting to telegram server. I have dedicated 2 months of my time to complete this framework from scratch. Research after research I do to improve this framework. So big thanks for pyrogram for the source, without that source code, this framework maybe unavailable.

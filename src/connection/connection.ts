@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -100,6 +100,7 @@ export class Connection {
       throw new ClientError.ClientNotReady();
     }
     this._connected = false;
+    await sleep(10);
     await this._protocol.close();
   }
   async send(data: Buffer) {

@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -47,7 +47,7 @@ export class TCP {
   async connect(ip: string, port: number) {
     const release = await this._mutex.acquire();
     try {
-      await this._socks.connect(port,ip);
+      await this._socks.connect(port, ip);
     } finally {
       release();
     }

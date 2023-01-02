@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -245,7 +245,7 @@ export class Session {
   private _pingWorker() {
     const ping = async () => {
       try {
-        if(!this._isConnected) return; // kill the ping worker when client is disconnected
+        if (!this._isConnected) return; // kill the ping worker when client is disconnected
         Logger.debug(`[55] Ping to telegram server.`);
         await this._send(
           new Raw.PingDelayDisconnect({
@@ -271,7 +271,7 @@ export class Session {
         return;
       }
       if (!waiting) {
-        try{
+        try {
           let packet = await this._connection.recv();
           if (packet !== undefined && packet.length !== 4) {
             waiting = true; // block the network task until previous task is done
@@ -290,9 +290,9 @@ export class Session {
               return this.restart();
             }
           }
-        } catch (error:any){
-          if(!this._isConnected){ 
-            break; 
+        } catch (error: any) {
+          if (!this._isConnected) {
+            break;
           } else {
             throw error;
           }
