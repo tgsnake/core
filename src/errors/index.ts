@@ -10,7 +10,6 @@
 
 export { RPCError, UnknownError } from './RpcError';
 export * as Exceptions from './exceptions';
-export * as WSError from './WebSocket';
 export * as ClientError from './Client';
 
 export class TimeoutError extends Error {

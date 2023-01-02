@@ -245,6 +245,7 @@ export class Session {
   private _pingWorker() {
     const ping = async () => {
       try {
+        if(!this._isConnected) return; // kill the ping worker when client is disconnected
         Logger.debug(`[55] Ping to telegram server.`);
         await this._send(
           new Raw.PingDelayDisconnect({
@@ -270,22 +271,30 @@ export class Session {
         return;
       }
       if (!waiting) {
-        let packet = await this._connection.recv();
-        if (packet !== undefined && packet.length !== 4) {
-          waiting = true; // block the network task until previous task is done
-          const release = await this._mutex.acquire();
-          try {
-            await this._handlePacket(packet);
-          } finally {
-            release();
+        try{
+          let packet = await this._connection.recv();
+          if (packet !== undefined && packet.length !== 4) {
+            waiting = true; // block the network task until previous task is done
+            const release = await this._mutex.acquire();
+            try {
+              await this._handlePacket(packet);
+            } finally {
+              release();
+            }
+            waiting = false; // unblock the network task
+          } else {
+            if (packet) {
+              Logger.warning(`[59] Server sent "${packet.readInt32LE(0)}"`);
+            }
+            if (this._isConnected) {
+              return this.restart();
+            }
           }
-          waiting = false; // unblock the network task
-        } else {
-          if (packet) {
-            Logger.warning(`[59] Server sent "${packet.readInt32LE(0)}"`);
-          }
-          if (this._isConnected) {
-            return this.restart();
+        } catch (error:any){
+          if(!this._isConnected){ 
+            break; 
+          } else {
+            throw error;
           }
         }
       }

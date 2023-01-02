@@ -45,7 +45,8 @@
   "dependencies": {
     "@tgsnake/log": "latest",
     "async-mutex": "0.4.0",
-    "big-integer": "1.6.51"
+    "big-integer": "1.6.51",
+    "promise-socket": "7.0.0"
   },
   "isBeta": true,
   "isPrivate": true

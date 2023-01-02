@@ -5,7 +5,7 @@ You will se like this : `[n] message`.
 So, if you want to know the location of the logger called, please see the list below.
 
 `1 – 2` : level is `(debug)` located on `src/connection/connection.ts`  
-`3` : level is `(debug)` located on `src/connection/webSocket.ts`  
+`3` : level is `(debug)` located on `src/connection/webSocket.ts` _(removed)_  
 `4 – 7` : level is `(debug)` located on `src/crypto/Aes.ts`  
 `8 – 9` : level is `(debug)` as RPCError, parent class located on`src/errors/RPCError.ts`  
 `10` : level is `(debug)` located on `src/raw/core/TLObject.ts`  
