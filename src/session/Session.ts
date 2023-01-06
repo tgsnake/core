@@ -12,7 +12,7 @@ import * as crypto from 'crypto';
 import * as os from 'os';
 import { Mutex } from 'async-mutex';
 import { Logger } from '../Logger';
-import { Connection } from '../connection/connection';
+import { Connection, ProxyInterface } from '../connection/connection';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw';
 import * as Mtproto from '../crypto/Mtproto';
 import * as Errors from '../errors';
@@ -46,6 +46,7 @@ export class Session {
   private _dcId!: number;
   private _authKey!: Buffer;
   private _testMode!: boolean;
+  private _proxy?: ProxyInterface;
   private _isMedia!: boolean;
   private _authKeyId!: Buffer;
   private _connection!: Connection;
@@ -69,12 +70,14 @@ export class Session {
     dcId: number,
     authKey: Buffer,
     testMode: boolean,
+    proxy?: ProxyInterface,
     isMedia: boolean = false
   ) {
     this._client = client;
     this._dcId = dcId;
     this._authKey = authKey;
     this._testMode = testMode;
+    this._proxy = proxy;
     this._isMedia = isMedia;
     this._authKeyId = crypto.createHash('sha1').update(this._authKey).digest().slice(-8);
     this.MAX_RETRIES = client._maxRetries ?? 5;
@@ -192,13 +195,7 @@ export class Session {
       this._results.set(BigInt(msgId), new Results());
     }
     Logger.debug(`[50] Sending msg id ${msgId}, has ${msg.write().length} bytes message.`);
-    let payload = Mtproto.pack(
-      msg,
-      this._salt,
-      this._sessionId,
-      this._authKey,
-      this._authKeyId
-    );
+    let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
       Logger.debug(`[51] Sending ${payload.length} bytes payload.`);
       await this._connection.send(payload);
@@ -386,6 +383,7 @@ export class Session {
         this._dcId,
         this._testMode,
         this._client._ipv6,
+        this._proxy,
         this._isMedia,
         this._client._connectionMode
       );

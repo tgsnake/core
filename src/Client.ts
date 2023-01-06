@@ -17,8 +17,13 @@ import { Logger } from './Logger';
 import * as Version from './Version';
 import * as helpers from './helpers';
 import { computePasswordCheck } from './crypto/Password';
+import type { ProxyInterface } from './connection/connection';
 
 export interface ClientInterface {
+  /**
+   * Connect to telegram using MTProto proxy.
+   */
+  proxy?: ProxyInterface;
   /**
    * Connecting to telegram test server.
    */
@@ -119,6 +124,8 @@ export class Client {
   /** @hidden */
   _testMode!: boolean;
   /** @hidden */
+  _proxy?: ProxyInterface;
+  /** @hidden */
   _ipv6!: boolean;
   /** @hidden */
   _deviceModel!: string;
@@ -149,7 +156,7 @@ export class Client {
   /** @hidden */
   _isConnected!: boolean;
   /** @hidden */
-  _connectionMode: number = 2;
+  _connectionMode: number = 1;
   /** @hidden */
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
@@ -169,6 +176,7 @@ export class Client {
     this._apiHash = apiHash;
     this._apiId = apiId ?? session.apiId;
     this._testMode = clientInterface?.testMode ?? false;
+    this._proxy = clientInterface?.proxy;
     this._ipv6 = clientInterface?.ipv6 ?? false;
     this._deviceModel = clientInterface?.deviceModel ?? os.type().toString();
     this._systemVersion = clientInterface?.systemVersion ?? os.release().toString();
@@ -219,7 +227,8 @@ export class Client {
         this,
         this._storage.dcId,
         this._storage.authKey,
-        this._storage.testMode
+        this._storage.testMode,
+        this._proxy
       );
       await this._session.start();
       this._isConnected = true;

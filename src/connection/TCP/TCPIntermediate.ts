@@ -9,6 +9,7 @@
  */
 
 import { TCP } from './tcp';
+import type { ProxyInterface } from '../connection';
 
 /**
  * @class TCPIntermediate
@@ -19,8 +20,8 @@ export class TCPIntermediate extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number) {
-    await super.connect(ip, port);
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    await super.connect(ip, port, proxy);
     await super.send(
       Buffer.concat([
         Buffer.from('ee', 'hex'),

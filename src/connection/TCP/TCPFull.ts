@@ -11,6 +11,7 @@
 import { TCP } from './tcp';
 import { crc32 } from '../../helpers';
 import { Primitive } from '../../raw';
+import type { ProxyInterface } from '../connection';
 
 /**
  * @class TCPFull
@@ -23,8 +24,8 @@ export class TCPFull extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number) {
-    await super.connect(ip, port);
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    await super.connect(ip, port, proxy);
     this._seq = 0;
   }
   async send(data: Buffer) {

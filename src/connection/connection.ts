@@ -33,6 +33,29 @@ export type TypeTCP =
   | TCP.TCPAbridgedO
   | TCP.TCPIntermediateO;
 
+export interface ProxyInterface {
+  /**
+   * IP destination for MTProto proxy.
+   */
+  hostname: string;
+  /**
+   * Port destination for MTProto proxy.
+   */
+  port: number;
+  /**
+   * Socks version. It should be 4 or 5. It marks using Socks4 or Socks5.
+   */
+  socks: 4 | 5;
+  /**
+   * If the proxy uses authentication, enter this using the authentication username.
+   */
+  username?: string;
+  /**
+   * If the proxy uses authentication, enter this using the authentication password of given username.
+   */
+  password?: string;
+}
+
 export class Connection {
   /**
    * Limitations of attempts that must be made to connect to the telegram data center server using the available TCP Modes.
@@ -45,6 +68,8 @@ export class Connection {
   private _test!: boolean;
   /** @hidden */
   private _ipv6!: boolean;
+  /** @hidden */
+  private _proxy?: ProxyInterface;
   /** @hidden */
   private _media!: boolean;
   /** @hidden */
@@ -61,6 +86,7 @@ export class Connection {
     dcId: number,
     test: boolean,
     ipv6: boolean,
+    proxy?: ProxyInterface,
     media: boolean = false,
     mode: number = 1
   ) {
@@ -68,6 +94,7 @@ export class Connection {
     this._dcId = dcId;
     this._test = test;
     this._ipv6 = ipv6;
+    this._proxy = proxy;
     this._media = media;
     this._mode = TCPModes[mode];
     this._address = DataCenter.DataCenter(dcId, test, ipv6, media);
@@ -82,7 +109,7 @@ export class Connection {
       this._protocol = new this._mode();
       try {
         Logger.debug(`[1] Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`);
-        await this._protocol.connect(this._address[0], this._address[1]);
+        await this._protocol.connect(this._address[0], this._address[1], this._proxy);
         this._connected = true;
         break;
       } catch (error: any) {

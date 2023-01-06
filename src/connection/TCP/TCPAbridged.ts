@@ -10,6 +10,7 @@
 
 import { TCP } from './tcp';
 import { bigintToBuffer } from '../../helpers';
+import type { ProxyInterface } from '../connection';
 
 /**
  * @class TCPAbridged
@@ -20,8 +21,8 @@ export class TCPAbridged extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number) {
-    await super.connect(ip, port);
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    await super.connect(ip, port, proxy);
     return await super.send(Buffer.from('ef', 'hex'));
   }
   async send(data: Buffer) {

@@ -13,6 +13,7 @@ import { includesBuffer, sliceBuffer, bigintToBuffer } from '../../helpers';
 import * as crypto from 'crypto';
 import { ctr256Encrypt, ctr256Decrypt } from '../../crypto/Aes';
 import { Primitive } from '../../raw';
+import type { ProxyInterface } from '../connection';
 
 /**
  * @class TCPIntermediateO
@@ -42,8 +43,8 @@ export class TCPIntermediateO extends TCP {
       ]),
     ];
   }
-  async connect(ip: string, port: number) {
-    await super.connect(ip, port);
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    await super.connect(ip, port, proxy);
     let nonce;
     while (true) {
       nonce = crypto.randomBytes(64);

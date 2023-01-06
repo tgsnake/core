@@ -9,11 +9,13 @@
  */
 
 import * as net from 'net';
+import { SocksClient } from 'socks';
 import { Mutex } from 'async-mutex';
 import { PromiseSocket } from 'promise-socket';
 import { Timeout } from '../../Timeout';
 import { Logger } from '../../Logger';
 import { sleep } from '../../helpers';
+import type { ProxyInterface } from '../connection';
 
 /**
  * @class TCP
@@ -29,27 +31,51 @@ export class TCP {
   /** @hidden */
   private _mutex: Mutex = new Mutex();
   /**
-   * The timeout used to run the function of the @link {WebSocket}. If more than the time has been found, it will return a TimeoutError error.
+   * The timeout used to run the function of the @link {net.Socket}. If more than the time has been found, it will return a TimeoutError error.
    */
   timeout!: number;
   connected!: boolean;
   constructor() {
-    this._socks = new PromiseSocket<net.Socket>(new net.Socket());
     this._task = new Timeout();
     this.timeout = 10 * 1000;
-    this._socks.setTimeout(this.timeout);
   }
   /**
    * connect to telegram server.
    * @param {String} ip - Telegram data center IP.
    * @param {Number} port - Port for connecting to telegram data center.
    */
-  async connect(ip: string, port: number) {
-    const release = await this._mutex.acquire();
-    try {
-      await this._socks.connect(port, ip);
-    } finally {
-      release();
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    if (proxy) {
+      const release = await this._mutex.acquire();
+      try {
+        const ws = await SocksClient.createConnection({
+          proxy: {
+            host: proxy.hostname,
+            port: proxy.port,
+            type: proxy.socks < 4 || proxy.socks > 5 ? 5 : proxy.socks,
+            userId: proxy.username,
+            password: proxy.password,
+          },
+          command: 'connect',
+          timeout: this.timeout,
+          destination: {
+            host: ip,
+            port: port,
+          },
+        });
+        this._socks = new PromiseSocket<net.Socket>(ws.socket);
+      } finally {
+        release();
+      }
+    } else {
+      this._socks = new PromiseSocket<net.Socket>(new net.Socket());
+      this._socks.setTimeout(this.timeout);
+      const release = await this._mutex.acquire();
+      try {
+        await this._socks.connect(port, ip);
+      } finally {
+        release();
+      }
     }
   }
   /**
