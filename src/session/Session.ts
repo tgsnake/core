@@ -83,7 +83,7 @@ export class Session {
   private async _handlePacket(packet: Buffer) {
     Logger.debug(`[33] Unpacking ${packet.length} bytes packet.`);
     try {
-      let data = await Mtproto.unpack(
+      let data = Mtproto.unpack(
         new BytesIO(packet),
         this._sessionId,
         this._authKey,
@@ -192,13 +192,7 @@ export class Session {
       this._results.set(BigInt(msgId), new Results());
     }
     Logger.debug(`[50] Sending msg id ${msgId}, has ${msg.write().length} bytes message.`);
-    let payload = await Mtproto.pack(
-      msg,
-      this._salt,
-      this._sessionId,
-      this._authKey,
-      this._authKeyId
-    );
+    let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
       Logger.debug(`[51] Sending ${payload.length} bytes payload.`);
       await this._connection.send(payload);

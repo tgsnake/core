@@ -9,6 +9,7 @@
  */
 
 import * as crypto from 'crypto';
+import { promisify } from 'util';
 import { Logger } from '../Logger';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers';
 
