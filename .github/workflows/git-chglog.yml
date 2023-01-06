@@ -21,6 +21,14 @@ jobs:
           go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
           git fetch --prune --unshallow --tags
           git-chglog -o CHANGELOG.md
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Almost done
+        run: |
+          yarn config set enableImmutableInstalls false
+          yarn install 
+          yarn prettier
           git config user.email github-actions@github.com
           git config user.name github-actions
           git add .
