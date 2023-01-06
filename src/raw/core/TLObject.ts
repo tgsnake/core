@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -47,7 +47,7 @@ export class TLObject {
   }
   static read(data: BytesIO, ...args: Array<any>): any {
     const id = data.readUInt32LE(4);
-    Logger.debug(`Reading TLObject with id: ${id.toString(16)} (${Object[id]})`);
+    Logger.debug(`[10] Reading TLObject with id: ${id.toString(16)} (${Object[id]})`);
     return getModule(Object[id]).read(data, ...args);
   }
   static write(...args: Array<any>): Buffer {

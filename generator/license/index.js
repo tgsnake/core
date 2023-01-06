@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -9,7 +9,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const cdateRE = /^(\* )?Copyright \(C\) (\d+)/im;
+const cdateRE = /(\* )?Copyright \(C\) (\d+)/im;
 
 function parseDate(source) {
   if (cdateRE.test(source)) {

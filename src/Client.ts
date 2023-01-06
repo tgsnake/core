@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -17,8 +17,13 @@ import { Logger } from './Logger';
 import * as Version from './Version';
 import * as helpers from './helpers';
 import { computePasswordCheck } from './crypto/Password';
+import type { ProxyInterface } from './connection/connection';
 
 export interface ClientInterface {
+  /**
+   * Connect to telegram using MTProto proxy.
+   */
+  proxy?: ProxyInterface;
   /**
    * Connecting to telegram test server.
    */
@@ -110,34 +115,56 @@ export interface SigInUser {
 }
 
 export class Client {
+  /** @hidden */
   _apiId!: number;
+  /** @hidden */
   _apiHash!: string;
+  /** @hidden */
   _storage!: AbstractSession;
+  /** @hidden */
   _testMode!: boolean;
+  /** @hidden */
+  _proxy?: ProxyInterface;
+  /** @hidden */
   _ipv6!: boolean;
+  /** @hidden */
   _deviceModel!: string;
+  /** @hidden */
   _systemVersion!: string;
+  /** @hidden */
   _appVersion!: string;
+  /** @hidden */
   _systemLangCode!: string;
+  /** @hidden */
   _langCode!: string;
+  /** @hidden */
   _maxRetries!: number;
+  /** @hidden */
   _isCdn!: boolean;
+  /** @hidden */
   _sleepTreshold!: number;
+  /** @hidden */
   _takeout!: boolean;
+  /** @hidden */
   _noUpdates!: boolean;
-
+  /** @hidden */
   _takeoutId!: bigint;
+  /** @hidden */
   _dcId!: string;
+  /** @hidden */
   _session!: Session;
+  /** @hidden */
   _isConnected!: boolean;
-  _connectionMode: number = 2;
+  /** @hidden */
+  _connectionMode: number = 1;
+  /** @hidden */
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
    * Client Constructor.
-   * @param session {Object} - What the session will be used for login to telegram.
-   * @param apiHash {String} - Your api hash, got it from my.telegram.org.
-   * @param apiId {Number} - Your api id, got it from my.telegram.org.
-   * @param clientInterface {Object} - Client options for initializing client.
+   * @param {Object} session - What the session will be used for login to telegram.
+   * @param {String} apiHash - Your api hash, got it from my.telegram.org.
+   * @param {Number} apiId - Your api id, got it from my.telegram.org.
+   * @param {Object} clientInterface - Client options for initializing client.
    */
   constructor(
     session: AbstractSession,
@@ -149,6 +176,7 @@ export class Client {
     this._apiHash = apiHash;
     this._apiId = apiId ?? session.apiId;
     this._testMode = clientInterface?.testMode ?? false;
+    this._proxy = clientInterface?.proxy;
     this._ipv6 = clientInterface?.ipv6 ?? false;
     this._deviceModel = clientInterface?.deviceModel ?? os.type().toString();
     this._systemVersion = clientInterface?.systemVersion ?? os.release().toString();
@@ -192,14 +220,15 @@ export class Client {
    */
   async connect(): Promise<void> {
     if (!this._isConnected) {
-      Logger.info(`Using version: ${Version.version} - ${Version.getType()}`);
+      Logger.info(`[100] Using version: ${Version.version} - ${Version.getType()}`);
       await this._loadSession();
 
       this._session = new Session(
         this,
         this._storage.dcId,
         this._storage.authKey,
-        this._storage.testMode
+        this._storage.testMode,
+        this._proxy
       );
       await this._session.start();
       this._isConnected = true;
@@ -207,7 +236,7 @@ export class Client {
   }
   /**
    * Sigin as bot.
-   * @param botToken {String} - Bot token from bot father.
+   * @param {String} botToken - Bot token from bot father.
    */
   private async _siginBot(botToken: string): Promise<Raw.User> {
     while (true) {
@@ -257,7 +286,7 @@ export class Client {
   }
   /**
    * Sigin as user.
-   * @param auth {Object} - The required parameter to be used for creating account or login.
+   * @param {Object} auth - The required parameter to be used for creating account or login.
    */
   private async _siginUser(auth: SigInUser): Promise<Raw.User> {
     let phoneNumber;
@@ -280,7 +309,7 @@ export class Client {
         }
       }
     }
-    Logger.info('The confirmation code has been sent.');
+    Logger.info('[101] The confirmation code has been sent.');
     while (true) {
       let code = await auth.code();
       try {
@@ -303,10 +332,10 @@ export class Client {
                 }
                 return await this.checkPassword(await auth.password(await this.getPasswordHint()));
               } else {
-                Logger.info('Look you are forgotten the password');
+                Logger.info('[102] Look you are forgotten the password');
                 if (auth.recoveryCode) {
                   let emailPattern = await this.sendRecoveryCode();
-                  Logger.info(`The recovery code has been sent to ${emailPattern}`);
+                  Logger.info(`[103] The recovery code has been sent to ${emailPattern}`);
                   while (true) {
                     let recoveryCode = await auth.recoveryCode();
                     try {
@@ -376,7 +405,7 @@ export class Client {
   }
   /**
    * Sending telegram OTP code.
-   * @param phoneNumber {String} - The phone number will be using to receive a OTP code.
+   * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
    */
   async sendCode(phoneNumber: string): Promise<Raw.auth.SentCode> {
     phoneNumber = phoneNumber.replace(/\+/g, '').trim();
@@ -424,9 +453,9 @@ export class Client {
   }
   /**
    * Authorize a user in Telegram with a valid confirmation code.
-   * @param phoneNumber {String} - Phone number in international format (includes the country prefix).
-   * @param phoneCodeHash {String} - Code identifier taken from the result of sendCode.
-   * @param phoneCode {String} - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
+   * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
+   * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
+   * @param {String} phoneCode - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
    */
   async sigin(
     phoneNumber: string,
@@ -454,7 +483,7 @@ export class Client {
   }
   /**
    * Recover your password with recovery code and login.
-   * @param code {String} - The recovery code has been send in connected email with 2FA.
+   * @param {String} code - The recovery code has been send in connected email with 2FA.
    */
   async recoverPassword(code: string): Promise<Raw.User> {
     let r = await this.invoke(
@@ -476,7 +505,7 @@ export class Client {
   }
   /**
    * Check the givens password is correct or not.
-   * @param password {String} - Password will be check.
+   * @param {String} password - Password will be check.
    */
   async checkPassword(password: string): Promise<Raw.User> {
     let r = await this.invoke(
@@ -494,7 +523,7 @@ export class Client {
   }
   /**
    * Accepting Terms Of Service for creating a account.
-   * @param id {Object} - TOS Id,The terms of service identifier.
+   * @param {String} id - TOS Id,The terms of service identifier.
    */
   async acceptTOS(id: string): Promise<boolean> {
     let r = await this.invoke(
@@ -515,10 +544,10 @@ export class Client {
   }
   /**
    * Sigin and create a new fresh account.
-   * @param phoneNumber {String} - Phone number in international format (includes the country prefix).
-   * @param phoneCodeHash {String} - Code identifier taken from the result of sendCode.
-   * @param firstname {String} - New user firstname.
-   * @param lastname {String} - New user lastname.
+   * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
+   * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
+   * @param {String} firstname - New user firstname.
+   * @param {String} lastname - New user lastname.
    */
   async signup(
     phoneNumber: string,
@@ -540,7 +569,7 @@ export class Client {
   }
   /**
    * Starting client.
-   * @param auth {Object} - Do you want to login with the user or with the bot.
+   * @param {Object} auth - Do you want to login with the user or with the bot.
    */
   async start(auth?: SigInBot | SigInUser): Promise<Raw.users.UserFull> {
     await this.connect();
@@ -557,7 +586,7 @@ export class Client {
     if (!this._storage.isBot && this._takeout) {
       let takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
       this._takeoutId = takeout.id;
-      Logger.warning(`Takeout session ${this._takeoutId} initiated.`);
+      Logger.warning(`[104] Takeout session ${this._takeoutId} initiated.`);
     }
     await this.invoke(new Raw.updates.GetState());
     return await this.getMe();
@@ -568,7 +597,7 @@ export class Client {
   async logout(): Promise<any> {
     await this.invoke(new Raw.auth.LogOut());
     await this._storage.delete();
-    Logger.info(`Logged out.`);
+    Logger.info(`[105] Logged out.`);
     return process.exit(0); // kill the process
   }
   /**
@@ -596,19 +625,19 @@ export class Client {
   /**
    * Sending request to telegram. <br/>
    * Only telegram method can be invoked.
-   * @param query {Object} - Raw class from telegram method.
-   * @param retries {Number} - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
-   * @param timeout {Number} - How long to wait for the function to finish. default is 15s.
-   * @param sleepTreshold {Number} - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
+   * @param {Object} query - Raw class from telegram method.
+   * @param {Number} retries - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
+   * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
+   * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
    */
   async invoke(
-    query: TLObject,
+    query: Raw.TypesTLRequest,
     retries: number = this._maxRetries,
     timeout?: number,
     sleepTreshold: number = this._sleepTreshold
   ) {
     if (!this._isConnected) {
-      throw new Errors.ClientDisconnected();
+      throw new Errors.ClientError.ClientDisconnected();
     }
     if (this._noUpdates) {
       query = new Raw.InvokeWithoutUpdates({ query });
@@ -642,7 +671,7 @@ export class Client {
   }
   /**
    * Fetch the peer into session.
-   * @param peers {Array} - Peers will be fetched.
+   * @param {Array} peers - Peers will be fetched.
    */
   async fetchPeers(peers: Array<Raw.TypeUser | Raw.TypeChat>): Promise<boolean> {
     let isMin = false;
@@ -661,7 +690,11 @@ export class Client {
           peer.id,
           peer.accessHash ?? BigInt(0),
           peer.bot ? 'bot' : 'user',
-          peer.username ? peer.username.toLowerCase() : undefined,
+          peer.username
+            ? peer.username.toLowerCase()
+            : peer.usernames && peer.usernames[0]
+            ? (peer.usernames[0] as Raw.Username).username.toLowerCase()
+            : undefined,
           peer.phone ? peer.phone : undefined,
         ]);
       } else if (peer instanceof Raw.Chat || peer instanceof Raw.ChatForbidden) {
@@ -684,13 +717,13 @@ export class Client {
   }
   /**
    * Get the valid peer.
-   * @param peerId {String|BigInt} - The provided peer id will be resolve to a valid peer object.
+   * @param {String|BigInt} peerId - The provided peer id will be resolve to a valid peer object.
    */
   async resolvePeer(
     peerId: bigint | string
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | Raw.InputUserSelf> {
     if (!this._isConnected) {
-      throw new Errors.ClientDisconnected();
+      throw new Errors.ClientError.ClientDisconnected();
     }
     if (typeof peerId === 'bigint') {
       peerId as bigint;
@@ -842,6 +875,7 @@ export class Client {
     }
     return toPrint;
   }
+  /** @hidden */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

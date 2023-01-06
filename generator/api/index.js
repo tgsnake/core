@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -131,6 +131,7 @@ function start(source, template) {
   let typeSubclassMap = new Map();
   let constructorMap = new Map();
   let allTLObject = '';
+  let typeTLFn = [];
 
   function getType(type) {
     switch (type) {
@@ -201,6 +202,9 @@ function start(source, template) {
       }
       name = Uppercase(name);
       allTLObject += `\n  0x${id} : "Raw.${namespace ?? ''}${name}",`;
+      if (section === 'functions') {
+        typeTLFn.push(`Raw.${namespace ?? ''}${name}`);
+      }
       if (typeSubclassMap.has(crc32(results))) {
         typeSubclassMap.set(
           crc32(results),
@@ -391,6 +395,10 @@ function start(source, template) {
       );
     }
   }
+  constructorMap.set(
+    '',
+    `  export type TypesTLRequest = ${typeTLFn.join('|')}\n${constructorMap.get('')}`
+  );
   let final = '';
   for (let [key, value] of constructorMap) {
     if (key === '') {

@@ -4,10 +4,11 @@
   "description": "Pure Telegram MTProto framework for nodejs",
   "main": "./lib/src/index.js",
   "devDependencies": {
-    "@types/node": "18.11.17",
+    "@types/node": "18.11.18",
     "fast-csv": "4.3.6",
     "prettier": "2.8.1",
     "ts-node": "10.9.1",
+    "typedoc": "0.23.23",
     "typescript": "4.9.4"
   },
   "scripts": {
@@ -16,6 +17,8 @@
     "build:api": "node ./generator/api",
     "build:license": "node ./generator/license",
     "build:error": "node ./generator/error",
+    "build:sync": "node ./generator/sync-tl",
+    "build:docs": "NODE_OPTIONS=--max_old_space_size=4096 typedoc",
     "prepare": "yarn build",
     "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."
   },
@@ -42,7 +45,9 @@
   "dependencies": {
     "@tgsnake/log": "latest",
     "async-mutex": "0.4.0",
-    "big-integer": "1.6.51"
+    "big-integer": "1.6.51",
+    "promise-socket": "7.0.0",
+    "socks": "2.7.1"
   },
   "isBeta": true,
   "isPrivate": true

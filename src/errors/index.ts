@@ -1,15 +1,17 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 export { RPCError, UnknownError } from './RpcError';
 export * as Exceptions from './exceptions';
-export * as WSError from './WebSocket';
+export * as ClientError from './Client';
+
 export class TimeoutError extends Error {
   message!: string;
   timeout!: number;
@@ -34,56 +36,15 @@ export class TimeoutError extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        }
-      }
-    }
-    return toPrint;
-  }
-  toString(): string {
-    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
-  }
-}
-export class ClientDisconnected extends Error {
-  name: string = 'ClientDisconnected';
-  message: string = "Can't send request to telegram when client is unconnected.";
-  description: string =
-    'The provided telegram client is unconnected, make sure to start the telegram client firsy before sending request.';
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = value;
-        }
-      }
-    }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
-    return toPrint;
-  }
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -121,15 +82,15 @@ export class NotAFunctionClass extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -176,15 +137,15 @@ export class BadMsgNotification extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -208,7 +169,7 @@ export class SecurityError extends Error {
     super();
     this.description = description;
   }
-  static check(cond:bool,description?:string){
+  static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityError(description);
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
@@ -223,15 +184,15 @@ export class SecurityError extends Error {
         }
       }
     }
-    Object.setPrototypeOf(toPrint,{
-      stack : this.stack
-    })
+    Object.setPrototypeOf(toPrint, {
+      stack: this.stack,
+    });
     return toPrint;
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
-      stack : this.stack,
+      stack: this.stack,
     };
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
@@ -250,14 +211,14 @@ export class SecurityError extends Error {
 export class SecurityCheckMismatch extends SecurityError {
   name: string = 'SecurityCheckMismatch';
   message: string = 'A security check mismatch has occurred.';
-  static check(cond:bool,description?:string){
+  static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityCheckMismatch(description);
   }
 }
 export class CDNFileHashMismatch extends SecurityError {
   name: string = 'CDNFileHashMismatch';
   message: string = 'A CDN file hash mismatch has occurred.';
-  static check(cond:bool,description?:string){
+  static check(cond: boolean, description?: string) {
     if (!cond) throw new CDNFileHashMismatch(description);
   }
 }

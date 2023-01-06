@@ -1,9 +1,11 @@
 # tgsnake core
 
 <center>  
-  <b>Layer 149</b>  
+  <b>Layer 151</b>  
 </center>
-
+   
+---   
+  
 Pure Telegram MTProto framework for nodejs.
 
 ⚡ Using less dependencies to make it fast.  
@@ -42,6 +44,39 @@ client.start({
 ### Exporting Session.
 
 For exporting string session, use `client.exportSession()`. It will be return `Promise<string>`.
+
+```typescript
+const exported = await client.exportSession();
+```
+
+---
+
+## Development Guidelines
+
+- Cloning Repository
+
+```bash
+$ git clone https://github.com/tgsnake/core
+```
+
+- Installing Dependencies
+
+> Required to use yarn!
+
+```bash
+$ yarn install
+```
+
+- Building TLSchema and Error class
+
+```bash
+$ yarn build:api
+$ yarn build:error
+```
+
+- Testing your app! Create `test` folder and you can create `index.js` file for testing the app. This folder will automatically ignored and not pushing to GitHub.
+
+---
 
 ## Notes
 

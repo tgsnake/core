@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -19,3 +19,5 @@ export * as Sessions from './session';
 export * as Storages from './storage';
 export * as Versions from './Version';
 export * as Helpers from './helpers';
+export * as Timeouts from './Timeout';
+import * as Loggers from './Logger';

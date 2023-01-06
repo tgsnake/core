@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -12,6 +12,6 @@ import * as DataCenter from './internals/DataCenter';
 export { SeqNo } from './internals/SeqNo';
 export { DataCenter };
 export { Auth } from './Auth';
-export { Session } from './Session';
+export { Session, Results } from './Session';
 export { MsgFactory } from './internals/MsgFactory';
 export { MsgId } from './internals/MsgId';

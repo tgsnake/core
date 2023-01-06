@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -9,5 +9,5 @@
  */
 
 import * as TCP from './TCP';
-export { WebSocket } from './webSocket';
+export * as Connections from './connection';
 export { TCP };

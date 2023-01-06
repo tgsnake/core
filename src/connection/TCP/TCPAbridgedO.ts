@@ -1,20 +1,30 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { TCP } from './tcp';
 import { includesBuffer, sliceBuffer, bigintToBuffer } from '../../helpers';
 import * as crypto from 'crypto';
 import { ctr256Encrypt, ctr256Decrypt } from '../../crypto/Aes';
+import type { ProxyInterface } from '../connection';
 
+/**
+ * @class TCPAbridgedO
+ * The TCPObfuscated wraped with TCPAbridged.
+ * see https://core.telegram.org/mtproto/mtproto-transports#transport-obfuscation
+ */
 export class TCPAbridgedO extends TCP {
+  /** @hidden */
   private _reserved!: Array<Buffer>;
+  /** @hidden */
   private _encrypt!: Array<Buffer>;
+  /** @hidden */
   private _decrypt!: Array<Buffer>;
   constructor() {
     super();
@@ -32,8 +42,8 @@ export class TCPAbridgedO extends TCP {
       ]),
     ];
   }
-  async connect(ip: string, port: number) {
-    await super.connect(ip, port);
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    await super.connect(ip, port, proxy);
     let nonce;
     while (true) {
       nonce = crypto.randomBytes(64);

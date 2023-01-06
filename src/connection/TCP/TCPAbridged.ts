@@ -1,21 +1,28 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { TCP } from './tcp';
 import { bigintToBuffer } from '../../helpers';
+import type { ProxyInterface } from '../connection';
 
+/**
+ * @class TCPAbridged
+ * One of the TCP classes that implements The lightest protocol available.
+ * see https://core.telegram.org/mtproto/mtproto-transports#abridged
+ */
 export class TCPAbridged extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number) {
-    await super.connect(ip, port);
+  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+    await super.connect(ip, port, proxy);
     return await super.send(Buffer.from('ef', 'hex'));
   }
   async send(data: Buffer) {

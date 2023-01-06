@@ -1,23 +1,26 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import * as crypto from 'crypto';
+import { promisify } from 'util';
 import { Logger } from '../Logger';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers';
+
 /**
  * Encrypt content with AES-256-IGE mode.
- * @param data {Buffer} - Content will be encrypted.
- * @param key {Buffer} - Key for encrypting content.
- * @param iv {Buffer} - Initial Vector for encrypting content.
+ * @param {Buffer} data - Content will be encrypted.
+ * @param {Buffer} key - Key for encrypting content.
+ * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`Encrypting ${data.length} bytes data with AES-256-IGE`);
+  Logger.debug(`[4] Encrypting ${data.length} bytes data with AES-256-IGE`);
   const pad = mod(data.length, 16);
   if (pad) {
     data = Buffer.concat([data, crypto.randomBytes(16 - pad)]);
@@ -26,32 +29,32 @@ export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
 }
 /**
  * Decrypt content with AES-256-IGE mode.
- * @param data {Buffer} - Content will be decrypting.
- * @param key {Buffer} - Key for decrypting content.
- * @param iv {Buffer} - Initial Vector for decrypting content.
+ * @param {Buffer} data - Content will be decrypting.
+ * @param {Buffer} key - Key for decrypting content.
+ * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`Decrypting ${data.length} bytes data with AES-256-IGE`);
+  Logger.debug(`[5] Decrypting ${data.length} bytes data with AES-256-IGE`);
   return ige(data, key, iv, false);
 }
 /**
  * Encrypt content with AES-256-CTR mode.
- * @param data {Buffer} - Content will be encrypted.
- * @param key {Buffer} - Key for encrypting content.
- * @param iv {Buffer} - Initial Vector for encrypting content.
+ * @param {Buffer} data - Content will be encrypted.
+ * @param {Buffer} key - Key for encrypting content.
+ * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ctr256Encrypt(data: Buffer, key: Buffer, iv: Buffer) {
-  Logger.debug(`Encrypting ${data.length} bytes data with AES-256-CTR`);
+  Logger.debug(`[6] Encrypting ${data.length} bytes data with AES-256-CTR`);
   return ctr(data, key, iv, true);
 }
 /**
  * Decrypt content with AES-256-CTR mode.
- * @param data {Buffer} - Content will be decrypting.
- * @param key {Buffer} - Key for decrypting content.
- * @param iv {Buffer} - Initial Vector for decrypting content.
+ * @param {Buffer} data - Content will be decrypting.
+ * @param {Buffer} key - Key for decrypting content.
+ * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ctr256Decrypt(data: Buffer, key: Buffer, iv: Buffer) {
-  Logger.debug(`Decrypting ${data.length} bytes data with AES-256-CTR`);
+  Logger.debug(`[7] Decrypting ${data.length} bytes data with AES-256-CTR`);
   return ctr(data, key, iv, false);
 }
 /**

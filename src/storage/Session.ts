@@ -1,16 +1,24 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+
 import { Logger } from '../Logger';
 import { AbstractSession } from './Abstract';
 import { Raw } from '../raw';
 import { getChannelId } from '../helpers';
+
+/**
+ * Get a valid InputPeer from the available data session.
+ * @param {BigInt} id - id of user or channel or group or bot which will be changed to a valid InputPeer.
+ * @param {BigInt} accessHash - access hash of user or channel or group or bot which will be changed to a valid InputPeer.
+ * @param {Boolean} type - Type of InputPeer to be assigned. The type must be `user` or `bot` or `group` or `channel` or `supergroup`
+ */
 export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
   if (type === 'bot' || type === 'user') {
     return new Raw.InputPeerUser({
@@ -31,6 +39,10 @@ export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
   }
 }
 
+/**
+ * @class BaseSession
+ * A class that is the parent of all existing session classes.Any session class can extend this class to get all the functionality it needs.
+ */
 export class BaseSession extends AbstractSession {
   protected _ip!: string;
   protected _dcId: number = 2;
@@ -101,17 +113,19 @@ export class BaseSession extends AbstractSession {
   async delete() {}
   async save() {}
   async move(session: AbstractSession) {
-    Logger.info(`Moving session from ${this.constructor.name} to ${session.constructor.name}.`);
+    Logger.info(
+      `[73] Moving session from ${this.constructor.name} to ${session.constructor.name}.`
+    );
     await session.setAddress(this._dcId, this._ip, this._port, this._testMode);
     await session.setAuthKey(this._authKey, this._dcId);
     await session.setApiId(this._apiId);
     await session.setIsBot(this._isBot);
     await session.setUserId(this._userId);
     Logger.info(
-      `Successfully move session from ${this.constructor.name} to ${session.constructor.name}.`
+      `[74] Successfully move session from ${this.constructor.name} to ${session.constructor.name}.`
     );
     Logger.debug(
-      `Deleting current session, cause: moved to another instance (${session.constructor.name}).`
+      `[75] Deleting current session, cause: moved to another instance (${session.constructor.name}).`
     );
     await this.delete();
   }
@@ -120,20 +134,20 @@ export class BaseSession extends AbstractSession {
       [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
     >
   ) {
-    Logger.debug(`Updating ${peers.length} peers`);
+    Logger.debug(`[76] Updating ${peers.length} peers`);
     for (let peer of peers) {
       this._peers.set(peer[0], peer);
     }
   }
   async getPeerById(id: bigint) {
-    Logger.debug(`Getting peer by id: ${id}`);
+    Logger.debug(`[77] Getting peer by id: ${id}`);
     let peer = this._peers.get(id);
     if (peer) {
       return getInputPeer(peer[0], peer[1], peer[2]);
     }
   }
   async getPeerByUsername(username: string) {
-    Logger.debug(`Getting peer by username: ${username}`);
+    Logger.debug(`[78] Getting peer by username: ${username}`);
     for (let [id, peer] of this._peers) {
       if (peer[3] && peer[3] === username) {
         return getInputPeer(peer[0], peer[1], peer[2]);
@@ -141,7 +155,7 @@ export class BaseSession extends AbstractSession {
     }
   }
   async getPeerByPhoneNumber(phoneNumber: string) {
-    Logger.debug(`Getting peer by phone number: ${phoneNumber}`);
+    Logger.debug(`[79] Getting peer by phone number: ${phoneNumber}`);
     for (let [id, peer] of this._peers) {
       if (peer[4] && peer[4] === phoneNumber) {
         return getInputPeer(peer[0], peer[1], peer[2]);
@@ -158,7 +172,7 @@ export class BaseSession extends AbstractSession {
     bytes = Buffer.concat([bytes, packLong(this._userId)]); // 270
     bytes = Buffer.concat([bytes, Buffer.alloc(1)]);
     bytes.writeUInt8(this._isBot ? 1 : 0, 270); // 271
-    Logger.debug(`Exporting ${bytes.length} bytes of session`);
+    Logger.debug(`[80] Exporting ${bytes.length} bytes of session`);
     return bytes.toString('base64url').replace(/=/g, '');
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
@@ -175,6 +189,7 @@ export class BaseSession extends AbstractSession {
     }
     return toPrint;
   }
+  /** @hidden */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -189,6 +204,7 @@ export class BaseSession extends AbstractSession {
     }
     return toPrint;
   }
+  /** @hidden */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

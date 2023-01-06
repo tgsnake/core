@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -12,7 +12,7 @@ import * as crypto from 'crypto';
 import * as os from 'os';
 import { Mutex } from 'async-mutex';
 import { Logger } from '../Logger';
-import { Connection } from '../connection/connection';
+import { Connection, ProxyInterface } from '../connection/connection';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw';
 import * as Mtproto from '../crypto/Mtproto';
 import * as Errors from '../errors';
@@ -23,7 +23,7 @@ import { sleep } from '../helpers';
 import { Timeout } from '../Timeout';
 import type { Client } from '../Client';
 
-class Results {
+export class Results {
   value!: Promise<unknown>;
   reject!: { (reason: any): any };
   resolve!: { (value: any): any };
@@ -46,6 +46,7 @@ export class Session {
   private _dcId!: number;
   private _authKey!: Buffer;
   private _testMode!: boolean;
+  private _proxy?: ProxyInterface;
   private _isMedia!: boolean;
   private _authKeyId!: Buffer;
   private _connection!: Connection;
@@ -69,21 +70,23 @@ export class Session {
     dcId: number,
     authKey: Buffer,
     testMode: boolean,
+    proxy?: ProxyInterface,
     isMedia: boolean = false
   ) {
     this._client = client;
     this._dcId = dcId;
     this._authKey = authKey;
     this._testMode = testMode;
+    this._proxy = proxy;
     this._isMedia = isMedia;
     this._authKeyId = crypto.createHash('sha1').update(this._authKey).digest().slice(-8);
     this.MAX_RETRIES = client._maxRetries ?? 5;
   }
 
   private async _handlePacket(packet: Buffer) {
-    Logger.debug(`Unpacking ${packet.length} bytes packet.`);
+    Logger.debug(`[33] Unpacking ${packet.length} bytes packet.`);
     try {
-      let data = await Mtproto.unpack(
+      let data = Mtproto.unpack(
         new BytesIO(packet),
         this._sessionId,
         this._authKey,
@@ -91,61 +94,67 @@ export class Session {
         this._storedMsgId
       );
       let message = data.body instanceof MsgContainer ? data.body.messages : [data];
-      Logger.debug(`Reveive ${message.length} data.`);
+      Logger.debug(`[34] Reveive ${message.length} data.`);
 
       for (let msg of message) {
         if (msg.seqNo % 2 === 0) {
-          Logger.debug(`Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
+          Logger.debug(`[35] Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
           this._msgId.setServerTime(msg.msgId / BigInt(2 ** 32));
         } else {
           if (this._pendingAcks.has(msg.msgId)) {
-            Logger.debug(`Skiping pending acks msg id: ${msg.msgId}.`);
+            Logger.debug(`[36] Skiping pending acks msg id: ${msg.msgId}.`);
             continue;
           } else {
-            Logger.debug(`Add msg id ${msg.msgId} to pending acks.`);
+            Logger.debug(`[37] Add msg id ${msg.msgId} to pending acks.`);
             this._pendingAcks.add(msg.msgId);
           }
         }
         if (msg.body instanceof Raw.MsgDetailedInfo || msg.body instanceof Raw.MsgNewDetailedInfo) {
           Logger.debug(
-            `Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`
+            `[38] Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`
           );
           this._pendingAcks.add(msg.body.answerMsgId);
           continue;
         }
         if (msg.body instanceof Raw.NewSessionCreated) {
-          Logger.debug(`Got ${msg.body.constructor.name} and skiping.`);
+          Logger.debug(`[39] Got ${msg.body.constructor.name} and skiping.`);
           continue;
         }
         let msgId;
         if (msg.body instanceof Raw.BadMsgNotification || msg.body instanceof Raw.BadServerSalt) {
-          Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`);
+          Logger.debug(
+            `[40] Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`
+          );
           msgId = msg.body.badMsgId;
         } else if (msg.body instanceof Raw.FutureSalts || msg.body instanceof Raw.RpcResult) {
-          Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`);
+          Logger.debug(
+            `[41] Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`
+          );
           msgId = msg.body.reqMsgId;
           if (msg.body instanceof Raw.RpcResult) {
             msg.body as Raw.RpcResult;
             msg.body = msg.body.result;
           }
         } else if (msg.body instanceof Raw.Pong) {
-          Logger.debug(`Got ${msg.body.constructor.name} and msg id is: ${msg.body.msgId}.`);
+          Logger.debug(`[42] Got ${msg.body.constructor.name} and msg id is: ${msg.body.msgId}.`);
           msgId = msg.body.msgId;
         } else {
-          Logger.debug(`Handling update ${msg.body.constructor.name}.`);
-          this._client.handleUpdate(msg.body);
+          Logger.debug(`[43] Handling update ${msg.body.constructor.name}.`);
+          this._client.handleUpdate(msg.body as unknown as Raw.Updates);
         }
 
         if (msgId !== undefined) {
           let promises = this._results.get(BigInt(msgId));
           if (promises !== undefined) {
-            Logger.debug(`Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`);
+            Logger.debug(
+              `[44] Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`
+            );
             promises.resolve(msg.body);
           }
         }
       }
       if (this._pendingAcks.size >= this.ACKS_THRESHOLD) {
-        Logger.debug(`Sending ${this._pendingAcks.size} pending aks.`);
+        Logger.debug(`[45] Sending ${this._pendingAcks.size} pending aks.`);
         try {
           await this._send(
             new Raw.MsgsAck({
@@ -153,20 +162,20 @@ export class Session {
             }),
             false
           );
-          Logger.debug(`Clearing all pending acks`);
+          Logger.debug(`[46] Clearing all pending acks`);
           this._pendingAcks.clear();
         } catch (error: any) {
           if (!(error instanceof Errors.TimeoutError)) {
-            Logger.debug(`Clearing all pending acks`);
+            Logger.debug(`[47] Clearing all pending acks`);
             this._pendingAcks.clear();
           }
-          Logger.error(`Got error when sending pending acks:`, error);
+          Logger.error(`[48] Got error when sending pending acks:`, error);
         }
       }
     } catch (error: any) {
       if (error instanceof Errors.SecurityCheckMismatch) {
         Logger.error(
-          `Invalid to unpack ${packet.length} bytes packet cause: ${
+          `[49] Invalid to unpack ${packet.length} bytes packet cause: ${
             error.description ?? error.message
           }`
         );
@@ -176,7 +185,7 @@ export class Session {
     }
   }
   private async _send(
-    data: TLObject,
+    data: Raw.TypesTLRequest,
     waitResponse: boolean = true,
     timeout: number = this.WAIT_TIMEOUT
   ) {
@@ -185,19 +194,13 @@ export class Session {
     if (waitResponse) {
       this._results.set(BigInt(msgId), new Results());
     }
-    Logger.debug(`Sending msg id ${msgId}, has ${msg.write().length} bytes message.`);
-    let payload = await Mtproto.pack(
-      msg,
-      this._salt,
-      this._sessionId,
-      this._authKey,
-      this._authKeyId
-    );
+    Logger.debug(`[50] Sending msg id ${msgId}, has ${msg.write().length} bytes message.`);
+    let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
-      Logger.debug(`Sending ${payload.length} bytes payload.`);
+      Logger.debug(`[51] Sending ${payload.length} bytes payload.`);
       await this._connection.send(payload);
     } catch (error: any) {
-      Logger.error(`Got error when trying to send ${payload.length} bytes payload:`, error);
+      Logger.error(`[52] Got error when trying to send ${payload.length} bytes payload:`, error);
       let promises = this._results.get(BigInt(msgId));
       // @ts-ignore
       promises.reject(error);
@@ -209,11 +212,11 @@ export class Session {
         response = await this._task.run(promises.value, timeout);
         // response = await promises.value
       } catch (error: any) {
-        Logger.error(`Got error when waiting response:`, error);
+        Logger.error(`[53] Got error when waiting response:`, error);
       }
       if (response) {
         this._results.delete(BigInt(msgId));
-        Logger.debug(`Got response from msg id ${msgId}: ${response.constructor.name}`);
+        Logger.debug(`[54] Got response from msg id ${msgId}: ${response.constructor.name}`);
         if (response instanceof Raw.RpcError) {
           // response as Raw.RpcError;
           if (data instanceof Raw.InvokeWithoutUpdates || data instanceof Raw.InvokeWithTakeout) {
@@ -239,7 +242,8 @@ export class Session {
   private _pingWorker() {
     const ping = async () => {
       try {
-        Logger.debug(`Ping to telegram server.`);
+        if (!this._isConnected) return; // kill the ping worker when client is disconnected
+        Logger.debug(`[55] Ping to telegram server.`);
         await this._send(
           new Raw.PingDelayDisconnect({
             pingId: BigInt(0),
@@ -248,7 +252,7 @@ export class Session {
           false
         );
       } catch (error: any) {
-        Logger.error(`Get error when trying ping to telegram :`, error);
+        Logger.error(`[56] Get error when trying ping to telegram :`, error);
       }
       return this._pingWorker();
     };
@@ -256,23 +260,42 @@ export class Session {
     return this._pingTask;
   }
   private async _networkWorker() {
-    Logger.debug(`Network worker started.`);
-    if (!this._networkTask) {
-      Logger.debug(`Network worker ended`);
-      return;
-    }
-    let packet = await this._connection.recv();
-    if (packet !== undefined && packet.length !== 4) {
-      await this._handlePacket(packet)
-    }else{
-      if (packet) {
-        Logger.warning(`Server sent "${packet.readInt32LE(0)}"`);
+    Logger.debug(`[57] Network worker started.`);
+    let waiting = false;
+    while (true) {
+      if (!this._networkTask) {
+        Logger.debug(`[58] Network worker ended`);
+        return;
       }
-      if (this._isConnected) {
-        return this.restart();
+      if (!waiting) {
+        try {
+          let packet = await this._connection.recv();
+          if (packet !== undefined && packet.length !== 4) {
+            waiting = true; // block the network task until previous task is done
+            const release = await this._mutex.acquire();
+            try {
+              await this._handlePacket(packet);
+            } finally {
+              release();
+            }
+            waiting = false; // unblock the network task
+          } else {
+            if (packet) {
+              Logger.warning(`[59] Server sent "${packet.readInt32LE(0)}"`);
+            }
+            if (this._isConnected) {
+              return this.restart();
+            }
+          }
+        } catch (error: any) {
+          if (!this._isConnected) {
+            break;
+          } else {
+            throw error;
+          }
+        }
       }
     }
-    return this._networkWorker()
   }
   async stop() {
     const release = await this._mutex.acquire();
@@ -283,28 +306,28 @@ export class Session {
       this._results.clear();
       this._task.clear();
       this._networkTask = false;
-      Logger.info(`Session stopped.`);
+      Logger.info(`[60] Session stopped.`);
     } finally {
       release();
     }
   }
   restart() {
-    Logger.debug(`Restarting client`);
+    Logger.debug(`[61] Restarting client`);
     this.stop();
     this.start();
   }
   async invoke(
-    data: TLObject,
+    data: Raw.TypesTLRequest,
     retries: number = this.MAX_RETRIES,
     timeout: number = this.WAIT_TIMEOUT,
     sleepThreshold: number = this.SLEEP_THRESHOLD
   ) {
     Logger.debug(
-      `Invoking ${data.className} with parameters: ${retries} retries, ${timeout}ms timeout, ${sleepThreshold}ms sleep threshold.`
+      `[62] Invoking ${data.className} with parameters: ${retries} retries, ${timeout}ms timeout, ${sleepThreshold}ms sleep threshold.`
     );
     if (!this._isConnected) {
-      Logger.error(`Can't sending request when client is unconnected.`);
-      throw new Errors.ClientDisconnected();
+      Logger.error(`[63] Can't sending request when client is unconnected.`);
+      throw new Errors.ClientError.ClientDisconnected();
     }
     if (data.classType !== 'functions') {
       throw new Errors.NotAFunctionClass(data.className);
@@ -318,7 +341,7 @@ export class Session {
       try {
         return await this._send(data, true, timeout);
       } catch (error: any) {
-        Logger.error(`Got error when trying invoking ${className}:`, error);
+        Logger.error(`[64] Got error when trying invoking ${className}:`, error);
         if (error instanceof Errors.Exceptions.Flood.FloodWait) {
           error as Errors.Exceptions.Flood.FloodWait;
           let amount = error.value ?? 2000; // if undefined, make it as 2s
@@ -327,7 +350,7 @@ export class Session {
             throw error;
           }
           Logger.warning(
-            `Waiting for ${amount} seconds before continuing (caused by ${className})`
+            `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`
           );
           await sleep(amount);
         } else {
@@ -336,11 +359,15 @@ export class Session {
           }
           if (retries < 2) {
             Logger.warning(
-              `[${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${error.message}`
+              `[66] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
+                error.message
+              }`
             );
           } else {
             Logger.info(
-              `[${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${error.message}`,
+              `[67] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
+                error.message
+              }`,
               error
             );
           }
@@ -356,12 +383,13 @@ export class Session {
         this._dcId,
         this._testMode,
         this._client._ipv6,
+        this._proxy,
         this._isMedia,
         this._client._connectionMode
       );
       this._networkTask = true;
       try {
-        Logger.debug(`Connecting to telegram server`);
+        Logger.debug(`[68] Connecting to telegram server`);
         await this._connection.connect();
         this._networkWorker();
         await this._send(
@@ -390,14 +418,14 @@ export class Session {
             this.START_TIMEOUT
           );
         }
-        Logger.info(`Session initialized: Layer ${Raw.Layer}`);
-        Logger.info(`Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
+        Logger.info(`[69] Session initialized: Layer ${Raw.Layer}`);
+        Logger.info(`[70] Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
         Logger.info(
-          `System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`
+          `[71] System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`
         );
         this._pingWorker();
         this._isConnected = true;
-        Logger.info('Session Started');
+        Logger.info('[72] Session Started');
         break;
       } catch (error) {
         if (error instanceof Errors.Exceptions.NotAcceptable.AuthKeyDuplicated) {

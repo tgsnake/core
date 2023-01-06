@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2022 butthx <https://github.com/butthx>
+ * Copyright (C) 2023 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -37,7 +37,7 @@ export class RPCError extends Error {
     isSigned?: boolean
   ) {
     super();
-    Logger.debug(`Creating new instance RPCError(${rpcName ?? this.name})`);
+    Logger.debug(`[8] Creating new instance RPCError(${rpcName ?? this.name})`);
     this._isSigned = isSigned;
     this._isUnknown = isUnknown;
     this._rpcName = rpcName;
@@ -47,7 +47,7 @@ export class RPCError extends Error {
       this.value = value;
     }
     if (isUnknown) {
-      Logger.debug(`UnknownError : ${this.name}`);
+      Logger.debug(`[9] UnknownError : ${this.name}`);
       // TODO: write UnknownError.txt file
     }
   }
