@@ -16,6 +16,7 @@ jobs:
           node-version: '18.x'
       - name: Building docs using typedoc
         run: |
+          yarn config set enableImmutableInstalls false
           yarn install
           yarn build:api
           yarn build:error

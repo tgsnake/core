@@ -14,8 +14,10 @@ jobs:
           node-version: '18.x'
       - name: Sync TLSchema
         run: |
+          yarn config set enableImmutableInstalls false
           yarn install
           yarn build:sync
+          yarn prettier
           git config user.email github-actions@github.com
           git config user.name github-actions
           git pull origin master
