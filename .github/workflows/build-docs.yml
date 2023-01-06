@@ -24,9 +24,12 @@ jobs:
           yarn build:docs
       - name: Completed Building
         working-directory: '../docs'
+      - uses: actions/checkout@v3
+        with:
+          repository: tgsnake/core
+          path: core
+          ref: gh-pages
         run: |
-          git init -b gh-pages
-          git remote add origin git@github.com:tgsnake/core -m gh-pages
           git config user.email github-actions@github.com
           git config user.name github-actions
           git add .
