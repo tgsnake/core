@@ -622,7 +622,7 @@ export class Client {
    * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
    */
   async invoke(
-    query: TLObject,
+    query: Raw.TypesTLRequest,
     retries: number = this._maxRetries,
     timeout?: number,
     sleepTreshold: number = this._sleepTreshold

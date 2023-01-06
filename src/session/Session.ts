@@ -182,7 +182,7 @@ export class Session {
     }
   }
   private async _send(
-    data: TLObject,
+    data: Raw.TypesTLRequest,
     waitResponse: boolean = true,
     timeout: number = this.WAIT_TIMEOUT
   ) {
@@ -192,7 +192,13 @@ export class Session {
       this._results.set(BigInt(msgId), new Results());
     }
     Logger.debug(`[50] Sending msg id ${msgId}, has ${msg.write().length} bytes message.`);
-    let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
+    let payload = Mtproto.pack(
+      msg,
+      this._salt,
+      this._sessionId,
+      this._authKey,
+      this._authKeyId
+    );
     try {
       Logger.debug(`[51] Sending ${payload.length} bytes payload.`);
       await this._connection.send(payload);
@@ -314,7 +320,7 @@ export class Session {
     this.start();
   }
   async invoke(
-    data: TLObject,
+    data: Raw.TypesTLRequest,
     retries: number = this.MAX_RETRIES,
     timeout: number = this.WAIT_TIMEOUT,
     sleepThreshold: number = this.SLEEP_THRESHOLD
