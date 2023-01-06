@@ -19,8 +19,8 @@ jobs:
       - name: Update CHANGELOG.md with git-chglog
         run: |
           go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
-          git-chglog -o CHANGELOG.md
           git fetch --prune --unshallow --tags
+          git-chglog -o CHANGELOG.md
           git config user.email github-actions@github.com
           git config user.name github-actions
           git commit -am "Update CHANGELOG.md"
