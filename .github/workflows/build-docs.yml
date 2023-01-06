@@ -9,6 +9,8 @@ jobs:
   typedoc:
     name: Setup NodeJS
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN : ${{ secret.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -22,18 +24,15 @@ jobs:
           yarn build:error
           yarn prettier
           yarn build:docs
-      - uses: actions/checkout@v3
-        with:
-          repository: tgsnake/core
-          path: '../docs'
-          ref: gh-pages
       - name: Completed Building
         working-directory: '../docs'
         run: |
+          git init 
+          git remote add origin gh-pages https://$GITHUB_TOKEN@github.com/tgsnake/core -b gh-pages
           git config user.email github-actions@github.com
           git config user.name github-actions
           git add .
-          git commit -am 'sync docs with latest version'
+          git commit -m 'sync docs with latest version'
           git checkout gh-pages
           git pull origin gh-pages
           git push origin gh-pages

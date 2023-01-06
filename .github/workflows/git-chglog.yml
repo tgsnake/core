@@ -23,5 +23,6 @@ jobs:
           git-chglog -o CHANGELOG.md
           git config user.email github-actions@github.com
           git config user.name github-actions
-          git commit -am "Update CHANGELOG.md"
+          git add .
+          git commit -m "Update CHANGELOG.md"
           git push origin master
