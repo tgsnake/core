@@ -20,5 +20,5 @@ jobs:
           git config user.email github-actions@github.com
           git config user.name github-actions
           git pull origin master
-          git commit -am "Update TLSchema"
-          git push origin master
+          git commit -am "Update TLSchema" || echo "Tree is clean"
+          git push origin master || echo "Tree is clean"
