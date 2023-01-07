@@ -10,7 +10,7 @@ jobs:
     name: Setup NodeJS
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -27,8 +27,9 @@ jobs:
       - name: Completed Building
         working-directory: '../docs'
         run: |
-          git init 
-          git remote add origin gh-pages https://$GITHUB_TOKEN@github.com/tgsnake/core -b gh-pages
+          git init -b gh-pages
+          git remote add origin gh-pages
+          https://$GITHUB_TOKEN@github.com/tgsnake/core -m gh-pages
           git config user.email github-actions@github.com
           git config user.name github-actions
           git add .
