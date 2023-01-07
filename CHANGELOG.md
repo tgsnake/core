@@ -6,39 +6,23 @@
 
 ### Add
 
-- proxy support - types TypeTLRequest for invoke method - support fetch peer when user has multiple username - workflows to automatic change the api.tl amd update api.tl to layer 151 - logger number, better for debuging - class client error - workflows for building docs with typedoc - changelog workflows - config for git-chglog - stack in json of errors - SecurityMismatch error description - Logger.error when got SecurityMismatch error
+- proxy support - types TypeTLRequest for invoke method - support fetch peer when user has multiple username - workflows to automatic change the api.tl amd update api.tl to layer 151 - logger number, better for debuging - class client error - workflows for building docs with typedoc - changelog workflows - config for git-chglog - stack in json of errors - SecurityMismatch error description - Logger.error when got SecurityMismatch error ### Add
 
-### Add
+- WebSocketError class - Show TimeoutError in console Change: Change InitConfig timeout Fix: NetworkWorker not started when client restarting - Security error message - Socket.unref() when disconnecting websocket ### Change
 
-- WebSocketError class - Show TimeoutError in console Change: Change InitConfig timeout Fix: NetworkWorker not started when client restarting - Security error message - Socket.unref() when disconnecting websocket
-
-### Change
-
-- int to uint - update copyright year - webSocket to promise-socket - improve jsdoc - switch to primitive loop instead of while true - async Mtproto.unpack and Mtproto.pack - checking security error with static class method instead of create new class - move git-chglog config location
-
-### Change
+- int to uint - update copyright year - webSocket to promise-socket - improve jsdoc - switch to primitive loop instead of while true - async Mtproto.unpack and Mtproto.pack - checking security error with static class method instead of create new class - move git-chglog config location ### Change
 
 - Automatic ask recovery code when 3 times try fill 2fa password - do nothing when receive timeout - AES-256-CTR node:crypto - default TCP mode to TCPAbridge - Promise reject instead of trow TimeoutError - support [@tgsnake](https://github.com/tgsnake)/log latest version ### Fix
 
-- bug security errors
+- bug security errors ### Fix
 
-### Fix
+- module not found - TCPAbridged crash when receive update content ### Fixed
 
-- module not found - TCPAbridged crash when receive update content
+- Expected 1 arguments, but got 2. ### Improve
 
-### Fixed
+- generator to change the layer number in readme ### Revert
 
-- Expected 1 arguments, but got 2.
-
-### Improve
-
-- generator to change the layer number in readme
-
-### Revert
-
-- revert network task
-
-### Pull Requests
+- revert network task ### Pull Requests
 
 - Merge pull request [#2](https://github.com/tgsnake/core/issues/2) from tgsnake/dev <a name="1.3.0"></a>
 
