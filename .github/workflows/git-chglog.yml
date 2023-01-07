@@ -25,6 +25,6 @@ jobs:
         run: |
           git config user.email github-actions[bot]@users.noreply.github.com 
           git config user.name github-actions[bot]
-          git add .
-          git commit -am "Update CHANGELOG.md" -am "Updating CHANGELOG.md using workflows"  -am "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
+          git add ./CHANGELOG.md
+          git commit -m "change: Update CHANGELOG.md" -m "Updating CHANGELOG.md using workflows"  -m "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
           git push origin master || echo "Tree is clean"

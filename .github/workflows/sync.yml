@@ -17,8 +17,10 @@ jobs:
           yarn config set enableImmutableInstalls false
           yarn install
           yarn build:sync
+          yarn prettier
           git config user.email github-actions[bot]@users.noreply.github.com
           git config user.name github-actions[bot]
           git pull origin master
-          git commit -am "Update TLSchema" -am "Updating TLSchema using workflows"  -am "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
+          git add ./generator/*
+          git commit -m "change: Update TLSchema" -m "Updating TLSchema using workflows"  -m "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
           git push origin master || echo "Tree is clean"
