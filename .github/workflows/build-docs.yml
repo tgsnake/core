@@ -29,8 +29,9 @@ jobs:
         run: |
           git init -b gh-pages
           git remote add origin https://$PAT@github.com/tgsnake/core.git -m gh-pages
-          git config user.email github-actions@github.com
-          git config user.name github-actions
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git config user.name github-actions[bot]
           git add .
-          git commit -m 'sync docs with latest version'
+          git commit -am "Update docs" -am "Sync dics with latest version using workflows"  -am "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
+          git pull origin gh-pages --rebase
           git push origin gh-pages

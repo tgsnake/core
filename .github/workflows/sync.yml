@@ -17,8 +17,8 @@ jobs:
           yarn config set enableImmutableInstalls false
           yarn install
           yarn build:sync
-          git config user.email github-actions@github.com
-          git config user.name github-actions
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git config user.name github-actions[bot]
           git pull origin master
-          git commit -am "Update TLSchema" || echo "Tree is clean"
+          git commit -am "Update TLSchema" -am "Updating TLSchema using workflows"  -am "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
           git push origin master || echo "Tree is clean"
