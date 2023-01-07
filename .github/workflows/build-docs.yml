@@ -33,5 +33,5 @@ jobs:
           git config user.name github-actions[bot]
           git add .
           git commit -am "Update docs" -am "Sync dics with latest version using workflows"  -am "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
-          git pull origin gh-pages --rebase
+          git pull origin gh-pages --ff-only
           git push origin gh-pages
