@@ -10,7 +10,7 @@ jobs:
     name: Setup NodeJS
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -33,6 +33,4 @@ jobs:
           git config user.name github-actions
           git add .
           git commit -m 'sync docs with latest version'
-          git checkout gh-pages
-          git pull origin gh-pages
           git push origin gh-pages
