@@ -49,6 +49,6 @@
     "promise-socket": "7.0.0",
     "socks": "2.7.1"
   },
-  "isBeta": true,
-  "isPrivate": true
+  "isBeta": false,
+  "isPrivate": false
 }
