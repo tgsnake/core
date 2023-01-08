@@ -10,7 +10,6 @@
 
 import { TCP } from './tcp';
 import { crc32 } from '../../helpers';
-import { Primitive } from '../../raw';
 import type { ProxyInterface } from '../connection';
 
 /**
@@ -33,7 +32,10 @@ export class TCPFull extends TCP {
     allocSum.writeInt32LE(data.length + 12, 0);
     allocSum.writeInt32LE(this._seq, 4);
     data = Buffer.concat([allocSum, data]);
-    data = Buffer.concat([data, Primitive.Int.write(crc32(data), false)]);
+    let crc = crc32(data);
+    let bcrc = Buffer.alloc(4);
+    bcrc.writeUInt32LE(crc, 0);
+    data = Buffer.concat([data, bcrc]);
     this._seq += 1;
     await super.send(data);
   }
