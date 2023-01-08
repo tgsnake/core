@@ -1,6 +1,6 @@
 {
   "entryPoints": ["src/index.ts"],
-  "includes": ["LoggerLocation.md","CHANGELOG.md"],
+  "includes": ["LoggerLocation.md", "CHANGELOG.md"],
   "out": "../docs",
   "name": "@tgsnake/core",
   "includeVersion": true,

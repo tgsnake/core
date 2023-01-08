@@ -84,6 +84,7 @@ export class TCP {
   async close() {
     await this._task.clear(); // clear all timeout process
     await sleep(1);
+    if (!this._socks) return;
     await this._socks.end(); // end the writable
     return await this._socks.destroy(); // destroy socket
   }

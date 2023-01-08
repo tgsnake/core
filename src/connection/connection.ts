@@ -113,6 +113,7 @@ export class Connection {
         this._connected = true;
         break;
       } catch (error: any) {
+        Logger.error(`[106] Got error when trying connecting to telegram :`, error);
         this._protocol.close();
         await sleep(2000);
       }
