@@ -16,10 +16,8 @@ export class TimeoutError extends Error {
   message!: string;
   timeout!: number;
   description!: string;
-  name!: string;
   constructor(timeout: number) {
     super();
-    this.name = 'TimeoutError';
     this.message = `Running timeout after ${timeout} ms`;
     this.timeout = timeout;
     this.description = `The function is running too long, until it reaches the time limit that has been given.`;
@@ -61,7 +59,6 @@ export class TimeoutError extends Error {
   }
 }
 export class NotAFunctionClass extends Error {
-  name: string = 'NotAFunctionClass';
   message: string = '{value} is not a function.';
   description: string =
     "The provided class {value} is not a function constructor, can't sending request with that class.";
@@ -107,7 +104,6 @@ export class NotAFunctionClass extends Error {
   }
 }
 export class BadMsgNotification extends Error {
-  name: string = 'BadMsgNotification';
   message!: string;
   constructor(code) {
     const description = {
@@ -162,7 +158,6 @@ export class BadMsgNotification extends Error {
   }
 }
 export class SecurityError extends Error {
-  name: string = 'SecurityError';
   message!: string;
   description?: string;
   constructor(description?: string) {
@@ -209,14 +204,12 @@ export class SecurityError extends Error {
   }
 }
 export class SecurityCheckMismatch extends SecurityError {
-  name: string = 'SecurityCheckMismatch';
   message: string = 'A security check mismatch has occurred.';
   static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityCheckMismatch(description);
   }
 }
 export class CDNFileHashMismatch extends SecurityError {
-  name: string = 'CDNFileHashMismatch';
   message: string = 'A CDN file hash mismatch has occurred.';
   static check(cond: boolean, description?: string) {
     if (!cond) throw new CDNFileHashMismatch(description);

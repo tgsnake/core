@@ -9,7 +9,6 @@
  */
 
 export class ClientError extends Error {
-  name!: string;
   message!: string;
   description!: string;
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
@@ -49,26 +48,27 @@ export class ClientError extends Error {
   }
 }
 export class ClientDisconnected extends ClientError {
-  name: string = 'ClientDisconnected';
   message: string = "Can't send request to telegram when client is unconnected.";
   description: string =
     'The provided telegram client is unconnected, make sure to start the telegram client firsy before sending request.';
 }
 export class ClientFailed extends ClientError {
-  name: string = 'ClientFailed';
   message: string = 'Client failed to connect to server.';
   description: string =
     'The provided telegram client failed to connect to the telegram data center server. Attempts to connect to the telegram server have exceeded the specified maximum limit.';
 }
 export class ClientReady extends ClientError {
-  name: string = 'ClientReady';
   message: string = 'Client is already connected to server.';
   description: string =
     'The provided telegram client has been already connected to the telegram data center server.';
 }
 export class ClientNotReady extends ClientError {
-  name: string = 'ClientNotReady';
   message: string = 'Client is already disconnected to server.';
   description: string =
     'The provided telegram client has been already disconnected to the telegram data center server.';
+}
+export class AuthKeyMissing extends ClientError {
+  message: string = 'Auth key unavailable';
+  description: string =
+    'Auth key is unavailable, this can happen because at when the client is run, the user does not provide information to login.';
 }

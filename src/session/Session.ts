@@ -21,7 +21,7 @@ import { MsgFactory } from './internals/MsgFactory';
 import { BaseSession } from '../storage';
 import { sleep } from '../helpers';
 import { Timeout } from '../Timeout';
-import type { Client } from '../Client';
+import type { Client } from '../client/Client';
 
 export class Results {
   value!: Promise<unknown>;

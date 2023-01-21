@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-export { Client } from './Client';
+export { Client } from './client/Client';
 export { Raw } from './raw';
-export * as Clients from './Client';
+export * as Clients from './client';
 export * as Connections from './connection';
 export * as Cryptos from './crypto';
 export * as Errors from './errors';
