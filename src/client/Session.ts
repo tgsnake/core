@@ -69,7 +69,7 @@ export async function start(
   auth?: _Auth.SigInBot | _Auth.SigInUser
 ): Promise<Raw.users.UserFull> {
   await connect(client);
-  if (auth && !client._storage.authKey) {
+  if (auth) {
     // @ts-ignore
     if (auth?.botToken) {
       // @ts-ignore

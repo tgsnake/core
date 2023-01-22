@@ -86,7 +86,7 @@ export class Session {
   private async _handlePacket(packet: Buffer) {
     Logger.debug(`[33] Unpacking ${packet.length} bytes packet.`);
     try {
-      let data = Mtproto.unpack(
+      let data = await Mtproto.unpack(
         new BytesIO(packet),
         this._sessionId,
         this._authKey,
@@ -179,7 +179,7 @@ export class Session {
             error.description ?? error.message
           }`
         );
-        return;
+        return await this.stop();
       }
       throw error;
     }

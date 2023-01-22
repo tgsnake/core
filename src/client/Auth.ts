@@ -106,14 +106,14 @@ export async function siginBot(client: Client, botToken: string): Promise<Raw.Us
  * @param {Object} auth - The required parameter to be used for creating account or login.
  */
 export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.User> {
-  let phoneNumber;
-  let sendCode;
-  let signedIn;
-  let signedUp;
+  let _phoneNumber;
+  let _sendCode;
+  let _signedIn;
+  let _signedUp;
   while (true) {
     try {
-      phoneNumber = await auth.phoneNumber();
-      sendCode = await sendCode(client, phoneNumber);
+      _phoneNumber = await auth.phoneNumber();
+      _sendCode = await sendCode(client, _phoneNumber);
       break;
     } catch (error: any) {
       if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
@@ -131,7 +131,7 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
     let code = await auth.code();
     try {
       // @ts-ignore
-      signedIn = await sigin(client, phoneNumber, sendCode.phoneCodeHash, code);
+      _signedIn = await sigin(client, _phoneNumber, _sendCode.phoneCodeHash, code);
       break;
     } catch (error: any) {
       if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
@@ -147,7 +147,10 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
               if (!auth.password) {
                 throw new Error('2FA password required');
               }
-              return await checkPassword(client,await auth.password(await getPasswordHint(client)));
+              return await checkPassword(
+                client,
+                await auth.password(await getPasswordHint(client))
+              );
             } else {
               Logger.info('[102] Look you are forgotten the password');
               if (auth.recoveryCode) {
@@ -190,15 +193,15 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
       }
     }
   }
-  if (signedIn && signedIn instanceof Raw.User) {
-    return signedIn;
+  if (_signedIn && _signedIn instanceof Raw.User) {
+    return _signedIn;
   }
   while (true) {
     try {
-      signedUp = await signup(
+      _signedUp = await signup(
         client,
-        phoneNumber,
-        sendCode.phoneCodeHash,
+        _phoneNumber,
+        _sendCode.phoneCodeHash,
         auth.firstname ? await auth.firstname() : String(Date.now()),
         auth.lastname ? await auth.lastname() : ''
       );
@@ -214,12 +217,12 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
       }
     }
   }
-  if (signedIn instanceof Raw.help.TermsOfService) {
-    Logger.info(`\n${signedIn.text}\n`);
+  if (_signedIn instanceof Raw.help.TermsOfService) {
+    Logger.info(`\n${_signedIn.text}\n`);
     //@ts-ignore
-    await acceptTOS(client, signedIn.id.data);
+    await acceptTOS(client, _signedIn.id.data);
   }
-  return signedUp;
+  return _signedUp;
 }
 /**
  * Sending telegram OTP code.
