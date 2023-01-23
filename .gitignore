@@ -116,6 +116,6 @@ ignore.json
 #tsc 
 lib
 test/**
-src/raw/Raw.ts
-src/raw/All.ts
-src/errors/exceptions
+# src/raw/Raw.ts
+# src/raw/All.ts
+# src/errors/exceptions
