@@ -8,14 +8,11 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as net from 'net';
-import { SocksClient } from 'socks';
-import { Mutex } from 'async-mutex';
-import { PromiseSocket } from 'promise-socket';
-import { Timeout } from '../../Timeout';
-import { Logger } from '../../Logger';
-import { sleep } from '../../helpers';
-import type { ProxyInterface } from '../connection';
+import { net, SocksClient, Mutex, PromiseSocket } from '../../platform.deno.ts';
+import { Timeout } from '../../Timeout.ts';
+import { Logger } from '../../Logger.ts';
+import { sleep } from '../../helpers.ts';
+import type { ProxyInterface } from '../connection.ts';
 
 /**
  * @class TCP

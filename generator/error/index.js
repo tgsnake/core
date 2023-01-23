@@ -102,8 +102,8 @@ async function read() {
       path.join(__dirname, '../../src/errors/exceptions', `${filename}.ts`),
       parents
     );
-    imported.push(`import * as ${prnt} from "./${filename}"`);
-    exported.push(`export * as ${prnt} from "./${filename}"`);
+    imported.push(`import * as ${prnt} from "./${filename}.ts"`);
+    exported.push(`export * as ${prnt} from "./${filename}.ts"`);
     let excp = `"_" : "${prnt}.${prnt}",\n`;
     for (let ex of exId) {
       excp += `"${ex[0]}" : "${prnt}.${ex[1]}",\n`;

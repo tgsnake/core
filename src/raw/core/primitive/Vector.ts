@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '../TLObject';
-import { BytesIO } from '../BytesIO';
-import { Int, Long } from './Int';
+import { TLObject } from '../TLObject.ts';
+import { BytesIO } from '../BytesIO.ts';
+import { Int, Long } from './Int.ts';
 
 export class Vector extends TLObject {
   static ID: number = 0x1cb5c415;

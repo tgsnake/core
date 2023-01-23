@@ -8,8 +8,8 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TCP } from './tcp';
-import type { ProxyInterface } from '../connection';
+import { TCP } from './tcp.ts';
+import type { ProxyInterface } from '../connection.ts';
 
 /**
  * @class TCPIntermediate

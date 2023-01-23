@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-export { Int, Long, Int128, Int256 } from './Int';
-export { Bytes } from './Bytes';
-export { String } from './String';
-export { Bool, BoolTrue, BoolFalse } from './Bool';
-export { Vector } from './Vector';
-export { Double } from './Double';
-export { Float } from './Float';
+export { Int, Long, Int128, Int256 } from './Int.ts';
+export { Bytes } from './Bytes.ts';
+export { String } from './String.ts';
+export { Bool, BoolTrue, BoolFalse } from './Bool.ts';
+export { Vector } from './Vector.ts';
+export { Double } from './Double.ts';
+export { Float } from './Float.ts';

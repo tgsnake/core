@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '../TLObject';
-import { BytesIO } from '../BytesIO';
-import { bufferToBigint as toBigint } from '../../../helpers';
+import { TLObject } from '../TLObject.ts';
+import { BytesIO } from '../BytesIO.ts';
+import { bufferToBigint as toBigint } from '../../../helpers.ts';
 
 export class Int extends TLObject {
   static SIZE: number = 4;

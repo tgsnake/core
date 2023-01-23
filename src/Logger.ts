@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Logger } from '@tgsnake/log';
+import { Logger } from './platform.deno.ts';
 const log = new Logger({
   name: '@tgsnake/core',
   level: ['debug'],

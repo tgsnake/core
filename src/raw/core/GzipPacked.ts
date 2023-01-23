@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-import { BytesIO } from './BytesIO';
-import { TLObject } from './TLObject';
-import * as Primitive from './primitive';
-import { gzipSync, gunzipSync } from 'zlib';
+import { BytesIO } from './BytesIO.ts';
+import { TLObject } from './TLObject.ts';
+import * as Primitive from './primitive/index.ts';
+import { gzipSync, gunzipSync } from '../../platform.deno.ts';
 
 export class GzipPacked extends TLObject {
   static ID: number = 0x3072cfa1;

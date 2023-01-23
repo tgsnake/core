@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-export { TCP } from './tcp';
-export { TCPAbridged } from './TCPAbridged';
-export { TCPAbridgedO } from './TCPAbridgedO';
-export { TCPFull } from './TCPFull';
-export { TCPIntermediate } from './TCPIntermediate';
-export { TCPIntermediateO } from './TCPIntermediateO';
+export { TCP } from './tcp.ts';
+export { TCPAbridged } from './TCPAbridged.ts';
+export { TCPAbridgedO } from './TCPAbridgedO.ts';
+export { TCPFull } from './TCPFull.ts';
+export { TCPIntermediate } from './TCPIntermediate.ts';
+export { TCPIntermediateO } from './TCPIntermediateO.ts';

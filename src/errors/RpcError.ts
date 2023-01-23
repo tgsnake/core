@@ -8,13 +8,24 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Logger } from '../Logger';
-import { Raw, TLObject } from '../raw';
-import { Exceptions } from './exceptions/All';
-
+import { Logger } from '../Logger.ts';
+import { Raw, TLObject } from '../raw/index.ts';
+import { Exceptions } from './exceptions/All.ts';
+function req(paths: string): { [key: string]: any } {
+  let res = {};
+  if ('Deno' in globalThis) {
+    // @ts-ignore
+    import(paths).then((r) => {
+      res = r;
+    });
+  } else {
+    res = require(paths.replace('.ts', '.js'));
+  }
+  return res;
+}
 function getModule(name: string) {
   let [n, m] = name.split('.');
-  const AllExceptions = require('./exceptions');
+  const AllExceptions = req('./exceptions/index.ts');
   if (AllExceptions[n] && AllExceptions[n][m]) {
     return AllExceptions[n][m];
   }

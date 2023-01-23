@@ -8,6 +8,6 @@
  * it under the terms of the MIT License as published.
  */
 
-export { AbstractSession } from './Abstract';
-export { BaseSession, getInputPeer } from './Session';
-export { StringSession } from './StringSession';
+export { AbstractSession } from './Abstract.ts';
+export { BaseSession, getInputPeer } from './Session.ts';
+export { StringSession } from './StringSession.ts';

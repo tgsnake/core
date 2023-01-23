@@ -8,20 +8,18 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as crypto from 'crypto';
-import * as os from 'os';
-import { Mutex } from 'async-mutex';
-import { Logger } from '../Logger';
-import { Connection, ProxyInterface } from '../connection/connection';
-import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw';
-import * as Mtproto from '../crypto/Mtproto';
-import * as Errors from '../errors';
-import { MsgId } from './internals/MsgId';
-import { MsgFactory } from './internals/MsgFactory';
-import { BaseSession } from '../storage';
-import { sleep } from '../helpers';
-import { Timeout } from '../Timeout';
-import type { Client } from '../client/Client';
+import { crypto, os, Mutex } from '../platform.deno.ts';
+import { Logger } from '../Logger.ts';
+import { Connection, ProxyInterface } from '../connection/connection.ts';
+import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw/index.ts';
+import * as Mtproto from '../crypto/Mtproto.ts';
+import * as Errors from '../errors/index.ts';
+import { MsgId } from './internals/MsgId.ts';
+import { MsgFactory } from './internals/MsgFactory.ts';
+import { BaseSession } from '../storage/index.ts';
+import { sleep } from '../helpers.ts';
+import { Timeout } from '../Timeout.ts';
+import type { Client } from '../client/Client.ts';
 
 export class Results {
   value!: Promise<unknown>;
@@ -300,12 +298,12 @@ export class Session {
   async stop() {
     const release = await this._mutex.acquire();
     try {
+      this._networkTask = false;
       this._isConnected = false;
       clearTimeout(this._pingTask);
       await this._connection.close();
       this._results.clear();
       this._task.clear();
-      this._networkTask = false;
       Logger.info(`[60] Session stopped.`);
     } finally {
       release();

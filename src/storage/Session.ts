@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Logger } from '../Logger';
-import { AbstractSession } from './Abstract';
-import { Raw } from '../raw';
-import { getChannelId } from '../helpers';
+import { Logger } from '../Logger.ts';
+import { AbstractSession } from './Abstract.ts';
+import { Raw } from '../raw/index.ts';
+import { getChannelId } from '../helpers.ts';
 
 /**
  * Get a valid InputPeer from the available data session.

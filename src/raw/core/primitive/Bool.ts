@@ -8,8 +8,8 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '../TLObject';
-import { BytesIO } from '../BytesIO';
+import { TLObject } from '../TLObject.ts';
+import { BytesIO } from '../BytesIO.ts';
 export class BoolFalse extends TLObject {
   static ID: number = 0xbc799737;
   static value: boolean = false;

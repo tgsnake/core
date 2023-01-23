@@ -7,13 +7,13 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import type { Client } from './Client';
-import { Raw } from '../raw';
-import { Auth, Session, DataCenter } from '../session';
-import { Logger } from '../Logger';
-import * as Errors from '../errors';
-import * as _Auth from './Auth';
-import * as Version from '../Version';
+import type { Client } from './Client.ts';
+import { Raw } from '../raw/index.ts';
+import { Auth, Session, DataCenter } from '../session/index.ts';
+import { Logger } from '../Logger.ts';
+import * as Errors from '../errors/index.ts';
+import * as _Auth from './Auth.ts';
+import * as Version from '../Version.deno.ts';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
  * @param {Object} client - Telegram client.

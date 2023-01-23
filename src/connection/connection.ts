@@ -8,12 +8,12 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as TCP from './TCP';
-import { DataCenter } from '../session';
-import { sleep } from '../helpers';
-import { Logger } from '../Logger';
-import { Mutex } from 'async-mutex';
-import { ClientError } from '../errors';
+import * as TCP from './TCP/index.ts';
+import { DataCenter } from '../session/index.ts';
+import { sleep } from '../helpers.ts';
+import { Logger } from '../Logger.ts';
+import { Mutex } from '../platform.deno.ts';
+import { ClientError } from '../errors/index.ts';
 
 /**
  * Several TCP models are available.

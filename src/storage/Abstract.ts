@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Raw } from '../raw';
+import { Raw } from '../raw/index.ts';
 
 /**
  * @class AbstractSession

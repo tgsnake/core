@@ -8,16 +8,16 @@
  * it under the terms of the MIT License as published.
  */
 
-export { Client } from './client/Client';
-export { Raw } from './raw';
-export * as Clients from './client';
-export * as Connections from './connection';
-export * as Cryptos from './crypto';
-export * as Errors from './errors';
-export * as Raws from './raw';
-export * as Sessions from './session';
-export * as Storages from './storage';
-export * as Versions from './Version';
-export * as Helpers from './helpers';
-export * as Timeouts from './Timeout';
-import * as Loggers from './Logger';
+export { Client } from './client/Client.ts';
+export { Raw } from './raw/index.ts';
+export * as Clients from './client/index.ts';
+export * as Connections from './connection/index.ts';
+export * as Cryptos from './crypto/index.ts';
+export * as Errors from './errors/index.ts';
+export * as Raws from './raw/index.ts';
+export * as Sessions from './session/index.ts';
+export * as Storages from './storage/index.ts';
+export * as Versions from './Version.deno.ts';
+export * as Helpers from './helpers.ts';
+export * as Timeouts from './Timeout.ts';
+import * as Loggers from './Logger.ts';

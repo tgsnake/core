@@ -13,7 +13,7 @@
 *               This file is auto generate.                *
 *         All change made in this file will be lost!       *
 ***********************************************************/
-import { RPCError } from "../RpcError"
+import { RPCError } from "../RpcError.ts"
 
 export class {{ CONSTRUCTOR-NAME }} extends RPCError {
   code:number = {{ CODE }};

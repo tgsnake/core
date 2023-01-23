@@ -7,12 +7,12 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import type { Client } from './Client';
-import { Raw } from '../raw';
-import { Session, Auth, DataCenter } from '../session';
-import { computePasswordCheck } from '../crypto/Password';
-import { Logger } from '../Logger';
-import * as Errors from '../errors';
+import type { Client } from './Client.ts';
+import { Raw } from '../raw/index.ts';
+import { Session, Auth, DataCenter } from '../session/index.ts';
+import { computePasswordCheck } from '../crypto/Password.ts';
+import { Logger } from '../Logger.ts';
+import * as Errors from '../errors/index.ts';
 export interface SigInBot {
   /**
    * Bot token from bot father.

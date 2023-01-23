@@ -6,12 +6,12 @@
    
 ---   
   
-Pure Telegram MTProto framework for nodejs.
+Pure Telegram MTProto framework for Javascript or Typescript.
 
 ⚡ Using less dependencies to make it fast.  
 🔓 Open Source, you can contribute to make this framework better.  
 🗒️ Using Pure Telegram Raw Api, all JSON object is pure from telegram, nothing has changed at all. So that it makes it easier for you to learn the [telegram schema](https://core.telegram.org/schema) docs.  
-⛓️ Typescript Support.
+🦕 Deno Support.
 
 ## Example use
 
@@ -81,7 +81,6 @@ $ yarn build:error
 ## Notes
 
 - This framework is porting of pyrogram for connecting to telegram server. I have dedicated 2 months of my time to complete this framework from scratch. Research after research I do to improve this framework. So big thanks for pyrogram for the source, without that source code, this framework maybe unavailable.
-- This framework currently only work for nodejs, untested on another platform.
 - For more questions, ask on telegram group ([@tgsnake](https://t.me/tgsnake)) or open github issue.
 
 ## MIT License

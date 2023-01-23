@@ -8,24 +8,36 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Object } from '../All';
-import { BytesIO } from './BytesIO';
-import { Logger } from '../../Logger';
+import { Object } from '../All.ts';
+import { BytesIO } from './BytesIO.ts';
+import { Logger } from '../../Logger.ts';
+function req(paths: string): { [key: string]: any } {
+  let res = {};
+  if ('Deno' in globalThis) {
+    // @ts-ignore
+    import(paths).then((r) => {
+      res = r;
+    });
+  } else {
+    res = require(paths.replace('.ts', '.js'));
+  }
+  return res;
+}
 function getModule(name: string) {
   if (!name) {
     throw new Error("name of module can't be undefined");
   }
   if (name === 'Message') {
-    return require('./Message').Message;
+    return req('./Message.ts').Message;
   } else if (name === 'GzipPacked') {
-    return require('./GzipPacked').GzipPacked;
+    return req('./GzipPacked.ts').GzipPacked;
   } else if (name === 'MsgContainer') {
-    return require('./MsgContainer').MsgContainer;
+    return req('./MsgContainer.ts').MsgContainer;
   } else if (name.startsWith('Primitive')) {
-    return require('./primitive')[name.split('.')[1]];
+    return req('./primitive/index.ts')[name.split('.')[1]];
   } else {
     const split = name.split('.');
-    const { Raw } = require('../Raw');
+    const { Raw } = req('../Raw.ts');
     if (split.length == 3) {
       return Raw[split[1]][split[2]];
     }

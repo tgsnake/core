@@ -8,22 +8,22 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Connection } from '../connection/connection';
-import * as AES from '../crypto/Aes';
-import * as Prime from '../crypto/Prime';
-import * as RSA from '../crypto/RSA';
-import * as crypto from 'crypto';
-import { SecurityCheckMismatch } from '../errors';
-import { TLObject, Primitive, Raw, BytesIO } from '../raw';
-import { MsgId } from './internals/MsgId';
+import { Connection } from '../connection/connection.ts';
+import * as AES from '../crypto/Aes.ts';
+import * as Prime from '../crypto/Prime.ts';
+import * as RSA from '../crypto/RSA.ts';
+import { crypto } from '../platform.deno.ts';
+import { SecurityCheckMismatch } from '../errors/index.ts';
+import { TLObject, Primitive, Raw, BytesIO } from '../raw/index.ts';
+import { MsgId } from './internals/MsgId.ts';
 import {
   sleep,
   mod,
   bufferToBigint as toBigint,
   bigintToBuffer as toBuffer,
   bigIntPow,
-} from '../helpers';
-import { Logger } from '../Logger';
+} from '../helpers.ts';
+import { Logger } from '../Logger.ts';
 
 export class Auth {
   MAX_RETRIES: number = 5;

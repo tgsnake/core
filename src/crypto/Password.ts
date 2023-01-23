@@ -7,9 +7,9 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Raw } from '../raw';
-import * as crypto from 'crypto';
-import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers';
+import { Raw } from '../raw/index.ts';
+import { crypto } from '../platform.deno.ts';
+import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers.ts';
 
 /**
  * Create a sha256 hash.

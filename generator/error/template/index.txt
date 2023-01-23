@@ -13,5 +13,5 @@
 *               This file is auto generate.                *
 *         All change made in this file will be lost!       *
 ***********************************************************/
-export { count, Exceptions } from "./All"
+export { count, Exceptions } from "./All.ts"
 {{ EXPORTED }}

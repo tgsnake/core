@@ -8,8 +8,15 @@
  * it under the terms of the MIT License as published.
  */
 
-import { bigMath, bigIntMod, randBigint, rangeBigint, bigIntPow, bufferToBigint } from '../helpers';
-import * as crypto from 'crypto';
+import {
+  bigMath,
+  bigIntMod,
+  randBigint,
+  rangeBigint,
+  bigIntPow,
+  bufferToBigint,
+} from '../helpers.ts';
+import { crypto } from '../platform.deno.ts';
 
 const CURRENT_DH_PRIME = BigInt(
   '0x' +

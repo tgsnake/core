@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { SeqNo } from './SeqNo';
-import { MsgId } from './MsgId';
-import { Raw, Message, MsgContainer, TLObject } from '../../raw';
+import { SeqNo } from './SeqNo.ts';
+import { MsgId } from './MsgId.ts';
+import { Raw, Message, MsgContainer, TLObject } from '../../raw/index.ts';
 
 export function MsgFactory() {
   const seqNo = new SeqNo();

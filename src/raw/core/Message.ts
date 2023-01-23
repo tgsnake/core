@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { BytesIO } from './BytesIO';
-import { TLObject } from './TLObject';
-import * as Primitive from './primitive';
+import { BytesIO } from './BytesIO.ts';
+import { TLObject } from './TLObject.ts';
+import * as Primitive from './primitive/index.ts';
 function toBytes(value: bigint) {
   const bytesArray: Array<number> = [];
   for (let i = 0; i < 8; i++) {

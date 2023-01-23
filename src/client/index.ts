@@ -8,6 +8,6 @@
  * it under the terms of the MIT License as published.
  */
 
-export * as Client from './Client';
-export * as Auth from './Auth';
-export * as Session from './Session';
+export * as Client from './Client.ts';
+export * as Auth from './Auth.ts';
+export * as Session from './Session.ts';

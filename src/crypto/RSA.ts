@@ -13,7 +13,7 @@ import {
   bigIntPow as pow,
   bigintToBuffer as toBuffer,
   bufferToBigint as toBigint,
-} from '../helpers';
+} from '../helpers.ts';
 
 const PublicKey = new Map<
   bigint,

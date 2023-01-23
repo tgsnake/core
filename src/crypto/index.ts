@@ -8,8 +8,8 @@
  * it under the terms of the MIT License as published.
  */
 
-export * as Mtproto from './Mtproto';
-export * as Prime from './Prime';
-export * as RSA from './RSA';
-export * as Password from './Password';
-export * as AES from './Aes';
+export * as Mtproto from './Mtproto.ts';
+export * as Prime from './Prime.ts';
+export * as RSA from './RSA.ts';
+export * as Password from './Password.ts';
+export * as AES from './Aes.ts';

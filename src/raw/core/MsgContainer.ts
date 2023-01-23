@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-import { BytesIO } from './BytesIO';
-import { TLObject } from './TLObject';
-import * as Primitive from './primitive';
-import { Message } from './Message';
+import { BytesIO } from './BytesIO.ts';
+import { TLObject } from './TLObject.ts';
+import * as Primitive from './primitive/index.ts';
+import { Message } from './Message.ts';
 
 export class MsgContainer extends TLObject {
   static ID: number = 0x73f1f8dc;

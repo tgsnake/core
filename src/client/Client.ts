@@ -7,16 +7,16 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import * as os from 'os';
-import * as Errors from '../errors';
-import { Raw } from '../raw';
-import { AbstractSession } from '../storage';
-import * as _Session from './Session';
-import * as _Auth from './Auth';
-import * as Version from '../Version';
-import * as helpers from '../helpers';
-import type { ProxyInterface } from '../connection/connection';
-import type { Session } from '../session/index';
+import { os } from '../platform.deno.ts';
+import * as Errors from '../errors/index.ts';
+import { Raw } from '../raw/index.ts';
+import { AbstractSession } from '../storage/index.ts';
+import * as _Session from './Session.ts';
+import * as _Auth from './Auth.ts';
+import * as Version from '../Version.deno.ts';
+import * as helpers from '../helpers.ts';
+import type { ProxyInterface } from '../connection/connection.ts';
+import type { Session } from '../session/index.ts';
 
 export interface ClientOptions {
   /**

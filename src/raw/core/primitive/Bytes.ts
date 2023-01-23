@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '../TLObject';
-import { BytesIO } from '../BytesIO';
-import { bufferToBigint, bigintToBuffer, mod } from '../../../helpers';
+import { TLObject } from '../TLObject.ts';
+import { BytesIO } from '../BytesIO.ts';
+import { bufferToBigint, bigintToBuffer, mod } from '../../../helpers.ts';
 
 export class Bytes extends TLObject {
   static write(value: Buffer): Buffer {

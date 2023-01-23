@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as DataCenter from './internals/DataCenter';
-export { SeqNo } from './internals/SeqNo';
+import * as DataCenter from './internals/DataCenter.ts';
+export { SeqNo } from './internals/SeqNo.ts';
 export { DataCenter };
-export { Auth } from './Auth';
-export { Session, Results } from './Session';
-export { MsgFactory } from './internals/MsgFactory';
-export { MsgId } from './internals/MsgId';
+export { Auth } from './Auth.ts';
+export { Session, Results } from './Session.ts';
+export { MsgFactory } from './internals/MsgFactory.ts';
+export { MsgId } from './internals/MsgId.ts';

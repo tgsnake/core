@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TimeoutError } from './errors';
+import { TimeoutError } from './errors/index.ts';
 
 export interface OnTimeout {
   /**

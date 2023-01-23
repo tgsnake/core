@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '../TLObject';
-import { BytesIO } from '../BytesIO';
-import { Bytes } from './Bytes';
+import { TLObject } from '../TLObject.ts';
+import { BytesIO } from '../BytesIO.ts';
+import { Bytes } from './Bytes.ts';
 
 export class String extends TLObject {
   static write(value: string): Buffer {

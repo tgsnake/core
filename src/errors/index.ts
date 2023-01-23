@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-export { RPCError, UnknownError } from './RpcError';
-export * as Exceptions from './exceptions';
-export * as ClientError from './Client';
+export { RPCError, UnknownError } from './RpcError.ts';
+export * as Exceptions from './exceptions/index.ts';
+export * as ClientError from './Client.ts';
 
 export class TimeoutError extends Error {
   message!: string;

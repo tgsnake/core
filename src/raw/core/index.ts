@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as Primitive from './primitive';
+import * as Primitive from './primitive/index.ts';
 export { Primitive };
-export { BytesIO } from './BytesIO';
-export { TLObject } from './TLObject';
-export { GzipPacked } from './GzipPacked';
-export { Message } from './Message';
-export { MsgContainer } from './MsgContainer';
+export { BytesIO } from './BytesIO.ts';
+export { TLObject } from './TLObject.ts';
+export { GzipPacked } from './GzipPacked.ts';
+export { Message } from './Message.ts';
+export { MsgContainer } from './MsgContainer.ts';

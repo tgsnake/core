@@ -8,6 +8,6 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as TCP from './TCP';
-export * as Connections from './connection';
+import * as TCP from './TCP/index.ts';
+export * as Connections from './connection.ts';
 export { TCP };

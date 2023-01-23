@@ -8,13 +8,13 @@
  * it under the terms of the MIT License as published.
  */
 
-import crypto from 'crypto';
-import { SecurityCheckMismatch } from '../errors';
-import { Primitive, Message, BytesIO } from '../raw';
-import { MsgId } from '../session/internals/MsgId';
-import { mod, range, bigIntMod } from '../helpers';
-import { ige256Encrypt, ige256Decrypt } from './Aes';
-import { Logger } from '../Logger';
+import { crypto } from '../platform.deno.ts';
+import { SecurityCheckMismatch } from '../errors/index.ts';
+import { Primitive, Message, BytesIO } from '../raw/index.ts';
+import { MsgId } from '../session/internals/MsgId.ts';
+import { mod, range, bigIntMod } from '../helpers.ts';
+import { ige256Encrypt, ige256Decrypt } from './Aes.ts';
+import { Logger } from '../Logger.ts';
 
 const STORED_MSG_IDS_MAX_SIZE = 1000 * 2;
 
@@ -82,18 +82,20 @@ export function unpack(
   );
   const msgKey = b.read(16);
   const [aesKey, aesIv] = kdf(authKey, msgKey, false);
-  const data = new BytesIO(ige256Decrypt(b.read(), aesKey, aesIv));
+  let encrypted = b.read();
+  const decrypted = ige256Decrypt(encrypted, aesKey, aesIv);
+  // https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
+  const hash = sha256(Buffer.concat([authKey.slice(96, 96 + 32), decrypted]));
+  SecurityCheckMismatch.check(
+    msgKey.equals(hash.slice(8, 24)),
+    'Provided msg key is not equal with expected one'
+  );
+  const data = new BytesIO(decrypted);
   data.read(8); // salt
   // https://core.telegram.org/mtproto/security_guidelines#checking-session-id
   SecurityCheckMismatch.check(
     Buffer.from(data.read(8)).equals(sessionId),
     'Provided session id is not equal with expected one.'
-  );
-  // https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
-  const hash = sha256(Buffer.concat([authKey.slice(96, 96 + 32), data.buffer]));
-  SecurityCheckMismatch.check(
-    msgKey.equals(hash.slice(8, 24)),
-    'Provided msg key is not equal with expected one'
   );
   let message;
   try {

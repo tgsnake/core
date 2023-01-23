@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TCP } from './tcp';
-import { bigintToBuffer } from '../../helpers';
-import type { ProxyInterface } from '../connection';
+import { TCP } from './tcp.ts';
+import { bigintToBuffer } from '../../helpers.ts';
+import type { ProxyInterface } from '../connection.ts';
 
 /**
  * @class TCPAbridged

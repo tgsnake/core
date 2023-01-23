@@ -8,9 +8,9 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Logger } from '../Logger';
-import { BaseSession } from './Session';
-import { BytesIO } from '../raw';
+import { Logger } from '../Logger.ts';
+import { BaseSession } from './Session.ts';
+import { BytesIO } from '../raw/index.ts';
 
 /**
  * @class StringSession
