@@ -1,4 +1,16 @@
- <a name="1.4.0"></a>
+ <a name="1.5.0"></a>
+
+## [1.5.0](https://github.com/tgsnake/core/compare/1.4.0...1.5.0)
+
+> 2023-01-23
+
+### Add
+
+- forceSMS params - logger error when failed connecting to telegram server  ### Change
+
+- Update CHANGELOG.md - ungitignore static file - add support to deno - split client code to different file - remove Primitive.Int.write in TCPFull  ### Fix
+
+- sendCode is not a function   <a name="1.4.0"></a>
 
 ## [1.4.0](https://github.com/tgsnake/core/compare/1.3.0...1.4.0)
 
