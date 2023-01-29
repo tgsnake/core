@@ -104,11 +104,12 @@ export function makeCRCTable() {
   return crcTable;
 }
 export function crc32(str: Buffer | string) {
-  str = Buffer.isBuffer(str) ? str.toString('utf8') : str;
+  str = Buffer.isBuffer(str) ? Buffer.from(str) : str;
   var crcTable = makeCRCTable();
-  var crc = 0 ^ -1;
+  var crc = -1;
   for (var i = 0; i < str.length; i++) {
-    crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
+    const bytes: number = Number(str[i]);
+    crc = (crc >>> 8) ^ crcTable[(crc ^ bytes) & 0xff];
   }
   return (crc ^ -1) >>> 0;
 }
