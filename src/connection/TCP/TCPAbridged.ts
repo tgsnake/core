@@ -44,6 +44,7 @@ export class TCPAbridged extends TCP {
     if (_length.equals(Buffer.from('7f', 'hex'))) {
       _length = await super.recv(3);
       if (!_length) return;
+      return await super.recv(Buffer.concat([_length, Buffer.alloc(1)]).readInt32LE(0) * 4);
     }
     return await super.recv(_length[0] * 4);
   }

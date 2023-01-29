@@ -50,8 +50,8 @@ export interface SigInUser {
   authError?: { (error: Errors.Exceptions.BadRequest.BadRequest): any };
   /**
    * Force sending OTP code via SMS.
-  */
-  forceSMS?:boolean;
+   */
+  forceSMS?: boolean;
 }
 /**
  * Sigin as bot.
@@ -117,7 +117,7 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
   while (true) {
     try {
       _phoneNumber = await auth.phoneNumber();
-      _sendCode = await sendCode(client, _phoneNumber,auth.forceSMS);
+      _sendCode = await sendCode(client, _phoneNumber, auth.forceSMS);
       break;
     } catch (error: any) {
       if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
@@ -233,8 +233,11 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
  * @param {Object} client - Telegram client.
  * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
  */
-export async function sendCode(client: Client, phoneNumber:
-string,forceSMS:boolean = false): Promise<Raw.auth.SentCode> {
+export async function sendCode(
+  client: Client,
+  phoneNumber: string,
+  forceSMS: boolean = false
+): Promise<Raw.auth.SentCode> {
   phoneNumber = phoneNumber.replace(/\+/g, '').trim();
   while (true) {
     try {
@@ -247,16 +250,16 @@ string,forceSMS:boolean = false): Promise<Raw.auth.SentCode> {
         }),
         0
       );
-      if(!forceSMS || r.type instanceof Raw.auth.SentCodeTypeSms){
-        return r
+      if (!forceSMS || r.type instanceof Raw.auth.SentCodeTypeSms) {
+        return r;
       }
       let resend = await client.invoke(
-          new Raw.auth.ResendCode({
-            phoneNumber : phoneNumber,
-            phoneCodeHash : r.phoneCodeHash
-          })
-        );
-      return resend
+        new Raw.auth.ResendCode({
+          phoneNumber: phoneNumber,
+          phoneCodeHash: r.phoneCodeHash,
+        })
+      );
+      return resend;
     } catch (error: any) {
       if (
         error instanceof Errors.Exceptions.SeeOther.NetworkMigrate ||
