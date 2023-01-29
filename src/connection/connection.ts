@@ -88,7 +88,7 @@ export class Connection {
     ipv6: boolean,
     proxy?: ProxyInterface,
     media: boolean = false,
-    mode: number = 1
+    mode: number = 0
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;

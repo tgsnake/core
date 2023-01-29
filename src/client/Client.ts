@@ -157,7 +157,7 @@ export class Client {
     this._isCdn = clientOptions?.isCdn ?? false;
     this._noUpdates = clientOptions?.noUpdates ?? false;
     this._takeout = clientOptions?.takeout ?? false;
-    this._connectionMode = clientOptions?.tcp ?? 1;
+    this._connectionMode = clientOptions?.tcp ?? 0;
   }
   /**
    * Exporting current session to string.
