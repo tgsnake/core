@@ -383,7 +383,8 @@ export class Session {
         this._client._ipv6,
         this._proxy,
         this._isMedia,
-        this._client._connectionMode
+        this._client._connectionMode,
+        this._client._local
       );
       this._networkTask = true;
       try {

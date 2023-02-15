@@ -34,7 +34,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 151;
+  export const Layer: number = 152;
   // Start telegram schema
 
   export type TypesTLRequest =
@@ -75,6 +75,7 @@ export namespace Raw {
     | Raw.auth.AcceptLoginToken
     | Raw.auth.CheckRecoveryPassword
     | Raw.auth.ImportWebTokenAuthorization
+    | Raw.auth.RequestFirebaseSms
     | Raw.account.RegisterDevice
     | Raw.account.UnregisterDevice
     | Raw.account.UpdateNotifySettings
@@ -157,6 +158,11 @@ export namespace Raw {
     | Raw.account.ClearRecentEmojiStatuses
     | Raw.account.ReorderUsernames
     | Raw.account.ToggleUsername
+    | Raw.account.GetDefaultProfilePhotoEmojis
+    | Raw.account.GetDefaultGroupPhotoEmojis
+    | Raw.account.GetAutoSaveSettings
+    | Raw.account.SaveAutoSaveSettings
+    | Raw.account.DeleteAutoSaveExceptions
     | Raw.users.GetUsers
     | Raw.users.GetFullUser
     | Raw.users.SetSecureValueErrors
@@ -362,6 +368,12 @@ export namespace Raw {
     | Raw.messages.GetExtendedMedia
     | Raw.messages.SetDefaultHistoryTTL
     | Raw.messages.GetDefaultHistoryTTL
+    | Raw.messages.SendBotRequestedPeer
+    | Raw.messages.GetEmojiGroups
+    | Raw.messages.GetEmojiStatusGroups
+    | Raw.messages.GetEmojiProfilePhotoGroups
+    | Raw.messages.SearchCustomEmoji
+    | Raw.messages.TogglePeerTranslations
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -658,6 +670,10 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeAutoSaveException = Raw.AutoSaveException;
+  export type TypeAutoSaveSettings = Raw.AutoSaveSettings;
+  export type TypeTextWithEntities = Raw.TextWithEntities;
+  export type TypeEmojiGroup = Raw.EmojiGroup;
   export type TypePremiumSubscriptionOption = Raw.PremiumSubscriptionOption;
   export type TypeAttachMenuBot = Raw.AttachMenuBot;
   export type TypeAttachMenuBotIcon = Raw.AttachMenuBotIcon;
@@ -873,6 +889,7 @@ export namespace Raw {
     | Raw.messages.SetChatAvailableReactions
     | Raw.messages.SendWebViewData
     | Raw.messages.GetExtendedMedia
+    | Raw.messages.SendBotRequestedPeer
     | Raw.help.GetAppChangelog
     | Raw.channels.CreateChannel
     | Raw.channels.EditAdmin
@@ -1024,7 +1041,12 @@ export namespace Raw {
     | Raw.InputKeyboardButtonUserProfile
     | Raw.KeyboardButtonUserProfile
     | Raw.KeyboardButtonWebView
-    | Raw.KeyboardButtonSimpleWebView;
+    | Raw.KeyboardButtonSimpleWebView
+    | Raw.KeyboardButtonRequestPeer;
+  export type TypeRequestPeerType =
+    | Raw.RequestPeerTypeUser
+    | Raw.RequestPeerTypeChat
+    | Raw.RequestPeerTypeBroadcast;
   export type TypeStickerKeyword = Raw.StickerKeyword;
   export type TypeStickerPack = Raw.StickerPack;
   export type TypeSecureSecretSettings = Raw.SecureSecretSettings;
@@ -1159,7 +1181,8 @@ export namespace Raw {
     | Raw.UpdateMessageExtendedMedia
     | Raw.UpdateChannelPinnedTopic
     | Raw.UpdateChannelPinnedTopics
-    | Raw.UpdateUser;
+    | Raw.UpdateUser
+    | Raw.UpdateAutoSaveSettings;
   export type TypeBotMenuButton =
     | Raw.BotMenuButtonDefault
     | Raw.BotMenuButtonCommands
@@ -1288,7 +1311,6 @@ export namespace Raw {
     | Raw.account.UpdateUsername
     | Raw.account.ChangePhone
     | Raw.contacts.ImportContactToken;
-  export type TypeVideoSize = Raw.VideoSize;
   export type TypePhotoSize =
     | Raw.PhotoSizeEmpty
     | Raw.PhotoSize
@@ -1375,7 +1397,8 @@ export namespace Raw {
     | Raw.MessageActionTopicCreate
     | Raw.MessageActionTopicEdit
     | Raw.MessageActionSuggestProfilePhoto
-    | Raw.MessageActionAttachMenuBotAllowed;
+    | Raw.MessageActionAttachMenuBotAllowed
+    | Raw.MessageActionRequestedPeer;
   export type TypeMessageReactions = Raw.MessageReactions;
   export type TypeMessageReplies = Raw.MessageReplies;
   export type TypeReplyMarkup =
@@ -1451,6 +1474,7 @@ export namespace Raw {
     | Raw.InputStickerSetEmojiGenericAnimations
     | Raw.InputStickerSetEmojiDefaultStatuses
     | Raw.InputStickerSetEmojiDefaultTopicIcons;
+  export type TypeVideoSize = Raw.VideoSize | Raw.VideoSizeEmojiMarkup | Raw.VideoSizeStickerMarkup;
   export type TypeMessageEntity =
     | Raw.MessageEntityUnknown
     | Raw.MessageEntityMention
@@ -5555,17 +5579,24 @@ export namespace Raw {
     file?: TypeInputFile;
     video?: TypeInputFile;
     videoStartTs?: double;
+    videoEmojiMarkup?: TypeVideoSize;
 
-    constructor(params: { file?: TypeInputFile; video?: TypeInputFile; videoStartTs?: double }) {
+    constructor(params: {
+      file?: TypeInputFile;
+      video?: TypeInputFile;
+      videoStartTs?: double;
+      videoEmojiMarkup?: TypeVideoSize;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'InputChatUploadedPhoto';
-      this.constructorId = 0xc642724e;
+      this.constructorId = 0xbdcdaec0;
       this.subclassOfId = 0xd4eb2d74;
-      this.slots = ['file', 'video', 'videoStartTs'];
+      this.slots = ['file', 'video', 'videoStartTs', 'videoEmojiMarkup'];
       this.file = params.file;
       this.video = params.video;
       this.videoStartTs = params.videoStartTs;
+      this.videoEmojiMarkup = params.videoEmojiMarkup;
     }
     /**
      * Generate the TLObject from buffer.
@@ -5579,10 +5610,12 @@ export namespace Raw {
       let file = flags & (1 << 0) ? TLObject.read(b) : undefined;
       let video = flags & (1 << 1) ? TLObject.read(b) : undefined;
       let videoStartTs = flags & (1 << 2) ? Primitive.Double.read(b) : undefined;
+      let videoEmojiMarkup = flags & (1 << 3) ? TLObject.read(b) : undefined;
       return new Raw.InputChatUploadedPhoto({
         file: file,
         video: video,
         videoStartTs: videoStartTs,
+        videoEmojiMarkup: videoEmojiMarkup,
       });
     }
     /**
@@ -5597,6 +5630,7 @@ export namespace Raw {
       flags |= this.file !== undefined ? 1 << 0 : 0;
       flags |= this.video !== undefined ? 1 << 1 : 0;
       flags |= this.videoStartTs !== undefined ? 1 << 2 : 0;
+      flags |= this.videoEmojiMarkup !== undefined ? 1 << 3 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.file !== undefined) {
@@ -5607,6 +5641,9 @@ export namespace Raw {
       }
       if (this.videoStartTs !== undefined) {
         b.write(Primitive.Double.write(this.videoStartTs) as unknown as Buffer);
+      }
+      if (this.videoEmojiMarkup !== undefined) {
+        b.write(this.videoEmojiMarkup.write() as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -7712,6 +7749,7 @@ export namespace Raw {
   export class ChatFull extends TLObject {
     canSetUsername?: boolean;
     hasScheduled?: boolean;
+    translationsDisabled?: boolean;
     id!: long;
     about!: string;
     participants!: TypeChatParticipants;
@@ -7732,6 +7770,7 @@ export namespace Raw {
     constructor(params: {
       canSetUsername?: boolean;
       hasScheduled?: boolean;
+      translationsDisabled?: boolean;
       id: long;
       about: string;
       participants: TypeChatParticipants;
@@ -7757,6 +7796,7 @@ export namespace Raw {
       this.slots = [
         'canSetUsername',
         'hasScheduled',
+        'translationsDisabled',
         'id',
         'about',
         'participants',
@@ -7776,6 +7816,7 @@ export namespace Raw {
       ];
       this.canSetUsername = params.canSetUsername;
       this.hasScheduled = params.hasScheduled;
+      this.translationsDisabled = params.translationsDisabled;
       this.id = params.id;
       this.about = params.about;
       this.participants = params.participants;
@@ -7804,6 +7845,7 @@ export namespace Raw {
 
       let canSetUsername = flags & (1 << 7) ? true : false;
       let hasScheduled = flags & (1 << 8) ? true : false;
+      let translationsDisabled = flags & (1 << 19) ? true : false;
       let id = Primitive.Long.read(b);
       let about = Primitive.String.read(b);
       let participants = TLObject.read(b);
@@ -7823,6 +7865,7 @@ export namespace Raw {
       return new Raw.ChatFull({
         canSetUsername: canSetUsername,
         hasScheduled: hasScheduled,
+        translationsDisabled: translationsDisabled,
         id: id,
         about: about,
         participants: participants,
@@ -7852,6 +7895,7 @@ export namespace Raw {
       let flags = 0;
       flags |= this.canSetUsername ? 1 << 7 : 0;
       flags |= this.hasScheduled ? 1 << 8 : 0;
+      flags |= this.translationsDisabled ? 1 << 19 : 0;
       flags |= this.chatPhoto !== undefined ? 1 << 2 : 0;
       flags |= this.exportedInvite !== undefined ? 1 << 13 : 0;
       flags |= this.botInfo ? 1 << 3 : 0;
@@ -7929,6 +7973,7 @@ export namespace Raw {
     canDeleteChannel?: boolean;
     antispam?: boolean;
     participantsHidden?: boolean;
+    translationsDisabled?: boolean;
     id!: long;
     about!: string;
     participantsCount?: int;
@@ -7977,6 +8022,7 @@ export namespace Raw {
       canDeleteChannel?: boolean;
       antispam?: boolean;
       participantsHidden?: boolean;
+      translationsDisabled?: boolean;
       id: long;
       about: string;
       participantsCount?: int;
@@ -8030,6 +8076,7 @@ export namespace Raw {
         'canDeleteChannel',
         'antispam',
         'participantsHidden',
+        'translationsDisabled',
         'id',
         'about',
         'participantsCount',
@@ -8077,6 +8124,7 @@ export namespace Raw {
       this.canDeleteChannel = params.canDeleteChannel;
       this.antispam = params.antispam;
       this.participantsHidden = params.participantsHidden;
+      this.translationsDisabled = params.translationsDisabled;
       this.id = params.id;
       this.about = params.about;
       this.participantsCount = params.participantsCount;
@@ -8133,6 +8181,7 @@ export namespace Raw {
       let canDeleteChannel = flags2 & (1 << 0) ? true : false;
       let antispam = flags2 & (1 << 1) ? true : false;
       let participantsHidden = flags2 & (1 << 2) ? true : false;
+      let translationsDisabled = flags2 & (1 << 3) ? true : false;
       let id = Primitive.Long.read(b);
       let about = Primitive.String.read(b);
       let participantsCount = flags & (1 << 0) ? Primitive.Int.read(b) : undefined;
@@ -8180,6 +8229,7 @@ export namespace Raw {
         canDeleteChannel: canDeleteChannel,
         antispam: antispam,
         participantsHidden: participantsHidden,
+        translationsDisabled: translationsDisabled,
         id: id,
         about: about,
         participantsCount: participantsCount,
@@ -8265,6 +8315,7 @@ export namespace Raw {
       flags2 |= this.canDeleteChannel ? 1 << 0 : 0;
       flags2 |= this.antispam ? 1 << 1 : 0;
       flags2 |= this.participantsHidden ? 1 << 2 : 0;
+      flags2 |= this.translationsDisabled ? 1 << 3 : 0;
       b.write(Primitive.Int.write(flags2) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -11499,6 +11550,48 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class MessageActionRequestedPeer extends TLObject {
+    buttonId!: int;
+    peer!: TypePeer;
+
+    constructor(params: { buttonId: int; peer: TypePeer }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionRequestedPeer';
+      this.constructorId = 0xfe77345d;
+      this.subclassOfId = 0x8680d126;
+      this.slots = ['buttonId', 'peer'];
+      this.buttonId = params.buttonId;
+      this.peer = params.peer;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.MessageActionRequestedPeer {
+      // no flags
+
+      let buttonId = Primitive.Int.read(b);
+      let peer = TLObject.read(b);
+      return new Raw.MessageActionRequestedPeer({ buttonId: buttonId, peer: peer });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.buttonId !== undefined) {
+        b.write(Primitive.Int.write(this.buttonId) as unknown as Buffer);
+      }
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class Dialog extends TLObject {
     pinned?: boolean;
     unreadMark?: boolean;
@@ -13230,6 +13323,7 @@ export namespace Raw {
     hasScheduled?: boolean;
     videoCallsAvailable?: boolean;
     voiceMessagesForbidden?: boolean;
+    translationsDisabled?: boolean;
     id!: long;
     about?: string;
     settings!: TypePeerSettings;
@@ -13256,6 +13350,7 @@ export namespace Raw {
       hasScheduled?: boolean;
       videoCallsAvailable?: boolean;
       voiceMessagesForbidden?: boolean;
+      translationsDisabled?: boolean;
       id: long;
       about?: string;
       settings: TypePeerSettings;
@@ -13287,6 +13382,7 @@ export namespace Raw {
         'hasScheduled',
         'videoCallsAvailable',
         'voiceMessagesForbidden',
+        'translationsDisabled',
         'id',
         'about',
         'settings',
@@ -13312,6 +13408,7 @@ export namespace Raw {
       this.hasScheduled = params.hasScheduled;
       this.videoCallsAvailable = params.videoCallsAvailable;
       this.voiceMessagesForbidden = params.voiceMessagesForbidden;
+      this.translationsDisabled = params.translationsDisabled;
       this.id = params.id;
       this.about = params.about;
       this.settings = params.settings;
@@ -13346,6 +13443,7 @@ export namespace Raw {
       let hasScheduled = flags & (1 << 12) ? true : false;
       let videoCallsAvailable = flags & (1 << 13) ? true : false;
       let voiceMessagesForbidden = flags & (1 << 20) ? true : false;
+      let translationsDisabled = flags & (1 << 23) ? true : false;
       let id = Primitive.Long.read(b);
       let about = flags & (1 << 1) ? Primitive.String.read(b) : undefined;
       let settings = TLObject.read(b);
@@ -13371,6 +13469,7 @@ export namespace Raw {
         hasScheduled: hasScheduled,
         videoCallsAvailable: videoCallsAvailable,
         voiceMessagesForbidden: voiceMessagesForbidden,
+        translationsDisabled: translationsDisabled,
         id: id,
         about: about,
         settings: settings,
@@ -13406,6 +13505,7 @@ export namespace Raw {
       flags |= this.hasScheduled ? 1 << 12 : 0;
       flags |= this.videoCallsAvailable ? 1 << 13 : 0;
       flags |= this.voiceMessagesForbidden ? 1 << 20 : 0;
+      flags |= this.translationsDisabled ? 1 << 23 : 0;
       flags |= this.about !== undefined ? 1 << 1 : 0;
       flags |= this.personalPhoto !== undefined ? 1 << 21 : 0;
       flags |= this.profilePhoto !== undefined ? 1 << 2 : 0;
@@ -19583,6 +19683,35 @@ export namespace Raw {
       if (this.userId !== undefined) {
         b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
       }
+      return b.buffer;
+    }
+  }
+  export class UpdateAutoSaveSettings extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateAutoSaveSettings';
+      this.constructorId = 0xec05b097;
+      this.subclassOfId = 0x9f89304e;
+      this.slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.UpdateAutoSaveSettings {
+      // no flags
+
+      return new Raw.UpdateAutoSaveSettings();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
       return b.buffer;
     }
   }
@@ -26531,6 +26660,58 @@ export namespace Raw {
       }
       if (this.url !== undefined) {
         b.write(Primitive.String.write(this.url) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class KeyboardButtonRequestPeer extends TLObject {
+    text!: string;
+    buttonId!: int;
+    peerType!: TypeRequestPeerType;
+
+    constructor(params: { text: string; buttonId: int; peerType: TypeRequestPeerType }) {
+      super();
+      this.classType = 'types';
+      this.className = 'KeyboardButtonRequestPeer';
+      this.constructorId = 0xd0b468c;
+      this.subclassOfId = 0xbad74a3;
+      this.slots = ['text', 'buttonId', 'peerType'];
+      this.text = params.text;
+      this.buttonId = params.buttonId;
+      this.peerType = params.peerType;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.KeyboardButtonRequestPeer {
+      // no flags
+
+      let text = Primitive.String.read(b);
+      let buttonId = Primitive.Int.read(b);
+      let peerType = TLObject.read(b);
+      return new Raw.KeyboardButtonRequestPeer({
+        text: text,
+        buttonId: buttonId,
+        peerType: peerType,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.text !== undefined) {
+        b.write(Primitive.String.write(this.text) as unknown as Buffer);
+      }
+      if (this.buttonId !== undefined) {
+        b.write(Primitive.Int.write(this.buttonId) as unknown as Buffer);
+      }
+      if (this.peerType !== undefined) {
+        b.write(this.peerType.write() as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -42126,6 +42307,13 @@ export namespace Raw {
     inviteUsers?: boolean;
     pinMessages?: boolean;
     manageTopics?: boolean;
+    sendPhotos?: boolean;
+    sendVideos?: boolean;
+    sendRoundvideos?: boolean;
+    sendAudios?: boolean;
+    sendVoices?: boolean;
+    sendDocs?: boolean;
+    sendPlain?: boolean;
     untilDate!: int;
 
     constructor(params: {
@@ -42142,6 +42330,13 @@ export namespace Raw {
       inviteUsers?: boolean;
       pinMessages?: boolean;
       manageTopics?: boolean;
+      sendPhotos?: boolean;
+      sendVideos?: boolean;
+      sendRoundvideos?: boolean;
+      sendAudios?: boolean;
+      sendVoices?: boolean;
+      sendDocs?: boolean;
+      sendPlain?: boolean;
       untilDate: int;
     }) {
       super();
@@ -42163,6 +42358,13 @@ export namespace Raw {
         'inviteUsers',
         'pinMessages',
         'manageTopics',
+        'sendPhotos',
+        'sendVideos',
+        'sendRoundvideos',
+        'sendAudios',
+        'sendVoices',
+        'sendDocs',
+        'sendPlain',
         'untilDate',
       ];
       this.viewMessages = params.viewMessages;
@@ -42178,6 +42380,13 @@ export namespace Raw {
       this.inviteUsers = params.inviteUsers;
       this.pinMessages = params.pinMessages;
       this.manageTopics = params.manageTopics;
+      this.sendPhotos = params.sendPhotos;
+      this.sendVideos = params.sendVideos;
+      this.sendRoundvideos = params.sendRoundvideos;
+      this.sendAudios = params.sendAudios;
+      this.sendVoices = params.sendVoices;
+      this.sendDocs = params.sendDocs;
+      this.sendPlain = params.sendPlain;
       this.untilDate = params.untilDate;
     }
     /**
@@ -42202,6 +42411,13 @@ export namespace Raw {
       let inviteUsers = flags & (1 << 15) ? true : false;
       let pinMessages = flags & (1 << 17) ? true : false;
       let manageTopics = flags & (1 << 18) ? true : false;
+      let sendPhotos = flags & (1 << 19) ? true : false;
+      let sendVideos = flags & (1 << 20) ? true : false;
+      let sendRoundvideos = flags & (1 << 21) ? true : false;
+      let sendAudios = flags & (1 << 22) ? true : false;
+      let sendVoices = flags & (1 << 23) ? true : false;
+      let sendDocs = flags & (1 << 24) ? true : false;
+      let sendPlain = flags & (1 << 25) ? true : false;
       let untilDate = Primitive.Int.read(b);
       return new Raw.ChatBannedRights({
         viewMessages: viewMessages,
@@ -42217,6 +42433,13 @@ export namespace Raw {
         inviteUsers: inviteUsers,
         pinMessages: pinMessages,
         manageTopics: manageTopics,
+        sendPhotos: sendPhotos,
+        sendVideos: sendVideos,
+        sendRoundvideos: sendRoundvideos,
+        sendAudios: sendAudios,
+        sendVoices: sendVoices,
+        sendDocs: sendDocs,
+        sendPlain: sendPlain,
         untilDate: untilDate,
       });
     }
@@ -42242,6 +42465,13 @@ export namespace Raw {
       flags |= this.inviteUsers ? 1 << 15 : 0;
       flags |= this.pinMessages ? 1 << 17 : 0;
       flags |= this.manageTopics ? 1 << 18 : 0;
+      flags |= this.sendPhotos ? 1 << 19 : 0;
+      flags |= this.sendVideos ? 1 << 20 : 0;
+      flags |= this.sendRoundvideos ? 1 << 21 : 0;
+      flags |= this.sendAudios ? 1 << 22 : 0;
+      flags |= this.sendVoices ? 1 << 23 : 0;
+      flags |= this.sendDocs ? 1 << 24 : 0;
+      flags |= this.sendPlain ? 1 << 25 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.untilDate !== undefined) {
@@ -42369,32 +42599,44 @@ export namespace Raw {
     currentNumber?: boolean;
     allowAppHash?: boolean;
     allowMissedCall?: boolean;
+    allowFirebase?: boolean;
     logoutTokens?: Vector<bytes>;
+    token?: string;
+    appSandbox?: Bool;
 
     constructor(params: {
       allowFlashcall?: boolean;
       currentNumber?: boolean;
       allowAppHash?: boolean;
       allowMissedCall?: boolean;
+      allowFirebase?: boolean;
       logoutTokens?: Vector<bytes>;
+      token?: string;
+      appSandbox?: Bool;
     }) {
       super();
       this.classType = 'types';
       this.className = 'CodeSettings';
-      this.constructorId = 0x8a6469c2;
+      this.constructorId = 0xad253d78;
       this.subclassOfId = 0x48edbc8a;
       this.slots = [
         'allowFlashcall',
         'currentNumber',
         'allowAppHash',
         'allowMissedCall',
+        'allowFirebase',
         'logoutTokens',
+        'token',
+        'appSandbox',
       ];
       this.allowFlashcall = params.allowFlashcall;
       this.currentNumber = params.currentNumber;
       this.allowAppHash = params.allowAppHash;
       this.allowMissedCall = params.allowMissedCall;
+      this.allowFirebase = params.allowFirebase;
       this.logoutTokens = params.logoutTokens;
+      this.token = params.token;
+      this.appSandbox = params.appSandbox;
     }
     /**
      * Generate the TLObject from buffer.
@@ -42409,13 +42651,19 @@ export namespace Raw {
       let currentNumber = flags & (1 << 1) ? true : false;
       let allowAppHash = flags & (1 << 4) ? true : false;
       let allowMissedCall = flags & (1 << 5) ? true : false;
+      let allowFirebase = flags & (1 << 7) ? true : false;
       let logoutTokens = flags & (1 << 6) ? TLObject.read(b, Primitive.Bytes) : [];
+      let token = flags & (1 << 8) ? Primitive.String.read(b) : undefined;
+      let appSandbox = flags & (1 << 8) ? Primitive.Bool.read(b) : undefined;
       return new Raw.CodeSettings({
         allowFlashcall: allowFlashcall,
         currentNumber: currentNumber,
         allowAppHash: allowAppHash,
         allowMissedCall: allowMissedCall,
+        allowFirebase: allowFirebase,
         logoutTokens: logoutTokens,
+        token: token,
+        appSandbox: appSandbox,
       });
     }
     /**
@@ -42431,11 +42679,20 @@ export namespace Raw {
       flags |= this.currentNumber ? 1 << 1 : 0;
       flags |= this.allowAppHash ? 1 << 4 : 0;
       flags |= this.allowMissedCall ? 1 << 5 : 0;
+      flags |= this.allowFirebase ? 1 << 7 : 0;
       flags |= this.logoutTokens ? 1 << 6 : 0;
+      flags |= this.token !== undefined ? 1 << 8 : 0;
+      flags |= this.appSandbox !== undefined ? 1 << 8 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.logoutTokens) {
         b.write(Primitive.Vector.write(this.logoutTokens, Primitive.Bytes) as unknown as Buffer);
+      }
+      if (this.token !== undefined) {
+        b.write(Primitive.String.write(this.token) as unknown as Buffer);
+      }
+      if (this.appSandbox !== undefined) {
+        b.write(Primitive.Bool.write(this.appSandbox) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -44727,6 +44984,104 @@ export namespace Raw {
       }
       if (this.videoStartTs !== undefined) {
         b.write(Primitive.Double.write(this.videoStartTs) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class VideoSizeEmojiMarkup extends TLObject {
+    emojiId!: long;
+    backgroundColors!: Vector<int>;
+
+    constructor(params: { emojiId: long; backgroundColors: Vector<int> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'VideoSizeEmojiMarkup';
+      this.constructorId = 0xf85c413c;
+      this.subclassOfId = 0x62f1d509;
+      this.slots = ['emojiId', 'backgroundColors'];
+      this.emojiId = params.emojiId;
+      this.backgroundColors = params.backgroundColors;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.VideoSizeEmojiMarkup {
+      // no flags
+
+      let emojiId = Primitive.Long.read(b);
+      let backgroundColors = TLObject.read(b, Primitive.Int);
+      return new Raw.VideoSizeEmojiMarkup({ emojiId: emojiId, backgroundColors: backgroundColors });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.emojiId !== undefined) {
+        b.write(Primitive.Long.write(this.emojiId) as unknown as Buffer);
+      }
+      if (this.backgroundColors) {
+        b.write(Primitive.Vector.write(this.backgroundColors, Primitive.Int) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class VideoSizeStickerMarkup extends TLObject {
+    stickerset!: TypeInputStickerSet;
+    stickerId!: long;
+    backgroundColors!: Vector<int>;
+
+    constructor(params: {
+      stickerset: TypeInputStickerSet;
+      stickerId: long;
+      backgroundColors: Vector<int>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'VideoSizeStickerMarkup';
+      this.constructorId = 0xda082fe;
+      this.subclassOfId = 0x62f1d509;
+      this.slots = ['stickerset', 'stickerId', 'backgroundColors'];
+      this.stickerset = params.stickerset;
+      this.stickerId = params.stickerId;
+      this.backgroundColors = params.backgroundColors;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.VideoSizeStickerMarkup {
+      // no flags
+
+      let stickerset = TLObject.read(b);
+      let stickerId = Primitive.Long.read(b);
+      let backgroundColors = TLObject.read(b, Primitive.Int);
+      return new Raw.VideoSizeStickerMarkup({
+        stickerset: stickerset,
+        stickerId: stickerId,
+        backgroundColors: backgroundColors,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.stickerset !== undefined) {
+        b.write(this.stickerset.write() as unknown as Buffer);
+      }
+      if (this.stickerId !== undefined) {
+        b.write(Primitive.Long.write(this.stickerId) as unknown as Buffer);
+      }
+      if (this.backgroundColors) {
+        b.write(Primitive.Vector.write(this.backgroundColors, Primitive.Int) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -47805,15 +48160,17 @@ export namespace Raw {
   }
   export class InputStorePaymentPremiumSubscription extends TLObject {
     restore?: boolean;
+    upgrade?: boolean;
 
-    constructor(params: { restore?: boolean }) {
+    constructor(params: { restore?: boolean; upgrade?: boolean }) {
       super();
       this.classType = 'types';
       this.className = 'InputStorePaymentPremiumSubscription';
       this.constructorId = 0xa6751e66;
       this.subclassOfId = 0xe7a4174d;
-      this.slots = ['restore'];
+      this.slots = ['restore', 'upgrade'];
       this.restore = params.restore;
+      this.upgrade = params.upgrade;
     }
     /**
      * Generate the TLObject from buffer.
@@ -47825,7 +48182,8 @@ export namespace Raw {
       let flags = Primitive.Int.read(b);
 
       let restore = flags & (1 << 0) ? true : false;
-      return new Raw.InputStorePaymentPremiumSubscription({ restore: restore });
+      let upgrade = flags & (1 << 1) ? true : false;
+      return new Raw.InputStorePaymentPremiumSubscription({ restore: restore, upgrade: upgrade });
     }
     /**
      * Generate buffer from TLObject.
@@ -47837,6 +48195,7 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.restore ? 1 << 0 : 0;
+      flags |= this.upgrade ? 1 << 1 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       return b.buffer;
@@ -48540,6 +48899,7 @@ export namespace Raw {
   export class PremiumSubscriptionOption extends TLObject {
     current?: boolean;
     canPurchaseUpgrade?: boolean;
+    transaction?: string;
     months!: int;
     currency!: string;
     amount!: long;
@@ -48549,6 +48909,7 @@ export namespace Raw {
     constructor(params: {
       current?: boolean;
       canPurchaseUpgrade?: boolean;
+      transaction?: string;
       months: int;
       currency: string;
       amount: long;
@@ -48558,11 +48919,12 @@ export namespace Raw {
       super();
       this.classType = 'types';
       this.className = 'PremiumSubscriptionOption';
-      this.constructorId = 0xb6f11ebe;
+      this.constructorId = 0x5f2d1df2;
       this.subclassOfId = 0x2e2dc73f;
       this.slots = [
         'current',
         'canPurchaseUpgrade',
+        'transaction',
         'months',
         'currency',
         'amount',
@@ -48571,6 +48933,7 @@ export namespace Raw {
       ];
       this.current = params.current;
       this.canPurchaseUpgrade = params.canPurchaseUpgrade;
+      this.transaction = params.transaction;
       this.months = params.months;
       this.currency = params.currency;
       this.amount = params.amount;
@@ -48588,6 +48951,7 @@ export namespace Raw {
 
       let current = flags & (1 << 1) ? true : false;
       let canPurchaseUpgrade = flags & (1 << 2) ? true : false;
+      let transaction = flags & (1 << 3) ? Primitive.String.read(b) : undefined;
       let months = Primitive.Int.read(b);
       let currency = Primitive.String.read(b);
       let amount = Primitive.Long.read(b);
@@ -48596,6 +48960,7 @@ export namespace Raw {
       return new Raw.PremiumSubscriptionOption({
         current: current,
         canPurchaseUpgrade: canPurchaseUpgrade,
+        transaction: transaction,
         months: months,
         currency: currency,
         amount: amount,
@@ -48614,9 +48979,13 @@ export namespace Raw {
       let flags = 0;
       flags |= this.current ? 1 << 1 : 0;
       flags |= this.canPurchaseUpgrade ? 1 << 2 : 0;
+      flags |= this.transaction !== undefined ? 1 << 3 : 0;
       flags |= this.storeProduct !== undefined ? 1 << 0 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
+      if (this.transaction !== undefined) {
+        b.write(Primitive.String.write(this.transaction) as unknown as Buffer);
+      }
       if (this.months !== undefined) {
         b.write(Primitive.Int.write(this.months) as unknown as Buffer);
       }
@@ -49186,6 +49555,474 @@ export namespace Raw {
       }
       if (this.expires !== undefined) {
         b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class RequestPeerTypeUser extends TLObject {
+    bot?: Bool;
+    premium?: Bool;
+
+    constructor(params: { bot?: Bool; premium?: Bool }) {
+      super();
+      this.classType = 'types';
+      this.className = 'RequestPeerTypeUser';
+      this.constructorId = 0x5f3b8a00;
+      this.subclassOfId = 0xe9a0e814;
+      this.slots = ['bot', 'premium'];
+      this.bot = params.bot;
+      this.premium = params.premium;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.RequestPeerTypeUser {
+      // no flags
+
+      let flags = Primitive.Int.read(b);
+
+      let bot = flags & (1 << 0) ? Primitive.Bool.read(b) : undefined;
+      let premium = flags & (1 << 1) ? Primitive.Bool.read(b) : undefined;
+      return new Raw.RequestPeerTypeUser({ bot: bot, premium: premium });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.bot !== undefined ? 1 << 0 : 0;
+      flags |= this.premium !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.bot !== undefined) {
+        b.write(Primitive.Bool.write(this.bot) as unknown as Buffer);
+      }
+      if (this.premium !== undefined) {
+        b.write(Primitive.Bool.write(this.premium) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class RequestPeerTypeChat extends TLObject {
+    creator?: boolean;
+    botParticipant?: boolean;
+    hasUsername?: Bool;
+    forum?: Bool;
+    userAdminRights?: TypeChatAdminRights;
+    botAdminRights?: TypeChatAdminRights;
+
+    constructor(params: {
+      creator?: boolean;
+      botParticipant?: boolean;
+      hasUsername?: Bool;
+      forum?: Bool;
+      userAdminRights?: TypeChatAdminRights;
+      botAdminRights?: TypeChatAdminRights;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'RequestPeerTypeChat';
+      this.constructorId = 0xc9f06e1b;
+      this.subclassOfId = 0xe9a0e814;
+      this.slots = [
+        'creator',
+        'botParticipant',
+        'hasUsername',
+        'forum',
+        'userAdminRights',
+        'botAdminRights',
+      ];
+      this.creator = params.creator;
+      this.botParticipant = params.botParticipant;
+      this.hasUsername = params.hasUsername;
+      this.forum = params.forum;
+      this.userAdminRights = params.userAdminRights;
+      this.botAdminRights = params.botAdminRights;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.RequestPeerTypeChat {
+      // no flags
+
+      let flags = Primitive.Int.read(b);
+
+      let creator = flags & (1 << 0) ? true : false;
+      let botParticipant = flags & (1 << 5) ? true : false;
+      let hasUsername = flags & (1 << 3) ? Primitive.Bool.read(b) : undefined;
+      let forum = flags & (1 << 4) ? Primitive.Bool.read(b) : undefined;
+      let userAdminRights = flags & (1 << 1) ? TLObject.read(b) : undefined;
+      let botAdminRights = flags & (1 << 2) ? TLObject.read(b) : undefined;
+      return new Raw.RequestPeerTypeChat({
+        creator: creator,
+        botParticipant: botParticipant,
+        hasUsername: hasUsername,
+        forum: forum,
+        userAdminRights: userAdminRights,
+        botAdminRights: botAdminRights,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.creator ? 1 << 0 : 0;
+      flags |= this.botParticipant ? 1 << 5 : 0;
+      flags |= this.hasUsername !== undefined ? 1 << 3 : 0;
+      flags |= this.forum !== undefined ? 1 << 4 : 0;
+      flags |= this.userAdminRights !== undefined ? 1 << 1 : 0;
+      flags |= this.botAdminRights !== undefined ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.hasUsername !== undefined) {
+        b.write(Primitive.Bool.write(this.hasUsername) as unknown as Buffer);
+      }
+      if (this.forum !== undefined) {
+        b.write(Primitive.Bool.write(this.forum) as unknown as Buffer);
+      }
+      if (this.userAdminRights !== undefined) {
+        b.write(this.userAdminRights.write() as unknown as Buffer);
+      }
+      if (this.botAdminRights !== undefined) {
+        b.write(this.botAdminRights.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class RequestPeerTypeBroadcast extends TLObject {
+    creator?: boolean;
+    hasUsername?: Bool;
+    userAdminRights?: TypeChatAdminRights;
+    botAdminRights?: TypeChatAdminRights;
+
+    constructor(params: {
+      creator?: boolean;
+      hasUsername?: Bool;
+      userAdminRights?: TypeChatAdminRights;
+      botAdminRights?: TypeChatAdminRights;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'RequestPeerTypeBroadcast';
+      this.constructorId = 0x339bef6c;
+      this.subclassOfId = 0xe9a0e814;
+      this.slots = ['creator', 'hasUsername', 'userAdminRights', 'botAdminRights'];
+      this.creator = params.creator;
+      this.hasUsername = params.hasUsername;
+      this.userAdminRights = params.userAdminRights;
+      this.botAdminRights = params.botAdminRights;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.RequestPeerTypeBroadcast {
+      // no flags
+
+      let flags = Primitive.Int.read(b);
+
+      let creator = flags & (1 << 0) ? true : false;
+      let hasUsername = flags & (1 << 3) ? Primitive.Bool.read(b) : undefined;
+      let userAdminRights = flags & (1 << 1) ? TLObject.read(b) : undefined;
+      let botAdminRights = flags & (1 << 2) ? TLObject.read(b) : undefined;
+      return new Raw.RequestPeerTypeBroadcast({
+        creator: creator,
+        hasUsername: hasUsername,
+        userAdminRights: userAdminRights,
+        botAdminRights: botAdminRights,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.creator ? 1 << 0 : 0;
+      flags |= this.hasUsername !== undefined ? 1 << 3 : 0;
+      flags |= this.userAdminRights !== undefined ? 1 << 1 : 0;
+      flags |= this.botAdminRights !== undefined ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.hasUsername !== undefined) {
+        b.write(Primitive.Bool.write(this.hasUsername) as unknown as Buffer);
+      }
+      if (this.userAdminRights !== undefined) {
+        b.write(this.userAdminRights.write() as unknown as Buffer);
+      }
+      if (this.botAdminRights !== undefined) {
+        b.write(this.botAdminRights.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class EmojiListNotModified extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'EmojiListNotModified';
+      this.constructorId = 0x481eadfa;
+      this.subclassOfId = 0xbcef6aba;
+      this.slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.EmojiListNotModified {
+      // no flags
+
+      return new Raw.EmojiListNotModified();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      return b.buffer;
+    }
+  }
+  export class EmojiList extends TLObject {
+    hash!: long;
+    documentId!: Vector<long>;
+
+    constructor(params: { hash: long; documentId: Vector<long> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'EmojiList';
+      this.constructorId = 0x7a1e11d1;
+      this.subclassOfId = 0xbcef6aba;
+      this.slots = ['hash', 'documentId'];
+      this.hash = params.hash;
+      this.documentId = params.documentId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.EmojiList {
+      // no flags
+
+      let hash = Primitive.Long.read(b);
+      let documentId = TLObject.read(b, Primitive.Long);
+      return new Raw.EmojiList({ hash: hash, documentId: documentId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.hash !== undefined) {
+        b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+      }
+      if (this.documentId) {
+        b.write(Primitive.Vector.write(this.documentId, Primitive.Long) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class EmojiGroup extends TLObject {
+    title!: string;
+    iconEmojiId!: long;
+    emoticons!: Vector<string>;
+
+    constructor(params: { title: string; iconEmojiId: long; emoticons: Vector<string> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'EmojiGroup';
+      this.constructorId = 0x7a9abda9;
+      this.subclassOfId = 0x55e0a193;
+      this.slots = ['title', 'iconEmojiId', 'emoticons'];
+      this.title = params.title;
+      this.iconEmojiId = params.iconEmojiId;
+      this.emoticons = params.emoticons;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.EmojiGroup {
+      // no flags
+
+      let title = Primitive.String.read(b);
+      let iconEmojiId = Primitive.Long.read(b);
+      let emoticons = TLObject.read(b, Primitive.String);
+      return new Raw.EmojiGroup({ title: title, iconEmojiId: iconEmojiId, emoticons: emoticons });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.title !== undefined) {
+        b.write(Primitive.String.write(this.title) as unknown as Buffer);
+      }
+      if (this.iconEmojiId !== undefined) {
+        b.write(Primitive.Long.write(this.iconEmojiId) as unknown as Buffer);
+      }
+      if (this.emoticons) {
+        b.write(Primitive.Vector.write(this.emoticons, Primitive.String) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class TextWithEntities extends TLObject {
+    text!: string;
+    entities!: Vector<TypeMessageEntity>;
+
+    constructor(params: { text: string; entities: Vector<TypeMessageEntity> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'TextWithEntities';
+      this.constructorId = 0x751f3146;
+      this.subclassOfId = 0x95ca4b05;
+      this.slots = ['text', 'entities'];
+      this.text = params.text;
+      this.entities = params.entities;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.TextWithEntities {
+      // no flags
+
+      let text = Primitive.String.read(b);
+      let entities = TLObject.read(b);
+      return new Raw.TextWithEntities({ text: text, entities: entities });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.text !== undefined) {
+        b.write(Primitive.String.write(this.text) as unknown as Buffer);
+      }
+      if (this.entities) {
+        b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class AutoSaveSettings extends TLObject {
+    photos?: boolean;
+    videos?: boolean;
+    videoMaxSize?: long;
+
+    constructor(params: { photos?: boolean; videos?: boolean; videoMaxSize?: long }) {
+      super();
+      this.classType = 'types';
+      this.className = 'AutoSaveSettings';
+      this.constructorId = 0xc84834ce;
+      this.subclassOfId = 0xcd3b96e6;
+      this.slots = ['photos', 'videos', 'videoMaxSize'];
+      this.photos = params.photos;
+      this.videos = params.videos;
+      this.videoMaxSize = params.videoMaxSize;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.AutoSaveSettings {
+      // no flags
+
+      let flags = Primitive.Int.read(b);
+
+      let photos = flags & (1 << 0) ? true : false;
+      let videos = flags & (1 << 1) ? true : false;
+      let videoMaxSize = flags & (1 << 2) ? Primitive.Long.read(b) : undefined;
+      return new Raw.AutoSaveSettings({
+        photos: photos,
+        videos: videos,
+        videoMaxSize: videoMaxSize,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.photos ? 1 << 0 : 0;
+      flags |= this.videos ? 1 << 1 : 0;
+      flags |= this.videoMaxSize !== undefined ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.videoMaxSize !== undefined) {
+        b.write(Primitive.Long.write(this.videoMaxSize) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class AutoSaveException extends TLObject {
+    peer!: TypePeer;
+    settings!: TypeAutoSaveSettings;
+
+    constructor(params: { peer: TypePeer; settings: TypeAutoSaveSettings }) {
+      super();
+      this.classType = 'types';
+      this.className = 'AutoSaveException';
+      this.constructorId = 0x81602d47;
+      this.subclassOfId = 0xdd868129;
+      this.slots = ['peer', 'settings'];
+      this.peer = params.peer;
+      this.settings = params.settings;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static read(b: BytesIO, ...args: Array<any>): Raw.AutoSaveException {
+      // no flags
+
+      let peer = TLObject.read(b);
+      let settings = TLObject.read(b);
+      return new Raw.AutoSaveException({ peer: peer, settings: settings });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.settings !== undefined) {
+        b.write(this.settings.write() as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -51864,6 +52701,7 @@ export namespace Raw {
   export namespace auth {
     export type TypeSentCode =
       | Raw.auth.SentCode
+      | Raw.auth.SentCodeSuccess
       | Raw.auth.SendCode
       | Raw.auth.ResendCode
       | Raw.account.SendChangePhoneCode
@@ -51893,7 +52731,8 @@ export namespace Raw {
       | Raw.auth.SentCodeTypeMissedCall
       | Raw.auth.SentCodeTypeEmailCode
       | Raw.auth.SentCodeTypeSetUpEmailRequired
-      | Raw.auth.SentCodeTypeFragmentSms;
+      | Raw.auth.SentCodeTypeFragmentSms
+      | Raw.auth.SentCodeTypeFirebaseSms;
     export class SentCode extends TLObject {
       type!: auth.TypeSentCodeType;
       phoneCodeHash!: string;
@@ -51965,27 +52804,72 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class SentCodeSuccess extends TLObject {
+      authorization!: auth.TypeAuthorization;
+
+      constructor(params: { authorization: auth.TypeAuthorization }) {
+        super();
+        this.classType = 'types';
+        this.className = 'auth.SentCodeSuccess';
+        this.constructorId = 0x2390fe44;
+        this.subclassOfId = 0x6ce87081;
+        this.slots = ['authorization'];
+        this.authorization = params.authorization;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.auth.SentCodeSuccess {
+        // no flags
+
+        let authorization = TLObject.read(b);
+        return new Raw.auth.SentCodeSuccess({ authorization: authorization });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.authorization !== undefined) {
+          b.write(this.authorization.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
     export class Authorization extends TLObject {
       setupPasswordRequired?: boolean;
       otherwiseReloginDays?: int;
       tmpSessions?: int;
+      futureAuthToken?: bytes;
       user!: TypeUser;
 
       constructor(params: {
         setupPasswordRequired?: boolean;
         otherwiseReloginDays?: int;
         tmpSessions?: int;
+        futureAuthToken?: bytes;
         user: TypeUser;
       }) {
         super();
         this.classType = 'types';
         this.className = 'auth.Authorization';
-        this.constructorId = 0x33fb7bb8;
+        this.constructorId = 0x2ea2c0d4;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['setupPasswordRequired', 'otherwiseReloginDays', 'tmpSessions', 'user'];
+        this.slots = [
+          'setupPasswordRequired',
+          'otherwiseReloginDays',
+          'tmpSessions',
+          'futureAuthToken',
+          'user',
+        ];
         this.setupPasswordRequired = params.setupPasswordRequired;
         this.otherwiseReloginDays = params.otherwiseReloginDays;
         this.tmpSessions = params.tmpSessions;
+        this.futureAuthToken = params.futureAuthToken;
         this.user = params.user;
       }
       /**
@@ -52000,11 +52884,13 @@ export namespace Raw {
         let setupPasswordRequired = flags & (1 << 1) ? true : false;
         let otherwiseReloginDays = flags & (1 << 1) ? Primitive.Int.read(b) : undefined;
         let tmpSessions = flags & (1 << 0) ? Primitive.Int.read(b) : undefined;
+        let futureAuthToken = flags & (1 << 2) ? Primitive.Bytes.read(b) : undefined;
         let user = TLObject.read(b);
         return new Raw.auth.Authorization({
           setupPasswordRequired: setupPasswordRequired,
           otherwiseReloginDays: otherwiseReloginDays,
           tmpSessions: tmpSessions,
+          futureAuthToken: futureAuthToken,
           user: user,
         });
       }
@@ -52020,6 +52906,7 @@ export namespace Raw {
         flags |= this.setupPasswordRequired ? 1 << 1 : 0;
         flags |= this.otherwiseReloginDays !== undefined ? 1 << 1 : 0;
         flags |= this.tmpSessions !== undefined ? 1 << 0 : 0;
+        flags |= this.futureAuthToken !== undefined ? 1 << 2 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.otherwiseReloginDays !== undefined) {
@@ -52027,6 +52914,9 @@ export namespace Raw {
         }
         if (this.tmpSessions !== undefined) {
           b.write(Primitive.Int.write(this.tmpSessions) as unknown as Buffer);
+        }
+        if (this.futureAuthToken !== undefined) {
+          b.write(Primitive.Bytes.write(this.futureAuthToken) as unknown as Buffer);
         }
         if (this.user !== undefined) {
           b.write(this.user.write() as unknown as Buffer);
@@ -52646,6 +53536,73 @@ export namespace Raw {
 
         if (this.url !== undefined) {
           b.write(Primitive.String.write(this.url) as unknown as Buffer);
+        }
+        if (this.length !== undefined) {
+          b.write(Primitive.Int.write(this.length) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SentCodeTypeFirebaseSms extends TLObject {
+      nonce?: bytes;
+      receipt?: string;
+      pushTimeout?: int;
+      length!: int;
+
+      constructor(params: { nonce?: bytes; receipt?: string; pushTimeout?: int; length: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'auth.SentCodeTypeFirebaseSms';
+        this.constructorId = 0xe57b1432;
+        this.subclassOfId = 0xff5b158e;
+        this.slots = ['nonce', 'receipt', 'pushTimeout', 'length'];
+        this.nonce = params.nonce;
+        this.receipt = params.receipt;
+        this.pushTimeout = params.pushTimeout;
+        this.length = params.length;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.auth.SentCodeTypeFirebaseSms {
+        // no flags
+
+        let flags = Primitive.Int.read(b);
+
+        let nonce = flags & (1 << 0) ? Primitive.Bytes.read(b) : undefined;
+        let receipt = flags & (1 << 1) ? Primitive.String.read(b) : undefined;
+        let pushTimeout = flags & (1 << 1) ? Primitive.Int.read(b) : undefined;
+        let length = Primitive.Int.read(b);
+        return new Raw.auth.SentCodeTypeFirebaseSms({
+          nonce: nonce,
+          receipt: receipt,
+          pushTimeout: pushTimeout,
+          length: length,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.nonce !== undefined ? 1 << 0 : 0;
+        flags |= this.receipt !== undefined ? 1 << 1 : 0;
+        flags |= this.pushTimeout !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.nonce !== undefined) {
+          b.write(Primitive.Bytes.write(this.nonce) as unknown as Buffer);
+        }
+        if (this.receipt !== undefined) {
+          b.write(Primitive.String.write(this.receipt) as unknown as Buffer);
+        }
+        if (this.pushTimeout !== undefined) {
+          b.write(Primitive.Int.write(this.pushTimeout) as unknown as Buffer);
         }
         if (this.length !== undefined) {
           b.write(Primitive.Int.write(this.length) as unknown as Buffer);
@@ -53714,6 +54671,77 @@ export namespace Raw {
         }
         if (this.webAuthToken !== undefined) {
           b.write(Primitive.String.write(this.webAuthToken) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class RequestFirebaseSms extends TLObject {
+      phoneNumber!: string;
+      phoneCodeHash!: string;
+      safetyNetToken?: string;
+      iosPushSecret?: string;
+
+      constructor(params: {
+        phoneNumber: string;
+        phoneCodeHash: string;
+        safetyNetToken?: string;
+        iosPushSecret?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'auth.RequestFirebaseSms';
+        this.constructorId = 0x89464b50;
+        this.subclassOfId = 0xf5b399ac;
+        this.slots = ['phoneNumber', 'phoneCodeHash', 'safetyNetToken', 'iosPushSecret'];
+        this.phoneNumber = params.phoneNumber;
+        this.phoneCodeHash = params.phoneCodeHash;
+        this.safetyNetToken = params.safetyNetToken;
+        this.iosPushSecret = params.iosPushSecret;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.auth.RequestFirebaseSms {
+        // no flags
+
+        let flags = Primitive.Int.read(b);
+
+        let phoneNumber = Primitive.String.read(b);
+        let phoneCodeHash = Primitive.String.read(b);
+        let safetyNetToken = flags & (1 << 0) ? Primitive.String.read(b) : undefined;
+        let iosPushSecret = flags & (1 << 1) ? Primitive.String.read(b) : undefined;
+        return new Raw.auth.RequestFirebaseSms({
+          phoneNumber: phoneNumber,
+          phoneCodeHash: phoneCodeHash,
+          safetyNetToken: safetyNetToken,
+          iosPushSecret: iosPushSecret,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.safetyNetToken !== undefined ? 1 << 0 : 0;
+        flags |= this.iosPushSecret !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.phoneNumber !== undefined) {
+          b.write(Primitive.String.write(this.phoneNumber) as unknown as Buffer);
+        }
+        if (this.phoneCodeHash !== undefined) {
+          b.write(Primitive.String.write(this.phoneCodeHash) as unknown as Buffer);
+        }
+        if (this.safetyNetToken !== undefined) {
+          b.write(Primitive.String.write(this.safetyNetToken) as unknown as Buffer);
+        }
+        if (this.iosPushSecret !== undefined) {
+          b.write(Primitive.String.write(this.iosPushSecret) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -58395,71 +59423,6 @@ export namespace Raw {
         return b.buffer;
       }
     }
-    export class TranslateNoResult extends TLObject {
-      constructor() {
-        super();
-        this.classType = 'types';
-        this.className = 'messages.TranslateNoResult';
-        this.constructorId = 0x67ca4737;
-        this.subclassOfId = 0x24243e8;
-        this.slots = [];
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static read(b: BytesIO, ...args: Array<any>): Raw.messages.TranslateNoResult {
-        // no flags
-
-        return new Raw.messages.TranslateNoResult();
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-
-        return b.buffer;
-      }
-    }
-    export class TranslateResultText extends TLObject {
-      text!: string;
-
-      constructor(params: { text: string }) {
-        super();
-        this.classType = 'types';
-        this.className = 'messages.TranslateResultText';
-        this.constructorId = 0xa214f7d0;
-        this.subclassOfId = 0x24243e8;
-        this.slots = ['text'];
-        this.text = params.text;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static read(b: BytesIO, ...args: Array<any>): Raw.messages.TranslateResultText {
-        // no flags
-
-        let text = Primitive.String.read(b);
-        return new Raw.messages.TranslateResultText({ text: text });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-
-        if (this.text !== undefined) {
-          b.write(Primitive.String.write(this.text) as unknown as Buffer);
-        }
-        return b.buffer;
-      }
-    }
     export class TranscribedAudio extends TLObject {
       pending?: boolean;
       transcriptionId!: long;
@@ -58673,6 +59636,113 @@ export namespace Raw {
         }
         if (this.pts !== undefined) {
           b.write(Primitive.Int.write(this.pts) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class EmojiGroupsNotModified extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.EmojiGroupsNotModified';
+        this.constructorId = 0x6fb4ad87;
+        this.subclassOfId = 0x7eca55d9;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.EmojiGroupsNotModified {
+        // no flags
+
+        return new Raw.messages.EmojiGroupsNotModified();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class EmojiGroups extends TLObject {
+      hash!: int;
+      groups!: Vector<TypeEmojiGroup>;
+
+      constructor(params: { hash: int; groups: Vector<TypeEmojiGroup> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.EmojiGroups';
+        this.constructorId = 0x881fb94b;
+        this.subclassOfId = 0x7eca55d9;
+        this.slots = ['hash', 'groups'];
+        this.hash = params.hash;
+        this.groups = params.groups;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.EmojiGroups {
+        // no flags
+
+        let hash = Primitive.Int.read(b);
+        let groups = TLObject.read(b);
+        return new Raw.messages.EmojiGroups({ hash: hash, groups: groups });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Int.write(this.hash) as unknown as Buffer);
+        }
+        if (this.groups) {
+          b.write(Primitive.Vector.write(this.groups) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class TranslateResult extends TLObject {
+      result!: Vector<TypeTextWithEntities>;
+
+      constructor(params: { result: Vector<TypeTextWithEntities> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.TranslateResult';
+        this.constructorId = 0x33db32f8;
+        this.subclassOfId = 0x24243e8;
+        this.slots = ['result'];
+        this.result = params.result;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.TranslateResult {
+        // no flags
+
+        let result = TLObject.read(b);
+        return new Raw.messages.TranslateResult({ result: result });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.result) {
+          b.write(Primitive.Vector.write(this.result) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -67239,28 +68309,25 @@ export namespace Raw {
     }
     export class TranslateText extends TLObject {
       peer?: TypeInputPeer;
-      msgId?: int;
-      text?: string;
-      fromLang?: string;
+      id?: Vector<int>;
+      text?: Vector<TypeTextWithEntities>;
       toLang!: string;
 
       constructor(params: {
         peer?: TypeInputPeer;
-        msgId?: int;
-        text?: string;
-        fromLang?: string;
+        id?: Vector<int>;
+        text?: Vector<TypeTextWithEntities>;
         toLang: string;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.TranslateText';
-        this.constructorId = 0x24ce6dee;
+        this.constructorId = 0x63183030;
         this.subclassOfId = 0x24243e8;
-        this.slots = ['peer', 'msgId', 'text', 'fromLang', 'toLang'];
+        this.slots = ['peer', 'id', 'text', 'toLang'];
         this.peer = params.peer;
-        this.msgId = params.msgId;
+        this.id = params.id;
         this.text = params.text;
-        this.fromLang = params.fromLang;
         this.toLang = params.toLang;
       }
       /**
@@ -67273,17 +68340,10 @@ export namespace Raw {
         let flags = Primitive.Int.read(b);
 
         let peer = flags & (1 << 0) ? TLObject.read(b) : undefined;
-        let msgId = flags & (1 << 0) ? Primitive.Int.read(b) : undefined;
-        let text = flags & (1 << 1) ? Primitive.String.read(b) : undefined;
-        let fromLang = flags & (1 << 2) ? Primitive.String.read(b) : undefined;
+        let id = flags & (1 << 0) ? TLObject.read(b, Primitive.Int) : [];
+        let text = flags & (1 << 1) ? TLObject.read(b) : [];
         let toLang = Primitive.String.read(b);
-        return new Raw.messages.TranslateText({
-          peer: peer,
-          msgId: msgId,
-          text: text,
-          fromLang: fromLang,
-          toLang: toLang,
-        });
+        return new Raw.messages.TranslateText({ peer: peer, id: id, text: text, toLang: toLang });
       }
       /**
        * Generate buffer from TLObject.
@@ -67295,22 +68355,18 @@ export namespace Raw {
 
         let flags = 0;
         flags |= this.peer !== undefined ? 1 << 0 : 0;
-        flags |= this.msgId !== undefined ? 1 << 0 : 0;
-        flags |= this.text !== undefined ? 1 << 1 : 0;
-        flags |= this.fromLang !== undefined ? 1 << 2 : 0;
+        flags |= this.id ? 1 << 0 : 0;
+        flags |= this.text ? 1 << 1 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
         }
-        if (this.msgId !== undefined) {
-          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id, Primitive.Int) as unknown as Buffer);
         }
-        if (this.text !== undefined) {
-          b.write(Primitive.String.write(this.text) as unknown as Buffer);
-        }
-        if (this.fromLang !== undefined) {
-          b.write(Primitive.String.write(this.fromLang) as unknown as Buffer);
+        if (this.text) {
+          b.write(Primitive.Vector.write(this.text) as unknown as Buffer);
         }
         if (this.toLang !== undefined) {
           b.write(Primitive.String.write(this.toLang) as unknown as Buffer);
@@ -68524,6 +69580,265 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class SendBotRequestedPeer extends TLObject {
+      peer!: TypeInputPeer;
+      msgId!: int;
+      buttonId!: int;
+      requestedPeer!: TypeInputPeer;
+
+      constructor(params: {
+        peer: TypeInputPeer;
+        msgId: int;
+        buttonId: int;
+        requestedPeer: TypeInputPeer;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.SendBotRequestedPeer';
+        this.constructorId = 0xfe38d01b;
+        this.subclassOfId = 0x8af52aac;
+        this.slots = ['peer', 'msgId', 'buttonId', 'requestedPeer'];
+        this.peer = params.peer;
+        this.msgId = params.msgId;
+        this.buttonId = params.buttonId;
+        this.requestedPeer = params.requestedPeer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.SendBotRequestedPeer {
+        // no flags
+
+        let peer = TLObject.read(b);
+        let msgId = Primitive.Int.read(b);
+        let buttonId = Primitive.Int.read(b);
+        let requestedPeer = TLObject.read(b);
+        return new Raw.messages.SendBotRequestedPeer({
+          peer: peer,
+          msgId: msgId,
+          buttonId: buttonId,
+          requestedPeer: requestedPeer,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        if (this.buttonId !== undefined) {
+          b.write(Primitive.Int.write(this.buttonId) as unknown as Buffer);
+        }
+        if (this.requestedPeer !== undefined) {
+          b.write(this.requestedPeer.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetEmojiGroups extends TLObject {
+      hash!: int;
+
+      constructor(params: { hash: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetEmojiGroups';
+        this.constructorId = 0x7488ce5b;
+        this.subclassOfId = 0x7eca55d9;
+        this.slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.GetEmojiGroups {
+        // no flags
+
+        let hash = Primitive.Int.read(b);
+        return new Raw.messages.GetEmojiGroups({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Int.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetEmojiStatusGroups extends TLObject {
+      hash!: int;
+
+      constructor(params: { hash: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetEmojiStatusGroups';
+        this.constructorId = 0x2ecd56cd;
+        this.subclassOfId = 0x7eca55d9;
+        this.slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.GetEmojiStatusGroups {
+        // no flags
+
+        let hash = Primitive.Int.read(b);
+        return new Raw.messages.GetEmojiStatusGroups({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Int.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetEmojiProfilePhotoGroups extends TLObject {
+      hash!: int;
+
+      constructor(params: { hash: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetEmojiProfilePhotoGroups';
+        this.constructorId = 0x21a548f3;
+        this.subclassOfId = 0x7eca55d9;
+        this.slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.GetEmojiProfilePhotoGroups {
+        // no flags
+
+        let hash = Primitive.Int.read(b);
+        return new Raw.messages.GetEmojiProfilePhotoGroups({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Int.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SearchCustomEmoji extends TLObject {
+      emoticon!: string;
+      hash!: long;
+
+      constructor(params: { emoticon: string; hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.SearchCustomEmoji';
+        this.constructorId = 0x2c11c0d7;
+        this.subclassOfId = 0xbcef6aba;
+        this.slots = ['emoticon', 'hash'];
+        this.emoticon = params.emoticon;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.SearchCustomEmoji {
+        // no flags
+
+        let emoticon = Primitive.String.read(b);
+        let hash = Primitive.Long.read(b);
+        return new Raw.messages.SearchCustomEmoji({ emoticon: emoticon, hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.emoticon !== undefined) {
+          b.write(Primitive.String.write(this.emoticon) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class TogglePeerTranslations extends TLObject {
+      disabled?: boolean;
+      peer!: TypeInputPeer;
+
+      constructor(params: { disabled?: boolean; peer: TypeInputPeer }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.TogglePeerTranslations';
+        this.constructorId = 0xe47cb579;
+        this.subclassOfId = 0xf5b399ac;
+        this.slots = ['disabled', 'peer'];
+        this.disabled = params.disabled;
+        this.peer = params.peer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.messages.TogglePeerTranslations {
+        // no flags
+
+        let flags = Primitive.Int.read(b);
+
+        let disabled = flags & (1 << 0) ? true : false;
+        let peer = TLObject.read(b);
+        return new Raw.messages.TogglePeerTranslations({ disabled: disabled, peer: peer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.disabled ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace updates {
     export type TypeState = Raw.updates.State | Raw.updates.GetState;
@@ -69426,23 +70741,26 @@ export namespace Raw {
       file?: TypeInputFile;
       video?: TypeInputFile;
       videoStartTs?: double;
+      videoEmojiMarkup?: TypeVideoSize;
 
       constructor(params: {
         fallback?: boolean;
         file?: TypeInputFile;
         video?: TypeInputFile;
         videoStartTs?: double;
+        videoEmojiMarkup?: TypeVideoSize;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'photos.UploadProfilePhoto';
-        this.constructorId = 0x89f30f69;
+        this.constructorId = 0x93c9a51;
         this.subclassOfId = 0xc292bd24;
-        this.slots = ['fallback', 'file', 'video', 'videoStartTs'];
+        this.slots = ['fallback', 'file', 'video', 'videoStartTs', 'videoEmojiMarkup'];
         this.fallback = params.fallback;
         this.file = params.file;
         this.video = params.video;
         this.videoStartTs = params.videoStartTs;
+        this.videoEmojiMarkup = params.videoEmojiMarkup;
       }
       /**
        * Generate the TLObject from buffer.
@@ -69457,11 +70775,13 @@ export namespace Raw {
         let file = flags & (1 << 0) ? TLObject.read(b) : undefined;
         let video = flags & (1 << 1) ? TLObject.read(b) : undefined;
         let videoStartTs = flags & (1 << 2) ? Primitive.Double.read(b) : undefined;
+        let videoEmojiMarkup = flags & (1 << 4) ? TLObject.read(b) : undefined;
         return new Raw.photos.UploadProfilePhoto({
           fallback: fallback,
           file: file,
           video: video,
           videoStartTs: videoStartTs,
+          videoEmojiMarkup: videoEmojiMarkup,
         });
       }
       /**
@@ -69477,6 +70797,7 @@ export namespace Raw {
         flags |= this.file !== undefined ? 1 << 0 : 0;
         flags |= this.video !== undefined ? 1 << 1 : 0;
         flags |= this.videoStartTs !== undefined ? 1 << 2 : 0;
+        flags |= this.videoEmojiMarkup !== undefined ? 1 << 4 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.file !== undefined) {
@@ -69487,6 +70808,9 @@ export namespace Raw {
         }
         if (this.videoStartTs !== undefined) {
           b.write(Primitive.Double.write(this.videoStartTs) as unknown as Buffer);
+        }
+        if (this.videoEmojiMarkup !== undefined) {
+          b.write(this.videoEmojiMarkup.write() as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -69593,6 +70917,7 @@ export namespace Raw {
       file?: TypeInputFile;
       video?: TypeInputFile;
       videoStartTs?: double;
+      videoEmojiMarkup?: TypeVideoSize;
 
       constructor(params: {
         suggest?: boolean;
@@ -69601,19 +70926,29 @@ export namespace Raw {
         file?: TypeInputFile;
         video?: TypeInputFile;
         videoStartTs?: double;
+        videoEmojiMarkup?: TypeVideoSize;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'photos.UploadContactProfilePhoto';
-        this.constructorId = 0xb91a83bf;
+        this.constructorId = 0xe14c4a71;
         this.subclassOfId = 0xc292bd24;
-        this.slots = ['suggest', 'save', 'userId', 'file', 'video', 'videoStartTs'];
+        this.slots = [
+          'suggest',
+          'save',
+          'userId',
+          'file',
+          'video',
+          'videoStartTs',
+          'videoEmojiMarkup',
+        ];
         this.suggest = params.suggest;
         this.save = params.save;
         this.userId = params.userId;
         this.file = params.file;
         this.video = params.video;
         this.videoStartTs = params.videoStartTs;
+        this.videoEmojiMarkup = params.videoEmojiMarkup;
       }
       /**
        * Generate the TLObject from buffer.
@@ -69630,6 +70965,7 @@ export namespace Raw {
         let file = flags & (1 << 0) ? TLObject.read(b) : undefined;
         let video = flags & (1 << 1) ? TLObject.read(b) : undefined;
         let videoStartTs = flags & (1 << 2) ? Primitive.Double.read(b) : undefined;
+        let videoEmojiMarkup = flags & (1 << 5) ? TLObject.read(b) : undefined;
         return new Raw.photos.UploadContactProfilePhoto({
           suggest: suggest,
           save: save,
@@ -69637,6 +70973,7 @@ export namespace Raw {
           file: file,
           video: video,
           videoStartTs: videoStartTs,
+          videoEmojiMarkup: videoEmojiMarkup,
         });
       }
       /**
@@ -69653,6 +70990,7 @@ export namespace Raw {
         flags |= this.file !== undefined ? 1 << 0 : 0;
         flags |= this.video !== undefined ? 1 << 1 : 0;
         flags |= this.videoStartTs !== undefined ? 1 << 2 : 0;
+        flags |= this.videoEmojiMarkup !== undefined ? 1 << 5 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.userId !== undefined) {
@@ -69666,6 +71004,9 @@ export namespace Raw {
         }
         if (this.videoStartTs !== undefined) {
           b.write(Primitive.Double.write(this.videoStartTs) as unknown as Buffer);
+        }
+        if (this.videoEmojiMarkup !== undefined) {
+          b.write(this.videoEmojiMarkup.write() as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -71593,6 +72934,93 @@ export namespace Raw {
         }
         if (this.sentCode !== undefined) {
           b.write(this.sentCode.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class AutoSaveSettings extends TLObject {
+      usersSettings!: TypeAutoSaveSettings;
+      chatsSettings!: TypeAutoSaveSettings;
+      broadcastsSettings!: TypeAutoSaveSettings;
+      exceptions!: Vector<TypeAutoSaveException>;
+      chats!: Vector<TypeChat>;
+      users!: Vector<TypeUser>;
+
+      constructor(params: {
+        usersSettings: TypeAutoSaveSettings;
+        chatsSettings: TypeAutoSaveSettings;
+        broadcastsSettings: TypeAutoSaveSettings;
+        exceptions: Vector<TypeAutoSaveException>;
+        chats: Vector<TypeChat>;
+        users: Vector<TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'account.AutoSaveSettings';
+        this.constructorId = 0x4c3e069d;
+        this.subclassOfId = 0x48cf2f02;
+        this.slots = [
+          'usersSettings',
+          'chatsSettings',
+          'broadcastsSettings',
+          'exceptions',
+          'chats',
+          'users',
+        ];
+        this.usersSettings = params.usersSettings;
+        this.chatsSettings = params.chatsSettings;
+        this.broadcastsSettings = params.broadcastsSettings;
+        this.exceptions = params.exceptions;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.account.AutoSaveSettings {
+        // no flags
+
+        let usersSettings = TLObject.read(b);
+        let chatsSettings = TLObject.read(b);
+        let broadcastsSettings = TLObject.read(b);
+        let exceptions = TLObject.read(b);
+        let chats = TLObject.read(b);
+        let users = TLObject.read(b);
+        return new Raw.account.AutoSaveSettings({
+          usersSettings: usersSettings,
+          chatsSettings: chatsSettings,
+          broadcastsSettings: broadcastsSettings,
+          exceptions: exceptions,
+          chats: chats,
+          users: users,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.usersSettings !== undefined) {
+          b.write(this.usersSettings.write() as unknown as Buffer);
+        }
+        if (this.chatsSettings !== undefined) {
+          b.write(this.chatsSettings.write() as unknown as Buffer);
+        }
+        if (this.broadcastsSettings !== undefined) {
+          b.write(this.broadcastsSettings.write() as unknown as Buffer);
+        }
+        if (this.exceptions) {
+          b.write(Primitive.Vector.write(this.exceptions) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -75096,6 +76524,208 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class GetDefaultProfilePhotoEmojis extends TLObject {
+      hash!: long;
+
+      constructor(params: { hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetDefaultProfilePhotoEmojis';
+        this.constructorId = 0xe2750328;
+        this.subclassOfId = 0xbcef6aba;
+        this.slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.account.GetDefaultProfilePhotoEmojis {
+        // no flags
+
+        let hash = Primitive.Long.read(b);
+        return new Raw.account.GetDefaultProfilePhotoEmojis({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetDefaultGroupPhotoEmojis extends TLObject {
+      hash!: long;
+
+      constructor(params: { hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetDefaultGroupPhotoEmojis';
+        this.constructorId = 0x915860ae;
+        this.subclassOfId = 0xbcef6aba;
+        this.slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.account.GetDefaultGroupPhotoEmojis {
+        // no flags
+
+        let hash = Primitive.Long.read(b);
+        return new Raw.account.GetDefaultGroupPhotoEmojis({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetAutoSaveSettings extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetAutoSaveSettings';
+        this.constructorId = 0xadcbbcda;
+        this.subclassOfId = 0x48cf2f02;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.account.GetAutoSaveSettings {
+        // no flags
+
+        return new Raw.account.GetAutoSaveSettings();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class SaveAutoSaveSettings extends TLObject {
+      users?: boolean;
+      chats?: boolean;
+      broadcasts?: boolean;
+      peer?: TypeInputPeer;
+      settings!: TypeAutoSaveSettings;
+
+      constructor(params: {
+        users?: boolean;
+        chats?: boolean;
+        broadcasts?: boolean;
+        peer?: TypeInputPeer;
+        settings: TypeAutoSaveSettings;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.SaveAutoSaveSettings';
+        this.constructorId = 0xd69b8361;
+        this.subclassOfId = 0xf5b399ac;
+        this.slots = ['users', 'chats', 'broadcasts', 'peer', 'settings'];
+        this.users = params.users;
+        this.chats = params.chats;
+        this.broadcasts = params.broadcasts;
+        this.peer = params.peer;
+        this.settings = params.settings;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.account.SaveAutoSaveSettings {
+        // no flags
+
+        let flags = Primitive.Int.read(b);
+
+        let users = flags & (1 << 0) ? true : false;
+        let chats = flags & (1 << 1) ? true : false;
+        let broadcasts = flags & (1 << 2) ? true : false;
+        let peer = flags & (1 << 3) ? TLObject.read(b) : undefined;
+        let settings = TLObject.read(b);
+        return new Raw.account.SaveAutoSaveSettings({
+          users: users,
+          chats: chats,
+          broadcasts: broadcasts,
+          peer: peer,
+          settings: settings,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.users ? 1 << 0 : 0;
+        flags |= this.chats ? 1 << 1 : 0;
+        flags |= this.broadcasts ? 1 << 2 : 0;
+        flags |= this.peer !== undefined ? 1 << 3 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.settings !== undefined) {
+          b.write(this.settings.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DeleteAutoSaveExceptions extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.DeleteAutoSaveExceptions';
+        this.constructorId = 0x53bc0020;
+        this.subclassOfId = 0xf5b399ac;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static read(b: BytesIO, ...args: Array<any>): Raw.account.DeleteAutoSaveExceptions {
+        // no flags
+
+        return new Raw.account.DeleteAutoSaveExceptions();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
   }
   export namespace channels {
     export class ChannelParticipants extends TLObject {
@@ -75719,6 +77349,7 @@ export namespace Raw {
       broadcast?: boolean;
       megagroup?: boolean;
       forImport?: boolean;
+      forum?: boolean;
       title!: string;
       about!: string;
       geoPoint?: TypeInputGeoPoint;
@@ -75729,6 +77360,7 @@ export namespace Raw {
         broadcast?: boolean;
         megagroup?: boolean;
         forImport?: boolean;
+        forum?: boolean;
         title: string;
         about: string;
         geoPoint?: TypeInputGeoPoint;
@@ -75744,6 +77376,7 @@ export namespace Raw {
           'broadcast',
           'megagroup',
           'forImport',
+          'forum',
           'title',
           'about',
           'geoPoint',
@@ -75753,6 +77386,7 @@ export namespace Raw {
         this.broadcast = params.broadcast;
         this.megagroup = params.megagroup;
         this.forImport = params.forImport;
+        this.forum = params.forum;
         this.title = params.title;
         this.about = params.about;
         this.geoPoint = params.geoPoint;
@@ -75771,6 +77405,7 @@ export namespace Raw {
         let broadcast = flags & (1 << 0) ? true : false;
         let megagroup = flags & (1 << 1) ? true : false;
         let forImport = flags & (1 << 3) ? true : false;
+        let forum = flags & (1 << 5) ? true : false;
         let title = Primitive.String.read(b);
         let about = Primitive.String.read(b);
         let geoPoint = flags & (1 << 2) ? TLObject.read(b) : undefined;
@@ -75780,6 +77415,7 @@ export namespace Raw {
           broadcast: broadcast,
           megagroup: megagroup,
           forImport: forImport,
+          forum: forum,
           title: title,
           about: about,
           geoPoint: geoPoint,
@@ -75799,6 +77435,7 @@ export namespace Raw {
         flags |= this.broadcast ? 1 << 0 : 0;
         flags |= this.megagroup ? 1 << 1 : 0;
         flags |= this.forImport ? 1 << 3 : 0;
+        flags |= this.forum ? 1 << 5 : 0;
         flags |= this.geoPoint !== undefined ? 1 << 2 : 0;
         flags |= this.address !== undefined ? 1 << 2 : 0;
         flags |= this.ttlPeriod !== undefined ? 1 << 4 : 0;

@@ -99,7 +99,6 @@ __metadata:
     deno2node: 1.7.1
     fast-csv: 4.3.6
     prettier: 2.8.1
-    promise-socket: 7.0.0
     socks: 2.7.1
   languageName: unknown
   linkType: soft
@@ -226,13 +225,6 @@ __metadata:
   version: 3.27.2
   resolution: "core-js-pure@npm:3.27.2"
   checksum: 7cb24502a782a032ffa2af6e84abfcfeffa0c30e84c38f4d0a1d7567c8c86e2d36a7554a00ca47762606c84d2a86d99662a7158e9f4df989f3fe3c7e7c09fa45
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^3.6.5":
-  version: 3.27.1
-  resolution: "core-js@npm:3.27.1"
-  checksum: d50b5f88aea4302512ad9446c18e90f4d35dea1e6d8d3f87337690677061565ff11a670f1e0c87de57aa6074375fbb25ed5784076c040d3c4de8b4bce7d2ebeb
   languageName: node
   linkType: hard
 
@@ -457,43 +449,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"promise-duplex@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "promise-duplex@npm:6.0.0"
-  dependencies:
-    core-js: ^3.6.5
-    promise-readable: ^6.0.0
-    promise-writable: ^6.0.0
-  checksum: 402ea90c81194ed5176ef2887f31155eb59d19d57dc9f37be2fa9e382654b9a5828c121b3da2e34ccf99bd7b78fae330b357adf20307407d9996e1a3e030b97a
-  languageName: node
-  linkType: hard
-
-"promise-readable@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "promise-readable@npm:6.0.0"
-  dependencies:
-    core-js: ^3.6.5
-  checksum: 2e93f83457011ca721e7a55b9bb5045f2bf75dc1435d1912a2f20db1ba309e3343364eb68525e87b4c8b27baa0ab04619d0a3c064e944584260b620ebcbb1bef
-  languageName: node
-  linkType: hard
-
-"promise-socket@npm:7.0.0":
-  version: 7.0.0
-  resolution: "promise-socket@npm:7.0.0"
-  dependencies:
-    promise-duplex: ^6.0.0
-    tslib: ^2.0.1
-  checksum: 88520afa6872a542345d0fd2dc372e6e2c88ac6a2f282309eb25d5cbc3ffda44070a60a19a7c1225942e935091fdb51d1956da706dc9fd38ecfdc99c54ac3a99
-  languageName: node
-  linkType: hard
-
-"promise-writable@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "promise-writable@npm:6.0.0"
-  checksum: 805441f35a88303f60bf84354ca826b8c6183ffdbaad296782a0ebc9e0b03e57e653e15d70cd52131902d5611f618dbbe5a140e41865a358f1fc9ce398bc41eb
-  languageName: node
-  linkType: hard
-
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -569,7 +524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.1, tslib@npm:^2.4.0":
+"tslib@npm:^2.4.0":
   version: 2.4.1
   resolution: "tslib@npm:2.4.1"
   checksum: 19480d6e0313292bd6505d4efe096a6b31c70e21cf08b5febf4da62e95c265c8f571f7b36fcc3d1a17e068032f59c269fab3459d6cd3ed6949eafecf64315fca

@@ -6,12 +6,12 @@
 
 ### Add
 
-- forceSMS params - logger error when failed connecting to telegram server  ### Change
+- forceSMS params - logger error when failed connecting to telegram server ### Change
 
-- Update CHANGELOG.md - ungitignore static file - add support to deno - split client code to different file - remove Primitive.Int.write in TCPFull  ### Fix
+- Update CHANGELOG.md - ungitignore static file - add support to deno - split client code to different file - remove Primitive.Int.write in TCPFull ### Fix
 
-- sendCode is not a function   <a name="1.4.0"></a>
->>>>>>> bed456608750a5946cdb93a7b46ad9406540f86e
+- sendCode is not a function <a name="1.4.0"></a>
+  > > > > > > > bed456608750a5946cdb93a7b46ad9406540f86e
 
 ## [1.4.0](https://github.com/tgsnake/core/compare/1.3.0...1.4.0)
 
