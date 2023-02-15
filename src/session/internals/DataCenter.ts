@@ -7,6 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
+import { isBrowser } from '../../platform.deno.ts';
 
 export const DCTest = {
   1: '149.154.175.10',
@@ -19,6 +20,13 @@ export const DCProd = {
   3: '149.154.175.100',
   4: '149.154.167.91',
   5: '91.108.56.130',
+};
+export const WebDC = {
+  1: 'pluto.web.telegram.org',
+  2: 'venus.web.telegram.org',
+  3: 'aurora.web.telegram.org',
+  4: 'vesta.web.telegram.org',
+  5: 'flora.web.telegram.org',
 };
 export const DCProdMedia = {
   2: '149.154.167.151',
@@ -46,13 +54,18 @@ export function DataCenter(
   ipv6: boolean,
   media: boolean
 ): [ip: string, port: number] {
-  if (testMode) {
-    return [ipv6 ? DCTestIPV6[dcId] : DCTest[dcId], 80];
+  // @ts-ignore
+  if (isBrowser) {
+    return [`${WebDC[dcId]}:$PORT/apiws${testMode ? '_test' : ''}`, 443];
   } else {
-    if (media) {
-      return [ipv6 ? DCProdMediaIPV6[dcId] : DCProdMedia[dcId], 443];
+    if (testMode) {
+      return [ipv6 ? DCTestIPV6[dcId] : DCTest[dcId], 80];
     } else {
-      return [ipv6 ? DCProdIPV6[dcId] : DCProd[dcId], 443];
+      if (media) {
+        return [ipv6 ? DCProdMediaIPV6[dcId] : DCProdMedia[dcId], 443];
+      } else {
+        return [ipv6 ? DCProdIPV6[dcId] : DCProd[dcId], 443];
+      }
     }
   }
 }
