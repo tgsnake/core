@@ -12,7 +12,7 @@ import * as TCP from './TCP/index.ts';
 import { DataCenter } from '../session/index.ts';
 import { sleep } from '../helpers.ts';
 import { Logger } from '../Logger.ts';
-import { Mutex } from '../platform.deno.ts';
+import { Mutex, isBrowser } from '../platform.deno.ts';
 import { ClientError } from '../errors/index.ts';
 
 /**
@@ -81,6 +81,8 @@ export class Connection {
   /** @hidden */
   private _connected!: boolean;
   /** @hidden */
+  private _local!: boolean;
+  /** @hidden */
   private _mutex: Mutex = new Mutex();
   constructor(
     dcId: number,
@@ -88,7 +90,8 @@ export class Connection {
     ipv6: boolean,
     proxy?: ProxyInterface,
     media: boolean = false,
-    mode: number = 0
+    mode: number = 0,
+    local: boolean = true
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;
@@ -98,6 +101,7 @@ export class Connection {
     this._media = media;
     this._mode = TCPModes[mode];
     this._address = DataCenter.DataCenter(dcId, test, ipv6, media);
+    this._local = local;
     this._connected = false;
   }
   async connect() {
@@ -109,7 +113,11 @@ export class Connection {
       this._protocol = new this._mode();
       try {
         Logger.debug(`[1] Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`);
-        await this._protocol.connect(this._address[0], this._address[1], this._proxy);
+        await this._protocol.connect(
+          this._address[0],
+          isBrowser ? (this._local ? 80 : this._address[1]) : this._address[1],
+          this._proxy
+        );
         this._connected = true;
         break;
       } catch (error: any) {

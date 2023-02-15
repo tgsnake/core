@@ -10,4 +10,5 @@
 
 import * as TCP from './TCP/index.ts';
 export * as Connections from './connection.ts';
+export { Socket } from './WebSocket.ts';
 export { TCP };
