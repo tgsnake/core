@@ -81,6 +81,10 @@ export interface ClientOptions {
    * Default is 1 (TCPAbridge)
    */
   tcp?: number;
+  /**
+   * Only for browser platform! Set false when you deployed your app offside the local machine. it wil use `ws://` in local machine and `wss://` in deployment.
+   */
+  local?: boolean;
 }
 
 export class Client {
@@ -127,6 +131,8 @@ export class Client {
   /** @hidden */
   _connectionMode!: number;
   /** @hidden */
+  _local!: boolean;
+  /** @hidden */
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
    * Client Constructor.
@@ -158,6 +164,7 @@ export class Client {
     this._noUpdates = clientOptions?.noUpdates ?? false;
     this._takeout = clientOptions?.takeout ?? false;
     this._connectionMode = clientOptions?.tcp ?? 0;
+    this._local = clientOptions?.local ?? true;
   }
   /**
    * Exporting current session to string.

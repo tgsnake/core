@@ -73,7 +73,7 @@ export async function start(
     // @ts-ignore
     if (auth?.botToken) {
       // @ts-ignore
-      await _Auth.siginBot(client, await _Auth?.botToken);
+      await _Auth.siginBot(client, await auth?.botToken);
     } else {
       // @ts-ignore
       await _Auth.siginUser(client, { ...auth });
