@@ -17,6 +17,7 @@ jobs:
           yarn config set enableImmutableInstalls false
           yarn install
           yarn build:sync
+          yarn build:api
           yarn build
           yarn prettier
           git config user.email github-actions[bot]@users.noreply.github.com
