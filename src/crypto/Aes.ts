@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto } from '../platform.deno.ts';
+import { crypto, aesCreateCipher, aesCreateDecipher } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers.ts';
 
@@ -71,14 +71,26 @@ export function AES(key: Buffer) {
   const iv = Buffer.alloc(0);
   return {
     encrypt: (data: Buffer) => {
-      const cipher = crypto.createCipheriv('aes-256-ecb', key, iv);
-      cipher.setAutoPadding(false);
-      return Buffer.concat([cipher.update(data), cipher.final()]);
+      if ('Deno' in globalThis) {
+        const cipher = aesCreateCipher('ECB', key, iv);
+        cipher.update(data);
+        return Buffer.concat([Buffer.alloc(0), cipher.finish()]);
+      } else {
+        const cipher = crypto.createCipheriv('aes-256-ecb', key, iv);
+        cipher.setAutoPadding(false);
+        return Buffer.concat([cipher.update(data), cipher.final()]);
+      }
     },
     decrypt: (data: Buffer) => {
-      const decipher = crypto.createDecipheriv('aes-256-ecb', key, iv);
-      decipher.setAutoPadding(false);
-      return Buffer.concat([decipher.update(data), decipher.final()]);
+      if ('Deno' in globalThis) {
+        const decipher = aesCreateDecipher('ECB', key, iv);
+        decipher.update(data);
+        return Buffer.concat([Buffer.alloc(0), decipher.finish()]);
+      } else {
+        const decipher = crypto.createDecipheriv('aes-256-ecb', key, iv);
+        decipher.setAutoPadding(false);
+        return Buffer.concat([decipher.update(data), decipher.final()]);
+      }
     },
   };
 }

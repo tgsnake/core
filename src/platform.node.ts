@@ -16,6 +16,19 @@ export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'zlib';
 export { Logger } from '@tgsnake/log';
 export { SocksClient } from 'socks';
-export { PromiseSocket } from 'promise-socket';
 export { Mutex } from 'async-mutex';
+export const aesCreateCipher = (...args: Array<any>) => {
+  return {
+    update: (...args: Array<any>) => Buffer.alloc(0),
+    finish: (...args: Array<any>) => Buffer.alloc(0),
+  };
+}; // Deno compatibility
+export const aesCreateDecipher = (...args: Array<any>) => {
+  return {
+    update: (...args: Array<any>) => Buffer.alloc(0),
+    finish: (...args: Array<any>) => Buffer.alloc(0),
+  };
+}; // Deno compatibility
+// @ts-ignore
+export const isBrowser = typeof window !== 'undefined'; // browser compatibility
 export { crypto, net, os, bigInt, path };
