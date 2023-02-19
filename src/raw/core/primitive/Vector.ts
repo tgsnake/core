@@ -27,26 +27,26 @@ export class Vector extends TLObject {
     }
     return b.buffer;
   }
-  static readBare(data: BytesIO, size: number): any {
+  static async readBare(data: BytesIO, size: number): Promise<any> {
     if (size === 4) {
-      return Int.read(data);
+      return await Int.read(data);
     }
     if (size === 8) {
-      return Long.read(data);
+      return await Long.read(data);
     }
-    return TLObject.read(data);
+    return await TLObject.read(data);
   }
-  static read(data: BytesIO, t?: any): Array<any> {
+  static async read(data: BytesIO, t?: any): Promise<Array<any>> {
     let results: Array<any> = [];
-    let count = Int.read(data);
+    let count = await Int.read(data);
     let left = data.read().length;
     let size = count ? left / count : 0;
     data.seek(-left, 1);
     for (let i = 0; i < count; i++) {
       if (t) {
-        results.push(t.read(data));
+        results.push(await t.read(data));
       } else {
-        results.push(Vector.readBare(data, size));
+        results.push(await Vector.readBare(data, size));
       }
     }
     return results;

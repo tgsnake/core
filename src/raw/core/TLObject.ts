@@ -11,33 +11,32 @@
 import { Object } from '../All.ts';
 import { BytesIO } from './BytesIO.ts';
 import { Logger } from '../../Logger.ts';
-function req(paths: string): { [key: string]: any } {
+async function req(paths: string): Promise<{ [key: string]: any }> {
   let res = {};
   if ('Deno' in globalThis) {
+    let done = false;
     // @ts-ignore
-    import(paths).then((r) => {
-      res = r;
-    });
+    res = await import(paths);
   } else {
-    res = require(paths.replace('.ts', '.js'));
+    res = await require(paths.replace('.ts', '.js'));
   }
   return res;
 }
-function getModule(name: string) {
+async function getModule(name: string): Promise<TLObject> {
   if (!name) {
     throw new Error("name of module can't be undefined");
   }
   if (name === 'Message') {
-    return req('./Message.ts').Message;
+    return (await req('./Message.ts')).Message;
   } else if (name === 'GzipPacked') {
-    return req('./GzipPacked.ts').GzipPacked;
+    return (await req('./GzipPacked.ts')).GzipPacked;
   } else if (name === 'MsgContainer') {
-    return req('./MsgContainer.ts').MsgContainer;
+    return (await req('./MsgContainer.ts')).MsgContainer;
   } else if (name.startsWith('Primitive')) {
-    return req('./primitive/index.ts')[name.split('.')[1]];
+    return (await req('./primitive/index.ts'))[name.split('.')[1]];
   } else {
     const split = name.split('.');
-    const { Raw } = req('../Raw.ts');
+    const { Raw } = await req('../Raw.ts');
     if (split.length == 3) {
       return Raw[split[1]][split[2]];
     }
@@ -57,15 +56,16 @@ export class TLObject {
     this.constructorId = this.cls.ID ?? 0;
     this.className = 'TLObject';
   }
-  static read(data: BytesIO, ...args: Array<any>): any {
+  static async read(data: BytesIO, ...args: Array<any>): Promise<any> {
     const id = data.readUInt32LE(4);
     Logger.debug(`[10] Reading TLObject with id: ${id.toString(16)} (${Object[id]})`);
-    return getModule(Object[id]).read(data, ...args);
+    const _class = await getModule(Object[id]);
+    return await _class.read(data, ...args);
   }
   static write(...args: Array<any>): Buffer {
     return Buffer.alloc(0);
   }
-  read(data: BytesIO, ...args: Array<any>): any {
+  async read(data: BytesIO, ...args: Array<any>): Promise<any> {
     return this.cls.read(data, ...args);
   }
   write(...args: Array<any>): Buffer {

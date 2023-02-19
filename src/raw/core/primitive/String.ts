@@ -16,7 +16,7 @@ export class String extends TLObject {
   static write(value: string): Buffer {
     return Bytes.write(Buffer.from(value, 'utf8')) as unknown as Buffer;
   }
-  static read(data: BytesIO, ...args: Array<any>): string {
-    return Bytes.read(data).toString('utf8');
+  static async read(data: BytesIO, ...args: Array<any>): Promise<string> {
+    return (await Bytes.read(data)).toString('utf8');
   }
 }

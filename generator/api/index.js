@@ -258,7 +258,7 @@ function start(source, template) {
             `    b.write((Primitive.Int.write(${parseArgName(argName)})) as unknown as Buffer);\n`,
           ].join('\n');
           writerString += writerFlag;
-          readerString += `\n    let ${parseArgName(argName)} = Primitive.Int.read(b);\n`;
+          readerString += `\n    let ${parseArgName(argName)} = await Primitive.Int.read(b);\n`;
           continue;
         }
         if (flag) {
@@ -281,7 +281,7 @@ function start(source, template) {
             writerString += `\n    }`;
             readerString += `\n    let ${parseArgName(argName)} = (flags${
               flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? Primitive.${Uppercase(
+            } & (1 << ${flagIndex})) ? await Primitive.${Uppercase(
               flagType.trim()
             )}.read(b) : undefined;`;
           } else if (/Vector<(\w+\.?\w+?)>/i.test(flagType.trim())) {
@@ -295,7 +295,7 @@ function start(source, template) {
             writerString += `\n    }`;
             readerString += `\n    let ${parseArgName(argName)} = (flags${
               flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? TLObject.read(b${
+            } & (1 << ${flagIndex})) ? await TLObject.read(b${
               VECTOR_CORE_TYPES.has(vectorType.trim())
                 ? `,Primitive.${Uppercase(vectorType.trim())}`
                 : ''
@@ -306,7 +306,7 @@ function start(source, template) {
             writerString += `\n    }`;
             readerString += `\n    let ${parseArgName(argName)} = (flags${
               flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? TLObject.read(b) : undefined;`;
+            } & (1 << ${flagIndex})) ? await TLObject.read(b) : undefined;`;
           }
         } else {
           if (!flagsArg.test(argName)) {
@@ -321,7 +321,7 @@ function start(source, template) {
               argType.trim()
             )}.write(this.${argName})) as unknown as Buffer);`;
             writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = Primitive.${Uppercase(
+            readerString += `\n    let ${parseArgName(argName)} = await Primitive.${Uppercase(
               argType.trim()
             )}.read(b);`;
           } else if (/Vector<(\w+\.?\w+?)>/i.test(argType.trim())) {
@@ -333,7 +333,7 @@ function start(source, template) {
                 : ''
             })) as unknown as Buffer);`;
             writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = TLObject.read(b${
+            readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b${
               VECTOR_CORE_TYPES.has(vectorType.trim())
                 ? `,Primitive.${Uppercase(vectorType.trim())}`
                 : ''
@@ -342,7 +342,7 @@ function start(source, template) {
             writerString += `\n    if(this.${argName} !== undefined){\n`;
             writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
             writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = TLObject.read(b);`;
+            readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b);`;
           }
         }
       }

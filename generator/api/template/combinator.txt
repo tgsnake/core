@@ -8,7 +8,7 @@ export class {{ CLASS-NAME }} extends TLObject {
     * Generate the TLObject from buffer. 
     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
   */
-  static read(b:BytesIO,...args:Array<any>) : Raw.{{ CLASS-NAME-WITH-NAMESPACE }} {
+  static async read(b:BytesIO,...args:Array<any>) : Promise<Raw.{{ CLASS-NAME-WITH-NAMESPACE }}> {
     {{ READER }}
     return new Raw.{{ CLASS-NAME-WITH-NAMESPACE }}({{ VARIABLE }})
   }

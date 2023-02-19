@@ -35,12 +35,12 @@ export class Message extends TLObject {
     this.length = length;
     this.body = body;
   }
-  static read(data: BytesIO, ...args: Array<any>): Message {
-    let msgId = Primitive.Long.read(data);
-    let seqNo = Primitive.Int.read(data);
-    let length = Primitive.Int.read(data);
+  static async read(data: BytesIO, ...args: Array<any>): Promise<Message> {
+    let msgId = await Primitive.Long.read(data);
+    let seqNo = await Primitive.Int.read(data);
+    let length = await Primitive.Int.read(data);
     let body = data.read(length);
-    return new Message(TLObject.read(new BytesIO(body)), msgId, seqNo, length);
+    return new Message(await TLObject.read(new BytesIO(body)), msgId, seqNo, length);
   }
   write(): Buffer {
     let b = new BytesIO();

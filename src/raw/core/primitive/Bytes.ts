@@ -26,7 +26,7 @@ export class Bytes extends TLObject {
       ]);
     }
   }
-  static read(data: BytesIO, ...args: Array<any>): Buffer {
+  static async read(data: BytesIO, ...args: Array<any>): Promise<Buffer> {
     let length = data.read(1)[0];
     if (length <= 253) {
       let x = data.read(length);

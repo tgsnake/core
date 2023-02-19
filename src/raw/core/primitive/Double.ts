@@ -21,7 +21,7 @@ export class Double extends TLObject {
     }
     return buffer;
   }
-  static read(data: BytesIO, little: boolean = true): number {
+  static async read(data: BytesIO, little: boolean = true): Promise<number> {
     if (little) {
       return data.readDoubleLE();
     }

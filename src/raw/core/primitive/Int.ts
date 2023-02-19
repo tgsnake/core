@@ -31,12 +31,12 @@ export class Int extends TLObject {
     }
     return buffer;
   }
-  static read(
+  static async read(
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
     size: number = Int.SIZE
-  ): number {
+  ): Promise<number> {
     if (signed) {
       if (little) {
         return data.readInt32LE(size);
@@ -55,12 +55,12 @@ export class Int extends TLObject {
 
 export class Long extends TLObject {
   static SIZE: number = 8;
-  static read(
+  static async read(
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
     size: number = Long.SIZE
-  ): bigint {
+  ): Promise<bigint> {
     if (signed) {
       if (little) {
         return data.readBigInt64LE(size);
@@ -95,12 +95,12 @@ export class Long extends TLObject {
 }
 export class Int128 extends Long {
   static SIZE: number = 16;
-  static read(
+  static async read(
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
     size: number = Int128.SIZE
-  ): bigint {
+  ): Promise<bigint> {
     return toBigint(data.read(size), little, signed);
   }
   static write(value: bigint, signed: boolean = true, little: boolean = true): Buffer {
@@ -115,12 +115,12 @@ export class Int128 extends Long {
 }
 export class Int256 extends Long {
   static SIZE: number = 32;
-  static read(
+  static async read(
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
     size: number = Int256.SIZE
-  ): bigint {
+  ): Promise<bigint> {
     return Int128.read(data, signed, little, size);
   }
   static write(value: bigint, signed: boolean = true, little: boolean = true): Buffer {
