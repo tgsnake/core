@@ -122,11 +122,13 @@ export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: b
   let length = buffer.length;
   let value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
   // @ts-ignore
-  let bigint = bigInt(value, 16).value;
+  let _bigint = bigInt(value, 16);
+  // @ts-ignore
+  let bigint = _bigint.value ? BigInt(_bigint.value) : BigInt(_bigint.raw);
   if (signed && Math.floor(bigint.toString(2).length / 8) >= length) {
     bigint = bigint - bigIntPow(BigInt(2), BigInt(length * 8));
   }
-  return bigint;
+  return BigInt(bigint);
 }
 // https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
 export function mod(n: number, m: number): number {

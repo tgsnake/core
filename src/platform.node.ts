@@ -17,17 +17,20 @@ export { gzipSync, gunzipSync } from 'zlib';
 export { Logger } from '@tgsnake/log';
 export { SocksClient } from 'socks';
 export { Mutex } from 'async-mutex';
-export const aesCreateCipher = (...args: Array<any>) => {
-  return {
-    update: (...args: Array<any>) => Buffer.alloc(0),
-    finish: (...args: Array<any>) => Buffer.alloc(0),
-  };
-}; // Deno compatibility
-export const aesCreateDecipher = (...args: Array<any>) => {
-  return {
-    update: (...args: Array<any>) => Buffer.alloc(0),
-    finish: (...args: Array<any>) => Buffer.alloc(0),
-  };
+export const aesjs = {
+  ModeOfOperation: {
+    ecb: class ECB {
+      constructor(...args: Array<any>) {
+        throw new Error('not implemented');
+      }
+      encrypt(...args: Array<any>): Buffer {
+        return Buffer.alloc(0);
+      }
+      decrypt(...args: Array<any>): Buffer {
+        return Buffer.alloc(0);
+      }
+    },
+  },
 }; // Deno compatibility
 // @ts-ignore
 export const isBrowser = typeof window !== 'undefined'; // browser compatibility
