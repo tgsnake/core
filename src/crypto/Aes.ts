@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, aesCreateCipher, aesCreateDecipher } from '../platform.deno.ts';
+import { crypto, aesjs } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers.ts';
 
@@ -72,9 +72,8 @@ export function AES(key: Buffer) {
   return {
     encrypt: (data: Buffer) => {
       if ('Deno' in globalThis) {
-        const cipher = aesCreateCipher('ECB', key, iv);
-        cipher.update(data);
-        return Buffer.concat([Buffer.alloc(0), cipher.finish()]);
+        const cipher = new aesjs.ModeOfOperation.ecb(key);
+        return Buffer.from(cipher.encrypt(data));
       } else {
         const cipher = crypto.createCipheriv('aes-256-ecb', key, iv);
         cipher.setAutoPadding(false);
@@ -83,9 +82,8 @@ export function AES(key: Buffer) {
     },
     decrypt: (data: Buffer) => {
       if ('Deno' in globalThis) {
-        const decipher = aesCreateDecipher('ECB', key, iv);
-        decipher.update(data);
-        return Buffer.concat([Buffer.alloc(0), decipher.finish()]);
+        const cipher = new aesjs.ModeOfOperation.ecb(key);
+        return Buffer.from(cipher.decrypt(data));
       } else {
         const decipher = crypto.createDecipheriv('aes-256-ecb', key, iv);
         decipher.setAutoPadding(false);
