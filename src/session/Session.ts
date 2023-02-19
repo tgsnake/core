@@ -34,7 +34,7 @@ export class Results {
 }
 
 export class Session {
-  START_TIMEOUT: number = 1000;
+  START_TIMEOUT: number = 2000;
   WAIT_TIMEOUT: number = 15000;
   SLEEP_THRESHOLD: number = 10000;
   MAX_RETRIES!: number;
@@ -192,7 +192,9 @@ export class Session {
     if (waitResponse) {
       this._results.set(BigInt(msgId), new Results());
     }
-    Logger.debug(`[50] Sending msg id ${msgId}, has ${msg.write().length} bytes message.`);
+    Logger.debug(
+      `[50] Sending msg id ${msgId} (${data.className}), has ${msg.write().length} bytes message.`
+    );
     let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
       Logger.debug(`[51] Sending ${payload.length} bytes payload.`);

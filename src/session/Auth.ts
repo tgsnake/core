@@ -44,15 +44,15 @@ export class Auth {
       data.write(),
     ]);
   }
-  static unpack(b: BytesIO) {
+  static async unpack(b: BytesIO) {
     b.seek(20, 1); // Skip auth_key_id (8), message_id (8) and message_length (4)
-    return TLObject.read(b);
+    return await TLObject.read(b);
   }
   async invoke(data: TLObject) {
     const content = Auth.pack(data);
     await this.connection.send(content);
     const response = new BytesIO(await this.connection.recv());
-    return Auth.unpack(response);
+    return await Auth.unpack(response);
   }
   async create() {
     // https://core.telegram.org/mtproto/auth_key
@@ -176,7 +176,7 @@ export class Auth {
         let answerWithHash = AES.ige256Decrypt(serverDh.encryptedAnswer, tempAesKey, tempAesIv);
         let answer = new BytesIO(answerWithHash);
         answer.seek(20, 1); // skip hash
-        let serverDhInnerData = TLObject.read(answer);
+        let serverDhInnerData = await TLObject.read(answer);
         Logger.debug('[22] Done decrypting answer');
 
         let dhPrime = toBigint(serverDhInnerData.dhPrime, false);
