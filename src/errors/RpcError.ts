@@ -11,21 +11,19 @@
 import { Logger } from '../Logger.ts';
 import { Raw, TLObject } from '../raw/index.ts';
 import { Exceptions } from './exceptions/All.ts';
-function req(paths: string): { [key: string]: any } {
+async function req(paths: string): Promise<{ [key: string]: any }> {
   let res = {};
   if ('Deno' in globalThis) {
     // @ts-ignore
-    import(paths).then((r) => {
-      res = r;
-    });
+    res = await import(paths);
   } else {
-    res = require(paths.replace('.ts', '.js'));
+    res = await require(paths.replace('.ts', '.js'));
   }
   return res;
 }
-function getModule(name: string) {
+async function getModule(name: string) {
   let [n, m] = name.split('.');
-  const AllExceptions = req('./exceptions/index.ts');
+  const AllExceptions = await req('./exceptions/index.ts');
   if (AllExceptions[n] && AllExceptions[n][m]) {
     return AllExceptions[n][m];
   }
@@ -72,7 +70,7 @@ export class RPCError extends Error {
       this._rpcName ? `(caused by ${this._rpcName})` : ''
     }`;
   }
-  static raise(rpcError: Raw.RpcError, rpcType: TLObject) {
+  static async raise(rpcError: Raw.RpcError, rpcType: TLObject) {
     let code = rpcError.errorCode;
     let message = rpcError.errorMessage;
     let isSigned = code < 0;
@@ -83,7 +81,7 @@ export class RPCError extends Error {
     }
     let id = message.replace(/\_\d+/gm, '_X');
     if (!(id in Exceptions[code])) {
-      let modules = getModule(Exceptions[code]['_']);
+      let modules = await getModule(Exceptions[code]['_']);
       // @ts-ignore
       let _module = new modules(`[${code} ${message}]`, name, true, isSigned);
       // @ts-ignore
@@ -99,7 +97,7 @@ export class RPCError extends Error {
       value = '';
     }
     //@ts-ignore
-    let modules = getModule(Exceptions[code][id]);
+    let modules = await getModule(Exceptions[code][id]);
     //@ts-ignore
     let _module = new modules(value, name, false, isSigned);
     //@ts-ignore
