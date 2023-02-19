@@ -69,13 +69,13 @@ export function pack(
 /**
  * Unpack Telegram Message to TLobject.
  */
-export function unpack(
+export async function unpack(
   b: BytesIO,
   sessionId: Buffer,
   authKey: Buffer,
   authKeyId: Buffer,
   storedMsgId: Array<bigint>
-): Message {
+): Promise<Message> {
   SecurityCheckMismatch.check(
     b.read(8).equals(authKeyId),
     'Provided auth key id is not equal with expected one.'
@@ -99,7 +99,7 @@ export function unpack(
   );
   let message;
   try {
-    message = Message.read(new BytesIO(data.buffer.slice(16)));
+    message = await Message.read(new BytesIO(data.buffer.slice(16)));
   } catch (error: any) {
     Logger.error(error);
     // I'm not sure about this, because we don't have a KeyError, so keep this as console.log until we know the error structure.
