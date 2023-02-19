@@ -154,7 +154,15 @@ export class Client {
     this._proxy = clientOptions?.proxy;
     this._ipv6 = clientOptions?.ipv6 ?? false;
     this._deviceModel = clientOptions?.deviceModel ?? os.type().toString();
-    this._systemVersion = clientOptions?.systemVersion ?? os.release().toString();
+    this._systemVersion =
+      clientOptions?.systemVersion ??
+      ('Deno' in globalThis
+        ? // @ts-ignore
+          Deno.version?.deno
+          ? // @ts-ignore
+            `Deno ${Deno.version?.deno}`
+          : `Deno unknown`
+        : os.release().toString());
     this._appVersion = clientOptions?.appVersion ?? Version.version;
     this._systemLangCode = clientOptions?.systemLangCode ?? 'en';
     this._langCode = clientOptions?.langCode ?? this._systemLangCode;
