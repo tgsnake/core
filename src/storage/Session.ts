@@ -12,6 +12,7 @@ import { Logger } from '../Logger.ts';
 import { AbstractSession } from './Abstract.ts';
 import { Raw } from '../raw/index.ts';
 import { getChannelId } from '../helpers.ts';
+import { inspect } from '../platform.deno.ts';
 
 /**
  * Get a valid InputPeer from the available data session.
@@ -188,6 +189,9 @@ export class BaseSession extends AbstractSession {
       }
     }
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   /** @hidden */
   toJSON(): { [key: string]: any } {

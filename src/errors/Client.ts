@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-
+import { inspect } from '../platform.deno.ts';
 export class ClientError extends Error {
   message!: string;
   description!: string;
@@ -27,6 +27,9 @@ export class ClientError extends Error {
       stack: this.stack,
     });
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {

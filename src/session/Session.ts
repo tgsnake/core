@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, os, Mutex } from '../platform.deno.ts';
+import { crypto, os, Mutex, inspect } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { Connection, ProxyInterface } from '../connection/connection.ts';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw/index.ts';
@@ -454,6 +454,9 @@ export class Session {
       }
     }
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {

@@ -11,6 +11,7 @@
 import { Logger } from '../Logger.ts';
 import { Raw, TLObject } from '../raw/index.ts';
 import { Exceptions } from './exceptions/All.ts';
+import { inspect } from '../platform.deno.ts';
 async function req(paths: string): Promise<{ [key: string]: any }> {
   let res = {};
   if ('Deno' in globalThis) {
@@ -120,6 +121,9 @@ export class RPCError extends Error {
       stack: this.stack,
     });
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {

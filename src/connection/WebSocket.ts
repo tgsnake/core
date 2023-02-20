@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { net, Mutex, SocksClient, isBrowser } from '../platform.deno.ts';
+import { net, Mutex, SocksClient, isBrowser, inspect } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { WSError } from '../errors/index.ts';
 import type { ProxyInterface } from './connection.ts';
@@ -266,6 +266,9 @@ export class Socket {
       }
     }
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   /** @hidden */
   toJSON(): { [key: string]: any } {

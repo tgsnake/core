@@ -9,7 +9,7 @@
  */
 
 import { Socket } from '../WebSocket.ts';
-import { Mutex } from '../../platform.deno.ts';
+import { Mutex, inspect } from '../../platform.deno.ts';
 import { Timeout } from '../../Timeout.ts';
 import { Logger } from '../../Logger.ts';
 import { sleep } from '../../helpers.ts';
@@ -103,6 +103,9 @@ export class TCP {
       }
     }
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   /** @hidden */
   toJSON(): { [key: string]: any } {

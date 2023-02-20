@@ -12,7 +12,7 @@ import * as TCP from './TCP/index.ts';
 import { DataCenter } from '../session/index.ts';
 import { sleep } from '../helpers.ts';
 import { Logger } from '../Logger.ts';
-import { Mutex, isBrowser } from '../platform.deno.ts';
+import { Mutex, isBrowser, inspect } from '../platform.deno.ts';
 import { ClientError } from '../errors/index.ts';
 
 /**
@@ -162,6 +162,9 @@ export class Connection {
       }
     }
     return toPrint;
+  }
+  [Symbol.for('Deno.customInspect')](): string {
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
   }
   /** @hidden */
   toJSON(): { [key: string]: any } {
