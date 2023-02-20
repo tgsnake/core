@@ -223,7 +223,7 @@ export class Session {
             //@ts-ignore
             data = data.query;
           }
-          Errors.RPCError.raise(response, data);
+          await Errors.RPCError.raise(response, data);
         } else if (response instanceof Raw.BadMsgNotification) {
           // response as Raw.BadMsgNotification;
           throw new Errors.BadMsgNotification(response.errorCode);
