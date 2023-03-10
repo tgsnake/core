@@ -15,6 +15,7 @@
     "build:license": "node ./generator/license",
     "build:error": "node ./generator/error",
     "build:sync": "node ./generator/sync-tl",
+    "build:chglog": "node ./generator/chglog",
     "prepare": "yarn build",
     "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."
   },
