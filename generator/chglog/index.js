@@ -11,6 +11,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const file = fs.readFileSync(path.join(__dirname, '../CHANGELOG.md'), 'utf8');
-const content = file.replace(/\s{2,}/gm, '  \n');
-fs.writeFileSync(path.join(__dirname, '../CHANGELOG.md'), 'content');
+const file = fs.readFileSync(path.join(__dirname, '../../CHANGELOG.md'), 'utf8');
+const content = file.replace(/\s{2,}/gm, '  \n').replace(/\s\-\s/gm, '  \n- ');
+fs.writeFileSync(path.join(__dirname, '../../CHANGELOG.md'), content);
