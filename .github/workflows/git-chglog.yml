@@ -14,19 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@main
-      - uses: actions/setup-node@v3
         with:
           go-version: 'stable'
-          node-version: '18.x'
       - name: Update CHANGELOG.md with git-chglog
         run: |
           go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
           git fetch --prune --unshallow --tags
           git-chglog -o CHANGELOG.md
-      - name: Just a sec
-        run: |
-          yarn build:chglog 
-          yarn prettier
       - name: Almost done
         run: |
           git config user.email github-actions[bot]@users.noreply.github.com 
