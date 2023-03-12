@@ -34,7 +34,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 154;
+  export const Layer: number = 155;
   // Start telegram schema
 
   export type TypesTLRequest =
@@ -1190,7 +1190,8 @@ export namespace Raw {
     | Raw.UpdateChannelPinnedTopic
     | Raw.UpdateChannelPinnedTopics
     | Raw.UpdateUser
-    | Raw.UpdateAutoSaveSettings;
+    | Raw.UpdateAutoSaveSettings
+    | Raw.UpdateGroupInvitePrivacyForbidden;
   export type TypeBotMenuButton =
     | Raw.BotMenuButtonDefault
     | Raw.BotMenuButtonCommands
@@ -19753,6 +19754,45 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      return b.buffer;
+    }
+  }
+  export class UpdateGroupInvitePrivacyForbidden extends TLObject {
+    userId!: long;
+
+    constructor(params: { userId: long }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateGroupInvitePrivacyForbidden';
+      this.constructorId = 0xccf08ad6;
+      this.subclassOfId = 0x9f89304e;
+      this.slots = ['userId'];
+      this.userId = params.userId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.UpdateGroupInvitePrivacyForbidden> {
+      // no flags
+
+      let userId = await Primitive.Long.read(b);
+      return new Raw.UpdateGroupInvitePrivacyForbidden({ userId: userId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.userId !== undefined) {
+        b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
+      }
       return b.buffer;
     }
   }
@@ -47380,23 +47420,26 @@ export namespace Raw {
     big?: boolean;
     unread?: boolean;
     peerId!: TypePeer;
+    date!: int;
     reaction!: TypeReaction;
 
     constructor(params: {
       big?: boolean;
       unread?: boolean;
       peerId: TypePeer;
+      date: int;
       reaction: TypeReaction;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessagePeerReaction';
-      this.constructorId = 0xb156fe9c;
+      this.constructorId = 0x8c79b63c;
       this.subclassOfId = 0xaf73a2a5;
-      this.slots = ['big', 'unread', 'peerId', 'reaction'];
+      this.slots = ['big', 'unread', 'peerId', 'date', 'reaction'];
       this.big = params.big;
       this.unread = params.unread;
       this.peerId = params.peerId;
+      this.date = params.date;
       this.reaction = params.reaction;
     }
     /**
@@ -47411,11 +47454,13 @@ export namespace Raw {
       let big = flags & (1 << 0) ? true : false;
       let unread = flags & (1 << 1) ? true : false;
       let peerId = await TLObject.read(b);
+      let date = await Primitive.Int.read(b);
       let reaction = await TLObject.read(b);
       return new Raw.MessagePeerReaction({
         big: big,
         unread: unread,
         peerId: peerId,
+        date: date,
         reaction: reaction,
       });
     }
@@ -47434,6 +47479,9 @@ export namespace Raw {
 
       if (this.peerId !== undefined) {
         b.write(this.peerId.write() as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
       }
       if (this.reaction !== undefined) {
         b.write(this.reaction.write() as unknown as Buffer);
