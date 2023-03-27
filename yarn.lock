@@ -96,9 +96,9 @@ __metadata:
     "@types/node": 18.11.18
     async-mutex: 0.4.0
     big-integer: 1.6.51
-    deno2node: 1.7.2
+    deno2node: 1.7.1
     fast-csv: 4.3.6
-    prettier: 2.8.4
+    prettier: 2.8.1
     socks: 2.7.1
   languageName: unknown
   linkType: soft
@@ -228,16 +228,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deno2node@npm:1.7.2":
-  version: 1.7.2
-  resolution: "deno2node@npm:1.7.2"
+"deno2node@npm:1.7.1":
+  version: 1.7.1
+  resolution: "deno2node@npm:1.7.1"
   dependencies:
     "@deno/shim-deno": <0.12
     ts-morph: ^17.0.1
     xregexp: ^5.1.0
   bin:
     deno2node: lib/cli.js
-  checksum: ad975392a8390aadef424aa7046974df90ef24dd922450bb47025ff002bc8542ff0ea44661bf7a174ed5afbba2655ff08c3c9c8c23440a3c47446df0d09b2295
+  checksum: 38897b7fcfda84450e46053473529db3edaa1253b4d7234f05575bd6ec4fbee194c8dcc85e83ead0b06011f1b009b2a08b6e4a40d38c8a36ded1b6d7549895c8
   languageName: node
   linkType: hard
 
@@ -440,12 +440,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.4":
-  version: 2.8.4
-  resolution: "prettier@npm:2.8.4"
+"prettier@npm:2.8.1":
+  version: 2.8.1
+  resolution: "prettier@npm:2.8.1"
   bin:
     prettier: bin-prettier.js
-  checksum: c173064bf3df57b6d93d19aa98753b9b9dd7657212e33b41ada8e2e9f9884066bb9ca0b4005b89b3ab137efffdf8fbe0b462785aba20364798ff4303aadda57e
+  checksum: 4f21a0f1269f76fb36f54e9a8a1ea4c11e27478958bf860661fb4b6d7ac69aac1581f8724fa98ea3585e56d42a2ea317a17ff6e3324f40cb11ff9e20b73785cc
   languageName: node
   linkType: hard
 

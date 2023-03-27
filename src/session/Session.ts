@@ -192,6 +192,10 @@ export class Session {
     if (waitResponse) {
       this._results.set(BigInt(msgId), new Results());
     }
+    if (msgId === undefined) {
+      Logger.error(`[107] Can't send request ${data.className} when msgId is undefined.`);
+      return;
+    }
     Logger.debug(
       `[50] Sending msg id ${msgId} (${data.className}), has ${msg.write().length} bytes message.`
     );
@@ -202,8 +206,9 @@ export class Session {
     } catch (error: any) {
       Logger.error(`[52] Got error when trying to send ${payload.length} bytes payload:`, error);
       let promises = this._results.get(BigInt(msgId));
-      // @ts-ignore
-      promises.reject(error);
+      if (promises) {
+        promises.reject(error);
+      }
     }
     let promises = this._results.get(BigInt(msgId));
     if (waitResponse && promises !== undefined) {

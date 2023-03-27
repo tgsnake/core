@@ -10,10 +10,10 @@ So, if you want to know the location of the logger called, please see the list b
 `8 – 9` : level is `(debug)` as RPCError, parent class located on`src/errors/RPCError.ts`  
 `10` : level is `(debug)` located on `src/raw/core/TLObject.ts`  
 `11 – 32` : level is `(debug,error)` located on `src/session/Auth.ts`  
-`32 – 72` : level is `(debug,error,warning,info)` located on `src/session/Session.ts`  
+`32 – 72, 107` : level is `(debug,error,warning,info)` located on `src/session/Session.ts`  
 `73 – 80` : level is `(debug,info)` as BaseSession, parent class located on `src/storage/Session.ts`  
 `81 – 99` : level is `(debug)` located on `src/storage/StringSession.ts`  
-`100 – 105` : level is `(info,warning)` located on `src/Client.ts`
+`100 – 105` : level is `(info,warning)` located on `src/Client`
 
 ## Why this file is created
 

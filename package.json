@@ -1,6 +1,6 @@
 {
   "name": "@tgsnake/core",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Pure Telegram MTProto framework for nodejs",
   "main": "./lib/src/index.js",
   "devDependencies": {
@@ -38,7 +38,7 @@
     "npm": ">=6.0.0",
     "yarn": ">=1.0.0"
   },
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@3.5.0",
   "dependencies": {
     "@tgsnake/log": "latest",
     "async-mutex": "0.4.0",
