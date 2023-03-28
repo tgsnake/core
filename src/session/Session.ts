@@ -205,6 +205,11 @@ export class Session {
       await this._connection.send(payload);
     } catch (error: any) {
       Logger.error(`[52] Got error when trying to send ${payload.length} bytes payload:`, error);
+      if (error instanceof Errors.WSError.Disconnected) {
+        Logger.debug(`[108] Restarting client due to disconnected`);
+        await this.restart();
+        return;
+      }
       let promises = this._results.get(BigInt(msgId));
       if (promises) {
         promises.reject(error);
@@ -343,41 +348,49 @@ export class Session {
       className = data.query.className;
     }
     while (true) {
-      try {
-        return await this._send(data, true, timeout);
-      } catch (error: any) {
-        Logger.error(`[64] Got error when trying invoking ${className}:`, error);
-        if (error instanceof Errors.Exceptions.Flood.FloodWait) {
-          error as Errors.Exceptions.Flood.FloodWait;
-          let amount = error.value ?? 2000; // if undefined, make it as 2s
-          // @ts-ignore
-          if (amount > sleepThreshold >= 0) {
-            throw error;
+      // loop until client is connected
+      if (this._isConnected) {
+        try {
+          const response = await this._send(data, true, timeout);
+          // possible undefined when client is reconnect, so loop sending!
+          if (response !== undefined) {
+            return response;
           }
-          Logger.warning(
-            `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`
-          );
-          await sleep(amount);
-        } else {
-          if (!retries) {
-            throw error;
-          }
-          if (retries < 2) {
+          await sleep(1000);
+        } catch (error: any) {
+          Logger.error(`[64] Got error when trying invoking ${className}:`, error);
+          if (error instanceof Errors.Exceptions.Flood.FloodWait) {
+            error as Errors.Exceptions.Flood.FloodWait;
+            let amount = error.value ?? 2000; // if undefined, make it as 2s
+            // @ts-ignore
+            if (amount > sleepThreshold >= 0) {
+              throw error;
+            }
             Logger.warning(
-              `[66] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
-                error.message
-              }`
+              `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`
             );
+            await sleep(amount);
           } else {
-            Logger.info(
-              `[67] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
-                error.message
-              }`,
-              error
-            );
+            if (!retries) {
+              throw error;
+            }
+            if (retries < 2) {
+              Logger.warning(
+                `[66] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
+                  error.message
+                }`
+              );
+            } else {
+              Logger.info(
+                `[67] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
+                  error.message
+                }`,
+                error
+              );
+            }
+            await sleep(500);
+            return await this.invoke(data, retries - 1, timeout, sleepThreshold);
           }
-          await sleep(500);
-          return await this.invoke(data, retries - 1, timeout, sleepThreshold);
         }
       }
     }
