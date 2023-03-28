@@ -1,4 +1,4 @@
-<a name="1.6.2"></a>
+ <a name="1.6.2"></a>
 
 ## [1.6.2](https://github.com/tgsnake/core/compare/1.6.1...1.6.2)
 
@@ -6,7 +6,7 @@
 
 ### Change
 
-- Update TLSchema <a name="1.6.1"></a>
+- Update TLSchema   <a name="1.6.1"></a>
 
 ## [1.6.1](https://github.com/tgsnake/core/compare/1.6.0...1.6.1)
 
@@ -14,7 +14,7 @@
 
 ### Change
 
-- Update TLSchema - Update CHANGELOG.md <a name="1.6.0"></a>
+- Update TLSchema - Update CHANGELOG.md   <a name="1.6.0"></a>
 
 ## [1.6.0](https://github.com/tgsnake/core/compare/1.5.0...1.6.0)
 
@@ -22,13 +22,13 @@
 
 ### Add
 
-- custom console on deno - browser compatibility - local option ### Change
+- custom console on deno - browser compatibility - local option  ### Change
 
-- update version - remove forceSMS param - switch big-integer deno framework to node cdn version - make RPCError.raise as asyncronous - make Mtproto.unpack as asyncronous - make TLObject.read as asyncronous - using notranspile_aes as crypto in deno - switch to Socket class - Update TLSchema - default TCP to TCPFull - Update CHANGELOG.md ### Fix
+- update version - remove forceSMS param - switch big-integer deno framework to node cdn version - make RPCError.raise as asyncronous - make Mtproto.unpack as asyncronous - make TLObject.read as asyncronous - using notranspile_aes as crypto in deno - switch to Socket class - Update TLSchema - default TCP to TCPFull - Update CHANGELOG.md  ### Fix
 
-- session.invoke return undefined on deno - fix 400 CONNECTION_SYSTEM_EMPTY error - deno connection - Aes encryption on deno using aes-js - login with botToken - TCPFull - TCPAbridge cause the security check error ### Revert
+- session.invoke return undefined on deno - fix 400 CONNECTION_SYSTEM_EMPTY error - deno connection - Aes encryption on deno using aes-js - login with botToken - TCPFull - TCPAbridge cause the security check error  ### Revert
 
-- bring back WebSocket class and make it support with node,deno,browser <a name="1.5.0"></a>
+- bring back WebSocket class and make it support with node,deno,browser   <a name="1.5.0"></a>
 
 ## [1.5.0](https://github.com/tgsnake/core/compare/1.4.0...1.5.0)
 
@@ -36,11 +36,11 @@
 
 ### Add
 
-- forceSMS params - logger error when failed connecting to telegram server ### Change
+- forceSMS params - logger error when failed connecting to telegram server  ### Change
 
-- Update CHANGELOG.md - ungitignore static file - add support to deno - split client code to different file - remove Primitive.Int.write in TCPFull ### Fix
+- Update CHANGELOG.md - ungitignore static file - add support to deno - split client code to different file - remove Primitive.Int.write in TCPFull  ### Fix
 
-- sendCode is not a function <a name="1.4.0"></a>
+- sendCode is not a function   <a name="1.4.0"></a>
 
 ## [1.4.0](https://github.com/tgsnake/core/compare/1.3.0...1.4.0)
 
@@ -48,49 +48,49 @@
 
 ### Add
 
-- proxy support - types TypeTLRequest for invoke method - support fetch peer when user has multiple username - workflows to automatic change the api.tl amd update api.tl to layer 151 - logger number, better for debuging - class client error - workflows for building docs with typedoc - changelog workflows - config for git-chglog - stack in json of errors - SecurityMismatch error description - Logger.error when got SecurityMismatch error ### Add
+- proxy support - types TypeTLRequest for invoke method - support fetch peer when user has multiple username - workflows to automatic change the api.tl amd update api.tl to layer 151 - logger number, better for debuging - class client error - workflows for building docs with typedoc - changelog workflows - config for git-chglog - stack in json of errors - SecurityMismatch error description - Logger.error when got SecurityMismatch error  ### Add
 
-- WebSocketError class - Show TimeoutError in console Change: Change InitConfig timeout Fix: NetworkWorker not started when client restarting - Security error message - Socket.unref() when disconnecting websocket ### Change
+- WebSocketError class - Show TimeoutError in console Change: Change InitConfig timeout Fix: NetworkWorker not started when client restarting - Security error message - Socket.unref() when disconnecting websocket  ### Change
 
-- int to uint - update copyright year - webSocket to promise-socket - improve jsdoc - switch to primitive loop instead of while true - async Mtproto.unpack and Mtproto.pack - checking security error with static class method instead of create new class - move git-chglog config location ### Change
+- int to uint - update copyright year - webSocket to promise-socket - improve jsdoc - switch to primitive loop instead of while true - async Mtproto.unpack and Mtproto.pack - checking security error with static class method instead of create new class - move git-chglog config location  ### Change
 
-- Automatic ask recovery code when 3 times try fill 2fa password - do nothing when receive timeout - AES-256-CTR node:crypto - default TCP mode to TCPAbridge - Promise reject instead of trow TimeoutError - support [@tgsnake](https://github.com/tgsnake)/log latest version ### Fix
+- Automatic ask recovery code when 3 times try fill 2fa password - do nothing when receive timeout - AES-256-CTR node:crypto - default TCP mode to TCPAbridge - Promise reject instead of trow TimeoutError - support [@tgsnake](https://github.com/tgsnake)/log latest version  ### Fix
 
-- bug security errors ### Fix
+- bug security errors  ### Fix
 
-- module not found - TCPAbridged crash when receive update content ### Fixed
+- module not found - TCPAbridged crash when receive update content  ### Fixed
 
-- Expected 1 arguments, but got 2. ### Improve
+- Expected 1 arguments, but got 2.  ### Improve
 
-- generator to change the layer number in readme ### Revert
+- generator to change the layer number in readme  ### Revert
 
-- revert network task ### Pull Requests
+- revert network task  ### Pull Requests
 
-- Merge pull request [#2](https://github.com/tgsnake/core/issues/2) from tgsnake/dev <a name="1.3.0"></a>
+- Merge pull request [#2](https://github.com/tgsnake/core/issues/2) from tgsnake/dev   <a name="1.3.0"></a>
 
 ## [1.3.0](https://github.com/tgsnake/core/compare/1.2.0...1.3.0)
 
 > 2022-12-03
 
-<a name="1.2.0"></a>
+ <a name="1.2.0"></a>
 
 ## [1.2.0](https://github.com/tgsnake/core/compare/1.1.3...1.2.0)
 
 > 2022-10-17
 
-<a name="1.1.3"></a>
+ <a name="1.1.3"></a>
 
 ## [1.1.3](https://github.com/tgsnake/core/compare/1.1.2...1.1.3)
 
 > 2022-08-28
 
-<a name="1.1.2"></a>
+ <a name="1.1.2"></a>
 
 ## [1.1.2](https://github.com/tgsnake/core/compare/1.1.1...1.1.2)
 
 > 2022-08-08
 
-<a name="1.1.1"></a>
+ <a name="1.1.1"></a>
 
 ## [1.1.1](https://github.com/tgsnake/core/compare/1.1.0...1.1.1)
 
@@ -98,7 +98,7 @@
 
 ### Changelog
 
-- ---- package.json: Update version to 1.1.1. src/Timeout.ts: Make a Timeout class, it better than runWithTimeout function. src/connection/TCP/tcp.ts: Change runWithTimeout to Timeout class. src/connection/TCP/tcp.ts: Clear all timeout task when connection is disconnected. src/connection/TCP/tcp.ts: Bug fix got timeout error when connection is dissconnected. src/connection/TCP/tcp.ts: Bring back to throwing timeout error. src/helpers.ts: Remove runWithTimeout. src/session/Session.ts: Change runWithTimeout to Timeout class. src/session/Session.ts: Clear all timeour task when connection is disconnected. <a name="1.1.0"></a>
+- ---- package.json: Update version to 1.1.1. src/Timeout.ts: Make a Timeout class, it better than runWithTimeout function. src/connection/TCP/tcp.ts: Change runWithTimeout to Timeout class. src/connection/TCP/tcp.ts: Clear all timeout task when connection is disconnected. src/connection/TCP/tcp.ts: Bug fix got timeout error when connection is dissconnected. src/connection/TCP/tcp.ts: Bring back to throwing timeout error. src/helpers.ts: Remove runWithTimeout. src/session/Session.ts: Change runWithTimeout to Timeout class. src/session/Session.ts: Clear all timeour task when connection is disconnected.   <a name="1.1.0"></a>
 
 ## [1.1.0](https://github.com/tgsnake/core/compare/1.0.2...1.1.0)
 
@@ -106,7 +106,7 @@
 
 ### Changelog
 
-- --- generator/api/index.js: Fixed classType. package.json: Update version to 1.1.0. package.json: Add config version (isBeta,isPrivate). package.json: Change main file from "./lib/index.js" to "./lib/src/index.js". src/Client.ts: Add options noUpdates,takeout. src/Client.ts: Invoke updates.GetState when client started. src/Client.ts: Using InvokeWithoutUpdate when options noUpdates is true and InvokeWithTakeout when options takeout is true. src/Client.ts: Invoke account.InitTakeSession when options takeout is true. src/Version.ts: Using package.json as config file. src/raw/core/TLObject.ts: Hide property when starting with underscore ("\_"). <a name="1.0.2"></a>
+- --- generator/api/index.js: Fixed classType. package.json: Update version to 1.1.0. package.json: Add config version (isBeta,isPrivate). package.json: Change main file from "./lib/index.js" to "./lib/src/index.js". src/Client.ts: Add options noUpdates,takeout. src/Client.ts: Invoke updates.GetState when client started. src/Client.ts: Using InvokeWithoutUpdate when options noUpdates is true and InvokeWithTakeout when options takeout is true. src/Client.ts: Invoke account.InitTakeSession when options takeout is true. src/Version.ts: Using package.json as config file. src/raw/core/TLObject.ts: Hide property when starting with underscore ("_").   <a name="1.0.2"></a>
 
 ## [1.0.2](https://github.com/tgsnake/core/compare/1.0.1...1.0.2)
 
@@ -114,7 +114,7 @@
 
 ### Changelog
 
-- ---- src/Version.ts: Change version to 1.0.2. src/storage/Abstract.ts: Add save() method to abstract class. src/storage/Session.ts: Add default save() function. <a name="1.0.1"></a>
+- ---- src/Version.ts: Change version to 1.0.2. src/storage/Abstract.ts: Add save() method to abstract class. src/storage/Session.ts: Add default save() function.   <a name="1.0.1"></a>
 
 ## [1.0.1](https://github.com/tgsnake/core/compare/1.0.0...1.0.1)
 
@@ -122,8 +122,9 @@
 
 ### Changelog
 
-- ----------- src/Version.ts: Update version to 1.0.1. src/Client.ts: Change max retries for client.start to 0 (Only one try invoke). src/connection/TCP/tcp.ts: Change timeout to 10s. src/connection/TCP/tcp.ts: Change timeout error to Logger.error instead of throw. src/connection/webSocket.ts: Make a public connectionClosed property. src/errors/RpcError.ts: Format error message before throwing. src/session/Session.ts: Break network worker when connection closed. <a name="1.0.0"></a>
+- ----------- src/Version.ts: Update version to 1.0.1. src/Client.ts: Change max retries for client.start to 0 (Only one try invoke). src/connection/TCP/tcp.ts: Change timeout to 10s. src/connection/TCP/tcp.ts: Change timeout error to Logger.error instead of throw. src/connection/webSocket.ts: Make a public connectionClosed property. src/errors/RpcError.ts: Format error message before throwing. src/session/Session.ts: Break network worker when connection closed.   <a name="1.0.0"></a>
 
 ## 1.0.0
 
 > 2022-07-17
+
