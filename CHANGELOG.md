@@ -1,4 +1,14 @@
-<a name="1.6.2"></a>
+<a name="1.6.3"></a>
+
+## [1.6.3](https://github.com/tgsnake/core/compare/1.6.2...1.6.3)
+
+> 2023-03-28
+
+### Change
+
+- Update CHANGELOG.md - Update CHANGELOG.md - Update CHANGELOG.md  ### Fix
+
+- cannot read property .reject and cant convert to BigInt   <a name="1.6.2"></a>
 
 ## [1.6.2](https://github.com/tgsnake/core/compare/1.6.1...1.6.2)
 
