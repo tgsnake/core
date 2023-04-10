@@ -11,6 +11,7 @@
 import { Logger } from '../Logger.ts';
 import { BaseSession } from './Session.ts';
 import { BytesIO } from '../raw/index.ts';
+import { base64urlTobase64 } from '../helpers.ts';
 
 /**
  * @class StringSession
@@ -30,7 +31,7 @@ export class StringSession extends BaseSession {
         );
         // https://github.com/gram-js/gramjs/blob/master/gramjs/sessions/StringSession.ts
         session = session.slice(1);
-        const bytes = new BytesIO(Buffer.from(session, 'base64url'));
+        const bytes = new BytesIO(Buffer.from(base64urlTobase64(session), 'base64'));
         this._dcId = bytes.read(1).readUInt8();
         Logger.debug(`[84] Found dcId: ${this._dcId}.`);
         if (session.length === 352) {
@@ -60,7 +61,7 @@ export class StringSession extends BaseSession {
         this._authKey = bytes.read();
         Logger.debug(`[89] Found authKey: ${this._authKey.length} bytes.`);
       } else {
-        const bytes = Buffer.from(session, 'base64url');
+        const bytes = Buffer.from(base64urlTobase64(session), 'base64');
         // Pyrogram (the old version of string session doesn't supported) or tgsnake string session.
         // The length of bytes must be 271
         if (bytes.length === 271) {

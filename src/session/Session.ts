@@ -474,7 +474,7 @@ export class Session {
     return toPrint;
   }
   [Symbol.for('Deno.customInspect')](): string {
-    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {

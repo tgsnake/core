@@ -191,7 +191,7 @@ export class BaseSession extends AbstractSession {
     return toPrint;
   }
   [Symbol.for('Deno.customInspect')](): string {
-    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')]()));
+    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @hidden */
   toJSON(): { [key: string]: any } {

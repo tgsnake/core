@@ -15,23 +15,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deno/shim-deno-test@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@deno/shim-deno-test@npm:0.4.0"
-  checksum: 37397110e88f7f0f450f2e44a529ca1b240f5063783cc2e29b740ddd653ecca628a3764b935069569bd8a2830dad8ba1460351579a723e81e346eff420622708
-  languageName: node
-  linkType: hard
-
-"@deno/shim-deno@npm:<0.12":
-  version: 0.11.0
-  resolution: "@deno/shim-deno@npm:0.11.0"
-  dependencies:
-    "@deno/shim-deno-test": ^0.4.0
-    which: ^2.0.2
-  checksum: efdb7c8a8a75f652369aee643cfcd6d11cd1232c171fb9d085f49ce96a966daca84edd4fa37b31ccf457210911584b5542c3295f73df30d43782f9fa1f217472
-  languageName: node
-  linkType: hard
-
 "@fast-csv/format@npm:4.3.5":
   version: 4.3.5
   resolution: "@fast-csv/format@npm:4.3.5"
@@ -93,12 +76,12 @@ __metadata:
   resolution: "@tgsnake/core@workspace:."
   dependencies:
     "@tgsnake/log": latest
-    "@types/node": 18.11.18
+    "@types/node": 18.15.11
     async-mutex: 0.4.0
     big-integer: 1.6.51
-    deno2node: 1.7.1
+    deno2node: 1.8.1
     fast-csv: 4.3.6
-    prettier: 2.8.1
+    prettier: 2.8.7
     socks: 2.7.1
   languageName: unknown
   linkType: soft
@@ -112,22 +95,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ts-morph/common@npm:~0.18.0":
-  version: 0.18.1
-  resolution: "@ts-morph/common@npm:0.18.1"
+"@ts-morph/common@npm:~0.19.0":
+  version: 0.19.0
+  resolution: "@ts-morph/common@npm:0.19.0"
   dependencies:
     fast-glob: ^3.2.12
-    minimatch: ^5.1.0
-    mkdirp: ^1.0.4
+    minimatch: ^7.4.3
+    mkdirp: ^2.1.6
     path-browserify: ^1.0.1
-  checksum: 848fff5f7a6428d7c2f055de20cf8df864a967aac0cc03adc558d853442085a8fd9dec70429da24d67d263794b315edb0791c46d23ad9ae513251a7702df8031
+  checksum: 6b02a63ded0ce77e2bf86e135c17a6d5126307bbb926a4085d3cc2acaf28cb732780cf8d16961e9600efcc599876f706a2c9e8d135f7668704bb04a1a6fd37ec
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.11.18":
-  version: 18.11.18
-  resolution: "@types/node@npm:18.11.18"
-  checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
+"@types/node@npm:18.15.11":
+  version: 18.15.11
+  resolution: "@types/node@npm:18.15.11"
+  checksum: 977b4ad04708897ff0eb049ecf82246d210939c82461922d20f7d2dcfd81bbc661582ba3af28869210f7e8b1934529dcd46bff7d448551400f9d48b9d3bddec3
   languageName: node
   linkType: hard
 
@@ -198,10 +181,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"code-block-writer@npm:^11.0.3":
-  version: 11.0.3
-  resolution: "code-block-writer@npm:11.0.3"
-  checksum: f0a2605f19963d7087267c9b0fd0b05a6638a50e7b29b70f97aa01a514f59475b0626f8aa092188df853ee6d96745426dfa132d6a677795df462c6ce32c21639
+"code-block-writer@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "code-block-writer@npm:12.0.0"
+  checksum: 9f6505a4d668c9131c6f3f686359079439e66d5f50c236614d52fcfa53aeb0bc615b2c6c64ef05b5511e3b0433ccfd9f7756ad40eb3b9298af6a7d791ab1981d
   languageName: node
   linkType: hard
 
@@ -228,16 +211,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deno2node@npm:1.7.1":
-  version: 1.7.1
-  resolution: "deno2node@npm:1.7.1"
+"deno2node@npm:1.8.1":
+  version: 1.8.1
+  resolution: "deno2node@npm:1.8.1"
   dependencies:
-    "@deno/shim-deno": <0.12
-    ts-morph: ^17.0.1
+    ts-morph: ^18.0.0
     xregexp: ^5.1.0
   bin:
     deno2node: lib/cli.js
-  checksum: 38897b7fcfda84450e46053473529db3edaa1253b4d7234f05575bd6ec4fbee194c8dcc85e83ead0b06011f1b009b2a08b6e4a40d38c8a36ded1b6d7549895c8
+  checksum: a30f2b32e5332c2976e23258e876cda9b2fd2d8584810c69597dfd8e65a25cbb8ade39baa8721fb0bbff4693196c38d29da4a4fde352742d86523617fcd6327c
   languageName: node
   linkType: hard
 
@@ -328,13 +310,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isexe@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "isexe@npm:2.0.0"
-  checksum: 26bf6c5480dda5161c820c5b5c751ae1e766c587b1f951ea3fcfc973bafb7831ae5b54a31a69bd670220e42e99ec154475025a468eae58ea262f813fdc8d1c62
-  languageName: node
-  linkType: hard
-
 "lodash.escaperegexp@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.escaperegexp@npm:4.1.2"
@@ -408,21 +383,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^5.1.0":
-  version: 5.1.6
-  resolution: "minimatch@npm:5.1.6"
+"minimatch@npm:^7.4.3":
+  version: 7.4.6
+  resolution: "minimatch@npm:7.4.6"
   dependencies:
     brace-expansion: ^2.0.1
-  checksum: 7564208ef81d7065a370f788d337cd80a689e981042cb9a1d0e6580b6c6a8c9279eba80010516e258835a988363f99f54a6f711a315089b8b42694f5da9d0d77
+  checksum: 1a6c8d22618df9d2a88aabeef1de5622eb7b558e9f8010be791cb6b0fa6e102d39b11c28d75b855a1e377b12edc7db8ff12a99c20353441caa6a05e78deb5da9
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "mkdirp@npm:1.0.4"
+"mkdirp@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "mkdirp@npm:2.1.6"
   bin:
-    mkdirp: bin/cmd.js
-  checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+    mkdirp: dist/cjs/src/bin.js
+  checksum: 8a1d09ffac585e55f41c54f445051f5bc33a7de99b952bb04c576cafdf1a67bb4bae8cb93736f7da6838771fbf75bc630430a3a59e1252047d2278690bd150ee
   languageName: node
   linkType: hard
 
@@ -440,12 +415,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.1":
-  version: 2.8.1
-  resolution: "prettier@npm:2.8.1"
+"prettier@npm:2.8.7":
+  version: 2.8.7
+  resolution: "prettier@npm:2.8.7"
   bin:
     prettier: bin-prettier.js
-  checksum: 4f21a0f1269f76fb36f54e9a8a1ea4c11e27478958bf860661fb4b6d7ac69aac1581f8724fa98ea3585e56d42a2ea317a17ff6e3324f40cb11ff9e20b73785cc
+  checksum: fdc8f2616f099f5f0d685907f4449a70595a0fc1d081a88919604375989e0d5e9168d6121d8cc6861f21990b31665828e00472544d785d5940ea08a17660c3a6
   languageName: node
   linkType: hard
 
@@ -514,13 +489,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-morph@npm:^17.0.1":
-  version: 17.0.1
-  resolution: "ts-morph@npm:17.0.1"
+"ts-morph@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "ts-morph@npm:18.0.0"
   dependencies:
-    "@ts-morph/common": ~0.18.0
-    code-block-writer: ^11.0.3
-  checksum: 4748ab45d0fb0be235f69399ea217cf1c5984ad2ef3ff9eba5a417571f73098c6f1f765fc011eaadc48179471b977f1e44f72eb993932e5c74c5031ab6c60f3a
+    "@ts-morph/common": ~0.19.0
+    code-block-writer: ^12.0.0
+  checksum: e3d3099b9a632dfcea2ddc75f00e0d0866b4f6d27b73f9e0ff96cf64fe24ce8074098d6709873afce9edb852c2127c40ad4013f54fdf68dafe0231f1a71827c8
   languageName: node
   linkType: hard
 
@@ -528,17 +503,6 @@ __metadata:
   version: 2.4.1
   resolution: "tslib@npm:2.4.1"
   checksum: 19480d6e0313292bd6505d4efe096a6b31c70e21cf08b5febf4da62e95c265c8f571f7b36fcc3d1a17e068032f59c269fab3459d6cd3ed6949eafecf64315fca
-  languageName: node
-  linkType: hard
-
-"which@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "which@npm:2.0.2"
-  dependencies:
-    isexe: ^2.0.0
-  bin:
-    node-which: ./bin/node-which
-  checksum: 1a5c563d3c1b52d5f893c8b61afe11abc3bab4afac492e8da5bde69d550de701cf9806235f20a47b5c8fa8a1d6a9135841de2596535e998027a54589000e66d1
   languageName: node
   linkType: hard
 

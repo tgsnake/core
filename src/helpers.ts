@@ -303,3 +303,12 @@ export function getPeerType(id: bigint) {
     throw new Error(`PeerId Invalid: ${id}`);
   }
 }
+export function base64urlTobase64(text: string): string {
+  const pad = text.length % 4;
+  if (pad === 1) {
+    throw new Error('Invalid base64url');
+  }
+  return (pad === 2 || pad === 3 ? text.padEnd(4 - pad, '=') : text)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+}
