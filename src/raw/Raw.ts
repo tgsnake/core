@@ -35,6 +35,10 @@ export namespace Raw {
    * The Telegram layer we using.
    */
   export const Layer: number = 155;
+  /**
+   * The highest telegram secret chat schema layer.
+   */
+  export const HighestSCLayer: number = 144;
   // Start telegram schema
 
   export type TypesTLRequest =
@@ -545,6 +549,45 @@ export namespace Raw {
     | Raw.stats.GetMegagroupStats
     | Raw.stats.GetMessagePublicForwards
     | Raw.stats.GetMessageStats;
+  export type TypeFileLocation = Raw.sclayer23.FileLocationUnavailable | Raw.sclayer23.FileLocation;
+  export type TypeDecryptedMessage =
+    | Raw.sclayer8.DecryptedMessage
+    | Raw.sclayer8.DecryptedMessageService
+    | Raw.sclayer17.DecryptedMessage
+    | Raw.sclayer17.DecryptedMessageService
+    | Raw.sclayer45.DecryptedMessage
+    | Raw.sclayer73.DecryptedMessage;
+  export type TypeDecryptedMessageAction =
+    | Raw.sclayer8.DecryptedMessageActionSetMessageTTL
+    | Raw.sclayer8.DecryptedMessageActionReadMessages
+    | Raw.sclayer8.DecryptedMessageActionDeleteMessages
+    | Raw.sclayer8.DecryptedMessageActionScreenshotMessages
+    | Raw.sclayer8.DecryptedMessageActionFlushHistory
+    | Raw.sclayer17.DecryptedMessageActionResend
+    | Raw.sclayer17.DecryptedMessageActionNotifyLayer
+    | Raw.sclayer17.DecryptedMessageActionTyping
+    | Raw.sclayer20.DecryptedMessageActionRequestKey
+    | Raw.sclayer20.DecryptedMessageActionAcceptKey
+    | Raw.sclayer20.DecryptedMessageActionAbortKey
+    | Raw.sclayer20.DecryptedMessageActionCommitKey
+    | Raw.sclayer20.DecryptedMessageActionNoop;
+  export type TypeDecryptedMessageMedia =
+    | Raw.sclayer8.DecryptedMessageMediaEmpty
+    | Raw.sclayer8.DecryptedMessageMediaPhoto
+    | Raw.sclayer8.DecryptedMessageMediaVideo
+    | Raw.sclayer8.DecryptedMessageMediaGeoPoint
+    | Raw.sclayer8.DecryptedMessageMediaContact
+    | Raw.sclayer8.DecryptedMessageMediaDocument
+    | Raw.sclayer8.DecryptedMessageMediaAudio
+    | Raw.sclayer17.DecryptedMessageMediaVideo
+    | Raw.sclayer17.DecryptedMessageMediaAudio
+    | Raw.sclayer23.DecryptedMessageMediaExternalDocument
+    | Raw.sclayer45.DecryptedMessageMediaPhoto
+    | Raw.sclayer45.DecryptedMessageMediaVideo
+    | Raw.sclayer45.DecryptedMessageMediaDocument
+    | Raw.sclayer45.DecryptedMessageMediaVenue
+    | Raw.sclayer45.DecryptedMessageMediaWebPage
+    | Raw.sclayer143.DecryptedMessageMediaDocument;
   export type TypeInputFolderPeer = Raw.InputFolderPeer;
   export type TypeInputPhoneCall = Raw.InputPhoneCall;
   export type TypeInputStickerSetItem = Raw.InputStickerSetItem;
@@ -1290,7 +1333,12 @@ export namespace Raw {
     | Raw.SendMessageHistoryImportAction
     | Raw.SendMessageChooseStickerAction
     | Raw.SendMessageEmojiInteraction
-    | Raw.SendMessageEmojiInteractionSeen;
+    | Raw.SendMessageEmojiInteractionSeen
+    | Raw.sclayer17.SendMessageUploadVideoAction
+    | Raw.sclayer17.SendMessageUploadAudioAction
+    | Raw.sclayer17.SendMessageUploadPhotoAction
+    | Raw.sclayer17.SendMessageUploadDocumentAction
+    | Raw.sclayer66.SendMessageUploadRoundAction;
   export type TypeChatFull = Raw.ChatFull | Raw.ChannelFull;
   export type TypeForumTopic = Raw.ForumTopicDeleted | Raw.ForumTopic;
   export type TypeMessage = Raw.MessageEmpty | Raw.Message | Raw.MessageService;
@@ -1326,7 +1374,9 @@ export namespace Raw {
     | Raw.PhotoCachedSize
     | Raw.PhotoStrippedSize
     | Raw.PhotoSizeProgressive
-    | Raw.PhotoPathSize;
+    | Raw.PhotoPathSize
+    | Raw.sclayer23.PhotoSize
+    | Raw.sclayer23.PhotoCachedSize;
   export type TypeFolder = Raw.Folder;
   export type TypeDraftMessage = Raw.DraftMessageEmpty | Raw.DraftMessage;
   export type TypeSecureValueType =
@@ -1535,7 +1585,12 @@ export namespace Raw {
     | Raw.DocumentAttributeAudio
     | Raw.DocumentAttributeFilename
     | Raw.DocumentAttributeHasStickers
-    | Raw.DocumentAttributeCustomEmoji;
+    | Raw.DocumentAttributeCustomEmoji
+    | Raw.sclayer23.DocumentAttributeSticker
+    | Raw.sclayer23.DocumentAttributeVideo
+    | Raw.sclayer23.DocumentAttributeAudio
+    | Raw.sclayer45.DocumentAttributeSticker
+    | Raw.sclayer45.DocumentAttributeAudio;
   export type TypeInputGeoPoint = Raw.InputGeoPointEmpty | Raw.InputGeoPoint;
   export type TypeInputPhoto = Raw.InputPhotoEmpty | Raw.InputPhoto;
   export type TypeInputDocument = Raw.InputDocumentEmpty | Raw.InputDocument;
@@ -86346,6 +86401,3145 @@ export namespace Raw {
 
         if (this.folderId !== undefined) {
           b.write(Primitive.Int.write(this.folderId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer8 {
+    export class DecryptedMessage extends TLObject {
+      randomId!: long;
+      randomBytes!: bytes;
+      message!: string;
+      media!: TypeDecryptedMessageMedia;
+
+      constructor(params: {
+        randomId: long;
+        randomBytes: bytes;
+        message: string;
+        media: TypeDecryptedMessageMedia;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessage';
+        this.constructorId = 0x1f814f1f;
+        this.subclassOfId = 0x5303193e;
+        this.slots = ['randomId', 'randomBytes', 'message', 'media'];
+        this.randomId = params.randomId;
+        this.randomBytes = params.randomBytes;
+        this.message = params.message;
+        this.media = params.media;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer8.DecryptedMessage> {
+        // no flags
+
+        let randomId = await Primitive.Long.read(b);
+        let randomBytes = await Primitive.Bytes.read(b);
+        let message = await Primitive.String.read(b);
+        let media = await TLObject.read(b);
+        return new Raw.sclayer8.DecryptedMessage({
+          randomId: randomId,
+          randomBytes: randomBytes,
+          message: message,
+          media: media,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.randomBytes !== undefined) {
+          b.write(Primitive.Bytes.write(this.randomBytes) as unknown as Buffer);
+        }
+        if (this.message !== undefined) {
+          b.write(Primitive.String.write(this.message) as unknown as Buffer);
+        }
+        if (this.media !== undefined) {
+          b.write(this.media.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageService extends TLObject {
+      randomId!: long;
+      randomBytes!: bytes;
+      action!: TypeDecryptedMessageAction;
+
+      constructor(params: {
+        randomId: long;
+        randomBytes: bytes;
+        action: TypeDecryptedMessageAction;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageService';
+        this.constructorId = 0xaa48327d;
+        this.subclassOfId = 0x5303193e;
+        this.slots = ['randomId', 'randomBytes', 'action'];
+        this.randomId = params.randomId;
+        this.randomBytes = params.randomBytes;
+        this.action = params.action;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageService> {
+        // no flags
+
+        let randomId = await Primitive.Long.read(b);
+        let randomBytes = await Primitive.Bytes.read(b);
+        let action = await TLObject.read(b);
+        return new Raw.sclayer8.DecryptedMessageService({
+          randomId: randomId,
+          randomBytes: randomBytes,
+          action: action,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.randomBytes !== undefined) {
+          b.write(Primitive.Bytes.write(this.randomBytes) as unknown as Buffer);
+        }
+        if (this.action !== undefined) {
+          b.write(this.action.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaEmpty extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaEmpty';
+        this.constructorId = 0x89f5c4a;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaEmpty> {
+        // no flags
+
+        return new Raw.sclayer8.DecryptedMessageMediaEmpty();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaPhoto extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      w!: int;
+      h!: int;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        w: int;
+        h: int;
+        size: int;
+        key: bytes;
+        iv: bytes;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaPhoto';
+        this.constructorId = 0x32798a8c;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['thumb', 'thumbW', 'thumbH', 'w', 'h', 'size', 'key', 'iv'];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.w = params.w;
+        this.h = params.h;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaPhoto> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        return new Raw.sclayer8.DecryptedMessageMediaPhoto({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          w: w,
+          h: h,
+          size: size,
+          key: key,
+          iv: iv,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaVideo extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      duration!: int;
+      w!: int;
+      h!: int;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        duration: int;
+        w: int;
+        h: int;
+        size: int;
+        key: bytes;
+        iv: bytes;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaVideo';
+        this.constructorId = 0x4cee6ef3;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['thumb', 'thumbW', 'thumbH', 'duration', 'w', 'h', 'size', 'key', 'iv'];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.duration = params.duration;
+        this.w = params.w;
+        this.h = params.h;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaVideo> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let duration = await Primitive.Int.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        return new Raw.sclayer8.DecryptedMessageMediaVideo({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          duration: duration,
+          w: w,
+          h: h,
+          size: size,
+          key: key,
+          iv: iv,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaGeoPoint extends TLObject {
+      lat!: double;
+      long!: double;
+
+      constructor(params: { lat: double; long: double }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaGeoPoint';
+        this.constructorId = 0x35480a59;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['lat', 'long'];
+        this.lat = params.lat;
+        this.long = params.long;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaGeoPoint> {
+        // no flags
+
+        let lat = await Primitive.Double.read(b);
+        let long = await Primitive.Double.read(b);
+        return new Raw.sclayer8.DecryptedMessageMediaGeoPoint({ lat: lat, long: long });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.lat !== undefined) {
+          b.write(Primitive.Double.write(this.lat) as unknown as Buffer);
+        }
+        if (this.long !== undefined) {
+          b.write(Primitive.Double.write(this.long) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaContact extends TLObject {
+      phoneNumber!: string;
+      firstName!: string;
+      lastName!: string;
+      userId!: int;
+
+      constructor(params: {
+        phoneNumber: string;
+        firstName: string;
+        lastName: string;
+        userId: int;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaContact';
+        this.constructorId = 0x588a0a97;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['phoneNumber', 'firstName', 'lastName', 'userId'];
+        this.phoneNumber = params.phoneNumber;
+        this.firstName = params.firstName;
+        this.lastName = params.lastName;
+        this.userId = params.userId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaContact> {
+        // no flags
+
+        let phoneNumber = await Primitive.String.read(b);
+        let firstName = await Primitive.String.read(b);
+        let lastName = await Primitive.String.read(b);
+        let userId = await Primitive.Int.read(b);
+        return new Raw.sclayer8.DecryptedMessageMediaContact({
+          phoneNumber: phoneNumber,
+          firstName: firstName,
+          lastName: lastName,
+          userId: userId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.phoneNumber !== undefined) {
+          b.write(Primitive.String.write(this.phoneNumber) as unknown as Buffer);
+        }
+        if (this.firstName !== undefined) {
+          b.write(Primitive.String.write(this.firstName) as unknown as Buffer);
+        }
+        if (this.lastName !== undefined) {
+          b.write(Primitive.String.write(this.lastName) as unknown as Buffer);
+        }
+        if (this.userId !== undefined) {
+          b.write(Primitive.Int.write(this.userId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionSetMessageTTL extends TLObject {
+      ttlSeconds!: int;
+
+      constructor(params: { ttlSeconds: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageActionSetMessageTTL';
+        this.constructorId = 0xa1733aec;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['ttlSeconds'];
+        this.ttlSeconds = params.ttlSeconds;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageActionSetMessageTTL> {
+        // no flags
+
+        let ttlSeconds = await Primitive.Int.read(b);
+        return new Raw.sclayer8.DecryptedMessageActionSetMessageTTL({ ttlSeconds: ttlSeconds });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.ttlSeconds !== undefined) {
+          b.write(Primitive.Int.write(this.ttlSeconds) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaDocument extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      fileName!: string;
+      mimeType!: string;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        fileName: string;
+        mimeType: string;
+        size: int;
+        key: bytes;
+        iv: bytes;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaDocument';
+        this.constructorId = 0xb095434b;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['thumb', 'thumbW', 'thumbH', 'fileName', 'mimeType', 'size', 'key', 'iv'];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.fileName = params.fileName;
+        this.mimeType = params.mimeType;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaDocument> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let fileName = await Primitive.String.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        return new Raw.sclayer8.DecryptedMessageMediaDocument({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          fileName: fileName,
+          mimeType: mimeType,
+          size: size,
+          key: key,
+          iv: iv,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.fileName !== undefined) {
+          b.write(Primitive.String.write(this.fileName) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaAudio extends TLObject {
+      duration!: int;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+
+      constructor(params: { duration: int; size: int; key: bytes; iv: bytes }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageMediaAudio';
+        this.constructorId = 0x6080758f;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['duration', 'size', 'key', 'iv'];
+        this.duration = params.duration;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageMediaAudio> {
+        // no flags
+
+        let duration = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        return new Raw.sclayer8.DecryptedMessageMediaAudio({
+          duration: duration,
+          size: size,
+          key: key,
+          iv: iv,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionReadMessages extends TLObject {
+      randomIds!: Vector<long>;
+
+      constructor(params: { randomIds: Vector<long> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageActionReadMessages';
+        this.constructorId = 0xc4f40be;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['randomIds'];
+        this.randomIds = params.randomIds;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageActionReadMessages> {
+        // no flags
+
+        let randomIds = await TLObject.read(b, Primitive.Long);
+        return new Raw.sclayer8.DecryptedMessageActionReadMessages({ randomIds: randomIds });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomIds) {
+          b.write(Primitive.Vector.write(this.randomIds, Primitive.Long) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionDeleteMessages extends TLObject {
+      randomIds!: Vector<long>;
+
+      constructor(params: { randomIds: Vector<long> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageActionDeleteMessages';
+        this.constructorId = 0x65614304;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['randomIds'];
+        this.randomIds = params.randomIds;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageActionDeleteMessages> {
+        // no flags
+
+        let randomIds = await TLObject.read(b, Primitive.Long);
+        return new Raw.sclayer8.DecryptedMessageActionDeleteMessages({ randomIds: randomIds });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomIds) {
+          b.write(Primitive.Vector.write(this.randomIds, Primitive.Long) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionScreenshotMessages extends TLObject {
+      randomIds!: Vector<long>;
+
+      constructor(params: { randomIds: Vector<long> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageActionScreenshotMessages';
+        this.constructorId = 0x8ac1f475;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['randomIds'];
+        this.randomIds = params.randomIds;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageActionScreenshotMessages> {
+        // no flags
+
+        let randomIds = await TLObject.read(b, Primitive.Long);
+        return new Raw.sclayer8.DecryptedMessageActionScreenshotMessages({ randomIds: randomIds });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomIds) {
+          b.write(Primitive.Vector.write(this.randomIds, Primitive.Long) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionFlushHistory extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer8.DecryptedMessageActionFlushHistory';
+        this.constructorId = 0x6719e45c;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer8.DecryptedMessageActionFlushHistory> {
+        // no flags
+
+        return new Raw.sclayer8.DecryptedMessageActionFlushHistory();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer17 {
+    export class DecryptedMessage extends TLObject {
+      randomId!: long;
+      ttl!: int;
+      message!: string;
+      media!: TypeDecryptedMessageMedia;
+
+      constructor(params: {
+        randomId: long;
+        ttl: int;
+        message: string;
+        media: TypeDecryptedMessageMedia;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessage';
+        this.constructorId = 0x204d3878;
+        this.subclassOfId = 0x5303193e;
+        this.slots = ['randomId', 'ttl', 'message', 'media'];
+        this.randomId = params.randomId;
+        this.ttl = params.ttl;
+        this.message = params.message;
+        this.media = params.media;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer17.DecryptedMessage> {
+        // no flags
+
+        let randomId = await Primitive.Long.read(b);
+        let ttl = await Primitive.Int.read(b);
+        let message = await Primitive.String.read(b);
+        let media = await TLObject.read(b);
+        return new Raw.sclayer17.DecryptedMessage({
+          randomId: randomId,
+          ttl: ttl,
+          message: message,
+          media: media,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.ttl !== undefined) {
+          b.write(Primitive.Int.write(this.ttl) as unknown as Buffer);
+        }
+        if (this.message !== undefined) {
+          b.write(Primitive.String.write(this.message) as unknown as Buffer);
+        }
+        if (this.media !== undefined) {
+          b.write(this.media.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageService extends TLObject {
+      randomId!: long;
+      action!: TypeDecryptedMessageAction;
+
+      constructor(params: { randomId: long; action: TypeDecryptedMessageAction }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageService';
+        this.constructorId = 0x73164160;
+        this.subclassOfId = 0x5303193e;
+        this.slots = ['randomId', 'action'];
+        this.randomId = params.randomId;
+        this.action = params.action;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageService> {
+        // no flags
+
+        let randomId = await Primitive.Long.read(b);
+        let action = await TLObject.read(b);
+        return new Raw.sclayer17.DecryptedMessageService({ randomId: randomId, action: action });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.action !== undefined) {
+          b.write(this.action.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaVideo extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      duration!: int;
+      mimeType!: string;
+      w!: int;
+      h!: int;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        duration: int;
+        mimeType: string;
+        w: int;
+        h: int;
+        size: int;
+        key: bytes;
+        iv: bytes;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageMediaVideo';
+        this.constructorId = 0x524a415d;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = [
+          'thumb',
+          'thumbW',
+          'thumbH',
+          'duration',
+          'mimeType',
+          'w',
+          'h',
+          'size',
+          'key',
+          'iv',
+        ];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.duration = params.duration;
+        this.mimeType = params.mimeType;
+        this.w = params.w;
+        this.h = params.h;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageMediaVideo> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let duration = await Primitive.Int.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        return new Raw.sclayer17.DecryptedMessageMediaVideo({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          duration: duration,
+          mimeType: mimeType,
+          w: w,
+          h: h,
+          size: size,
+          key: key,
+          iv: iv,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaAudio extends TLObject {
+      duration!: int;
+      mimeType!: string;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+
+      constructor(params: { duration: int; mimeType: string; size: int; key: bytes; iv: bytes }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageMediaAudio';
+        this.constructorId = 0x57e0a9cb;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['duration', 'mimeType', 'size', 'key', 'iv'];
+        this.duration = params.duration;
+        this.mimeType = params.mimeType;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageMediaAudio> {
+        // no flags
+
+        let duration = await Primitive.Int.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        return new Raw.sclayer17.DecryptedMessageMediaAudio({
+          duration: duration,
+          mimeType: mimeType,
+          size: size,
+          key: key,
+          iv: iv,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageLayer extends TLObject {
+      randomBytes!: bytes;
+      layer!: int;
+      inSeqNo!: int;
+      outSeqNo!: int;
+      message!: TypeDecryptedMessage;
+
+      constructor(params: {
+        randomBytes: bytes;
+        layer: int;
+        inSeqNo: int;
+        outSeqNo: int;
+        message: TypeDecryptedMessage;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageLayer';
+        this.constructorId = 0x1be31789;
+        this.subclassOfId = 0x85caa022;
+        this.slots = ['randomBytes', 'layer', 'inSeqNo', 'outSeqNo', 'message'];
+        this.randomBytes = params.randomBytes;
+        this.layer = params.layer;
+        this.inSeqNo = params.inSeqNo;
+        this.outSeqNo = params.outSeqNo;
+        this.message = params.message;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageLayer> {
+        // no flags
+
+        let randomBytes = await Primitive.Bytes.read(b);
+        let layer = await Primitive.Int.read(b);
+        let inSeqNo = await Primitive.Int.read(b);
+        let outSeqNo = await Primitive.Int.read(b);
+        let message = await TLObject.read(b);
+        return new Raw.sclayer17.DecryptedMessageLayer({
+          randomBytes: randomBytes,
+          layer: layer,
+          inSeqNo: inSeqNo,
+          outSeqNo: outSeqNo,
+          message: message,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.randomBytes !== undefined) {
+          b.write(Primitive.Bytes.write(this.randomBytes) as unknown as Buffer);
+        }
+        if (this.layer !== undefined) {
+          b.write(Primitive.Int.write(this.layer) as unknown as Buffer);
+        }
+        if (this.inSeqNo !== undefined) {
+          b.write(Primitive.Int.write(this.inSeqNo) as unknown as Buffer);
+        }
+        if (this.outSeqNo !== undefined) {
+          b.write(Primitive.Int.write(this.outSeqNo) as unknown as Buffer);
+        }
+        if (this.message !== undefined) {
+          b.write(this.message.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SendMessageUploadVideoAction extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.SendMessageUploadVideoAction';
+        this.constructorId = 0x92042ff7;
+        this.subclassOfId = 0x20b2cc21;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.SendMessageUploadVideoAction> {
+        // no flags
+
+        return new Raw.sclayer17.SendMessageUploadVideoAction();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class SendMessageUploadAudioAction extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.SendMessageUploadAudioAction';
+        this.constructorId = 0xe6ac8a6f;
+        this.subclassOfId = 0x20b2cc21;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.SendMessageUploadAudioAction> {
+        // no flags
+
+        return new Raw.sclayer17.SendMessageUploadAudioAction();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class SendMessageUploadPhotoAction extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.SendMessageUploadPhotoAction';
+        this.constructorId = 0x990a3c1a;
+        this.subclassOfId = 0x20b2cc21;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.SendMessageUploadPhotoAction> {
+        // no flags
+
+        return new Raw.sclayer17.SendMessageUploadPhotoAction();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class SendMessageUploadDocumentAction extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.SendMessageUploadDocumentAction';
+        this.constructorId = 0x8faee98e;
+        this.subclassOfId = 0x20b2cc21;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.SendMessageUploadDocumentAction> {
+        // no flags
+
+        return new Raw.sclayer17.SendMessageUploadDocumentAction();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionResend extends TLObject {
+      startSeqNo!: int;
+      endSeqNo!: int;
+
+      constructor(params: { startSeqNo: int; endSeqNo: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageActionResend';
+        this.constructorId = 0x511110b0;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['startSeqNo', 'endSeqNo'];
+        this.startSeqNo = params.startSeqNo;
+        this.endSeqNo = params.endSeqNo;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageActionResend> {
+        // no flags
+
+        let startSeqNo = await Primitive.Int.read(b);
+        let endSeqNo = await Primitive.Int.read(b);
+        return new Raw.sclayer17.DecryptedMessageActionResend({
+          startSeqNo: startSeqNo,
+          endSeqNo: endSeqNo,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.startSeqNo !== undefined) {
+          b.write(Primitive.Int.write(this.startSeqNo) as unknown as Buffer);
+        }
+        if (this.endSeqNo !== undefined) {
+          b.write(Primitive.Int.write(this.endSeqNo) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionNotifyLayer extends TLObject {
+      layer!: int;
+
+      constructor(params: { layer: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageActionNotifyLayer';
+        this.constructorId = 0xf3048883;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['layer'];
+        this.layer = params.layer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageActionNotifyLayer> {
+        // no flags
+
+        let layer = await Primitive.Int.read(b);
+        return new Raw.sclayer17.DecryptedMessageActionNotifyLayer({ layer: layer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.layer !== undefined) {
+          b.write(Primitive.Int.write(this.layer) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionTyping extends TLObject {
+      action!: TypeSendMessageAction;
+
+      constructor(params: { action: TypeSendMessageAction }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer17.DecryptedMessageActionTyping';
+        this.constructorId = 0xccb27641;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['action'];
+        this.action = params.action;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer17.DecryptedMessageActionTyping> {
+        // no flags
+
+        let action = await TLObject.read(b);
+        return new Raw.sclayer17.DecryptedMessageActionTyping({ action: action });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.action !== undefined) {
+          b.write(this.action.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer20 {
+    export class DecryptedMessageActionRequestKey extends TLObject {
+      exchangeId!: long;
+      gA!: bytes;
+
+      constructor(params: { exchangeId: long; gA: bytes }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer20.DecryptedMessageActionRequestKey';
+        this.constructorId = 0xf3c9611b;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['exchangeId', 'gA'];
+        this.exchangeId = params.exchangeId;
+        this.gA = params.gA;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer20.DecryptedMessageActionRequestKey> {
+        // no flags
+
+        let exchangeId = await Primitive.Long.read(b);
+        let gA = await Primitive.Bytes.read(b);
+        return new Raw.sclayer20.DecryptedMessageActionRequestKey({
+          exchangeId: exchangeId,
+          gA: gA,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.exchangeId !== undefined) {
+          b.write(Primitive.Long.write(this.exchangeId) as unknown as Buffer);
+        }
+        if (this.gA !== undefined) {
+          b.write(Primitive.Bytes.write(this.gA) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionAcceptKey extends TLObject {
+      exchangeId!: long;
+      gB!: bytes;
+      keyFingerprint!: long;
+
+      constructor(params: { exchangeId: long; gB: bytes; keyFingerprint: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer20.DecryptedMessageActionAcceptKey';
+        this.constructorId = 0x6fe1735b;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['exchangeId', 'gB', 'keyFingerprint'];
+        this.exchangeId = params.exchangeId;
+        this.gB = params.gB;
+        this.keyFingerprint = params.keyFingerprint;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer20.DecryptedMessageActionAcceptKey> {
+        // no flags
+
+        let exchangeId = await Primitive.Long.read(b);
+        let gB = await Primitive.Bytes.read(b);
+        let keyFingerprint = await Primitive.Long.read(b);
+        return new Raw.sclayer20.DecryptedMessageActionAcceptKey({
+          exchangeId: exchangeId,
+          gB: gB,
+          keyFingerprint: keyFingerprint,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.exchangeId !== undefined) {
+          b.write(Primitive.Long.write(this.exchangeId) as unknown as Buffer);
+        }
+        if (this.gB !== undefined) {
+          b.write(Primitive.Bytes.write(this.gB) as unknown as Buffer);
+        }
+        if (this.keyFingerprint !== undefined) {
+          b.write(Primitive.Long.write(this.keyFingerprint) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionAbortKey extends TLObject {
+      exchangeId!: long;
+
+      constructor(params: { exchangeId: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer20.DecryptedMessageActionAbortKey';
+        this.constructorId = 0xdd05ec6b;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['exchangeId'];
+        this.exchangeId = params.exchangeId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer20.DecryptedMessageActionAbortKey> {
+        // no flags
+
+        let exchangeId = await Primitive.Long.read(b);
+        return new Raw.sclayer20.DecryptedMessageActionAbortKey({ exchangeId: exchangeId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.exchangeId !== undefined) {
+          b.write(Primitive.Long.write(this.exchangeId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionCommitKey extends TLObject {
+      exchangeId!: long;
+      keyFingerprint!: long;
+
+      constructor(params: { exchangeId: long; keyFingerprint: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer20.DecryptedMessageActionCommitKey';
+        this.constructorId = 0xec2e0b9b;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = ['exchangeId', 'keyFingerprint'];
+        this.exchangeId = params.exchangeId;
+        this.keyFingerprint = params.keyFingerprint;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer20.DecryptedMessageActionCommitKey> {
+        // no flags
+
+        let exchangeId = await Primitive.Long.read(b);
+        let keyFingerprint = await Primitive.Long.read(b);
+        return new Raw.sclayer20.DecryptedMessageActionCommitKey({
+          exchangeId: exchangeId,
+          keyFingerprint: keyFingerprint,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.exchangeId !== undefined) {
+          b.write(Primitive.Long.write(this.exchangeId) as unknown as Buffer);
+        }
+        if (this.keyFingerprint !== undefined) {
+          b.write(Primitive.Long.write(this.keyFingerprint) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageActionNoop extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer20.DecryptedMessageActionNoop';
+        this.constructorId = 0xa82fdd63;
+        this.subclassOfId = 0x6faf258d;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer20.DecryptedMessageActionNoop> {
+        // no flags
+
+        return new Raw.sclayer20.DecryptedMessageActionNoop();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer23 {
+    export class DocumentAttributeSticker extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.DocumentAttributeSticker';
+        this.constructorId = 0xfb0a5727;
+        this.subclassOfId = 0xf729eb9b;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer23.DocumentAttributeSticker> {
+        // no flags
+
+        return new Raw.sclayer23.DocumentAttributeSticker();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class DocumentAttributeVideo extends TLObject {
+      duration!: int;
+      w!: int;
+      h!: int;
+
+      constructor(params: { duration: int; w: int; h: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.DocumentAttributeVideo';
+        this.constructorId = 0x5910cccb;
+        this.subclassOfId = 0xf729eb9b;
+        this.slots = ['duration', 'w', 'h'];
+        this.duration = params.duration;
+        this.w = params.w;
+        this.h = params.h;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer23.DocumentAttributeVideo> {
+        // no flags
+
+        let duration = await Primitive.Int.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        return new Raw.sclayer23.DocumentAttributeVideo({ duration: duration, w: w, h: h });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DocumentAttributeAudio extends TLObject {
+      duration!: int;
+
+      constructor(params: { duration: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.DocumentAttributeAudio';
+        this.constructorId = 0x51448e5;
+        this.subclassOfId = 0xf729eb9b;
+        this.slots = ['duration'];
+        this.duration = params.duration;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer23.DocumentAttributeAudio> {
+        // no flags
+
+        let duration = await Primitive.Int.read(b);
+        return new Raw.sclayer23.DocumentAttributeAudio({ duration: duration });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class PhotoSize extends TLObject {
+      type!: string;
+      location!: TypeFileLocation;
+      w!: int;
+      h!: int;
+      size!: int;
+
+      constructor(params: { type: string; location: TypeFileLocation; w: int; h: int; size: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.PhotoSize';
+        this.constructorId = 0x77bfb61b;
+        this.subclassOfId = 0x17cc29d9;
+        this.slots = ['type', 'location', 'w', 'h', 'size'];
+        this.type = params.type;
+        this.location = params.location;
+        this.w = params.w;
+        this.h = params.h;
+        this.size = params.size;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer23.PhotoSize> {
+        // no flags
+
+        let type = await Primitive.String.read(b);
+        let location = await TLObject.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        return new Raw.sclayer23.PhotoSize({
+          type: type,
+          location: location,
+          w: w,
+          h: h,
+          size: size,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.type !== undefined) {
+          b.write(Primitive.String.write(this.type) as unknown as Buffer);
+        }
+        if (this.location !== undefined) {
+          b.write(this.location.write() as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class PhotoCachedSize extends TLObject {
+      type!: string;
+      location!: TypeFileLocation;
+      w!: int;
+      h!: int;
+      bytes!: bytes;
+
+      constructor(params: {
+        type: string;
+        location: TypeFileLocation;
+        w: int;
+        h: int;
+        bytes: bytes;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.PhotoCachedSize';
+        this.constructorId = 0xe9a734fa;
+        this.subclassOfId = 0x17cc29d9;
+        this.slots = ['type', 'location', 'w', 'h', 'bytes'];
+        this.type = params.type;
+        this.location = params.location;
+        this.w = params.w;
+        this.h = params.h;
+        this.bytes = params.bytes;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer23.PhotoCachedSize> {
+        // no flags
+
+        let type = await Primitive.String.read(b);
+        let location = await TLObject.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let bytes = await Primitive.Bytes.read(b);
+        return new Raw.sclayer23.PhotoCachedSize({
+          type: type,
+          location: location,
+          w: w,
+          h: h,
+          bytes: bytes,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.type !== undefined) {
+          b.write(Primitive.String.write(this.type) as unknown as Buffer);
+        }
+        if (this.location !== undefined) {
+          b.write(this.location.write() as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.bytes !== undefined) {
+          b.write(Primitive.Bytes.write(this.bytes) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class FileLocationUnavailable extends TLObject {
+      volumeId!: long;
+      localId!: int;
+      secret!: long;
+
+      constructor(params: { volumeId: long; localId: int; secret: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.FileLocationUnavailable';
+        this.constructorId = 0x7c596b46;
+        this.subclassOfId = 0x90f76823;
+        this.slots = ['volumeId', 'localId', 'secret'];
+        this.volumeId = params.volumeId;
+        this.localId = params.localId;
+        this.secret = params.secret;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer23.FileLocationUnavailable> {
+        // no flags
+
+        let volumeId = await Primitive.Long.read(b);
+        let localId = await Primitive.Int.read(b);
+        let secret = await Primitive.Long.read(b);
+        return new Raw.sclayer23.FileLocationUnavailable({
+          volumeId: volumeId,
+          localId: localId,
+          secret: secret,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.volumeId !== undefined) {
+          b.write(Primitive.Long.write(this.volumeId) as unknown as Buffer);
+        }
+        if (this.localId !== undefined) {
+          b.write(Primitive.Int.write(this.localId) as unknown as Buffer);
+        }
+        if (this.secret !== undefined) {
+          b.write(Primitive.Long.write(this.secret) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class FileLocation extends TLObject {
+      dcId!: int;
+      volumeId!: long;
+      localId!: int;
+      secret!: long;
+
+      constructor(params: { dcId: int; volumeId: long; localId: int; secret: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.FileLocation';
+        this.constructorId = 0x53d69076;
+        this.subclassOfId = 0x90f76823;
+        this.slots = ['dcId', 'volumeId', 'localId', 'secret'];
+        this.dcId = params.dcId;
+        this.volumeId = params.volumeId;
+        this.localId = params.localId;
+        this.secret = params.secret;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer23.FileLocation> {
+        // no flags
+
+        let dcId = await Primitive.Int.read(b);
+        let volumeId = await Primitive.Long.read(b);
+        let localId = await Primitive.Int.read(b);
+        let secret = await Primitive.Long.read(b);
+        return new Raw.sclayer23.FileLocation({
+          dcId: dcId,
+          volumeId: volumeId,
+          localId: localId,
+          secret: secret,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.dcId !== undefined) {
+          b.write(Primitive.Int.write(this.dcId) as unknown as Buffer);
+        }
+        if (this.volumeId !== undefined) {
+          b.write(Primitive.Long.write(this.volumeId) as unknown as Buffer);
+        }
+        if (this.localId !== undefined) {
+          b.write(Primitive.Int.write(this.localId) as unknown as Buffer);
+        }
+        if (this.secret !== undefined) {
+          b.write(Primitive.Long.write(this.secret) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaExternalDocument extends TLObject {
+      id!: long;
+      accessHash!: long;
+      date!: int;
+      mimeType!: string;
+      size!: int;
+      thumb!: TypePhotoSize;
+      dcId!: int;
+      attributes!: Vector<TypeDocumentAttribute>;
+
+      constructor(params: {
+        id: long;
+        accessHash: long;
+        date: int;
+        mimeType: string;
+        size: int;
+        thumb: TypePhotoSize;
+        dcId: int;
+        attributes: Vector<TypeDocumentAttribute>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer23.DecryptedMessageMediaExternalDocument';
+        this.constructorId = 0xfa95b0dd;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = [
+          'id',
+          'accessHash',
+          'date',
+          'mimeType',
+          'size',
+          'thumb',
+          'dcId',
+          'attributes',
+        ];
+        this.id = params.id;
+        this.accessHash = params.accessHash;
+        this.date = params.date;
+        this.mimeType = params.mimeType;
+        this.size = params.size;
+        this.thumb = params.thumb;
+        this.dcId = params.dcId;
+        this.attributes = params.attributes;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer23.DecryptedMessageMediaExternalDocument> {
+        // no flags
+
+        let id = await Primitive.Long.read(b);
+        let accessHash = await Primitive.Long.read(b);
+        let date = await Primitive.Int.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let size = await Primitive.Int.read(b);
+        let thumb = await TLObject.read(b);
+        let dcId = await Primitive.Int.read(b);
+        let attributes = await TLObject.read(b);
+        return new Raw.sclayer23.DecryptedMessageMediaExternalDocument({
+          id: id,
+          accessHash: accessHash,
+          date: date,
+          mimeType: mimeType,
+          size: size,
+          thumb: thumb,
+          dcId: dcId,
+          attributes: attributes,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.id !== undefined) {
+          b.write(Primitive.Long.write(this.id) as unknown as Buffer);
+        }
+        if (this.accessHash !== undefined) {
+          b.write(Primitive.Long.write(this.accessHash) as unknown as Buffer);
+        }
+        if (this.date !== undefined) {
+          b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.thumb !== undefined) {
+          b.write(this.thumb.write() as unknown as Buffer);
+        }
+        if (this.dcId !== undefined) {
+          b.write(Primitive.Int.write(this.dcId) as unknown as Buffer);
+        }
+        if (this.attributes) {
+          b.write(Primitive.Vector.write(this.attributes) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer45 {
+    export class DecryptedMessage extends TLObject {
+      randomId!: long;
+      ttl!: int;
+      message!: string;
+      media?: TypeDecryptedMessageMedia;
+      entities?: Vector<TypeMessageEntity>;
+      viaBotName?: string;
+      replyToRandomId?: long;
+
+      constructor(params: {
+        randomId: long;
+        ttl: int;
+        message: string;
+        media?: TypeDecryptedMessageMedia;
+        entities?: Vector<TypeMessageEntity>;
+        viaBotName?: string;
+        replyToRandomId?: long;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DecryptedMessage';
+        this.constructorId = 0x36b091de;
+        this.subclassOfId = 0x5303193e;
+        this.slots = [
+          'randomId',
+          'ttl',
+          'message',
+          'media',
+          'entities',
+          'viaBotName',
+          'replyToRandomId',
+        ];
+        this.randomId = params.randomId;
+        this.ttl = params.ttl;
+        this.message = params.message;
+        this.media = params.media;
+        this.entities = params.entities;
+        this.viaBotName = params.viaBotName;
+        this.replyToRandomId = params.replyToRandomId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer45.DecryptedMessage> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let randomId = await Primitive.Long.read(b);
+        let ttl = await Primitive.Int.read(b);
+        let message = await Primitive.String.read(b);
+        let media = flags & (1 << 9) ? await TLObject.read(b) : undefined;
+        let entities = flags & (1 << 7) ? await TLObject.read(b) : [];
+        let viaBotName = flags & (1 << 11) ? await Primitive.String.read(b) : undefined;
+        let replyToRandomId = flags & (1 << 3) ? await Primitive.Long.read(b) : undefined;
+        return new Raw.sclayer45.DecryptedMessage({
+          randomId: randomId,
+          ttl: ttl,
+          message: message,
+          media: media,
+          entities: entities,
+          viaBotName: viaBotName,
+          replyToRandomId: replyToRandomId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.media !== undefined ? 1 << 9 : 0;
+        flags |= this.entities ? 1 << 7 : 0;
+        flags |= this.viaBotName !== undefined ? 1 << 11 : 0;
+        flags |= this.replyToRandomId !== undefined ? 1 << 3 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.ttl !== undefined) {
+          b.write(Primitive.Int.write(this.ttl) as unknown as Buffer);
+        }
+        if (this.message !== undefined) {
+          b.write(Primitive.String.write(this.message) as unknown as Buffer);
+        }
+        if (this.media !== undefined) {
+          b.write(this.media.write() as unknown as Buffer);
+        }
+        if (this.entities) {
+          b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+        }
+        if (this.viaBotName !== undefined) {
+          b.write(Primitive.String.write(this.viaBotName) as unknown as Buffer);
+        }
+        if (this.replyToRandomId !== undefined) {
+          b.write(Primitive.Long.write(this.replyToRandomId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaPhoto extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      w!: int;
+      h!: int;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+      caption!: string;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        w: int;
+        h: int;
+        size: int;
+        key: bytes;
+        iv: bytes;
+        caption: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DecryptedMessageMediaPhoto';
+        this.constructorId = 0xf1fa8d78;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['thumb', 'thumbW', 'thumbH', 'w', 'h', 'size', 'key', 'iv', 'caption'];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.w = params.w;
+        this.h = params.h;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+        this.caption = params.caption;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DecryptedMessageMediaPhoto> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        let caption = await Primitive.String.read(b);
+        return new Raw.sclayer45.DecryptedMessageMediaPhoto({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          w: w,
+          h: h,
+          size: size,
+          key: key,
+          iv: iv,
+          caption: caption,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        if (this.caption !== undefined) {
+          b.write(Primitive.String.write(this.caption) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaVideo extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      duration!: int;
+      mimeType!: string;
+      w!: int;
+      h!: int;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+      caption!: string;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        duration: int;
+        mimeType: string;
+        w: int;
+        h: int;
+        size: int;
+        key: bytes;
+        iv: bytes;
+        caption: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DecryptedMessageMediaVideo';
+        this.constructorId = 0x970c8c0e;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = [
+          'thumb',
+          'thumbW',
+          'thumbH',
+          'duration',
+          'mimeType',
+          'w',
+          'h',
+          'size',
+          'key',
+          'iv',
+          'caption',
+        ];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.duration = params.duration;
+        this.mimeType = params.mimeType;
+        this.w = params.w;
+        this.h = params.h;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+        this.caption = params.caption;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DecryptedMessageMediaVideo> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let duration = await Primitive.Int.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let w = await Primitive.Int.read(b);
+        let h = await Primitive.Int.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        let caption = await Primitive.String.read(b);
+        return new Raw.sclayer45.DecryptedMessageMediaVideo({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          duration: duration,
+          mimeType: mimeType,
+          w: w,
+          h: h,
+          size: size,
+          key: key,
+          iv: iv,
+          caption: caption,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.w !== undefined) {
+          b.write(Primitive.Int.write(this.w) as unknown as Buffer);
+        }
+        if (this.h !== undefined) {
+          b.write(Primitive.Int.write(this.h) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        if (this.caption !== undefined) {
+          b.write(Primitive.String.write(this.caption) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaDocument extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      mimeType!: string;
+      size!: int;
+      key!: bytes;
+      iv!: bytes;
+      attributes!: Vector<TypeDocumentAttribute>;
+      caption!: string;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        mimeType: string;
+        size: int;
+        key: bytes;
+        iv: bytes;
+        attributes: Vector<TypeDocumentAttribute>;
+        caption: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DecryptedMessageMediaDocument';
+        this.constructorId = 0x7afe8ae2;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = [
+          'thumb',
+          'thumbW',
+          'thumbH',
+          'mimeType',
+          'size',
+          'key',
+          'iv',
+          'attributes',
+          'caption',
+        ];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.mimeType = params.mimeType;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+        this.attributes = params.attributes;
+        this.caption = params.caption;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DecryptedMessageMediaDocument> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let size = await Primitive.Int.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        let attributes = await TLObject.read(b);
+        let caption = await Primitive.String.read(b);
+        return new Raw.sclayer45.DecryptedMessageMediaDocument({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          mimeType: mimeType,
+          size: size,
+          key: key,
+          iv: iv,
+          attributes: attributes,
+          caption: caption,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Int.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        if (this.attributes) {
+          b.write(Primitive.Vector.write(this.attributes) as unknown as Buffer);
+        }
+        if (this.caption !== undefined) {
+          b.write(Primitive.String.write(this.caption) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DocumentAttributeSticker extends TLObject {
+      alt!: string;
+      stickerset!: TypeInputStickerSet;
+
+      constructor(params: { alt: string; stickerset: TypeInputStickerSet }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DocumentAttributeSticker';
+        this.constructorId = 0x3a556302;
+        this.subclassOfId = 0xf729eb9b;
+        this.slots = ['alt', 'stickerset'];
+        this.alt = params.alt;
+        this.stickerset = params.stickerset;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DocumentAttributeSticker> {
+        // no flags
+
+        let alt = await Primitive.String.read(b);
+        let stickerset = await TLObject.read(b);
+        return new Raw.sclayer45.DocumentAttributeSticker({ alt: alt, stickerset: stickerset });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.alt !== undefined) {
+          b.write(Primitive.String.write(this.alt) as unknown as Buffer);
+        }
+        if (this.stickerset !== undefined) {
+          b.write(this.stickerset.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DocumentAttributeAudio extends TLObject {
+      duration!: int;
+      title!: string;
+      performer!: string;
+
+      constructor(params: { duration: int; title: string; performer: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DocumentAttributeAudio';
+        this.constructorId = 0xded218e0;
+        this.subclassOfId = 0xf729eb9b;
+        this.slots = ['duration', 'title', 'performer'];
+        this.duration = params.duration;
+        this.title = params.title;
+        this.performer = params.performer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DocumentAttributeAudio> {
+        // no flags
+
+        let duration = await Primitive.Int.read(b);
+        let title = await Primitive.String.read(b);
+        let performer = await Primitive.String.read(b);
+        return new Raw.sclayer45.DocumentAttributeAudio({
+          duration: duration,
+          title: title,
+          performer: performer,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.title !== undefined) {
+          b.write(Primitive.String.write(this.title) as unknown as Buffer);
+        }
+        if (this.performer !== undefined) {
+          b.write(Primitive.String.write(this.performer) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaVenue extends TLObject {
+      lat!: double;
+      long!: double;
+      title!: string;
+      address!: string;
+      provider!: string;
+      venueId!: string;
+
+      constructor(params: {
+        lat: double;
+        long: double;
+        title: string;
+        address: string;
+        provider: string;
+        venueId: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DecryptedMessageMediaVenue';
+        this.constructorId = 0x8a0df56f;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['lat', 'long', 'title', 'address', 'provider', 'venueId'];
+        this.lat = params.lat;
+        this.long = params.long;
+        this.title = params.title;
+        this.address = params.address;
+        this.provider = params.provider;
+        this.venueId = params.venueId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DecryptedMessageMediaVenue> {
+        // no flags
+
+        let lat = await Primitive.Double.read(b);
+        let long = await Primitive.Double.read(b);
+        let title = await Primitive.String.read(b);
+        let address = await Primitive.String.read(b);
+        let provider = await Primitive.String.read(b);
+        let venueId = await Primitive.String.read(b);
+        return new Raw.sclayer45.DecryptedMessageMediaVenue({
+          lat: lat,
+          long: long,
+          title: title,
+          address: address,
+          provider: provider,
+          venueId: venueId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.lat !== undefined) {
+          b.write(Primitive.Double.write(this.lat) as unknown as Buffer);
+        }
+        if (this.long !== undefined) {
+          b.write(Primitive.Double.write(this.long) as unknown as Buffer);
+        }
+        if (this.title !== undefined) {
+          b.write(Primitive.String.write(this.title) as unknown as Buffer);
+        }
+        if (this.address !== undefined) {
+          b.write(Primitive.String.write(this.address) as unknown as Buffer);
+        }
+        if (this.provider !== undefined) {
+          b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+        }
+        if (this.venueId !== undefined) {
+          b.write(Primitive.String.write(this.venueId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DecryptedMessageMediaWebPage extends TLObject {
+      url!: string;
+
+      constructor(params: { url: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer45.DecryptedMessageMediaWebPage';
+        this.constructorId = 0xe50511d8;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = ['url'];
+        this.url = params.url;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer45.DecryptedMessageMediaWebPage> {
+        // no flags
+
+        let url = await Primitive.String.read(b);
+        return new Raw.sclayer45.DecryptedMessageMediaWebPage({ url: url });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.url !== undefined) {
+          b.write(Primitive.String.write(this.url) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer66 {
+    export class SendMessageUploadRoundAction extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer66.SendMessageUploadRoundAction';
+        this.constructorId = 0xbb718624;
+        this.subclassOfId = 0x20b2cc21;
+        this.slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer66.SendMessageUploadRoundAction> {
+        // no flags
+
+        return new Raw.sclayer66.SendMessageUploadRoundAction();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer73 {
+    export class DecryptedMessage extends TLObject {
+      noWebpage?: boolean;
+      silent?: boolean;
+      randomId!: long;
+      ttl!: int;
+      message!: string;
+      media?: TypeDecryptedMessageMedia;
+      entities?: Vector<TypeMessageEntity>;
+      viaBotName?: string;
+      replyToRandomId?: long;
+      groupedId?: long;
+
+      constructor(params: {
+        noWebpage?: boolean;
+        silent?: boolean;
+        randomId: long;
+        ttl: int;
+        message: string;
+        media?: TypeDecryptedMessageMedia;
+        entities?: Vector<TypeMessageEntity>;
+        viaBotName?: string;
+        replyToRandomId?: long;
+        groupedId?: long;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer73.DecryptedMessage';
+        this.constructorId = 0x91cc4674;
+        this.subclassOfId = 0x5303193e;
+        this.slots = [
+          'noWebpage',
+          'silent',
+          'randomId',
+          'ttl',
+          'message',
+          'media',
+          'entities',
+          'viaBotName',
+          'replyToRandomId',
+          'groupedId',
+        ];
+        this.noWebpage = params.noWebpage;
+        this.silent = params.silent;
+        this.randomId = params.randomId;
+        this.ttl = params.ttl;
+        this.message = params.message;
+        this.media = params.media;
+        this.entities = params.entities;
+        this.viaBotName = params.viaBotName;
+        this.replyToRandomId = params.replyToRandomId;
+        this.groupedId = params.groupedId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.sclayer73.DecryptedMessage> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let noWebpage = flags & (1 << 1) ? true : false;
+        let silent = flags & (1 << 5) ? true : false;
+        let randomId = await Primitive.Long.read(b);
+        let ttl = await Primitive.Int.read(b);
+        let message = await Primitive.String.read(b);
+        let media = flags & (1 << 9) ? await TLObject.read(b) : undefined;
+        let entities = flags & (1 << 7) ? await TLObject.read(b) : [];
+        let viaBotName = flags & (1 << 11) ? await Primitive.String.read(b) : undefined;
+        let replyToRandomId = flags & (1 << 3) ? await Primitive.Long.read(b) : undefined;
+        let groupedId = flags & (1 << 17) ? await Primitive.Long.read(b) : undefined;
+        return new Raw.sclayer73.DecryptedMessage({
+          noWebpage: noWebpage,
+          silent: silent,
+          randomId: randomId,
+          ttl: ttl,
+          message: message,
+          media: media,
+          entities: entities,
+          viaBotName: viaBotName,
+          replyToRandomId: replyToRandomId,
+          groupedId: groupedId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.noWebpage ? 1 << 1 : 0;
+        flags |= this.silent ? 1 << 5 : 0;
+        flags |= this.media !== undefined ? 1 << 9 : 0;
+        flags |= this.entities ? 1 << 7 : 0;
+        flags |= this.viaBotName !== undefined ? 1 << 11 : 0;
+        flags |= this.replyToRandomId !== undefined ? 1 << 3 : 0;
+        flags |= this.groupedId !== undefined ? 1 << 17 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.ttl !== undefined) {
+          b.write(Primitive.Int.write(this.ttl) as unknown as Buffer);
+        }
+        if (this.message !== undefined) {
+          b.write(Primitive.String.write(this.message) as unknown as Buffer);
+        }
+        if (this.media !== undefined) {
+          b.write(this.media.write() as unknown as Buffer);
+        }
+        if (this.entities) {
+          b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+        }
+        if (this.viaBotName !== undefined) {
+          b.write(Primitive.String.write(this.viaBotName) as unknown as Buffer);
+        }
+        if (this.replyToRandomId !== undefined) {
+          b.write(Primitive.Long.write(this.replyToRandomId) as unknown as Buffer);
+        }
+        if (this.groupedId !== undefined) {
+          b.write(Primitive.Long.write(this.groupedId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+  }
+  export namespace sclayer143 {
+    export class DecryptedMessageMediaDocument extends TLObject {
+      thumb!: bytes;
+      thumbW!: int;
+      thumbH!: int;
+      mimeType!: string;
+      size!: long;
+      key!: bytes;
+      iv!: bytes;
+      attributes!: Vector<TypeDocumentAttribute>;
+      caption!: string;
+
+      constructor(params: {
+        thumb: bytes;
+        thumbW: int;
+        thumbH: int;
+        mimeType: string;
+        size: long;
+        key: bytes;
+        iv: bytes;
+        attributes: Vector<TypeDocumentAttribute>;
+        caption: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'sclayer143.DecryptedMessageMediaDocument';
+        this.constructorId = 0x6abd9782;
+        this.subclassOfId = 0xb3d2034;
+        this.slots = [
+          'thumb',
+          'thumbW',
+          'thumbH',
+          'mimeType',
+          'size',
+          'key',
+          'iv',
+          'attributes',
+          'caption',
+        ];
+        this.thumb = params.thumb;
+        this.thumbW = params.thumbW;
+        this.thumbH = params.thumbH;
+        this.mimeType = params.mimeType;
+        this.size = params.size;
+        this.key = params.key;
+        this.iv = params.iv;
+        this.attributes = params.attributes;
+        this.caption = params.caption;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.sclayer143.DecryptedMessageMediaDocument> {
+        // no flags
+
+        let thumb = await Primitive.Bytes.read(b);
+        let thumbW = await Primitive.Int.read(b);
+        let thumbH = await Primitive.Int.read(b);
+        let mimeType = await Primitive.String.read(b);
+        let size = await Primitive.Long.read(b);
+        let key = await Primitive.Bytes.read(b);
+        let iv = await Primitive.Bytes.read(b);
+        let attributes = await TLObject.read(b);
+        let caption = await Primitive.String.read(b);
+        return new Raw.sclayer143.DecryptedMessageMediaDocument({
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH,
+          mimeType: mimeType,
+          size: size,
+          key: key,
+          iv: iv,
+          attributes: attributes,
+          caption: caption,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.thumb !== undefined) {
+          b.write(Primitive.Bytes.write(this.thumb) as unknown as Buffer);
+        }
+        if (this.thumbW !== undefined) {
+          b.write(Primitive.Int.write(this.thumbW) as unknown as Buffer);
+        }
+        if (this.thumbH !== undefined) {
+          b.write(Primitive.Int.write(this.thumbH) as unknown as Buffer);
+        }
+        if (this.mimeType !== undefined) {
+          b.write(Primitive.String.write(this.mimeType) as unknown as Buffer);
+        }
+        if (this.size !== undefined) {
+          b.write(Primitive.Long.write(this.size) as unknown as Buffer);
+        }
+        if (this.key !== undefined) {
+          b.write(Primitive.Bytes.write(this.key) as unknown as Buffer);
+        }
+        if (this.iv !== undefined) {
+          b.write(Primitive.Bytes.write(this.iv) as unknown as Buffer);
+        }
+        if (this.attributes) {
+          b.write(Primitive.Vector.write(this.attributes) as unknown as Buffer);
+        }
+        if (this.caption !== undefined) {
+          b.write(Primitive.String.write(this.caption) as unknown as Buffer);
         }
         return b.buffer;
       }

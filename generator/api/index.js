@@ -38,6 +38,7 @@ const flagsArgType = /flags(\d+)?.(\d+)\?([\w?!.<>#]+)/;
 const flagsArg = /flags(\d+?):#/;
 const lineSection = /---(\w+)---/;
 const layerSection = /\/\/\s+LAYER\s+(\d+)/;
+const layerSecretChat = /={3}(\d+)={3}/;
 const VECTOR_CORE_TYPES = new Set([
   'int',
   'long',
@@ -127,10 +128,12 @@ function parseArgName(argname) {
 function start(source, template) {
   let layer;
   let section = 'types';
+  let hsclayer = 8; // Highest secret chat schema layer, the initial schema is 8
   let typesMap = new Map();
   let typeSubclassMap = new Map();
   let constructorMap = new Map();
   let allTLObject = '';
+  let passedId = [];
   let typeTLFn = [];
 
   function getType(type) {
@@ -183,6 +186,11 @@ function start(source, template) {
       section = match[1];
       continue;
     }
+    if (layerSecretChat.test(line.trim())) {
+      let match = line.trim().match(layerSecretChat);
+      hsclayer = match[1];
+      continue;
+    }
     if (!line.startsWith('//')) {
       if (line.trim() === '') continue;
       let [input, full, namespace, name, id] = line.trim().match(reNamespace);
@@ -201,175 +209,181 @@ function start(source, template) {
         name = snakeCaseToCamelCase(name);
       }
       name = Uppercase(name);
-      allTLObject += `\n  0x${id} : "Raw.${namespace ?? ''}${name}",`;
-      if (section === 'functions') {
-        typeTLFn.push(`Raw.${namespace ?? ''}${name}`);
-      }
-      if (typeSubclassMap.has(crc32(results))) {
-        typeSubclassMap.set(
-          crc32(results),
-          `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
-        );
-        if (Uppercase(full) === results) {
+      // to prevent clashes, ignore schemas that have the same id
+      if (!passedId.includes(id)) {
+        allTLObject += `\n  0x${id} : "Raw.${namespace ?? ''}${name}",`;
+        passedId.push(id);
+        if (section === 'functions') {
+          typeTLFn.push(`Raw.${namespace ?? ''}${name}`);
+        }
+        if (typeSubclassMap.has(crc32(results))) {
           typeSubclassMap.set(
-            crc32(camelToSnakeCase(full)),
+            crc32(results),
             `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
           );
-        }
-      } else {
-        typeSubclassMap.set(crc32(results), `Raw.${namespace ?? ''}${name}`);
-        if (Uppercase(full) === results) {
-          typeSubclassMap.set(crc32(camelToSnakeCase(full)), `Raw.${namespace ?? ''}${name}`);
-        }
-      }
-      for (let [argFull, argName, argType] of execAll(line.trim(), reArgs)) {
-        if (argFull === 'X:Type') continue; // skip the {X:Type} args
-        argName = snakeCaseToCamelCase(argName);
-        if (AUTH_KEY_TYPES.has(parseInt(id, 16))) {
-          if (argType === 'string') {
-            argType = 'bytes';
-          }
-        }
-        let flag = argType.trim().match(flagsArgType);
-        if (/flags(\d+)?/.test(argName) && argType === '#') {
-          let writerFlag = [];
-          for (let i of execAll(line.trim(), reArgs)) {
-            flag = i[2].trim().match(flagsArgType);
-            if (flag) {
-              if (argName !== `flags${flag[1] ?? ''}`) continue;
-              if (flag[3] === 'true' || flag[3].startsWith('Vector')) {
-                writerFlag.push(
-                  `    ${parseArgName(argName)} |= this.${
-                    i[1].includes('_') ? snakeCaseToCamelCase(i[1]) : i[1]
-                  } ? (1 << ${flag[2]}) : 0;`
-                );
-              } else {
-                writerFlag.push(
-                  `    ${parseArgName(argName)} |= this.${
-                    i[1].includes('_') ? snakeCaseToCamelCase(i[1]) : i[1]
-                  } !== undefined ? (1 << ${flag[2]}) : 0;`
-                );
-              }
-            }
-          }
-          writerFlag = [
-            `\n    let ${parseArgName(argName)} = 0;`,
-            writerFlag.join('\n'),
-            `    b.write((Primitive.Int.write(${parseArgName(argName)})) as unknown as Buffer);\n`,
-          ].join('\n');
-          writerString += writerFlag;
-          readerString += `\n    let ${parseArgName(argName)} = await Primitive.Int.read(b);\n`;
-          continue;
-        }
-        if (flag) {
-          let [flagFull, flagNumber, flagIndex, flagType] = flag;
-          if (!flagsArg.test(argName)) {
-            typesArgsString += `  ${argName}?:${getType(flagType)};\n`;
-            interfaceArgsString += `\n    ${argName}?:${getType(flagType)};`;
-            if (!slots.includes(argName.trim())) slots.push(argName.trim());
-            constructorString += `    this.${argName} = params.${argName};\n`;
-          }
-          if (flagType.trim() === 'true') {
-            readerString += `\n    let ${parseArgName(argName)} = (flags${
-              flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? true : false;`;
-          } else if (VECTOR_CORE_TYPES.has(flagType.trim())) {
-            writerString += `\n    if(this.${argName} !== undefined){\n`;
-            writerString += `      b.write((Primitive.${Uppercase(
-              flagType.trim()
-            )}.write(this.${argName})) as unknown as Buffer);`;
-            writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = (flags${
-              flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? await Primitive.${Uppercase(
-              flagType.trim()
-            )}.read(b) : undefined;`;
-          } else if (/Vector<(\w+\.?\w+?)>/i.test(flagType.trim())) {
-            let [vectorFull, vectorType] = flagType.trim().match(/Vector<(\w+\.?\w+?)>/i);
-            writerString += `\n    if(this.${argName}){\n`;
-            writerString += `      b.write((Primitive.Vector.write(this.${argName}${
-              VECTOR_CORE_TYPES.has(vectorType.trim())
-                ? `,Primitive.${Uppercase(vectorType.trim())}`
-                : ''
-            })) as unknown as Buffer);`;
-            writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = (flags${
-              flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? await TLObject.read(b${
-              VECTOR_CORE_TYPES.has(vectorType.trim())
-                ? `,Primitive.${Uppercase(vectorType.trim())}`
-                : ''
-            }) : [];`;
-          } else {
-            writerString += `\n    if(this.${argName} !== undefined){\n`;
-            writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
-            writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = (flags${
-              flagNumber ?? ''
-            } & (1 << ${flagIndex})) ? await TLObject.read(b) : undefined;`;
+          if (Uppercase(full) === results) {
+            typeSubclassMap.set(
+              crc32(camelToSnakeCase(full)),
+              `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
+            );
           }
         } else {
-          if (!flagsArg.test(argName)) {
-            typesArgsString += `  ${argName}!:${getType(argType)};\n`;
-            interfaceArgsString += `\n   ${argName}:${getType(argType)};`;
-            if (!slots.includes(argName.trim())) slots.push(argName.trim());
-            constructorString += `    this.${argName} = params.${argName};\n`;
-          }
-          if (VECTOR_CORE_TYPES.has(argType.trim())) {
-            writerString += `\n    if(this.${argName} !== undefined){\n`;
-            writerString += `      b.write((Primitive.${Uppercase(
-              argType.trim()
-            )}.write(this.${argName})) as unknown as Buffer);`;
-            writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = await Primitive.${Uppercase(
-              argType.trim()
-            )}.read(b);`;
-          } else if (/Vector<(\w+\.?\w+?)>/i.test(argType.trim())) {
-            let [vectorFull, vectorType] = argType.trim().match(/Vector<(\w+\.?\w+?)>/i);
-            writerString += `\n    if(this.${argName}){\n`;
-            writerString += `      b.write((Primitive.Vector.write(this.${argName}${
-              VECTOR_CORE_TYPES.has(vectorType.trim())
-                ? `,Primitive.${Uppercase(vectorType.trim())}`
-                : ''
-            })) as unknown as Buffer);`;
-            writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b${
-              VECTOR_CORE_TYPES.has(vectorType.trim())
-                ? `,Primitive.${Uppercase(vectorType.trim())}`
-                : ''
-            });`;
-          } else {
-            writerString += `\n    if(this.${argName} !== undefined){\n`;
-            writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
-            writerString += `\n    }`;
-            readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b);`;
+          typeSubclassMap.set(crc32(results), `Raw.${namespace ?? ''}${name}`);
+          if (Uppercase(full) === results) {
+            typeSubclassMap.set(crc32(camelToSnakeCase(full)), `Raw.${namespace ?? ''}${name}`);
           }
         }
-      }
-      let content = replacer(template, {
-        'CLASS-NAME': name,
-        'CLASS-NAME-WITH-NAMESPACE': `${namespace ?? ''}${name}`,
-        READER: readerString,
-        WRITER: writerString,
-        VARIABLE: slots.length
-          ? `{${slots.map((e) => `"${e}": ${parseArgName(e)}`).join(',')}}`
-          : '',
-        TYPES: typesArgsString,
-        PARAMETERS: slots.length ? `params:{${interfaceArgsString}}` : '',
-        'CONSTRUCTOR-VALUES': `this.classType = "${section}"\n    this.className = "${
-          namespace ?? ''
-        }${name}"\n    this.constructorId = 0x${id}\n    this.subclassOfId = 0x${crc32(
-          results
-        ).toString(16)}\n    this.slots = ${JSON.stringify(slots)}\n${constructorString}`,
-      });
-      if (constructorMap.has(namespace ? namespace.replace(/\.$/, '') : '')) {
-        let ccontent = constructorMap.get(namespace ? namespace.replace(/\.$/, '') : '');
-        constructorMap.set(
-          namespace ? namespace.replace(/\.$/, '') : '',
-          `${ccontent}\n${content}`
-        );
-      } else {
-        constructorMap.set(namespace ? namespace.replace(/\.$/, '') : '', content);
+        for (let [argFull, argName, argType] of execAll(line.trim(), reArgs)) {
+          if (argFull === 'X:Type') continue; // skip the {X:Type} args
+          argName = snakeCaseToCamelCase(argName);
+          if (AUTH_KEY_TYPES.has(parseInt(id, 16))) {
+            if (argType === 'string') {
+              argType = 'bytes';
+            }
+          }
+          let flag = argType.trim().match(flagsArgType);
+          if (/flags(\d+)?/.test(argName) && argType === '#') {
+            let writerFlag = [];
+            for (let i of execAll(line.trim(), reArgs)) {
+              flag = i[2].trim().match(flagsArgType);
+              if (flag) {
+                if (argName !== `flags${flag[1] ?? ''}`) continue;
+                if (flag[3] === 'true' || flag[3].startsWith('Vector')) {
+                  writerFlag.push(
+                    `    ${parseArgName(argName)} |= this.${
+                      i[1].includes('_') ? snakeCaseToCamelCase(i[1]) : i[1]
+                    } ? (1 << ${flag[2]}) : 0;`
+                  );
+                } else {
+                  writerFlag.push(
+                    `    ${parseArgName(argName)} |= this.${
+                      i[1].includes('_') ? snakeCaseToCamelCase(i[1]) : i[1]
+                    } !== undefined ? (1 << ${flag[2]}) : 0;`
+                  );
+                }
+              }
+            }
+            writerFlag = [
+              `\n    let ${parseArgName(argName)} = 0;`,
+              writerFlag.join('\n'),
+              `    b.write((Primitive.Int.write(${parseArgName(
+                argName
+              )})) as unknown as Buffer);\n`,
+            ].join('\n');
+            writerString += writerFlag;
+            readerString += `\n    let ${parseArgName(argName)} = await Primitive.Int.read(b);\n`;
+            continue;
+          }
+          if (flag) {
+            let [flagFull, flagNumber, flagIndex, flagType] = flag;
+            if (!flagsArg.test(argName)) {
+              typesArgsString += `  ${argName}?:${getType(flagType)};\n`;
+              interfaceArgsString += `\n    ${argName}?:${getType(flagType)};`;
+              if (!slots.includes(argName.trim())) slots.push(argName.trim());
+              constructorString += `    this.${argName} = params.${argName};\n`;
+            }
+            if (flagType.trim() === 'true') {
+              readerString += `\n    let ${parseArgName(argName)} = (flags${
+                flagNumber ?? ''
+              } & (1 << ${flagIndex})) ? true : false;`;
+            } else if (VECTOR_CORE_TYPES.has(flagType.trim())) {
+              writerString += `\n    if(this.${argName} !== undefined){\n`;
+              writerString += `      b.write((Primitive.${Uppercase(
+                flagType.trim()
+              )}.write(this.${argName})) as unknown as Buffer);`;
+              writerString += `\n    }`;
+              readerString += `\n    let ${parseArgName(argName)} = (flags${
+                flagNumber ?? ''
+              } & (1 << ${flagIndex})) ? await Primitive.${Uppercase(
+                flagType.trim()
+              )}.read(b) : undefined;`;
+            } else if (/Vector<(\w+\.?\w+?)>/i.test(flagType.trim())) {
+              let [vectorFull, vectorType] = flagType.trim().match(/Vector<(\w+\.?\w+?)>/i);
+              writerString += `\n    if(this.${argName}){\n`;
+              writerString += `      b.write((Primitive.Vector.write(this.${argName}${
+                VECTOR_CORE_TYPES.has(vectorType.trim())
+                  ? `,Primitive.${Uppercase(vectorType.trim())}`
+                  : ''
+              })) as unknown as Buffer);`;
+              writerString += `\n    }`;
+              readerString += `\n    let ${parseArgName(argName)} = (flags${
+                flagNumber ?? ''
+              } & (1 << ${flagIndex})) ? await TLObject.read(b${
+                VECTOR_CORE_TYPES.has(vectorType.trim())
+                  ? `,Primitive.${Uppercase(vectorType.trim())}`
+                  : ''
+              }) : [];`;
+            } else {
+              writerString += `\n    if(this.${argName} !== undefined){\n`;
+              writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
+              writerString += `\n    }`;
+              readerString += `\n    let ${parseArgName(argName)} = (flags${
+                flagNumber ?? ''
+              } & (1 << ${flagIndex})) ? await TLObject.read(b) : undefined;`;
+            }
+          } else {
+            if (!flagsArg.test(argName)) {
+              typesArgsString += `  ${argName}!:${getType(argType)};\n`;
+              interfaceArgsString += `\n   ${argName}:${getType(argType)};`;
+              if (!slots.includes(argName.trim())) slots.push(argName.trim());
+              constructorString += `    this.${argName} = params.${argName};\n`;
+            }
+            if (VECTOR_CORE_TYPES.has(argType.trim())) {
+              writerString += `\n    if(this.${argName} !== undefined){\n`;
+              writerString += `      b.write((Primitive.${Uppercase(
+                argType.trim()
+              )}.write(this.${argName})) as unknown as Buffer);`;
+              writerString += `\n    }`;
+              readerString += `\n    let ${parseArgName(argName)} = await Primitive.${Uppercase(
+                argType.trim()
+              )}.read(b);`;
+            } else if (/Vector<(\w+\.?\w+?)>/i.test(argType.trim())) {
+              let [vectorFull, vectorType] = argType.trim().match(/Vector<(\w+\.?\w+?)>/i);
+              writerString += `\n    if(this.${argName}){\n`;
+              writerString += `      b.write((Primitive.Vector.write(this.${argName}${
+                VECTOR_CORE_TYPES.has(vectorType.trim())
+                  ? `,Primitive.${Uppercase(vectorType.trim())}`
+                  : ''
+              })) as unknown as Buffer);`;
+              writerString += `\n    }`;
+              readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b${
+                VECTOR_CORE_TYPES.has(vectorType.trim())
+                  ? `,Primitive.${Uppercase(vectorType.trim())}`
+                  : ''
+              });`;
+            } else {
+              writerString += `\n    if(this.${argName} !== undefined){\n`;
+              writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
+              writerString += `\n    }`;
+              readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b);`;
+            }
+          }
+        }
+        let content = replacer(template, {
+          'CLASS-NAME': name,
+          'CLASS-NAME-WITH-NAMESPACE': `${namespace ?? ''}${name}`,
+          READER: readerString,
+          WRITER: writerString,
+          VARIABLE: slots.length
+            ? `{${slots.map((e) => `"${e}": ${parseArgName(e)}`).join(',')}}`
+            : '',
+          TYPES: typesArgsString,
+          PARAMETERS: slots.length ? `params:{${interfaceArgsString}}` : '',
+          'CONSTRUCTOR-VALUES': `this.classType = "${section}"\n    this.className = "${
+            namespace ?? ''
+          }${name}"\n    this.constructorId = 0x${id}\n    this.subclassOfId = 0x${crc32(
+            results
+          ).toString(16)}\n    this.slots = ${JSON.stringify(slots)}\n${constructorString}`,
+        });
+        if (constructorMap.has(namespace ? namespace.replace(/\.$/, '') : '')) {
+          let ccontent = constructorMap.get(namespace ? namespace.replace(/\.$/, '') : '');
+          constructorMap.set(
+            namespace ? namespace.replace(/\.$/, '') : '',
+            `${ccontent}\n${content}`
+          );
+        } else {
+          constructorMap.set(namespace ? namespace.replace(/\.$/, '') : '', content);
+        }
       }
     }
   }
@@ -410,6 +424,7 @@ function start(source, template) {
   return {
     layer,
     allTLObject,
+    hsclayer,
     results: final,
   };
 }
@@ -417,15 +432,20 @@ function start(source, template) {
 function generate() {
   const schema = fs.readFileSync(path.join(__dirname, './source/api.tl'), 'utf8');
   const mtproto = fs.readFileSync(path.join(__dirname, './source/mtproto.tl'), 'utf8');
+  const secretchat = fs.readFileSync(path.join(__dirname, './source/secretchat.tl'), 'utf8');
   const combinator = fs.readFileSync(path.join(__dirname, './template/combinator.txt'), 'utf8');
   const namespace = fs.readFileSync(path.join(__dirname, './template/namespace.txt'), 'utf8');
   const tl = fs.readFileSync(path.join(__dirname, './template/allTlObject.txt'), 'utf8');
-  let results = start(mtproto + '\n---types---\n' + schema, combinator);
+  let results = start(
+    mtproto + '\n---types---\n' + schema + '\n---types---\n' + secretchat,
+    combinator
+  );
   fs.writeFileSync(
     path.join(__dirname, '../../src/raw/Raw.ts'),
     replacer(namespace, {
       'TL-Layer': results.layer,
       Classes: results.results,
+      'HSC-Layer': results.hsclayer,
       'Copyright-Date': new Date().getFullYear(),
     })
   );
