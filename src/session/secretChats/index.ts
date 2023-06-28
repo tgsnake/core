@@ -8,9 +8,4 @@
  * it under the terms of the MIT License as published.
  */
 
-export * as Mtproto from './Mtproto.ts';
-export * as Prime from './Prime.ts';
-export * as RSA from './RSA.ts';
-export * as Password from './Password.ts';
-export * as AES from './Aes.ts';
-export * as SecretChats from './SecretChat.ts';
+export { SecretChat } from './SecretChat.ts';

@@ -9,8 +9,14 @@
  */
 import { os, inspect } from '../platform.deno.ts';
 import * as Errors from '../errors/index.ts';
-import { Raw } from '../raw/index.ts';
+import {
+  Raw,
+  UpdateSecretChatMessage,
+  SecretChatMessageService,
+  SecretChatMessage,
+} from '../raw/index.ts';
 import { AbstractSession } from '../storage/index.ts';
+import { SecretChat } from '../session/secretChats/index.ts';
 import * as _Session from './Session.ts';
 import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
@@ -133,7 +139,9 @@ export class Client {
   /** @hidden */
   _local!: boolean;
   /** @hidden */
-  private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
+  _secretChat!: SecretChat;
+  /** @hidden */
+  private _handler: Array<{ (update: Raw.TypeUpdates | UpdateSecretChatMessage): any }> = [];
   /**
    * Client Constructor.
    * @param {Object} session - What the session will be used for login to telegram.
@@ -173,6 +181,7 @@ export class Client {
     this._takeout = clientOptions?.takeout ?? false;
     this._connectionMode = clientOptions?.tcp ?? 0;
     this._local = clientOptions?.local ?? true;
+    this._secretChat = new SecretChat(session, this);
   }
   /**
    * Exporting current session to string.
@@ -215,16 +224,116 @@ export class Client {
     if (!this._noUpdates) {
       await this.fetchPeers(update.users ?? []);
       await this.fetchPeers(update.users ?? []);
+      if (update instanceof Raw.Updates) {
+        for (const up of update.updates) {
+          if (up instanceof Raw.UpdateEncryption) {
+            if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChat) {
+              return await this._secretChat.finish(
+                (up as Raw.UpdateEncryption).chat as Raw.EncryptedChat
+              );
+            }
+            if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatRequested) {
+              return await this._secretChat.accept(
+                (up as Raw.UpdateEncryption).chat as Raw.EncryptedChatRequested
+              );
+            }
+          }
+          if (up instanceof Raw.UpdateNewEncryptedMessage) {
+            return this._handleSecretChatUpdate(up as Raw.UpdateNewEncryptedMessage);
+          }
+        }
+      }
       this._handler.forEach((callback) => {
         return callback(update);
       });
     }
     return update;
   }
+  private async _handleSecretChatUpdate(update: Raw.UpdateNewEncryptedMessage) {
+    const modUpdate = await UpdateSecretChatMessage.generate(update, this._secretChat);
+    if (modUpdate.message instanceof SecretChatMessageService) {
+      const msg = (modUpdate.message as SecretChatMessageService).message;
+      if ('action' in msg) {
+        const action = msg.action;
+        if (action instanceof Raw.sclayer20.DecryptedMessageActionRequestKey) {
+          return await this._secretChat.acceptRekeying(
+            modUpdate.message.chatId,
+            action as Raw.sclayer20.DecryptedMessageActionRequestKey
+          );
+        }
+        if (action instanceof Raw.sclayer20.DecryptedMessageActionAcceptKey) {
+          return await this._secretChat.commitRekeying(
+            modUpdate.message.chatId,
+            action as Raw.sclayer20.DecryptedMessageActionAcceptKey
+          );
+        }
+        if (action instanceof Raw.sclayer20.DecryptedMessageActionCommitKey) {
+          return await this._secretChat.finalRekeying(
+            modUpdate.message.chatId,
+            action as Raw.sclayer20.DecryptedMessageActionCommitKey
+          );
+        }
+        if (action instanceof Raw.sclayer20.DecryptedMessageActionNoop) {
+          return modUpdate;
+        }
+        if (action instanceof Raw.sclayer17.DecryptedMessageActionNotifyLayer) {
+          const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
+          if (peer) {
+            peer.layer = (action as Raw.sclayer17.DecryptedMessageActionNotifyLayer).layer;
+            if ((action as Raw.sclayer17.DecryptedMessageActionNotifyLayer).layer < 73) {
+              peer.mtproto = 1;
+            }
+            await peer.update(this._storage);
+            if (
+              (action as Raw.sclayer17.DecryptedMessageActionNotifyLayer).layer >= 17 &&
+              Date.now() / 1000 - peer.created > 15
+            ) {
+              await this._secretChat.notifyLayer(modUpdate.message.chatId);
+            }
+          }
+          return modUpdate;
+        }
+        if (action instanceof Raw.sclayer8.DecryptedMessageActionSetMessageTTL) {
+          const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
+          if (peer) {
+            peer.ttl = (action as Raw.sclayer8.DecryptedMessageActionSetMessageTTL).ttlSeconds;
+            await peer.update(this._storage);
+          }
+          return modUpdate;
+        }
+      }
+    }
+    if (modUpdate.message instanceof SecretChatMessage) {
+      const msg = (modUpdate.message as SecretChatMessage).message;
+      if (msg instanceof Raw.sclayer17.DecryptedMessageLayer) {
+        const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
+        if (peer) {
+          peer.inSeqNo += 1;
+          if ((msg as Raw.sclayer17.DecryptedMessageLayer).layer >= 17) {
+            peer.layer = (msg as Raw.sclayer17.DecryptedMessageLayer).layer;
+          }
+          await peer.update(this._storage);
+          if (
+            (msg as Raw.sclayer17.DecryptedMessageLayer).layer >= 17 &&
+            Date.now() / 1000 - peer.created > 15
+          ) {
+            await this._secretChat.notifyLayer(modUpdate.message.chatId);
+          }
+        }
+        return modUpdate;
+      }
+    }
+    this._handler.forEach((callback) => {
+      return callback(modUpdate);
+    });
+    return modUpdate;
+  }
   /**
    * Add handler when update coming.
    */
-  async addHandler(callback: { (update: Raw.TypeUpdates): any }): Promise<any> {
+  async addHandler(callback: {
+    (update: Raw.TypeUpdates | UpdateSecretChatMessage): any;
+  }): Promise<any> {
     return this._handler.push(callback);
   }
   /**
@@ -405,6 +514,22 @@ export class Client {
       throw new Errors.Exceptions.BadRequest.PeerIdInvalid();
     }
   }
+  /**
+   * Start a secret chat.
+   * @param { BigInt | String } chatId - Participant id or interlocutor id that you want to transfer to the secret chat.
+   */
+  async startSecretChat(chatId: bigint | string) {
+    return this._secretChat.start(chatId);
+  }
+  /**
+   * Close and destroy secret chat.
+   * Secret chats that have been created will be destroyed and closed, so they can no longer be used to send secret messages.
+   * @param {Number} chatId - The id of the secret chat that you want to close.
+   */
+  async destroySecretChat(chatId: number) {
+    return this._secretChat.destroy(chatId);
+  }
+
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,

@@ -312,3 +312,22 @@ export function base64urlTobase64(text: string): string {
     .replace(/\-/g, '+')
     .replace(/_/g, '/');
 }
+
+// https://devimalplanet.com/how-to-generate-random-number-in-range-javascript#generate-random-bigint-between-low-and-high
+export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint) {
+  if (lowBigInt >= highBigInt) {
+    throw new Error('lowBigInt must be smaller than highBigInt');
+  }
+  const difference = highBigInt - lowBigInt;
+  const differenceLength = difference.toString().length;
+  let multiplier = '';
+  while (multiplier.length < differenceLength) {
+    multiplier += Math.random().toString().split('.')[1];
+  }
+  multiplier = multiplier.slice(0, differenceLength);
+  const divisor = '1' + '0'.repeat(differenceLength);
+
+  const randomDifference = (difference * BigInt(multiplier)) / BigInt(divisor);
+
+  return lowBigInt + randomDifference;
+}

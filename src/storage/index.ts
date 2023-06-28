@@ -11,3 +11,4 @@
 export { AbstractSession } from './Abstract.ts';
 export { BaseSession, getInputPeer } from './Session.ts';
 export { StringSession } from './StringSession.ts';
+export { SecretChat } from './SecretChat.ts';

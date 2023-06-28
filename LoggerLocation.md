@@ -5,15 +5,17 @@ You will se like this : `[n] message`.
 So, if you want to know the location of the logger called, please see the list below.
 
 `1 – 2, 106` : level is `(debug,error)` located on `src/connection/connection.ts`  
-`3` : level is `(debug)` located on `src/connection/webSocket.ts` _(removed)_  
+`3` : level is `(debug)` located on `src/connection/webSocket.ts`  
 `4 – 7` : level is `(debug)` located on `src/crypto/Aes.ts`  
 `8 – 9` : level is `(debug)` as RPCError, parent class located on`src/errors/RPCError.ts`  
 `10` : level is `(debug)` located on `src/raw/core/TLObject.ts`  
 `11 – 32` : level is `(debug,error)` located on `src/session/Auth.ts`  
 `32 – 72, 107 - 108` : level is `(debug,error,warning,info)` located on `src/session/Session.ts`  
-`73 – 80` : level is `(debug,info)` as BaseSession, parent class located on `src/storage/Session.ts`  
+`111 - 134` : level is `(debug,info,error)` located on `src/session/secretChats/SecretChat`  
+`73 – 80, 109 - 110` : level is `(debug,info)` as BaseSession, parent class located on `src/storage/Session.ts`  
 `81 – 99` : level is `(debug)` located on `src/storage/StringSession.ts`  
-`100 – 105` : level is `(info,warning)` located on `src/Client`
+`100, 104 - 105` : level is `(info,warning)` located on `src/client/Session.ts`  
+`101 - 103` : level is `(info,error)` located on `src/client/Auth.ts`
 
 ## Why this file is created
 

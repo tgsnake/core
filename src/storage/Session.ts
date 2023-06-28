@@ -13,6 +13,7 @@ import { AbstractSession } from './Abstract.ts';
 import { Raw } from '../raw/index.ts';
 import { getChannelId } from '../helpers.ts';
 import { inspect } from '../platform.deno.ts';
+import type { SecretChat } from './SecretChat.ts';
 
 /**
  * Get a valid InputPeer from the available data session.
@@ -55,6 +56,7 @@ export class BaseSession extends AbstractSession {
     bigint,
     [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
   >();
+  protected _secretChats: Map<number, SecretChat> = new Map<number, SecretChat>();
   protected _authKey!: Buffer;
   protected _testMode: boolean = false;
   protected _apiId!: number;
@@ -109,6 +111,9 @@ export class BaseSession extends AbstractSession {
   get peers() {
     return this._peers;
   }
+  get secretChats() {
+    return this._secretChats;
+  }
 
   async load() {}
   async delete() {}
@@ -140,6 +145,19 @@ export class BaseSession extends AbstractSession {
       this._peers.set(peer[0], peer);
     }
   }
+  async updateSecretChats(chats: Array<SecretChat>) {
+    Logger.debug(`[109] Updating ${chats.length} secret chats`);
+    for (let chat of chats) {
+      this._secretChats.set(chat.id, chat);
+    }
+  }
+  async getSecretChatById(id: number) {
+    Logger.debug(`[110] Getting secret chat by id: ${id}`);
+    let chat = this._secretChats.get(id);
+    if (chat) {
+      return chat;
+    }
+  }
   async getPeerById(id: bigint) {
     Logger.debug(`[77] Getting peer by id: ${id}`);
     let peer = this._peers.get(id);
@@ -162,6 +180,12 @@ export class BaseSession extends AbstractSession {
         return getInputPeer(peer[0], peer[1], peer[2]);
       }
     }
+  }
+  async removeSecretChatById(id: number) {
+    if (this._secretChats.has(id)) {
+      this._secretChats.delete(id);
+    }
+    return true;
   }
   exportString() {
     // >BI?256sQ?

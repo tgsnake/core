@@ -9,6 +9,7 @@
  */
 
 import { Raw } from '../raw/index.ts';
+import type { SecretChat } from './SecretChat.ts';
 
 /**
  * @class AbstractSession
@@ -34,6 +35,10 @@ export abstract class AbstractSession {
     bigint,
     [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
   >;
+  /**
+   * Collective of secret chat.
+   */
+  protected abstract _secretChats: Map<number, SecretChat>;
   /**
    * Bytes Authkey for user login.
    */
@@ -129,6 +134,7 @@ export abstract class AbstractSession {
       phoneNumber?: string | undefined
     ]
   >;
+  abstract get secretChats(): Map<number, SecretChat>;
   /**
    * Load the session
    */
@@ -156,6 +162,16 @@ export abstract class AbstractSession {
     >
   ): Promise<void>;
   /**
+   * Save secret chat into cache.
+   * @param {Array} chats - Collection of secret chats will be saved to cache.
+   */
+  abstract updateSecretChats(chats: Array<SecretChat>);
+  /**
+   * Get the input secret chat or secret chat info with given id.
+   * @param {number} id - Chat Id which will be used to find input secret chat or secret chat object.
+   */
+  abstract getSecretChatById(id: number): Promise<SecretChat | undefined>;
+  /**
    * Get peer by their given id from cache.
    * @param {BigInt} id - User id will be search on cache.
    */
@@ -176,6 +192,11 @@ export abstract class AbstractSession {
   abstract getPeerByPhoneNumber(
     phoneNumber: string
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
+  /**
+   * Remove secret chat by id.
+   * @param {Number} id - secret chat id which will removed.
+   */
+  abstract removeSecretChatById(id: number): Promise<boolean>;
   /**
    * Export session to valid string.
    */
