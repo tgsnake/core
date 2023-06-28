@@ -553,9 +553,9 @@ export class SecretChat {
       try {
         decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
       } catch (error) {
-        if(error instanceof SecretChatError.FingerprintMismatch){
-          await this.destroy(message.chatId)
-          throw error
+        if (error instanceof SecretChatError.FingerprintMismatch) {
+          await this.destroy(message.chatId);
+          throw error;
         }
         decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 1);
         peer.mtproto = 1;
@@ -565,9 +565,9 @@ export class SecretChat {
       try {
         decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
       } catch (error) {
-        if(error instanceof SecretChatError.FingerprintMismatch){
-          await this.destroy(message.chatId)
-          throw error
+        if (error instanceof SecretChatError.FingerprintMismatch) {
+          await this.destroy(message.chatId);
+          throw error;
         }
         decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 2);
         peer.mtproto = 2;

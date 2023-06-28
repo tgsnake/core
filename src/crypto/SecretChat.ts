@@ -35,7 +35,7 @@ export function kdf(
   v1: boolean = false
 ): Array<Buffer> {
   // https://corefork.telegram.org/api/end-to-end#serialization-and-encryption-of-outgoing-messages
-  const x = v1 ? 0 : isAdmin ? 0 : 8;
+  const x = isAdmin ? 8 : 0;
   if (v1) {
     // https://corefork.telegram.org/api/end-to-end_v1#serialization-and-encryption-of-outgoing-messages
     const sha1A = sha1(Buffer.concat([msgKey, sharedKey.slice(x, x + 32)]));
@@ -87,7 +87,7 @@ export function pack(
   }
   const bytesmsg = msg.write();
   const length = Buffer.alloc(4);
-  length.writeInt32LE(bytesmsg.length, 0);
+  length.writeUInt32LE(bytesmsg.length, 0);
   const data = Buffer.concat([length, bytesmsg]);
   const padding = Buffer.from(crypto.randomBytes(mod(-(data.length + 16), 16) + 16));
   const paddedMsg = Buffer.concat([data, padding]);
@@ -118,12 +118,13 @@ export async function unpack(
   const [aesKey, aesIv] =
     mtproto === 1 ? kdf(sharedKey, msgKey, isAdmin, true) : kdf(sharedKey, msgKey, isAdmin, false);
   const decryptedMsg = new BytesIO(ige256Decrypt(encryptedMsg, aesKey, aesIv));
-  const msgLength = decryptedMsg.readInt32LE();
-  const payload = decryptedMsg.read(msgLength);
-  const padding = decryptedMsg.read();
+  const msgLength = decryptedMsg.readUInt32LE();
+  const payload = decryptedMsg.read();
+  const msg = await TLObject.read(new BytesIO(payload));
+  const padding = payload.slice(msgLength);
   const msgKeyLarge = sha256(
     Buffer.concat([
-      sharedKey.slice(88 + (isAdmin ? 0 : 8), 88 + (isAdmin ? 0 : 8) + 32),
+      sharedKey.slice(88 + (isAdmin ? 8 : 0), 88 + (isAdmin ? 8 : 0) + 32),
       decryptedMsg.buffer,
     ])
   );
@@ -131,7 +132,7 @@ export async function unpack(
     mtproto === 1
       ? sha1(decryptedMsg.buffer.slice(0, 4 + msgLength)).slice(-16)
       : msgKeyLarge.slice(8, 8 + 16);
-  const msg = await TLObject.read(new BytesIO(payload));
+
   SecurityCheckMismatch.check(
     padding.length >= 12 && padding.length <= 1024,
     'Payload padding is lower than 12 or bigger than 1024'
