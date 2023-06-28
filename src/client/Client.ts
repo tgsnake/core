@@ -232,6 +232,12 @@ export class Client {
                 (up as Raw.UpdateEncryption).chat as Raw.EncryptedChat
               );
             }
+            if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatDiscarded) {
+              await this._storage.removeSecretChatById(
+                ((up as Raw.UpdateEncryption).chat as Raw.EncryptedChatDiscarded).id
+              );
+              return update;
+            }
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatRequested) {
               return await this._secretChat.accept(
                 (up as Raw.UpdateEncryption).chat as Raw.EncryptedChatRequested
