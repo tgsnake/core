@@ -65,7 +65,7 @@ export class SecretChatMessage extends TLObject {
     | Raw.sclayer17.DecryptedMessage
     | Raw.sclayer45.DecryptedMessage
     | Raw.sclayer73.DecryptedMessage;
-  file?: Raw.TypeEncryptedFile;
+  file!: Raw.TypeEncryptedFile;
 
   constructor(params: {
     randomId: bigint;
@@ -76,7 +76,7 @@ export class SecretChatMessage extends TLObject {
       | Raw.sclayer17.DecryptedMessage
       | Raw.sclayer45.DecryptedMessage
       | Raw.sclayer73.DecryptedMessage;
-    file?: Raw.TypeEncryptedFile;
+    file: Raw.TypeEncryptedFile;
   }) {
     super();
     this.classType = 'modified_types_EncryptedMessage';

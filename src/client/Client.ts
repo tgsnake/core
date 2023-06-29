@@ -326,7 +326,6 @@ export class Client {
             await this._secretChat.notifyLayer(modUpdate.message.chatId);
           }
         }
-        return modUpdate;
       }
     }
     this._handler.forEach((callback) => {
