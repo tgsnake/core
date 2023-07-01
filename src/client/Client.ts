@@ -261,37 +261,37 @@ export class Client {
       const msg = (modUpdate.message as SecretChatMessageService).message;
       if ('action' in msg) {
         const action = msg.action;
-        if (action instanceof Raw.sclayer20.DecryptedMessageActionRequestKey) {
+        if (action instanceof Raw.DecryptedMessageActionRequestKey20) {
           return await this._secretChat.acceptRekeying(
             modUpdate.message.chatId,
-            action as Raw.sclayer20.DecryptedMessageActionRequestKey
+            action as Raw.DecryptedMessageActionRequestKey20
           );
         }
-        if (action instanceof Raw.sclayer20.DecryptedMessageActionAcceptKey) {
+        if (action instanceof Raw.DecryptedMessageActionAcceptKey20) {
           return await this._secretChat.commitRekeying(
             modUpdate.message.chatId,
-            action as Raw.sclayer20.DecryptedMessageActionAcceptKey
+            action as Raw.DecryptedMessageActionAcceptKey20
           );
         }
-        if (action instanceof Raw.sclayer20.DecryptedMessageActionCommitKey) {
+        if (action instanceof Raw.DecryptedMessageActionCommitKey20) {
           return await this._secretChat.finalRekeying(
             modUpdate.message.chatId,
-            action as Raw.sclayer20.DecryptedMessageActionCommitKey
+            action as Raw.DecryptedMessageActionCommitKey20
           );
         }
-        if (action instanceof Raw.sclayer20.DecryptedMessageActionNoop) {
+        if (action instanceof Raw.DecryptedMessageActionNoop20) {
           return modUpdate;
         }
-        if (action instanceof Raw.sclayer17.DecryptedMessageActionNotifyLayer) {
+        if (action instanceof Raw.DecryptedMessageActionNotifyLayer17) {
           const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
           if (peer) {
-            peer.layer = (action as Raw.sclayer17.DecryptedMessageActionNotifyLayer).layer;
-            if ((action as Raw.sclayer17.DecryptedMessageActionNotifyLayer).layer < 73) {
+            peer.layer = (action as Raw.DecryptedMessageActionNotifyLayer17).layer;
+            if ((action as Raw.DecryptedMessageActionNotifyLayer17).layer < 73) {
               peer.mtproto = 1;
             }
             await peer.update(this._storage);
             if (
-              (action as Raw.sclayer17.DecryptedMessageActionNotifyLayer).layer >= 17 &&
+              (action as Raw.DecryptedMessageActionNotifyLayer17).layer >= 17 &&
               Date.now() / 1000 - peer.created > 15
             ) {
               await this._secretChat.notifyLayer(modUpdate.message.chatId);
@@ -299,10 +299,10 @@ export class Client {
           }
           return modUpdate;
         }
-        if (action instanceof Raw.sclayer8.DecryptedMessageActionSetMessageTTL) {
+        if (action instanceof Raw.DecryptedMessageActionSetMessageTTL8) {
           const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
           if (peer) {
-            peer.ttl = (action as Raw.sclayer8.DecryptedMessageActionSetMessageTTL).ttlSeconds;
+            peer.ttl = (action as Raw.DecryptedMessageActionSetMessageTTL8).ttlSeconds;
             await peer.update(this._storage);
           }
           return modUpdate;
@@ -311,16 +311,16 @@ export class Client {
     }
     if (modUpdate.message instanceof SecretChatMessage) {
       const msg = (modUpdate.message as SecretChatMessage).message;
-      if (msg instanceof Raw.sclayer17.DecryptedMessageLayer) {
+      if (msg instanceof Raw.DecryptedMessageLayer17) {
         const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
         if (peer) {
           peer.inSeqNo += 1;
-          if ((msg as Raw.sclayer17.DecryptedMessageLayer).layer >= 17) {
-            peer.layer = (msg as Raw.sclayer17.DecryptedMessageLayer).layer;
+          if ((msg as Raw.DecryptedMessageLayer17).layer >= 17) {
+            peer.layer = (msg as Raw.DecryptedMessageLayer17).layer;
           }
           await peer.update(this._storage);
           if (
-            (msg as Raw.sclayer17.DecryptedMessageLayer).layer >= 17 &&
+            (msg as Raw.DecryptedMessageLayer17).layer >= 17 &&
             Date.now() / 1000 - peer.created > 15
           ) {
             await this._secretChat.notifyLayer(modUpdate.message.chatId);

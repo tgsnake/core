@@ -125,10 +125,21 @@ function parseArgName(argname) {
   }
 }
 
+function getLastMatch(inputText, regex) {
+  const match = inputText.match(new RegExp(regex, 'g'));
+  if (match) {
+    return match[match.length - 1].match(regex);
+  }
+  return match;
+}
+
 function start(source, template) {
   let layer;
+  let currentLayer;
   let section = 'types';
-  let hsclayer = 8; // Highest secret chat schema layer, the initial schema is 8
+  let hsclayer = Number(getLastMatch(source, layerSecretChat)[1])
+    ? Number(getLastMatch(source, layerSecretChat)[1])
+    : 8; // Highest secret chat schema layer, the initial schema is 8
   let typesMap = new Map();
   let typeSubclassMap = new Map();
   let constructorMap = new Map();
@@ -188,7 +199,7 @@ function start(source, template) {
     }
     if (layerSecretChat.test(line.trim())) {
       let match = line.trim().match(layerSecretChat);
-      hsclayer = match[1];
+      currentLayer = Number(match[1]);
       continue;
     }
     if (!line.startsWith('//')) {
@@ -209,6 +220,9 @@ function start(source, template) {
         name = snakeCaseToCamelCase(name);
       }
       name = Uppercase(name);
+      if (currentLayer) {
+        name = `${name}${currentLayer}`;
+      }
       // to prevent clashes, ignore schemas that have the same id
       if (!passedId.includes(id)) {
         allTLObject += `\n  0x${id} : "Raw.${namespace ?? ''}${name}",`;
@@ -216,21 +230,23 @@ function start(source, template) {
         if (section === 'functions') {
           typeTLFn.push(`Raw.${namespace ?? ''}${name}`);
         }
-        if (typeSubclassMap.has(crc32(results))) {
-          typeSubclassMap.set(
-            crc32(results),
-            `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
-          );
-          if (Uppercase(full) === results) {
+        if (section === 'types') {
+          if (typeSubclassMap.has(crc32(results))) {
             typeSubclassMap.set(
-              crc32(camelToSnakeCase(full)),
+              crc32(results),
               `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
             );
-          }
-        } else {
-          typeSubclassMap.set(crc32(results), `Raw.${namespace ?? ''}${name}`);
-          if (Uppercase(full) === results) {
-            typeSubclassMap.set(crc32(camelToSnakeCase(full)), `Raw.${namespace ?? ''}${name}`);
+            if (Uppercase(full) === results) {
+              typeSubclassMap.set(
+                crc32(camelToSnakeCase(full)),
+                `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
+              );
+            }
+          } else {
+            typeSubclassMap.set(crc32(results), `Raw.${namespace ?? ''}${name}`);
+            if (Uppercase(full) === results) {
+              typeSubclassMap.set(crc32(camelToSnakeCase(full)), `Raw.${namespace ?? ''}${name}`);
+            }
           }
         }
         for (let [argFull, argName, argType] of execAll(line.trim(), reArgs)) {

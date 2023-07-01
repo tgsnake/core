@@ -18,7 +18,12 @@ import { TLObject } from './TLObject.ts';
 export class UpdateSecretChatMessage extends TLObject {
   message!: SecretChatMessage | SecretChatMessageService;
   qts!: number;
-  constructor(params: { message: SecretChatMessage | SecretChatMessageService; qts: number }) {
+  _original!: Raw.UpdateNewEncryptedMessage;
+  constructor(params: {
+    message: SecretChatMessage | SecretChatMessageService;
+    qts: number;
+    original: Raw.UpdateNewEncryptedMessage;
+  }) {
     super();
     this.classType = 'modified_types_UpdateNewEncryptedMessage';
     this.className = 'UpdateSecretChatMessage';
@@ -27,6 +32,7 @@ export class UpdateSecretChatMessage extends TLObject {
     this.slots = ['message', 'qts'];
     this.message = params.message;
     this.qts = params.qts;
+    this._original = params.original;
   }
   static async generate(
     update: Raw.UpdateNewEncryptedMessage,
@@ -42,6 +48,7 @@ export class UpdateSecretChatMessage extends TLObject {
           message: decrypted!,
         }),
         qts: update.qts,
+        original: update,
       });
     }
     return new UpdateSecretChatMessage({
@@ -53,6 +60,7 @@ export class UpdateSecretChatMessage extends TLObject {
         message: decrypted!,
       }),
       qts: update.qts,
+      original: update,
     });
   }
 }
@@ -61,10 +69,10 @@ export class SecretChatMessage extends TLObject {
   chatId!: number;
   date!: number;
   message!:
-    | Raw.sclayer8.DecryptedMessage
-    | Raw.sclayer17.DecryptedMessage
-    | Raw.sclayer45.DecryptedMessage
-    | Raw.sclayer73.DecryptedMessage;
+    | Raw.DecryptedMessage8
+    | Raw.DecryptedMessage17
+    | Raw.DecryptedMessage45
+    | Raw.DecryptedMessage73;
   file!: Raw.TypeEncryptedFile;
 
   constructor(params: {
@@ -72,10 +80,10 @@ export class SecretChatMessage extends TLObject {
     chatId: number;
     date: number;
     message:
-      | Raw.sclayer8.DecryptedMessage
-      | Raw.sclayer17.DecryptedMessage
-      | Raw.sclayer45.DecryptedMessage
-      | Raw.sclayer73.DecryptedMessage;
+      | Raw.DecryptedMessage8
+      | Raw.DecryptedMessage17
+      | Raw.DecryptedMessage45
+      | Raw.DecryptedMessage73;
     file: Raw.TypeEncryptedFile;
   }) {
     super();
@@ -95,12 +103,12 @@ export class SecretChatMessageService extends TLObject {
   randomId!: bigint;
   chatId!: number;
   date!: number;
-  message!: Raw.sclayer8.DecryptedMessageService | Raw.sclayer17.DecryptedMessageService;
+  message!: Raw.DecryptedMessageService8 | Raw.DecryptedMessageService17;
   constructor(params: {
     randomId: bigint;
     chatId: number;
     date: number;
-    message: Raw.sclayer8.DecryptedMessageService | Raw.sclayer17.DecryptedMessageService;
+    message: Raw.DecryptedMessageService8 | Raw.DecryptedMessageService17;
   }) {
     super();
     this.classType = 'modified_types_EncryptedMessageService';

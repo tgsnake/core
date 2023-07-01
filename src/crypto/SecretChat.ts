@@ -75,9 +75,9 @@ export function pack(
   layer: number,
   mtproto: number = 2
 ): Buffer {
-  let msg: Raw.sclayer17.DecryptedMessageLayer | Raw.TypeDecryptedMessage = message;
+  let msg: Raw.DecryptedMessageLayer17 | Raw.TypeDecryptedMessage = message;
   if (layer > 8) {
-    msg = new Raw.sclayer17.DecryptedMessageLayer({
+    msg = new Raw.DecryptedMessageLayer17({
       randomBytes: crypto.randomBytes(15 + 4 * Math.floor(Math.random() * 3)), // generate random bytes at least 15 bytes
       layer: layer,
       inSeqNo: inSeqNo,

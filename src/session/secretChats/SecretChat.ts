@@ -226,10 +226,10 @@ export class SecretChat {
           randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
-            new Raw.sclayer8.DecryptedMessageService({
+            new Raw.DecryptedMessageService8({
               randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
               randomBytes: crypto.randomBytes(15 + 4 * Math.floor(Math.random() * 2)),
-              action: new Raw.sclayer17.DecryptedMessageActionNotifyLayer({
+              action: new Raw.DecryptedMessageActionNotifyLayer17({
                 layer: Math.min(peer.layer, Raw.Layer),
               }),
             })
@@ -300,9 +300,9 @@ export class SecretChat {
         randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.sclayer17.DecryptedMessageService({
+          new Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
-            action: new Raw.sclayer20.DecryptedMessageActionRequestKey({
+            action: new Raw.DecryptedMessageActionRequestKey20({
               gA: await toBuffer(gA, 256, false),
               exchangeId: e,
             }),
@@ -315,9 +315,9 @@ export class SecretChat {
    * Accept request generate a new keys.
    * https://core.telegram.org/api/end-to-end/pfs#2-decryptedmessageactionacceptkey
    * @param {Number} chatId - Secret chat id which will be accept re-keying
-   * @param {Raw.sclayer20.DecryptedMessageActionRequestKey} - An action used to accept and create new authKey.
+   * @param {Raw.DecryptedMessageActionRequestKey20} - An action used to accept and create new authKey.
    */
-  async acceptRekeying(chatId: number, action: Raw.sclayer20.DecryptedMessageActionRequestKey) {
+  async acceptRekeying(chatId: number, action: Raw.DecryptedMessageActionRequestKey20) {
     Logger.debug(`[116] re-keying ${chatId}: accepting`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -374,9 +374,9 @@ export class SecretChat {
         randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.sclayer17.DecryptedMessageService({
+          new Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
-            action: new Raw.sclayer20.DecryptedMessageActionAcceptKey({
+            action: new Raw.DecryptedMessageActionAcceptKey20({
               gB: await toBuffer(gB, 256, false),
               exchangeId: action.exchangeId,
               keyFingerprint: fingerprint.readBigInt64LE(),
@@ -390,9 +390,9 @@ export class SecretChat {
    * Commit a new keys.
    * https://corefork.telegram.org/api/end-to-end/pfs#3-decryptedmessageactioncommitkey
    * @param {Number} chatId - Secret chat id which will be changed the auth key.
-   * @param {Raw.sclayer20.DecryptedMessageActionRequestKey} action - An action used to commit the new authKey.
+   * @param {Raw.DecryptedMessageActionRequestKey20} action - An action used to commit the new authKey.
    */
-  async commitRekeying(chatId: number, action: Raw.sclayer20.DecryptedMessageActionAcceptKey) {
+  async commitRekeying(chatId: number, action: Raw.DecryptedMessageActionAcceptKey20) {
     Logger.debug(`[120] re-keying ${chatId}: commiting`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -436,9 +436,9 @@ export class SecretChat {
           randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
-            new Raw.sclayer17.DecryptedMessageService({
+            new Raw.DecryptedMessageService17({
               randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
-              action: new Raw.sclayer20.DecryptedMessageActionAbortKey({
+              action: new Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
             })
@@ -453,9 +453,9 @@ export class SecretChat {
         randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.sclayer17.DecryptedMessageService({
+          new Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
-            action: new Raw.sclayer20.DecryptedMessageActionCommitKey({
+            action: new Raw.DecryptedMessageActionCommitKey20({
               exchangeId: action.exchangeId,
               keyFingerprint: action.keyFingerprint,
             }),
@@ -481,9 +481,9 @@ export class SecretChat {
    * Complete the re-keying
    * https://corefork.telegram.org/api/end-to-end/pfs#4-final-step
    * @param {Number} chatId - Secret chat id which will be Completing the re-keying.
-   * @param {Raw.sclayer20.DecryptedMessageActionCommitKey} action - An action used to completed re-keying.
+   * @param {Raw.DecryptedMessageActionCommitKey20} action - An action used to completed re-keying.
    */
-  async finalRekeying(chatId: number, action: Raw.sclayer20.DecryptedMessageActionCommitKey) {
+  async finalRekeying(chatId: number, action: Raw.DecryptedMessageActionCommitKey20) {
     Logger.debug(`[123] re-keying ${chatId}: finishing`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -503,9 +503,9 @@ export class SecretChat {
           randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
-            new Raw.sclayer17.DecryptedMessageService({
+            new Raw.DecryptedMessageService17({
               randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
-              action: new Raw.sclayer20.DecryptedMessageActionAbortKey({
+              action: new Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
             })
@@ -532,9 +532,9 @@ export class SecretChat {
         randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.sclayer17.DecryptedMessageService({
+          new Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
-            action: new Raw.sclayer20.DecryptedMessageActionNoop(),
+            action: new Raw.DecryptedMessageActionNoop20(),
           })
         ),
       })
