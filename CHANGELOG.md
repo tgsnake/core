@@ -1,4 +1,14 @@
- <a name="1.7.0"></a>
+ <a name="1.7.1"></a>
+
+## [1.7.1](https://github.com/tgsnake/core/compare/1.7.0...1.7.1)
+
+> 2023-06-29
+
+### Change
+
+- Update CHANGELOG.md  ### Fix
+
+- handler not receive update from secret chat   <a name="1.7.0"></a>
 
 ## [1.7.0](https://github.com/tgsnake/core/compare/1.6.5...1.7.0)
 
