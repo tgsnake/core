@@ -39,12 +39,14 @@ export class SecretChat {
   private _dhP!: bigint;
   private _mutex!: Mutex;
   private _tempAuthKey!: Map<bigint, Buffer>;
+  private _waiting!: Array<number>;
 
   constructor(storage: AbstractSession, client: Client) {
     this._storage = storage;
     this._client = client;
     this._mutex = new Mutex();
     this._tempAuthKey = new Map();
+    this._waiting = [];
   }
   /**
    * Request the DH Config for creating key with Diffie-Hellman.
@@ -114,6 +116,7 @@ export class SecretChat {
     } finally {
       release();
     }
+    this._waiting.push(res.id);
     return res;
   }
   /**
@@ -210,6 +213,10 @@ export class SecretChat {
       });
     } finally {
       release();
+    }
+    let index = this._waiting.findIndex((id) => id === chat.id);
+    if (index >= 0) {
+      this._waiting.splice(index, 1);
     }
     return this.notifyLayer(chat.id);
   }
@@ -544,48 +551,50 @@ export class SecretChat {
    * Decrypt encrypted message
    */
   async decrypt(message: Raw.TypeEncryptedMessage) {
-    const peer = await this._storage.getSecretChatById(message.chatId);
-    if (!peer) {
-      throw new SecretChatError.ChatNotFound(message.chatId);
-    }
     let decrypted;
-    if (peer.mtproto === 2) {
-      try {
-        decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
-      } catch (error) {
-        if (error instanceof SecretChatError.FingerprintMismatch) {
-          await this.destroy(message.chatId);
-          throw error;
-        }
-        decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 1);
-        peer.mtproto = 1;
-        Logger.debug(`[112] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`);
+    if (!this._waiting.includes(message.chatId)) {
+      const peer = await this._storage.getSecretChatById(message.chatId);
+      if (!peer) {
+        throw new SecretChatError.ChatNotFound(message.chatId);
       }
-    } else {
-      try {
-        decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
-      } catch (error) {
-        if (error instanceof SecretChatError.FingerprintMismatch) {
-          await this.destroy(message.chatId);
-          throw error;
+      if (peer.mtproto === 2) {
+        try {
+          decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
+        } catch (error) {
+          if (error instanceof SecretChatError.FingerprintMismatch) {
+            await this.destroy(message.chatId);
+            throw error;
+          }
+          decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 1);
+          peer.mtproto = 1;
+          Logger.debug(`[112] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`);
         }
-        decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 2);
-        peer.mtproto = 2;
-        Logger.debug(`[113] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`);
+      } else {
+        try {
+          decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
+        } catch (error) {
+          if (error instanceof SecretChatError.FingerprintMismatch) {
+            await this.destroy(message.chatId);
+            throw error;
+          }
+          decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 2);
+          peer.mtproto = 2;
+          Logger.debug(`[113] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`);
+        }
       }
-    }
-    const release = await this._mutex.acquire();
-    try {
-      peer.timeRekey -= 1;
-      await peer.update(this._storage); // keep it sync!
-    } finally {
-      release();
-    }
-    if (
-      (peer.timeRekey <= 0 || Date.now() / 1000 - peer.changed < 7 * 24 * 60 * 60) &&
-      peer.rekeyStep === 0
-    ) {
-      await this.rekeying(message.chatId);
+      const release = await this._mutex.acquire();
+      try {
+        peer.timeRekey -= 1;
+        await peer.update(this._storage); // keep it sync!
+      } finally {
+        release();
+      }
+      if (
+        (peer.timeRekey <= 0 || Date.now() / 1000 - peer.changed < 7 * 24 * 60 * 60) &&
+        peer.rekeyStep === 0
+      ) {
+        await this.rekeying(message.chatId);
+      }
     }
     return decrypted;
   }
