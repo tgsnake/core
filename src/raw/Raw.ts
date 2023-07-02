@@ -13,7 +13,7 @@
  *               This file is auto generate.                *
  *         All change made in this file will be lost!       *
  ***********************************************************/
-import { TLObject, BytesIO, Primitive } from './core/index.ts';
+import { TLObject, BytesIO, Primitive, type UpdateSecretChatMessage } from './core/index.ts';
 
 /**
  * This is a telegram schema, so you can see the documentation in https://core.telegram.org/schema.
@@ -1147,7 +1147,8 @@ export namespace Raw {
     | Raw.UpdateChannelPinnedTopics
     | Raw.UpdateUser
     | Raw.UpdateAutoSaveSettings
-    | Raw.UpdateGroupInvitePrivacyForbidden;
+    | Raw.UpdateGroupInvitePrivacyForbidden
+    | UpdateSecretChatMessage;
   export type TypeBotMenuButton =
     | Raw.BotMenuButtonDefault
     | Raw.BotMenuButtonCommands

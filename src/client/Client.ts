@@ -141,7 +141,7 @@ export class Client {
   /** @hidden */
   _secretChat!: SecretChat;
   /** @hidden */
-  private _handler: Array<{ (update: Raw.TypeUpdates | UpdateSecretChatMessage): any }> = [];
+  private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
    * Client Constructor.
    * @param {Object} session - What the session will be used for login to telegram.
@@ -220,34 +220,39 @@ export class Client {
   /**
    * Handling new updates from telegram.
    */
-  async handleUpdate(update: Raw.Updates): Promise<Raw.Updates> {
+  async handleUpdate(update: Raw.TypeUpdates): Promise<Raw.TypeUpdates> {
     if (!this._noUpdates) {
-      await this.fetchPeers(update.users ?? []);
-      await this.fetchPeers(update.users ?? []);
+      await this.fetchPeers('users' in update ? update.users : []);
+      await this.fetchPeers('chats' in update ? update.chats : []);
       if (update instanceof Raw.Updates) {
+        let parsed: Array<Raw.TypeUpdate> = [];
         for (const up of update.updates) {
           if (up instanceof Raw.UpdateEncryption) {
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChat) {
-              return await this._secretChat.finish(
-                (up as Raw.UpdateEncryption).chat as Raw.EncryptedChat
-              );
+              await this._secretChat.finish((up as Raw.UpdateEncryption).chat as Raw.EncryptedChat);
             }
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatDiscarded) {
               await this._storage.removeSecretChatById(
                 ((up as Raw.UpdateEncryption).chat as Raw.EncryptedChatDiscarded).id
               );
-              return update;
             }
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatRequested) {
-              return await this._secretChat.accept(
+              await this._secretChat.accept(
                 (up as Raw.UpdateEncryption).chat as Raw.EncryptedChatRequested
               );
             }
-          }
-          if (up instanceof Raw.UpdateNewEncryptedMessage) {
-            return this._handleSecretChatUpdate(up as Raw.UpdateNewEncryptedMessage);
+          } else if (up instanceof Raw.UpdateNewEncryptedMessage) {
+            const modUpdate = await this._handleSecretChatUpdate(
+              up as Raw.UpdateNewEncryptedMessage
+            );
+            if (modUpdate) {
+              parsed.push(modUpdate);
+            }
+          } else {
+            parsed.push(up);
           }
         }
+        update.updates = parsed;
       }
       this._handler.forEach((callback) => {
         return callback(update);
@@ -262,25 +267,28 @@ export class Client {
       if ('action' in msg) {
         const action = msg.action;
         if (action instanceof Raw.DecryptedMessageActionRequestKey20) {
-          return await this._secretChat.acceptRekeying(
+          await this._secretChat.acceptRekeying(
             modUpdate.message.chatId,
             action as Raw.DecryptedMessageActionRequestKey20
           );
+          return false;
         }
         if (action instanceof Raw.DecryptedMessageActionAcceptKey20) {
-          return await this._secretChat.commitRekeying(
+          await this._secretChat.commitRekeying(
             modUpdate.message.chatId,
             action as Raw.DecryptedMessageActionAcceptKey20
           );
+          return false;
         }
         if (action instanceof Raw.DecryptedMessageActionCommitKey20) {
-          return await this._secretChat.finalRekeying(
+          await this._secretChat.finalRekeying(
             modUpdate.message.chatId,
             action as Raw.DecryptedMessageActionCommitKey20
           );
+          return false;
         }
         if (action instanceof Raw.DecryptedMessageActionNoop20) {
-          return modUpdate;
+          return false;
         }
         if (action instanceof Raw.DecryptedMessageActionNotifyLayer17) {
           const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
@@ -297,7 +305,7 @@ export class Client {
               await this._secretChat.notifyLayer(modUpdate.message.chatId);
             }
           }
-          return modUpdate;
+          return false;
         }
         if (action instanceof Raw.DecryptedMessageActionSetMessageTTL8) {
           const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
@@ -305,7 +313,7 @@ export class Client {
             peer.ttl = (action as Raw.DecryptedMessageActionSetMessageTTL8).ttlSeconds;
             await peer.update(this._storage);
           }
-          return modUpdate;
+          return false;
         }
       }
     }
@@ -328,17 +336,12 @@ export class Client {
         }
       }
     }
-    this._handler.forEach((callback) => {
-      return callback(modUpdate);
-    });
     return modUpdate;
   }
   /**
    * Add handler when update coming.
    */
-  async addHandler(callback: {
-    (update: Raw.TypeUpdates | UpdateSecretChatMessage): any;
-  }): Promise<any> {
+  async addHandler(callback: { (update: Raw.TypeUpdates): any }): Promise<any> {
     return this._handler.push(callback);
   }
   /**

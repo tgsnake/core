@@ -412,6 +412,7 @@ function start(source, template) {
     if (!typeSubclassMap.has(value)) {
       throw new Error(`Can't parsing type ${key} with id ${value}`);
     }
+    // console.log(key === 'TypeUpdate' ? value : '')
     if (key.includes('.')) {
       let [ns, ty] = key.split('.');
       constructorMap.set(
@@ -421,7 +422,9 @@ function start(source, template) {
     } else {
       constructorMap.set(
         '',
-        `  export type ${key} = ${typeSubclassMap.get(value)}\n${constructorMap.get('')}`
+        `  export type ${key} = ${typeSubclassMap.get(value)}${
+          key === 'TypeUpdate' ? ' | UpdateSecretChatMessage' : ''
+        }\n${constructorMap.get('')}`
       );
     }
   }

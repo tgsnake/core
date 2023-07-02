@@ -15,3 +15,8 @@ export { TLObject } from './TLObject.ts';
 export { GzipPacked } from './GzipPacked.ts';
 export { Message } from './Message.ts';
 export { MsgContainer } from './MsgContainer.ts';
+export {
+  UpdateSecretChatMessage,
+  SecretChatMessage,
+  SecretChatMessageService,
+} from './UpdateSecretChat.ts';

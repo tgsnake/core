@@ -8,11 +8,16 @@
  * it under the terms of the MIT License as published.
  */
 
-export { BytesIO, Primitive, TLObject, GzipPacked, Message, MsgContainer } from './core/index.ts';
-export { Object } from './All.ts';
-export { Raw } from './Raw.ts';
 export {
+  BytesIO,
+  Primitive,
+  TLObject,
+  GzipPacked,
+  Message,
+  MsgContainer,
   UpdateSecretChatMessage,
   SecretChatMessage,
   SecretChatMessageService,
-} from './core/UpdateSecretChat.ts';
+} from './core/index.ts';
+export { Object } from './All.ts';
+export { Raw } from './Raw.ts';

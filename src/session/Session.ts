@@ -138,7 +138,7 @@ export class Session {
           msgId = msg.body.msgId;
         } else {
           Logger.debug(`[43] Handling update ${msg.body.constructor.name}.`);
-          this._client.handleUpdate(msg.body as unknown as Raw.Updates);
+          this._client.handleUpdate(msg.body);
         }
 
         if (msgId !== undefined) {
