@@ -27,6 +27,10 @@ async function start(version) {
         body: JSON.stringify({
           chat_id: '-1001515207777',
           message_thread_id: 3953,
+          protect_content : true,
+          disable_notification : true,
+          disable_web_page_preview : true,
+          allow_sending_without_reply : true,
           text: replacer(text, {
             VERSION: version,
             DATE: new Date().toLocaleDateString('en-US', {
