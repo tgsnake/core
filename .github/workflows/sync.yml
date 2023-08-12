@@ -13,10 +13,12 @@ jobs:
         with:
           node-version: '18.x'
       - name: Sync TLSchema
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           yarn config set enableImmutableInstalls false
           yarn install
-          yarn build:sync
+          BOT_TOKEN="$BOT_TOKEN" yarn build:sync
           yarn build:api
           yarn build
           yarn prettier
