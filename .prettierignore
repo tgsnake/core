@@ -4,3 +4,5 @@ lib/**
 .yarn/**
 # node module 
 node_modules/**
+# changelog 
+CHANGELOG.md
