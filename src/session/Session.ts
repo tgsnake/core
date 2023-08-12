@@ -69,7 +69,7 @@ export class Session {
     authKey: Buffer,
     testMode: boolean,
     proxy?: ProxyInterface,
-    isMedia: boolean = false
+    isMedia: boolean = false,
   ) {
     this._client = client;
     this._dcId = dcId;
@@ -89,7 +89,7 @@ export class Session {
         this._sessionId,
         this._authKey,
         this._authKeyId,
-        this._storedMsgId
+        this._storedMsgId,
       );
       let message = data.body instanceof MsgContainer ? data.body.messages : [data];
       Logger.debug(`[34] Reveive ${message.length} data.`);
@@ -109,7 +109,7 @@ export class Session {
         }
         if (msg.body instanceof Raw.MsgDetailedInfo || msg.body instanceof Raw.MsgNewDetailedInfo) {
           Logger.debug(
-            `[38] Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`
+            `[38] Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`,
           );
           this._pendingAcks.add(msg.body.answerMsgId);
           continue;
@@ -121,12 +121,12 @@ export class Session {
         let msgId;
         if (msg.body instanceof Raw.BadMsgNotification || msg.body instanceof Raw.BadServerSalt) {
           Logger.debug(
-            `[40] Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`
+            `[40] Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`,
           );
           msgId = msg.body.badMsgId;
         } else if (msg.body instanceof Raw.FutureSalts || msg.body instanceof Raw.RpcResult) {
           Logger.debug(
-            `[41] Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`
+            `[41] Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`,
           );
           msgId = msg.body.reqMsgId;
           if (msg.body instanceof Raw.RpcResult) {
@@ -145,7 +145,7 @@ export class Session {
           let promises = this._results.get(BigInt(msgId));
           if (promises !== undefined) {
             Logger.debug(
-              `[44] Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`
+              `[44] Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`,
             );
             promises.resolve(msg.body);
           }
@@ -158,7 +158,7 @@ export class Session {
             new Raw.MsgsAck({
               msgIds: Array.from(this._pendingAcks),
             }),
-            false
+            false,
           );
           Logger.debug(`[46] Clearing all pending acks`);
           this._pendingAcks.clear();
@@ -175,7 +175,7 @@ export class Session {
         Logger.error(
           `[49] Invalid to unpack ${packet.length} bytes packet cause: ${
             error.description ?? error.message
-          }`
+          }`,
         );
         return await this.stop();
       }
@@ -183,10 +183,10 @@ export class Session {
     }
   }
   private async _send(
-    data: Raw.TypesTLRequest,
+    data: TLObject,
     waitResponse: boolean = true,
-    timeout: number = this.WAIT_TIMEOUT
-  ) {
+    timeout: number = this.WAIT_TIMEOUT,
+  ): Promise<TLObject | undefined> {
     let msg = await this._msgFactory(data, this._msgId);
     let msgId = msg.msgId;
     if (waitResponse) {
@@ -197,7 +197,7 @@ export class Session {
       return;
     }
     Logger.debug(
-      `[50] Sending msg id ${msgId} (${data.className}), has ${msg.write().length} bytes message.`
+      `[50] Sending msg id ${msgId} (${data.className}), has ${msg.write().length} bytes message.`,
     );
     let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
@@ -259,7 +259,7 @@ export class Session {
             pingId: BigInt(0),
             disconnectDelay: this.WAIT_TIMEOUT + 10000,
           }),
-          false
+          false,
         );
       } catch (error: any) {
         Logger.error(`[56] Get error when trying ping to telegram :`, error);
@@ -327,13 +327,13 @@ export class Session {
     this.start();
   }
   async invoke(
-    data: Raw.TypesTLRequest,
+    data: TLObject,
     retries: number = this.MAX_RETRIES,
     timeout: number = this.WAIT_TIMEOUT,
-    sleepThreshold: number = this.SLEEP_THRESHOLD
-  ) {
+    sleepThreshold: number = this.SLEEP_THRESHOLD,
+  ): Promise<TLObject> {
     Logger.debug(
-      `[62] Invoking ${data.className} with parameters: ${retries} retries, ${timeout}ms timeout, ${sleepThreshold}ms sleep threshold.`
+      `[62] Invoking ${data.className} with parameters: ${retries} retries, ${timeout}ms timeout, ${sleepThreshold}ms sleep threshold.`,
     );
     if (!this._isConnected) {
       Logger.error(`[63] Can't sending request when client is unconnected.`);
@@ -367,7 +367,7 @@ export class Session {
               throw error;
             }
             Logger.warning(
-              `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`
+              `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`,
             );
             await sleep(amount);
           } else {
@@ -378,14 +378,14 @@ export class Session {
               Logger.warning(
                 `[66] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
                   error.message
-                }`
+                }`,
               );
             } else {
               Logger.info(
                 `[67] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
                   error.message
                 }`,
-                error
+                error,
               );
             }
             await sleep(500);
@@ -404,7 +404,7 @@ export class Session {
         this._proxy,
         this._isMedia,
         this._client._connectionMode,
-        this._client._local
+        this._client._local,
       );
       this._networkTask = true;
       try {
@@ -416,7 +416,7 @@ export class Session {
             pingId: BigInt(0),
           }),
           true,
-          this.START_TIMEOUT
+          this.START_TIMEOUT,
         );
         if (!this._client._isCdn) {
           await this._send(
@@ -434,13 +434,13 @@ export class Session {
               }),
             }),
             true,
-            this.START_TIMEOUT
+            this.START_TIMEOUT,
           );
         }
         Logger.info(`[69] Session initialized: Layer ${Raw.Layer}`);
         Logger.info(`[70] Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
         Logger.info(
-          `[71] System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`
+          `[71] System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`,
         );
         this._pingWorker();
         this._isConnected = true;

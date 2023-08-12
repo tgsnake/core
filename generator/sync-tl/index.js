@@ -21,7 +21,7 @@ async function getTl() {
       {
         method: 'GET',
         mode: 'cors',
-      }
+      },
     )
   ).text();
   const tl =
@@ -31,7 +31,7 @@ async function getTl() {
         {
           method: 'GET',
           mode: 'cors',
-        }
+        },
       )
     ).text()) +
     '\n\n' +
@@ -44,19 +44,19 @@ async function getTl() {
   if (+intTL !== +intPr) {
     fs.writeFileSync(
       path.join(__dirname, '../api/source/api.tl'),
-      `// https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/api.tl\n${tl}`
+      `// https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/api.tl\n${tl}`,
     );
     await notify.start(intTL);
   }
   if (+intTL !== +intMd) {
     fs.writeFileSync(
       path.join(__dirname, '../../README.md'),
-      readme.replace(reMd, `<b>Layer ${intTL}</b>`)
+      readme.replace(reMd, `<b>Layer ${intTL}</b>`),
     );
   }
   return;
 }
 console.log(
-  "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE THE api.tl and README.md\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:sync ---"
+  "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE THE api.tl and README.md\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:sync ---",
 );
 getTl();

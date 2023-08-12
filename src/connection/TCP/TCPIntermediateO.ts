@@ -57,7 +57,7 @@ export class TCPIntermediateO extends TCP {
             Buffer.from('00', 'hex'),
             Buffer.from('00', 'hex'),
             Buffer.from('00', 'hex'),
-          ])
+          ]),
         )
       ) {
         nonce[56] = nonce[57] = nonce[58] = nonce[59] = 0xee;
@@ -75,7 +75,7 @@ export class TCPIntermediateO extends TCP {
     let payload = ctr256Encrypt(
       Primitive.Int.write(data.length),
       this._encrypt[0],
-      this._encrypt[1]
+      this._encrypt[1],
     );
     return await super.send(payload);
   }

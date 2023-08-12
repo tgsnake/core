@@ -52,7 +52,7 @@ export function DataCenter(
   dcId: number,
   testMode: boolean,
   ipv6: boolean,
-  media: boolean
+  media: boolean,
 ): [ip: string, port: number] {
   // @ts-ignore
   if (isBrowser) {

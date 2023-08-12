@@ -14,7 +14,7 @@ export function bigintToBuffer(
   int: bigint,
   padding: number,
   litte: boolean = true,
-  signed: boolean = false
+  signed: boolean = false,
 ) {
   const bigintLength = int.toString(2).length;
   const bytes = Math.ceil(bigintLength / 8);

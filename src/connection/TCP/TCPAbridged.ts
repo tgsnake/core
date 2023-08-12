@@ -34,7 +34,7 @@ export class TCPAbridged extends TCP {
         Buffer.concat([
           Buffer.concat([Buffer.from('7f', 'hex'), bigintToBuffer(BigInt(length), 3)]),
           data,
-        ])
+        ]),
       );
     }
   }

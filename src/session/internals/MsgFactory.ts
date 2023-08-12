@@ -26,7 +26,7 @@ export function MsgFactory() {
       body,
       BigInt(msgId.getMsgId()),
       seqNo.getSeqNo(!notRelatedContent(body)),
-      body.write().length
+      body.write().length,
     );
   };
 }

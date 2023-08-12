@@ -623,8 +623,10 @@ export namespace Raw {
     | Raw.DecryptedMessageMediaVenue45
     | Raw.DecryptedMessageMediaWebPage45
     | Raw.DecryptedMessageMediaDocument143;
+  export type TypeExportedStoryLink = Raw.ExportedStoryLink;
   export type TypeInputChatlist = Raw.InputChatlistDialogFilter;
   export type TypeInputFolderPeer = Raw.InputFolderPeer;
+  export type TypeLangPackLanguage = Raw.LangPackLanguage;
   export type TypeInputPhoneCall = Raw.InputPhoneCall;
   export type TypeInputStickerSetItem = Raw.InputStickerSetItem;
   export type TypeInputStorePaymentPurpose =
@@ -645,6 +647,7 @@ export namespace Raw {
     | Raw.BotCommandScopePeerAdmins
     | Raw.BotCommandScopePeerUser;
   export type TypeChannelAdminLogEventsFilter = Raw.ChannelAdminLogEventsFilter;
+  export type TypeExportedMessageLink = Raw.ExportedMessageLink;
   export type TypeChannelParticipantsFilter =
     | Raw.ChannelParticipantsRecent
     | Raw.ChannelParticipantsAdmins
@@ -655,6 +658,9 @@ export namespace Raw {
     | Raw.ChannelParticipantsContacts
     | Raw.ChannelParticipantsMentions;
   export type TypeInputAppEvent = Raw.InputAppEvent;
+  export type TypeCdnConfig = Raw.CdnConfig;
+  export type TypeNearestDc = Raw.NearestDc;
+  export type TypeConfig = Raw.Config;
   export type TypeInputWebFileLocation =
     | Raw.InputWebFileLocation
     | Raw.InputWebFileGeoPointLocation
@@ -673,7 +679,24 @@ export namespace Raw {
   export type TypeChannelMessagesFilter =
     | Raw.ChannelMessagesFilterEmpty
     | Raw.ChannelMessagesFilter;
+  export type TypeAppWebViewResult = Raw.AppWebViewResultUrl;
   export type TypeInputBotApp = Raw.InputBotAppID | Raw.InputBotAppShortName;
+  export type TypeDefaultHistoryTTL = Raw.DefaultHistoryTTL;
+  export type TypeWebViewMessageSent = Raw.WebViewMessageSent;
+  export type TypeSimpleWebViewResult = Raw.SimpleWebViewResultUrl;
+  export type TypeWebViewResult = Raw.WebViewResultUrl;
+  export type TypeAttachMenuBotsBot = Raw.AttachMenuBotsBot;
+  export type TypeAttachMenuBots = Raw.AttachMenuBotsNotModified | Raw.AttachMenuBots;
+  export type TypeReadParticipantDate = Raw.ReadParticipantDate;
+  export type TypeDialogFilterSuggested = Raw.DialogFilterSuggested;
+  export type TypeUrlAuthResult =
+    | Raw.UrlAuthResultRequest
+    | Raw.UrlAuthResultAccepted
+    | Raw.UrlAuthResultDefault;
+  export type TypeEmojiURL = Raw.EmojiURL;
+  export type TypeEmojiLanguage = Raw.EmojiLanguage;
+  export type TypeEmojiKeywordsDifference = Raw.EmojiKeywordsDifference;
+  export type TypeChatOnlines = Raw.ChatOnlines;
   export type TypeInputSingleMedia = Raw.InputSingleMedia;
   export type TypeInputStickeredMedia =
     | Raw.InputStickeredMediaPhoto
@@ -695,12 +718,17 @@ export namespace Raw {
     | Raw.InputChatUploadedPhoto
     | Raw.InputChatPhoto;
   export type TypeInputReplyTo = Raw.InputReplyToMessage | Raw.InputReplyToStory;
+  export type TypeReceivedNotifyMessage = Raw.ReceivedNotifyMessage;
   export type TypeInputMessage =
     | Raw.InputMessageID
     | Raw.InputMessageReplyTo
     | Raw.InputMessagePinned
     | Raw.InputMessageCallbackQuery;
+  export type TypeExportedContactToken = Raw.ExportedContactToken;
+  export type TypeSavedContact = Raw.SavedPhoneContact;
   export type TypeInputContact = Raw.InputPhoneContact;
+  export type TypeContactStatus = Raw.ContactStatus;
+  export type TypeEmojiList = Raw.EmojiListNotModified | Raw.EmojiList;
   export type TypeGlobalPrivacySettings = Raw.GlobalPrivacySettings;
   export type TypeInputTheme = Raw.InputTheme | Raw.InputThemeSlug;
   export type TypeInputThemeSettings = Raw.InputThemeSettings;
@@ -1533,9 +1561,23 @@ export namespace Raw {
     | Raw.InputPeerChannel
     | Raw.InputPeerUserFromMessage
     | Raw.InputPeerChannelFromMessage;
+  export type TypeDestroySessionRes = Raw.DestroySessionOk | Raw.DestroySessionNone;
+  export type TypePong = Raw.Pong;
+  export type TypeFutureSalts = Raw.FutureSalts;
+  export type TypeRpcDropAnswer =
+    | Raw.RpcAnswerUnknown
+    | Raw.RpcAnswerDroppedRunning
+    | Raw.RpcAnswerDropped;
   export type TypeAccessPointRule = Raw.AccessPointRule;
   export type TypeIpPort = Raw.IpPort | Raw.IpPortSecret;
   export type TypeFutureSalt = Raw.FutureSalt;
+  export type TypeDestroyAuthKeyRes =
+    | Raw.DestroyAuthKeyOk
+    | Raw.DestroyAuthKeyNone
+    | Raw.DestroyAuthKeyFail;
+  export type TypeSetClientDhParamsAnswer = Raw.DhGenOk | Raw.DhGenRetry | Raw.DhGenFail;
+  export type TypeServerDhParams = Raw.ServerDhParamsFail | Raw.ServerDhParamsOk;
+  export type TypeResPQ = Raw.ResPQ;
   export class ResPQ extends TLObject {
     nonce!: int128;
     serverNonce!: int128;
@@ -1598,8 +1640,8 @@ export namespace Raw {
         b.write(
           Primitive.Vector.write(
             this.serverPublicKeyFingerprints,
-            Primitive.Long
-          ) as unknown as Buffer
+            Primitive.Long,
+          ) as unknown as Buffer,
         );
       }
       return b.buffer;
@@ -2516,6 +2558,7 @@ export namespace Raw {
     }
   }
   export class ReqPq extends TLObject {
+    __response__!: TypeResPQ;
     nonce!: int128;
 
     constructor(params: { nonce: int128 }) {
@@ -2552,6 +2595,7 @@ export namespace Raw {
     }
   }
   export class ReqPqMulti extends TLObject {
+    __response__!: TypeResPQ;
     nonce!: int128;
 
     constructor(params: { nonce: int128 }) {
@@ -2588,6 +2632,7 @@ export namespace Raw {
     }
   }
   export class ReqDhParams extends TLObject {
+    __response__!: TypeServerDhParams;
     nonce!: int128;
     serverNonce!: int128;
     p!: bytes;
@@ -2668,6 +2713,7 @@ export namespace Raw {
     }
   }
   export class SetClientDhParams extends TLObject {
+    __response__!: TypeSetClientDhParamsAnswer;
     nonce!: int128;
     serverNonce!: int128;
     encryptedData!: bytes;
@@ -2720,6 +2766,8 @@ export namespace Raw {
     }
   }
   export class DestroyAuthKey extends TLObject {
+    __response__!: TypeDestroyAuthKeyRes;
+
     constructor() {
       super();
       this.classType = 'functions';
@@ -3797,6 +3845,7 @@ export namespace Raw {
     }
   }
   export class RpcDropAnswer extends TLObject {
+    __response__!: TypeRpcDropAnswer;
     reqMsgId!: long;
 
     constructor(params: { reqMsgId: long }) {
@@ -3833,6 +3882,7 @@ export namespace Raw {
     }
   }
   export class GetFutureSalts extends TLObject {
+    __response__!: TypeFutureSalts;
     num!: int;
 
     constructor(params: { num: int }) {
@@ -3869,6 +3919,7 @@ export namespace Raw {
     }
   }
   export class Ping extends TLObject {
+    __response__!: TypePong;
     pingId!: long;
 
     constructor(params: { pingId: long }) {
@@ -3905,6 +3956,7 @@ export namespace Raw {
     }
   }
   export class PingDelayDisconnect extends TLObject {
+    __response__!: TypePong;
     pingId!: long;
     disconnectDelay!: int;
 
@@ -3947,6 +3999,7 @@ export namespace Raw {
     }
   }
   export class DestroySession extends TLObject {
+    __response__!: TypeDestroySessionRes;
     sessionId!: long;
 
     constructor(params: { sessionId: long }) {
@@ -8478,7 +8531,7 @@ export namespace Raw {
       }
       if (this.pendingSuggestions) {
         b.write(
-          Primitive.Vector.write(this.pendingSuggestions, Primitive.String) as unknown as Buffer
+          Primitive.Vector.write(this.pendingSuggestions, Primitive.String) as unknown as Buffer,
         );
       }
       if (this.groupcallDefaultJoinAs !== undefined) {
@@ -34661,7 +34714,7 @@ export namespace Raw {
       }
       if (this.suggestedTipAmounts) {
         b.write(
-          Primitive.Vector.write(this.suggestedTipAmounts, Primitive.Long) as unknown as Buffer
+          Primitive.Vector.write(this.suggestedTipAmounts, Primitive.Long) as unknown as Buffer,
         );
       }
       if (this.recurringTermsUrl !== undefined) {
@@ -36461,7 +36514,7 @@ export namespace Raw {
       }
       if (this.libraryVersions) {
         b.write(
-          Primitive.Vector.write(this.libraryVersions, Primitive.String) as unknown as Buffer
+          Primitive.Vector.write(this.libraryVersions, Primitive.String) as unknown as Buffer,
         );
       }
       return b.buffer;
@@ -52258,6 +52311,7 @@ export namespace Raw {
     }
   }
   export class InvokeAfterMsg extends TLObject {
+    __response__!: X;
     msgId!: long;
     query!: X;
 
@@ -52300,6 +52354,7 @@ export namespace Raw {
     }
   }
   export class InvokeAfterMsgs extends TLObject {
+    __response__!: X;
     msgIds!: Vector<long>;
     query!: X;
 
@@ -52342,6 +52397,7 @@ export namespace Raw {
     }
   }
   export class InitConnection extends TLObject {
+    __response__!: X;
     apiId!: int;
     deviceModel!: string;
     systemVersion!: string;
@@ -52472,6 +52528,7 @@ export namespace Raw {
     }
   }
   export class InvokeWithLayer extends TLObject {
+    __response__!: X;
     layer!: int;
     query!: X;
 
@@ -52514,6 +52571,7 @@ export namespace Raw {
     }
   }
   export class InvokeWithoutUpdates extends TLObject {
+    __response__!: X;
     query!: X;
 
     constructor(params: { query: X }) {
@@ -52550,6 +52608,7 @@ export namespace Raw {
     }
   }
   export class InvokeWithMessagesRange extends TLObject {
+    __response__!: X;
     range!: TypeMessageRange;
     query!: X;
 
@@ -52592,6 +52651,7 @@ export namespace Raw {
     }
   }
   export class InvokeWithTakeout extends TLObject {
+    __response__!: X;
     takeoutId!: long;
     query!: X;
 
@@ -55733,6 +55793,21 @@ export namespace Raw {
     }
   }
   export namespace help {
+    export type TypePremiumPromo = Raw.help.PremiumPromo;
+    export type TypeCountriesList = Raw.help.CountriesListNotModified | Raw.help.CountriesList;
+    export type TypePromoData = Raw.help.PromoDataEmpty | Raw.help.PromoData;
+    export type TypeUserInfo = Raw.help.UserInfoEmpty | Raw.help.UserInfo;
+    export type TypeSupportName = Raw.help.SupportName;
+    export type TypePassportConfig = Raw.help.PassportConfigNotModified | Raw.help.PassportConfig;
+    export type TypeAppConfig = Raw.help.AppConfigNotModified | Raw.help.AppConfig;
+    export type TypeDeepLinkInfo = Raw.help.DeepLinkInfoEmpty | Raw.help.DeepLinkInfo;
+    export type TypeTermsOfServiceUpdate =
+      | Raw.help.TermsOfServiceUpdateEmpty
+      | Raw.help.TermsOfServiceUpdate;
+    export type TypeRecentMeUrls = Raw.help.RecentMeUrls;
+    export type TypeSupport = Raw.help.Support;
+    export type TypeInviteText = Raw.help.InviteText;
+    export type TypeAppUpdate = Raw.help.AppUpdate | Raw.help.NoAppUpdate;
     export type TypeCountry = Raw.help.Country;
     export type TypeCountryCode = Raw.help.CountryCode;
     export type TypeTermsOfService = Raw.help.TermsOfService;
@@ -56922,7 +56997,7 @@ export namespace Raw {
         }
         if (this.videoSections) {
           b.write(
-            Primitive.Vector.write(this.videoSections, Primitive.String) as unknown as Buffer
+            Primitive.Vector.write(this.videoSections, Primitive.String) as unknown as Buffer,
           );
         }
         if (this.videos) {
@@ -57009,6 +57084,8 @@ export namespace Raw {
       }
     }
     export class GetConfig extends TLObject {
+      __response__!: TypeConfig;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57038,6 +57115,8 @@ export namespace Raw {
       }
     }
     export class GetNearestDc extends TLObject {
+      __response__!: TypeNearestDc;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57067,6 +57146,7 @@ export namespace Raw {
       }
     }
     export class GetAppUpdate extends TLObject {
+      __response__!: help.TypeAppUpdate;
       source!: string;
 
       constructor(params: { source: string }) {
@@ -57103,6 +57183,8 @@ export namespace Raw {
       }
     }
     export class GetInviteText extends TLObject {
+      __response__!: help.TypeInviteText;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57132,6 +57214,8 @@ export namespace Raw {
       }
     }
     export class GetSupport extends TLObject {
+      __response__!: help.TypeSupport;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57161,6 +57245,7 @@ export namespace Raw {
       }
     }
     export class GetAppChangelog extends TLObject {
+      __response__!: TypeUpdates;
       prevAppVersion!: string;
 
       constructor(params: { prevAppVersion: string }) {
@@ -57197,6 +57282,7 @@ export namespace Raw {
       }
     }
     export class SetBotUpdatesStatus extends TLObject {
+      __response__!: Bool;
       pendingUpdatesCount!: int;
       message!: string;
 
@@ -57242,6 +57328,8 @@ export namespace Raw {
       }
     }
     export class GetCdnConfig extends TLObject {
+      __response__!: TypeCdnConfig;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57271,6 +57359,7 @@ export namespace Raw {
       }
     }
     export class GetRecentMeUrls extends TLObject {
+      __response__!: help.TypeRecentMeUrls;
       referer!: string;
 
       constructor(params: { referer: string }) {
@@ -57307,6 +57396,8 @@ export namespace Raw {
       }
     }
     export class GetTermsOfServiceUpdate extends TLObject {
+      __response__!: help.TypeTermsOfServiceUpdate;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57339,6 +57430,7 @@ export namespace Raw {
       }
     }
     export class AcceptTermsOfService extends TLObject {
+      __response__!: Bool;
       id!: TypeDataJSON;
 
       constructor(params: { id: TypeDataJSON }) {
@@ -57375,6 +57467,7 @@ export namespace Raw {
       }
     }
     export class GetDeepLinkInfo extends TLObject {
+      __response__!: help.TypeDeepLinkInfo;
       path!: string;
 
       constructor(params: { path: string }) {
@@ -57411,6 +57504,7 @@ export namespace Raw {
       }
     }
     export class GetAppConfig extends TLObject {
+      __response__!: help.TypeAppConfig;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -57447,6 +57541,7 @@ export namespace Raw {
       }
     }
     export class SaveAppLog extends TLObject {
+      __response__!: Bool;
       events!: Vector<TypeInputAppEvent>;
 
       constructor(params: { events: Vector<TypeInputAppEvent> }) {
@@ -57483,6 +57578,7 @@ export namespace Raw {
       }
     }
     export class GetPassportConfig extends TLObject {
+      __response__!: help.TypePassportConfig;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -57519,6 +57615,8 @@ export namespace Raw {
       }
     }
     export class GetSupportName extends TLObject {
+      __response__!: help.TypeSupportName;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57548,6 +57646,7 @@ export namespace Raw {
       }
     }
     export class GetUserInfo extends TLObject {
+      __response__!: help.TypeUserInfo;
       userId!: TypeInputUser;
 
       constructor(params: { userId: TypeInputUser }) {
@@ -57584,6 +57683,7 @@ export namespace Raw {
       }
     }
     export class EditUserInfo extends TLObject {
+      __response__!: help.TypeUserInfo;
       userId!: TypeInputUser;
       message!: string;
       entities!: Vector<TypeMessageEntity>;
@@ -57636,6 +57736,8 @@ export namespace Raw {
       }
     }
     export class GetPromoData extends TLObject {
+      __response__!: help.TypePromoData;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -57665,6 +57767,7 @@ export namespace Raw {
       }
     }
     export class HidePromoData extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -57701,6 +57804,7 @@ export namespace Raw {
       }
     }
     export class DismissSuggestion extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       suggestion!: string;
 
@@ -57743,6 +57847,7 @@ export namespace Raw {
       }
     }
     export class GetCountriesList extends TLObject {
+      __response__!: help.TypeCountriesList;
       langCode!: string;
       hash!: int;
 
@@ -57785,6 +57890,8 @@ export namespace Raw {
       }
     }
     export class GetPremiumPromo extends TLObject {
+      __response__!: help.TypePremiumPromo;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -58118,6 +58225,13 @@ export namespace Raw {
     }
   }
   export namespace auth {
+    export type TypeLoginToken =
+      | Raw.auth.LoginToken
+      | Raw.auth.LoginTokenMigrateTo
+      | Raw.auth.LoginTokenSuccess;
+    export type TypePasswordRecovery = Raw.auth.PasswordRecovery;
+    export type TypeExportedAuthorization = Raw.auth.ExportedAuthorization;
+    export type TypeLoggedOut = Raw.auth.LoggedOut;
     export type TypeSentCode = Raw.auth.SentCode | Raw.auth.SentCodeSuccess;
     export type TypeAuthorization = Raw.auth.Authorization | Raw.auth.AuthorizationSignUpRequired;
     export type TypeCodeType =
@@ -59198,6 +59312,7 @@ export namespace Raw {
       }
     }
     export class SendCode extends TLObject {
+      __response__!: auth.TypeSentCode;
       phoneNumber!: string;
       apiId!: int;
       apiHash!: string;
@@ -59262,6 +59377,7 @@ export namespace Raw {
       }
     }
     export class SignUp extends TLObject {
+      __response__!: auth.TypeAuthorization;
       phoneNumber!: string;
       phoneCodeHash!: string;
       firstName!: string;
@@ -59326,6 +59442,7 @@ export namespace Raw {
       }
     }
     export class SignIn extends TLObject {
+      __response__!: auth.TypeAuthorization;
       phoneNumber!: string;
       phoneCodeHash!: string;
       phoneCode?: string;
@@ -59397,6 +59514,8 @@ export namespace Raw {
       }
     }
     export class LogOut extends TLObject {
+      __response__!: auth.TypeLoggedOut;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -59426,6 +59545,8 @@ export namespace Raw {
       }
     }
     export class ResetAuthorizations extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -59455,6 +59576,7 @@ export namespace Raw {
       }
     }
     export class ExportAuthorization extends TLObject {
+      __response__!: auth.TypeExportedAuthorization;
       dcId!: int;
 
       constructor(params: { dcId: int }) {
@@ -59491,6 +59613,7 @@ export namespace Raw {
       }
     }
     export class ImportAuthorization extends TLObject {
+      __response__!: auth.TypeAuthorization;
       id!: long;
       bytes!: bytes;
 
@@ -59533,6 +59656,7 @@ export namespace Raw {
       }
     }
     export class BindTempAuthKey extends TLObject {
+      __response__!: Bool;
       permAuthKeyId!: long;
       nonce!: long;
       expiresAt!: int;
@@ -59597,6 +59721,7 @@ export namespace Raw {
       }
     }
     export class ImportBotAuthorization extends TLObject {
+      __response__!: auth.TypeAuthorization;
       flags!: int;
       apiId!: int;
       apiHash!: string;
@@ -59656,6 +59781,7 @@ export namespace Raw {
       }
     }
     export class CheckPassword extends TLObject {
+      __response__!: auth.TypeAuthorization;
       password!: TypeInputCheckPasswordSRP;
 
       constructor(params: { password: TypeInputCheckPasswordSRP }) {
@@ -59692,6 +59818,8 @@ export namespace Raw {
       }
     }
     export class RequestPasswordRecovery extends TLObject {
+      __response__!: auth.TypePasswordRecovery;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -59724,6 +59852,7 @@ export namespace Raw {
       }
     }
     export class RecoverPassword extends TLObject {
+      __response__!: auth.TypeAuthorization;
       code!: string;
       newSettings?: account.TypePasswordInputSettings;
 
@@ -59772,6 +59901,7 @@ export namespace Raw {
       }
     }
     export class ResendCode extends TLObject {
+      __response__!: auth.TypeSentCode;
       phoneNumber!: string;
       phoneCodeHash!: string;
 
@@ -59814,6 +59944,7 @@ export namespace Raw {
       }
     }
     export class CancelCode extends TLObject {
+      __response__!: Bool;
       phoneNumber!: string;
       phoneCodeHash!: string;
 
@@ -59856,6 +59987,7 @@ export namespace Raw {
       }
     }
     export class DropTempAuthKeys extends TLObject {
+      __response__!: Bool;
       exceptAuthKeys!: Vector<long>;
 
       constructor(params: { exceptAuthKeys: Vector<long> }) {
@@ -59892,6 +60024,7 @@ export namespace Raw {
       }
     }
     export class ExportLoginToken extends TLObject {
+      __response__!: auth.TypeLoginToken;
       apiId!: int;
       apiHash!: string;
       exceptIds!: Vector<long>;
@@ -59944,6 +60077,7 @@ export namespace Raw {
       }
     }
     export class ImportLoginToken extends TLObject {
+      __response__!: auth.TypeLoginToken;
       token!: bytes;
 
       constructor(params: { token: bytes }) {
@@ -59980,6 +60114,7 @@ export namespace Raw {
       }
     }
     export class AcceptLoginToken extends TLObject {
+      __response__!: TypeAuthorization;
       token!: bytes;
 
       constructor(params: { token: bytes }) {
@@ -60016,6 +60151,7 @@ export namespace Raw {
       }
     }
     export class CheckRecoveryPassword extends TLObject {
+      __response__!: Bool;
       code!: string;
 
       constructor(params: { code: string }) {
@@ -60052,6 +60188,7 @@ export namespace Raw {
       }
     }
     export class ImportWebTokenAuthorization extends TLObject {
+      __response__!: auth.TypeAuthorization;
       apiId!: int;
       apiHash!: string;
       webAuthToken!: string;
@@ -60107,6 +60244,7 @@ export namespace Raw {
       }
     }
     export class RequestFirebaseSms extends TLObject {
+      __response__!: Bool;
       phoneNumber!: string;
       phoneCodeHash!: string;
       safetyNetToken?: string;
@@ -60178,6 +60316,7 @@ export namespace Raw {
       }
     }
     export class ResetLoginEmail extends TLObject {
+      __response__!: auth.TypeSentCode;
       phoneNumber!: string;
       phoneCodeHash!: string;
 
@@ -60224,6 +60363,15 @@ export namespace Raw {
     }
   }
   export namespace contacts {
+    export type TypeTopPeers =
+      | Raw.contacts.TopPeersNotModified
+      | Raw.contacts.TopPeers
+      | Raw.contacts.TopPeersDisabled;
+    export type TypeResolvedPeer = Raw.contacts.ResolvedPeer;
+    export type TypeFound = Raw.contacts.Found;
+    export type TypeBlocked = Raw.contacts.Blocked | Raw.contacts.BlockedSlice;
+    export type TypeImportedContacts = Raw.contacts.ImportedContacts;
+    export type TypeContacts = Raw.contacts.ContactsNotModified | Raw.contacts.Contacts;
     export class ContactsNotModified extends TLObject {
       constructor() {
         super();
@@ -60718,6 +60866,7 @@ export namespace Raw {
       }
     }
     export class GetContactIDs extends TLObject {
+      __response__!: Vector<int>;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -60754,6 +60903,8 @@ export namespace Raw {
       }
     }
     export class GetStatuses extends TLObject {
+      __response__!: Vector<TypeContactStatus>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -60783,6 +60934,7 @@ export namespace Raw {
       }
     }
     export class GetContacts extends TLObject {
+      __response__!: contacts.TypeContacts;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -60819,6 +60971,7 @@ export namespace Raw {
       }
     }
     export class ImportContacts extends TLObject {
+      __response__!: contacts.TypeImportedContacts;
       contacts!: Vector<TypeInputContact>;
 
       constructor(params: { contacts: Vector<TypeInputContact> }) {
@@ -60855,6 +61008,7 @@ export namespace Raw {
       }
     }
     export class DeleteContacts extends TLObject {
+      __response__!: TypeUpdates;
       id!: Vector<TypeInputUser>;
 
       constructor(params: { id: Vector<TypeInputUser> }) {
@@ -60891,6 +61045,7 @@ export namespace Raw {
       }
     }
     export class DeleteByPhones extends TLObject {
+      __response__!: Bool;
       phones!: Vector<string>;
 
       constructor(params: { phones: Vector<string> }) {
@@ -60927,6 +61082,7 @@ export namespace Raw {
       }
     }
     export class Block extends TLObject {
+      __response__!: Bool;
       id!: TypeInputPeer;
 
       constructor(params: { id: TypeInputPeer }) {
@@ -60963,6 +61119,7 @@ export namespace Raw {
       }
     }
     export class Unblock extends TLObject {
+      __response__!: Bool;
       id!: TypeInputPeer;
 
       constructor(params: { id: TypeInputPeer }) {
@@ -60999,6 +61156,7 @@ export namespace Raw {
       }
     }
     export class GetBlocked extends TLObject {
+      __response__!: contacts.TypeBlocked;
       offset!: int;
       limit!: int;
 
@@ -61041,6 +61199,7 @@ export namespace Raw {
       }
     }
     export class Search extends TLObject {
+      __response__!: contacts.TypeFound;
       q!: string;
       limit!: int;
 
@@ -61083,6 +61242,7 @@ export namespace Raw {
       }
     }
     export class ResolveUsername extends TLObject {
+      __response__!: contacts.TypeResolvedPeer;
       username!: string;
 
       constructor(params: { username: string }) {
@@ -61119,6 +61279,7 @@ export namespace Raw {
       }
     }
     export class GetTopPeers extends TLObject {
+      __response__!: contacts.TypeTopPeers;
       correspondents?: boolean;
       botsPm?: boolean;
       botsInline?: boolean;
@@ -61240,6 +61401,7 @@ export namespace Raw {
       }
     }
     export class ResetTopPeerRating extends TLObject {
+      __response__!: Bool;
       category!: TypeTopPeerCategory;
       peer!: TypeInputPeer;
 
@@ -61282,6 +61444,8 @@ export namespace Raw {
       }
     }
     export class ResetSaved extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -61311,6 +61475,8 @@ export namespace Raw {
       }
     }
     export class GetSaved extends TLObject {
+      __response__!: Vector<TypeSavedContact>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -61340,6 +61506,7 @@ export namespace Raw {
       }
     }
     export class ToggleTopPeers extends TLObject {
+      __response__!: Bool;
       enabled!: Bool;
 
       constructor(params: { enabled: Bool }) {
@@ -61376,6 +61543,7 @@ export namespace Raw {
       }
     }
     export class AddContact extends TLObject {
+      __response__!: TypeUpdates;
       addPhonePrivacyException?: boolean;
       id!: TypeInputUser;
       firstName!: string;
@@ -61451,6 +61619,7 @@ export namespace Raw {
       }
     }
     export class AcceptContact extends TLObject {
+      __response__!: TypeUpdates;
       id!: TypeInputUser;
 
       constructor(params: { id: TypeInputUser }) {
@@ -61487,6 +61656,7 @@ export namespace Raw {
       }
     }
     export class GetLocated extends TLObject {
+      __response__!: TypeUpdates;
       background?: boolean;
       geoPoint!: TypeInputGeoPoint;
       selfExpires?: int;
@@ -61547,6 +61717,7 @@ export namespace Raw {
       }
     }
     export class BlockFromReplies extends TLObject {
+      __response__!: TypeUpdates;
       deleteMessage?: boolean;
       deleteHistory?: boolean;
       reportSpam?: boolean;
@@ -61610,6 +61781,7 @@ export namespace Raw {
       }
     }
     export class ResolvePhone extends TLObject {
+      __response__!: contacts.TypeResolvedPeer;
       phone!: string;
 
       constructor(params: { phone: string }) {
@@ -61646,6 +61818,8 @@ export namespace Raw {
       }
     }
     export class ExportContactToken extends TLObject {
+      __response__!: TypeExportedContactToken;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -61675,6 +61849,7 @@ export namespace Raw {
       }
     }
     export class ImportContactToken extends TLObject {
+      __response__!: TypeUser;
       token!: string;
 
       constructor(params: { token: string }) {
@@ -61711,6 +61886,7 @@ export namespace Raw {
       }
     }
     export class EditCloseFriends extends TLObject {
+      __response__!: Bool;
       id!: Vector<long>;
 
       constructor(params: { id: Vector<long> }) {
@@ -61747,6 +61923,7 @@ export namespace Raw {
       }
     }
     export class ToggleStoriesHidden extends TLObject {
+      __response__!: Bool;
       id!: TypeInputUser;
       hidden!: Bool;
 
@@ -61793,6 +61970,78 @@ export namespace Raw {
     }
   }
   export namespace messages {
+    export type TypeForumTopics = Raw.messages.ForumTopics;
+    export type TypeSponsoredMessages =
+      | Raw.messages.SponsoredMessages
+      | Raw.messages.SponsoredMessagesEmpty;
+    export type TypeInactiveChats = Raw.messages.InactiveChats;
+    export type TypeBotApp = Raw.messages.BotApp;
+    export type TypeEmojiGroups = Raw.messages.EmojiGroupsNotModified | Raw.messages.EmojiGroups;
+    export type TypeReactions = Raw.messages.ReactionsNotModified | Raw.messages.Reactions;
+    export type TypeTranscribedAudio = Raw.messages.TranscribedAudio;
+    export type TypeTranslatedText = Raw.messages.TranslateResult;
+    export type TypeAvailableReactions =
+      | Raw.messages.AvailableReactionsNotModified
+      | Raw.messages.AvailableReactions;
+    export type TypeMessageReactionsList = Raw.messages.MessageReactionsList;
+    export type TypeSearchResultsPositions = Raw.messages.SearchResultsPositions;
+    export type TypeSearchResultsCalendar = Raw.messages.SearchResultsCalendar;
+    export type TypeCheckedHistoryImportPeer = Raw.messages.CheckedHistoryImportPeer;
+    export type TypeChatInviteImporters = Raw.messages.ChatInviteImporters;
+    export type TypeChatAdminsWithInvites = Raw.messages.ChatAdminsWithInvites;
+    export type TypeExportedChatInvite =
+      | Raw.messages.ExportedChatInvite
+      | Raw.messages.ExportedChatInviteReplaced;
+    export type TypeExportedChatInvites = Raw.messages.ExportedChatInvites;
+    export type TypeHistoryImport = Raw.messages.HistoryImport;
+    export type TypeHistoryImportParsed = Raw.messages.HistoryImportParsed;
+    export type TypeAffectedFoundMessages = Raw.messages.AffectedFoundMessages;
+    export type TypeDiscussionMessage = Raw.messages.DiscussionMessage;
+    export type TypeVotesList = Raw.messages.VotesList;
+    export type TypeSearchCounter = Raw.messages.SearchCounter;
+    export type TypeFoundStickerSets =
+      | Raw.messages.FoundStickerSetsNotModified
+      | Raw.messages.FoundStickerSets;
+    export type TypeFavedStickers =
+      | Raw.messages.FavedStickersNotModified
+      | Raw.messages.FavedStickers;
+    export type TypeHighScores = Raw.messages.HighScores;
+    export type TypeArchivedStickers = Raw.messages.ArchivedStickers;
+    export type TypeRecentStickers =
+      | Raw.messages.RecentStickersNotModified
+      | Raw.messages.RecentStickers;
+    export type TypeFeaturedStickers =
+      | Raw.messages.FeaturedStickersNotModified
+      | Raw.messages.FeaturedStickers;
+    export type TypePeerDialogs = Raw.messages.PeerDialogs;
+    export type TypeBotCallbackAnswer = Raw.messages.BotCallbackAnswer;
+    export type TypeMessageEditData = Raw.messages.MessageEditData;
+    export type TypeBotResults = Raw.messages.BotResults;
+    export type TypeSavedGifs = Raw.messages.SavedGifsNotModified | Raw.messages.SavedGifs;
+    export type TypeMessageViews = Raw.messages.MessageViews;
+    export type TypeStickerSetInstallResult =
+      | Raw.messages.StickerSetInstallResultSuccess
+      | Raw.messages.StickerSetInstallResultArchive;
+    export type TypeAllStickers = Raw.messages.AllStickersNotModified | Raw.messages.AllStickers;
+    export type TypeStickers = Raw.messages.StickersNotModified | Raw.messages.Stickers;
+    export type TypeSentEncryptedMessage =
+      | Raw.messages.SentEncryptedMessage
+      | Raw.messages.SentEncryptedFile;
+    export type TypeDhConfig = Raw.messages.DhConfigNotModified | Raw.messages.DhConfig;
+    export type TypeChatFull = Raw.messages.ChatFull;
+    export type TypeChats = Raw.messages.Chats | Raw.messages.ChatsSlice;
+    export type TypePeerSettings = Raw.messages.PeerSettings;
+    export type TypeAffectedHistory = Raw.messages.AffectedHistory;
+    export type TypeAffectedMessages = Raw.messages.AffectedMessages;
+    export type TypeDialogs =
+      | Raw.messages.Dialogs
+      | Raw.messages.DialogsSlice
+      | Raw.messages.DialogsNotModified;
+    export type TypeMessages =
+      | Raw.messages.Messages
+      | Raw.messages.MessagesSlice
+      | Raw.messages.ChannelMessages
+      | Raw.messages.MessagesNotModified;
     export type TypeStickerSet = Raw.messages.StickerSet | Raw.messages.StickerSetNotModified;
     export class Dialogs extends TLObject {
       dialogs!: Vector<TypeDialog>;
@@ -65455,6 +65704,7 @@ export namespace Raw {
       }
     }
     export class GetMessages extends TLObject {
+      __response__!: messages.TypeMessages;
       id!: Vector<TypeInputMessage>;
 
       constructor(params: { id: Vector<TypeInputMessage> }) {
@@ -65491,6 +65741,7 @@ export namespace Raw {
       }
     }
     export class GetDialogs extends TLObject {
+      __response__!: messages.TypeDialogs;
       excludePinned?: boolean;
       folderId?: int;
       offsetDate!: int;
@@ -65591,6 +65842,7 @@ export namespace Raw {
       }
     }
     export class GetHistory extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       offsetId!: int;
       offsetDate!: int;
@@ -65696,6 +65948,7 @@ export namespace Raw {
       }
     }
     export class Search extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       q!: string;
       fromId?: TypeInputPeer;
@@ -65853,6 +66106,7 @@ export namespace Raw {
       }
     }
     export class ReadHistory extends TLObject {
+      __response__!: messages.TypeAffectedMessages;
       peer!: TypeInputPeer;
       maxId!: int;
 
@@ -65895,6 +66149,7 @@ export namespace Raw {
       }
     }
     export class DeleteHistory extends TLObject {
+      __response__!: messages.TypeAffectedHistory;
       justClear?: boolean;
       revoke?: boolean;
       peer!: TypeInputPeer;
@@ -65978,6 +66233,7 @@ export namespace Raw {
       }
     }
     export class DeleteMessages extends TLObject {
+      __response__!: messages.TypeAffectedMessages;
       revoke?: boolean;
       id!: Vector<int>;
 
@@ -66023,6 +66279,7 @@ export namespace Raw {
       }
     }
     export class ReceivedMessages extends TLObject {
+      __response__!: Vector<TypeReceivedNotifyMessage>;
       maxId!: int;
 
       constructor(params: { maxId: int }) {
@@ -66059,6 +66316,7 @@ export namespace Raw {
       }
     }
     export class SetTyping extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       topMsgId?: int;
       action!: TypeSendMessageAction;
@@ -66113,6 +66371,7 @@ export namespace Raw {
       }
     }
     export class SendMessage extends TLObject {
+      __response__!: TypeUpdates;
       noWebpage?: boolean;
       silent?: boolean;
       background?: boolean;
@@ -66270,6 +66529,7 @@ export namespace Raw {
       }
     }
     export class SendMedia extends TLObject {
+      __response__!: TypeUpdates;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
@@ -66429,6 +66689,7 @@ export namespace Raw {
       }
     }
     export class ForwardMessages extends TLObject {
+      __response__!: TypeUpdates;
       silent?: boolean;
       background?: boolean;
       withMyScore?: boolean;
@@ -66575,6 +66836,7 @@ export namespace Raw {
       }
     }
     export class ReportSpam extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -66611,6 +66873,7 @@ export namespace Raw {
       }
     }
     export class GetPeerSettings extends TLObject {
+      __response__!: messages.TypePeerSettings;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -66647,6 +66910,7 @@ export namespace Raw {
       }
     }
     export class Report extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       id!: Vector<int>;
       reason!: TypeReportReason;
@@ -66706,6 +66970,7 @@ export namespace Raw {
       }
     }
     export class GetChats extends TLObject {
+      __response__!: messages.TypeChats;
       id!: Vector<long>;
 
       constructor(params: { id: Vector<long> }) {
@@ -66742,6 +67007,7 @@ export namespace Raw {
       }
     }
     export class GetFullChat extends TLObject {
+      __response__!: messages.TypeChatFull;
       chatId!: long;
 
       constructor(params: { chatId: long }) {
@@ -66778,6 +67044,7 @@ export namespace Raw {
       }
     }
     export class EditChatTitle extends TLObject {
+      __response__!: TypeUpdates;
       chatId!: long;
       title!: string;
 
@@ -66820,6 +67087,7 @@ export namespace Raw {
       }
     }
     export class EditChatPhoto extends TLObject {
+      __response__!: TypeUpdates;
       chatId!: long;
       photo!: TypeInputChatPhoto;
 
@@ -66862,6 +67130,7 @@ export namespace Raw {
       }
     }
     export class AddChatUser extends TLObject {
+      __response__!: TypeUpdates;
       chatId!: long;
       userId!: TypeInputUser;
       fwdLimit!: int;
@@ -66910,6 +67179,7 @@ export namespace Raw {
       }
     }
     export class DeleteChatUser extends TLObject {
+      __response__!: TypeUpdates;
       revokeHistory?: boolean;
       chatId!: long;
       userId!: TypeInputUser;
@@ -66965,6 +67235,7 @@ export namespace Raw {
       }
     }
     export class CreateChat extends TLObject {
+      __response__!: TypeUpdates;
       users!: Vector<TypeInputUser>;
       title!: string;
       ttlPeriod?: int;
@@ -67019,6 +67290,7 @@ export namespace Raw {
       }
     }
     export class GetDhConfig extends TLObject {
+      __response__!: messages.TypeDhConfig;
       version!: int;
       randomLength!: int;
 
@@ -67061,6 +67333,7 @@ export namespace Raw {
       }
     }
     export class RequestEncryption extends TLObject {
+      __response__!: TypeEncryptedChat;
       userId!: TypeInputUser;
       randomId!: int;
       gA!: bytes;
@@ -67109,6 +67382,7 @@ export namespace Raw {
       }
     }
     export class AcceptEncryption extends TLObject {
+      __response__!: TypeEncryptedChat;
       peer!: TypeInputEncryptedChat;
       gB!: bytes;
       keyFingerprint!: long;
@@ -67161,6 +67435,7 @@ export namespace Raw {
       }
     }
     export class DiscardEncryption extends TLObject {
+      __response__!: Bool;
       deleteHistory?: boolean;
       chatId!: int;
 
@@ -67206,6 +67481,7 @@ export namespace Raw {
       }
     }
     export class SetEncryptedTyping extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputEncryptedChat;
       typing!: Bool;
 
@@ -67248,6 +67524,7 @@ export namespace Raw {
       }
     }
     export class ReadEncryptedHistory extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputEncryptedChat;
       maxDate!: int;
 
@@ -67293,6 +67570,7 @@ export namespace Raw {
       }
     }
     export class SendEncrypted extends TLObject {
+      __response__!: messages.TypeSentEncryptedMessage;
       silent?: boolean;
       peer!: TypeInputEncryptedChat;
       randomId!: long;
@@ -67360,6 +67638,7 @@ export namespace Raw {
       }
     }
     export class SendEncryptedFile extends TLObject {
+      __response__!: messages.TypeSentEncryptedMessage;
       silent?: boolean;
       peer!: TypeInputEncryptedChat;
       randomId!: long;
@@ -67435,6 +67714,7 @@ export namespace Raw {
       }
     }
     export class SendEncryptedService extends TLObject {
+      __response__!: messages.TypeSentEncryptedMessage;
       peer!: TypeInputEncryptedChat;
       randomId!: long;
       data!: bytes;
@@ -67490,6 +67770,7 @@ export namespace Raw {
       }
     }
     export class ReceivedQueue extends TLObject {
+      __response__!: Vector<long>;
       maxQts!: int;
 
       constructor(params: { maxQts: int }) {
@@ -67526,6 +67807,7 @@ export namespace Raw {
       }
     }
     export class ReportEncryptedSpam extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputEncryptedChat;
 
       constructor(params: { peer: TypeInputEncryptedChat }) {
@@ -67565,6 +67847,7 @@ export namespace Raw {
       }
     }
     export class ReadMessageContents extends TLObject {
+      __response__!: messages.TypeAffectedMessages;
       id!: Vector<int>;
 
       constructor(params: { id: Vector<int> }) {
@@ -67604,6 +67887,7 @@ export namespace Raw {
       }
     }
     export class GetStickers extends TLObject {
+      __response__!: messages.TypeStickers;
       emoticon!: string;
       hash!: long;
 
@@ -67646,6 +67930,7 @@ export namespace Raw {
       }
     }
     export class GetAllStickers extends TLObject {
+      __response__!: messages.TypeAllStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -67682,6 +67967,7 @@ export namespace Raw {
       }
     }
     export class GetWebPagePreview extends TLObject {
+      __response__!: TypeMessageMedia;
       message!: string;
       entities?: Vector<TypeMessageEntity>;
 
@@ -67730,6 +68016,7 @@ export namespace Raw {
       }
     }
     export class ExportChatInvite extends TLObject {
+      __response__!: TypeExportedChatInvite;
       legacyRevokePermanent?: boolean;
       requestNeeded?: boolean;
       peer!: TypeInputPeer;
@@ -67821,6 +68108,7 @@ export namespace Raw {
       }
     }
     export class CheckChatInvite extends TLObject {
+      __response__!: TypeChatInvite;
       hash!: string;
 
       constructor(params: { hash: string }) {
@@ -67857,6 +68145,7 @@ export namespace Raw {
       }
     }
     export class ImportChatInvite extends TLObject {
+      __response__!: TypeUpdates;
       hash!: string;
 
       constructor(params: { hash: string }) {
@@ -67893,6 +68182,7 @@ export namespace Raw {
       }
     }
     export class GetStickerSet extends TLObject {
+      __response__!: messages.TypeStickerSet;
       stickerset!: TypeInputStickerSet;
       hash!: int;
 
@@ -67935,6 +68225,7 @@ export namespace Raw {
       }
     }
     export class InstallStickerSet extends TLObject {
+      __response__!: messages.TypeStickerSetInstallResult;
       stickerset!: TypeInputStickerSet;
       archived!: Bool;
 
@@ -67977,6 +68268,7 @@ export namespace Raw {
       }
     }
     export class UninstallStickerSet extends TLObject {
+      __response__!: Bool;
       stickerset!: TypeInputStickerSet;
 
       constructor(params: { stickerset: TypeInputStickerSet }) {
@@ -68016,6 +68308,7 @@ export namespace Raw {
       }
     }
     export class StartBot extends TLObject {
+      __response__!: TypeUpdates;
       bot!: TypeInputUser;
       peer!: TypeInputPeer;
       randomId!: long;
@@ -68080,6 +68373,7 @@ export namespace Raw {
       }
     }
     export class GetMessagesViews extends TLObject {
+      __response__!: messages.TypeMessageViews;
       peer!: TypeInputPeer;
       id!: Vector<int>;
       increment!: Bool;
@@ -68128,6 +68422,7 @@ export namespace Raw {
       }
     }
     export class EditChatAdmin extends TLObject {
+      __response__!: Bool;
       chatId!: long;
       userId!: TypeInputUser;
       isAdmin!: Bool;
@@ -68176,6 +68471,7 @@ export namespace Raw {
       }
     }
     export class MigrateChat extends TLObject {
+      __response__!: TypeUpdates;
       chatId!: long;
 
       constructor(params: { chatId: long }) {
@@ -68212,6 +68508,7 @@ export namespace Raw {
       }
     }
     export class SearchGlobal extends TLObject {
+      __response__!: messages.TypeMessages;
       folderId?: int;
       q!: string;
       filter!: TypeMessagesFilter;
@@ -68332,6 +68629,7 @@ export namespace Raw {
       }
     }
     export class ReorderStickerSets extends TLObject {
+      __response__!: Bool;
       masks?: boolean;
       emojis?: boolean;
       order!: Vector<long>;
@@ -68381,6 +68679,7 @@ export namespace Raw {
       }
     }
     export class GetDocumentByHash extends TLObject {
+      __response__!: TypeDocument;
       sha256!: bytes;
       size!: long;
       mimeType!: string;
@@ -68433,6 +68732,7 @@ export namespace Raw {
       }
     }
     export class GetSavedGifs extends TLObject {
+      __response__!: messages.TypeSavedGifs;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -68469,6 +68769,7 @@ export namespace Raw {
       }
     }
     export class SaveGif extends TLObject {
+      __response__!: Bool;
       id!: TypeInputDocument;
       unsave!: Bool;
 
@@ -68511,6 +68812,7 @@ export namespace Raw {
       }
     }
     export class GetInlineBotResults extends TLObject {
+      __response__!: messages.TypeBotResults;
       bot!: TypeInputUser;
       peer!: TypeInputPeer;
       geoPoint?: TypeInputGeoPoint;
@@ -68592,6 +68894,7 @@ export namespace Raw {
       }
     }
     export class SetInlineBotResults extends TLObject {
+      __response__!: Bool;
       gallery?: boolean;
       private?: boolean;
       queryId!: long;
@@ -68704,6 +69007,7 @@ export namespace Raw {
       }
     }
     export class SendInlineBotResult extends TLObject {
+      __response__!: TypeUpdates;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
@@ -68839,6 +69143,7 @@ export namespace Raw {
       }
     }
     export class GetMessageEditData extends TLObject {
+      __response__!: messages.TypeMessageEditData;
       peer!: TypeInputPeer;
       id!: int;
 
@@ -68881,6 +69186,7 @@ export namespace Raw {
       }
     }
     export class EditMessage extends TLObject {
+      __response__!: TypeUpdates;
       noWebpage?: boolean;
       peer!: TypeInputPeer;
       id!: int;
@@ -68994,6 +69300,7 @@ export namespace Raw {
       }
     }
     export class EditInlineBotMessage extends TLObject {
+      __response__!: Bool;
       noWebpage?: boolean;
       id!: TypeInputBotInlineMessageID;
       message?: string;
@@ -69084,6 +69391,7 @@ export namespace Raw {
       }
     }
     export class GetBotCallbackAnswer extends TLObject {
+      __response__!: messages.TypeBotCallbackAnswer;
       game?: boolean;
       peer!: TypeInputPeer;
       msgId!: int;
@@ -69164,6 +69472,7 @@ export namespace Raw {
       }
     }
     export class SetBotCallbackAnswer extends TLObject {
+      __response__!: Bool;
       alert?: boolean;
       queryId!: long;
       message?: string;
@@ -69244,6 +69553,7 @@ export namespace Raw {
       }
     }
     export class GetPeerDialogs extends TLObject {
+      __response__!: messages.TypePeerDialogs;
       peers!: Vector<TypeInputDialogPeer>;
 
       constructor(params: { peers: Vector<TypeInputDialogPeer> }) {
@@ -69280,6 +69590,7 @@ export namespace Raw {
       }
     }
     export class SaveDraft extends TLObject {
+      __response__!: Bool;
       noWebpage?: boolean;
       replyToMsgId?: int;
       topMsgId?: int;
@@ -69366,6 +69677,8 @@ export namespace Raw {
       }
     }
     export class GetAllDrafts extends TLObject {
+      __response__!: TypeUpdates;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -69395,6 +69708,7 @@ export namespace Raw {
       }
     }
     export class GetFeaturedStickers extends TLObject {
+      __response__!: messages.TypeFeaturedStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -69434,6 +69748,7 @@ export namespace Raw {
       }
     }
     export class ReadFeaturedStickers extends TLObject {
+      __response__!: Bool;
       id!: Vector<long>;
 
       constructor(params: { id: Vector<long> }) {
@@ -69473,6 +69788,7 @@ export namespace Raw {
       }
     }
     export class GetRecentStickers extends TLObject {
+      __response__!: messages.TypeRecentStickers;
       attached?: boolean;
       hash!: long;
 
@@ -69518,6 +69834,7 @@ export namespace Raw {
       }
     }
     export class SaveRecentSticker extends TLObject {
+      __response__!: Bool;
       attached?: boolean;
       id!: TypeInputDocument;
       unsave!: Bool;
@@ -69569,6 +69886,7 @@ export namespace Raw {
       }
     }
     export class ClearRecentStickers extends TLObject {
+      __response__!: Bool;
       attached?: boolean;
 
       constructor(params: { attached?: boolean }) {
@@ -69611,6 +69929,7 @@ export namespace Raw {
       }
     }
     export class GetArchivedStickers extends TLObject {
+      __response__!: messages.TypeArchivedStickers;
       masks?: boolean;
       emojis?: boolean;
       offsetId!: long;
@@ -69674,6 +69993,7 @@ export namespace Raw {
       }
     }
     export class GetMaskStickers extends TLObject {
+      __response__!: messages.TypeAllStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -69710,6 +70030,7 @@ export namespace Raw {
       }
     }
     export class GetAttachedStickers extends TLObject {
+      __response__!: Vector<TypeStickerSetCovered>;
       media!: TypeInputStickeredMedia;
 
       constructor(params: { media: TypeInputStickeredMedia }) {
@@ -69749,6 +70070,7 @@ export namespace Raw {
       }
     }
     export class SetGameScore extends TLObject {
+      __response__!: TypeUpdates;
       editMessage?: boolean;
       force?: boolean;
       peer!: TypeInputPeer;
@@ -69830,6 +70152,7 @@ export namespace Raw {
       }
     }
     export class SetInlineGameScore extends TLObject {
+      __response__!: Bool;
       editMessage?: boolean;
       force?: boolean;
       id!: TypeInputBotInlineMessageID;
@@ -69903,6 +70226,7 @@ export namespace Raw {
       }
     }
     export class GetGameHighScores extends TLObject {
+      __response__!: messages.TypeHighScores;
       peer!: TypeInputPeer;
       id!: int;
       userId!: TypeInputUser;
@@ -69951,6 +70275,7 @@ export namespace Raw {
       }
     }
     export class GetInlineGameHighScores extends TLObject {
+      __response__!: messages.TypeHighScores;
       id!: TypeInputBotInlineMessageID;
       userId!: TypeInputUser;
 
@@ -69996,6 +70321,7 @@ export namespace Raw {
       }
     }
     export class GetCommonChats extends TLObject {
+      __response__!: messages.TypeChats;
       userId!: TypeInputUser;
       maxId!: long;
       limit!: int;
@@ -70044,6 +70370,7 @@ export namespace Raw {
       }
     }
     export class GetWebPage extends TLObject {
+      __response__!: TypeWebPage;
       url!: string;
       hash!: int;
 
@@ -70086,6 +70413,7 @@ export namespace Raw {
       }
     }
     export class ToggleDialogPin extends TLObject {
+      __response__!: Bool;
       pinned?: boolean;
       peer!: TypeInputDialogPeer;
 
@@ -70131,6 +70459,7 @@ export namespace Raw {
       }
     }
     export class ReorderPinnedDialogs extends TLObject {
+      __response__!: Bool;
       force?: boolean;
       folderId!: int;
       order!: Vector<TypeInputDialogPeer>;
@@ -70189,6 +70518,7 @@ export namespace Raw {
       }
     }
     export class GetPinnedDialogs extends TLObject {
+      __response__!: messages.TypePeerDialogs;
       folderId!: int;
 
       constructor(params: { folderId: int }) {
@@ -70225,6 +70555,7 @@ export namespace Raw {
       }
     }
     export class SetBotShippingResults extends TLObject {
+      __response__!: Bool;
       queryId!: long;
       error?: string;
       shippingOptions?: Vector<TypeShippingOption>;
@@ -70291,6 +70622,7 @@ export namespace Raw {
       }
     }
     export class SetBotPrecheckoutResults extends TLObject {
+      __response__!: Bool;
       success?: boolean;
       queryId!: long;
       error?: string;
@@ -70350,6 +70682,7 @@ export namespace Raw {
       }
     }
     export class UploadMedia extends TLObject {
+      __response__!: TypeMessageMedia;
       peer!: TypeInputPeer;
       media!: TypeInputMedia;
 
@@ -70392,6 +70725,7 @@ export namespace Raw {
       }
     }
     export class SendScreenshotNotification extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       replyTo!: TypeInputReplyTo;
       randomId!: long;
@@ -70447,6 +70781,7 @@ export namespace Raw {
       }
     }
     export class GetFavedStickers extends TLObject {
+      __response__!: messages.TypeFavedStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -70483,6 +70818,7 @@ export namespace Raw {
       }
     }
     export class FaveSticker extends TLObject {
+      __response__!: Bool;
       id!: TypeInputDocument;
       unfave!: Bool;
 
@@ -70525,6 +70861,7 @@ export namespace Raw {
       }
     }
     export class GetUnreadMentions extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       topMsgId?: int;
       offsetId!: int;
@@ -70619,6 +70956,7 @@ export namespace Raw {
       }
     }
     export class ReadMentions extends TLObject {
+      __response__!: messages.TypeAffectedHistory;
       peer!: TypeInputPeer;
       topMsgId?: int;
 
@@ -70667,6 +71005,7 @@ export namespace Raw {
       }
     }
     export class GetRecentLocations extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       limit!: int;
       hash!: long;
@@ -70715,6 +71054,7 @@ export namespace Raw {
       }
     }
     export class SendMultiMedia extends TLObject {
+      __response__!: TypeUpdates;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
@@ -70836,6 +71176,7 @@ export namespace Raw {
       }
     }
     export class UploadEncryptedFile extends TLObject {
+      __response__!: TypeEncryptedFile;
       peer!: TypeInputEncryptedChat;
       file!: TypeInputEncryptedFile;
 
@@ -70881,6 +71222,7 @@ export namespace Raw {
       }
     }
     export class SearchStickerSets extends TLObject {
+      __response__!: messages.TypeFoundStickerSets;
       excludeFeatured?: boolean;
       q!: string;
       hash!: long;
@@ -70936,6 +71278,8 @@ export namespace Raw {
       }
     }
     export class GetSplitRanges extends TLObject {
+      __response__!: Vector<TypeMessageRange>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -70965,6 +71309,7 @@ export namespace Raw {
       }
     }
     export class MarkDialogUnread extends TLObject {
+      __response__!: Bool;
       unread?: boolean;
       peer!: TypeInputDialogPeer;
 
@@ -71010,6 +71355,8 @@ export namespace Raw {
       }
     }
     export class GetDialogUnreadMarks extends TLObject {
+      __response__!: Vector<TypeDialogPeer>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -71042,6 +71389,8 @@ export namespace Raw {
       }
     }
     export class ClearAllDrafts extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -71071,6 +71420,7 @@ export namespace Raw {
       }
     }
     export class UpdatePinnedMessage extends TLObject {
+      __response__!: TypeUpdates;
       silent?: boolean;
       unpin?: boolean;
       pmOneside?: boolean;
@@ -71145,6 +71495,7 @@ export namespace Raw {
       }
     }
     export class SendVote extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       msgId!: int;
       options!: Vector<bytes>;
@@ -71193,6 +71544,7 @@ export namespace Raw {
       }
     }
     export class GetPollResults extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       msgId!: int;
 
@@ -71235,6 +71587,7 @@ export namespace Raw {
       }
     }
     export class GetOnlines extends TLObject {
+      __response__!: TypeChatOnlines;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -71271,6 +71624,7 @@ export namespace Raw {
       }
     }
     export class EditChatAbout extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       about!: string;
 
@@ -71313,6 +71667,7 @@ export namespace Raw {
       }
     }
     export class EditChatDefaultBannedRights extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       bannedRights!: TypeChatBannedRights;
 
@@ -71361,6 +71716,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiKeywords extends TLObject {
+      __response__!: TypeEmojiKeywordsDifference;
       langCode!: string;
 
       constructor(params: { langCode: string }) {
@@ -71397,6 +71753,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiKeywordsDifference extends TLObject {
+      __response__!: TypeEmojiKeywordsDifference;
       langCode!: string;
       fromVersion!: int;
 
@@ -71445,6 +71802,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiKeywordsLanguages extends TLObject {
+      __response__!: Vector<TypeEmojiLanguage>;
       langCodes!: Vector<string>;
 
       constructor(params: { langCodes: Vector<string> }) {
@@ -71484,6 +71842,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiURL extends TLObject {
+      __response__!: TypeEmojiURL;
       langCode!: string;
 
       constructor(params: { langCode: string }) {
@@ -71520,6 +71879,7 @@ export namespace Raw {
       }
     }
     export class GetSearchCounters extends TLObject {
+      __response__!: Vector<messages.TypeSearchCounter>;
       peer!: TypeInputPeer;
       topMsgId?: int;
       filters!: Vector<TypeMessagesFilter>;
@@ -71582,6 +71942,7 @@ export namespace Raw {
       }
     }
     export class RequestUrlAuth extends TLObject {
+      __response__!: TypeUrlAuthResult;
       peer?: TypeInputPeer;
       msgId?: int;
       buttonId?: int;
@@ -71650,6 +72011,7 @@ export namespace Raw {
       }
     }
     export class AcceptUrlAuth extends TLObject {
+      __response__!: TypeUrlAuthResult;
       writeAllowed?: boolean;
       peer?: TypeInputPeer;
       msgId?: int;
@@ -71729,6 +72091,7 @@ export namespace Raw {
       }
     }
     export class HidePeerSettingsBar extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -71768,6 +72131,7 @@ export namespace Raw {
       }
     }
     export class GetScheduledHistory extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       hash!: long;
 
@@ -71813,6 +72177,7 @@ export namespace Raw {
       }
     }
     export class GetScheduledMessages extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       id!: Vector<int>;
 
@@ -71858,6 +72223,7 @@ export namespace Raw {
       }
     }
     export class SendScheduledMessages extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       id!: Vector<int>;
 
@@ -71903,6 +72269,7 @@ export namespace Raw {
       }
     }
     export class DeleteScheduledMessages extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       id!: Vector<int>;
 
@@ -71948,6 +72315,7 @@ export namespace Raw {
       }
     }
     export class GetPollVotes extends TLObject {
+      __response__!: messages.TypeVotesList;
       peer!: TypeInputPeer;
       id!: int;
       option?: bytes;
@@ -72027,6 +72395,7 @@ export namespace Raw {
       }
     }
     export class ToggleStickerSets extends TLObject {
+      __response__!: Bool;
       uninstall?: boolean;
       archive?: boolean;
       unarchive?: boolean;
@@ -72090,6 +72459,8 @@ export namespace Raw {
       }
     }
     export class GetDialogFilters extends TLObject {
+      __response__!: Vector<TypeDialogFilter>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -72119,6 +72490,8 @@ export namespace Raw {
       }
     }
     export class GetSuggestedDialogFilters extends TLObject {
+      __response__!: Vector<TypeDialogFilterSuggested>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -72151,6 +72524,7 @@ export namespace Raw {
       }
     }
     export class UpdateDialogFilter extends TLObject {
+      __response__!: Bool;
       id!: int;
       filter?: TypeDialogFilter;
 
@@ -72199,6 +72573,7 @@ export namespace Raw {
       }
     }
     export class UpdateDialogFiltersOrder extends TLObject {
+      __response__!: Bool;
       order!: Vector<int>;
 
       constructor(params: { order: Vector<int> }) {
@@ -72238,6 +72613,7 @@ export namespace Raw {
       }
     }
     export class GetOldFeaturedStickers extends TLObject {
+      __response__!: messages.TypeFeaturedStickers;
       offset!: int;
       limit!: int;
       hash!: long;
@@ -72293,6 +72669,7 @@ export namespace Raw {
       }
     }
     export class GetReplies extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       msgId!: int;
       offsetId!: int;
@@ -72407,6 +72784,7 @@ export namespace Raw {
       }
     }
     export class GetDiscussionMessage extends TLObject {
+      __response__!: messages.TypeDiscussionMessage;
       peer!: TypeInputPeer;
       msgId!: int;
 
@@ -72452,6 +72830,7 @@ export namespace Raw {
       }
     }
     export class ReadDiscussion extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       msgId!: int;
       readMaxId!: int;
@@ -72500,6 +72879,7 @@ export namespace Raw {
       }
     }
     export class UnpinAllMessages extends TLObject {
+      __response__!: messages.TypeAffectedHistory;
       peer!: TypeInputPeer;
       topMsgId?: int;
 
@@ -72548,6 +72928,7 @@ export namespace Raw {
       }
     }
     export class DeleteChat extends TLObject {
+      __response__!: Bool;
       chatId!: long;
 
       constructor(params: { chatId: long }) {
@@ -72584,6 +72965,7 @@ export namespace Raw {
       }
     }
     export class DeletePhoneCallHistory extends TLObject {
+      __response__!: messages.TypeAffectedFoundMessages;
       revoke?: boolean;
 
       constructor(params: { revoke?: boolean }) {
@@ -72626,6 +73008,7 @@ export namespace Raw {
       }
     }
     export class CheckHistoryImport extends TLObject {
+      __response__!: messages.TypeHistoryImportParsed;
       importHead!: string;
 
       constructor(params: { importHead: string }) {
@@ -72662,6 +73045,7 @@ export namespace Raw {
       }
     }
     export class InitHistoryImport extends TLObject {
+      __response__!: messages.TypeHistoryImport;
       peer!: TypeInputPeer;
       file!: TypeInputFile;
       mediaCount!: int;
@@ -72714,6 +73098,7 @@ export namespace Raw {
       }
     }
     export class UploadImportedMedia extends TLObject {
+      __response__!: TypeMessageMedia;
       peer!: TypeInputPeer;
       importId!: long;
       fileName!: string;
@@ -72781,6 +73166,7 @@ export namespace Raw {
       }
     }
     export class StartHistoryImport extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       importId!: long;
 
@@ -72823,6 +73209,7 @@ export namespace Raw {
       }
     }
     export class GetExportedChatInvites extends TLObject {
+      __response__!: messages.TypeExportedChatInvites;
       revoked?: boolean;
       peer!: TypeInputPeer;
       adminId!: TypeInputUser;
@@ -72911,6 +73298,7 @@ export namespace Raw {
       }
     }
     export class GetExportedChatInvite extends TLObject {
+      __response__!: messages.TypeExportedChatInvite;
       peer!: TypeInputPeer;
       link!: string;
 
@@ -72956,6 +73344,7 @@ export namespace Raw {
       }
     }
     export class EditExportedChatInvite extends TLObject {
+      __response__!: messages.TypeExportedChatInvite;
       revoked?: boolean;
       peer!: TypeInputPeer;
       link!: string;
@@ -73062,6 +73451,7 @@ export namespace Raw {
       }
     }
     export class DeleteRevokedExportedChatInvites extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       adminId!: TypeInputUser;
 
@@ -73107,6 +73497,7 @@ export namespace Raw {
       }
     }
     export class DeleteExportedChatInvite extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       link!: string;
 
@@ -73152,6 +73543,7 @@ export namespace Raw {
       }
     }
     export class GetAdminsWithInvites extends TLObject {
+      __response__!: messages.TypeChatAdminsWithInvites;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -73191,6 +73583,7 @@ export namespace Raw {
       }
     }
     export class GetChatInviteImporters extends TLObject {
+      __response__!: messages.TypeChatInviteImporters;
       requested?: boolean;
       peer!: TypeInputPeer;
       link?: string;
@@ -73287,6 +73680,7 @@ export namespace Raw {
       }
     }
     export class SetHistoryTTL extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       period!: int;
 
@@ -73329,6 +73723,7 @@ export namespace Raw {
       }
     }
     export class CheckHistoryImportPeer extends TLObject {
+      __response__!: messages.TypeCheckedHistoryImportPeer;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -73368,6 +73763,7 @@ export namespace Raw {
       }
     }
     export class SetChatTheme extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       emoticon!: string;
 
@@ -73410,6 +73806,7 @@ export namespace Raw {
       }
     }
     export class GetMessageReadParticipants extends TLObject {
+      __response__!: Vector<TypeReadParticipantDate>;
       peer!: TypeInputPeer;
       msgId!: int;
 
@@ -73455,6 +73852,7 @@ export namespace Raw {
       }
     }
     export class GetSearchResultsCalendar extends TLObject {
+      __response__!: messages.TypeSearchResultsCalendar;
       peer!: TypeInputPeer;
       filter!: TypeMessagesFilter;
       offsetId!: int;
@@ -73522,6 +73920,7 @@ export namespace Raw {
       }
     }
     export class GetSearchResultsPositions extends TLObject {
+      __response__!: messages.TypeSearchResultsPositions;
       peer!: TypeInputPeer;
       filter!: TypeMessagesFilter;
       offsetId!: int;
@@ -73589,6 +73988,7 @@ export namespace Raw {
       }
     }
     export class HideChatJoinRequest extends TLObject {
+      __response__!: TypeUpdates;
       approved?: boolean;
       peer!: TypeInputPeer;
       userId!: TypeInputUser;
@@ -73647,6 +74047,7 @@ export namespace Raw {
       }
     }
     export class HideAllChatJoinRequests extends TLObject {
+      __response__!: TypeUpdates;
       approved?: boolean;
       peer!: TypeInputPeer;
       link?: string;
@@ -73706,6 +74107,7 @@ export namespace Raw {
       }
     }
     export class ToggleNoForwards extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       enabled!: Bool;
 
@@ -73748,6 +74150,7 @@ export namespace Raw {
       }
     }
     export class SaveDefaultSendAs extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       sendAs!: TypeInputPeer;
 
@@ -73790,6 +74193,7 @@ export namespace Raw {
       }
     }
     export class SendReaction extends TLObject {
+      __response__!: TypeUpdates;
       big?: boolean;
       addToRecent?: boolean;
       peer!: TypeInputPeer;
@@ -73864,6 +74268,7 @@ export namespace Raw {
       }
     }
     export class GetMessagesReactions extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       id!: Vector<int>;
 
@@ -73909,6 +74314,7 @@ export namespace Raw {
       }
     }
     export class GetMessageReactionsList extends TLObject {
+      __response__!: messages.TypeMessageReactionsList;
       peer!: TypeInputPeer;
       id!: int;
       reaction?: TypeReaction;
@@ -73991,6 +74397,7 @@ export namespace Raw {
       }
     }
     export class SetChatAvailableReactions extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       availableReactions!: TypeChatReactions;
 
@@ -74039,6 +74446,7 @@ export namespace Raw {
       }
     }
     export class GetAvailableReactions extends TLObject {
+      __response__!: messages.TypeAvailableReactions;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -74078,6 +74486,7 @@ export namespace Raw {
       }
     }
     export class SetDefaultReaction extends TLObject {
+      __response__!: Bool;
       reaction!: TypeReaction;
 
       constructor(params: { reaction: TypeReaction }) {
@@ -74114,6 +74523,7 @@ export namespace Raw {
       }
     }
     export class TranslateText extends TLObject {
+      __response__!: messages.TypeTranslatedText;
       peer?: TypeInputPeer;
       id?: Vector<int>;
       text?: Vector<TypeTextWithEntities>;
@@ -74181,6 +74591,7 @@ export namespace Raw {
       }
     }
     export class GetUnreadReactions extends TLObject {
+      __response__!: messages.TypeMessages;
       peer!: TypeInputPeer;
       topMsgId?: int;
       offsetId!: int;
@@ -74275,6 +74686,7 @@ export namespace Raw {
       }
     }
     export class ReadReactions extends TLObject {
+      __response__!: messages.TypeAffectedHistory;
       peer!: TypeInputPeer;
       topMsgId?: int;
 
@@ -74323,6 +74735,7 @@ export namespace Raw {
       }
     }
     export class SearchSentMedia extends TLObject {
+      __response__!: messages.TypeMessages;
       q!: string;
       filter!: TypeMessagesFilter;
       limit!: int;
@@ -74371,6 +74784,7 @@ export namespace Raw {
       }
     }
     export class GetAttachMenuBots extends TLObject {
+      __response__!: TypeAttachMenuBots;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -74407,6 +74821,7 @@ export namespace Raw {
       }
     }
     export class GetAttachMenuBot extends TLObject {
+      __response__!: TypeAttachMenuBotsBot;
       bot!: TypeInputUser;
 
       constructor(params: { bot: TypeInputUser }) {
@@ -74443,6 +74858,7 @@ export namespace Raw {
       }
     }
     export class ToggleBotInAttachMenu extends TLObject {
+      __response__!: Bool;
       writeAllowed?: boolean;
       bot!: TypeInputUser;
       enabled!: Bool;
@@ -74501,6 +74917,7 @@ export namespace Raw {
       }
     }
     export class RequestWebView extends TLObject {
+      __response__!: TypeWebViewResult;
       fromBotMenu?: boolean;
       silent?: boolean;
       peer!: TypeInputPeer;
@@ -74630,6 +75047,7 @@ export namespace Raw {
       }
     }
     export class ProlongWebView extends TLObject {
+      __response__!: Bool;
       silent?: boolean;
       peer!: TypeInputPeer;
       bot!: TypeInputUser;
@@ -74715,6 +75133,7 @@ export namespace Raw {
       }
     }
     export class RequestSimpleWebView extends TLObject {
+      __response__!: TypeSimpleWebViewResult;
       fromSwitchWebview?: boolean;
       bot!: TypeInputUser;
       url!: string;
@@ -74794,6 +75213,7 @@ export namespace Raw {
       }
     }
     export class SendWebViewResultMessage extends TLObject {
+      __response__!: TypeWebViewMessageSent;
       botQueryId!: string;
       result!: TypeInputBotInlineResult;
 
@@ -74842,6 +75262,7 @@ export namespace Raw {
       }
     }
     export class SendWebViewData extends TLObject {
+      __response__!: TypeUpdates;
       bot!: TypeInputUser;
       randomId!: long;
       buttonText!: string;
@@ -74906,6 +75327,7 @@ export namespace Raw {
       }
     }
     export class TranscribeAudio extends TLObject {
+      __response__!: messages.TypeTranscribedAudio;
       peer!: TypeInputPeer;
       msgId!: int;
 
@@ -74948,6 +75370,7 @@ export namespace Raw {
       }
     }
     export class RateTranscribedAudio extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       msgId!: int;
       transcriptionId!: long;
@@ -75010,6 +75433,7 @@ export namespace Raw {
       }
     }
     export class GetCustomEmojiDocuments extends TLObject {
+      __response__!: Vector<TypeDocument>;
       documentId!: Vector<long>;
 
       constructor(params: { documentId: Vector<long> }) {
@@ -75049,6 +75473,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiStickers extends TLObject {
+      __response__!: messages.TypeAllStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -75085,6 +75510,7 @@ export namespace Raw {
       }
     }
     export class GetFeaturedEmojiStickers extends TLObject {
+      __response__!: messages.TypeFeaturedStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -75124,6 +75550,7 @@ export namespace Raw {
       }
     }
     export class ReportReaction extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       id!: int;
       reactionPeer!: TypeInputPeer;
@@ -75172,6 +75599,7 @@ export namespace Raw {
       }
     }
     export class GetTopReactions extends TLObject {
+      __response__!: messages.TypeReactions;
       limit!: int;
       hash!: long;
 
@@ -75214,6 +75642,7 @@ export namespace Raw {
       }
     }
     export class GetRecentReactions extends TLObject {
+      __response__!: messages.TypeReactions;
       limit!: int;
       hash!: long;
 
@@ -75256,6 +75685,8 @@ export namespace Raw {
       }
     }
     export class ClearRecentReactions extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -75288,6 +75719,7 @@ export namespace Raw {
       }
     }
     export class GetExtendedMedia extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       id!: Vector<int>;
 
@@ -75330,6 +75762,7 @@ export namespace Raw {
       }
     }
     export class SetDefaultHistoryTTL extends TLObject {
+      __response__!: Bool;
       period!: int;
 
       constructor(params: { period: int }) {
@@ -75369,6 +75802,8 @@ export namespace Raw {
       }
     }
     export class GetDefaultHistoryTTL extends TLObject {
+      __response__!: TypeDefaultHistoryTTL;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -75401,6 +75836,7 @@ export namespace Raw {
       }
     }
     export class SendBotRequestedPeer extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       msgId!: int;
       buttonId!: int;
@@ -75468,6 +75904,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiGroups extends TLObject {
+      __response__!: messages.TypeEmojiGroups;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -75504,6 +75941,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiStatusGroups extends TLObject {
+      __response__!: messages.TypeEmojiGroups;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -75543,6 +75981,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiProfilePhotoGroups extends TLObject {
+      __response__!: messages.TypeEmojiGroups;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -75582,6 +76021,7 @@ export namespace Raw {
       }
     }
     export class SearchCustomEmoji extends TLObject {
+      __response__!: TypeEmojiList;
       emoticon!: string;
       hash!: long;
 
@@ -75624,6 +76064,7 @@ export namespace Raw {
       }
     }
     export class TogglePeerTranslations extends TLObject {
+      __response__!: Bool;
       disabled?: boolean;
       peer!: TypeInputPeer;
 
@@ -75672,6 +76113,7 @@ export namespace Raw {
       }
     }
     export class GetBotApp extends TLObject {
+      __response__!: messages.TypeBotApp;
       app!: TypeInputBotApp;
       hash!: long;
 
@@ -75714,6 +76156,7 @@ export namespace Raw {
       }
     }
     export class RequestAppWebView extends TLObject {
+      __response__!: TypeAppWebViewResult;
       writeAllowed?: boolean;
       peer!: TypeInputPeer;
       app!: TypeInputBotApp;
@@ -75799,6 +76242,7 @@ export namespace Raw {
       }
     }
     export class SetChatWallPaper extends TLObject {
+      __response__!: TypeUpdates;
       peer!: TypeInputPeer;
       wallpaper?: TypeInputWallPaper;
       settings?: TypeWallPaperSettings;
@@ -75872,6 +76316,15 @@ export namespace Raw {
     }
   }
   export namespace updates {
+    export type TypeChannelDifference =
+      | Raw.updates.ChannelDifferenceEmpty
+      | Raw.updates.ChannelDifferenceTooLong
+      | Raw.updates.ChannelDifference;
+    export type TypeDifference =
+      | Raw.updates.DifferenceEmpty
+      | Raw.updates.Difference
+      | Raw.updates.DifferenceSlice
+      | Raw.updates.DifferenceTooLong;
     export type TypeState = Raw.updates.State;
     export class State extends TLObject {
       pts!: int;
@@ -76426,6 +76879,8 @@ export namespace Raw {
       }
     }
     export class GetState extends TLObject {
+      __response__!: updates.TypeState;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -76455,6 +76910,7 @@ export namespace Raw {
       }
     }
     export class GetDifference extends TLObject {
+      __response__!: updates.TypeDifference;
       pts!: int;
       ptsLimit?: int;
       ptsTotalLimit?: int;
@@ -76543,6 +76999,7 @@ export namespace Raw {
       }
     }
     export class GetChannelDifference extends TLObject {
+      __response__!: updates.TypeChannelDifference;
       force?: boolean;
       channel!: TypeInputChannel;
       filter!: TypeChannelMessagesFilter;
@@ -76622,6 +77079,8 @@ export namespace Raw {
     }
   }
   export namespace photos {
+    export type TypePhotos = Raw.photos.Photos | Raw.photos.PhotosSlice;
+    export type TypePhoto = Raw.photos.Photo;
     export class Photos extends TLObject {
       photos!: Vector<TypePhoto>;
       users!: Vector<TypeUser>;
@@ -76755,6 +77214,7 @@ export namespace Raw {
       }
     }
     export class UpdateProfilePhoto extends TLObject {
+      __response__!: photos.TypePhoto;
       fallback?: boolean;
       bot?: TypeInputUser;
       id!: TypeInputPhoto;
@@ -76807,6 +77267,7 @@ export namespace Raw {
       }
     }
     export class UploadProfilePhoto extends TLObject {
+      __response__!: photos.TypePhoto;
       fallback?: boolean;
       bot?: TypeInputUser;
       file?: TypeInputFile;
@@ -76895,6 +77356,7 @@ export namespace Raw {
       }
     }
     export class DeletePhotos extends TLObject {
+      __response__!: Vector<long>;
       id!: Vector<TypeInputPhoto>;
 
       constructor(params: { id: Vector<TypeInputPhoto> }) {
@@ -76931,6 +77393,7 @@ export namespace Raw {
       }
     }
     export class GetUserPhotos extends TLObject {
+      __response__!: photos.TypePhotos;
       userId!: TypeInputUser;
       offset!: int;
       maxId!: long;
@@ -76990,6 +77453,7 @@ export namespace Raw {
       }
     }
     export class UploadContactProfilePhoto extends TLObject {
+      __response__!: photos.TypePhoto;
       suggest?: boolean;
       save?: boolean;
       userId!: TypeInputUser;
@@ -77095,6 +77559,9 @@ export namespace Raw {
     }
   }
   export namespace upload {
+    export type TypeCdnFile = Raw.upload.CdnFileReuploadNeeded | Raw.upload.CdnFile;
+    export type TypeWebFile = Raw.upload.WebFile;
+    export type TypeFile = Raw.upload.File | Raw.upload.FileCdnRedirect;
     export class File extends TLObject {
       type!: storage.TypeFileType;
       mtime!: int;
@@ -77363,6 +77830,7 @@ export namespace Raw {
       }
     }
     export class SaveFilePart extends TLObject {
+      __response__!: Bool;
       fileId!: long;
       filePart!: int;
       bytes!: bytes;
@@ -77411,6 +77879,7 @@ export namespace Raw {
       }
     }
     export class GetFile extends TLObject {
+      __response__!: upload.TypeFile;
       precise?: boolean;
       cdnSupported?: boolean;
       location!: TypeInputFileLocation;
@@ -77484,6 +77953,7 @@ export namespace Raw {
       }
     }
     export class SaveBigFilePart extends TLObject {
+      __response__!: Bool;
       fileId!: long;
       filePart!: int;
       fileTotalParts!: int;
@@ -77543,6 +78013,7 @@ export namespace Raw {
       }
     }
     export class GetWebFile extends TLObject {
+      __response__!: upload.TypeWebFile;
       location!: TypeInputWebFileLocation;
       offset!: int;
       limit!: int;
@@ -77591,6 +78062,7 @@ export namespace Raw {
       }
     }
     export class GetCdnFile extends TLObject {
+      __response__!: upload.TypeCdnFile;
       fileToken!: bytes;
       offset!: long;
       limit!: int;
@@ -77639,6 +78111,7 @@ export namespace Raw {
       }
     }
     export class ReuploadCdnFile extends TLObject {
+      __response__!: Vector<TypeFileHash>;
       fileToken!: bytes;
       requestToken!: bytes;
 
@@ -77681,6 +78154,7 @@ export namespace Raw {
       }
     }
     export class GetCdnFileHashes extends TLObject {
+      __response__!: Vector<TypeFileHash>;
       fileToken!: bytes;
       offset!: long;
 
@@ -77723,6 +78197,7 @@ export namespace Raw {
       }
     }
     export class GetFileHashes extends TLObject {
+      __response__!: Vector<TypeFileHash>;
       location!: TypeInputFileLocation;
       offset!: long;
 
@@ -77766,6 +78241,32 @@ export namespace Raw {
     }
   }
   export namespace account {
+    export type TypeAutoSaveSettings = Raw.account.AutoSaveSettings;
+    export type TypeEmojiStatuses =
+      | Raw.account.EmojiStatusesNotModified
+      | Raw.account.EmojiStatuses;
+    export type TypeSavedRingtone = Raw.account.SavedRingtone | Raw.account.SavedRingtoneConverted;
+    export type TypeSavedRingtones =
+      | Raw.account.SavedRingtonesNotModified
+      | Raw.account.SavedRingtones;
+    export type TypeResetPasswordResult =
+      | Raw.account.ResetPasswordFailedWait
+      | Raw.account.ResetPasswordRequestedWait
+      | Raw.account.ResetPasswordOk;
+    export type TypeContentSettings = Raw.account.ContentSettings;
+    export type TypeThemes = Raw.account.ThemesNotModified | Raw.account.Themes;
+    export type TypeAutoDownloadSettings = Raw.account.AutoDownloadSettings;
+    export type TypeTakeout = Raw.account.Takeout;
+    export type TypeEmailVerified = Raw.account.EmailVerified | Raw.account.EmailVerifiedLogin;
+    export type TypeSentEmailCode = Raw.account.SentEmailCode;
+    export type TypeAuthorizationForm = Raw.account.AuthorizationForm;
+    export type TypeWebAuthorizations = Raw.account.WebAuthorizations;
+    export type TypeTmpPassword = Raw.account.TmpPassword;
+    export type TypePasswordSettings = Raw.account.PasswordSettings;
+    export type TypePassword = Raw.account.Password;
+    export type TypeAuthorizations = Raw.account.Authorizations;
+    export type TypePrivacyRules = Raw.account.PrivacyRules;
+    export type TypeWallPapers = Raw.account.WallPapersNotModified | Raw.account.WallPapers;
     export type TypePasswordInputSettings = Raw.account.PasswordInputSettings;
     export class PrivacyRules extends TLObject {
       rules!: Vector<TypePrivacyRule>;
@@ -79135,6 +79636,7 @@ export namespace Raw {
       }
     }
     export class RegisterDevice extends TLObject {
+      __response__!: Bool;
       noMuted?: boolean;
       tokenType!: int;
       token!: string;
@@ -79218,6 +79720,7 @@ export namespace Raw {
       }
     }
     export class UnregisterDevice extends TLObject {
+      __response__!: Bool;
       tokenType!: int;
       token!: string;
       otherUids!: Vector<long>;
@@ -79270,6 +79773,7 @@ export namespace Raw {
       }
     }
     export class UpdateNotifySettings extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputNotifyPeer;
       settings!: TypeInputPeerNotifySettings;
 
@@ -79315,6 +79819,7 @@ export namespace Raw {
       }
     }
     export class GetNotifySettings extends TLObject {
+      __response__!: TypePeerNotifySettings;
       peer!: TypeInputNotifyPeer;
 
       constructor(params: { peer: TypeInputNotifyPeer }) {
@@ -79351,6 +79856,8 @@ export namespace Raw {
       }
     }
     export class ResetNotifySettings extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -79380,6 +79887,7 @@ export namespace Raw {
       }
     }
     export class UpdateProfile extends TLObject {
+      __response__!: TypeUser;
       firstName?: string;
       lastName?: string;
       about?: string;
@@ -79440,6 +79948,7 @@ export namespace Raw {
       }
     }
     export class UpdateStatus extends TLObject {
+      __response__!: Bool;
       offline!: Bool;
 
       constructor(params: { offline: Bool }) {
@@ -79476,6 +79985,7 @@ export namespace Raw {
       }
     }
     export class GetWallPapers extends TLObject {
+      __response__!: account.TypeWallPapers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -79512,6 +80022,7 @@ export namespace Raw {
       }
     }
     export class ReportPeer extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       reason!: TypeReportReason;
       message!: string;
@@ -79560,6 +80071,7 @@ export namespace Raw {
       }
     }
     export class CheckUsername extends TLObject {
+      __response__!: Bool;
       username!: string;
 
       constructor(params: { username: string }) {
@@ -79596,6 +80108,7 @@ export namespace Raw {
       }
     }
     export class UpdateUsername extends TLObject {
+      __response__!: TypeUser;
       username!: string;
 
       constructor(params: { username: string }) {
@@ -79632,6 +80145,7 @@ export namespace Raw {
       }
     }
     export class GetPrivacy extends TLObject {
+      __response__!: account.TypePrivacyRules;
       key!: TypeInputPrivacyKey;
 
       constructor(params: { key: TypeInputPrivacyKey }) {
@@ -79668,6 +80182,7 @@ export namespace Raw {
       }
     }
     export class SetPrivacy extends TLObject {
+      __response__!: account.TypePrivacyRules;
       key!: TypeInputPrivacyKey;
       rules!: Vector<TypeInputPrivacyRule>;
 
@@ -79710,6 +80225,7 @@ export namespace Raw {
       }
     }
     export class DeleteAccount extends TLObject {
+      __response__!: Bool;
       reason!: string;
       password?: TypeInputCheckPasswordSRP;
 
@@ -79758,6 +80274,8 @@ export namespace Raw {
       }
     }
     export class GetAccountTTL extends TLObject {
+      __response__!: TypeAccountDaysTTL;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -79787,6 +80305,7 @@ export namespace Raw {
       }
     }
     export class SetAccountTTL extends TLObject {
+      __response__!: Bool;
       ttl!: TypeAccountDaysTTL;
 
       constructor(params: { ttl: TypeAccountDaysTTL }) {
@@ -79823,6 +80342,7 @@ export namespace Raw {
       }
     }
     export class SendChangePhoneCode extends TLObject {
+      __response__!: auth.TypeSentCode;
       phoneNumber!: string;
       settings!: TypeCodeSettings;
 
@@ -79868,6 +80388,7 @@ export namespace Raw {
       }
     }
     export class ChangePhone extends TLObject {
+      __response__!: TypeUser;
       phoneNumber!: string;
       phoneCodeHash!: string;
       phoneCode!: string;
@@ -79920,6 +80441,7 @@ export namespace Raw {
       }
     }
     export class UpdateDeviceLocked extends TLObject {
+      __response__!: Bool;
       period!: int;
 
       constructor(params: { period: int }) {
@@ -79956,6 +80478,8 @@ export namespace Raw {
       }
     }
     export class GetAuthorizations extends TLObject {
+      __response__!: account.TypeAuthorizations;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -79985,6 +80509,7 @@ export namespace Raw {
       }
     }
     export class ResetAuthorization extends TLObject {
+      __response__!: Bool;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -80021,6 +80546,8 @@ export namespace Raw {
       }
     }
     export class GetPassword extends TLObject {
+      __response__!: account.TypePassword;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -80050,6 +80577,7 @@ export namespace Raw {
       }
     }
     export class GetPasswordSettings extends TLObject {
+      __response__!: account.TypePasswordSettings;
       password!: TypeInputCheckPasswordSRP;
 
       constructor(params: { password: TypeInputCheckPasswordSRP }) {
@@ -80086,6 +80614,7 @@ export namespace Raw {
       }
     }
     export class UpdatePasswordSettings extends TLObject {
+      __response__!: Bool;
       password!: TypeInputCheckPasswordSRP;
       newSettings!: account.TypePasswordInputSettings;
 
@@ -80137,6 +80666,7 @@ export namespace Raw {
       }
     }
     export class SendConfirmPhoneCode extends TLObject {
+      __response__!: auth.TypeSentCode;
       hash!: string;
       settings!: TypeCodeSettings;
 
@@ -80182,6 +80712,7 @@ export namespace Raw {
       }
     }
     export class ConfirmPhone extends TLObject {
+      __response__!: Bool;
       phoneCodeHash!: string;
       phoneCode!: string;
 
@@ -80224,6 +80755,7 @@ export namespace Raw {
       }
     }
     export class GetTmpPassword extends TLObject {
+      __response__!: account.TypeTmpPassword;
       password!: TypeInputCheckPasswordSRP;
       period!: int;
 
@@ -80266,6 +80798,8 @@ export namespace Raw {
       }
     }
     export class GetWebAuthorizations extends TLObject {
+      __response__!: account.TypeWebAuthorizations;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -80298,6 +80832,7 @@ export namespace Raw {
       }
     }
     export class ResetWebAuthorization extends TLObject {
+      __response__!: Bool;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -80337,6 +80872,8 @@ export namespace Raw {
       }
     }
     export class ResetWebAuthorizations extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -80369,6 +80906,8 @@ export namespace Raw {
       }
     }
     export class GetAllSecureValues extends TLObject {
+      __response__!: Vector<TypeSecureValue>;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -80398,6 +80937,7 @@ export namespace Raw {
       }
     }
     export class GetSecureValue extends TLObject {
+      __response__!: Vector<TypeSecureValue>;
       types!: Vector<TypeSecureValueType>;
 
       constructor(params: { types: Vector<TypeSecureValueType> }) {
@@ -80434,6 +80974,7 @@ export namespace Raw {
       }
     }
     export class SaveSecureValue extends TLObject {
+      __response__!: TypeSecureValue;
       value!: TypeInputSecureValue;
       secureSecretId!: long;
 
@@ -80476,6 +81017,7 @@ export namespace Raw {
       }
     }
     export class DeleteSecureValue extends TLObject {
+      __response__!: Bool;
       types!: Vector<TypeSecureValueType>;
 
       constructor(params: { types: Vector<TypeSecureValueType> }) {
@@ -80512,6 +81054,7 @@ export namespace Raw {
       }
     }
     export class GetAuthorizationForm extends TLObject {
+      __response__!: account.TypeAuthorizationForm;
       botId!: long;
       scope!: string;
       publicKey!: string;
@@ -80567,6 +81110,7 @@ export namespace Raw {
       }
     }
     export class AcceptAuthorization extends TLObject {
+      __response__!: Bool;
       botId!: long;
       scope!: string;
       publicKey!: string;
@@ -80639,6 +81183,7 @@ export namespace Raw {
       }
     }
     export class SendVerifyPhoneCode extends TLObject {
+      __response__!: auth.TypeSentCode;
       phoneNumber!: string;
       settings!: TypeCodeSettings;
 
@@ -80684,6 +81229,7 @@ export namespace Raw {
       }
     }
     export class VerifyPhone extends TLObject {
+      __response__!: Bool;
       phoneNumber!: string;
       phoneCodeHash!: string;
       phoneCode!: string;
@@ -80736,6 +81282,7 @@ export namespace Raw {
       }
     }
     export class SendVerifyEmailCode extends TLObject {
+      __response__!: account.TypeSentEmailCode;
       purpose!: TypeEmailVerifyPurpose;
       email!: string;
 
@@ -80778,6 +81325,7 @@ export namespace Raw {
       }
     }
     export class VerifyEmail extends TLObject {
+      __response__!: account.TypeEmailVerified;
       purpose!: TypeEmailVerifyPurpose;
       verification!: TypeEmailVerification;
 
@@ -80823,6 +81371,7 @@ export namespace Raw {
       }
     }
     export class InitTakeoutSession extends TLObject {
+      __response__!: account.TypeTakeout;
       contacts?: boolean;
       messageUsers?: boolean;
       messageChats?: boolean;
@@ -80913,6 +81462,7 @@ export namespace Raw {
       }
     }
     export class FinishTakeoutSession extends TLObject {
+      __response__!: Bool;
       success?: boolean;
 
       constructor(params: { success?: boolean }) {
@@ -80955,6 +81505,7 @@ export namespace Raw {
       }
     }
     export class ConfirmPasswordEmail extends TLObject {
+      __response__!: Bool;
       code!: string;
 
       constructor(params: { code: string }) {
@@ -80994,6 +81545,8 @@ export namespace Raw {
       }
     }
     export class ResendPasswordEmail extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -81023,6 +81576,8 @@ export namespace Raw {
       }
     }
     export class CancelPasswordEmail extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -81052,6 +81607,8 @@ export namespace Raw {
       }
     }
     export class GetContactSignUpNotification extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -81084,6 +81641,7 @@ export namespace Raw {
       }
     }
     export class SetContactSignUpNotification extends TLObject {
+      __response__!: Bool;
       silent!: Bool;
 
       constructor(params: { silent: Bool }) {
@@ -81123,6 +81681,7 @@ export namespace Raw {
       }
     }
     export class GetNotifyExceptions extends TLObject {
+      __response__!: TypeUpdates;
       compareSound?: boolean;
       compareStories?: boolean;
       peer?: TypeInputNotifyPeer;
@@ -81181,6 +81740,7 @@ export namespace Raw {
       }
     }
     export class GetWallPaper extends TLObject {
+      __response__!: TypeWallPaper;
       wallpaper!: TypeInputWallPaper;
 
       constructor(params: { wallpaper: TypeInputWallPaper }) {
@@ -81217,6 +81777,7 @@ export namespace Raw {
       }
     }
     export class UploadWallPaper extends TLObject {
+      __response__!: TypeWallPaper;
       forChat?: boolean;
       file!: TypeInputFile;
       mimeType!: string;
@@ -81284,6 +81845,7 @@ export namespace Raw {
       }
     }
     export class SaveWallPaper extends TLObject {
+      __response__!: Bool;
       wallpaper!: TypeInputWallPaper;
       unsave!: Bool;
       settings!: TypeWallPaperSettings;
@@ -81340,6 +81902,7 @@ export namespace Raw {
       }
     }
     export class InstallWallPaper extends TLObject {
+      __response__!: Bool;
       wallpaper!: TypeInputWallPaper;
       settings!: TypeWallPaperSettings;
 
@@ -81382,6 +81945,8 @@ export namespace Raw {
       }
     }
     export class ResetWallPapers extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -81411,6 +81976,8 @@ export namespace Raw {
       }
     }
     export class GetAutoDownloadSettings extends TLObject {
+      __response__!: account.TypeAutoDownloadSettings;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -81443,6 +82010,7 @@ export namespace Raw {
       }
     }
     export class SaveAutoDownloadSettings extends TLObject {
+      __response__!: Bool;
       low?: boolean;
       high?: boolean;
       settings!: TypeAutoDownloadSettings;
@@ -81499,6 +82067,7 @@ export namespace Raw {
       }
     }
     export class UploadTheme extends TLObject {
+      __response__!: TypeDocument;
       file!: TypeInputFile;
       thumb?: TypeInputFile;
       fileName!: string;
@@ -81569,6 +82138,7 @@ export namespace Raw {
       }
     }
     export class CreateTheme extends TLObject {
+      __response__!: TypeTheme;
       slug!: string;
       title!: string;
       document?: TypeInputDocument;
@@ -81640,6 +82210,7 @@ export namespace Raw {
       }
     }
     export class UpdateTheme extends TLObject {
+      __response__!: TypeTheme;
       format!: string;
       theme!: TypeInputTheme;
       slug?: string;
@@ -81729,6 +82300,7 @@ export namespace Raw {
       }
     }
     export class SaveTheme extends TLObject {
+      __response__!: Bool;
       theme!: TypeInputTheme;
       unsave!: Bool;
 
@@ -81771,6 +82343,7 @@ export namespace Raw {
       }
     }
     export class InstallTheme extends TLObject {
+      __response__!: Bool;
       dark?: boolean;
       theme?: TypeInputTheme;
       format?: string;
@@ -81841,6 +82414,7 @@ export namespace Raw {
       }
     }
     export class GetTheme extends TLObject {
+      __response__!: TypeTheme;
       format!: string;
       theme!: TypeInputTheme;
 
@@ -81883,6 +82457,7 @@ export namespace Raw {
       }
     }
     export class GetThemes extends TLObject {
+      __response__!: account.TypeThemes;
       format!: string;
       hash!: long;
 
@@ -81925,6 +82500,7 @@ export namespace Raw {
       }
     }
     export class SetContentSettings extends TLObject {
+      __response__!: Bool;
       sensitiveEnabled?: boolean;
 
       constructor(params: { sensitiveEnabled?: boolean }) {
@@ -81964,6 +82540,8 @@ export namespace Raw {
       }
     }
     export class GetContentSettings extends TLObject {
+      __response__!: account.TypeContentSettings;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -81993,6 +82571,7 @@ export namespace Raw {
       }
     }
     export class GetMultiWallPapers extends TLObject {
+      __response__!: Vector<TypeWallPaper>;
       wallpapers!: Vector<TypeInputWallPaper>;
 
       constructor(params: { wallpapers: Vector<TypeInputWallPaper> }) {
@@ -82029,6 +82608,8 @@ export namespace Raw {
       }
     }
     export class GetGlobalPrivacySettings extends TLObject {
+      __response__!: TypeGlobalPrivacySettings;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -82061,6 +82642,7 @@ export namespace Raw {
       }
     }
     export class SetGlobalPrivacySettings extends TLObject {
+      __response__!: TypeGlobalPrivacySettings;
       settings!: TypeGlobalPrivacySettings;
 
       constructor(params: { settings: TypeGlobalPrivacySettings }) {
@@ -82100,6 +82682,7 @@ export namespace Raw {
       }
     }
     export class ReportProfilePhoto extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       photoId!: TypeInputPhoto;
       reason!: TypeReportReason;
@@ -82164,6 +82747,8 @@ export namespace Raw {
       }
     }
     export class ResetPassword extends TLObject {
+      __response__!: account.TypeResetPasswordResult;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -82193,6 +82778,8 @@ export namespace Raw {
       }
     }
     export class DeclinePasswordReset extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -82225,6 +82812,7 @@ export namespace Raw {
       }
     }
     export class GetChatThemes extends TLObject {
+      __response__!: account.TypeThemes;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82261,6 +82849,7 @@ export namespace Raw {
       }
     }
     export class SetAuthorizationTTL extends TLObject {
+      __response__!: Bool;
       authorizationTtlDays!: int;
 
       constructor(params: { authorizationTtlDays: int }) {
@@ -82297,6 +82886,7 @@ export namespace Raw {
       }
     }
     export class ChangeAuthorizationSettings extends TLObject {
+      __response__!: Bool;
       hash!: long;
       encryptedRequestsDisabled?: Bool;
       callRequestsDisabled?: Bool;
@@ -82363,6 +82953,7 @@ export namespace Raw {
       }
     }
     export class GetSavedRingtones extends TLObject {
+      __response__!: account.TypeSavedRingtones;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82399,6 +82990,7 @@ export namespace Raw {
       }
     }
     export class SaveRingtone extends TLObject {
+      __response__!: account.TypeSavedRingtone;
       id!: TypeInputDocument;
       unsave!: Bool;
 
@@ -82441,6 +83033,7 @@ export namespace Raw {
       }
     }
     export class UploadRingtone extends TLObject {
+      __response__!: TypeDocument;
       file!: TypeInputFile;
       fileName!: string;
       mimeType!: string;
@@ -82493,6 +83086,7 @@ export namespace Raw {
       }
     }
     export class UpdateEmojiStatus extends TLObject {
+      __response__!: Bool;
       emojiStatus!: TypeEmojiStatus;
 
       constructor(params: { emojiStatus: TypeEmojiStatus }) {
@@ -82529,6 +83123,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultEmojiStatuses extends TLObject {
+      __response__!: account.TypeEmojiStatuses;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82568,6 +83163,7 @@ export namespace Raw {
       }
     }
     export class GetRecentEmojiStatuses extends TLObject {
+      __response__!: account.TypeEmojiStatuses;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82607,6 +83203,8 @@ export namespace Raw {
       }
     }
     export class ClearRecentEmojiStatuses extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -82639,6 +83237,7 @@ export namespace Raw {
       }
     }
     export class ReorderUsernames extends TLObject {
+      __response__!: Bool;
       order!: Vector<string>;
 
       constructor(params: { order: Vector<string> }) {
@@ -82675,6 +83274,7 @@ export namespace Raw {
       }
     }
     export class ToggleUsername extends TLObject {
+      __response__!: Bool;
       username!: string;
       active!: Bool;
 
@@ -82717,6 +83317,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultProfilePhotoEmojis extends TLObject {
+      __response__!: TypeEmojiList;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82756,6 +83357,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultGroupPhotoEmojis extends TLObject {
+      __response__!: TypeEmojiList;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82795,6 +83397,8 @@ export namespace Raw {
       }
     }
     export class GetAutoSaveSettings extends TLObject {
+      __response__!: account.TypeAutoSaveSettings;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -82824,6 +83428,7 @@ export namespace Raw {
       }
     }
     export class SaveAutoSaveSettings extends TLObject {
+      __response__!: Bool;
       users?: boolean;
       chats?: boolean;
       broadcasts?: boolean;
@@ -82899,6 +83504,8 @@ export namespace Raw {
       }
     }
     export class DeleteAutoSaveExceptions extends TLObject {
+      __response__!: Bool;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -82931,6 +83538,7 @@ export namespace Raw {
       }
     }
     export class InvalidateSignInCodes extends TLObject {
+      __response__!: Bool;
       codes!: Vector<string>;
 
       constructor(params: { codes: Vector<string> }) {
@@ -82971,6 +83579,12 @@ export namespace Raw {
     }
   }
   export namespace channels {
+    export type TypeSendAsPeers = Raw.channels.SendAsPeers;
+    export type TypeAdminLogResults = Raw.channels.AdminLogResults;
+    export type TypeChannelParticipant = Raw.channels.ChannelParticipant;
+    export type TypeChannelParticipants =
+      | Raw.channels.ChannelParticipants
+      | Raw.channels.ChannelParticipantsNotModified;
     export class ChannelParticipants extends TLObject {
       count!: int;
       participants!: Vector<TypeChannelParticipant>;
@@ -83231,6 +83845,7 @@ export namespace Raw {
       }
     }
     export class ReadHistory extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       maxId!: int;
 
@@ -83273,6 +83888,7 @@ export namespace Raw {
       }
     }
     export class DeleteMessages extends TLObject {
+      __response__!: messages.TypeAffectedMessages;
       channel!: TypeInputChannel;
       id!: Vector<int>;
 
@@ -83315,6 +83931,7 @@ export namespace Raw {
       }
     }
     export class ReportSpam extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       participant!: TypeInputPeer;
       id!: Vector<int>;
@@ -83367,6 +83984,7 @@ export namespace Raw {
       }
     }
     export class GetMessages extends TLObject {
+      __response__!: messages.TypeMessages;
       channel!: TypeInputChannel;
       id!: Vector<TypeInputMessage>;
 
@@ -83409,6 +84027,7 @@ export namespace Raw {
       }
     }
     export class GetParticipants extends TLObject {
+      __response__!: channels.TypeChannelParticipants;
       channel!: TypeInputChannel;
       filter!: TypeChannelParticipantsFilter;
       offset!: int;
@@ -83481,6 +84100,7 @@ export namespace Raw {
       }
     }
     export class GetParticipant extends TLObject {
+      __response__!: channels.TypeChannelParticipant;
       channel!: TypeInputChannel;
       participant!: TypeInputPeer;
 
@@ -83523,6 +84143,7 @@ export namespace Raw {
       }
     }
     export class GetChannels extends TLObject {
+      __response__!: messages.TypeChats;
       id!: Vector<TypeInputChannel>;
 
       constructor(params: { id: Vector<TypeInputChannel> }) {
@@ -83559,6 +84180,7 @@ export namespace Raw {
       }
     }
     export class GetFullChannel extends TLObject {
+      __response__!: messages.TypeChatFull;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -83595,6 +84217,7 @@ export namespace Raw {
       }
     }
     export class CreateChannel extends TLObject {
+      __response__!: TypeUpdates;
       broadcast?: boolean;
       megagroup?: boolean;
       forImport?: boolean;
@@ -83709,6 +84332,7 @@ export namespace Raw {
       }
     }
     export class EditAdmin extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       userId!: TypeInputUser;
       adminRights!: TypeChatAdminRights;
@@ -83773,6 +84397,7 @@ export namespace Raw {
       }
     }
     export class EditTitle extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       title!: string;
 
@@ -83815,6 +84440,7 @@ export namespace Raw {
       }
     }
     export class EditPhoto extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       photo!: TypeInputChatPhoto;
 
@@ -83857,6 +84483,7 @@ export namespace Raw {
       }
     }
     export class CheckUsername extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       username!: string;
 
@@ -83899,6 +84526,7 @@ export namespace Raw {
       }
     }
     export class UpdateUsername extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       username!: string;
 
@@ -83941,6 +84569,7 @@ export namespace Raw {
       }
     }
     export class JoinChannel extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -83977,6 +84606,7 @@ export namespace Raw {
       }
     }
     export class LeaveChannel extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -84013,6 +84643,7 @@ export namespace Raw {
       }
     }
     export class InviteToChannel extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       users!: Vector<TypeInputUser>;
 
@@ -84055,6 +84686,7 @@ export namespace Raw {
       }
     }
     export class DeleteChannel extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -84091,6 +84723,7 @@ export namespace Raw {
       }
     }
     export class ExportMessageLink extends TLObject {
+      __response__!: TypeExportedMessageLink;
       grouped?: boolean;
       thread?: boolean;
       channel!: TypeInputChannel;
@@ -84156,6 +84789,7 @@ export namespace Raw {
       }
     }
     export class ToggleSignatures extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -84198,6 +84832,7 @@ export namespace Raw {
       }
     }
     export class GetAdminedPublicChannels extends TLObject {
+      __response__!: messages.TypeChats;
       byLocation?: boolean;
       checkLimit?: boolean;
 
@@ -84247,6 +84882,7 @@ export namespace Raw {
       }
     }
     export class EditBanned extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       participant!: TypeInputPeer;
       bannedRights!: TypeChatBannedRights;
@@ -84303,6 +84939,7 @@ export namespace Raw {
       }
     }
     export class GetAdminLog extends TLObject {
+      __response__!: channels.TypeAdminLogResults;
       channel!: TypeInputChannel;
       q!: string;
       eventsFilter?: TypeChannelAdminLogEventsFilter;
@@ -84398,6 +85035,7 @@ export namespace Raw {
       }
     }
     export class SetStickers extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       stickerset!: TypeInputStickerSet;
 
@@ -84440,6 +85078,7 @@ export namespace Raw {
       }
     }
     export class ReadMessageContents extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       id!: Vector<int>;
 
@@ -84485,6 +85124,7 @@ export namespace Raw {
       }
     }
     export class DeleteHistory extends TLObject {
+      __response__!: TypeUpdates;
       forEveryone?: boolean;
       channel!: TypeInputChannel;
       maxId!: int;
@@ -84540,6 +85180,7 @@ export namespace Raw {
       }
     }
     export class TogglePreHistoryHidden extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -84585,6 +85226,7 @@ export namespace Raw {
       }
     }
     export class GetLeftChannels extends TLObject {
+      __response__!: messages.TypeChats;
       offset!: int;
 
       constructor(params: { offset: int }) {
@@ -84621,6 +85263,8 @@ export namespace Raw {
       }
     }
     export class GetGroupsForDiscussion extends TLObject {
+      __response__!: messages.TypeChats;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -84653,6 +85297,7 @@ export namespace Raw {
       }
     }
     export class SetDiscussionGroup extends TLObject {
+      __response__!: Bool;
       broadcast!: TypeInputChannel;
       group!: TypeInputChannel;
 
@@ -84695,6 +85340,7 @@ export namespace Raw {
       }
     }
     export class EditCreator extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       userId!: TypeInputUser;
       password!: TypeInputCheckPasswordSRP;
@@ -84751,6 +85397,7 @@ export namespace Raw {
       }
     }
     export class EditLocation extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       geoPoint!: TypeInputGeoPoint;
       address!: string;
@@ -84807,6 +85454,7 @@ export namespace Raw {
       }
     }
     export class ToggleSlowMode extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       seconds!: int;
 
@@ -84849,6 +85497,8 @@ export namespace Raw {
       }
     }
     export class GetInactiveChannels extends TLObject {
+      __response__!: messages.TypeInactiveChats;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -84881,6 +85531,7 @@ export namespace Raw {
       }
     }
     export class ConvertToGigagroup extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -84917,6 +85568,7 @@ export namespace Raw {
       }
     }
     export class ViewSponsoredMessage extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       randomId!: bytes;
 
@@ -84962,6 +85614,7 @@ export namespace Raw {
       }
     }
     export class GetSponsoredMessages extends TLObject {
+      __response__!: messages.TypeSponsoredMessages;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -85001,6 +85654,7 @@ export namespace Raw {
       }
     }
     export class GetSendAs extends TLObject {
+      __response__!: channels.TypeSendAsPeers;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -85037,6 +85691,7 @@ export namespace Raw {
       }
     }
     export class DeleteParticipantHistory extends TLObject {
+      __response__!: messages.TypeAffectedHistory;
       channel!: TypeInputChannel;
       participant!: TypeInputPeer;
 
@@ -85085,6 +85740,7 @@ export namespace Raw {
       }
     }
     export class ToggleJoinToSend extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -85127,6 +85783,7 @@ export namespace Raw {
       }
     }
     export class ToggleJoinRequest extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -85169,6 +85826,7 @@ export namespace Raw {
       }
     }
     export class ReorderUsernames extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       order!: Vector<string>;
 
@@ -85211,6 +85869,7 @@ export namespace Raw {
       }
     }
     export class ToggleUsername extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       username!: string;
       active!: Bool;
@@ -85263,6 +85922,7 @@ export namespace Raw {
       }
     }
     export class DeactivateAllUsernames extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
 
       constructor(params: { channel: TypeInputChannel }) {
@@ -85302,6 +85962,7 @@ export namespace Raw {
       }
     }
     export class ToggleForum extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -85344,6 +86005,7 @@ export namespace Raw {
       }
     }
     export class CreateForumTopic extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       title!: string;
       iconColor?: int;
@@ -85432,6 +86094,7 @@ export namespace Raw {
       }
     }
     export class GetForumTopics extends TLObject {
+      __response__!: messages.TypeForumTopics;
       channel!: TypeInputChannel;
       q?: string;
       offsetDate!: int;
@@ -85518,6 +86181,7 @@ export namespace Raw {
       }
     }
     export class GetForumTopicsByID extends TLObject {
+      __response__!: messages.TypeForumTopics;
       channel!: TypeInputChannel;
       topics!: Vector<int>;
 
@@ -85560,6 +86224,7 @@ export namespace Raw {
       }
     }
     export class EditForumTopic extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       topicId!: int;
       title?: string;
@@ -85649,6 +86314,7 @@ export namespace Raw {
       }
     }
     export class UpdatePinnedForumTopic extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       topicId!: int;
       pinned!: Bool;
@@ -85704,6 +86370,7 @@ export namespace Raw {
       }
     }
     export class DeleteTopicHistory extends TLObject {
+      __response__!: messages.TypeAffectedHistory;
       channel!: TypeInputChannel;
       topMsgId!: int;
 
@@ -85746,6 +86413,7 @@ export namespace Raw {
       }
     }
     export class ReorderPinnedForumTopics extends TLObject {
+      __response__!: TypeUpdates;
       force?: boolean;
       channel!: TypeInputChannel;
       order!: Vector<int>;
@@ -85804,6 +86472,7 @@ export namespace Raw {
       }
     }
     export class ToggleAntiSpam extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -85846,6 +86515,7 @@ export namespace Raw {
       }
     }
     export class ReportAntiSpamFalsePositive extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       msgId!: int;
 
@@ -85891,6 +86561,7 @@ export namespace Raw {
       }
     }
     export class ToggleParticipantsHidden extends TLObject {
+      __response__!: TypeUpdates;
       channel!: TypeInputChannel;
       enabled!: Bool;
 
@@ -85936,6 +86607,7 @@ export namespace Raw {
       }
     }
     export class ClickSponsoredMessage extends TLObject {
+      __response__!: Bool;
       channel!: TypeInputChannel;
       randomId!: bytes;
 
@@ -85982,6 +86654,15 @@ export namespace Raw {
     }
   }
   export namespace payments {
+    export type TypeExportedInvoice = Raw.payments.ExportedInvoice;
+    export type TypeBankCardData = Raw.payments.BankCardData;
+    export type TypeSavedInfo = Raw.payments.SavedInfo;
+    export type TypePaymentResult =
+      | Raw.payments.PaymentResult
+      | Raw.payments.PaymentVerificationNeeded;
+    export type TypeValidatedRequestedInfo = Raw.payments.ValidatedRequestedInfo;
+    export type TypePaymentReceipt = Raw.payments.PaymentReceipt;
+    export type TypePaymentForm = Raw.payments.PaymentForm;
     export class PaymentForm extends TLObject {
       canSaveCredentials?: boolean;
       passwordMissing?: boolean;
@@ -86592,6 +87273,7 @@ export namespace Raw {
       }
     }
     export class GetPaymentForm extends TLObject {
+      __response__!: payments.TypePaymentForm;
       invoice!: TypeInputInvoice;
       themeParams?: TypeDataJSON;
 
@@ -86640,6 +87322,7 @@ export namespace Raw {
       }
     }
     export class GetPaymentReceipt extends TLObject {
+      __response__!: payments.TypePaymentReceipt;
       peer!: TypeInputPeer;
       msgId!: int;
 
@@ -86682,6 +87365,7 @@ export namespace Raw {
       }
     }
     export class ValidateRequestedInfo extends TLObject {
+      __response__!: payments.TypeValidatedRequestedInfo;
       save?: boolean;
       invoice!: TypeInputInvoice;
       info!: TypePaymentRequestedInfo;
@@ -86740,6 +87424,7 @@ export namespace Raw {
       }
     }
     export class SendPaymentForm extends TLObject {
+      __response__!: payments.TypePaymentResult;
       formId!: long;
       invoice!: TypeInputInvoice;
       requestedInfoId?: string;
@@ -86835,6 +87520,8 @@ export namespace Raw {
       }
     }
     export class GetSavedInfo extends TLObject {
+      __response__!: payments.TypeSavedInfo;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -86864,6 +87551,7 @@ export namespace Raw {
       }
     }
     export class ClearSavedInfo extends TLObject {
+      __response__!: Bool;
       credentials?: boolean;
       info?: boolean;
 
@@ -86907,6 +87595,7 @@ export namespace Raw {
       }
     }
     export class GetBankCardData extends TLObject {
+      __response__!: payments.TypeBankCardData;
       number!: string;
 
       constructor(params: { number: string }) {
@@ -86943,6 +87632,7 @@ export namespace Raw {
       }
     }
     export class ExportInvoice extends TLObject {
+      __response__!: payments.TypeExportedInvoice;
       invoiceMedia!: TypeInputMedia;
 
       constructor(params: { invoiceMedia: TypeInputMedia }) {
@@ -86979,6 +87669,7 @@ export namespace Raw {
       }
     }
     export class AssignAppStoreTransaction extends TLObject {
+      __response__!: TypeUpdates;
       receipt!: bytes;
       purpose!: TypeInputStorePaymentPurpose;
 
@@ -87024,6 +87715,7 @@ export namespace Raw {
       }
     }
     export class AssignPlayMarketTransaction extends TLObject {
+      __response__!: TypeUpdates;
       receipt!: TypeDataJSON;
       purpose!: TypeInputStorePaymentPurpose;
 
@@ -87069,6 +87761,7 @@ export namespace Raw {
       }
     }
     export class CanPurchasePremium extends TLObject {
+      __response__!: Bool;
       purpose!: TypeInputStorePaymentPurpose;
 
       constructor(params: { purpose: TypeInputStorePaymentPurpose }) {
@@ -87106,6 +87799,13 @@ export namespace Raw {
     }
   }
   export namespace phone {
+    export type TypeGroupCallStreamRtmpUrl = Raw.phone.GroupCallStreamRtmpUrl;
+    export type TypeGroupCallStreamChannels = Raw.phone.GroupCallStreamChannels;
+    export type TypeExportedGroupCallInvite = Raw.phone.ExportedGroupCallInvite;
+    export type TypeJoinAsPeers = Raw.phone.JoinAsPeers;
+    export type TypeGroupParticipants = Raw.phone.GroupParticipants;
+    export type TypeGroupCall = Raw.phone.GroupCall;
+    export type TypePhoneCall = Raw.phone.PhoneCall;
     export class PhoneCall extends TLObject {
       phoneCall!: TypePhoneCall;
       users!: Vector<TypeUser>;
@@ -87476,6 +88176,8 @@ export namespace Raw {
       }
     }
     export class GetCallConfig extends TLObject {
+      __response__!: TypeDataJSON;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -87505,6 +88207,7 @@ export namespace Raw {
       }
     }
     export class RequestCall extends TLObject {
+      __response__!: phone.TypePhoneCall;
       video?: boolean;
       userId!: TypeInputUser;
       randomId!: int;
@@ -87580,6 +88283,7 @@ export namespace Raw {
       }
     }
     export class AcceptCall extends TLObject {
+      __response__!: phone.TypePhoneCall;
       peer!: TypeInputPhoneCall;
       gB!: bytes;
       protocol!: TypePhoneCallProtocol;
@@ -87632,6 +88336,7 @@ export namespace Raw {
       }
     }
     export class ConfirmCall extends TLObject {
+      __response__!: phone.TypePhoneCall;
       peer!: TypeInputPhoneCall;
       gA!: bytes;
       keyFingerprint!: long;
@@ -87696,6 +88401,7 @@ export namespace Raw {
       }
     }
     export class ReceivedCall extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPhoneCall;
 
       constructor(params: { peer: TypeInputPhoneCall }) {
@@ -87732,6 +88438,7 @@ export namespace Raw {
       }
     }
     export class DiscardCall extends TLObject {
+      __response__!: TypeUpdates;
       video?: boolean;
       peer!: TypeInputPhoneCall;
       duration!: int;
@@ -87807,6 +88514,7 @@ export namespace Raw {
       }
     }
     export class SetCallRating extends TLObject {
+      __response__!: TypeUpdates;
       userInitiative?: boolean;
       peer!: TypeInputPhoneCall;
       rating!: int;
@@ -87874,6 +88582,7 @@ export namespace Raw {
       }
     }
     export class SaveCallDebug extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPhoneCall;
       debug!: TypeDataJSON;
 
@@ -87916,6 +88625,7 @@ export namespace Raw {
       }
     }
     export class SendSignalingData extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPhoneCall;
       data!: bytes;
 
@@ -87958,6 +88668,7 @@ export namespace Raw {
       }
     }
     export class CreateGroupCall extends TLObject {
+      __response__!: TypeUpdates;
       rtmpStream?: boolean;
       peer!: TypeInputPeer;
       randomId!: int;
@@ -88035,6 +88746,7 @@ export namespace Raw {
       }
     }
     export class JoinGroupCall extends TLObject {
+      __response__!: TypeUpdates;
       muted?: boolean;
       videoStopped?: boolean;
       call!: TypeInputGroupCall;
@@ -88117,6 +88829,7 @@ export namespace Raw {
       }
     }
     export class LeaveGroupCall extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
       source!: int;
 
@@ -88159,6 +88872,7 @@ export namespace Raw {
       }
     }
     export class InviteToGroupCall extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
       users!: Vector<TypeInputUser>;
 
@@ -88201,6 +88915,7 @@ export namespace Raw {
       }
     }
     export class DiscardGroupCall extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
 
       constructor(params: { call: TypeInputGroupCall }) {
@@ -88237,6 +88952,7 @@ export namespace Raw {
       }
     }
     export class ToggleGroupCallSettings extends TLObject {
+      __response__!: TypeUpdates;
       resetInviteHash?: boolean;
       call!: TypeInputGroupCall;
       joinMuted?: Bool;
@@ -88300,6 +89016,7 @@ export namespace Raw {
       }
     }
     export class GetGroupCall extends TLObject {
+      __response__!: phone.TypeGroupCall;
       call!: TypeInputGroupCall;
       limit!: int;
 
@@ -88342,6 +89059,7 @@ export namespace Raw {
       }
     }
     export class GetGroupParticipants extends TLObject {
+      __response__!: phone.TypeGroupParticipants;
       call!: TypeInputGroupCall;
       ids!: Vector<TypeInputPeer>;
       sources!: Vector<int>;
@@ -88414,6 +89132,7 @@ export namespace Raw {
       }
     }
     export class CheckGroupCall extends TLObject {
+      __response__!: Vector<int>;
       call!: TypeInputGroupCall;
       sources!: Vector<int>;
 
@@ -88456,6 +89175,7 @@ export namespace Raw {
       }
     }
     export class ToggleGroupCallRecord extends TLObject {
+      __response__!: TypeUpdates;
       start?: boolean;
       video?: boolean;
       call!: TypeInputGroupCall;
@@ -88531,6 +89251,7 @@ export namespace Raw {
       }
     }
     export class EditGroupCallParticipant extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
       participant!: TypeInputPeer;
       muted?: Bool;
@@ -88650,6 +89371,7 @@ export namespace Raw {
       }
     }
     export class EditGroupCallTitle extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
       title!: string;
 
@@ -88692,6 +89414,7 @@ export namespace Raw {
       }
     }
     export class GetGroupCallJoinAs extends TLObject {
+      __response__!: phone.TypeJoinAsPeers;
       peer!: TypeInputPeer;
 
       constructor(params: { peer: TypeInputPeer }) {
@@ -88728,6 +89451,7 @@ export namespace Raw {
       }
     }
     export class ExportGroupCallInvite extends TLObject {
+      __response__!: phone.TypeExportedGroupCallInvite;
       canSelfUnmute?: boolean;
       call!: TypeInputGroupCall;
 
@@ -88773,6 +89497,7 @@ export namespace Raw {
       }
     }
     export class ToggleGroupCallStartSubscription extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
       subscribed!: Bool;
 
@@ -88821,6 +89546,7 @@ export namespace Raw {
       }
     }
     export class StartScheduledGroupCall extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
 
       constructor(params: { call: TypeInputGroupCall }) {
@@ -88860,6 +89586,7 @@ export namespace Raw {
       }
     }
     export class SaveDefaultGroupCallJoinAs extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPeer;
       joinAs!: TypeInputPeer;
 
@@ -88905,6 +89632,7 @@ export namespace Raw {
       }
     }
     export class JoinGroupCallPresentation extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
       params!: TypeDataJSON;
 
@@ -88950,6 +89678,7 @@ export namespace Raw {
       }
     }
     export class LeaveGroupCallPresentation extends TLObject {
+      __response__!: TypeUpdates;
       call!: TypeInputGroupCall;
 
       constructor(params: { call: TypeInputGroupCall }) {
@@ -88989,6 +89718,7 @@ export namespace Raw {
       }
     }
     export class GetGroupCallStreamChannels extends TLObject {
+      __response__!: phone.TypeGroupCallStreamChannels;
       call!: TypeInputGroupCall;
 
       constructor(params: { call: TypeInputGroupCall }) {
@@ -89028,6 +89758,7 @@ export namespace Raw {
       }
     }
     export class GetGroupCallStreamRtmpUrl extends TLObject {
+      __response__!: phone.TypeGroupCallStreamRtmpUrl;
       peer!: TypeInputPeer;
       revoke!: Bool;
 
@@ -89073,6 +89804,7 @@ export namespace Raw {
       }
     }
     export class SaveCallLog extends TLObject {
+      __response__!: Bool;
       peer!: TypeInputPhoneCall;
       file!: TypeInputFile;
 
@@ -89116,6 +89848,9 @@ export namespace Raw {
     }
   }
   export namespace stats {
+    export type TypeMessageStats = Raw.stats.MessageStats;
+    export type TypeMegagroupStats = Raw.stats.MegagroupStats;
+    export type TypeBroadcastStats = Raw.stats.BroadcastStats;
     export class BroadcastStats extends TLObject {
       period!: TypeStatsDateRangeDays;
       followers!: TypeStatsAbsValueAndPrev;
@@ -89507,6 +90242,7 @@ export namespace Raw {
       }
     }
     export class GetBroadcastStats extends TLObject {
+      __response__!: stats.TypeBroadcastStats;
       dark?: boolean;
       channel!: TypeInputChannel;
 
@@ -89552,6 +90288,7 @@ export namespace Raw {
       }
     }
     export class LoadAsyncGraph extends TLObject {
+      __response__!: TypeStatsGraph;
       token!: string;
       x?: long;
 
@@ -89600,6 +90337,7 @@ export namespace Raw {
       }
     }
     export class GetMegagroupStats extends TLObject {
+      __response__!: stats.TypeMegagroupStats;
       dark?: boolean;
       channel!: TypeInputChannel;
 
@@ -89645,6 +90383,7 @@ export namespace Raw {
       }
     }
     export class GetMessagePublicForwards extends TLObject {
+      __response__!: messages.TypeMessages;
       channel!: TypeInputChannel;
       msgId!: int;
       offsetRate!: int;
@@ -89728,6 +90467,7 @@ export namespace Raw {
       }
     }
     export class GetMessageStats extends TLObject {
+      __response__!: stats.TypeMessageStats;
       dark?: boolean;
       channel!: TypeInputChannel;
       msgId!: int;
@@ -89780,6 +90520,7 @@ export namespace Raw {
     }
   }
   export namespace stickers {
+    export type TypeSuggestedShortName = Raw.stickers.SuggestedShortName;
     export class SuggestedShortName extends TLObject {
       shortName!: string;
 
@@ -89817,6 +90558,7 @@ export namespace Raw {
       }
     }
     export class CreateStickerSet extends TLObject {
+      __response__!: messages.TypeStickerSet;
       masks?: boolean;
       animated?: boolean;
       videos?: boolean;
@@ -89946,6 +90688,7 @@ export namespace Raw {
       }
     }
     export class RemoveStickerFromSet extends TLObject {
+      __response__!: messages.TypeStickerSet;
       sticker!: TypeInputDocument;
 
       constructor(params: { sticker: TypeInputDocument }) {
@@ -89985,6 +90728,7 @@ export namespace Raw {
       }
     }
     export class ChangeStickerPosition extends TLObject {
+      __response__!: messages.TypeStickerSet;
       sticker!: TypeInputDocument;
       position!: int;
 
@@ -90030,6 +90774,7 @@ export namespace Raw {
       }
     }
     export class AddStickerToSet extends TLObject {
+      __response__!: messages.TypeStickerSet;
       stickerset!: TypeInputStickerSet;
       sticker!: TypeInputStickerSetItem;
 
@@ -90072,6 +90817,7 @@ export namespace Raw {
       }
     }
     export class SetStickerSetThumb extends TLObject {
+      __response__!: messages.TypeStickerSet;
       stickerset!: TypeInputStickerSet;
       thumb?: TypeInputDocument;
       thumbDocumentId?: long;
@@ -90135,6 +90881,7 @@ export namespace Raw {
       }
     }
     export class CheckShortName extends TLObject {
+      __response__!: Bool;
       shortName!: string;
 
       constructor(params: { shortName: string }) {
@@ -90171,6 +90918,7 @@ export namespace Raw {
       }
     }
     export class SuggestShortName extends TLObject {
+      __response__!: stickers.TypeSuggestedShortName;
       title!: string;
 
       constructor(params: { title: string }) {
@@ -90207,6 +90955,7 @@ export namespace Raw {
       }
     }
     export class ChangeSticker extends TLObject {
+      __response__!: messages.TypeStickerSet;
       sticker!: TypeInputDocument;
       emoji?: string;
       maskCoords?: TypeMaskCoords;
@@ -90279,6 +91028,7 @@ export namespace Raw {
       }
     }
     export class RenameStickerSet extends TLObject {
+      __response__!: messages.TypeStickerSet;
       stickerset!: TypeInputStickerSet;
       title!: string;
 
@@ -90321,6 +91071,7 @@ export namespace Raw {
       }
     }
     export class DeleteStickerSet extends TLObject {
+      __response__!: Bool;
       stickerset!: TypeInputStickerSet;
 
       constructor(params: { stickerset: TypeInputStickerSet }) {
@@ -90358,6 +91109,7 @@ export namespace Raw {
     }
   }
   export namespace users {
+    export type TypeUserFull = Raw.users.UserFull;
     export class UserFull extends TLObject {
       fullUser!: TypeUserFull;
       chats!: Vector<TypeChat>;
@@ -90411,6 +91163,7 @@ export namespace Raw {
       }
     }
     export class GetUsers extends TLObject {
+      __response__!: Vector<TypeUser>;
       id!: Vector<TypeInputUser>;
 
       constructor(params: { id: Vector<TypeInputUser> }) {
@@ -90447,6 +91200,7 @@ export namespace Raw {
       }
     }
     export class GetFullUser extends TLObject {
+      __response__!: users.TypeUserFull;
       id!: TypeInputUser;
 
       constructor(params: { id: TypeInputUser }) {
@@ -90483,6 +91237,7 @@ export namespace Raw {
       }
     }
     export class SetSecureValueErrors extends TLObject {
+      __response__!: Bool;
       id!: TypeInputUser;
       errors!: Vector<TypeSecureValueError>;
 
@@ -90525,6 +91280,7 @@ export namespace Raw {
       }
     }
     export class GetStoriesMaxIDs extends TLObject {
+      __response__!: Vector<int>;
       id!: Vector<TypeInputUser>;
 
       constructor(params: { id: Vector<TypeInputUser> }) {
@@ -90562,6 +91318,12 @@ export namespace Raw {
     }
   }
   export namespace chatlists {
+    export type TypeChatlistUpdates = Raw.chatlists.ChatlistUpdates;
+    export type TypeChatlistInvite =
+      | Raw.chatlists.ChatlistInviteAlready
+      | Raw.chatlists.ChatlistInvite;
+    export type TypeExportedInvites = Raw.chatlists.ExportedInvites;
+    export type TypeExportedChatlistInvite = Raw.chatlists.ExportedChatlistInvite;
     export class ExportedChatlistInvite extends TLObject {
       filter!: TypeDialogFilter;
       invite!: TypeExportedChatlistInvite;
@@ -90869,6 +91631,7 @@ export namespace Raw {
       }
     }
     export class ExportChatlistInvite extends TLObject {
+      __response__!: chatlists.TypeExportedChatlistInvite;
       chatlist!: TypeInputChatlist;
       title!: string;
       peers!: Vector<TypeInputPeer>;
@@ -90928,6 +91691,7 @@ export namespace Raw {
       }
     }
     export class DeleteExportedInvite extends TLObject {
+      __response__!: Bool;
       chatlist!: TypeInputChatlist;
       slug!: string;
 
@@ -90973,6 +91737,7 @@ export namespace Raw {
       }
     }
     export class EditExportedInvite extends TLObject {
+      __response__!: TypeExportedChatlistInvite;
       chatlist!: TypeInputChatlist;
       slug!: string;
       title?: string;
@@ -91047,6 +91812,7 @@ export namespace Raw {
       }
     }
     export class GetExportedInvites extends TLObject {
+      __response__!: chatlists.TypeExportedInvites;
       chatlist!: TypeInputChatlist;
 
       constructor(params: { chatlist: TypeInputChatlist }) {
@@ -91086,6 +91852,7 @@ export namespace Raw {
       }
     }
     export class CheckChatlistInvite extends TLObject {
+      __response__!: chatlists.TypeChatlistInvite;
       slug!: string;
 
       constructor(params: { slug: string }) {
@@ -91125,6 +91892,7 @@ export namespace Raw {
       }
     }
     export class JoinChatlistInvite extends TLObject {
+      __response__!: TypeUpdates;
       slug!: string;
       peers!: Vector<TypeInputPeer>;
 
@@ -91170,6 +91938,7 @@ export namespace Raw {
       }
     }
     export class GetChatlistUpdates extends TLObject {
+      __response__!: chatlists.TypeChatlistUpdates;
       chatlist!: TypeInputChatlist;
 
       constructor(params: { chatlist: TypeInputChatlist }) {
@@ -91209,6 +91978,7 @@ export namespace Raw {
       }
     }
     export class JoinChatlistUpdates extends TLObject {
+      __response__!: TypeUpdates;
       chatlist!: TypeInputChatlist;
       peers!: Vector<TypeInputPeer>;
 
@@ -91254,6 +92024,7 @@ export namespace Raw {
       }
     }
     export class HideChatlistUpdates extends TLObject {
+      __response__!: Bool;
       chatlist!: TypeInputChatlist;
 
       constructor(params: { chatlist: TypeInputChatlist }) {
@@ -91293,6 +92064,7 @@ export namespace Raw {
       }
     }
     export class GetLeaveChatlistSuggestions extends TLObject {
+      __response__!: Vector<TypePeer>;
       chatlist!: TypeInputChatlist;
 
       constructor(params: { chatlist: TypeInputChatlist }) {
@@ -91332,6 +92104,7 @@ export namespace Raw {
       }
     }
     export class LeaveChatlist extends TLObject {
+      __response__!: TypeUpdates;
       chatlist!: TypeInputChatlist;
       peers!: Vector<TypeInputPeer>;
 
@@ -91375,6 +92148,7 @@ export namespace Raw {
     }
   }
   export namespace bots {
+    export type TypeBotInfo = Raw.bots.BotInfo;
     export class BotInfo extends TLObject {
       name!: string;
       about!: string;
@@ -91424,6 +92198,7 @@ export namespace Raw {
       }
     }
     export class SendCustomRequest extends TLObject {
+      __response__!: TypeDataJSON;
       customMethod!: string;
       params!: TypeDataJSON;
 
@@ -91466,6 +92241,7 @@ export namespace Raw {
       }
     }
     export class AnswerWebhookJSONQuery extends TLObject {
+      __response__!: Bool;
       queryId!: long;
       data!: TypeDataJSON;
 
@@ -91508,6 +92284,7 @@ export namespace Raw {
       }
     }
     export class SetBotCommands extends TLObject {
+      __response__!: Bool;
       scope!: TypeBotCommandScope;
       langCode!: string;
       commands!: Vector<TypeBotCommand>;
@@ -91564,6 +92341,7 @@ export namespace Raw {
       }
     }
     export class ResetBotCommands extends TLObject {
+      __response__!: Bool;
       scope!: TypeBotCommandScope;
       langCode!: string;
 
@@ -91606,6 +92384,7 @@ export namespace Raw {
       }
     }
     export class GetBotCommands extends TLObject {
+      __response__!: Vector<TypeBotCommand>;
       scope!: TypeBotCommandScope;
       langCode!: string;
 
@@ -91648,6 +92427,7 @@ export namespace Raw {
       }
     }
     export class SetBotMenuButton extends TLObject {
+      __response__!: Bool;
       userId!: TypeInputUser;
       button!: TypeBotMenuButton;
 
@@ -91690,6 +92470,7 @@ export namespace Raw {
       }
     }
     export class GetBotMenuButton extends TLObject {
+      __response__!: TypeBotMenuButton;
       userId!: TypeInputUser;
 
       constructor(params: { userId: TypeInputUser }) {
@@ -91726,6 +92507,7 @@ export namespace Raw {
       }
     }
     export class SetBotBroadcastDefaultAdminRights extends TLObject {
+      __response__!: Bool;
       adminRights!: TypeChatAdminRights;
 
       constructor(params: { adminRights: TypeChatAdminRights }) {
@@ -91765,6 +92547,7 @@ export namespace Raw {
       }
     }
     export class SetBotGroupDefaultAdminRights extends TLObject {
+      __response__!: Bool;
       adminRights!: TypeChatAdminRights;
 
       constructor(params: { adminRights: TypeChatAdminRights }) {
@@ -91804,6 +92587,7 @@ export namespace Raw {
       }
     }
     export class SetBotInfo extends TLObject {
+      __response__!: Bool;
       bot?: TypeInputUser;
       langCode!: string;
       name?: string;
@@ -91885,6 +92669,7 @@ export namespace Raw {
       }
     }
     export class GetBotInfo extends TLObject {
+      __response__!: bots.TypeBotInfo;
       bot?: TypeInputUser;
       langCode!: string;
 
@@ -91933,6 +92718,7 @@ export namespace Raw {
       }
     }
     export class ReorderUsernames extends TLObject {
+      __response__!: Bool;
       bot!: TypeInputUser;
       order!: Vector<string>;
 
@@ -91975,6 +92761,7 @@ export namespace Raw {
       }
     }
     export class ToggleUsername extends TLObject {
+      __response__!: Bool;
       bot!: TypeInputUser;
       username!: string;
       active!: Bool;
@@ -92024,6 +92811,11 @@ export namespace Raw {
     }
   }
   export namespace stories {
+    export type TypeStoryViews = Raw.stories.StoryViews;
+    export type TypeStoryViewsList = Raw.stories.StoryViewsList;
+    export type TypeStories = Raw.stories.Stories;
+    export type TypeUserStories = Raw.stories.UserStories;
+    export type TypeAllStories = Raw.stories.AllStoriesNotModified | Raw.stories.AllStories;
     export class AllStoriesNotModified extends TLObject {
       state!: string;
 
@@ -92319,6 +93111,7 @@ export namespace Raw {
       }
     }
     export class SendStory extends TLObject {
+      __response__!: TypeUpdates;
       pinned?: boolean;
       noforwards?: boolean;
       media!: TypeInputMedia;
@@ -92428,6 +93221,7 @@ export namespace Raw {
       }
     }
     export class EditStory extends TLObject {
+      __response__!: TypeUpdates;
       id!: int;
       media?: TypeInputMedia;
       caption?: string;
@@ -92509,6 +93303,7 @@ export namespace Raw {
       }
     }
     export class DeleteStories extends TLObject {
+      __response__!: Vector<int>;
       id!: Vector<int>;
 
       constructor(params: { id: Vector<int> }) {
@@ -92545,6 +93340,7 @@ export namespace Raw {
       }
     }
     export class TogglePinned extends TLObject {
+      __response__!: Vector<int>;
       id!: Vector<int>;
       pinned!: Bool;
 
@@ -92587,6 +93383,7 @@ export namespace Raw {
       }
     }
     export class GetAllStories extends TLObject {
+      __response__!: stories.TypeAllStories;
       next?: boolean;
       hidden?: boolean;
       state?: string;
@@ -92637,6 +93434,7 @@ export namespace Raw {
       }
     }
     export class GetUserStories extends TLObject {
+      __response__!: stories.TypeUserStories;
       userId!: TypeInputUser;
 
       constructor(params: { userId: TypeInputUser }) {
@@ -92673,6 +93471,7 @@ export namespace Raw {
       }
     }
     export class GetPinnedStories extends TLObject {
+      __response__!: stories.TypeStories;
       userId!: TypeInputUser;
       offsetId!: int;
       limit!: int;
@@ -92725,6 +93524,7 @@ export namespace Raw {
       }
     }
     export class GetStoriesArchive extends TLObject {
+      __response__!: stories.TypeStories;
       offsetId!: int;
       limit!: int;
 
@@ -92767,6 +93567,7 @@ export namespace Raw {
       }
     }
     export class GetStoriesByID extends TLObject {
+      __response__!: stories.TypeStories;
       userId!: TypeInputUser;
       id!: Vector<int>;
 
@@ -92809,6 +93610,7 @@ export namespace Raw {
       }
     }
     export class ToggleAllStoriesHidden extends TLObject {
+      __response__!: Bool;
       hidden!: Bool;
 
       constructor(params: { hidden: Bool }) {
@@ -92848,6 +93650,8 @@ export namespace Raw {
       }
     }
     export class GetAllReadUserStories extends TLObject {
+      __response__!: TypeUpdates;
+
       constructor() {
         super();
         this.classType = 'functions';
@@ -92880,6 +93684,7 @@ export namespace Raw {
       }
     }
     export class ReadStories extends TLObject {
+      __response__!: Vector<int>;
       userId!: TypeInputUser;
       maxId!: int;
 
@@ -92922,6 +93727,7 @@ export namespace Raw {
       }
     }
     export class IncrementStoryViews extends TLObject {
+      __response__!: Bool;
       userId!: TypeInputUser;
       id!: Vector<int>;
 
@@ -92964,6 +93770,7 @@ export namespace Raw {
       }
     }
     export class GetStoryViewsList extends TLObject {
+      __response__!: stories.TypeStoryViewsList;
       id!: int;
       offsetDate!: int;
       offsetId!: long;
@@ -93023,6 +93830,7 @@ export namespace Raw {
       }
     }
     export class GetStoriesViews extends TLObject {
+      __response__!: stories.TypeStoryViews;
       id!: Vector<int>;
 
       constructor(params: { id: Vector<int> }) {
@@ -93059,6 +93867,7 @@ export namespace Raw {
       }
     }
     export class ExportStoryLink extends TLObject {
+      __response__!: TypeExportedStoryLink;
       userId!: TypeInputUser;
       id!: int;
 
@@ -93101,6 +93910,7 @@ export namespace Raw {
       }
     }
     export class Report extends TLObject {
+      __response__!: Bool;
       userId!: TypeInputUser;
       id!: Vector<int>;
       reason!: TypeReportReason;
@@ -93162,6 +93972,7 @@ export namespace Raw {
   }
   export namespace langpack {
     export class GetLangPack extends TLObject {
+      __response__!: TypeLangPackDifference;
       langPack!: string;
       langCode!: string;
 
@@ -93204,6 +94015,7 @@ export namespace Raw {
       }
     }
     export class GetStrings extends TLObject {
+      __response__!: Vector<TypeLangPackString>;
       langPack!: string;
       langCode!: string;
       keys!: Vector<string>;
@@ -93252,6 +94064,7 @@ export namespace Raw {
       }
     }
     export class GetDifference extends TLObject {
+      __response__!: TypeLangPackDifference;
       langPack!: string;
       langCode!: string;
       fromVersion!: int;
@@ -93304,6 +94117,7 @@ export namespace Raw {
       }
     }
     export class GetLanguages extends TLObject {
+      __response__!: Vector<TypeLangPackLanguage>;
       langPack!: string;
 
       constructor(params: { langPack: string }) {
@@ -93340,6 +94154,7 @@ export namespace Raw {
       }
     }
     export class GetLanguage extends TLObject {
+      __response__!: TypeLangPackLanguage;
       langPack!: string;
       langCode!: string;
 
@@ -93384,6 +94199,7 @@ export namespace Raw {
   }
   export namespace folders {
     export class EditPeerFolders extends TLObject {
+      __response__!: TypeUpdates;
       folderPeers!: Vector<TypeInputFolderPeer>;
 
       constructor(params: { folderPeers: Vector<TypeInputFolderPeer> }) {

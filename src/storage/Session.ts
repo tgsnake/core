@@ -120,7 +120,7 @@ export class BaseSession extends AbstractSession {
   async save() {}
   async move(session: AbstractSession) {
     Logger.info(
-      `[73] Moving session from ${this.constructor.name} to ${session.constructor.name}.`
+      `[73] Moving session from ${this.constructor.name} to ${session.constructor.name}.`,
     );
     await session.setAddress(this._dcId, this._ip, this._port, this._testMode);
     await session.setAuthKey(this._authKey, this._dcId);
@@ -128,17 +128,17 @@ export class BaseSession extends AbstractSession {
     await session.setIsBot(this._isBot);
     await session.setUserId(this._userId);
     Logger.info(
-      `[74] Successfully move session from ${this.constructor.name} to ${session.constructor.name}.`
+      `[74] Successfully move session from ${this.constructor.name} to ${session.constructor.name}.`,
     );
     Logger.debug(
-      `[75] Deleting current session, cause: moved to another instance (${session.constructor.name}).`
+      `[75] Deleting current session, cause: moved to another instance (${session.constructor.name}).`,
     );
     await this.delete();
   }
   async updatePeers(
     peers: Array<
       [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
-    >
+    >,
   ) {
     Logger.debug(`[76] Updating ${peers.length} peers`);
     for (let peer of peers) {

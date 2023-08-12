@@ -31,7 +31,7 @@ const snakeCaseToCamelCase = (input) =>
         i === 0
           ? word.toLowerCase()
           : `${res}${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`,
-      ''
+      '',
     );
 function PromisedParse(route) {
   let results = [];
@@ -47,7 +47,7 @@ function PromisedParse(route) {
 async function read() {
   const templateParent = fs.readFileSync(
     path.join(__dirname, './template/constructor.txt'),
-    'utf8'
+    'utf8',
   );
   const templateExtends = fs.readFileSync(path.join(__dirname, './template/extends.txt'), 'utf8');
   const templateAll = fs.readFileSync(path.join(__dirname, './template/all.txt'), 'utf8');
@@ -77,7 +77,7 @@ async function read() {
       content.id = content.id.replace(/\s+/g, '_');
       let crte = content.id.includes('_')
         ? Uppercase(
-            snakeCaseToCamelCase(content.id.toLowerCase().replace('2', 'Two_').replace(/_X/i, ''))
+            snakeCaseToCamelCase(content.id.toLowerCase().replace('2', 'Two_').replace(/_X/i, '')),
           )
         : Uppercase(content.id);
       if (already.has(crte)) {
@@ -100,7 +100,7 @@ async function read() {
     }
     fs.writeFileSync(
       path.join(__dirname, '../../src/errors/exceptions', `${filename}.ts`),
-      parents
+      parents,
     );
     imported.push(`import * as ${prnt} from "./${filename}.ts"`);
     exported.push(`export * as ${prnt} from "./${filename}.ts"`);
@@ -121,17 +121,17 @@ async function read() {
       COUNT: count,
       IMPORTS: imported.join('\n'),
       EXCEPTION: exts,
-    })
+    }),
   );
   fs.writeFileSync(
     path.join(__dirname, '../../src/errors/exceptions', `index.ts`),
     replacer(templateIndex, {
       'Copyright-Date': new Date().getFullYear(),
       EXPORTED: exported.join('\n'),
-    })
+    }),
   );
 }
 console.log(
-  "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE ALL ERROR FILE.\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:error ---"
+  "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE ALL ERROR FILE.\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:error ---",
 );
 read();

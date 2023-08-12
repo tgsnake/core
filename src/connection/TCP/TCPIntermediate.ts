@@ -28,7 +28,7 @@ export class TCPIntermediate extends TCP {
         Buffer.from('ee', 'hex'),
         Buffer.from('ee', 'hex'),
         Buffer.from('ee', 'hex'),
-      ])
+      ]),
     );
   }
   async send(data: Buffer) {

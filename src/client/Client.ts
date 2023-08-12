@@ -153,7 +153,7 @@ export class Client {
     session: AbstractSession,
     apiHash: string,
     apiId?: number,
-    clientOptions?: ClientOptions
+    clientOptions?: ClientOptions,
   ) {
     this._storage = session;
     this._apiHash = apiHash;
@@ -197,12 +197,12 @@ export class Client {
    * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
    * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is clientOptions.sleepTreshold or 10s.
    */
-  async invoke(
-    query: Raw.TypesTLRequest,
+  async invoke<T extends Raw.TypesTLRequest>(
+    query: T,
     retries: number = this._maxRetries,
     timeout: number = 15000,
-    sleepTreshold: number = this._sleepTreshold
-  ) {
+    sleepTreshold: number = this._sleepTreshold,
+  ): Promise<T['__response__']> {
     return _Session.invoke(this, query, retries, timeout, sleepTreshold);
   }
   /**
@@ -233,17 +233,17 @@ export class Client {
             }
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatDiscarded) {
               await this._storage.removeSecretChatById(
-                ((up as Raw.UpdateEncryption).chat as Raw.EncryptedChatDiscarded).id
+                ((up as Raw.UpdateEncryption).chat as Raw.EncryptedChatDiscarded).id,
               );
             }
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatRequested) {
               await this._secretChat.accept(
-                (up as Raw.UpdateEncryption).chat as Raw.EncryptedChatRequested
+                (up as Raw.UpdateEncryption).chat as Raw.EncryptedChatRequested,
               );
             }
           } else if (up instanceof Raw.UpdateNewEncryptedMessage) {
             const modUpdate = await this._handleSecretChatUpdate(
-              up as Raw.UpdateNewEncryptedMessage
+              up as Raw.UpdateNewEncryptedMessage,
             );
             if (modUpdate) {
               parsed.push(modUpdate);
@@ -269,21 +269,21 @@ export class Client {
         if (action instanceof Raw.DecryptedMessageActionRequestKey20) {
           await this._secretChat.acceptRekeying(
             modUpdate.message.chatId,
-            action as Raw.DecryptedMessageActionRequestKey20
+            action as Raw.DecryptedMessageActionRequestKey20,
           );
           return false;
         }
         if (action instanceof Raw.DecryptedMessageActionAcceptKey20) {
           await this._secretChat.commitRekeying(
             modUpdate.message.chatId,
-            action as Raw.DecryptedMessageActionAcceptKey20
+            action as Raw.DecryptedMessageActionAcceptKey20,
           );
           return false;
         }
         if (action instanceof Raw.DecryptedMessageActionCommitKey20) {
           await this._secretChat.finalRekeying(
             modUpdate.message.chatId,
-            action as Raw.DecryptedMessageActionCommitKey20
+            action as Raw.DecryptedMessageActionCommitKey20,
           );
           return false;
         }
@@ -395,7 +395,7 @@ export class Client {
    * @param {String|BigInt} peerId - The provided peer id will be resolve to a valid peer object.
    */
   async resolvePeer(
-    peerId: bigint | string
+    peerId: bigint | string,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | Raw.InputUserSelf> {
     if (!this._isConnected) {
       throw new Errors.ClientError.ClientDisconnected();
@@ -417,14 +417,14 @@ export class Client {
                     accessHash: BigInt(0),
                   }),
                 ],
-              })
-            )
+              }),
+            ),
           );
         } else if (type === 'chat') {
           await this.invoke(
             new Raw.messages.GetChats({
               id: [-peerId],
-            })
+            }),
           );
         } else {
           await this.invoke(
@@ -435,7 +435,7 @@ export class Client {
                   accessHash: BigInt(0),
                 }),
               ],
-            })
+            }),
           );
         }
         peer = await this._storage.getPeerById(peerId);
@@ -458,7 +458,7 @@ export class Client {
           await this.invoke(
             new Raw.contacts.ResolveUsername({
               username: peerId.replace('@', '').trim(),
-            })
+            }),
           );
           peer = await this._storage.getPeerByUsername(peerId.replace('@', '').trim());
           if (peer) {
@@ -483,14 +483,14 @@ export class Client {
                       accessHash: BigInt(0),
                     }),
                   ],
-                })
-              )
+                }),
+              ),
             );
           } else if (type === 'chat') {
             await this.invoke(
               new Raw.messages.GetChats({
                 id: [-BigInt(peerId)],
-              })
+              }),
             );
           } else {
             await this.invoke(
@@ -501,7 +501,7 @@ export class Client {
                     accessHash: BigInt(0),
                   }),
                 ],
-              })
+              }),
             );
           }
           peer = await this._storage.getPeerById(BigInt(peerId));

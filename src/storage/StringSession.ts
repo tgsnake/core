@@ -27,7 +27,7 @@ export class StringSession extends BaseSession {
       // Telethon or gramjs string session
       if (session[0] === '1') {
         Logger.debug(
-          `[82] The string session look like telethon or gramjs string session, start parsing.`
+          `[82] The string session look like telethon or gramjs string session, start parsing.`,
         );
         // https://github.com/gram-js/gramjs/blob/master/gramjs/sessions/StringSession.ts
         session = session.slice(1);
@@ -66,7 +66,7 @@ export class StringSession extends BaseSession {
         // The length of bytes must be 271
         if (bytes.length === 271) {
           Logger.debug(
-            `[90] The string session look like pyrogram or tgsnake string session, start parsing.`
+            `[90] The string session look like pyrogram or tgsnake string session, start parsing.`,
           );
           Logger.debug(`[91] String session have a ${bytes.length} bytes`);
           this._dcId = bytes.readUInt8(0); // 1
@@ -82,11 +82,11 @@ export class StringSession extends BaseSession {
           this._isBot = bytes.readUInt8(270) ? true : false; // 271
           Logger.debug(`[97] Found isBot: ${this._isBot}.`);
           Logger.debug(
-            `[98] Done parsing string session (${Math.floor(Date.now() / 1000) - start}s)`
+            `[98] Done parsing string session (${Math.floor(Date.now() / 1000) - start}s)`,
           );
         } else {
           Logger.error(
-            `[99] Can't parsing ${bytes.length} bytes of string session, we only supported string session from telethon,gramjs,tgsnake, and pyrogram (latest version, old version doesn't supported)`
+            `[99] Can't parsing ${bytes.length} bytes of string session, we only supported string session from telethon,gramjs,tgsnake, and pyrogram (latest version, old version doesn't supported)`,
           );
           throw new Error(`Invalid String Session`);
         }

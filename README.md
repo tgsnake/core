@@ -22,7 +22,7 @@ const client = new Client(
   // you can fill with Telethon or Pyrogram string session.
   new Storages.StringSession(''),
   apiHash,
-  apiId
+  apiId,
 );
 // handle update
 client.addHandler((update) => {

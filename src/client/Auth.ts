@@ -54,7 +54,7 @@ export interface SigInUser {
  * @param {Object} client - Telegram client.
  * @param {String} botToken - Bot token from bot father.
  */
-export async function siginBot(client: Client, botToken: string): Promise<Raw.User> {
+export async function siginBot(client: Client, botToken: string): Promise<Raw.User | undefined> {
   while (true) {
     let user;
     try {
@@ -65,7 +65,7 @@ export async function siginBot(client: Client, botToken: string): Promise<Raw.Us
           apiHash: client._apiHash,
           flags: 0,
         }),
-        0
+        0,
       );
     } catch (error: any) {
       if (error instanceof Errors.Exceptions.SeeOther.UserMigrate) {
@@ -75,7 +75,7 @@ export async function siginBot(client: Client, botToken: string): Promise<Raw.Us
           error.value as unknown as number,
           client._testMode,
           client._ipv6,
-          false
+          false,
         );
         const auth = new Auth(error.value as unknown as number, client._testMode, client._ipv6);
         client._storage.setAddress(error.value as unknown as number, ip, port, client._testMode);
@@ -85,7 +85,7 @@ export async function siginBot(client: Client, botToken: string): Promise<Raw.Us
           client,
           client._storage.dcId,
           client._storage.authKey,
-          client._storage.testMode
+          client._storage.testMode,
         );
         await client._session.start();
       } else {
@@ -105,7 +105,7 @@ export async function siginBot(client: Client, botToken: string): Promise<Raw.Us
  * @param {Object} client - Telegram client.
  * @param {Object} auth - The required parameter to be used for creating account or login.
  */
-export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.User> {
+export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.User | undefined> {
   let _phoneNumber;
   let _sendCode;
   let _signedIn;
@@ -149,7 +149,7 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
               }
               return await checkPassword(
                 client,
-                await auth.password(await getPasswordHint(client))
+                await auth.password(await getPasswordHint(client)),
               );
             } else {
               Logger.info('[102] Look you are forgotten the password');
@@ -203,7 +203,7 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
         _phoneNumber,
         _sendCode.phoneCodeHash,
         auth.firstname ? await auth.firstname() : String(Date.now()),
-        auth.lastname ? await auth.lastname() : ''
+        auth.lastname ? await auth.lastname() : '',
       );
       break;
     } catch (error: any) {
@@ -229,7 +229,10 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
  * @param {Object} client - Telegram client.
  * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
  */
-export async function sendCode(client: Client, phoneNumber: string): Promise<Raw.auth.SentCode> {
+export async function sendCode(
+  client: Client,
+  phoneNumber: string,
+): Promise<Raw.auth.TypeSentCode> {
   phoneNumber = phoneNumber.replace(/\+/g, '').trim();
   while (true) {
     try {
@@ -240,7 +243,7 @@ export async function sendCode(client: Client, phoneNumber: string): Promise<Raw
           apiHash: client._apiHash,
           settings: new Raw.CodeSettings({}),
         }),
-        0
+        0,
       );
       return r;
     } catch (error: any) {
@@ -253,7 +256,7 @@ export async function sendCode(client: Client, phoneNumber: string): Promise<Raw
           error.value as unknown as number,
           client._testMode,
           client._ipv6,
-          false
+          false,
         );
         const auth = new Auth(error.value as unknown as number, client._testMode, client._ipv6);
         client._storage.setAddress(error.value as unknown as number, ip, port, client._testMode);
@@ -263,7 +266,7 @@ export async function sendCode(client: Client, phoneNumber: string): Promise<Raw
           client,
           client._storage.dcId,
           client._storage.authKey,
-          client._storage.testMode
+          client._storage.testMode,
         );
         await client._session.start();
       } else {
@@ -283,7 +286,7 @@ export async function sigin(
   client: Client,
   phoneNumber: string,
   phoneCodeHash: string,
-  phoneCode: string
+  phoneCode: string,
 ): Promise<Raw.User | Raw.help.TermsOfService | boolean> {
   let r = await client.invoke(
     new Raw.auth.SignIn({
@@ -291,7 +294,7 @@ export async function sigin(
       phoneCodeHash,
       phoneCode,
     }),
-    0
+    0,
   );
   if (r instanceof Raw.auth.AuthorizationSignUpRequired) {
     if (r.termsOfService) {
@@ -309,16 +312,19 @@ export async function sigin(
  * @param {Object} client - Telegram client.
  * @param {String} code - The recovery code has been send in connected email with 2FA.
  */
-export async function recoverPassword(client: Client, code: string): Promise<Raw.User> {
+export async function recoverPassword(client: Client, code: string): Promise<Raw.User | undefined> {
   let r = await client.invoke(
     new Raw.auth.RecoverPassword({
       code: code,
     }),
-    0
+    0,
   );
-  await client._storage.setUserId(r.user.id);
-  await client._storage.setIsBot(false);
-  return r.user;
+  if ('user' in r) {
+    await client._storage.setUserId(r.user.id);
+    await client._storage.setIsBot(false);
+    return r.user;
+  }
+  return;
 }
 /**
  * Send the recovery code to cennected email to reset the 2FA.
@@ -333,19 +339,25 @@ export async function sendRecoveryCode(client: Client): Promise<string> {
  * @param {Object} client - Telegram client
  * @param {String} password - Password will be check.
  */
-export async function checkPassword(client: Client, password: string): Promise<Raw.User> {
+export async function checkPassword(
+  client: Client,
+  password: string,
+): Promise<Raw.User | undefined> {
   let r = await client.invoke(
     new Raw.auth.CheckPassword({
       password: computePasswordCheck(
         await client.invoke(new Raw.account.GetPassword(), 0),
-        password
+        password,
       ),
     }),
-    0
+    0,
   );
-  await client._storage.setUserId(r.user.id);
-  await client._storage.setIsBot(false);
-  return r.user;
+  if ('user' in r) {
+    await client._storage.setUserId(r.user.id);
+    await client._storage.setIsBot(false);
+    return r.user;
+  }
+  return;
 }
 /**
  * Accepting Terms Of Service for creating a account.
@@ -358,7 +370,7 @@ export async function acceptTOS(client: Client, id: string): Promise<boolean> {
       id: new Raw.DataJSON({
         data: id,
       }),
-    })
+    }),
   );
   return Boolean(r);
 }
@@ -368,7 +380,7 @@ export async function acceptTOS(client: Client, id: string): Promise<boolean> {
  */
 export async function getPasswordHint(client: Client): Promise<string> {
   let r = await client.invoke(new Raw.account.GetPassword(), 0);
-  return r.hint;
+  return r.hint ?? '';
 }
 /**
  * Sigin and create a new fresh account.
@@ -383,19 +395,22 @@ export async function signup(
   phoneNumber: string,
   phoneCodeHash: string,
   firstname: string,
-  lastname: string = ''
-): Promise<Raw.User> {
+  lastname: string = '',
+): Promise<Raw.User | undefined> {
   let r = await client.invoke(
     new Raw.auth.SignUp({
       phoneNumber: phoneNumber.replace(/\+/g, '').trim(),
       phoneCodeHash,
       firstName: firstname,
       lastName: lastname,
-    })
+    }),
   );
-  await client._storage.setUserId(r.user.id);
-  await client._storage.setIsBot(false);
-  return r.user;
+  if ('user' in r) {
+    await client._storage.setUserId(r.user.id);
+    await client._storage.setIsBot(false);
+    return r.user;
+  }
+  return;
 }
 /**
  * Getting info about self.
@@ -404,6 +419,6 @@ export async function getMe(client: Client): Promise<Raw.users.UserFull> {
   return await client.invoke(
     new Raw.users.GetFullUser({
       id: new Raw.InputUserSelf(),
-    })
+    }),
   );
 }

@@ -66,7 +66,7 @@ export class SecretChat {
         new Raw.messages.GetDhConfig({
           randomLength: 0,
           version: version,
-        })
+        }),
       );
       if (dh instanceof Raw.messages.DhConfigNotModified) {
         return this._dhConfig;
@@ -91,11 +91,11 @@ export class SecretChat {
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
-      'gA must be greater than one and smaller than p-1'
+      'gA must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
-      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     Logger.debug('[111] gA validation: OK');
     const res = await this._client.invoke(
@@ -103,7 +103,7 @@ export class SecretChat {
         userId: peer,
         gA: await toBuffer(gA, 256, false),
         randomId: Buffer.from(crypto.randomBytes(4)).readInt32LE(),
-      })
+      }),
     );
     const release = await this._mutex.acquire();
     try {
@@ -138,19 +138,19 @@ export class SecretChat {
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
-      'gA must be greater than one and smaller than p-1'
+      'gA must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
-      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
-      'gB must be greater than one and smaller than p-1'
+      'gB must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gB && gB < p - BigInt(2) ** BigInt(2048 - 64),
-      'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     Logger.debug('[126] gA and gB validation: OK');
     const release = await this._mutex.acquire();
@@ -172,7 +172,7 @@ export class SecretChat {
         }),
         gB: await toBuffer(gB, 256, false),
         keyFingerprint: fingerprint,
-      })
+      }),
     );
     await this.notifyLayer(request.id);
     return res;
@@ -185,11 +185,11 @@ export class SecretChat {
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gAOrB && gAOrB < p - BigInt(1),
-      'gAOrB must be greater than one and smaller than p-1'
+      'gAOrB must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gAOrB && gAOrB < p - BigInt(2) ** BigInt(2048 - 64),
-      'gAOrB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gAOrB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     Logger.debug('[128] gAOrB validation: OK');
     const peer = await this._storage.getSecretChatById(chat.id);
@@ -239,9 +239,9 @@ export class SecretChat {
               action: new Raw.DecryptedMessageActionNotifyLayer17({
                 layer: Math.min(peer.layer, Raw.Layer),
               }),
-            })
+            }),
           ),
-        })
+        }),
       );
     }
     return;
@@ -259,7 +259,7 @@ export class SecretChat {
       const res = await this._client.invoke(
         new Raw.messages.DiscardEncryption({
           chatId: chatId,
-        })
+        }),
       );
     } catch (error: any) {}
     Logger.debug(`[133] ${chatId} already destroyed`);
@@ -287,11 +287,11 @@ export class SecretChat {
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
-      'gA must be greater than one and smaller than p-1'
+      'gA must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
-      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     Logger.debug('[115] gA validation: OK');
     const release = await this._mutex.acquire();
@@ -313,9 +313,9 @@ export class SecretChat {
               gA: await toBuffer(gA, 256, false),
               exchangeId: e,
             }),
-          })
+          }),
         ),
-      })
+      }),
     );
   }
   /**
@@ -359,11 +359,11 @@ export class SecretChat {
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
-      'gB must be greater than one and smaller than p-1'
+      'gB must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gB && gB < p - BigInt(2) ** BigInt(2048 - 64),
-      'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     Logger.debug('[119] gB validation: OK');
     const release = await this._mutex.acquire();
@@ -388,9 +388,9 @@ export class SecretChat {
               exchangeId: action.exchangeId,
               keyFingerprint: fingerprint.readBigInt64LE(),
             }),
-          })
+          }),
         ),
-      })
+      }),
     );
   }
   /**
@@ -422,17 +422,17 @@ export class SecretChat {
     const authKey = await toBuffer(
       bigIntPow(gB, await toBigint(this._tempAuthKey.get(action.exchangeId) as Buffer), p),
       256,
-      false
+      false,
     );
     const fingerprint = sha1(authKey).slice(-8).readBigInt64LE();
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
-      'gB must be greater than one and smaller than p-1'
+      'gB must be greater than one and smaller than p-1',
     );
     SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gB && gB < p - BigInt(2) ** BigInt(2048 - 64),
-      'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}'
+      'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
     Logger.debug('[121] gB validation: OK');
     if (fingerprint !== action.keyFingerprint) {
@@ -448,9 +448,9 @@ export class SecretChat {
               action: new Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
-            })
+            }),
           ),
-        })
+        }),
       );
       throw new SecretChatError.FingerprintMismatch();
     }
@@ -466,9 +466,9 @@ export class SecretChat {
               exchangeId: action.exchangeId,
               keyFingerprint: action.keyFingerprint,
             }),
-          })
+          }),
         ),
-      })
+      }),
     );
     const release = await this._mutex.acquire();
     try {
@@ -515,9 +515,9 @@ export class SecretChat {
               action: new Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
-            })
+            }),
           ),
-        })
+        }),
       );
       throw new SecretChatError.FingerprintMismatch();
     }
@@ -542,9 +542,9 @@ export class SecretChat {
           new Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
             action: new Raw.DecryptedMessageActionNoop20(),
-          })
+          }),
         ),
-      })
+      }),
     );
   }
   /**
@@ -632,7 +632,7 @@ export class SecretChat {
       outSeqNo,
       peer.isAdmin,
       peer.layer,
-      peer.mtproto
+      peer.mtproto,
     );
   }
 

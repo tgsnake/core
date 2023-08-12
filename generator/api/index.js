@@ -60,7 +60,7 @@ const snakeCaseToCamelCase = (input) =>
         i === 0
           ? word.toLowerCase()
           : `${res}${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`,
-      ''
+      '',
     );
 // https://stackoverflow.com/questions/54246477/how-to-convert-camelcase-to-snake-case-in-javascript
 const camelToSnakeCase = (str) => str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
@@ -174,10 +174,10 @@ function start(source, template) {
         let typeName =
           typeSplit.length > 1
             ? `${typeSplit[0]}.Type${Uppercase(
-                typeSplit[1].includes('_') ? snakeCaseToCamelCase(typeSplit[1]) : typeSplit[1]
+                typeSplit[1].includes('_') ? snakeCaseToCamelCase(typeSplit[1]) : typeSplit[1],
               )}`
             : `Type${Uppercase(
-                typeSplit[0].includes('_') ? snakeCaseToCamelCase(typeSplit[0]) : typeSplit[0]
+                typeSplit[0].includes('_') ? snakeCaseToCamelCase(typeSplit[0]) : typeSplit[0],
               )}`;
         if (!typesMap.has(typeName)) {
           typesMap.set(typeName, crc32(type.trim()));
@@ -229,17 +229,18 @@ function start(source, template) {
         passedId.push(id);
         if (section === 'functions') {
           typeTLFn.push(`Raw.${namespace ?? ''}${name}`);
+          typesArgsString += `  __response__!: ${getType(results)};\n`;
         }
         if (section === 'types') {
           if (typeSubclassMap.has(crc32(results))) {
             typeSubclassMap.set(
               crc32(results),
-              `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
+              `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`,
             );
             if (Uppercase(full) === results) {
               typeSubclassMap.set(
                 crc32(camelToSnakeCase(full)),
-                `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`
+                `${typeSubclassMap.get(crc32(results))} | Raw.${namespace ?? ''}${name}`,
               );
             }
           } else {
@@ -268,13 +269,13 @@ function start(source, template) {
                   writerFlag.push(
                     `    ${parseArgName(argName)} |= this.${
                       i[1].includes('_') ? snakeCaseToCamelCase(i[1]) : i[1]
-                    } ? (1 << ${flag[2]}) : 0;`
+                    } ? (1 << ${flag[2]}) : 0;`,
                   );
                 } else {
                   writerFlag.push(
                     `    ${parseArgName(argName)} |= this.${
                       i[1].includes('_') ? snakeCaseToCamelCase(i[1]) : i[1]
-                    } !== undefined ? (1 << ${flag[2]}) : 0;`
+                    } !== undefined ? (1 << ${flag[2]}) : 0;`,
                   );
                 }
               }
@@ -283,7 +284,7 @@ function start(source, template) {
               `\n    let ${parseArgName(argName)} = 0;`,
               writerFlag.join('\n'),
               `    b.write((Primitive.Int.write(${parseArgName(
-                argName
+                argName,
               )})) as unknown as Buffer);\n`,
             ].join('\n');
             writerString += writerFlag;
@@ -305,13 +306,13 @@ function start(source, template) {
             } else if (VECTOR_CORE_TYPES.has(flagType.trim())) {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
               writerString += `      b.write((Primitive.${Uppercase(
-                flagType.trim()
+                flagType.trim(),
               )}.write(this.${argName})) as unknown as Buffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = (flags${
                 flagNumber ?? ''
               } & (1 << ${flagIndex})) ? await Primitive.${Uppercase(
-                flagType.trim()
+                flagType.trim(),
               )}.read(b) : undefined;`;
             } else if (/Vector<(\w+\.?\w+?)>/i.test(flagType.trim())) {
               let [vectorFull, vectorType] = flagType.trim().match(/Vector<(\w+\.?\w+?)>/i);
@@ -347,11 +348,11 @@ function start(source, template) {
             if (VECTOR_CORE_TYPES.has(argType.trim())) {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
               writerString += `      b.write((Primitive.${Uppercase(
-                argType.trim()
+                argType.trim(),
               )}.write(this.${argName})) as unknown as Buffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = await Primitive.${Uppercase(
-                argType.trim()
+                argType.trim(),
               )}.read(b);`;
             } else if (/Vector<(\w+\.?\w+?)>/i.test(argType.trim())) {
               let [vectorFull, vectorType] = argType.trim().match(/Vector<(\w+\.?\w+?)>/i);
@@ -388,14 +389,14 @@ function start(source, template) {
           'CONSTRUCTOR-VALUES': `this.classType = "${section}"\n    this.className = "${
             namespace ?? ''
           }${name}"\n    this.constructorId = 0x${id}\n    this.subclassOfId = 0x${crc32(
-            results
+            results,
           ).toString(16)}\n    this.slots = ${JSON.stringify(slots)}\n${constructorString}`,
         });
         if (constructorMap.has(namespace ? namespace.replace(/\.$/, '') : '')) {
           let ccontent = constructorMap.get(namespace ? namespace.replace(/\.$/, '') : '');
           constructorMap.set(
             namespace ? namespace.replace(/\.$/, '') : '',
-            `${ccontent}\n${content}`
+            `${ccontent}\n${content}`,
           );
         } else {
           constructorMap.set(namespace ? namespace.replace(/\.$/, '') : '', content);
@@ -417,20 +418,20 @@ function start(source, template) {
       let [ns, ty] = key.split('.');
       constructorMap.set(
         ns,
-        `  export type ${ty} = ${typeSubclassMap.get(value)}\n${constructorMap.get(ns)}`
+        `  export type ${ty} = ${typeSubclassMap.get(value)}\n${constructorMap.get(ns)}`,
       );
     } else {
       constructorMap.set(
         '',
         `  export type ${key} = ${typeSubclassMap.get(value)}${
           key === 'TypeUpdate' ? ' | UpdateSecretChatMessage' : ''
-        }\n${constructorMap.get('')}`
+        }\n${constructorMap.get('')}`,
       );
     }
   }
   constructorMap.set(
     '',
-    `  export type TypesTLRequest = ${typeTLFn.join('|')}\n${constructorMap.get('')}`
+    `  export type TypesTLRequest = ${typeTLFn.join('|')}\n${constructorMap.get('')}`,
   );
   let final = '';
   for (let [key, value] of constructorMap) {
@@ -457,7 +458,7 @@ function generate() {
   const tl = fs.readFileSync(path.join(__dirname, './template/allTlObject.txt'), 'utf8');
   let results = start(
     mtproto + '\n---types---\n' + schema + '\n---types---\n' + secretchat,
-    combinator
+    combinator,
   );
   fs.writeFileSync(
     path.join(__dirname, '../../src/raw/Raw.ts'),
@@ -466,17 +467,17 @@ function generate() {
       Classes: results.results,
       'HSC-Layer': results.hsclayer,
       'Copyright-Date': new Date().getFullYear(),
-    })
+    }),
   );
   fs.writeFileSync(
     path.join(__dirname, '../../src/raw/All.ts'),
     replacer(tl, {
       'Copyright-Date': new Date().getFullYear(),
       'ALL-OBJECT': results.allTLObject,
-    })
+    }),
   );
 }
 console.log(
-  "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE THE Raw.ts AND All.ts FILE\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:api ---"
+  "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE THE Raw.ts AND All.ts FILE\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:api ---",
 );
 generate();

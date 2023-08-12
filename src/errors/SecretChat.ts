@@ -62,7 +62,7 @@ export class FingerprintMismatch extends SecretChatError {
   constructor() {
     super(
       'Fingerprint key mismatch',
-      'Given fingerprint key from message is mismatch. So the message is not secure and the secret chat should be closed.'
+      'Given fingerprint key from message is mismatch. So the message is not secure and the secret chat should be closed.',
     );
   }
 }
@@ -70,7 +70,7 @@ export class ChatNotFound extends SecretChatError {
   constructor(chatId: number) {
     super(
       'Secret chat not found',
-      `Provided chatId (${chatId}) is not found in session. Make sure the chatId is correct and already saved in session.`
+      `Provided chatId (${chatId}) is not found in session. Make sure the chatId is correct and already saved in session.`,
     );
   }
 }

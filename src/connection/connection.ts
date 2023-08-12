@@ -91,7 +91,7 @@ export class Connection {
     proxy?: ProxyInterface,
     media: boolean = false,
     mode: number = 0,
-    local: boolean = true
+    local: boolean = true,
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;
@@ -116,7 +116,7 @@ export class Connection {
         await this._protocol.connect(
           this._address[0],
           isBrowser ? (this._local ? 80 : this._address[1]) : this._address[1],
-          this._proxy
+          this._proxy,
         );
         this._connected = true;
         break;

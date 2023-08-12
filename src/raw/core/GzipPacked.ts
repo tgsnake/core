@@ -24,7 +24,7 @@ export class GzipPacked extends TLObject {
   }
   static async read(data: BytesIO, ...args: Array<any>) {
     return (await TLObject.read(
-      new BytesIO(gunzipSync(await Primitive.Bytes.read(data)))
+      new BytesIO(gunzipSync(await Primitive.Bytes.read(data))),
     )) as unknown as GzipPacked;
   }
   write(): Buffer {

@@ -44,7 +44,7 @@ export class RPCError extends Error {
     value?: number | string | Raw.RpcError,
     rpcName?: string,
     isUnknown?: boolean,
-    isSigned?: boolean
+    isSigned?: boolean,
   ) {
     super();
     Logger.debug(`[8] Creating new instance RPCError(${rpcName ?? this.name})`);

@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 import type { Client } from './Client.ts';
-import { Raw } from '../raw/index.ts';
+import { Raw, TLObject } from '../raw/index.ts';
 import { Auth, Session, DataCenter } from '../session/index.ts';
 import { Logger } from '../Logger.ts';
 import * as Errors from '../errors/index.ts';
@@ -37,7 +37,7 @@ export async function loadSession(client: Client): Promise<void> {
       client._storage.dcId,
       client._storage.ip,
       client._storage.port,
-      client._testMode
+      client._testMode,
     );
   }
 }
@@ -55,7 +55,7 @@ export async function connect(client: Client): Promise<void> {
       client._storage.dcId,
       client._storage.authKey,
       client._storage.testMode,
-      client._proxy
+      client._proxy,
     );
     await client._session.start();
     client._isConnected = true;
@@ -66,7 +66,7 @@ export async function connect(client: Client): Promise<void> {
  */
 export async function start(
   client: Client,
-  auth?: _Auth.SigInBot | _Auth.SigInUser
+  auth?: _Auth.SigInBot | _Auth.SigInUser,
 ): Promise<Raw.users.UserFull> {
   await connect(client);
   if (auth) {
@@ -107,7 +107,7 @@ export async function logout(client: Client): Promise<any> {
 export async function exportSession(client: Client): Promise<string> {
   if (!client._storage.userId) {
     const me = await _Auth.getMe(client);
-    client._storage.setUserId(me.fullUser.id);
+    client._storage.setUserId((me.fullUser as unknown as Raw.UserFull).id);
     // @ts-ignore
     client._storage.setIsBot(Boolean(me.users[0].bot));
   }
@@ -124,11 +124,11 @@ export async function exportSession(client: Client): Promise<string> {
  */
 export async function invoke(
   client: Client,
-  query: Raw.TypesTLRequest,
+  query: TLObject,
   retries: number,
   timeout: number,
-  sleepTreshold: number
-) {
+  sleepTreshold: number,
+): Promise<TLObject> {
   if (!client._isConnected) {
     throw new Errors.ClientError.ClientDisconnected();
   }
@@ -139,7 +139,11 @@ export async function invoke(
     query = new Raw.InvokeWithTakeout({ query, takeoutId: client._takeoutId });
   }
   const r = await client._session.invoke(query, retries, timeout, sleepTreshold);
-  await client.fetchPeers(r.users ?? []);
-  await client.fetchPeers(r.chats ?? []);
+  if ('users' in r) {
+    await client.fetchPeers(r.users as unknown as Array<Raw.TypeUser>);
+  }
+  if ('chats' in r) {
+    await client.fetchPeers(r.chats as unknown as Array<Raw.TypeChat>);
+  }
   return r;
 }

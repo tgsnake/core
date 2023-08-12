@@ -53,7 +53,7 @@ export function pack(
   salt: bigint,
   sessionId: Buffer,
   authKey: Buffer,
-  authKeyId: Buffer
+  authKeyId: Buffer,
 ): Buffer {
   const data = Buffer.concat([Buffer.concat([toBytes(salt), sessionId]), message.write()]);
   const padding = Buffer.from(crypto.randomBytes(mod(-(data.length + 12), 16) + 12));
@@ -74,11 +74,11 @@ export async function unpack(
   sessionId: Buffer,
   authKey: Buffer,
   authKeyId: Buffer,
-  storedMsgId: Array<bigint>
+  storedMsgId: Array<bigint>,
 ): Promise<Message> {
   SecurityCheckMismatch.check(
     b.read(8).equals(authKeyId),
-    'Provided auth key id is not equal with expected one.'
+    'Provided auth key id is not equal with expected one.',
   );
   const msgKey = b.read(16);
   const [aesKey, aesIv] = kdf(authKey, msgKey, false);
@@ -88,14 +88,14 @@ export async function unpack(
   const hash = sha256(Buffer.concat([authKey.slice(96, 96 + 32), decrypted]));
   SecurityCheckMismatch.check(
     msgKey.equals(hash.slice(8, 24)),
-    'Provided msg key is not equal with expected one'
+    'Provided msg key is not equal with expected one',
   );
   const data = new BytesIO(decrypted);
   data.read(8); // salt
   // https://core.telegram.org/mtproto/security_guidelines#checking-session-id
   SecurityCheckMismatch.check(
     Buffer.from(data.read(8)).equals(sessionId),
-    'Provided session id is not equal with expected one.'
+    'Provided session id is not equal with expected one.',
   );
   let message;
   try {
@@ -119,16 +119,16 @@ export async function unpack(
   const padding = payload.slice(message.length);
   SecurityCheckMismatch.check(
     padding.length >= 12 && padding.length <= 1024,
-    'Payload padding is lower than 12 or bigger than 1024'
+    'Payload padding is lower than 12 or bigger than 1024',
   );
   SecurityCheckMismatch.check(
     mod(padding.length, 4) === 0,
-    'Mod of padding length with 4 is equal with zero'
+    'Mod of padding length with 4 is equal with zero',
   );
   // https://core.telegram.org/mtproto/security_guidelines#checking-msg-id
   SecurityCheckMismatch.check(
     bigIntMod(message.msgId, BigInt(2)) !== BigInt(0),
-    'Mod of msgId with 2 is not equal with zero'
+    'Mod of msgId with 2 is not equal with zero',
   );
   if (storedMsgId.length > STORED_MSG_IDS_MAX_SIZE) {
     storedMsgId.splice(0, Math.floor(STORED_MSG_IDS_MAX_SIZE / 2));

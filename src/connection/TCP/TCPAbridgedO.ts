@@ -56,7 +56,7 @@ export class TCPAbridgedO extends TCP {
             Buffer.from('00', 'hex'),
             Buffer.from('00', 'hex'),
             Buffer.from('00', 'hex'),
-          ])
+          ]),
         )
       ) {
         nonce[56] = nonce[57] = nonce[58] = nonce[59] = 0xef;

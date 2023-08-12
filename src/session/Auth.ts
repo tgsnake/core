@@ -98,8 +98,8 @@ export class Auth {
         });
         Logger.debug(
           `[18] Done PQ factorization (${Math.round(
-            Math.floor(Date.now() / 1000) - start
-          )}s): ${p} ${q}`
+            Math.floor(Date.now() / 1000) - start,
+          )}s): ${p} ${q}`,
         );
 
         // step 4
@@ -131,7 +131,7 @@ export class Auth {
             p: pBytes,
             q: qBytes,
             publicKeyFingerprint: fingerprints,
-          })
+          }),
         );
         let tempAesKey = Buffer.concat([
           crypto
@@ -140,7 +140,7 @@ export class Auth {
               Buffer.concat([
                 Primitive.Int256.write(newNonce),
                 Primitive.Int128.write(resPq.serverNonce),
-              ])
+              ]),
             )
             .digest(),
           crypto
@@ -149,7 +149,7 @@ export class Auth {
               Buffer.concat([
                 Primitive.Int128.write(resPq.serverNonce),
                 Primitive.Int256.write(newNonce),
-              ])
+              ]),
             )
             .digest()
             .slice(0, 12),
@@ -161,14 +161,14 @@ export class Auth {
               Buffer.concat([
                 Primitive.Int128.write(resPq.serverNonce),
                 Primitive.Int256.write(newNonce),
-              ])
+              ]),
             )
             .digest()
             .slice(12),
           crypto
             .createHash('sha1')
             .update(
-              Buffer.concat([Primitive.Int256.write(newNonce), Primitive.Int256.write(newNonce)])
+              Buffer.concat([Primitive.Int256.write(newNonce), Primitive.Int256.write(newNonce)]),
             )
             .digest(),
           Primitive.Int256.write(newNonce).slice(0, 4),
@@ -204,7 +204,7 @@ export class Auth {
             nonce: resPq.nonce,
             serverNonce: resPq.serverNonce,
             encryptedData: encryptedData,
-          })
+          }),
         );
         // TODO: Handle "authKeyAuHash" if the previous step fails
 
@@ -221,10 +221,10 @@ export class Auth {
         SecurityCheckMismatch.check(BigInt(1) < gA && gA < dhPrime - BigInt(1));
         SecurityCheckMismatch.check(BigInt(1) < gB && gB < dhPrime - BigInt(1));
         SecurityCheckMismatch.check(
-          BigInt(2) ** BigInt(2048 - 64) < gA && gA < dhPrime - BigInt(2) ** BigInt(2048 - 64)
+          BigInt(2) ** BigInt(2048 - 64) < gA && gA < dhPrime - BigInt(2) ** BigInt(2048 - 64),
         );
         SecurityCheckMismatch.check(
-          BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64)
+          BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64),
         );
         Logger.debug('[27] gA and gB validation: OK');
 
@@ -232,7 +232,7 @@ export class Auth {
         SecurityCheckMismatch.check(
           answerWithHash
             .slice(0, 20)
-            .equals(crypto.createHash('sha1').update(serverDhInnerData.write()).digest())
+            .equals(crypto.createHash('sha1').update(serverDhInnerData.write()).digest()),
         );
         Logger.debug('[28] SHA1 hash values check: OK');
 
@@ -247,7 +247,7 @@ export class Auth {
         // Step 9
         let serverSalt = AES.xor(
           toBuffer(newNonce, 32, true, true).slice(0, 8),
-          toBuffer(resPq.serverNonce, 16, true, true).slice(0, 8)
+          toBuffer(resPq.serverNonce, 16, true, true).slice(0, 8),
         );
         Logger.debug(`[30] Server salt: ${toBigint(serverSalt, true)}`);
         Logger.debug(`[31] Done auth key exchange: ${setClientDhParamsAnswer.className}`);

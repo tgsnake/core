@@ -35,7 +35,7 @@ export class Int extends TLObject {
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
-    size: number = Int.SIZE
+    size: number = Int.SIZE,
   ): Promise<number> {
     if (signed) {
       if (little) {
@@ -59,7 +59,7 @@ export class Long extends TLObject {
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
-    size: number = Long.SIZE
+    size: number = Long.SIZE,
   ): Promise<bigint> {
     if (signed) {
       if (little) {
@@ -99,7 +99,7 @@ export class Int128 extends Long {
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
-    size: number = Int128.SIZE
+    size: number = Int128.SIZE,
   ): Promise<bigint> {
     return toBigint(data.read(size), little, signed);
   }
@@ -119,7 +119,7 @@ export class Int256 extends Long {
     data: BytesIO,
     signed: boolean = true,
     little: boolean = true,
-    size: number = Int256.SIZE
+    size: number = Int256.SIZE,
   ): Promise<bigint> {
     return Int128.read(data, signed, little, size);
   }

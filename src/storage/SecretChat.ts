@@ -80,7 +80,7 @@ export class SecretChat {
       accessHash: bigint;
       isAdmin: boolean;
       authKey: Buffer;
-    }
+    },
   ): Promise<SecretChat> {
     let tempChat = new SecretChat(params);
     await storage.updateSecretChats([tempChat]);

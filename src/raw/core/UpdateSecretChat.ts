@@ -36,7 +36,7 @@ export class UpdateSecretChatMessage extends TLObject {
   }
   static async generate(
     update: Raw.UpdateNewEncryptedMessage,
-    secretChat: SecretChat
+    secretChat: SecretChat,
   ): Promise<UpdateSecretChatMessage> {
     const decrypted = await secretChat.decrypt(update.message);
     if (update.message instanceof Raw.EncryptedMessageService) {

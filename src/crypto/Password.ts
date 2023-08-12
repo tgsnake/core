@@ -35,7 +35,7 @@ export function xor(a: Buffer, b: Buffer) {
 
 export function computePasswordHash(
   algo: Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
-  password: string
+  password: string,
 ): Buffer {
   // @ts-ignore
   let hash1 = sha256(Buffer.concat([algo.salt1, Buffer.from(password, 'utf8'), algo.salt1]));
@@ -53,7 +53,7 @@ export function computePasswordHash(
  */
 export function computePasswordCheck(
   r: Raw.account.Password,
-  password: string
+  password: string,
 ): Raw.InputCheckPasswordSRP {
   let algo = r.currentAlgo as Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow;
   // @ts-ignore
@@ -101,7 +101,7 @@ export function computePasswordCheck(
       ABytes,
       BBytes,
       KBytes,
-    ])
+    ]),
   );
   return new Raw.InputCheckPasswordSRP({
     // @ts-ignore

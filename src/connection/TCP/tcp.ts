@@ -79,7 +79,7 @@ export class TCP {
       let chunk = await this._task.run(
         this._socks.read(length - data.length),
         this._socks.timeout,
-        () => {}
+        () => {},
       );
       if (chunk) {
         data = Buffer.concat([data, chunk as Buffer]);

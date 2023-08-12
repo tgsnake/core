@@ -32,7 +32,7 @@ export function kdf(
   sharedKey: Buffer,
   msgKey: Buffer,
   isAdmin: boolean,
-  v1: boolean = false
+  v1: boolean = false,
 ): Array<Buffer> {
   // https://corefork.telegram.org/api/end-to-end#serialization-and-encryption-of-outgoing-messages
   const x = isAdmin ? 8 : 0;
@@ -40,7 +40,7 @@ export function kdf(
     // https://corefork.telegram.org/api/end-to-end_v1#serialization-and-encryption-of-outgoing-messages
     const sha1A = sha1(Buffer.concat([msgKey, sharedKey.slice(x, x + 32)]));
     const sha1B = sha1(
-      Buffer.concat([sharedKey.slice(x + 32, x + 48), msgKey, sharedKey.slice(x + 48, x + 64)])
+      Buffer.concat([sharedKey.slice(x + 32, x + 48), msgKey, sharedKey.slice(x + 48, x + 64)]),
     );
     const sha1C = sha1(Buffer.concat([sharedKey.slice(x + 64, x + 96), msgKey]));
     const sha1D = sha1(Buffer.concat([msgKey, sharedKey.slice(x + 96, x + 128)]));
@@ -73,7 +73,7 @@ export function pack(
   outSeqNo: number,
   isAdmin: boolean,
   layer: number,
-  mtproto: number = 2
+  mtproto: number = 2,
 ): Buffer {
   let msg: Raw.DecryptedMessageLayer17 | Raw.TypeDecryptedMessage = message;
   if (layer > 8) {
@@ -92,7 +92,10 @@ export function pack(
   const padding = Buffer.from(crypto.randomBytes(mod(-(data.length + 16), 16) + 16));
   const paddedMsg = Buffer.concat([data, padding]);
   const msgKeyLarge = sha256(
-    Buffer.concat([sharedKey.slice(88 + (isAdmin ? 0 : 8), 88 + (isAdmin ? 0 : 8) + 32), paddedMsg])
+    Buffer.concat([
+      sharedKey.slice(88 + (isAdmin ? 0 : 8), 88 + (isAdmin ? 0 : 8) + 32),
+      paddedMsg,
+    ]),
   );
   const msgKey = mtproto === 1 ? sha1(data).slice(-16) : msgKeyLarge.slice(8, 8 + 16);
   const [aesKey, aesIv] =
@@ -105,7 +108,7 @@ export async function unpack(
   message: Raw.TypeEncryptedMessage,
   sharedKey: Buffer,
   isAdmin: boolean,
-  mtproto: number = 2
+  mtproto: number = 2,
 ): Promise<Raw.TypeDecryptedMessage> {
   const data = new BytesIO(message.bytes);
   const serverFingerprintKey = data.readBigInt64LE();
@@ -126,7 +129,7 @@ export async function unpack(
     Buffer.concat([
       sharedKey.slice(88 + (isAdmin ? 8 : 0), 88 + (isAdmin ? 8 : 0) + 32),
       decryptedMsg.buffer,
-    ])
+    ]),
   );
   const clientMsgKey =
     mtproto === 1
@@ -135,15 +138,15 @@ export async function unpack(
 
   SecurityCheckMismatch.check(
     padding.length >= 12 && padding.length <= 1024,
-    'Payload padding is lower than 12 or bigger than 1024'
+    'Payload padding is lower than 12 or bigger than 1024',
   );
   SecurityCheckMismatch.check(
     mod(padding.length, 4) === 0,
-    'Mod of padding length with 4 is equal with zero'
+    'Mod of padding length with 4 is equal with zero',
   );
   SecurityCheckMismatch.check(
     msgKey.equals(clientMsgKey),
-    'Given message key is not equal with client side'
+    'Given message key is not equal with client side',
   );
   return msg;
 }

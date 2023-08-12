@@ -131,7 +131,7 @@ export abstract class AbstractSession {
       accessHash: bigint,
       type: string,
       username?: string | undefined,
-      phoneNumber?: string | undefined
+      phoneNumber?: string | undefined,
     ]
   >;
   abstract get secretChats(): Map<number, SecretChat>;
@@ -159,7 +159,7 @@ export abstract class AbstractSession {
   abstract updatePeers(
     peers: Array<
       [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
-    >
+    >,
   ): Promise<void>;
   /**
    * Save secret chat into cache.
@@ -176,21 +176,21 @@ export abstract class AbstractSession {
    * @param {BigInt} id - User id will be search on cache.
    */
   abstract getPeerById(
-    id: bigint
+    id: bigint,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Get peer by their given username from cache.
    * @param {String} username - Username will be search on cache.
    */
   abstract getPeerByUsername(
-    username: string
+    username: string,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Get peer by their given phone number from cache.
    * @param {String} phoneNumber - Phone number will be search on cache.
    */
   abstract getPeerByPhoneNumber(
-    phoneNumber: string
+    phoneNumber: string,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Remove secret chat by id.

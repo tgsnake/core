@@ -28,12 +28,12 @@ export class BytesIO {
     } else if (whence === 2) {
       if (offset >= 0) {
         throw new Error(
-          `offset of BytesIO.seek must be less than zero or negative value when whence is 2`
+          `offset of BytesIO.seek must be less than zero or negative value when whence is 2`,
         );
       }
       if (this._buffer.length + offset < 0) {
         throw new Error(
-          `offset out of range, offset ${offset} is less than the available buffer length.`
+          `offset out of range, offset ${offset} is less than the available buffer length.`,
         );
       }
       this._post = this._buffer.length + offset;

@@ -61,7 +61,7 @@ export class Disconnected extends WebSocketError {
   constructor() {
     super(
       'WebSocket Disconnected',
-      "This happen when you trying to send request or receive update from websocket server hut the websocket client is doesn't ready. Make sure the websocket client is connected to server."
+      "This happen when you trying to send request or receive update from websocket server hut the websocket client is doesn't ready. Make sure the websocket client is connected to server.",
     );
   }
 }
@@ -70,7 +70,7 @@ export class ReadClosed extends WebSocketError {
   constructor() {
     super(
       'WebSocket connection closed when reading data',
-      'This happen when suddenly the connection between the websocket client and the server is lost when fetching data updates from the server.'
+      'This happen when suddenly the connection between the websocket client and the server is lost when fetching data updates from the server.',
     );
   }
 }
@@ -79,7 +79,7 @@ export class ProxyUnsupported extends WebSocketError {
   constructor() {
     super(
       'WebSocket proxy unsupported',
-      'This is because browser telegram or websocket proxy are not supported by the framework at this time.'
+      'This is because browser telegram or websocket proxy are not supported by the framework at this time.',
     );
   }
 }
