@@ -1,4 +1,16 @@
- <a name="1.8.0"></a>
+ <a name="1.9.0"></a>
+
+## [1.9.0](https://github.com/tgsnake/core/compare/1.8.0...1.9.0)
+
+> 2023-08-12
+
+### Add
+
+- env to node process - notification to group when layer updated  ### Change
+
+- update version - client.invoke now can prediction the results - Update TLSchema - silent sending - Update CHANGELOG.md - update to layer 160  ### Fix
+
+- generator to sync latest layer   <a name="1.8.0"></a>
 
 ## [1.8.0](https://github.com/tgsnake/core/compare/1.7.1...1.8.0)
 
