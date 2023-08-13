@@ -182,7 +182,7 @@ function start(source, template) {
         if (!typesMap.has(typeName)) {
           typesMap.set(typeName, crc32(type.trim()));
         }
-        return typeName;
+        return `Raw.${typeName}`;
     }
   }
 

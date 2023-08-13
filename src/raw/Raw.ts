@@ -2558,7 +2558,7 @@ export namespace Raw {
     }
   }
   export class ReqPq extends TLObject {
-    __response__!: TypeResPQ;
+    __response__!: Raw.TypeResPQ;
     nonce!: int128;
 
     constructor(params: { nonce: int128 }) {
@@ -2595,7 +2595,7 @@ export namespace Raw {
     }
   }
   export class ReqPqMulti extends TLObject {
-    __response__!: TypeResPQ;
+    __response__!: Raw.TypeResPQ;
     nonce!: int128;
 
     constructor(params: { nonce: int128 }) {
@@ -2632,7 +2632,7 @@ export namespace Raw {
     }
   }
   export class ReqDhParams extends TLObject {
-    __response__!: TypeServerDhParams;
+    __response__!: Raw.TypeServerDhParams;
     nonce!: int128;
     serverNonce!: int128;
     p!: bytes;
@@ -2713,7 +2713,7 @@ export namespace Raw {
     }
   }
   export class SetClientDhParams extends TLObject {
-    __response__!: TypeSetClientDhParamsAnswer;
+    __response__!: Raw.TypeSetClientDhParamsAnswer;
     nonce!: int128;
     serverNonce!: int128;
     encryptedData!: bytes;
@@ -2766,7 +2766,7 @@ export namespace Raw {
     }
   }
   export class DestroyAuthKey extends TLObject {
-    __response__!: TypeDestroyAuthKeyRes;
+    __response__!: Raw.TypeDestroyAuthKeyRes;
 
     constructor() {
       super();
@@ -3447,9 +3447,9 @@ export namespace Raw {
   export class FutureSalts extends TLObject {
     reqMsgId!: long;
     now!: int;
-    salts!: Vector<TypeFutureSalt>;
+    salts!: Vector<Raw.TypeFutureSalt>;
 
-    constructor(params: { reqMsgId: long; now: int; salts: Vector<TypeFutureSalt> }) {
+    constructor(params: { reqMsgId: long; now: int; salts: Vector<Raw.TypeFutureSalt> }) {
       super();
       this.classType = 'types';
       this.className = 'FutureSalts';
@@ -3799,9 +3799,9 @@ export namespace Raw {
   export class AccessPointRule extends TLObject {
     phonePrefixRules!: string;
     dcId!: int;
-    ips!: Vector<TypeIpPort>;
+    ips!: Vector<Raw.TypeIpPort>;
 
-    constructor(params: { phonePrefixRules: string; dcId: int; ips: Vector<TypeIpPort> }) {
+    constructor(params: { phonePrefixRules: string; dcId: int; ips: Vector<Raw.TypeIpPort> }) {
       super();
       this.classType = 'types';
       this.className = 'AccessPointRule';
@@ -3845,7 +3845,7 @@ export namespace Raw {
     }
   }
   export class RpcDropAnswer extends TLObject {
-    __response__!: TypeRpcDropAnswer;
+    __response__!: Raw.TypeRpcDropAnswer;
     reqMsgId!: long;
 
     constructor(params: { reqMsgId: long }) {
@@ -3882,7 +3882,7 @@ export namespace Raw {
     }
   }
   export class GetFutureSalts extends TLObject {
-    __response__!: TypeFutureSalts;
+    __response__!: Raw.TypeFutureSalts;
     num!: int;
 
     constructor(params: { num: int }) {
@@ -3919,7 +3919,7 @@ export namespace Raw {
     }
   }
   export class Ping extends TLObject {
-    __response__!: TypePong;
+    __response__!: Raw.TypePong;
     pingId!: long;
 
     constructor(params: { pingId: long }) {
@@ -3956,7 +3956,7 @@ export namespace Raw {
     }
   }
   export class PingDelayDisconnect extends TLObject {
-    __response__!: TypePong;
+    __response__!: Raw.TypePong;
     pingId!: long;
     disconnectDelay!: int;
 
@@ -3999,7 +3999,7 @@ export namespace Raw {
     }
   }
   export class DestroySession extends TLObject {
-    __response__!: TypeDestroySessionRes;
+    __response__!: Raw.TypeDestroySessionRes;
     sessionId!: long;
 
     constructor(params: { sessionId: long }) {
@@ -4214,11 +4214,11 @@ export namespace Raw {
     }
   }
   export class InputPeerUserFromMessage extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     msgId!: int;
     userId!: long;
 
-    constructor(params: { peer: TypeInputPeer; msgId: int; userId: long }) {
+    constructor(params: { peer: Raw.TypeInputPeer; msgId: int; userId: long }) {
       super();
       this.classType = 'types';
       this.className = 'InputPeerUserFromMessage';
@@ -4262,11 +4262,11 @@ export namespace Raw {
     }
   }
   export class InputPeerChannelFromMessage extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     msgId!: int;
     channelId!: long;
 
-    constructor(params: { peer: TypeInputPeer; msgId: int; channelId: long }) {
+    constructor(params: { peer: Raw.TypeInputPeer; msgId: int; channelId: long }) {
       super();
       this.classType = 'types';
       this.className = 'InputPeerChannelFromMessage';
@@ -4414,11 +4414,11 @@ export namespace Raw {
     }
   }
   export class InputUserFromMessage extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     msgId!: int;
     userId!: long;
 
-    constructor(params: { peer: TypeInputPeer; msgId: int; userId: long }) {
+    constructor(params: { peer: Raw.TypeInputPeer; msgId: int; userId: long }) {
       super();
       this.classType = 'types';
       this.className = 'InputUserFromMessage';
@@ -4653,14 +4653,14 @@ export namespace Raw {
   }
   export class InputMediaUploadedPhoto extends TLObject {
     spoiler?: boolean;
-    file!: TypeInputFile;
-    stickers?: Vector<TypeInputDocument>;
+    file!: Raw.TypeInputFile;
+    stickers?: Vector<Raw.TypeInputDocument>;
     ttlSeconds?: int;
 
     constructor(params: {
       spoiler?: boolean;
-      file: TypeInputFile;
-      stickers?: Vector<TypeInputDocument>;
+      file: Raw.TypeInputFile;
+      stickers?: Vector<Raw.TypeInputDocument>;
       ttlSeconds?: int;
     }) {
       super();
@@ -4722,10 +4722,10 @@ export namespace Raw {
   }
   export class InputMediaPhoto extends TLObject {
     spoiler?: boolean;
-    id!: TypeInputPhoto;
+    id!: Raw.TypeInputPhoto;
     ttlSeconds?: int;
 
-    constructor(params: { spoiler?: boolean; id: TypeInputPhoto; ttlSeconds?: int }) {
+    constructor(params: { spoiler?: boolean; id: Raw.TypeInputPhoto; ttlSeconds?: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputMediaPhoto';
@@ -4773,9 +4773,9 @@ export namespace Raw {
     }
   }
   export class InputMediaGeoPoint extends TLObject {
-    geoPoint!: TypeInputGeoPoint;
+    geoPoint!: Raw.TypeInputGeoPoint;
 
-    constructor(params: { geoPoint: TypeInputGeoPoint }) {
+    constructor(params: { geoPoint: Raw.TypeInputGeoPoint }) {
       super();
       this.classType = 'types';
       this.className = 'InputMediaGeoPoint';
@@ -4876,22 +4876,22 @@ export namespace Raw {
     nosoundVideo?: boolean;
     forceFile?: boolean;
     spoiler?: boolean;
-    file!: TypeInputFile;
-    thumb?: TypeInputFile;
+    file!: Raw.TypeInputFile;
+    thumb?: Raw.TypeInputFile;
     mimeType!: string;
-    attributes!: Vector<TypeDocumentAttribute>;
-    stickers?: Vector<TypeInputDocument>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
+    stickers?: Vector<Raw.TypeInputDocument>;
     ttlSeconds?: int;
 
     constructor(params: {
       nosoundVideo?: boolean;
       forceFile?: boolean;
       spoiler?: boolean;
-      file: TypeInputFile;
-      thumb?: TypeInputFile;
+      file: Raw.TypeInputFile;
+      thumb?: Raw.TypeInputFile;
       mimeType: string;
-      attributes: Vector<TypeDocumentAttribute>;
-      stickers?: Vector<TypeInputDocument>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
+      stickers?: Vector<Raw.TypeInputDocument>;
       ttlSeconds?: int;
     }) {
       super();
@@ -4990,13 +4990,13 @@ export namespace Raw {
   }
   export class InputMediaDocument extends TLObject {
     spoiler?: boolean;
-    id!: TypeInputDocument;
+    id!: Raw.TypeInputDocument;
     ttlSeconds?: int;
     query?: string;
 
     constructor(params: {
       spoiler?: boolean;
-      id: TypeInputDocument;
+      id: Raw.TypeInputDocument;
       ttlSeconds?: int;
       query?: string;
     }) {
@@ -5058,7 +5058,7 @@ export namespace Raw {
     }
   }
   export class InputMediaVenue extends TLObject {
-    geoPoint!: TypeInputGeoPoint;
+    geoPoint!: Raw.TypeInputGeoPoint;
     title!: string;
     address!: string;
     provider!: string;
@@ -5066,7 +5066,7 @@ export namespace Raw {
     venueType!: string;
 
     constructor(params: {
-      geoPoint: TypeInputGeoPoint;
+      geoPoint: Raw.TypeInputGeoPoint;
       title: string;
       address: string;
       provider: string;
@@ -5250,9 +5250,9 @@ export namespace Raw {
     }
   }
   export class InputMediaGame extends TLObject {
-    id!: TypeInputGame;
+    id!: Raw.TypeInputGame;
 
-    constructor(params: { id: TypeInputGame }) {
+    constructor(params: { id: Raw.TypeInputGame }) {
       super();
       this.classType = 'types';
       this.className = 'InputMediaGame';
@@ -5288,24 +5288,24 @@ export namespace Raw {
   export class InputMediaInvoice extends TLObject {
     title!: string;
     description!: string;
-    photo?: TypeInputWebDocument;
-    invoice!: TypeInvoice;
+    photo?: Raw.TypeInputWebDocument;
+    invoice!: Raw.TypeInvoice;
     payload!: bytes;
     provider!: string;
-    providerData!: TypeDataJSON;
+    providerData!: Raw.TypeDataJSON;
     startParam?: string;
-    extendedMedia?: TypeInputMedia;
+    extendedMedia?: Raw.TypeInputMedia;
 
     constructor(params: {
       title: string;
       description: string;
-      photo?: TypeInputWebDocument;
-      invoice: TypeInvoice;
+      photo?: Raw.TypeInputWebDocument;
+      invoice: Raw.TypeInvoice;
       payload: bytes;
       provider: string;
-      providerData: TypeDataJSON;
+      providerData: Raw.TypeDataJSON;
       startParam?: string;
-      extendedMedia?: TypeInputMedia;
+      extendedMedia?: Raw.TypeInputMedia;
     }) {
       super();
       this.classType = 'types';
@@ -5409,14 +5409,14 @@ export namespace Raw {
   }
   export class InputMediaGeoLive extends TLObject {
     stopped?: boolean;
-    geoPoint!: TypeInputGeoPoint;
+    geoPoint!: Raw.TypeInputGeoPoint;
     heading?: int;
     period?: int;
     proximityNotificationRadius?: int;
 
     constructor(params: {
       stopped?: boolean;
-      geoPoint: TypeInputGeoPoint;
+      geoPoint: Raw.TypeInputGeoPoint;
       heading?: int;
       period?: int;
       proximityNotificationRadius?: int;
@@ -5486,16 +5486,16 @@ export namespace Raw {
     }
   }
   export class InputMediaPoll extends TLObject {
-    poll!: TypePoll;
+    poll!: Raw.TypePoll;
     correctAnswers?: Vector<bytes>;
     solution?: string;
-    solutionEntities?: Vector<TypeMessageEntity>;
+    solutionEntities?: Vector<Raw.TypeMessageEntity>;
 
     constructor(params: {
-      poll: TypePoll;
+      poll: Raw.TypePoll;
       correctAnswers?: Vector<bytes>;
       solution?: string;
-      solutionEntities?: Vector<TypeMessageEntity>;
+      solutionEntities?: Vector<Raw.TypeMessageEntity>;
     }) {
       super();
       this.classType = 'types';
@@ -5594,10 +5594,10 @@ export namespace Raw {
     }
   }
   export class InputMediaStory extends TLObject {
-    userId!: TypeInputUser;
+    userId!: Raw.TypeInputUser;
     id!: int;
 
-    constructor(params: { userId: TypeInputUser; id: int }) {
+    constructor(params: { userId: Raw.TypeInputUser; id: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputMediaStory';
@@ -5665,16 +5665,16 @@ export namespace Raw {
     }
   }
   export class InputChatUploadedPhoto extends TLObject {
-    file?: TypeInputFile;
-    video?: TypeInputFile;
+    file?: Raw.TypeInputFile;
+    video?: Raw.TypeInputFile;
     videoStartTs?: double;
-    videoEmojiMarkup?: TypeVideoSize;
+    videoEmojiMarkup?: Raw.TypeVideoSize;
 
     constructor(params: {
-      file?: TypeInputFile;
-      video?: TypeInputFile;
+      file?: Raw.TypeInputFile;
+      video?: Raw.TypeInputFile;
       videoStartTs?: double;
-      videoEmojiMarkup?: TypeVideoSize;
+      videoEmojiMarkup?: Raw.TypeVideoSize;
     }) {
       super();
       this.classType = 'types';
@@ -5738,9 +5738,9 @@ export namespace Raw {
     }
   }
   export class InputChatPhoto extends TLObject {
-    id!: TypeInputPhoto;
+    id!: Raw.TypeInputPhoto;
 
-    constructor(params: { id: TypeInputPhoto }) {
+    constructor(params: { id: Raw.TypeInputPhoto }) {
       super();
       this.classType = 'types';
       this.className = 'InputChatPhoto';
@@ -6305,10 +6305,10 @@ export namespace Raw {
   }
   export class InputPeerPhotoFileLocation extends TLObject {
     big?: boolean;
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     photoId!: long;
 
-    constructor(params: { big?: boolean; peer: TypeInputPeer; photoId: long }) {
+    constructor(params: { big?: boolean; peer: Raw.TypeInputPeer; photoId: long }) {
       super();
       this.classType = 'types';
       this.className = 'InputPeerPhotoFileLocation';
@@ -6355,10 +6355,10 @@ export namespace Raw {
     }
   }
   export class InputStickerSetThumb extends TLObject {
-    stickerset!: TypeInputStickerSet;
+    stickerset!: Raw.TypeInputStickerSet;
     thumbVersion!: int;
 
-    constructor(params: { stickerset: TypeInputStickerSet; thumbVersion: int }) {
+    constructor(params: { stickerset: Raw.TypeInputStickerSet; thumbVersion: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputStickerSetThumb';
@@ -6397,14 +6397,14 @@ export namespace Raw {
     }
   }
   export class InputGroupCallStream extends TLObject {
-    call!: TypeInputGroupCall;
+    call!: Raw.TypeInputGroupCall;
     timeMs!: long;
     scale!: int;
     videoChannel?: int;
     videoQuality?: int;
 
     constructor(params: {
-      call: TypeInputGroupCall;
+      call: Raw.TypeInputGroupCall;
       timeMs: long;
       scale: int;
       videoChannel?: int;
@@ -6648,14 +6648,14 @@ export namespace Raw {
     lastName?: string;
     username?: string;
     phone?: string;
-    photo?: TypeUserProfilePhoto;
-    status?: TypeUserStatus;
+    photo?: Raw.TypeUserProfilePhoto;
+    status?: Raw.TypeUserStatus;
     botInfoVersion?: int;
-    restrictionReason?: Vector<TypeRestrictionReason>;
+    restrictionReason?: Vector<Raw.TypeRestrictionReason>;
     botInlinePlaceholder?: string;
     langCode?: string;
-    emojiStatus?: TypeEmojiStatus;
-    usernames?: Vector<TypeUsername>;
+    emojiStatus?: Raw.TypeEmojiStatus;
+    usernames?: Vector<Raw.TypeUsername>;
     storiesMaxId?: int;
 
     constructor(params: {
@@ -6687,14 +6687,14 @@ export namespace Raw {
       lastName?: string;
       username?: string;
       phone?: string;
-      photo?: TypeUserProfilePhoto;
-      status?: TypeUserStatus;
+      photo?: Raw.TypeUserProfilePhoto;
+      status?: Raw.TypeUserStatus;
       botInfoVersion?: int;
-      restrictionReason?: Vector<TypeRestrictionReason>;
+      restrictionReason?: Vector<Raw.TypeRestrictionReason>;
       botInlinePlaceholder?: string;
       langCode?: string;
-      emojiStatus?: TypeEmojiStatus;
-      usernames?: Vector<TypeUsername>;
+      emojiStatus?: Raw.TypeEmojiStatus;
+      usernames?: Vector<Raw.TypeUsername>;
       storiesMaxId?: int;
     }) {
       super();
@@ -7298,13 +7298,13 @@ export namespace Raw {
     noforwards?: boolean;
     id!: long;
     title!: string;
-    photo!: TypeChatPhoto;
+    photo!: Raw.TypeChatPhoto;
     participantsCount!: int;
     date!: int;
     version!: int;
-    migratedTo?: TypeInputChannel;
-    adminRights?: TypeChatAdminRights;
-    defaultBannedRights?: TypeChatBannedRights;
+    migratedTo?: Raw.TypeInputChannel;
+    adminRights?: Raw.TypeChatAdminRights;
+    defaultBannedRights?: Raw.TypeChatBannedRights;
 
     constructor(params: {
       creator?: boolean;
@@ -7315,13 +7315,13 @@ export namespace Raw {
       noforwards?: boolean;
       id: long;
       title: string;
-      photo: TypeChatPhoto;
+      photo: Raw.TypeChatPhoto;
       participantsCount: int;
       date: int;
       version: int;
-      migratedTo?: TypeInputChannel;
-      adminRights?: TypeChatAdminRights;
-      defaultBannedRights?: TypeChatBannedRights;
+      migratedTo?: Raw.TypeInputChannel;
+      adminRights?: Raw.TypeChatAdminRights;
+      defaultBannedRights?: Raw.TypeChatBannedRights;
     }) {
       super();
       this.classType = 'types';
@@ -7520,14 +7520,14 @@ export namespace Raw {
     accessHash?: long;
     title!: string;
     username?: string;
-    photo!: TypeChatPhoto;
+    photo!: Raw.TypeChatPhoto;
     date!: int;
-    restrictionReason?: Vector<TypeRestrictionReason>;
-    adminRights?: TypeChatAdminRights;
-    bannedRights?: TypeChatBannedRights;
-    defaultBannedRights?: TypeChatBannedRights;
+    restrictionReason?: Vector<Raw.TypeRestrictionReason>;
+    adminRights?: Raw.TypeChatAdminRights;
+    bannedRights?: Raw.TypeChatBannedRights;
+    defaultBannedRights?: Raw.TypeChatBannedRights;
     participantsCount?: int;
-    usernames?: Vector<TypeUsername>;
+    usernames?: Vector<Raw.TypeUsername>;
 
     constructor(params: {
       creator?: boolean;
@@ -7554,14 +7554,14 @@ export namespace Raw {
       accessHash?: long;
       title: string;
       username?: string;
-      photo: TypeChatPhoto;
+      photo: Raw.TypeChatPhoto;
       date: int;
-      restrictionReason?: Vector<TypeRestrictionReason>;
-      adminRights?: TypeChatAdminRights;
-      bannedRights?: TypeChatBannedRights;
-      defaultBannedRights?: TypeChatBannedRights;
+      restrictionReason?: Vector<Raw.TypeRestrictionReason>;
+      adminRights?: Raw.TypeChatAdminRights;
+      bannedRights?: Raw.TypeChatBannedRights;
+      defaultBannedRights?: Raw.TypeChatBannedRights;
       participantsCount?: int;
-      usernames?: Vector<TypeUsername>;
+      usernames?: Vector<Raw.TypeUsername>;
     }) {
       super();
       this.classType = 'types';
@@ -7879,20 +7879,20 @@ export namespace Raw {
     translationsDisabled?: boolean;
     id!: long;
     about!: string;
-    participants!: TypeChatParticipants;
-    chatPhoto?: TypePhoto;
-    notifySettings!: TypePeerNotifySettings;
-    exportedInvite?: TypeExportedChatInvite;
-    botInfo?: Vector<TypeBotInfo>;
+    participants!: Raw.TypeChatParticipants;
+    chatPhoto?: Raw.TypePhoto;
+    notifySettings!: Raw.TypePeerNotifySettings;
+    exportedInvite?: Raw.TypeExportedChatInvite;
+    botInfo?: Vector<Raw.TypeBotInfo>;
     pinnedMsgId?: int;
     folderId?: int;
-    call?: TypeInputGroupCall;
+    call?: Raw.TypeInputGroupCall;
     ttlPeriod?: int;
-    groupcallDefaultJoinAs?: TypePeer;
+    groupcallDefaultJoinAs?: Raw.TypePeer;
     themeEmoticon?: string;
     requestsPending?: int;
     recentRequesters?: Vector<long>;
-    availableReactions?: TypeChatReactions;
+    availableReactions?: Raw.TypeChatReactions;
 
     constructor(params: {
       canSetUsername?: boolean;
@@ -7900,20 +7900,20 @@ export namespace Raw {
       translationsDisabled?: boolean;
       id: long;
       about: string;
-      participants: TypeChatParticipants;
-      chatPhoto?: TypePhoto;
-      notifySettings: TypePeerNotifySettings;
-      exportedInvite?: TypeExportedChatInvite;
-      botInfo?: Vector<TypeBotInfo>;
+      participants: Raw.TypeChatParticipants;
+      chatPhoto?: Raw.TypePhoto;
+      notifySettings: Raw.TypePeerNotifySettings;
+      exportedInvite?: Raw.TypeExportedChatInvite;
+      botInfo?: Vector<Raw.TypeBotInfo>;
       pinnedMsgId?: int;
       folderId?: int;
-      call?: TypeInputGroupCall;
+      call?: Raw.TypeInputGroupCall;
       ttlPeriod?: int;
-      groupcallDefaultJoinAs?: TypePeer;
+      groupcallDefaultJoinAs?: Raw.TypePeer;
       themeEmoticon?: string;
       requestsPending?: int;
       recentRequesters?: Vector<long>;
-      availableReactions?: TypeChatReactions;
+      availableReactions?: Raw.TypeChatReactions;
     }) {
       super();
       this.classType = 'types';
@@ -8111,31 +8111,31 @@ export namespace Raw {
     readInboxMaxId!: int;
     readOutboxMaxId!: int;
     unreadCount!: int;
-    chatPhoto!: TypePhoto;
-    notifySettings!: TypePeerNotifySettings;
-    exportedInvite?: TypeExportedChatInvite;
-    botInfo!: Vector<TypeBotInfo>;
+    chatPhoto!: Raw.TypePhoto;
+    notifySettings!: Raw.TypePeerNotifySettings;
+    exportedInvite?: Raw.TypeExportedChatInvite;
+    botInfo!: Vector<Raw.TypeBotInfo>;
     migratedFromChatId?: long;
     migratedFromMaxId?: int;
     pinnedMsgId?: int;
-    stickerset?: TypeStickerSet;
+    stickerset?: Raw.TypeStickerSet;
     availableMinId?: int;
     folderId?: int;
     linkedChatId?: long;
-    location?: TypeChannelLocation;
+    location?: Raw.TypeChannelLocation;
     slowmodeSeconds?: int;
     slowmodeNextSendDate?: int;
     statsDc?: int;
     pts!: int;
-    call?: TypeInputGroupCall;
+    call?: Raw.TypeInputGroupCall;
     ttlPeriod?: int;
     pendingSuggestions?: Vector<string>;
-    groupcallDefaultJoinAs?: TypePeer;
+    groupcallDefaultJoinAs?: Raw.TypePeer;
     themeEmoticon?: string;
     requestsPending?: int;
     recentRequesters?: Vector<long>;
-    defaultSendAs?: TypePeer;
-    availableReactions?: TypeChatReactions;
+    defaultSendAs?: Raw.TypePeer;
+    availableReactions?: Raw.TypeChatReactions;
 
     constructor(params: {
       canViewParticipants?: boolean;
@@ -8160,31 +8160,31 @@ export namespace Raw {
       readInboxMaxId: int;
       readOutboxMaxId: int;
       unreadCount: int;
-      chatPhoto: TypePhoto;
-      notifySettings: TypePeerNotifySettings;
-      exportedInvite?: TypeExportedChatInvite;
-      botInfo: Vector<TypeBotInfo>;
+      chatPhoto: Raw.TypePhoto;
+      notifySettings: Raw.TypePeerNotifySettings;
+      exportedInvite?: Raw.TypeExportedChatInvite;
+      botInfo: Vector<Raw.TypeBotInfo>;
       migratedFromChatId?: long;
       migratedFromMaxId?: int;
       pinnedMsgId?: int;
-      stickerset?: TypeStickerSet;
+      stickerset?: Raw.TypeStickerSet;
       availableMinId?: int;
       folderId?: int;
       linkedChatId?: long;
-      location?: TypeChannelLocation;
+      location?: Raw.TypeChannelLocation;
       slowmodeSeconds?: int;
       slowmodeNextSendDate?: int;
       statsDc?: int;
       pts: int;
-      call?: TypeInputGroupCall;
+      call?: Raw.TypeInputGroupCall;
       ttlPeriod?: int;
       pendingSuggestions?: Vector<string>;
-      groupcallDefaultJoinAs?: TypePeer;
+      groupcallDefaultJoinAs?: Raw.TypePeer;
       themeEmoticon?: string;
       requestsPending?: int;
       recentRequesters?: Vector<long>;
-      defaultSendAs?: TypePeer;
-      availableReactions?: TypeChatReactions;
+      defaultSendAs?: Raw.TypePeer;
+      availableReactions?: Raw.TypeChatReactions;
     }) {
       super();
       this.classType = 'types';
@@ -8689,9 +8689,9 @@ export namespace Raw {
   }
   export class ChatParticipantsForbidden extends TLObject {
     chatId!: long;
-    selfParticipant?: TypeChatParticipant;
+    selfParticipant?: Raw.TypeChatParticipant;
 
-    constructor(params: { chatId: long; selfParticipant?: TypeChatParticipant }) {
+    constructor(params: { chatId: long; selfParticipant?: Raw.TypeChatParticipant }) {
       super();
       this.classType = 'types';
       this.className = 'ChatParticipantsForbidden';
@@ -8740,10 +8740,14 @@ export namespace Raw {
   }
   export class ChatParticipants extends TLObject {
     chatId!: long;
-    participants!: Vector<TypeChatParticipant>;
+    participants!: Vector<Raw.TypeChatParticipant>;
     version!: int;
 
-    constructor(params: { chatId: long; participants: Vector<TypeChatParticipant>; version: int }) {
+    constructor(params: {
+      chatId: long;
+      participants: Vector<Raw.TypeChatParticipant>;
+      version: int;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'ChatParticipants';
@@ -8884,9 +8888,9 @@ export namespace Raw {
   }
   export class MessageEmpty extends TLObject {
     id!: int;
-    peerId?: TypePeer;
+    peerId?: Raw.TypePeer;
 
-    constructor(params: { id: int; peerId?: TypePeer }) {
+    constructor(params: { id: int; peerId?: Raw.TypePeer }) {
       super();
       this.classType = 'types';
       this.className = 'MessageEmpty';
@@ -8942,24 +8946,24 @@ export namespace Raw {
     pinned?: boolean;
     noforwards?: boolean;
     id!: int;
-    fromId?: TypePeer;
-    peerId!: TypePeer;
-    fwdFrom?: TypeMessageFwdHeader;
+    fromId?: Raw.TypePeer;
+    peerId!: Raw.TypePeer;
+    fwdFrom?: Raw.TypeMessageFwdHeader;
     viaBotId?: long;
-    replyTo?: TypeMessageReplyHeader;
+    replyTo?: Raw.TypeMessageReplyHeader;
     date!: int;
     message!: string;
-    media?: TypeMessageMedia;
-    replyMarkup?: TypeReplyMarkup;
-    entities?: Vector<TypeMessageEntity>;
+    media?: Raw.TypeMessageMedia;
+    replyMarkup?: Raw.TypeReplyMarkup;
+    entities?: Vector<Raw.TypeMessageEntity>;
     views?: int;
     forwards?: int;
-    replies?: TypeMessageReplies;
+    replies?: Raw.TypeMessageReplies;
     editDate?: int;
     postAuthor?: string;
     groupedId?: long;
-    reactions?: TypeMessageReactions;
-    restrictionReason?: Vector<TypeRestrictionReason>;
+    reactions?: Raw.TypeMessageReactions;
+    restrictionReason?: Vector<Raw.TypeRestrictionReason>;
     ttlPeriod?: int;
 
     constructor(params: {
@@ -8974,24 +8978,24 @@ export namespace Raw {
       pinned?: boolean;
       noforwards?: boolean;
       id: int;
-      fromId?: TypePeer;
-      peerId: TypePeer;
-      fwdFrom?: TypeMessageFwdHeader;
+      fromId?: Raw.TypePeer;
+      peerId: Raw.TypePeer;
+      fwdFrom?: Raw.TypeMessageFwdHeader;
       viaBotId?: long;
-      replyTo?: TypeMessageReplyHeader;
+      replyTo?: Raw.TypeMessageReplyHeader;
       date: int;
       message: string;
-      media?: TypeMessageMedia;
-      replyMarkup?: TypeReplyMarkup;
-      entities?: Vector<TypeMessageEntity>;
+      media?: Raw.TypeMessageMedia;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
       views?: int;
       forwards?: int;
-      replies?: TypeMessageReplies;
+      replies?: Raw.TypeMessageReplies;
       editDate?: int;
       postAuthor?: string;
       groupedId?: long;
-      reactions?: TypeMessageReactions;
-      restrictionReason?: Vector<TypeRestrictionReason>;
+      reactions?: Raw.TypeMessageReactions;
+      restrictionReason?: Vector<Raw.TypeRestrictionReason>;
       ttlPeriod?: int;
     }) {
       super();
@@ -9242,11 +9246,11 @@ export namespace Raw {
     post?: boolean;
     legacy?: boolean;
     id!: int;
-    fromId?: TypePeer;
-    peerId!: TypePeer;
-    replyTo?: TypeMessageReplyHeader;
+    fromId?: Raw.TypePeer;
+    peerId!: Raw.TypePeer;
+    replyTo?: Raw.TypeMessageReplyHeader;
     date!: int;
-    action!: TypeMessageAction;
+    action!: Raw.TypeMessageAction;
     ttlPeriod?: int;
 
     constructor(params: {
@@ -9257,11 +9261,11 @@ export namespace Raw {
       post?: boolean;
       legacy?: boolean;
       id: int;
-      fromId?: TypePeer;
-      peerId: TypePeer;
-      replyTo?: TypeMessageReplyHeader;
+      fromId?: Raw.TypePeer;
+      peerId: Raw.TypePeer;
+      replyTo?: Raw.TypeMessageReplyHeader;
       date: int;
-      action: TypeMessageAction;
+      action: Raw.TypeMessageAction;
       ttlPeriod?: int;
     }) {
       super();
@@ -9411,10 +9415,10 @@ export namespace Raw {
   }
   export class MessageMediaPhoto extends TLObject {
     spoiler?: boolean;
-    photo?: TypePhoto;
+    photo?: Raw.TypePhoto;
     ttlSeconds?: int;
 
-    constructor(params: { spoiler?: boolean; photo?: TypePhoto; ttlSeconds?: int }) {
+    constructor(params: { spoiler?: boolean; photo?: Raw.TypePhoto; ttlSeconds?: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaPhoto';
@@ -9463,9 +9467,9 @@ export namespace Raw {
     }
   }
   export class MessageMediaGeo extends TLObject {
-    geo!: TypeGeoPoint;
+    geo!: Raw.TypeGeoPoint;
 
-    constructor(params: { geo: TypeGeoPoint }) {
+    constructor(params: { geo: Raw.TypeGeoPoint }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaGeo';
@@ -9602,15 +9606,15 @@ export namespace Raw {
   export class MessageMediaDocument extends TLObject {
     nopremium?: boolean;
     spoiler?: boolean;
-    document?: TypeDocument;
-    altDocument?: TypeDocument;
+    document?: Raw.TypeDocument;
+    altDocument?: Raw.TypeDocument;
     ttlSeconds?: int;
 
     constructor(params: {
       nopremium?: boolean;
       spoiler?: boolean;
-      document?: TypeDocument;
-      altDocument?: TypeDocument;
+      document?: Raw.TypeDocument;
+      altDocument?: Raw.TypeDocument;
       ttlSeconds?: int;
     }) {
       super();
@@ -9676,9 +9680,9 @@ export namespace Raw {
     }
   }
   export class MessageMediaWebPage extends TLObject {
-    webpage!: TypeWebPage;
+    webpage!: Raw.TypeWebPage;
 
-    constructor(params: { webpage: TypeWebPage }) {
+    constructor(params: { webpage: Raw.TypeWebPage }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaWebPage';
@@ -9712,7 +9716,7 @@ export namespace Raw {
     }
   }
   export class MessageMediaVenue extends TLObject {
-    geo!: TypeGeoPoint;
+    geo!: Raw.TypeGeoPoint;
     title!: string;
     address!: string;
     provider!: string;
@@ -9720,7 +9724,7 @@ export namespace Raw {
     venueType!: string;
 
     constructor(params: {
-      geo: TypeGeoPoint;
+      geo: Raw.TypeGeoPoint;
       title: string;
       address: string;
       provider: string;
@@ -9792,9 +9796,9 @@ export namespace Raw {
     }
   }
   export class MessageMediaGame extends TLObject {
-    game!: TypeGame;
+    game!: Raw.TypeGame;
 
-    constructor(params: { game: TypeGame }) {
+    constructor(params: { game: Raw.TypeGame }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaGame';
@@ -9832,24 +9836,24 @@ export namespace Raw {
     test?: boolean;
     title!: string;
     description!: string;
-    photo?: TypeWebDocument;
+    photo?: Raw.TypeWebDocument;
     receiptMsgId?: int;
     currency!: string;
     totalAmount!: long;
     startParam!: string;
-    extendedMedia?: TypeMessageExtendedMedia;
+    extendedMedia?: Raw.TypeMessageExtendedMedia;
 
     constructor(params: {
       shippingAddressRequested?: boolean;
       test?: boolean;
       title: string;
       description: string;
-      photo?: TypeWebDocument;
+      photo?: Raw.TypeWebDocument;
       receiptMsgId?: int;
       currency: string;
       totalAmount: long;
       startParam: string;
-      extendedMedia?: TypeMessageExtendedMedia;
+      extendedMedia?: Raw.TypeMessageExtendedMedia;
     }) {
       super();
       this.classType = 'types';
@@ -9955,13 +9959,13 @@ export namespace Raw {
     }
   }
   export class MessageMediaGeoLive extends TLObject {
-    geo!: TypeGeoPoint;
+    geo!: Raw.TypeGeoPoint;
     heading?: int;
     period!: int;
     proximityNotificationRadius?: int;
 
     constructor(params: {
-      geo: TypeGeoPoint;
+      geo: Raw.TypeGeoPoint;
       heading?: int;
       period: int;
       proximityNotificationRadius?: int;
@@ -10026,10 +10030,10 @@ export namespace Raw {
     }
   }
   export class MessageMediaPoll extends TLObject {
-    poll!: TypePoll;
-    results!: TypePollResults;
+    poll!: Raw.TypePoll;
+    results!: Raw.TypePollResults;
 
-    constructor(params: { poll: TypePoll; results: TypePollResults }) {
+    constructor(params: { poll: Raw.TypePoll; results: Raw.TypePollResults }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaPoll';
@@ -10113,9 +10117,14 @@ export namespace Raw {
     viaMention?: boolean;
     userId!: long;
     id!: int;
-    story?: TypeStoryItem;
+    story?: Raw.TypeStoryItem;
 
-    constructor(params: { viaMention?: boolean; userId: long; id: int; story?: TypeStoryItem }) {
+    constructor(params: {
+      viaMention?: boolean;
+      userId: long;
+      id: int;
+      story?: Raw.TypeStoryItem;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaStory';
@@ -10280,9 +10289,9 @@ export namespace Raw {
     }
   }
   export class MessageActionChatEditPhoto extends TLObject {
-    photo!: TypePhoto;
+    photo!: Raw.TypePhoto;
 
-    constructor(params: { photo: TypePhoto }) {
+    constructor(params: { photo: Raw.TypePhoto }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionChatEditPhoto';
@@ -10675,9 +10684,9 @@ export namespace Raw {
     currency!: string;
     totalAmount!: long;
     payload!: bytes;
-    info?: TypePaymentRequestedInfo;
+    info?: Raw.TypePaymentRequestedInfo;
     shippingOptionId?: string;
-    charge!: TypePaymentCharge;
+    charge!: Raw.TypePaymentCharge;
 
     constructor(params: {
       recurringInit?: boolean;
@@ -10685,9 +10694,9 @@ export namespace Raw {
       currency: string;
       totalAmount: long;
       payload: bytes;
-      info?: TypePaymentRequestedInfo;
+      info?: Raw.TypePaymentRequestedInfo;
       shippingOptionId?: string;
-      charge: TypePaymentCharge;
+      charge: Raw.TypePaymentCharge;
     }) {
       super();
       this.classType = 'types';
@@ -10854,13 +10863,13 @@ export namespace Raw {
   export class MessageActionPhoneCall extends TLObject {
     video?: boolean;
     callId!: long;
-    reason?: TypePhoneCallDiscardReason;
+    reason?: Raw.TypePhoneCallDiscardReason;
     duration?: int;
 
     constructor(params: {
       video?: boolean;
       callId: long;
-      reason?: TypePhoneCallDiscardReason;
+      reason?: Raw.TypePhoneCallDiscardReason;
       duration?: int;
     }) {
       super();
@@ -10988,9 +10997,9 @@ export namespace Raw {
   export class MessageActionBotAllowed extends TLObject {
     attachMenu?: boolean;
     domain?: string;
-    app?: TypeBotApp;
+    app?: Raw.TypeBotApp;
 
-    constructor(params: { attachMenu?: boolean; domain?: string; app?: TypeBotApp }) {
+    constructor(params: { attachMenu?: boolean; domain?: string; app?: Raw.TypeBotApp }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionBotAllowed';
@@ -11039,12 +11048,12 @@ export namespace Raw {
     }
   }
   export class MessageActionSecureValuesSentMe extends TLObject {
-    values!: Vector<TypeSecureValue>;
-    credentials!: TypeSecureCredentialsEncrypted;
+    values!: Vector<Raw.TypeSecureValue>;
+    credentials!: Raw.TypeSecureCredentialsEncrypted;
 
     constructor(params: {
-      values: Vector<TypeSecureValue>;
-      credentials: TypeSecureCredentialsEncrypted;
+      values: Vector<Raw.TypeSecureValue>;
+      credentials: Raw.TypeSecureCredentialsEncrypted;
     }) {
       super();
       this.classType = 'types';
@@ -11087,9 +11096,9 @@ export namespace Raw {
     }
   }
   export class MessageActionSecureValuesSent extends TLObject {
-    types!: Vector<TypeSecureValueType>;
+    types!: Vector<Raw.TypeSecureValueType>;
 
-    constructor(params: { types: Vector<TypeSecureValueType> }) {
+    constructor(params: { types: Vector<Raw.TypeSecureValueType> }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionSecureValuesSent';
@@ -11152,11 +11161,11 @@ export namespace Raw {
     }
   }
   export class MessageActionGeoProximityReached extends TLObject {
-    fromId!: TypePeer;
-    toId!: TypePeer;
+    fromId!: Raw.TypePeer;
+    toId!: Raw.TypePeer;
     distance!: int;
 
-    constructor(params: { fromId: TypePeer; toId: TypePeer; distance: int }) {
+    constructor(params: { fromId: Raw.TypePeer; toId: Raw.TypePeer; distance: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionGeoProximityReached';
@@ -11207,10 +11216,10 @@ export namespace Raw {
     }
   }
   export class MessageActionGroupCall extends TLObject {
-    call!: TypeInputGroupCall;
+    call!: Raw.TypeInputGroupCall;
     duration?: int;
 
-    constructor(params: { call: TypeInputGroupCall; duration?: int }) {
+    constructor(params: { call: Raw.TypeInputGroupCall; duration?: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionGroupCall';
@@ -11255,10 +11264,10 @@ export namespace Raw {
     }
   }
   export class MessageActionInviteToGroupCall extends TLObject {
-    call!: TypeInputGroupCall;
+    call!: Raw.TypeInputGroupCall;
     users!: Vector<long>;
 
-    constructor(params: { call: TypeInputGroupCall; users: Vector<long> }) {
+    constructor(params: { call: Raw.TypeInputGroupCall; users: Vector<long> }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionInviteToGroupCall';
@@ -11351,10 +11360,10 @@ export namespace Raw {
     }
   }
   export class MessageActionGroupCallScheduled extends TLObject {
-    call!: TypeInputGroupCall;
+    call!: Raw.TypeInputGroupCall;
     scheduleDate!: int;
 
-    constructor(params: { call: TypeInputGroupCall; scheduleDate: int }) {
+    constructor(params: { call: Raw.TypeInputGroupCall; scheduleDate: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionGroupCallScheduled';
@@ -11750,9 +11759,9 @@ export namespace Raw {
     }
   }
   export class MessageActionSuggestProfilePhoto extends TLObject {
-    photo!: TypePhoto;
+    photo!: Raw.TypePhoto;
 
-    constructor(params: { photo: TypePhoto }) {
+    constructor(params: { photo: Raw.TypePhoto }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionSuggestProfilePhoto';
@@ -11790,9 +11799,9 @@ export namespace Raw {
   }
   export class MessageActionRequestedPeer extends TLObject {
     buttonId!: int;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
 
-    constructor(params: { buttonId: int; peer: TypePeer }) {
+    constructor(params: { buttonId: int; peer: Raw.TypePeer }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionRequestedPeer';
@@ -11831,9 +11840,9 @@ export namespace Raw {
     }
   }
   export class MessageActionSetChatWallPaper extends TLObject {
-    wallpaper!: TypeWallPaper;
+    wallpaper!: Raw.TypeWallPaper;
 
-    constructor(params: { wallpaper: TypeWallPaper }) {
+    constructor(params: { wallpaper: Raw.TypeWallPaper }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionSetChatWallPaper';
@@ -11867,9 +11876,9 @@ export namespace Raw {
     }
   }
   export class MessageActionSetSameChatWallPaper extends TLObject {
-    wallpaper!: TypeWallPaper;
+    wallpaper!: Raw.TypeWallPaper;
 
-    constructor(params: { wallpaper: TypeWallPaper }) {
+    constructor(params: { wallpaper: Raw.TypeWallPaper }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionSetSameChatWallPaper';
@@ -11908,32 +11917,32 @@ export namespace Raw {
   export class Dialog extends TLObject {
     pinned?: boolean;
     unreadMark?: boolean;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     topMessage!: int;
     readInboxMaxId!: int;
     readOutboxMaxId!: int;
     unreadCount!: int;
     unreadMentionsCount!: int;
     unreadReactionsCount!: int;
-    notifySettings!: TypePeerNotifySettings;
+    notifySettings!: Raw.TypePeerNotifySettings;
     pts?: int;
-    draft?: TypeDraftMessage;
+    draft?: Raw.TypeDraftMessage;
     folderId?: int;
     ttlPeriod?: int;
 
     constructor(params: {
       pinned?: boolean;
       unreadMark?: boolean;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       topMessage: int;
       readInboxMaxId: int;
       readOutboxMaxId: int;
       unreadCount: int;
       unreadMentionsCount: int;
       unreadReactionsCount: int;
-      notifySettings: TypePeerNotifySettings;
+      notifySettings: Raw.TypePeerNotifySettings;
       pts?: int;
-      draft?: TypeDraftMessage;
+      draft?: Raw.TypeDraftMessage;
       folderId?: int;
       ttlPeriod?: int;
     }) {
@@ -12071,8 +12080,8 @@ export namespace Raw {
   }
   export class DialogFolder extends TLObject {
     pinned?: boolean;
-    folder!: TypeFolder;
-    peer!: TypePeer;
+    folder!: Raw.TypeFolder;
+    peer!: Raw.TypePeer;
     topMessage!: int;
     unreadMutedPeersCount!: int;
     unreadUnmutedPeersCount!: int;
@@ -12081,8 +12090,8 @@ export namespace Raw {
 
     constructor(params: {
       pinned?: boolean;
-      folder: TypeFolder;
-      peer: TypePeer;
+      folder: Raw.TypeFolder;
+      peer: Raw.TypePeer;
       topMessage: int;
       unreadMutedPeersCount: int;
       unreadUnmutedPeersCount: int;
@@ -12219,8 +12228,8 @@ export namespace Raw {
     accessHash!: long;
     fileReference!: bytes;
     date!: int;
-    sizes!: Vector<TypePhotoSize>;
-    videoSizes?: Vector<TypeVideoSize>;
+    sizes!: Vector<Raw.TypePhotoSize>;
+    videoSizes?: Vector<Raw.TypeVideoSize>;
     dcId!: int;
 
     constructor(params: {
@@ -12229,8 +12238,8 @@ export namespace Raw {
       accessHash: long;
       fileReference: bytes;
       date: int;
-      sizes: Vector<TypePhotoSize>;
-      videoSizes?: Vector<TypeVideoSize>;
+      sizes: Vector<Raw.TypePhotoSize>;
+      videoSizes?: Vector<Raw.TypeVideoSize>;
       dcId: int;
     }) {
       super();
@@ -12699,9 +12708,9 @@ export namespace Raw {
     }
   }
   export class InputNotifyPeer extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
 
-    constructor(params: { peer: TypeInputPeer }) {
+    constructor(params: { peer: Raw.TypeInputPeer }) {
       super();
       this.classType = 'types';
       this.className = 'InputNotifyPeer';
@@ -12822,10 +12831,10 @@ export namespace Raw {
     }
   }
   export class InputNotifyForumTopic extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     topMsgId!: int;
 
-    constructor(params: { peer: TypeInputPeer; topMsgId: int }) {
+    constructor(params: { peer: Raw.TypeInputPeer; topMsgId: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputNotifyForumTopic';
@@ -12867,19 +12876,19 @@ export namespace Raw {
     showPreviews?: Bool;
     silent?: Bool;
     muteUntil?: int;
-    sound?: TypeNotificationSound;
+    sound?: Raw.TypeNotificationSound;
     storiesMuted?: Bool;
     storiesHideSender?: Bool;
-    storiesSound?: TypeNotificationSound;
+    storiesSound?: Raw.TypeNotificationSound;
 
     constructor(params: {
       showPreviews?: Bool;
       silent?: Bool;
       muteUntil?: int;
-      sound?: TypeNotificationSound;
+      sound?: Raw.TypeNotificationSound;
       storiesMuted?: Bool;
       storiesHideSender?: Bool;
-      storiesSound?: TypeNotificationSound;
+      storiesSound?: Raw.TypeNotificationSound;
     }) {
       super();
       this.classType = 'types';
@@ -12975,27 +12984,27 @@ export namespace Raw {
     showPreviews?: Bool;
     silent?: Bool;
     muteUntil?: int;
-    iosSound?: TypeNotificationSound;
-    androidSound?: TypeNotificationSound;
-    otherSound?: TypeNotificationSound;
+    iosSound?: Raw.TypeNotificationSound;
+    androidSound?: Raw.TypeNotificationSound;
+    otherSound?: Raw.TypeNotificationSound;
     storiesMuted?: Bool;
     storiesHideSender?: Bool;
-    storiesIosSound?: TypeNotificationSound;
-    storiesAndroidSound?: TypeNotificationSound;
-    storiesOtherSound?: TypeNotificationSound;
+    storiesIosSound?: Raw.TypeNotificationSound;
+    storiesAndroidSound?: Raw.TypeNotificationSound;
+    storiesOtherSound?: Raw.TypeNotificationSound;
 
     constructor(params: {
       showPreviews?: Bool;
       silent?: Bool;
       muteUntil?: int;
-      iosSound?: TypeNotificationSound;
-      androidSound?: TypeNotificationSound;
-      otherSound?: TypeNotificationSound;
+      iosSound?: Raw.TypeNotificationSound;
+      androidSound?: Raw.TypeNotificationSound;
+      otherSound?: Raw.TypeNotificationSound;
       storiesMuted?: Bool;
       storiesHideSender?: Bool;
-      storiesIosSound?: TypeNotificationSound;
-      storiesAndroidSound?: TypeNotificationSound;
-      storiesOtherSound?: TypeNotificationSound;
+      storiesIosSound?: Raw.TypeNotificationSound;
+      storiesAndroidSound?: Raw.TypeNotificationSound;
+      storiesOtherSound?: Raw.TypeNotificationSound;
     }) {
       super();
       this.classType = 'types';
@@ -13258,8 +13267,8 @@ export namespace Raw {
     dark?: boolean;
     accessHash!: long;
     slug!: string;
-    document!: TypeDocument;
-    settings?: TypeWallPaperSettings;
+    document!: Raw.TypeDocument;
+    settings?: Raw.TypeWallPaperSettings;
 
     constructor(params: {
       id: long;
@@ -13269,8 +13278,8 @@ export namespace Raw {
       dark?: boolean;
       accessHash: long;
       slug: string;
-      document: TypeDocument;
-      settings?: TypeWallPaperSettings;
+      document: Raw.TypeDocument;
+      settings?: Raw.TypeWallPaperSettings;
     }) {
       super();
       this.classType = 'types';
@@ -13366,13 +13375,13 @@ export namespace Raw {
     id!: long;
     default?: boolean;
     dark?: boolean;
-    settings?: TypeWallPaperSettings;
+    settings?: Raw.TypeWallPaperSettings;
 
     constructor(params: {
       id: long;
       default?: boolean;
       dark?: boolean;
-      settings?: TypeWallPaperSettings;
+      settings?: Raw.TypeWallPaperSettings;
     }) {
       super();
       this.classType = 'types';
@@ -13731,23 +13740,23 @@ export namespace Raw {
     storiesPinnedAvailable?: boolean;
     id!: long;
     about?: string;
-    settings!: TypePeerSettings;
-    personalPhoto?: TypePhoto;
-    profilePhoto?: TypePhoto;
-    fallbackPhoto?: TypePhoto;
-    notifySettings!: TypePeerNotifySettings;
-    botInfo?: TypeBotInfo;
+    settings!: Raw.TypePeerSettings;
+    personalPhoto?: Raw.TypePhoto;
+    profilePhoto?: Raw.TypePhoto;
+    fallbackPhoto?: Raw.TypePhoto;
+    notifySettings!: Raw.TypePeerNotifySettings;
+    botInfo?: Raw.TypeBotInfo;
     pinnedMsgId?: int;
     commonChatsCount!: int;
     folderId?: int;
     ttlPeriod?: int;
     themeEmoticon?: string;
     privateForwardName?: string;
-    botGroupAdminRights?: TypeChatAdminRights;
-    botBroadcastAdminRights?: TypeChatAdminRights;
-    premiumGifts?: Vector<TypePremiumGiftOption>;
-    wallpaper?: TypeWallPaper;
-    stories?: TypeUserStories;
+    botGroupAdminRights?: Raw.TypeChatAdminRights;
+    botBroadcastAdminRights?: Raw.TypeChatAdminRights;
+    premiumGifts?: Vector<Raw.TypePremiumGiftOption>;
+    wallpaper?: Raw.TypeWallPaper;
+    stories?: Raw.TypeUserStories;
 
     constructor(params: {
       blocked?: boolean;
@@ -13761,23 +13770,23 @@ export namespace Raw {
       storiesPinnedAvailable?: boolean;
       id: long;
       about?: string;
-      settings: TypePeerSettings;
-      personalPhoto?: TypePhoto;
-      profilePhoto?: TypePhoto;
-      fallbackPhoto?: TypePhoto;
-      notifySettings: TypePeerNotifySettings;
-      botInfo?: TypeBotInfo;
+      settings: Raw.TypePeerSettings;
+      personalPhoto?: Raw.TypePhoto;
+      profilePhoto?: Raw.TypePhoto;
+      fallbackPhoto?: Raw.TypePhoto;
+      notifySettings: Raw.TypePeerNotifySettings;
+      botInfo?: Raw.TypeBotInfo;
       pinnedMsgId?: int;
       commonChatsCount: int;
       folderId?: int;
       ttlPeriod?: int;
       themeEmoticon?: string;
       privateForwardName?: string;
-      botGroupAdminRights?: TypeChatAdminRights;
-      botBroadcastAdminRights?: TypeChatAdminRights;
-      premiumGifts?: Vector<TypePremiumGiftOption>;
-      wallpaper?: TypeWallPaper;
-      stories?: TypeUserStories;
+      botGroupAdminRights?: Raw.TypeChatAdminRights;
+      botBroadcastAdminRights?: Raw.TypeChatAdminRights;
+      premiumGifts?: Vector<Raw.TypePremiumGiftOption>;
+      wallpaper?: Raw.TypeWallPaper;
+      stories?: Raw.TypeUserStories;
     }) {
       super();
       this.classType = 'types';
@@ -14092,9 +14101,9 @@ export namespace Raw {
   }
   export class ContactStatus extends TLObject {
     userId!: long;
-    status!: TypeUserStatus;
+    status!: Raw.TypeUserStatus;
 
-    constructor(params: { userId: long; status: TypeUserStatus }) {
+    constructor(params: { userId: long; status: Raw.TypeUserStatus }) {
       super();
       this.classType = 'types';
       this.className = 'ContactStatus';
@@ -14636,11 +14645,11 @@ export namespace Raw {
     }
   }
   export class UpdateNewMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { message: TypeMessage; pts: int; ptsCount: int }) {
+    constructor(params: { message: Raw.TypeMessage; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateNewMessage';
@@ -14775,9 +14784,9 @@ export namespace Raw {
   }
   export class UpdateUserTyping extends TLObject {
     userId!: long;
-    action!: TypeSendMessageAction;
+    action!: Raw.TypeSendMessageAction;
 
-    constructor(params: { userId: long; action: TypeSendMessageAction }) {
+    constructor(params: { userId: long; action: Raw.TypeSendMessageAction }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateUserTyping';
@@ -14817,10 +14826,10 @@ export namespace Raw {
   }
   export class UpdateChatUserTyping extends TLObject {
     chatId!: long;
-    fromId!: TypePeer;
-    action!: TypeSendMessageAction;
+    fromId!: Raw.TypePeer;
+    action!: Raw.TypeSendMessageAction;
 
-    constructor(params: { chatId: long; fromId: TypePeer; action: TypeSendMessageAction }) {
+    constructor(params: { chatId: long; fromId: Raw.TypePeer; action: Raw.TypeSendMessageAction }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateChatUserTyping';
@@ -14864,9 +14873,9 @@ export namespace Raw {
     }
   }
   export class UpdateChatParticipants extends TLObject {
-    participants!: TypeChatParticipants;
+    participants!: Raw.TypeChatParticipants;
 
-    constructor(params: { participants: TypeChatParticipants }) {
+    constructor(params: { participants: Raw.TypeChatParticipants }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateChatParticipants';
@@ -14901,9 +14910,9 @@ export namespace Raw {
   }
   export class UpdateUserStatus extends TLObject {
     userId!: long;
-    status!: TypeUserStatus;
+    status!: Raw.TypeUserStatus;
 
-    constructor(params: { userId: long; status: TypeUserStatus }) {
+    constructor(params: { userId: long; status: Raw.TypeUserStatus }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateUserStatus';
@@ -14945,13 +14954,13 @@ export namespace Raw {
     userId!: long;
     firstName!: string;
     lastName!: string;
-    usernames!: Vector<TypeUsername>;
+    usernames!: Vector<Raw.TypeUsername>;
 
     constructor(params: {
       userId: long;
       firstName: string;
       lastName: string;
-      usernames: Vector<TypeUsername>;
+      usernames: Vector<Raw.TypeUsername>;
     }) {
       super();
       this.classType = 'types';
@@ -15006,10 +15015,10 @@ export namespace Raw {
     }
   }
   export class UpdateNewEncryptedMessage extends TLObject {
-    message!: TypeEncryptedMessage;
+    message!: Raw.TypeEncryptedMessage;
     qts!: int;
 
-    constructor(params: { message: TypeEncryptedMessage; qts: int }) {
+    constructor(params: { message: Raw.TypeEncryptedMessage; qts: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateNewEncryptedMessage';
@@ -15084,10 +15093,10 @@ export namespace Raw {
     }
   }
   export class UpdateEncryption extends TLObject {
-    chat!: TypeEncryptedChat;
+    chat!: Raw.TypeEncryptedChat;
     date!: int;
 
-    constructor(params: { chat: TypeEncryptedChat; date: int }) {
+    constructor(params: { chat: Raw.TypeEncryptedChat; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateEncryption';
@@ -15292,9 +15301,9 @@ export namespace Raw {
     }
   }
   export class UpdateDcOptions extends TLObject {
-    dcOptions!: Vector<TypeDcOption>;
+    dcOptions!: Vector<Raw.TypeDcOption>;
 
-    constructor(params: { dcOptions: Vector<TypeDcOption> }) {
+    constructor(params: { dcOptions: Vector<Raw.TypeDcOption> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDcOptions';
@@ -15328,10 +15337,10 @@ export namespace Raw {
     }
   }
   export class UpdateNotifySettings extends TLObject {
-    peer!: TypeNotifyPeer;
-    notifySettings!: TypePeerNotifySettings;
+    peer!: Raw.TypeNotifyPeer;
+    notifySettings!: Raw.TypePeerNotifySettings;
 
-    constructor(params: { peer: TypeNotifyPeer; notifySettings: TypePeerNotifySettings }) {
+    constructor(params: { peer: Raw.TypeNotifyPeer; notifySettings: Raw.TypePeerNotifySettings }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateNotifySettings';
@@ -15374,16 +15383,16 @@ export namespace Raw {
     inboxDate?: int;
     type!: string;
     message!: string;
-    media!: TypeMessageMedia;
-    entities!: Vector<TypeMessageEntity>;
+    media!: Raw.TypeMessageMedia;
+    entities!: Vector<Raw.TypeMessageEntity>;
 
     constructor(params: {
       popup?: boolean;
       inboxDate?: int;
       type: string;
       message: string;
-      media: TypeMessageMedia;
-      entities: Vector<TypeMessageEntity>;
+      media: Raw.TypeMessageMedia;
+      entities: Vector<Raw.TypeMessageEntity>;
     }) {
       super();
       this.classType = 'types';
@@ -15454,10 +15463,10 @@ export namespace Raw {
     }
   }
   export class UpdatePrivacy extends TLObject {
-    key!: TypePrivacyKey;
-    rules!: Vector<TypePrivacyRule>;
+    key!: Raw.TypePrivacyKey;
+    rules!: Vector<Raw.TypePrivacyRule>;
 
-    constructor(params: { key: TypePrivacyKey; rules: Vector<TypePrivacyRule> }) {
+    constructor(params: { key: Raw.TypePrivacyKey; rules: Vector<Raw.TypePrivacyRule> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePrivacy';
@@ -15539,7 +15548,7 @@ export namespace Raw {
   }
   export class UpdateReadHistoryInbox extends TLObject {
     folderId?: int;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     maxId!: int;
     stillUnreadCount!: int;
     pts!: int;
@@ -15547,7 +15556,7 @@ export namespace Raw {
 
     constructor(params: {
       folderId?: int;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       maxId: int;
       stillUnreadCount: int;
       pts: int;
@@ -15624,12 +15633,12 @@ export namespace Raw {
     }
   }
   export class UpdateReadHistoryOutbox extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     maxId!: int;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { peer: TypePeer; maxId: int; pts: int; ptsCount: int }) {
+    constructor(params: { peer: Raw.TypePeer; maxId: int; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateReadHistoryOutbox';
@@ -15683,11 +15692,11 @@ export namespace Raw {
     }
   }
   export class UpdateWebPage extends TLObject {
-    webpage!: TypeWebPage;
+    webpage!: Raw.TypeWebPage;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { webpage: TypeWebPage; pts: int; ptsCount: int }) {
+    constructor(params: { webpage: Raw.TypeWebPage; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateWebPage';
@@ -15867,11 +15876,11 @@ export namespace Raw {
     }
   }
   export class UpdateNewChannelMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { message: TypeMessage; pts: int; ptsCount: int }) {
+    constructor(params: { message: Raw.TypeMessage; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateNewChannelMessage';
@@ -16159,9 +16168,9 @@ export namespace Raw {
     }
   }
   export class UpdateNewStickerSet extends TLObject {
-    stickerset!: messages.TypeStickerSet;
+    stickerset!: Raw.messages.TypeStickerSet;
 
-    constructor(params: { stickerset: messages.TypeStickerSet }) {
+    constructor(params: { stickerset: Raw.messages.TypeStickerSet }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateNewStickerSet';
@@ -16319,16 +16328,16 @@ export namespace Raw {
     queryId!: long;
     userId!: long;
     query!: string;
-    geo?: TypeGeoPoint;
-    peerType?: TypeInlineQueryPeerType;
+    geo?: Raw.TypeGeoPoint;
+    peerType?: Raw.TypeInlineQueryPeerType;
     offset!: string;
 
     constructor(params: {
       queryId: long;
       userId: long;
       query: string;
-      geo?: TypeGeoPoint;
-      peerType?: TypeInlineQueryPeerType;
+      geo?: Raw.TypeGeoPoint;
+      peerType?: Raw.TypeInlineQueryPeerType;
       offset: string;
     }) {
       super();
@@ -16405,16 +16414,16 @@ export namespace Raw {
   export class UpdateBotInlineSend extends TLObject {
     userId!: long;
     query!: string;
-    geo?: TypeGeoPoint;
+    geo?: Raw.TypeGeoPoint;
     id!: string;
-    msgId?: TypeInputBotInlineMessageID;
+    msgId?: Raw.TypeInputBotInlineMessageID;
 
     constructor(params: {
       userId: long;
       query: string;
-      geo?: TypeGeoPoint;
+      geo?: Raw.TypeGeoPoint;
       id: string;
-      msgId?: TypeInputBotInlineMessageID;
+      msgId?: Raw.TypeInputBotInlineMessageID;
     }) {
       super();
       this.classType = 'types';
@@ -16482,11 +16491,11 @@ export namespace Raw {
     }
   }
   export class UpdateEditChannelMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { message: TypeMessage; pts: int; ptsCount: int }) {
+    constructor(params: { message: Raw.TypeMessage; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateEditChannelMessage';
@@ -16532,7 +16541,7 @@ export namespace Raw {
   export class UpdateBotCallbackQuery extends TLObject {
     queryId!: long;
     userId!: long;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     msgId!: int;
     chatInstance!: long;
     data?: bytes;
@@ -16541,7 +16550,7 @@ export namespace Raw {
     constructor(params: {
       queryId: long;
       userId: long;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       msgId: int;
       chatInstance: long;
       data?: bytes;
@@ -16625,11 +16634,11 @@ export namespace Raw {
     }
   }
   export class UpdateEditMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { message: TypeMessage; pts: int; ptsCount: int }) {
+    constructor(params: { message: Raw.TypeMessage; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateEditMessage';
@@ -16675,7 +16684,7 @@ export namespace Raw {
   export class UpdateInlineBotCallbackQuery extends TLObject {
     queryId!: long;
     userId!: long;
-    msgId!: TypeInputBotInlineMessageID;
+    msgId!: Raw.TypeInputBotInlineMessageID;
     chatInstance!: long;
     data?: bytes;
     gameShortName?: string;
@@ -16683,7 +16692,7 @@ export namespace Raw {
     constructor(params: {
       queryId: long;
       userId: long;
-      msgId: TypeInputBotInlineMessageID;
+      msgId: Raw.TypeInputBotInlineMessageID;
       chatInstance: long;
       data?: bytes;
       gameShortName?: string;
@@ -16802,11 +16811,11 @@ export namespace Raw {
     }
   }
   export class UpdateDraftMessage extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     topMsgId?: int;
-    draft!: TypeDraftMessage;
+    draft!: Raw.TypeDraftMessage;
 
-    constructor(params: { peer: TypePeer; topMsgId?: int; draft: TypeDraftMessage }) {
+    constructor(params: { peer: Raw.TypePeer; topMsgId?: int; draft: Raw.TypeDraftMessage }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDraftMessage';
@@ -16973,11 +16982,11 @@ export namespace Raw {
   }
   export class UpdateChannelWebPage extends TLObject {
     channelId!: long;
-    webpage!: TypeWebPage;
+    webpage!: Raw.TypeWebPage;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { channelId: long; webpage: TypeWebPage; pts: int; ptsCount: int }) {
+    constructor(params: { channelId: long; webpage: Raw.TypeWebPage; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateChannelWebPage';
@@ -17033,9 +17042,9 @@ export namespace Raw {
   export class UpdateDialogPinned extends TLObject {
     pinned?: boolean;
     folderId?: int;
-    peer!: TypeDialogPeer;
+    peer!: Raw.TypeDialogPeer;
 
-    constructor(params: { pinned?: boolean; folderId?: int; peer: TypeDialogPeer }) {
+    constructor(params: { pinned?: boolean; folderId?: int; peer: Raw.TypeDialogPeer }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDialogPinned';
@@ -17084,9 +17093,9 @@ export namespace Raw {
   }
   export class UpdatePinnedDialogs extends TLObject {
     folderId?: int;
-    order?: Vector<TypeDialogPeer>;
+    order?: Vector<Raw.TypeDialogPeer>;
 
-    constructor(params: { folderId?: int; order?: Vector<TypeDialogPeer> }) {
+    constructor(params: { folderId?: int; order?: Vector<Raw.TypeDialogPeer> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePinnedDialogs';
@@ -17132,9 +17141,9 @@ export namespace Raw {
     }
   }
   export class UpdateBotWebhookJSON extends TLObject {
-    data!: TypeDataJSON;
+    data!: Raw.TypeDataJSON;
 
-    constructor(params: { data: TypeDataJSON }) {
+    constructor(params: { data: Raw.TypeDataJSON }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateBotWebhookJSON';
@@ -17169,10 +17178,10 @@ export namespace Raw {
   }
   export class UpdateBotWebhookJSONQuery extends TLObject {
     queryId!: long;
-    data!: TypeDataJSON;
+    data!: Raw.TypeDataJSON;
     timeout!: int;
 
-    constructor(params: { queryId: long; data: TypeDataJSON; timeout: int }) {
+    constructor(params: { queryId: long; data: Raw.TypeDataJSON; timeout: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateBotWebhookJSONQuery';
@@ -17219,13 +17228,13 @@ export namespace Raw {
     queryId!: long;
     userId!: long;
     payload!: bytes;
-    shippingAddress!: TypePostAddress;
+    shippingAddress!: Raw.TypePostAddress;
 
     constructor(params: {
       queryId: long;
       userId: long;
       payload: bytes;
-      shippingAddress: TypePostAddress;
+      shippingAddress: Raw.TypePostAddress;
     }) {
       super();
       this.classType = 'types';
@@ -17283,7 +17292,7 @@ export namespace Raw {
     queryId!: long;
     userId!: long;
     payload!: bytes;
-    info?: TypePaymentRequestedInfo;
+    info?: Raw.TypePaymentRequestedInfo;
     shippingOptionId?: string;
     currency!: string;
     totalAmount!: long;
@@ -17292,7 +17301,7 @@ export namespace Raw {
       queryId: long;
       userId: long;
       payload: bytes;
-      info?: TypePaymentRequestedInfo;
+      info?: Raw.TypePaymentRequestedInfo;
       shippingOptionId?: string;
       currency: string;
       totalAmount: long;
@@ -17383,9 +17392,9 @@ export namespace Raw {
     }
   }
   export class UpdatePhoneCall extends TLObject {
-    phoneCall!: TypePhoneCall;
+    phoneCall!: Raw.TypePhoneCall;
 
-    constructor(params: { phoneCall: TypePhoneCall }) {
+    constructor(params: { phoneCall: Raw.TypePhoneCall }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePhoneCall';
@@ -17455,9 +17464,9 @@ export namespace Raw {
     }
   }
   export class UpdateLangPack extends TLObject {
-    difference!: TypeLangPackDifference;
+    difference!: Raw.TypeLangPackDifference;
 
-    constructor(params: { difference: TypeLangPackDifference }) {
+    constructor(params: { difference: Raw.TypeLangPackDifference }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateLangPack';
@@ -17659,9 +17668,9 @@ export namespace Raw {
   }
   export class UpdateDialogUnreadMark extends TLObject {
     unread?: boolean;
-    peer!: TypeDialogPeer;
+    peer!: Raw.TypeDialogPeer;
 
-    constructor(params: { unread?: boolean; peer: TypeDialogPeer }) {
+    constructor(params: { unread?: boolean; peer: Raw.TypeDialogPeer }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDialogUnreadMark';
@@ -17704,10 +17713,10 @@ export namespace Raw {
   }
   export class UpdateMessagePoll extends TLObject {
     pollId!: long;
-    poll?: TypePoll;
-    results!: TypePollResults;
+    poll?: Raw.TypePoll;
+    results!: Raw.TypePollResults;
 
-    constructor(params: { pollId: long; poll?: TypePoll; results: TypePollResults }) {
+    constructor(params: { pollId: long; poll?: Raw.TypePoll; results: Raw.TypePollResults }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateMessagePoll';
@@ -17757,13 +17766,13 @@ export namespace Raw {
     }
   }
   export class UpdateChatDefaultBannedRights extends TLObject {
-    peer!: TypePeer;
-    defaultBannedRights!: TypeChatBannedRights;
+    peer!: Raw.TypePeer;
+    defaultBannedRights!: Raw.TypeChatBannedRights;
     version!: int;
 
     constructor(params: {
-      peer: TypePeer;
-      defaultBannedRights: TypeChatBannedRights;
+      peer: Raw.TypePeer;
+      defaultBannedRights: Raw.TypeChatBannedRights;
       version: int;
     }) {
       super();
@@ -17813,11 +17822,11 @@ export namespace Raw {
     }
   }
   export class UpdateFolderPeers extends TLObject {
-    folderPeers!: Vector<TypeFolderPeer>;
+    folderPeers!: Vector<Raw.TypeFolderPeer>;
     pts!: int;
     ptsCount!: int;
 
-    constructor(params: { folderPeers: Vector<TypeFolderPeer>; pts: int; ptsCount: int }) {
+    constructor(params: { folderPeers: Vector<Raw.TypeFolderPeer>; pts: int; ptsCount: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateFolderPeers';
@@ -17861,10 +17870,10 @@ export namespace Raw {
     }
   }
   export class UpdatePeerSettings extends TLObject {
-    peer!: TypePeer;
-    settings!: TypePeerSettings;
+    peer!: Raw.TypePeer;
+    settings!: Raw.TypePeerSettings;
 
-    constructor(params: { peer: TypePeer; settings: TypePeerSettings }) {
+    constructor(params: { peer: Raw.TypePeer; settings: Raw.TypePeerSettings }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePeerSettings';
@@ -17903,9 +17912,9 @@ export namespace Raw {
     }
   }
   export class UpdatePeerLocated extends TLObject {
-    peers!: Vector<TypePeerLocated>;
+    peers!: Vector<Raw.TypePeerLocated>;
 
-    constructor(params: { peers: Vector<TypePeerLocated> }) {
+    constructor(params: { peers: Vector<Raw.TypePeerLocated> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePeerLocated';
@@ -17939,9 +17948,9 @@ export namespace Raw {
     }
   }
   export class UpdateNewScheduledMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
 
-    constructor(params: { message: TypeMessage }) {
+    constructor(params: { message: Raw.TypeMessage }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateNewScheduledMessage';
@@ -17975,10 +17984,10 @@ export namespace Raw {
     }
   }
   export class UpdateDeleteScheduledMessages extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     messages!: Vector<int>;
 
-    constructor(params: { peer: TypePeer; messages: Vector<int> }) {
+    constructor(params: { peer: Raw.TypePeer; messages: Vector<int> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDeleteScheduledMessages';
@@ -18017,9 +18026,9 @@ export namespace Raw {
     }
   }
   export class UpdateTheme extends TLObject {
-    theme!: TypeTheme;
+    theme!: Raw.TypeTheme;
 
-    constructor(params: { theme: TypeTheme }) {
+    constructor(params: { theme: Raw.TypeTheme }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateTheme';
@@ -18053,10 +18062,10 @@ export namespace Raw {
     }
   }
   export class UpdateGeoLiveViewed extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     msgId!: int;
 
-    constructor(params: { peer: TypePeer; msgId: int }) {
+    constructor(params: { peer: Raw.TypePeer; msgId: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateGeoLiveViewed';
@@ -18125,11 +18134,11 @@ export namespace Raw {
   }
   export class UpdateMessagePollVote extends TLObject {
     pollId!: long;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     options!: Vector<bytes>;
     qts!: int;
 
-    constructor(params: { pollId: long; peer: TypePeer; options: Vector<bytes>; qts: int }) {
+    constructor(params: { pollId: long; peer: Raw.TypePeer; options: Vector<bytes>; qts: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateMessagePollVote';
@@ -18184,9 +18193,9 @@ export namespace Raw {
   }
   export class UpdateDialogFilter extends TLObject {
     id!: int;
-    filter?: TypeDialogFilter;
+    filter?: Raw.TypeDialogFilter;
 
-    constructor(params: { id: int; filter?: TypeDialogFilter }) {
+    constructor(params: { id: int; filter?: Raw.TypeDialogFilter }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDialogFilter';
@@ -18527,10 +18536,10 @@ export namespace Raw {
     }
   }
   export class UpdatePeerBlocked extends TLObject {
-    peerId!: TypePeer;
+    peerId!: Raw.TypePeer;
     blocked!: Bool;
 
-    constructor(params: { peerId: TypePeer; blocked: Bool }) {
+    constructor(params: { peerId: Raw.TypePeer; blocked: Bool }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePeerBlocked';
@@ -18571,14 +18580,14 @@ export namespace Raw {
   export class UpdateChannelUserTyping extends TLObject {
     channelId!: long;
     topMsgId?: int;
-    fromId!: TypePeer;
-    action!: TypeSendMessageAction;
+    fromId!: Raw.TypePeer;
+    action!: Raw.TypeSendMessageAction;
 
     constructor(params: {
       channelId: long;
       topMsgId?: int;
-      fromId: TypePeer;
-      action: TypeSendMessageAction;
+      fromId: Raw.TypePeer;
+      action: Raw.TypeSendMessageAction;
     }) {
       super();
       this.classType = 'types';
@@ -18640,14 +18649,14 @@ export namespace Raw {
   }
   export class UpdatePinnedMessages extends TLObject {
     pinned?: boolean;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     messages!: Vector<int>;
     pts!: int;
     ptsCount!: int;
 
     constructor(params: {
       pinned?: boolean;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       messages: Vector<int>;
       pts: int;
       ptsCount: int;
@@ -18825,13 +18834,13 @@ export namespace Raw {
     }
   }
   export class UpdateGroupCallParticipants extends TLObject {
-    call!: TypeInputGroupCall;
-    participants!: Vector<TypeGroupCallParticipant>;
+    call!: Raw.TypeInputGroupCall;
+    participants!: Vector<Raw.TypeGroupCallParticipant>;
     version!: int;
 
     constructor(params: {
-      call: TypeInputGroupCall;
-      participants: Vector<TypeGroupCallParticipant>;
+      call: Raw.TypeInputGroupCall;
+      participants: Vector<Raw.TypeGroupCallParticipant>;
       version: int;
     }) {
       super();
@@ -18882,9 +18891,9 @@ export namespace Raw {
   }
   export class UpdateGroupCall extends TLObject {
     chatId!: long;
-    call!: TypeGroupCall;
+    call!: Raw.TypeGroupCall;
 
-    constructor(params: { chatId: long; call: TypeGroupCall }) {
+    constructor(params: { chatId: long; call: Raw.TypeGroupCall }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateGroupCall';
@@ -18923,10 +18932,10 @@ export namespace Raw {
     }
   }
   export class UpdatePeerHistoryTTL extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     ttlPeriod?: int;
 
-    constructor(params: { peer: TypePeer; ttlPeriod?: int }) {
+    constructor(params: { peer: Raw.TypePeer; ttlPeriod?: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePeerHistoryTTL';
@@ -18975,9 +18984,9 @@ export namespace Raw {
     date!: int;
     actorId!: long;
     userId!: long;
-    prevParticipant?: TypeChatParticipant;
-    newParticipant?: TypeChatParticipant;
-    invite?: TypeExportedChatInvite;
+    prevParticipant?: Raw.TypeChatParticipant;
+    newParticipant?: Raw.TypeChatParticipant;
+    invite?: Raw.TypeExportedChatInvite;
     qts!: int;
 
     constructor(params: {
@@ -18985,9 +18994,9 @@ export namespace Raw {
       date: int;
       actorId: long;
       userId: long;
-      prevParticipant?: TypeChatParticipant;
-      newParticipant?: TypeChatParticipant;
-      invite?: TypeExportedChatInvite;
+      prevParticipant?: Raw.TypeChatParticipant;
+      newParticipant?: Raw.TypeChatParticipant;
+      invite?: Raw.TypeExportedChatInvite;
       qts: int;
     }) {
       super();
@@ -19089,9 +19098,9 @@ export namespace Raw {
     date!: int;
     actorId!: long;
     userId!: long;
-    prevParticipant?: TypeChannelParticipant;
-    newParticipant?: TypeChannelParticipant;
-    invite?: TypeExportedChatInvite;
+    prevParticipant?: Raw.TypeChannelParticipant;
+    newParticipant?: Raw.TypeChannelParticipant;
+    invite?: Raw.TypeExportedChatInvite;
     qts!: int;
 
     constructor(params: {
@@ -19100,9 +19109,9 @@ export namespace Raw {
       date: int;
       actorId: long;
       userId: long;
-      prevParticipant?: TypeChannelParticipant;
-      newParticipant?: TypeChannelParticipant;
-      invite?: TypeExportedChatInvite;
+      prevParticipant?: Raw.TypeChannelParticipant;
+      newParticipant?: Raw.TypeChannelParticipant;
+      invite?: Raw.TypeExportedChatInvite;
       qts: int;
     }) {
       super();
@@ -19259,9 +19268,9 @@ export namespace Raw {
   }
   export class UpdateGroupCallConnection extends TLObject {
     presentation?: boolean;
-    params!: TypeDataJSON;
+    params!: Raw.TypeDataJSON;
 
-    constructor(params: { presentation?: boolean; params: TypeDataJSON }) {
+    constructor(params: { presentation?: boolean; params: Raw.TypeDataJSON }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateGroupCallConnection';
@@ -19303,11 +19312,11 @@ export namespace Raw {
     }
   }
   export class UpdateBotCommands extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     botId!: long;
-    commands!: Vector<TypeBotCommand>;
+    commands!: Vector<Raw.TypeBotCommand>;
 
-    constructor(params: { peer: TypePeer; botId: long; commands: Vector<TypeBotCommand> }) {
+    constructor(params: { peer: Raw.TypePeer; botId: long; commands: Vector<Raw.TypeBotCommand> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateBotCommands';
@@ -19351,11 +19360,15 @@ export namespace Raw {
     }
   }
   export class UpdatePendingJoinRequests extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     requestsPending!: int;
     recentRequesters!: Vector<long>;
 
-    constructor(params: { peer: TypePeer; requestsPending: int; recentRequesters: Vector<long> }) {
+    constructor(params: {
+      peer: Raw.TypePeer;
+      requestsPending: int;
+      recentRequesters: Vector<long>;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'UpdatePendingJoinRequests';
@@ -19403,19 +19416,19 @@ export namespace Raw {
     }
   }
   export class UpdateBotChatInviteRequester extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     date!: int;
     userId!: long;
     about!: string;
-    invite!: TypeExportedChatInvite;
+    invite!: Raw.TypeExportedChatInvite;
     qts!: int;
 
     constructor(params: {
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       date: int;
       userId: long;
       about: string;
-      invite: TypeExportedChatInvite;
+      invite: Raw.TypeExportedChatInvite;
       qts: int;
     }) {
       super();
@@ -19483,16 +19496,16 @@ export namespace Raw {
     }
   }
   export class UpdateMessageReactions extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     msgId!: int;
     topMsgId?: int;
-    reactions!: TypeMessageReactions;
+    reactions!: Raw.TypeMessageReactions;
 
     constructor(params: {
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       msgId: int;
       topMsgId?: int;
-      reactions: TypeMessageReactions;
+      reactions: Raw.TypeMessageReactions;
     }) {
       super();
       this.classType = 'types';
@@ -19619,9 +19632,9 @@ export namespace Raw {
   }
   export class UpdateBotMenuButton extends TLObject {
     botId!: long;
-    button!: TypeBotMenuButton;
+    button!: Raw.TypeBotMenuButton;
 
-    constructor(params: { botId: long; button: TypeBotMenuButton }) {
+    constructor(params: { botId: long; button: Raw.TypeBotMenuButton }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateBotMenuButton';
@@ -19690,14 +19703,14 @@ export namespace Raw {
   }
   export class UpdateTranscribedAudio extends TLObject {
     pending?: boolean;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     msgId!: int;
     transcriptionId!: long;
     text!: string;
 
     constructor(params: {
       pending?: boolean;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       msgId: int;
       transcriptionId: long;
       text: string;
@@ -19797,9 +19810,9 @@ export namespace Raw {
   }
   export class UpdateUserEmojiStatus extends TLObject {
     userId!: long;
-    emojiStatus!: TypeEmojiStatus;
+    emojiStatus!: Raw.TypeEmojiStatus;
 
-    constructor(params: { userId: long; emojiStatus: TypeEmojiStatus }) {
+    constructor(params: { userId: long; emojiStatus: Raw.TypeEmojiStatus }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateUserEmojiStatus';
@@ -19949,11 +19962,15 @@ export namespace Raw {
     }
   }
   export class UpdateMessageExtendedMedia extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     msgId!: int;
-    extendedMedia!: TypeMessageExtendedMedia;
+    extendedMedia!: Raw.TypeMessageExtendedMedia;
 
-    constructor(params: { peer: TypePeer; msgId: int; extendedMedia: TypeMessageExtendedMedia }) {
+    constructor(params: {
+      peer: Raw.TypePeer;
+      msgId: int;
+      extendedMedia: Raw.TypeMessageExtendedMedia;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateMessageExtendedMedia';
@@ -20209,9 +20226,9 @@ export namespace Raw {
   }
   export class UpdateStory extends TLObject {
     userId!: long;
-    story!: TypeStoryItem;
+    story!: Raw.TypeStoryItem;
 
-    constructor(params: { userId: long; story: TypeStoryItem }) {
+    constructor(params: { userId: long; story: Raw.TypeStoryItem }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateStory';
@@ -20373,10 +20390,10 @@ export namespace Raw {
     pts!: int;
     ptsCount!: int;
     date!: int;
-    fwdFrom?: TypeMessageFwdHeader;
+    fwdFrom?: Raw.TypeMessageFwdHeader;
     viaBotId?: long;
-    replyTo?: TypeMessageReplyHeader;
-    entities?: Vector<TypeMessageEntity>;
+    replyTo?: Raw.TypeMessageReplyHeader;
+    entities?: Vector<Raw.TypeMessageEntity>;
     ttlPeriod?: int;
 
     constructor(params: {
@@ -20390,10 +20407,10 @@ export namespace Raw {
       pts: int;
       ptsCount: int;
       date: int;
-      fwdFrom?: TypeMessageFwdHeader;
+      fwdFrom?: Raw.TypeMessageFwdHeader;
       viaBotId?: long;
-      replyTo?: TypeMessageReplyHeader;
-      entities?: Vector<TypeMessageEntity>;
+      replyTo?: Raw.TypeMessageReplyHeader;
+      entities?: Vector<Raw.TypeMessageEntity>;
       ttlPeriod?: int;
     }) {
       super();
@@ -20544,10 +20561,10 @@ export namespace Raw {
     pts!: int;
     ptsCount!: int;
     date!: int;
-    fwdFrom?: TypeMessageFwdHeader;
+    fwdFrom?: Raw.TypeMessageFwdHeader;
     viaBotId?: long;
-    replyTo?: TypeMessageReplyHeader;
-    entities?: Vector<TypeMessageEntity>;
+    replyTo?: Raw.TypeMessageReplyHeader;
+    entities?: Vector<Raw.TypeMessageEntity>;
     ttlPeriod?: int;
 
     constructor(params: {
@@ -20562,10 +20579,10 @@ export namespace Raw {
       pts: int;
       ptsCount: int;
       date: int;
-      fwdFrom?: TypeMessageFwdHeader;
+      fwdFrom?: Raw.TypeMessageFwdHeader;
       viaBotId?: long;
-      replyTo?: TypeMessageReplyHeader;
-      entities?: Vector<TypeMessageEntity>;
+      replyTo?: Raw.TypeMessageReplyHeader;
+      entities?: Vector<Raw.TypeMessageEntity>;
       ttlPeriod?: int;
     }) {
       super();
@@ -20712,10 +20729,10 @@ export namespace Raw {
     }
   }
   export class UpdateShort extends TLObject {
-    update!: TypeUpdate;
+    update!: Raw.TypeUpdate;
     date!: int;
 
-    constructor(params: { update: TypeUpdate; date: int }) {
+    constructor(params: { update: Raw.TypeUpdate; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateShort';
@@ -20754,17 +20771,17 @@ export namespace Raw {
     }
   }
   export class UpdatesCombined extends TLObject {
-    updates!: Vector<TypeUpdate>;
-    users!: Vector<TypeUser>;
-    chats!: Vector<TypeChat>;
+    updates!: Vector<Raw.TypeUpdate>;
+    users!: Vector<Raw.TypeUser>;
+    chats!: Vector<Raw.TypeChat>;
     date!: int;
     seqStart!: int;
     seq!: int;
 
     constructor(params: {
-      updates: Vector<TypeUpdate>;
-      users: Vector<TypeUser>;
-      chats: Vector<TypeChat>;
+      updates: Vector<Raw.TypeUpdate>;
+      users: Vector<Raw.TypeUser>;
+      chats: Vector<Raw.TypeChat>;
       date: int;
       seqStart: int;
       seq: int;
@@ -20834,16 +20851,16 @@ export namespace Raw {
     }
   }
   export class Updates extends TLObject {
-    updates!: Vector<TypeUpdate>;
-    users!: Vector<TypeUser>;
-    chats!: Vector<TypeChat>;
+    updates!: Vector<Raw.TypeUpdate>;
+    users!: Vector<Raw.TypeUser>;
+    chats!: Vector<Raw.TypeChat>;
     date!: int;
     seq!: int;
 
     constructor(params: {
-      updates: Vector<TypeUpdate>;
-      users: Vector<TypeUser>;
-      chats: Vector<TypeChat>;
+      updates: Vector<Raw.TypeUpdate>;
+      users: Vector<Raw.TypeUser>;
+      chats: Vector<Raw.TypeChat>;
       date: int;
       seq: int;
     }) {
@@ -20911,8 +20928,8 @@ export namespace Raw {
     pts!: int;
     ptsCount!: int;
     date!: int;
-    media?: TypeMessageMedia;
-    entities?: Vector<TypeMessageEntity>;
+    media?: Raw.TypeMessageMedia;
+    entities?: Vector<Raw.TypeMessageEntity>;
     ttlPeriod?: int;
 
     constructor(params: {
@@ -20921,8 +20938,8 @@ export namespace Raw {
       pts: int;
       ptsCount: int;
       date: int;
-      media?: TypeMessageMedia;
-      entities?: Vector<TypeMessageEntity>;
+      media?: Raw.TypeMessageMedia;
+      entities?: Vector<Raw.TypeMessageEntity>;
       ttlPeriod?: int;
     }) {
       super();
@@ -21134,7 +21151,7 @@ export namespace Raw {
     expires!: int;
     testMode!: Bool;
     thisDc!: int;
-    dcOptions!: Vector<TypeDcOption>;
+    dcOptions!: Vector<Raw.TypeDcOption>;
     dcTxtDomainName!: string;
     chatSizeMax!: int;
     megagroupSizeMax!: int;
@@ -21170,7 +21187,7 @@ export namespace Raw {
     suggestedLangCode?: string;
     langPackVersion?: int;
     baseLangPackVersion?: int;
-    reactionsDefault?: TypeReaction;
+    reactionsDefault?: Raw.TypeReaction;
     autologinToken?: string;
 
     constructor(params: {
@@ -21183,7 +21200,7 @@ export namespace Raw {
       expires: int;
       testMode: Bool;
       thisDc: int;
-      dcOptions: Vector<TypeDcOption>;
+      dcOptions: Vector<Raw.TypeDcOption>;
       dcTxtDomainName: string;
       chatSizeMax: int;
       megagroupSizeMax: int;
@@ -21219,7 +21236,7 @@ export namespace Raw {
       suggestedLangCode?: string;
       langPackVersion?: int;
       baseLangPackVersion?: int;
-      reactionsDefault?: TypeReaction;
+      reactionsDefault?: Raw.TypeReaction;
       autologinToken?: string;
     }) {
       super();
@@ -22307,14 +22324,14 @@ export namespace Raw {
     chatId!: int;
     date!: int;
     bytes!: bytes;
-    file!: TypeEncryptedFile;
+    file!: Raw.TypeEncryptedFile;
 
     constructor(params: {
       randomId: long;
       chatId: int;
       date: int;
       bytes: bytes;
-      file: TypeEncryptedFile;
+      file: Raw.TypeEncryptedFile;
     }) {
       super();
       this.classType = 'types';
@@ -22557,10 +22574,10 @@ export namespace Raw {
     date!: int;
     mimeType!: string;
     size!: long;
-    thumbs?: Vector<TypePhotoSize>;
-    videoThumbs?: Vector<TypeVideoSize>;
+    thumbs?: Vector<Raw.TypePhotoSize>;
+    videoThumbs?: Vector<Raw.TypeVideoSize>;
     dcId!: int;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
 
     constructor(params: {
       id: long;
@@ -22569,10 +22586,10 @@ export namespace Raw {
       date: int;
       mimeType: string;
       size: long;
-      thumbs?: Vector<TypePhotoSize>;
-      videoThumbs?: Vector<TypeVideoSize>;
+      thumbs?: Vector<Raw.TypePhotoSize>;
+      videoThumbs?: Vector<Raw.TypeVideoSize>;
       dcId: int;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
     }) {
       super();
       this.classType = 'types';
@@ -22681,9 +22698,9 @@ export namespace Raw {
     }
   }
   export class NotifyPeer extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
 
-    constructor(params: { peer: TypePeer }) {
+    constructor(params: { peer: Raw.TypePeer }) {
       super();
       this.classType = 'types';
       this.className = 'NotifyPeer';
@@ -22804,10 +22821,10 @@ export namespace Raw {
     }
   }
   export class NotifyForumTopic extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     topMsgId!: int;
 
-    constructor(params: { peer: TypePeer; topMsgId: int }) {
+    constructor(params: { peer: Raw.TypePeer; topMsgId: int }) {
       super();
       this.classType = 'types';
       this.className = 'NotifyForumTopic';
@@ -23366,9 +23383,9 @@ export namespace Raw {
   export class SendMessageEmojiInteraction extends TLObject {
     emoticon!: string;
     msgId!: int;
-    interaction!: TypeDataJSON;
+    interaction!: Raw.TypeDataJSON;
 
-    constructor(params: { emoticon: string; msgId: int; interaction: TypeDataJSON }) {
+    constructor(params: { emoticon: string; msgId: int; interaction: Raw.TypeDataJSON }) {
       super();
       this.classType = 'types';
       this.className = 'SendMessageEmojiInteraction';
@@ -24099,9 +24116,9 @@ export namespace Raw {
     }
   }
   export class InputPrivacyValueAllowUsers extends TLObject {
-    users!: Vector<TypeInputUser>;
+    users!: Vector<Raw.TypeInputUser>;
 
-    constructor(params: { users: Vector<TypeInputUser> }) {
+    constructor(params: { users: Vector<Raw.TypeInputUser> }) {
       super();
       this.classType = 'types';
       this.className = 'InputPrivacyValueAllowUsers';
@@ -24196,9 +24213,9 @@ export namespace Raw {
     }
   }
   export class InputPrivacyValueDisallowUsers extends TLObject {
-    users!: Vector<TypeInputUser>;
+    users!: Vector<Raw.TypeInputUser>;
 
-    constructor(params: { users: Vector<TypeInputUser> }) {
+    constructor(params: { users: Vector<Raw.TypeInputUser> }) {
       super();
       this.classType = 'types';
       this.className = 'InputPrivacyValueDisallowUsers';
@@ -24749,14 +24766,14 @@ export namespace Raw {
   export class DocumentAttributeSticker extends TLObject {
     mask?: boolean;
     alt!: string;
-    stickerset!: TypeInputStickerSet;
-    maskCoords?: TypeMaskCoords;
+    stickerset!: Raw.TypeInputStickerSet;
+    maskCoords?: Raw.TypeMaskCoords;
 
     constructor(params: {
       mask?: boolean;
       alt: string;
-      stickerset: TypeInputStickerSet;
-      maskCoords?: TypeMaskCoords;
+      stickerset: Raw.TypeInputStickerSet;
+      maskCoords?: Raw.TypeMaskCoords;
     }) {
       super();
       this.classType = 'types';
@@ -25057,13 +25074,13 @@ export namespace Raw {
     free?: boolean;
     textColor?: boolean;
     alt!: string;
-    stickerset!: TypeInputStickerSet;
+    stickerset!: Raw.TypeInputStickerSet;
 
     constructor(params: {
       free?: boolean;
       textColor?: boolean;
       alt: string;
-      stickerset: TypeInputStickerSet;
+      stickerset: Raw.TypeInputStickerSet;
     }) {
       super();
       this.classType = 'types';
@@ -25247,16 +25264,16 @@ export namespace Raw {
     siteName?: string;
     title?: string;
     description?: string;
-    photo?: TypePhoto;
+    photo?: Raw.TypePhoto;
     embedUrl?: string;
     embedType?: string;
     embedWidth?: int;
     embedHeight?: int;
     duration?: int;
     author?: string;
-    document?: TypeDocument;
-    cachedPage?: TypePage;
-    attributes?: Vector<TypeWebPageAttribute>;
+    document?: Raw.TypeDocument;
+    cachedPage?: Raw.TypePage;
+    attributes?: Vector<Raw.TypeWebPageAttribute>;
 
     constructor(params: {
       id: long;
@@ -25267,16 +25284,16 @@ export namespace Raw {
       siteName?: string;
       title?: string;
       description?: string;
-      photo?: TypePhoto;
+      photo?: Raw.TypePhoto;
       embedUrl?: string;
       embedType?: string;
       embedWidth?: int;
       embedHeight?: int;
       duration?: int;
       author?: string;
-      document?: TypeDocument;
-      cachedPage?: TypePage;
-      attributes?: Vector<TypeWebPageAttribute>;
+      document?: Raw.TypeDocument;
+      cachedPage?: Raw.TypePage;
+      attributes?: Vector<Raw.TypeWebPageAttribute>;
     }) {
       super();
       this.classType = 'types';
@@ -25893,9 +25910,9 @@ export namespace Raw {
     }
   }
   export class ChatInviteAlready extends TLObject {
-    chat!: TypeChat;
+    chat!: Raw.TypeChat;
 
-    constructor(params: { chat: TypeChat }) {
+    constructor(params: { chat: Raw.TypeChat }) {
       super();
       this.classType = 'types';
       this.className = 'ChatInviteAlready';
@@ -25936,9 +25953,9 @@ export namespace Raw {
     requestNeeded?: boolean;
     title!: string;
     about?: string;
-    photo!: TypePhoto;
+    photo!: Raw.TypePhoto;
     participantsCount!: int;
-    participants?: Vector<TypeUser>;
+    participants?: Vector<Raw.TypeUser>;
 
     constructor(params: {
       channel?: boolean;
@@ -25948,9 +25965,9 @@ export namespace Raw {
       requestNeeded?: boolean;
       title: string;
       about?: string;
-      photo: TypePhoto;
+      photo: Raw.TypePhoto;
       participantsCount: int;
-      participants?: Vector<TypeUser>;
+      participants?: Vector<Raw.TypeUser>;
     }) {
       super();
       this.classType = 'types';
@@ -26049,10 +26066,10 @@ export namespace Raw {
     }
   }
   export class ChatInvitePeek extends TLObject {
-    chat!: TypeChat;
+    chat!: Raw.TypeChat;
     expires!: int;
 
-    constructor(params: { chat: TypeChat; expires: int }) {
+    constructor(params: { chat: Raw.TypeChat; expires: int }) {
       super();
       this.classType = 'types';
       this.className = 'ChatInvitePeek';
@@ -26431,7 +26448,7 @@ export namespace Raw {
     accessHash!: long;
     title!: string;
     shortName!: string;
-    thumbs?: Vector<TypePhotoSize>;
+    thumbs?: Vector<Raw.TypePhotoSize>;
     thumbDcId?: int;
     thumbVersion?: int;
     thumbDocumentId?: long;
@@ -26450,7 +26467,7 @@ export namespace Raw {
       accessHash: long;
       title: string;
       shortName: string;
-      thumbs?: Vector<TypePhotoSize>;
+      thumbs?: Vector<Raw.TypePhotoSize>;
       thumbDcId?: int;
       thumbVersion?: int;
       thumbDocumentId?: long;
@@ -26648,18 +26665,18 @@ export namespace Raw {
   export class BotInfo extends TLObject {
     userId?: long;
     description?: string;
-    descriptionPhoto?: TypePhoto;
-    descriptionDocument?: TypeDocument;
-    commands?: Vector<TypeBotCommand>;
-    menuButton?: TypeBotMenuButton;
+    descriptionPhoto?: Raw.TypePhoto;
+    descriptionDocument?: Raw.TypeDocument;
+    commands?: Vector<Raw.TypeBotCommand>;
+    menuButton?: Raw.TypeBotMenuButton;
 
     constructor(params: {
       userId?: long;
       description?: string;
-      descriptionPhoto?: TypePhoto;
-      descriptionDocument?: TypeDocument;
-      commands?: Vector<TypeBotCommand>;
-      menuButton?: TypeBotMenuButton;
+      descriptionPhoto?: Raw.TypePhoto;
+      descriptionDocument?: Raw.TypeDocument;
+      commands?: Vector<Raw.TypeBotCommand>;
+      menuButton?: Raw.TypeBotMenuButton;
     }) {
       super();
       this.classType = 'types';
@@ -26955,13 +26972,13 @@ export namespace Raw {
     samePeer?: boolean;
     text!: string;
     query!: string;
-    peerTypes?: Vector<TypeInlineQueryPeerType>;
+    peerTypes?: Vector<Raw.TypeInlineQueryPeerType>;
 
     constructor(params: {
       samePeer?: boolean;
       text: string;
       query: string;
-      peerTypes?: Vector<TypeInlineQueryPeerType>;
+      peerTypes?: Vector<Raw.TypeInlineQueryPeerType>;
     }) {
       super();
       this.classType = 'types';
@@ -27161,14 +27178,14 @@ export namespace Raw {
     text!: string;
     fwdText?: string;
     url!: string;
-    bot!: TypeInputUser;
+    bot!: Raw.TypeInputUser;
 
     constructor(params: {
       requestWriteAccess?: boolean;
       text: string;
       fwdText?: string;
       url: string;
-      bot: TypeInputUser;
+      bot: Raw.TypeInputUser;
     }) {
       super();
       this.classType = 'types';
@@ -27282,9 +27299,9 @@ export namespace Raw {
   }
   export class InputKeyboardButtonUserProfile extends TLObject {
     text!: string;
-    userId!: TypeInputUser;
+    userId!: Raw.TypeInputUser;
 
-    constructor(params: { text: string; userId: TypeInputUser }) {
+    constructor(params: { text: string; userId: Raw.TypeInputUser }) {
       super();
       this.classType = 'types';
       this.className = 'InputKeyboardButtonUserProfile';
@@ -27454,9 +27471,9 @@ export namespace Raw {
   export class KeyboardButtonRequestPeer extends TLObject {
     text!: string;
     buttonId!: int;
-    peerType!: TypeRequestPeerType;
+    peerType!: Raw.TypeRequestPeerType;
 
-    constructor(params: { text: string; buttonId: int; peerType: TypeRequestPeerType }) {
+    constructor(params: { text: string; buttonId: int; peerType: Raw.TypeRequestPeerType }) {
       super();
       this.classType = 'types';
       this.className = 'KeyboardButtonRequestPeer';
@@ -27504,9 +27521,9 @@ export namespace Raw {
     }
   }
   export class KeyboardButtonRow extends TLObject {
-    buttons!: Vector<TypeKeyboardButton>;
+    buttons!: Vector<Raw.TypeKeyboardButton>;
 
-    constructor(params: { buttons: Vector<TypeKeyboardButton> }) {
+    constructor(params: { buttons: Vector<Raw.TypeKeyboardButton> }) {
       super();
       this.classType = 'types';
       this.className = 'KeyboardButtonRow';
@@ -27637,7 +27654,7 @@ export namespace Raw {
     singleUse?: boolean;
     selective?: boolean;
     persistent?: boolean;
-    rows!: Vector<TypeKeyboardButtonRow>;
+    rows!: Vector<Raw.TypeKeyboardButtonRow>;
     placeholder?: string;
 
     constructor(params: {
@@ -27645,7 +27662,7 @@ export namespace Raw {
       singleUse?: boolean;
       selective?: boolean;
       persistent?: boolean;
-      rows: Vector<TypeKeyboardButtonRow>;
+      rows: Vector<Raw.TypeKeyboardButtonRow>;
       placeholder?: string;
     }) {
       super();
@@ -27711,9 +27728,9 @@ export namespace Raw {
     }
   }
   export class ReplyInlineMarkup extends TLObject {
-    rows!: Vector<TypeKeyboardButtonRow>;
+    rows!: Vector<Raw.TypeKeyboardButtonRow>;
 
-    constructor(params: { rows: Vector<TypeKeyboardButtonRow> }) {
+    constructor(params: { rows: Vector<Raw.TypeKeyboardButtonRow> }) {
       super();
       this.classType = 'types';
       this.className = 'ReplyInlineMarkup';
@@ -28271,9 +28288,9 @@ export namespace Raw {
   export class InputMessageEntityMentionName extends TLObject {
     offset!: int;
     length!: int;
-    userId!: TypeInputUser;
+    userId!: Raw.TypeInputUser;
 
-    constructor(params: { offset: int; length: int; userId: TypeInputUser }) {
+    constructor(params: { offset: int; length: int; userId: Raw.TypeInputUser }) {
       super();
       this.classType = 'types';
       this.className = 'InputMessageEntityMentionName';
@@ -28738,11 +28755,11 @@ export namespace Raw {
     }
   }
   export class InputChannelFromMessage extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     msgId!: int;
     channelId!: long;
 
-    constructor(params: { peer: TypeInputPeer; msgId: int; channelId: long }) {
+    constructor(params: { peer: Raw.TypeInputPeer; msgId: int; channelId: long }) {
       super();
       this.classType = 'types';
       this.className = 'InputChannelFromMessage';
@@ -28858,9 +28875,9 @@ export namespace Raw {
   }
   export class ChannelMessagesFilter extends TLObject {
     excludeNewMessages?: boolean;
-    ranges!: Vector<TypeMessageRange>;
+    ranges!: Vector<Raw.TypeMessageRange>;
 
-    constructor(params: { excludeNewMessages?: boolean; ranges: Vector<TypeMessageRange> }) {
+    constructor(params: { excludeNewMessages?: boolean; ranges: Vector<Raw.TypeMessageRange> }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelMessagesFilter';
@@ -29010,10 +29027,10 @@ export namespace Raw {
   }
   export class ChannelParticipantCreator extends TLObject {
     userId!: long;
-    adminRights!: TypeChatAdminRights;
+    adminRights!: Raw.TypeChatAdminRights;
     rank?: string;
 
-    constructor(params: { userId: long; adminRights: TypeChatAdminRights; rank?: string }) {
+    constructor(params: { userId: long; adminRights: Raw.TypeChatAdminRights; rank?: string }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelParticipantCreator';
@@ -29073,7 +29090,7 @@ export namespace Raw {
     inviterId?: long;
     promotedBy!: long;
     date!: int;
-    adminRights!: TypeChatAdminRights;
+    adminRights!: Raw.TypeChatAdminRights;
     rank?: string;
 
     constructor(params: {
@@ -29083,7 +29100,7 @@ export namespace Raw {
       inviterId?: long;
       promotedBy: long;
       date: int;
-      adminRights: TypeChatAdminRights;
+      adminRights: Raw.TypeChatAdminRights;
       rank?: string;
     }) {
       super();
@@ -29176,17 +29193,17 @@ export namespace Raw {
   }
   export class ChannelParticipantBanned extends TLObject {
     left?: boolean;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     kickedBy!: long;
     date!: int;
-    bannedRights!: TypeChatBannedRights;
+    bannedRights!: Raw.TypeChatBannedRights;
 
     constructor(params: {
       left?: boolean;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       kickedBy: long;
       date: int;
-      bannedRights: TypeChatBannedRights;
+      bannedRights: Raw.TypeChatBannedRights;
     }) {
       super();
       this.classType = 'types';
@@ -29250,9 +29267,9 @@ export namespace Raw {
     }
   }
   export class ChannelParticipantLeft extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
 
-    constructor(params: { peer: TypePeer }) {
+    constructor(params: { peer: Raw.TypePeer }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelParticipantLeft';
@@ -29567,13 +29584,13 @@ export namespace Raw {
   }
   export class InputBotInlineMessageMediaAuto extends TLObject {
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
-    replyMarkup?: TypeReplyMarkup;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       message: string;
-      entities?: Vector<TypeMessageEntity>;
-      replyMarkup?: TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -29634,14 +29651,14 @@ export namespace Raw {
   export class InputBotInlineMessageText extends TLObject {
     noWebpage?: boolean;
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
-    replyMarkup?: TypeReplyMarkup;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       noWebpage?: boolean;
       message: string;
-      entities?: Vector<TypeMessageEntity>;
-      replyMarkup?: TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -29701,18 +29718,18 @@ export namespace Raw {
     }
   }
   export class InputBotInlineMessageMediaGeo extends TLObject {
-    geoPoint!: TypeInputGeoPoint;
+    geoPoint!: Raw.TypeInputGeoPoint;
     heading?: int;
     period?: int;
     proximityNotificationRadius?: int;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
-      geoPoint: TypeInputGeoPoint;
+      geoPoint: Raw.TypeInputGeoPoint;
       heading?: int;
       period?: int;
       proximityNotificationRadius?: int;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -29782,22 +29799,22 @@ export namespace Raw {
     }
   }
   export class InputBotInlineMessageMediaVenue extends TLObject {
-    geoPoint!: TypeInputGeoPoint;
+    geoPoint!: Raw.TypeInputGeoPoint;
     title!: string;
     address!: string;
     provider!: string;
     venueId!: string;
     venueType!: string;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
-      geoPoint: TypeInputGeoPoint;
+      geoPoint: Raw.TypeInputGeoPoint;
       title: string;
       address: string;
       provider: string;
       venueId: string;
       venueType: string;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -29891,14 +29908,14 @@ export namespace Raw {
     firstName!: string;
     lastName!: string;
     vcard!: string;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       phoneNumber: string;
       firstName: string;
       lastName: string;
       vcard: string;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -29968,9 +29985,9 @@ export namespace Raw {
     }
   }
   export class InputBotInlineMessageGame extends TLObject {
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
-    constructor(params: { replyMarkup?: TypeReplyMarkup }) {
+    constructor(params: { replyMarkup?: Raw.TypeReplyMarkup }) {
       super();
       this.classType = 'types';
       this.className = 'InputBotInlineMessageGame';
@@ -30012,22 +30029,22 @@ export namespace Raw {
   export class InputBotInlineMessageMediaInvoice extends TLObject {
     title!: string;
     description!: string;
-    photo?: TypeInputWebDocument;
-    invoice!: TypeInvoice;
+    photo?: Raw.TypeInputWebDocument;
+    invoice!: Raw.TypeInvoice;
     payload!: bytes;
     provider!: string;
-    providerData!: TypeDataJSON;
-    replyMarkup?: TypeReplyMarkup;
+    providerData!: Raw.TypeDataJSON;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       title: string;
       description: string;
-      photo?: TypeInputWebDocument;
-      invoice: TypeInvoice;
+      photo?: Raw.TypeInputWebDocument;
+      invoice: Raw.TypeInvoice;
       payload: bytes;
       provider: string;
-      providerData: TypeDataJSON;
-      replyMarkup?: TypeReplyMarkup;
+      providerData: Raw.TypeDataJSON;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30130,9 +30147,9 @@ export namespace Raw {
     title?: string;
     description?: string;
     url?: string;
-    thumb?: TypeInputWebDocument;
-    content?: TypeInputWebDocument;
-    sendMessage!: TypeInputBotInlineMessage;
+    thumb?: Raw.TypeInputWebDocument;
+    content?: Raw.TypeInputWebDocument;
+    sendMessage!: Raw.TypeInputBotInlineMessage;
 
     constructor(params: {
       id: string;
@@ -30140,9 +30157,9 @@ export namespace Raw {
       title?: string;
       description?: string;
       url?: string;
-      thumb?: TypeInputWebDocument;
-      content?: TypeInputWebDocument;
-      sendMessage: TypeInputBotInlineMessage;
+      thumb?: Raw.TypeInputWebDocument;
+      content?: Raw.TypeInputWebDocument;
+      sendMessage: Raw.TypeInputBotInlineMessage;
     }) {
       super();
       this.classType = 'types';
@@ -30233,14 +30250,14 @@ export namespace Raw {
   export class InputBotInlineResultPhoto extends TLObject {
     id!: string;
     type!: string;
-    photo!: TypeInputPhoto;
-    sendMessage!: TypeInputBotInlineMessage;
+    photo!: Raw.TypeInputPhoto;
+    sendMessage!: Raw.TypeInputBotInlineMessage;
 
     constructor(params: {
       id: string;
       type: string;
-      photo: TypeInputPhoto;
-      sendMessage: TypeInputBotInlineMessage;
+      photo: Raw.TypeInputPhoto;
+      sendMessage: Raw.TypeInputBotInlineMessage;
     }) {
       super();
       this.classType = 'types';
@@ -30299,16 +30316,16 @@ export namespace Raw {
     type!: string;
     title?: string;
     description?: string;
-    document!: TypeInputDocument;
-    sendMessage!: TypeInputBotInlineMessage;
+    document!: Raw.TypeInputDocument;
+    sendMessage!: Raw.TypeInputBotInlineMessage;
 
     constructor(params: {
       id: string;
       type: string;
       title?: string;
       description?: string;
-      document: TypeInputDocument;
-      sendMessage: TypeInputBotInlineMessage;
+      document: Raw.TypeInputDocument;
+      sendMessage: Raw.TypeInputBotInlineMessage;
     }) {
       super();
       this.classType = 'types';
@@ -30384,9 +30401,13 @@ export namespace Raw {
   export class InputBotInlineResultGame extends TLObject {
     id!: string;
     shortName!: string;
-    sendMessage!: TypeInputBotInlineMessage;
+    sendMessage!: Raw.TypeInputBotInlineMessage;
 
-    constructor(params: { id: string; shortName: string; sendMessage: TypeInputBotInlineMessage }) {
+    constructor(params: {
+      id: string;
+      shortName: string;
+      sendMessage: Raw.TypeInputBotInlineMessage;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'InputBotInlineResultGame';
@@ -30435,13 +30456,13 @@ export namespace Raw {
   }
   export class BotInlineMessageMediaAuto extends TLObject {
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
-    replyMarkup?: TypeReplyMarkup;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       message: string;
-      entities?: Vector<TypeMessageEntity>;
-      replyMarkup?: TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30499,14 +30520,14 @@ export namespace Raw {
   export class BotInlineMessageText extends TLObject {
     noWebpage?: boolean;
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
-    replyMarkup?: TypeReplyMarkup;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       noWebpage?: boolean;
       message: string;
-      entities?: Vector<TypeMessageEntity>;
-      replyMarkup?: TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30566,18 +30587,18 @@ export namespace Raw {
     }
   }
   export class BotInlineMessageMediaGeo extends TLObject {
-    geo!: TypeGeoPoint;
+    geo!: Raw.TypeGeoPoint;
     heading?: int;
     period?: int;
     proximityNotificationRadius?: int;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
-      geo: TypeGeoPoint;
+      geo: Raw.TypeGeoPoint;
       heading?: int;
       period?: int;
       proximityNotificationRadius?: int;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30647,22 +30668,22 @@ export namespace Raw {
     }
   }
   export class BotInlineMessageMediaVenue extends TLObject {
-    geo!: TypeGeoPoint;
+    geo!: Raw.TypeGeoPoint;
     title!: string;
     address!: string;
     provider!: string;
     venueId!: string;
     venueType!: string;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
-      geo: TypeGeoPoint;
+      geo: Raw.TypeGeoPoint;
       title: string;
       address: string;
       provider: string;
       venueId: string;
       venueType: string;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30745,14 +30766,14 @@ export namespace Raw {
     firstName!: string;
     lastName!: string;
     vcard!: string;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       phoneNumber: string;
       firstName: string;
       lastName: string;
       vcard: string;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30823,20 +30844,20 @@ export namespace Raw {
     test?: boolean;
     title!: string;
     description!: string;
-    photo?: TypeWebDocument;
+    photo?: Raw.TypeWebDocument;
     currency!: string;
     totalAmount!: long;
-    replyMarkup?: TypeReplyMarkup;
+    replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       shippingAddressRequested?: boolean;
       test?: boolean;
       title: string;
       description: string;
-      photo?: TypeWebDocument;
+      photo?: Raw.TypeWebDocument;
       currency: string;
       totalAmount: long;
-      replyMarkup?: TypeReplyMarkup;
+      replyMarkup?: Raw.TypeReplyMarkup;
     }) {
       super();
       this.classType = 'types';
@@ -30932,9 +30953,9 @@ export namespace Raw {
     title?: string;
     description?: string;
     url?: string;
-    thumb?: TypeWebDocument;
-    content?: TypeWebDocument;
-    sendMessage!: TypeBotInlineMessage;
+    thumb?: Raw.TypeWebDocument;
+    content?: Raw.TypeWebDocument;
+    sendMessage!: Raw.TypeBotInlineMessage;
 
     constructor(params: {
       id: string;
@@ -30942,9 +30963,9 @@ export namespace Raw {
       title?: string;
       description?: string;
       url?: string;
-      thumb?: TypeWebDocument;
-      content?: TypeWebDocument;
-      sendMessage: TypeBotInlineMessage;
+      thumb?: Raw.TypeWebDocument;
+      content?: Raw.TypeWebDocument;
+      sendMessage: Raw.TypeBotInlineMessage;
     }) {
       super();
       this.classType = 'types';
@@ -31035,20 +31056,20 @@ export namespace Raw {
   export class BotInlineMediaResult extends TLObject {
     id!: string;
     type!: string;
-    photo?: TypePhoto;
-    document?: TypeDocument;
+    photo?: Raw.TypePhoto;
+    document?: Raw.TypeDocument;
     title?: string;
     description?: string;
-    sendMessage!: TypeBotInlineMessage;
+    sendMessage!: Raw.TypeBotInlineMessage;
 
     constructor(params: {
       id: string;
       type: string;
-      photo?: TypePhoto;
-      document?: TypeDocument;
+      photo?: Raw.TypePhoto;
+      document?: Raw.TypeDocument;
       title?: string;
       description?: string;
-      sendMessage: TypeBotInlineMessage;
+      sendMessage: Raw.TypeBotInlineMessage;
     }) {
       super();
       this.classType = 'types';
@@ -31173,23 +31194,23 @@ export namespace Raw {
   }
   export class MessageFwdHeader extends TLObject {
     imported?: boolean;
-    fromId?: TypePeer;
+    fromId?: Raw.TypePeer;
     fromName?: string;
     date!: int;
     channelPost?: int;
     postAuthor?: string;
-    savedFromPeer?: TypePeer;
+    savedFromPeer?: Raw.TypePeer;
     savedFromMsgId?: int;
     psaType?: string;
 
     constructor(params: {
       imported?: boolean;
-      fromId?: TypePeer;
+      fromId?: Raw.TypePeer;
       fromName?: string;
       date: int;
       channelPost?: int;
       postAuthor?: string;
-      savedFromPeer?: TypePeer;
+      savedFromPeer?: Raw.TypePeer;
       savedFromMsgId?: int;
       psaType?: string;
     }) {
@@ -31445,10 +31466,10 @@ export namespace Raw {
     }
   }
   export class TopPeer extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     rating!: double;
 
-    constructor(params: { peer: TypePeer; rating: double }) {
+    constructor(params: { peer: Raw.TypePeer; rating: double }) {
       super();
       this.classType = 'types';
       this.className = 'TopPeer';
@@ -31719,11 +31740,15 @@ export namespace Raw {
     }
   }
   export class TopPeerCategoryPeers extends TLObject {
-    category!: TypeTopPeerCategory;
+    category!: Raw.TypeTopPeerCategory;
     count!: int;
-    peers!: Vector<TypeTopPeer>;
+    peers!: Vector<Raw.TypeTopPeer>;
 
-    constructor(params: { category: TypeTopPeerCategory; count: int; peers: Vector<TypeTopPeer> }) {
+    constructor(params: {
+      category: Raw.TypeTopPeerCategory;
+      count: int;
+      peers: Vector<Raw.TypeTopPeer>;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'TopPeerCategoryPeers';
@@ -31812,14 +31837,14 @@ export namespace Raw {
     noWebpage?: boolean;
     replyToMsgId?: int;
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
+    entities?: Vector<Raw.TypeMessageEntity>;
     date!: int;
 
     constructor(params: {
       noWebpage?: boolean;
       replyToMsgId?: int;
       message: string;
-      entities?: Vector<TypeMessageEntity>;
+      entities?: Vector<Raw.TypeMessageEntity>;
       date: int;
     }) {
       super();
@@ -31886,10 +31911,10 @@ export namespace Raw {
     }
   }
   export class StickerSetCovered extends TLObject {
-    set!: TypeStickerSet;
-    cover!: TypeDocument;
+    set!: Raw.TypeStickerSet;
+    cover!: Raw.TypeDocument;
 
-    constructor(params: { set: TypeStickerSet; cover: TypeDocument }) {
+    constructor(params: { set: Raw.TypeStickerSet; cover: Raw.TypeDocument }) {
       super();
       this.classType = 'types';
       this.className = 'StickerSetCovered';
@@ -31928,10 +31953,10 @@ export namespace Raw {
     }
   }
   export class StickerSetMultiCovered extends TLObject {
-    set!: TypeStickerSet;
-    covers!: Vector<TypeDocument>;
+    set!: Raw.TypeStickerSet;
+    covers!: Vector<Raw.TypeDocument>;
 
-    constructor(params: { set: TypeStickerSet; covers: Vector<TypeDocument> }) {
+    constructor(params: { set: Raw.TypeStickerSet; covers: Vector<Raw.TypeDocument> }) {
       super();
       this.classType = 'types';
       this.className = 'StickerSetMultiCovered';
@@ -31970,16 +31995,16 @@ export namespace Raw {
     }
   }
   export class StickerSetFullCovered extends TLObject {
-    set!: TypeStickerSet;
-    packs!: Vector<TypeStickerPack>;
-    keywords!: Vector<TypeStickerKeyword>;
-    documents!: Vector<TypeDocument>;
+    set!: Raw.TypeStickerSet;
+    packs!: Vector<Raw.TypeStickerPack>;
+    keywords!: Vector<Raw.TypeStickerKeyword>;
+    documents!: Vector<Raw.TypeDocument>;
 
     constructor(params: {
-      set: TypeStickerSet;
-      packs: Vector<TypeStickerPack>;
-      keywords: Vector<TypeStickerKeyword>;
-      documents: Vector<TypeDocument>;
+      set: Raw.TypeStickerSet;
+      packs: Vector<Raw.TypeStickerPack>;
+      keywords: Vector<Raw.TypeStickerKeyword>;
+      documents: Vector<Raw.TypeDocument>;
     }) {
       super();
       this.classType = 'types';
@@ -32034,9 +32059,9 @@ export namespace Raw {
     }
   }
   export class StickerSetNoCovered extends TLObject {
-    set!: TypeStickerSet;
+    set!: Raw.TypeStickerSet;
 
-    constructor(params: { set: TypeStickerSet }) {
+    constructor(params: { set: Raw.TypeStickerSet }) {
       super();
       this.classType = 'types';
       this.className = 'StickerSetNoCovered';
@@ -32124,9 +32149,9 @@ export namespace Raw {
     }
   }
   export class InputStickeredMediaPhoto extends TLObject {
-    id!: TypeInputPhoto;
+    id!: Raw.TypeInputPhoto;
 
-    constructor(params: { id: TypeInputPhoto }) {
+    constructor(params: { id: Raw.TypeInputPhoto }) {
       super();
       this.classType = 'types';
       this.className = 'InputStickeredMediaPhoto';
@@ -32160,9 +32185,9 @@ export namespace Raw {
     }
   }
   export class InputStickeredMediaDocument extends TLObject {
-    id!: TypeInputDocument;
+    id!: Raw.TypeInputDocument;
 
-    constructor(params: { id: TypeInputDocument }) {
+    constructor(params: { id: Raw.TypeInputDocument }) {
       super();
       this.classType = 'types';
       this.className = 'InputStickeredMediaDocument';
@@ -32201,8 +32226,8 @@ export namespace Raw {
     shortName!: string;
     title!: string;
     description!: string;
-    photo!: TypePhoto;
-    document?: TypeDocument;
+    photo!: Raw.TypePhoto;
+    document?: Raw.TypeDocument;
 
     constructor(params: {
       id: long;
@@ -32210,8 +32235,8 @@ export namespace Raw {
       shortName: string;
       title: string;
       description: string;
-      photo: TypePhoto;
-      document?: TypeDocument;
+      photo: Raw.TypePhoto;
+      document?: Raw.TypeDocument;
     }) {
       super();
       this.classType = 'types';
@@ -32332,10 +32357,10 @@ export namespace Raw {
     }
   }
   export class InputGameShortName extends TLObject {
-    botId!: TypeInputUser;
+    botId!: Raw.TypeInputUser;
     shortName!: string;
 
-    constructor(params: { botId: TypeInputUser; shortName: string }) {
+    constructor(params: { botId: Raw.TypeInputUser; shortName: string }) {
       super();
       this.classType = 'types';
       this.className = 'InputGameShortName';
@@ -32487,9 +32512,9 @@ export namespace Raw {
     }
   }
   export class TextBold extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextBold';
@@ -32523,9 +32548,9 @@ export namespace Raw {
     }
   }
   export class TextItalic extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextItalic';
@@ -32559,9 +32584,9 @@ export namespace Raw {
     }
   }
   export class TextUnderline extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextUnderline';
@@ -32595,9 +32620,9 @@ export namespace Raw {
     }
   }
   export class TextStrike extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextStrike';
@@ -32631,9 +32656,9 @@ export namespace Raw {
     }
   }
   export class TextFixed extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextFixed';
@@ -32667,11 +32692,11 @@ export namespace Raw {
     }
   }
   export class TextUrl extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
     url!: string;
     webpageId!: long;
 
-    constructor(params: { text: TypeRichText; url: string; webpageId: long }) {
+    constructor(params: { text: Raw.TypeRichText; url: string; webpageId: long }) {
       super();
       this.classType = 'types';
       this.className = 'TextUrl';
@@ -32715,10 +32740,10 @@ export namespace Raw {
     }
   }
   export class TextEmail extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
     email!: string;
 
-    constructor(params: { text: TypeRichText; email: string }) {
+    constructor(params: { text: Raw.TypeRichText; email: string }) {
       super();
       this.classType = 'types';
       this.className = 'TextEmail';
@@ -32757,9 +32782,9 @@ export namespace Raw {
     }
   }
   export class TextConcat extends TLObject {
-    texts!: Vector<TypeRichText>;
+    texts!: Vector<Raw.TypeRichText>;
 
-    constructor(params: { texts: Vector<TypeRichText> }) {
+    constructor(params: { texts: Vector<Raw.TypeRichText> }) {
       super();
       this.classType = 'types';
       this.className = 'TextConcat';
@@ -32793,9 +32818,9 @@ export namespace Raw {
     }
   }
   export class TextSubscript extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextSubscript';
@@ -32829,9 +32854,9 @@ export namespace Raw {
     }
   }
   export class TextSuperscript extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextSuperscript';
@@ -32865,9 +32890,9 @@ export namespace Raw {
     }
   }
   export class TextMarked extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'TextMarked';
@@ -32901,10 +32926,10 @@ export namespace Raw {
     }
   }
   export class TextPhone extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
     phone!: string;
 
-    constructor(params: { text: TypeRichText; phone: string }) {
+    constructor(params: { text: Raw.TypeRichText; phone: string }) {
       super();
       this.classType = 'types';
       this.className = 'TextPhone';
@@ -32991,10 +33016,10 @@ export namespace Raw {
     }
   }
   export class TextAnchor extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
     name!: string;
 
-    constructor(params: { text: TypeRichText; name: string }) {
+    constructor(params: { text: Raw.TypeRichText; name: string }) {
       super();
       this.classType = 'types';
       this.className = 'TextAnchor';
@@ -33062,9 +33087,9 @@ export namespace Raw {
     }
   }
   export class PageBlockTitle extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockTitle';
@@ -33098,9 +33123,9 @@ export namespace Raw {
     }
   }
   export class PageBlockSubtitle extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockSubtitle';
@@ -33134,10 +33159,10 @@ export namespace Raw {
     }
   }
   export class PageBlockAuthorDate extends TLObject {
-    author!: TypeRichText;
+    author!: Raw.TypeRichText;
     publishedDate!: int;
 
-    constructor(params: { author: TypeRichText; publishedDate: int }) {
+    constructor(params: { author: Raw.TypeRichText; publishedDate: int }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockAuthorDate';
@@ -33176,9 +33201,9 @@ export namespace Raw {
     }
   }
   export class PageBlockHeader extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockHeader';
@@ -33212,9 +33237,9 @@ export namespace Raw {
     }
   }
   export class PageBlockSubheader extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockSubheader';
@@ -33248,9 +33273,9 @@ export namespace Raw {
     }
   }
   export class PageBlockParagraph extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockParagraph';
@@ -33284,10 +33309,10 @@ export namespace Raw {
     }
   }
   export class PageBlockPreformatted extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
     language!: string;
 
-    constructor(params: { text: TypeRichText; language: string }) {
+    constructor(params: { text: Raw.TypeRichText; language: string }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockPreformatted';
@@ -33326,9 +33351,9 @@ export namespace Raw {
     }
   }
   export class PageBlockFooter extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockFooter';
@@ -33427,9 +33452,9 @@ export namespace Raw {
     }
   }
   export class PageBlockList extends TLObject {
-    items!: Vector<TypePageListItem>;
+    items!: Vector<Raw.TypePageListItem>;
 
-    constructor(params: { items: Vector<TypePageListItem> }) {
+    constructor(params: { items: Vector<Raw.TypePageListItem> }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockList';
@@ -33463,10 +33488,10 @@ export namespace Raw {
     }
   }
   export class PageBlockBlockquote extends TLObject {
-    text!: TypeRichText;
-    caption!: TypeRichText;
+    text!: Raw.TypeRichText;
+    caption!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText; caption: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText; caption: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockBlockquote';
@@ -33505,10 +33530,10 @@ export namespace Raw {
     }
   }
   export class PageBlockPullquote extends TLObject {
-    text!: TypeRichText;
-    caption!: TypeRichText;
+    text!: Raw.TypeRichText;
+    caption!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText; caption: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText; caption: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockPullquote';
@@ -33548,13 +33573,13 @@ export namespace Raw {
   }
   export class PageBlockPhoto extends TLObject {
     photoId!: long;
-    caption!: TypePageCaption;
+    caption!: Raw.TypePageCaption;
     url?: string;
     webpageId?: long;
 
     constructor(params: {
       photoId: long;
-      caption: TypePageCaption;
+      caption: Raw.TypePageCaption;
       url?: string;
       webpageId?: long;
     }) {
@@ -33621,13 +33646,13 @@ export namespace Raw {
     autoplay?: boolean;
     loop?: boolean;
     videoId!: long;
-    caption!: TypePageCaption;
+    caption!: Raw.TypePageCaption;
 
     constructor(params: {
       autoplay?: boolean;
       loop?: boolean;
       videoId: long;
-      caption: TypePageCaption;
+      caption: Raw.TypePageCaption;
     }) {
       super();
       this.classType = 'types';
@@ -33683,9 +33708,9 @@ export namespace Raw {
     }
   }
   export class PageBlockCover extends TLObject {
-    cover!: TypePageBlock;
+    cover!: Raw.TypePageBlock;
 
-    constructor(params: { cover: TypePageBlock }) {
+    constructor(params: { cover: Raw.TypePageBlock }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockCover';
@@ -33726,7 +33751,7 @@ export namespace Raw {
     posterPhotoId?: long;
     w?: int;
     h?: int;
-    caption!: TypePageCaption;
+    caption!: Raw.TypePageCaption;
 
     constructor(params: {
       fullWidth?: boolean;
@@ -33736,7 +33761,7 @@ export namespace Raw {
       posterPhotoId?: long;
       w?: int;
       h?: int;
-      caption: TypePageCaption;
+      caption: Raw.TypePageCaption;
     }) {
       super();
       this.classType = 'types';
@@ -33835,8 +33860,8 @@ export namespace Raw {
     authorPhotoId!: long;
     author!: string;
     date!: int;
-    blocks!: Vector<TypePageBlock>;
-    caption!: TypePageCaption;
+    blocks!: Vector<Raw.TypePageBlock>;
+    caption!: Raw.TypePageCaption;
 
     constructor(params: {
       url: string;
@@ -33844,8 +33869,8 @@ export namespace Raw {
       authorPhotoId: long;
       author: string;
       date: int;
-      blocks: Vector<TypePageBlock>;
-      caption: TypePageCaption;
+      blocks: Vector<Raw.TypePageBlock>;
+      caption: Raw.TypePageCaption;
     }) {
       super();
       this.classType = 'types';
@@ -33918,10 +33943,10 @@ export namespace Raw {
     }
   }
   export class PageBlockCollage extends TLObject {
-    items!: Vector<TypePageBlock>;
-    caption!: TypePageCaption;
+    items!: Vector<Raw.TypePageBlock>;
+    caption!: Raw.TypePageCaption;
 
-    constructor(params: { items: Vector<TypePageBlock>; caption: TypePageCaption }) {
+    constructor(params: { items: Vector<Raw.TypePageBlock>; caption: Raw.TypePageCaption }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockCollage';
@@ -33960,10 +33985,10 @@ export namespace Raw {
     }
   }
   export class PageBlockSlideshow extends TLObject {
-    items!: Vector<TypePageBlock>;
-    caption!: TypePageCaption;
+    items!: Vector<Raw.TypePageBlock>;
+    caption!: Raw.TypePageCaption;
 
-    constructor(params: { items: Vector<TypePageBlock>; caption: TypePageCaption }) {
+    constructor(params: { items: Vector<Raw.TypePageBlock>; caption: Raw.TypePageCaption }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockSlideshow';
@@ -34002,9 +34027,9 @@ export namespace Raw {
     }
   }
   export class PageBlockChannel extends TLObject {
-    channel!: TypeChat;
+    channel!: Raw.TypeChat;
 
-    constructor(params: { channel: TypeChat }) {
+    constructor(params: { channel: Raw.TypeChat }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockChannel';
@@ -34039,9 +34064,9 @@ export namespace Raw {
   }
   export class PageBlockAudio extends TLObject {
     audioId!: long;
-    caption!: TypePageCaption;
+    caption!: Raw.TypePageCaption;
 
-    constructor(params: { audioId: long; caption: TypePageCaption }) {
+    constructor(params: { audioId: long; caption: Raw.TypePageCaption }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockAudio';
@@ -34080,9 +34105,9 @@ export namespace Raw {
     }
   }
   export class PageBlockKicker extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockKicker';
@@ -34118,14 +34143,14 @@ export namespace Raw {
   export class PageBlockTable extends TLObject {
     bordered?: boolean;
     striped?: boolean;
-    title!: TypeRichText;
-    rows!: Vector<TypePageTableRow>;
+    title!: Raw.TypeRichText;
+    rows!: Vector<Raw.TypePageTableRow>;
 
     constructor(params: {
       bordered?: boolean;
       striped?: boolean;
-      title: TypeRichText;
-      rows: Vector<TypePageTableRow>;
+      title: Raw.TypeRichText;
+      rows: Vector<Raw.TypePageTableRow>;
     }) {
       super();
       this.classType = 'types';
@@ -34181,9 +34206,9 @@ export namespace Raw {
     }
   }
   export class PageBlockOrderedList extends TLObject {
-    items!: Vector<TypePageListOrderedItem>;
+    items!: Vector<Raw.TypePageListOrderedItem>;
 
-    constructor(params: { items: Vector<TypePageListOrderedItem> }) {
+    constructor(params: { items: Vector<Raw.TypePageListOrderedItem> }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockOrderedList';
@@ -34218,10 +34243,14 @@ export namespace Raw {
   }
   export class PageBlockDetails extends TLObject {
     open?: boolean;
-    blocks!: Vector<TypePageBlock>;
-    title!: TypeRichText;
+    blocks!: Vector<Raw.TypePageBlock>;
+    title!: Raw.TypeRichText;
 
-    constructor(params: { open?: boolean; blocks: Vector<TypePageBlock>; title: TypeRichText }) {
+    constructor(params: {
+      open?: boolean;
+      blocks: Vector<Raw.TypePageBlock>;
+      title: Raw.TypeRichText;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockDetails';
@@ -34268,10 +34297,10 @@ export namespace Raw {
     }
   }
   export class PageBlockRelatedArticles extends TLObject {
-    title!: TypeRichText;
-    articles!: Vector<TypePageRelatedArticle>;
+    title!: Raw.TypeRichText;
+    articles!: Vector<Raw.TypePageRelatedArticle>;
 
-    constructor(params: { title: TypeRichText; articles: Vector<TypePageRelatedArticle> }) {
+    constructor(params: { title: Raw.TypeRichText; articles: Vector<Raw.TypePageRelatedArticle> }) {
       super();
       this.classType = 'types';
       this.className = 'PageBlockRelatedArticles';
@@ -34310,18 +34339,18 @@ export namespace Raw {
     }
   }
   export class PageBlockMap extends TLObject {
-    geo!: TypeGeoPoint;
+    geo!: Raw.TypeGeoPoint;
     zoom!: int;
     w!: int;
     h!: int;
-    caption!: TypePageCaption;
+    caption!: Raw.TypePageCaption;
 
     constructor(params: {
-      geo: TypeGeoPoint;
+      geo: Raw.TypeGeoPoint;
       zoom: int;
       w: int;
       h: int;
-      caption: TypePageCaption;
+      caption: Raw.TypePageCaption;
     }) {
       super();
       this.classType = 'types';
@@ -34583,7 +34612,7 @@ export namespace Raw {
     emailToProvider?: boolean;
     recurring?: boolean;
     currency!: string;
-    prices!: Vector<TypeLabeledPrice>;
+    prices!: Vector<Raw.TypeLabeledPrice>;
     maxTipAmount?: long;
     suggestedTipAmounts?: Vector<long>;
     recurringTermsUrl?: string;
@@ -34599,7 +34628,7 @@ export namespace Raw {
       emailToProvider?: boolean;
       recurring?: boolean;
       currency: string;
-      prices: Vector<TypeLabeledPrice>;
+      prices: Vector<Raw.TypeLabeledPrice>;
       maxTipAmount?: long;
       suggestedTipAmounts?: Vector<long>;
       recurringTermsUrl?: string;
@@ -34849,13 +34878,13 @@ export namespace Raw {
     name?: string;
     phone?: string;
     email?: string;
-    shippingAddress?: TypePostAddress;
+    shippingAddress?: Raw.TypePostAddress;
 
     constructor(params: {
       name?: string;
       phone?: string;
       email?: string;
-      shippingAddress?: TypePostAddress;
+      shippingAddress?: Raw.TypePostAddress;
     }) {
       super();
       this.classType = 'types';
@@ -34965,14 +34994,14 @@ export namespace Raw {
     accessHash!: long;
     size!: int;
     mimeType!: string;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
 
     constructor(params: {
       url: string;
       accessHash: long;
       size: int;
       mimeType: string;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
     }) {
       super();
       this.classType = 'types';
@@ -35036,13 +35065,13 @@ export namespace Raw {
     url!: string;
     size!: int;
     mimeType!: string;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
 
     constructor(params: {
       url: string;
       size: int;
       mimeType: string;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
     }) {
       super();
       this.classType = 'types';
@@ -35100,13 +35129,13 @@ export namespace Raw {
     url!: string;
     size!: int;
     mimeType!: string;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
 
     constructor(params: {
       url: string;
       size: int;
       mimeType: string;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
     }) {
       super();
       this.classType = 'types';
@@ -35203,7 +35232,7 @@ export namespace Raw {
     }
   }
   export class InputWebFileGeoPointLocation extends TLObject {
-    geoPoint!: TypeInputGeoPoint;
+    geoPoint!: Raw.TypeInputGeoPoint;
     accessHash!: long;
     w!: int;
     h!: int;
@@ -35211,7 +35240,7 @@ export namespace Raw {
     scale!: int;
 
     constructor(params: {
-      geoPoint: TypeInputGeoPoint;
+      geoPoint: Raw.TypeInputGeoPoint;
       accessHash: long;
       w: int;
       h: int;
@@ -35284,13 +35313,13 @@ export namespace Raw {
   }
   export class InputWebFileAudioAlbumThumbLocation extends TLObject {
     small?: boolean;
-    document?: TypeInputDocument;
+    document?: Raw.TypeInputDocument;
     title?: string;
     performer?: string;
 
     constructor(params: {
       small?: boolean;
-      document?: TypeInputDocument;
+      document?: Raw.TypeInputDocument;
       title?: string;
       performer?: string;
     }) {
@@ -35399,9 +35428,9 @@ export namespace Raw {
   }
   export class InputPaymentCredentials extends TLObject {
     save?: boolean;
-    data!: TypeDataJSON;
+    data!: Raw.TypeDataJSON;
 
-    constructor(params: { save?: boolean; data: TypeDataJSON }) {
+    constructor(params: { save?: boolean; data: Raw.TypeDataJSON }) {
       super();
       this.classType = 'types';
       this.className = 'InputPaymentCredentials';
@@ -35443,9 +35472,9 @@ export namespace Raw {
     }
   }
   export class InputPaymentCredentialsApplePay extends TLObject {
-    paymentData!: TypeDataJSON;
+    paymentData!: Raw.TypeDataJSON;
 
-    constructor(params: { paymentData: TypeDataJSON }) {
+    constructor(params: { paymentData: Raw.TypeDataJSON }) {
       super();
       this.classType = 'types';
       this.className = 'InputPaymentCredentialsApplePay';
@@ -35482,9 +35511,9 @@ export namespace Raw {
     }
   }
   export class InputPaymentCredentialsGooglePay extends TLObject {
-    paymentToken!: TypeDataJSON;
+    paymentToken!: Raw.TypeDataJSON;
 
-    constructor(params: { paymentToken: TypeDataJSON }) {
+    constructor(params: { paymentToken: Raw.TypeDataJSON }) {
       super();
       this.classType = 'types';
       this.className = 'InputPaymentCredentialsGooglePay';
@@ -35523,9 +35552,9 @@ export namespace Raw {
   export class ShippingOption extends TLObject {
     id!: string;
     title!: string;
-    prices!: Vector<TypeLabeledPrice>;
+    prices!: Vector<Raw.TypeLabeledPrice>;
 
-    constructor(params: { id: string; title: string; prices: Vector<TypeLabeledPrice> }) {
+    constructor(params: { id: string; title: string; prices: Vector<Raw.TypeLabeledPrice> }) {
       super();
       this.classType = 'types';
       this.className = 'ShippingOption';
@@ -35569,15 +35598,15 @@ export namespace Raw {
     }
   }
   export class InputStickerSetItem extends TLObject {
-    document!: TypeInputDocument;
+    document!: Raw.TypeInputDocument;
     emoji!: string;
-    maskCoords?: TypeMaskCoords;
+    maskCoords?: Raw.TypeMaskCoords;
     keywords?: string;
 
     constructor(params: {
-      document: TypeInputDocument;
+      document: Raw.TypeInputDocument;
       emoji: string;
-      maskCoords?: TypeMaskCoords;
+      maskCoords?: Raw.TypeMaskCoords;
       keywords?: string;
     }) {
       super();
@@ -35724,7 +35753,7 @@ export namespace Raw {
     date!: int;
     adminId!: long;
     participantId!: long;
-    protocol!: TypePhoneCallProtocol;
+    protocol!: Raw.TypePhoneCallProtocol;
     receiveDate?: int;
 
     constructor(params: {
@@ -35734,7 +35763,7 @@ export namespace Raw {
       date: int;
       adminId: long;
       participantId: long;
-      protocol: TypePhoneCallProtocol;
+      protocol: Raw.TypePhoneCallProtocol;
       receiveDate?: int;
     }) {
       super();
@@ -35834,7 +35863,7 @@ export namespace Raw {
     adminId!: long;
     participantId!: long;
     gAHash!: bytes;
-    protocol!: TypePhoneCallProtocol;
+    protocol!: Raw.TypePhoneCallProtocol;
 
     constructor(params: {
       video?: boolean;
@@ -35844,7 +35873,7 @@ export namespace Raw {
       adminId: long;
       participantId: long;
       gAHash: bytes;
-      protocol: TypePhoneCallProtocol;
+      protocol: Raw.TypePhoneCallProtocol;
     }) {
       super();
       this.classType = 'types';
@@ -35942,7 +35971,7 @@ export namespace Raw {
     adminId!: long;
     participantId!: long;
     gB!: bytes;
-    protocol!: TypePhoneCallProtocol;
+    protocol!: Raw.TypePhoneCallProtocol;
 
     constructor(params: {
       video?: boolean;
@@ -35952,7 +35981,7 @@ export namespace Raw {
       adminId: long;
       participantId: long;
       gB: bytes;
-      protocol: TypePhoneCallProtocol;
+      protocol: Raw.TypePhoneCallProtocol;
     }) {
       super();
       this.classType = 'types';
@@ -36052,8 +36081,8 @@ export namespace Raw {
     participantId!: long;
     gAOrB!: bytes;
     keyFingerprint!: long;
-    protocol!: TypePhoneCallProtocol;
-    connections!: Vector<TypePhoneConnection>;
+    protocol!: Raw.TypePhoneCallProtocol;
+    connections!: Vector<Raw.TypePhoneConnection>;
     startDate!: int;
 
     constructor(params: {
@@ -36066,8 +36095,8 @@ export namespace Raw {
       participantId: long;
       gAOrB: bytes;
       keyFingerprint: long;
-      protocol: TypePhoneCallProtocol;
-      connections: Vector<TypePhoneConnection>;
+      protocol: Raw.TypePhoneCallProtocol;
+      connections: Vector<Raw.TypePhoneConnection>;
       startDate: int;
     }) {
       super();
@@ -36189,7 +36218,7 @@ export namespace Raw {
     needDebug?: boolean;
     video?: boolean;
     id!: long;
-    reason?: TypePhoneCallDiscardReason;
+    reason?: Raw.TypePhoneCallDiscardReason;
     duration?: int;
 
     constructor(params: {
@@ -36197,7 +36226,7 @@ export namespace Raw {
       needDebug?: boolean;
       video?: boolean;
       id: long;
-      reason?: TypePhoneCallDiscardReason;
+      reason?: Raw.TypePhoneCallDiscardReason;
       duration?: int;
     }) {
       super();
@@ -36563,9 +36592,9 @@ export namespace Raw {
     }
   }
   export class CdnConfig extends TLObject {
-    publicKeys!: Vector<TypeCdnPublicKey>;
+    publicKeys!: Vector<Raw.TypeCdnPublicKey>;
 
-    constructor(params: { publicKeys: Vector<TypeCdnPublicKey> }) {
+    constructor(params: { publicKeys: Vector<Raw.TypeCdnPublicKey> }) {
       super();
       this.classType = 'types';
       this.className = 'CdnConfig';
@@ -36786,13 +36815,13 @@ export namespace Raw {
     langCode!: string;
     fromVersion!: int;
     version!: int;
-    strings!: Vector<TypeLangPackString>;
+    strings!: Vector<Raw.TypeLangPackString>;
 
     constructor(params: {
       langCode: string;
       fromVersion: int;
       version: int;
-      strings: Vector<TypeLangPackString>;
+      strings: Vector<Raw.TypeLangPackString>;
     }) {
       super();
       this.classType = 'types';
@@ -37123,10 +37152,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionChangePhoto extends TLObject {
-    prevPhoto!: TypePhoto;
-    newPhoto!: TypePhoto;
+    prevPhoto!: Raw.TypePhoto;
+    newPhoto!: Raw.TypePhoto;
 
-    constructor(params: { prevPhoto: TypePhoto; newPhoto: TypePhoto }) {
+    constructor(params: { prevPhoto: Raw.TypePhoto; newPhoto: Raw.TypePhoto }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionChangePhoto';
@@ -37249,9 +37278,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionUpdatePinned extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
 
-    constructor(params: { message: TypeMessage }) {
+    constructor(params: { message: Raw.TypeMessage }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionUpdatePinned';
@@ -37288,10 +37317,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionEditMessage extends TLObject {
-    prevMessage!: TypeMessage;
-    newMessage!: TypeMessage;
+    prevMessage!: Raw.TypeMessage;
+    newMessage!: Raw.TypeMessage;
 
-    constructor(params: { prevMessage: TypeMessage; newMessage: TypeMessage }) {
+    constructor(params: { prevMessage: Raw.TypeMessage; newMessage: Raw.TypeMessage }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionEditMessage';
@@ -37336,9 +37365,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionDeleteMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
 
-    constructor(params: { message: TypeMessage }) {
+    constructor(params: { message: Raw.TypeMessage }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionDeleteMessage';
@@ -37439,9 +37468,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantInvite extends TLObject {
-    participant!: TypeChannelParticipant;
+    participant!: Raw.TypeChannelParticipant;
 
-    constructor(params: { participant: TypeChannelParticipant }) {
+    constructor(params: { participant: Raw.TypeChannelParticipant }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionParticipantInvite';
@@ -37478,12 +37507,12 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantToggleBan extends TLObject {
-    prevParticipant!: TypeChannelParticipant;
-    newParticipant!: TypeChannelParticipant;
+    prevParticipant!: Raw.TypeChannelParticipant;
+    newParticipant!: Raw.TypeChannelParticipant;
 
     constructor(params: {
-      prevParticipant: TypeChannelParticipant;
-      newParticipant: TypeChannelParticipant;
+      prevParticipant: Raw.TypeChannelParticipant;
+      newParticipant: Raw.TypeChannelParticipant;
     }) {
       super();
       this.classType = 'types';
@@ -37529,12 +37558,12 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantToggleAdmin extends TLObject {
-    prevParticipant!: TypeChannelParticipant;
-    newParticipant!: TypeChannelParticipant;
+    prevParticipant!: Raw.TypeChannelParticipant;
+    newParticipant!: Raw.TypeChannelParticipant;
 
     constructor(params: {
-      prevParticipant: TypeChannelParticipant;
-      newParticipant: TypeChannelParticipant;
+      prevParticipant: Raw.TypeChannelParticipant;
+      newParticipant: Raw.TypeChannelParticipant;
     }) {
       super();
       this.classType = 'types';
@@ -37580,12 +37609,12 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionChangeStickerSet extends TLObject {
-    prevStickerset!: TypeInputStickerSet;
-    newStickerset!: TypeInputStickerSet;
+    prevStickerset!: Raw.TypeInputStickerSet;
+    newStickerset!: Raw.TypeInputStickerSet;
 
     constructor(params: {
-      prevStickerset: TypeInputStickerSet;
-      newStickerset: TypeInputStickerSet;
+      prevStickerset: Raw.TypeInputStickerSet;
+      newStickerset: Raw.TypeInputStickerSet;
     }) {
       super();
       this.classType = 'types';
@@ -37670,12 +37699,12 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionDefaultBannedRights extends TLObject {
-    prevBannedRights!: TypeChatBannedRights;
-    newBannedRights!: TypeChatBannedRights;
+    prevBannedRights!: Raw.TypeChatBannedRights;
+    newBannedRights!: Raw.TypeChatBannedRights;
 
     constructor(params: {
-      prevBannedRights: TypeChatBannedRights;
-      newBannedRights: TypeChatBannedRights;
+      prevBannedRights: Raw.TypeChatBannedRights;
+      newBannedRights: Raw.TypeChatBannedRights;
     }) {
       super();
       this.classType = 'types';
@@ -37721,9 +37750,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionStopPoll extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
 
-    constructor(params: { message: TypeMessage }) {
+    constructor(params: { message: Raw.TypeMessage }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionStopPoll';
@@ -37808,10 +37837,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionChangeLocation extends TLObject {
-    prevValue!: TypeChannelLocation;
-    newValue!: TypeChannelLocation;
+    prevValue!: Raw.TypeChannelLocation;
+    newValue!: Raw.TypeChannelLocation;
 
-    constructor(params: { prevValue: TypeChannelLocation; newValue: TypeChannelLocation }) {
+    constructor(params: { prevValue: Raw.TypeChannelLocation; newValue: Raw.TypeChannelLocation }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionChangeLocation';
@@ -37904,9 +37933,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionStartGroupCall extends TLObject {
-    call!: TypeInputGroupCall;
+    call!: Raw.TypeInputGroupCall;
 
-    constructor(params: { call: TypeInputGroupCall }) {
+    constructor(params: { call: Raw.TypeInputGroupCall }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionStartGroupCall';
@@ -37943,9 +37972,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionDiscardGroupCall extends TLObject {
-    call!: TypeInputGroupCall;
+    call!: Raw.TypeInputGroupCall;
 
-    constructor(params: { call: TypeInputGroupCall }) {
+    constructor(params: { call: Raw.TypeInputGroupCall }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionDiscardGroupCall';
@@ -37982,9 +38011,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantMute extends TLObject {
-    participant!: TypeGroupCallParticipant;
+    participant!: Raw.TypeGroupCallParticipant;
 
-    constructor(params: { participant: TypeGroupCallParticipant }) {
+    constructor(params: { participant: Raw.TypeGroupCallParticipant }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionParticipantMute';
@@ -38021,9 +38050,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantUnmute extends TLObject {
-    participant!: TypeGroupCallParticipant;
+    participant!: Raw.TypeGroupCallParticipant;
 
-    constructor(params: { participant: TypeGroupCallParticipant }) {
+    constructor(params: { participant: Raw.TypeGroupCallParticipant }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionParticipantUnmute';
@@ -38100,9 +38129,9 @@ export namespace Raw {
   }
   export class ChannelAdminLogEventActionParticipantJoinByInvite extends TLObject {
     viaChatlist?: boolean;
-    invite!: TypeExportedChatInvite;
+    invite!: Raw.TypeExportedChatInvite;
 
-    constructor(params: { viaChatlist?: boolean; invite: TypeExportedChatInvite }) {
+    constructor(params: { viaChatlist?: boolean; invite: Raw.TypeExportedChatInvite }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionParticipantJoinByInvite';
@@ -38150,9 +38179,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionExportedInviteDelete extends TLObject {
-    invite!: TypeExportedChatInvite;
+    invite!: Raw.TypeExportedChatInvite;
 
-    constructor(params: { invite: TypeExportedChatInvite }) {
+    constructor(params: { invite: Raw.TypeExportedChatInvite }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionExportedInviteDelete';
@@ -38189,9 +38218,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionExportedInviteRevoke extends TLObject {
-    invite!: TypeExportedChatInvite;
+    invite!: Raw.TypeExportedChatInvite;
 
-    constructor(params: { invite: TypeExportedChatInvite }) {
+    constructor(params: { invite: Raw.TypeExportedChatInvite }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionExportedInviteRevoke';
@@ -38228,10 +38257,13 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionExportedInviteEdit extends TLObject {
-    prevInvite!: TypeExportedChatInvite;
-    newInvite!: TypeExportedChatInvite;
+    prevInvite!: Raw.TypeExportedChatInvite;
+    newInvite!: Raw.TypeExportedChatInvite;
 
-    constructor(params: { prevInvite: TypeExportedChatInvite; newInvite: TypeExportedChatInvite }) {
+    constructor(params: {
+      prevInvite: Raw.TypeExportedChatInvite;
+      newInvite: Raw.TypeExportedChatInvite;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionExportedInviteEdit';
@@ -38276,9 +38308,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantVolume extends TLObject {
-    participant!: TypeGroupCallParticipant;
+    participant!: Raw.TypeGroupCallParticipant;
 
-    constructor(params: { participant: TypeGroupCallParticipant }) {
+    constructor(params: { participant: Raw.TypeGroupCallParticipant }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionParticipantVolume';
@@ -38363,10 +38395,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionParticipantJoinByRequest extends TLObject {
-    invite!: TypeExportedChatInvite;
+    invite!: Raw.TypeExportedChatInvite;
     approvedBy!: long;
 
-    constructor(params: { invite: TypeExportedChatInvite; approvedBy: long }) {
+    constructor(params: { invite: Raw.TypeExportedChatInvite; approvedBy: long }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionParticipantJoinByRequest';
@@ -38450,9 +38482,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionSendMessage extends TLObject {
-    message!: TypeMessage;
+    message!: Raw.TypeMessage;
 
-    constructor(params: { message: TypeMessage }) {
+    constructor(params: { message: Raw.TypeMessage }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionSendMessage';
@@ -38489,10 +38521,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionChangeAvailableReactions extends TLObject {
-    prevValue!: TypeChatReactions;
-    newValue!: TypeChatReactions;
+    prevValue!: Raw.TypeChatReactions;
+    newValue!: Raw.TypeChatReactions;
 
-    constructor(params: { prevValue: TypeChatReactions; newValue: TypeChatReactions }) {
+    constructor(params: { prevValue: Raw.TypeChatReactions; newValue: Raw.TypeChatReactions }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionChangeAvailableReactions';
@@ -38624,9 +38656,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionCreateTopic extends TLObject {
-    topic!: TypeForumTopic;
+    topic!: Raw.TypeForumTopic;
 
-    constructor(params: { topic: TypeForumTopic }) {
+    constructor(params: { topic: Raw.TypeForumTopic }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionCreateTopic';
@@ -38663,10 +38695,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionEditTopic extends TLObject {
-    prevTopic!: TypeForumTopic;
-    newTopic!: TypeForumTopic;
+    prevTopic!: Raw.TypeForumTopic;
+    newTopic!: Raw.TypeForumTopic;
 
-    constructor(params: { prevTopic: TypeForumTopic; newTopic: TypeForumTopic }) {
+    constructor(params: { prevTopic: Raw.TypeForumTopic; newTopic: Raw.TypeForumTopic }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionEditTopic';
@@ -38711,9 +38743,9 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionDeleteTopic extends TLObject {
-    topic!: TypeForumTopic;
+    topic!: Raw.TypeForumTopic;
 
-    constructor(params: { topic: TypeForumTopic }) {
+    constructor(params: { topic: Raw.TypeForumTopic }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionDeleteTopic';
@@ -38750,10 +38782,10 @@ export namespace Raw {
     }
   }
   export class ChannelAdminLogEventActionPinTopic extends TLObject {
-    prevTopic?: TypeForumTopic;
-    newTopic?: TypeForumTopic;
+    prevTopic?: Raw.TypeForumTopic;
+    newTopic?: Raw.TypeForumTopic;
 
-    constructor(params: { prevTopic?: TypeForumTopic; newTopic?: TypeForumTopic }) {
+    constructor(params: { prevTopic?: Raw.TypeForumTopic; newTopic?: Raw.TypeForumTopic }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelAdminLogEventActionPinTopic';
@@ -38847,13 +38879,13 @@ export namespace Raw {
     id!: long;
     date!: int;
     userId!: long;
-    action!: TypeChannelAdminLogEventAction;
+    action!: Raw.TypeChannelAdminLogEventAction;
 
     constructor(params: {
       id: long;
       date: int;
       userId: long;
-      action: TypeChannelAdminLogEventAction;
+      action: Raw.TypeChannelAdminLogEventAction;
     }) {
       super();
       this.classType = 'types';
@@ -39230,9 +39262,9 @@ export namespace Raw {
   }
   export class RecentMeUrlChatInvite extends TLObject {
     url!: string;
-    chatInvite!: TypeChatInvite;
+    chatInvite!: Raw.TypeChatInvite;
 
-    constructor(params: { url: string; chatInvite: TypeChatInvite }) {
+    constructor(params: { url: string; chatInvite: Raw.TypeChatInvite }) {
       super();
       this.classType = 'types';
       this.className = 'RecentMeUrlChatInvite';
@@ -39272,9 +39304,9 @@ export namespace Raw {
   }
   export class RecentMeUrlStickerSet extends TLObject {
     url!: string;
-    set!: TypeStickerSetCovered;
+    set!: Raw.TypeStickerSetCovered;
 
-    constructor(params: { url: string; set: TypeStickerSetCovered }) {
+    constructor(params: { url: string; set: Raw.TypeStickerSetCovered }) {
       super();
       this.classType = 'types';
       this.className = 'RecentMeUrlStickerSet';
@@ -39313,16 +39345,16 @@ export namespace Raw {
     }
   }
   export class InputSingleMedia extends TLObject {
-    media!: TypeInputMedia;
+    media!: Raw.TypeInputMedia;
     randomId!: long;
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
+    entities?: Vector<Raw.TypeMessageEntity>;
 
     constructor(params: {
-      media: TypeInputMedia;
+      media: Raw.TypeInputMedia;
       randomId: long;
       message: string;
-      entities?: Vector<TypeMessageEntity>;
+      entities?: Vector<Raw.TypeMessageEntity>;
     }) {
       super();
       this.classType = 'types';
@@ -39640,9 +39672,9 @@ export namespace Raw {
     }
   }
   export class InputDialogPeer extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
 
-    constructor(params: { peer: TypeInputPeer }) {
+    constructor(params: { peer: Raw.TypeInputPeer }) {
       super();
       this.classType = 'types';
       this.className = 'InputDialogPeer';
@@ -39712,9 +39744,9 @@ export namespace Raw {
     }
   }
   export class DialogPeer extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
 
-    constructor(params: { peer: TypePeer }) {
+    constructor(params: { peer: Raw.TypePeer }) {
       super();
       this.classType = 'types';
       this.className = 'DialogPeer';
@@ -40617,25 +40649,25 @@ export namespace Raw {
     }
   }
   export class SecureValue extends TLObject {
-    type!: TypeSecureValueType;
-    data?: TypeSecureData;
-    frontSide?: TypeSecureFile;
-    reverseSide?: TypeSecureFile;
-    selfie?: TypeSecureFile;
-    translation?: Vector<TypeSecureFile>;
-    files?: Vector<TypeSecureFile>;
-    plainData?: TypeSecurePlainData;
+    type!: Raw.TypeSecureValueType;
+    data?: Raw.TypeSecureData;
+    frontSide?: Raw.TypeSecureFile;
+    reverseSide?: Raw.TypeSecureFile;
+    selfie?: Raw.TypeSecureFile;
+    translation?: Vector<Raw.TypeSecureFile>;
+    files?: Vector<Raw.TypeSecureFile>;
+    plainData?: Raw.TypeSecurePlainData;
     hash!: bytes;
 
     constructor(params: {
-      type: TypeSecureValueType;
-      data?: TypeSecureData;
-      frontSide?: TypeSecureFile;
-      reverseSide?: TypeSecureFile;
-      selfie?: TypeSecureFile;
-      translation?: Vector<TypeSecureFile>;
-      files?: Vector<TypeSecureFile>;
-      plainData?: TypeSecurePlainData;
+      type: Raw.TypeSecureValueType;
+      data?: Raw.TypeSecureData;
+      frontSide?: Raw.TypeSecureFile;
+      reverseSide?: Raw.TypeSecureFile;
+      selfie?: Raw.TypeSecureFile;
+      translation?: Vector<Raw.TypeSecureFile>;
+      files?: Vector<Raw.TypeSecureFile>;
+      plainData?: Raw.TypeSecurePlainData;
       hash: bytes;
     }) {
       super();
@@ -40743,24 +40775,24 @@ export namespace Raw {
     }
   }
   export class InputSecureValue extends TLObject {
-    type!: TypeSecureValueType;
-    data?: TypeSecureData;
-    frontSide?: TypeInputSecureFile;
-    reverseSide?: TypeInputSecureFile;
-    selfie?: TypeInputSecureFile;
-    translation?: Vector<TypeInputSecureFile>;
-    files?: Vector<TypeInputSecureFile>;
-    plainData?: TypeSecurePlainData;
+    type!: Raw.TypeSecureValueType;
+    data?: Raw.TypeSecureData;
+    frontSide?: Raw.TypeInputSecureFile;
+    reverseSide?: Raw.TypeInputSecureFile;
+    selfie?: Raw.TypeInputSecureFile;
+    translation?: Vector<Raw.TypeInputSecureFile>;
+    files?: Vector<Raw.TypeInputSecureFile>;
+    plainData?: Raw.TypeSecurePlainData;
 
     constructor(params: {
-      type: TypeSecureValueType;
-      data?: TypeSecureData;
-      frontSide?: TypeInputSecureFile;
-      reverseSide?: TypeInputSecureFile;
-      selfie?: TypeInputSecureFile;
-      translation?: Vector<TypeInputSecureFile>;
-      files?: Vector<TypeInputSecureFile>;
-      plainData?: TypeSecurePlainData;
+      type: Raw.TypeSecureValueType;
+      data?: Raw.TypeSecureData;
+      frontSide?: Raw.TypeInputSecureFile;
+      reverseSide?: Raw.TypeInputSecureFile;
+      selfie?: Raw.TypeInputSecureFile;
+      translation?: Vector<Raw.TypeInputSecureFile>;
+      files?: Vector<Raw.TypeInputSecureFile>;
+      plainData?: Raw.TypeSecurePlainData;
     }) {
       super();
       this.classType = 'types';
@@ -40860,10 +40892,10 @@ export namespace Raw {
     }
   }
   export class SecureValueHash extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     hash!: bytes;
 
-    constructor(params: { type: TypeSecureValueType; hash: bytes }) {
+    constructor(params: { type: Raw.TypeSecureValueType; hash: bytes }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueHash';
@@ -40902,13 +40934,13 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorData extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     dataHash!: bytes;
     field!: string;
     text!: string;
 
     constructor(params: {
-      type: TypeSecureValueType;
+      type: Raw.TypeSecureValueType;
       dataHash: bytes;
       field: string;
       text: string;
@@ -40966,11 +40998,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorFrontSide extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: bytes;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: bytes; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: bytes; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorFrontSide';
@@ -41014,11 +41046,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorReverseSide extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: bytes;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: bytes; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: bytes; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorReverseSide';
@@ -41062,11 +41094,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorSelfie extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: bytes;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: bytes; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: bytes; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorSelfie';
@@ -41110,11 +41142,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorFile extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: bytes;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: bytes; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: bytes; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorFile';
@@ -41158,11 +41190,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorFiles extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: Vector<bytes>;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: Vector<bytes>; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: Vector<bytes>; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorFiles';
@@ -41206,11 +41238,11 @@ export namespace Raw {
     }
   }
   export class SecureValueError extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     hash!: bytes;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; hash: bytes; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; hash: bytes; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueError';
@@ -41254,11 +41286,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorTranslationFile extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: bytes;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: bytes; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: bytes; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorTranslationFile';
@@ -41309,11 +41341,11 @@ export namespace Raw {
     }
   }
   export class SecureValueErrorTranslationFiles extends TLObject {
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
     fileHash!: Vector<bytes>;
     text!: string;
 
-    constructor(params: { type: TypeSecureValueType; fileHash: Vector<bytes>; text: string }) {
+    constructor(params: { type: Raw.TypeSecureValueType; fileHash: Vector<bytes>; text: string }) {
       super();
       this.classType = 'types';
       this.className = 'SecureValueErrorTranslationFiles';
@@ -41666,12 +41698,12 @@ export namespace Raw {
     }
   }
   export class SecureSecretSettings extends TLObject {
-    secureAlgo!: TypeSecurePasswordKdfAlgo;
+    secureAlgo!: Raw.TypeSecurePasswordKdfAlgo;
     secureSecret!: bytes;
     secureSecretId!: long;
 
     constructor(params: {
-      secureAlgo: TypeSecurePasswordKdfAlgo;
+      secureAlgo: Raw.TypeSecurePasswordKdfAlgo;
       secureSecret: bytes;
       secureSecretId: long;
     }) {
@@ -41802,13 +41834,13 @@ export namespace Raw {
     nativeNames?: boolean;
     selfieRequired?: boolean;
     translationRequired?: boolean;
-    type!: TypeSecureValueType;
+    type!: Raw.TypeSecureValueType;
 
     constructor(params: {
       nativeNames?: boolean;
       selfieRequired?: boolean;
       translationRequired?: boolean;
-      type: TypeSecureValueType;
+      type: Raw.TypeSecureValueType;
     }) {
       super();
       this.classType = 'types';
@@ -41862,9 +41894,9 @@ export namespace Raw {
     }
   }
   export class SecureRequiredTypeOneOf extends TLObject {
-    types!: Vector<TypeSecureRequiredType>;
+    types!: Vector<Raw.TypeSecureRequiredType>;
 
-    constructor(params: { types: Vector<TypeSecureRequiredType> }) {
+    constructor(params: { types: Vector<Raw.TypeSecureRequiredType> }) {
       super();
       this.classType = 'types';
       this.className = 'SecureRequiredTypeOneOf';
@@ -41901,9 +41933,9 @@ export namespace Raw {
     time!: double;
     type!: string;
     peer!: long;
-    data!: TypeJSONValue;
+    data!: Raw.TypeJSONValue;
 
-    constructor(params: { time: double; type: string; peer: long; data: TypeJSONValue }) {
+    constructor(params: { time: double; type: string; peer: long; data: Raw.TypeJSONValue }) {
       super();
       this.classType = 'types';
       this.className = 'InputAppEvent';
@@ -41953,9 +41985,9 @@ export namespace Raw {
   }
   export class JsonObjectValue extends TLObject {
     key!: string;
-    value!: TypeJSONValue;
+    value!: Raw.TypeJSONValue;
 
-    constructor(params: { key: string; value: TypeJSONValue }) {
+    constructor(params: { key: string; value: Raw.TypeJSONValue }) {
       super();
       this.classType = 'types';
       this.className = 'JsonObjectValue';
@@ -42131,9 +42163,9 @@ export namespace Raw {
     }
   }
   export class JsonArray extends TLObject {
-    value!: Vector<TypeJSONValue>;
+    value!: Vector<Raw.TypeJSONValue>;
 
-    constructor(params: { value: Vector<TypeJSONValue> }) {
+    constructor(params: { value: Vector<Raw.TypeJSONValue> }) {
       super();
       this.classType = 'types';
       this.className = 'JsonArray';
@@ -42167,9 +42199,9 @@ export namespace Raw {
     }
   }
   export class JsonObject extends TLObject {
-    value!: Vector<TypeJSONObjectValue>;
+    value!: Vector<Raw.TypeJSONObjectValue>;
 
-    constructor(params: { value: Vector<TypeJSONObjectValue> }) {
+    constructor(params: { value: Vector<Raw.TypeJSONObjectValue> }) {
       super();
       this.classType = 'types';
       this.className = 'JsonObject';
@@ -42208,7 +42240,7 @@ export namespace Raw {
     alignRight?: boolean;
     valignMiddle?: boolean;
     valignBottom?: boolean;
-    text?: TypeRichText;
+    text?: Raw.TypeRichText;
     colspan?: int;
     rowspan?: int;
 
@@ -42218,7 +42250,7 @@ export namespace Raw {
       alignRight?: boolean;
       valignMiddle?: boolean;
       valignBottom?: boolean;
-      text?: TypeRichText;
+      text?: Raw.TypeRichText;
       colspan?: int;
       rowspan?: int;
     }) {
@@ -42306,9 +42338,9 @@ export namespace Raw {
     }
   }
   export class PageTableRow extends TLObject {
-    cells!: Vector<TypePageTableCell>;
+    cells!: Vector<Raw.TypePageTableCell>;
 
-    constructor(params: { cells: Vector<TypePageTableCell> }) {
+    constructor(params: { cells: Vector<Raw.TypePageTableCell> }) {
       super();
       this.classType = 'types';
       this.className = 'PageTableRow';
@@ -42342,10 +42374,10 @@ export namespace Raw {
     }
   }
   export class PageCaption extends TLObject {
-    text!: TypeRichText;
-    credit!: TypeRichText;
+    text!: Raw.TypeRichText;
+    credit!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText; credit: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText; credit: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageCaption';
@@ -42384,9 +42416,9 @@ export namespace Raw {
     }
   }
   export class PageListItemText extends TLObject {
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { text: TypeRichText }) {
+    constructor(params: { text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageListItemText';
@@ -42420,9 +42452,9 @@ export namespace Raw {
     }
   }
   export class PageListItemBlocks extends TLObject {
-    blocks!: Vector<TypePageBlock>;
+    blocks!: Vector<Raw.TypePageBlock>;
 
-    constructor(params: { blocks: Vector<TypePageBlock> }) {
+    constructor(params: { blocks: Vector<Raw.TypePageBlock> }) {
       super();
       this.classType = 'types';
       this.className = 'PageListItemBlocks';
@@ -42457,9 +42489,9 @@ export namespace Raw {
   }
   export class PageListOrderedItemText extends TLObject {
     num!: string;
-    text!: TypeRichText;
+    text!: Raw.TypeRichText;
 
-    constructor(params: { num: string; text: TypeRichText }) {
+    constructor(params: { num: string; text: Raw.TypeRichText }) {
       super();
       this.classType = 'types';
       this.className = 'PageListOrderedItemText';
@@ -42499,9 +42531,9 @@ export namespace Raw {
   }
   export class PageListOrderedItemBlocks extends TLObject {
     num!: string;
-    blocks!: Vector<TypePageBlock>;
+    blocks!: Vector<Raw.TypePageBlock>;
 
-    constructor(params: { num: string; blocks: Vector<TypePageBlock> }) {
+    constructor(params: { num: string; blocks: Vector<Raw.TypePageBlock> }) {
       super();
       this.classType = 'types';
       this.className = 'PageListOrderedItemBlocks';
@@ -42650,9 +42682,9 @@ export namespace Raw {
     rtl?: boolean;
     v2?: boolean;
     url!: string;
-    blocks!: Vector<TypePageBlock>;
-    photos!: Vector<TypePhoto>;
-    documents!: Vector<TypeDocument>;
+    blocks!: Vector<Raw.TypePageBlock>;
+    photos!: Vector<Raw.TypePhoto>;
+    documents!: Vector<Raw.TypeDocument>;
     views?: int;
 
     constructor(params: {
@@ -42660,9 +42692,9 @@ export namespace Raw {
       rtl?: boolean;
       v2?: boolean;
       url: string;
-      blocks: Vector<TypePageBlock>;
-      photos: Vector<TypePhoto>;
-      documents: Vector<TypeDocument>;
+      blocks: Vector<Raw.TypePageBlock>;
+      photos: Vector<Raw.TypePhoto>;
+      documents: Vector<Raw.TypeDocument>;
       views?: int;
     }) {
       super();
@@ -42790,7 +42822,7 @@ export namespace Raw {
     multipleChoice?: boolean;
     quiz?: boolean;
     question!: string;
-    answers!: Vector<TypePollAnswer>;
+    answers!: Vector<Raw.TypePollAnswer>;
     closePeriod?: int;
     closeDate?: int;
 
@@ -42801,7 +42833,7 @@ export namespace Raw {
       multipleChoice?: boolean;
       quiz?: boolean;
       question: string;
-      answers: Vector<TypePollAnswer>;
+      answers: Vector<Raw.TypePollAnswer>;
       closePeriod?: int;
       closeDate?: int;
     }) {
@@ -42958,19 +42990,19 @@ export namespace Raw {
   }
   export class PollResults extends TLObject {
     min?: boolean;
-    results?: Vector<TypePollAnswerVoters>;
+    results?: Vector<Raw.TypePollAnswerVoters>;
     totalVoters?: int;
-    recentVoters?: Vector<TypePeer>;
+    recentVoters?: Vector<Raw.TypePeer>;
     solution?: string;
-    solutionEntities?: Vector<TypeMessageEntity>;
+    solutionEntities?: Vector<Raw.TypeMessageEntity>;
 
     constructor(params: {
       min?: boolean;
-      results?: Vector<TypePollAnswerVoters>;
+      results?: Vector<Raw.TypePollAnswerVoters>;
       totalVoters?: int;
-      recentVoters?: Vector<TypePeer>;
+      recentVoters?: Vector<Raw.TypePeer>;
       solution?: string;
-      solutionEntities?: Vector<TypeMessageEntity>;
+      solutionEntities?: Vector<Raw.TypeMessageEntity>;
     }) {
       super();
       this.classType = 'types';
@@ -43976,13 +44008,13 @@ export namespace Raw {
     langCode!: string;
     fromVersion!: int;
     version!: int;
-    keywords!: Vector<TypeEmojiKeyword>;
+    keywords!: Vector<Raw.TypeEmojiKeyword>;
 
     constructor(params: {
       langCode: string;
       fromVersion: int;
       version: int;
-      keywords: Vector<TypeEmojiKeyword>;
+      keywords: Vector<Raw.TypeEmojiKeyword>;
     }) {
       super();
       this.classType = 'types';
@@ -44114,7 +44146,7 @@ export namespace Raw {
     autofillNewCorrespondents?: boolean;
     id!: int;
     title!: string;
-    photo?: TypeChatPhoto;
+    photo?: Raw.TypeChatPhoto;
 
     constructor(params: {
       autofillNewBroadcasts?: boolean;
@@ -44122,7 +44154,7 @@ export namespace Raw {
       autofillNewCorrespondents?: boolean;
       id: int;
       title: string;
-      photo?: TypeChatPhoto;
+      photo?: Raw.TypeChatPhoto;
     }) {
       super();
       this.classType = 'types';
@@ -44196,10 +44228,10 @@ export namespace Raw {
     }
   }
   export class InputFolderPeer extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     folderId!: int;
 
-    constructor(params: { peer: TypeInputPeer; folderId: int }) {
+    constructor(params: { peer: Raw.TypeInputPeer; folderId: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputFolderPeer';
@@ -44238,10 +44270,10 @@ export namespace Raw {
     }
   }
   export class FolderPeer extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     folderId!: int;
 
-    constructor(params: { peer: TypePeer; folderId: int }) {
+    constructor(params: { peer: Raw.TypePeer; folderId: int }) {
       super();
       this.classType = 'types';
       this.className = 'FolderPeer';
@@ -44281,10 +44313,10 @@ export namespace Raw {
   }
   export class UrlAuthResultRequest extends TLObject {
     requestWriteAccess?: boolean;
-    bot!: TypeUser;
+    bot!: Raw.TypeUser;
     domain!: string;
 
-    constructor(params: { requestWriteAccess?: boolean; bot: TypeUser; domain: string }) {
+    constructor(params: { requestWriteAccess?: boolean; bot: Raw.TypeUser; domain: string }) {
       super();
       this.classType = 'types';
       this.className = 'UrlAuthResultRequest';
@@ -44429,10 +44461,10 @@ export namespace Raw {
     }
   }
   export class ChannelLocation extends TLObject {
-    geoPoint!: TypeGeoPoint;
+    geoPoint!: Raw.TypeGeoPoint;
     address!: string;
 
-    constructor(params: { geoPoint: TypeGeoPoint; address: string }) {
+    constructor(params: { geoPoint: Raw.TypeGeoPoint; address: string }) {
       super();
       this.classType = 'types';
       this.className = 'ChannelLocation';
@@ -44471,11 +44503,11 @@ export namespace Raw {
     }
   }
   export class PeerLocated extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     expires!: int;
     distance!: int;
 
-    constructor(params: { peer: TypePeer; expires: int; distance: int }) {
+    constructor(params: { peer: Raw.TypePeer; expires: int; distance: int }) {
       super();
       this.classType = 'types';
       this.className = 'PeerLocated';
@@ -44688,8 +44720,8 @@ export namespace Raw {
     accessHash!: long;
     slug!: string;
     title!: string;
-    document?: TypeDocument;
-    settings?: Vector<TypeThemeSettings>;
+    document?: Raw.TypeDocument;
+    settings?: Vector<Raw.TypeThemeSettings>;
     emoticon?: string;
     installsCount?: int;
 
@@ -44701,8 +44733,8 @@ export namespace Raw {
       accessHash: long;
       slug: string;
       title: string;
-      document?: TypeDocument;
-      settings?: Vector<TypeThemeSettings>;
+      document?: Raw.TypeDocument;
+      settings?: Vector<Raw.TypeThemeSettings>;
       emoticon?: string;
       installsCount?: int;
     }) {
@@ -44962,21 +44994,21 @@ export namespace Raw {
   }
   export class InputThemeSettings extends TLObject {
     messageColorsAnimated?: boolean;
-    baseTheme!: TypeBaseTheme;
+    baseTheme!: Raw.TypeBaseTheme;
     accentColor!: int;
     outboxAccentColor?: int;
     messageColors?: Vector<int>;
-    wallpaper?: TypeInputWallPaper;
-    wallpaperSettings?: TypeWallPaperSettings;
+    wallpaper?: Raw.TypeInputWallPaper;
+    wallpaperSettings?: Raw.TypeWallPaperSettings;
 
     constructor(params: {
       messageColorsAnimated?: boolean;
-      baseTheme: TypeBaseTheme;
+      baseTheme: Raw.TypeBaseTheme;
       accentColor: int;
       outboxAccentColor?: int;
       messageColors?: Vector<int>;
-      wallpaper?: TypeInputWallPaper;
-      wallpaperSettings?: TypeWallPaperSettings;
+      wallpaper?: Raw.TypeInputWallPaper;
+      wallpaperSettings?: Raw.TypeWallPaperSettings;
     }) {
       super();
       this.classType = 'types';
@@ -45065,19 +45097,19 @@ export namespace Raw {
   }
   export class ThemeSettings extends TLObject {
     messageColorsAnimated?: boolean;
-    baseTheme!: TypeBaseTheme;
+    baseTheme!: Raw.TypeBaseTheme;
     accentColor!: int;
     outboxAccentColor?: int;
     messageColors?: Vector<int>;
-    wallpaper?: TypeWallPaper;
+    wallpaper?: Raw.TypeWallPaper;
 
     constructor(params: {
       messageColorsAnimated?: boolean;
-      baseTheme: TypeBaseTheme;
+      baseTheme: Raw.TypeBaseTheme;
       accentColor: int;
       outboxAccentColor?: int;
       messageColors?: Vector<int>;
-      wallpaper?: TypeWallPaper;
+      wallpaper?: Raw.TypeWallPaper;
     }) {
       super();
       this.classType = 'types';
@@ -45157,10 +45189,13 @@ export namespace Raw {
     }
   }
   export class WebPageAttributeTheme extends TLObject {
-    documents?: Vector<TypeDocument>;
-    settings?: TypeThemeSettings;
+    documents?: Vector<Raw.TypeDocument>;
+    settings?: Raw.TypeThemeSettings;
 
-    constructor(params: { documents?: Vector<TypeDocument>; settings?: TypeThemeSettings }) {
+    constructor(params: {
+      documents?: Vector<Raw.TypeDocument>;
+      settings?: Raw.TypeThemeSettings;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'WebPageAttributeTheme';
@@ -45208,9 +45243,9 @@ export namespace Raw {
   export class WebPageAttributeStory extends TLObject {
     userId!: long;
     id!: int;
-    story?: TypeStoryItem;
+    story?: Raw.TypeStoryItem;
 
-    constructor(params: { userId: long; id: int; story?: TypeStoryItem }) {
+    constructor(params: { userId: long; id: int; story?: Raw.TypeStoryItem }) {
       super();
       this.classType = 'types';
       this.className = 'WebPageAttributeStory';
@@ -45313,9 +45348,9 @@ export namespace Raw {
     id!: int;
     title!: string;
     emoticon?: string;
-    pinnedPeers!: Vector<TypeInputPeer>;
-    includePeers!: Vector<TypeInputPeer>;
-    excludePeers!: Vector<TypeInputPeer>;
+    pinnedPeers!: Vector<Raw.TypeInputPeer>;
+    includePeers!: Vector<Raw.TypeInputPeer>;
+    excludePeers!: Vector<Raw.TypeInputPeer>;
 
     constructor(params: {
       contacts?: boolean;
@@ -45329,9 +45364,9 @@ export namespace Raw {
       id: int;
       title: string;
       emoticon?: string;
-      pinnedPeers: Vector<TypeInputPeer>;
-      includePeers: Vector<TypeInputPeer>;
-      excludePeers: Vector<TypeInputPeer>;
+      pinnedPeers: Vector<Raw.TypeInputPeer>;
+      includePeers: Vector<Raw.TypeInputPeer>;
+      excludePeers: Vector<Raw.TypeInputPeer>;
     }) {
       super();
       this.classType = 'types';
@@ -45484,16 +45519,16 @@ export namespace Raw {
     id!: int;
     title!: string;
     emoticon?: string;
-    pinnedPeers!: Vector<TypeInputPeer>;
-    includePeers!: Vector<TypeInputPeer>;
+    pinnedPeers!: Vector<Raw.TypeInputPeer>;
+    includePeers!: Vector<Raw.TypeInputPeer>;
 
     constructor(params: {
       hasMyInvites?: boolean;
       id: int;
       title: string;
       emoticon?: string;
-      pinnedPeers: Vector<TypeInputPeer>;
-      includePeers: Vector<TypeInputPeer>;
+      pinnedPeers: Vector<Raw.TypeInputPeer>;
+      includePeers: Vector<Raw.TypeInputPeer>;
     }) {
       super();
       this.classType = 'types';
@@ -45564,10 +45599,10 @@ export namespace Raw {
     }
   }
   export class DialogFilterSuggested extends TLObject {
-    filter!: TypeDialogFilter;
+    filter!: Raw.TypeDialogFilter;
     description!: string;
 
-    constructor(params: { filter: TypeDialogFilter; description: string }) {
+    constructor(params: { filter: Raw.TypeDialogFilter; description: string }) {
       super();
       this.classType = 'types';
       this.className = 'DialogFilterSuggested';
@@ -45804,10 +45839,10 @@ export namespace Raw {
     }
   }
   export class StatsGraph extends TLObject {
-    json!: TypeDataJSON;
+    json!: Raw.TypeDataJSON;
     zoomToken?: string;
 
-    constructor(params: { json: TypeDataJSON; zoomToken?: string }) {
+    constructor(params: { json: Raw.TypeDataJSON; zoomToken?: string }) {
       super();
       this.classType = 'types';
       this.className = 'StatsGraph';
@@ -46008,12 +46043,12 @@ export namespace Raw {
     }
   }
   export class VideoSizeStickerMarkup extends TLObject {
-    stickerset!: TypeInputStickerSet;
+    stickerset!: Raw.TypeInputStickerSet;
     stickerId!: long;
     backgroundColors!: Vector<int>;
 
     constructor(params: {
-      stickerset: TypeInputStickerSet;
+      stickerset: Raw.TypeInputStickerSet;
       stickerId: long;
       backgroundColors: Vector<int>;
     }) {
@@ -46278,9 +46313,9 @@ export namespace Raw {
   export class MessageViews extends TLObject {
     views?: int;
     forwards?: int;
-    replies?: TypeMessageReplies;
+    replies?: Raw.TypeMessageReplies;
 
-    constructor(params: { views?: int; forwards?: int; replies?: TypeMessageReplies }) {
+    constructor(params: { views?: int; forwards?: int; replies?: Raw.TypeMessageReplies }) {
       super();
       this.classType = 'types';
       this.className = 'MessageViews';
@@ -46335,14 +46370,14 @@ export namespace Raw {
     replyToScheduled?: boolean;
     forumTopic?: boolean;
     replyToMsgId!: int;
-    replyToPeerId?: TypePeer;
+    replyToPeerId?: Raw.TypePeer;
     replyToTopId?: int;
 
     constructor(params: {
       replyToScheduled?: boolean;
       forumTopic?: boolean;
       replyToMsgId: int;
-      replyToPeerId?: TypePeer;
+      replyToPeerId?: Raw.TypePeer;
       replyToTopId?: int;
     }) {
       super();
@@ -46458,7 +46493,7 @@ export namespace Raw {
     comments?: boolean;
     replies!: int;
     repliesPts!: int;
-    recentRepliers?: Vector<TypePeer>;
+    recentRepliers?: Vector<Raw.TypePeer>;
     channelId?: long;
     maxId?: int;
     readMaxId?: int;
@@ -46467,7 +46502,7 @@ export namespace Raw {
       comments?: boolean;
       replies: int;
       repliesPts: int;
-      recentRepliers?: Vector<TypePeer>;
+      recentRepliers?: Vector<Raw.TypePeer>;
       channelId?: long;
       maxId?: int;
       readMaxId?: int;
@@ -46558,10 +46593,10 @@ export namespace Raw {
     }
   }
   export class PeerBlocked extends TLObject {
-    peerId!: TypePeer;
+    peerId!: Raw.TypePeer;
     date!: int;
 
-    constructor(params: { peerId: TypePeer; date: int }) {
+    constructor(params: { peerId: Raw.TypePeer; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'PeerBlocked';
@@ -46889,15 +46924,15 @@ export namespace Raw {
     volumeByAdmin?: boolean;
     self?: boolean;
     videoJoined?: boolean;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     date!: int;
     activeDate?: int;
     source!: int;
     volume?: int;
     about?: string;
     raiseHandRating?: long;
-    video?: TypeGroupCallParticipantVideo;
-    presentation?: TypeGroupCallParticipantVideo;
+    video?: Raw.TypeGroupCallParticipantVideo;
+    presentation?: Raw.TypeGroupCallParticipantVideo;
 
     constructor(params: {
       muted?: boolean;
@@ -46910,15 +46945,15 @@ export namespace Raw {
       volumeByAdmin?: boolean;
       self?: boolean;
       videoJoined?: boolean;
-      peer: TypePeer;
+      peer: Raw.TypePeer;
       date: int;
       activeDate?: int;
       source: int;
       volume?: int;
       about?: string;
       raiseHandRating?: long;
-      video?: TypeGroupCallParticipantVideo;
-      presentation?: TypeGroupCallParticipantVideo;
+      video?: Raw.TypeGroupCallParticipantVideo;
+      presentation?: Raw.TypeGroupCallParticipantVideo;
     }) {
       super();
       this.classType = 'types';
@@ -47433,13 +47468,13 @@ export namespace Raw {
   export class GroupCallParticipantVideo extends TLObject {
     paused?: boolean;
     endpoint!: string;
-    sourceGroups!: Vector<TypeGroupCallParticipantVideoSourceGroup>;
+    sourceGroups!: Vector<Raw.TypeGroupCallParticipantVideoSourceGroup>;
     audioSource?: int;
 
     constructor(params: {
       paused?: boolean;
       endpoint: string;
-      sourceGroups: Vector<TypeGroupCallParticipantVideoSourceGroup>;
+      sourceGroups: Vector<Raw.TypeGroupCallParticipantVideoSourceGroup>;
       audioSource?: int;
     }) {
       super();
@@ -47615,9 +47650,9 @@ export namespace Raw {
     }
   }
   export class BotCommandScopePeer extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
 
-    constructor(params: { peer: TypeInputPeer }) {
+    constructor(params: { peer: Raw.TypeInputPeer }) {
       super();
       this.classType = 'types';
       this.className = 'BotCommandScopePeer';
@@ -47651,9 +47686,9 @@ export namespace Raw {
     }
   }
   export class BotCommandScopePeerAdmins extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
 
-    constructor(params: { peer: TypeInputPeer }) {
+    constructor(params: { peer: Raw.TypeInputPeer }) {
       super();
       this.classType = 'types';
       this.className = 'BotCommandScopePeerAdmins';
@@ -47687,10 +47722,10 @@ export namespace Raw {
     }
   }
   export class BotCommandScopePeerUser extends TLObject {
-    peer!: TypeInputPeer;
-    userId!: TypeInputUser;
+    peer!: Raw.TypeInputPeer;
+    userId!: Raw.TypeInputUser;
 
-    constructor(params: { peer: TypeInputPeer; userId: TypeInputUser }) {
+    constructor(params: { peer: Raw.TypeInputPeer; userId: Raw.TypeInputUser }) {
       super();
       this.classType = 'types';
       this.className = 'BotCommandScopePeerUser';
@@ -47732,14 +47767,14 @@ export namespace Raw {
     recommended?: boolean;
     showPeerPhoto?: boolean;
     randomId!: bytes;
-    fromId?: TypePeer;
-    chatInvite?: TypeChatInvite;
+    fromId?: Raw.TypePeer;
+    chatInvite?: Raw.TypeChatInvite;
     chatInviteHash?: string;
     channelPost?: int;
     startParam?: string;
-    webpage?: TypeSponsoredWebPage;
+    webpage?: Raw.TypeSponsoredWebPage;
     message!: string;
-    entities?: Vector<TypeMessageEntity>;
+    entities?: Vector<Raw.TypeMessageEntity>;
     sponsorInfo?: string;
     additionalInfo?: string;
 
@@ -47747,14 +47782,14 @@ export namespace Raw {
       recommended?: boolean;
       showPeerPhoto?: boolean;
       randomId: bytes;
-      fromId?: TypePeer;
-      chatInvite?: TypeChatInvite;
+      fromId?: Raw.TypePeer;
+      chatInvite?: Raw.TypeChatInvite;
       chatInviteHash?: string;
       channelPost?: int;
       startParam?: string;
-      webpage?: TypeSponsoredWebPage;
+      webpage?: Raw.TypeSponsoredWebPage;
       message: string;
-      entities?: Vector<TypeMessageEntity>;
+      entities?: Vector<Raw.TypeMessageEntity>;
       sponsorInfo?: string;
       additionalInfo?: string;
     }) {
@@ -47997,10 +48032,10 @@ export namespace Raw {
   }
   export class ReactionCount extends TLObject {
     chosenOrder?: int;
-    reaction!: TypeReaction;
+    reaction!: Raw.TypeReaction;
     count!: int;
 
-    constructor(params: { chosenOrder?: int; reaction: TypeReaction; count: int }) {
+    constructor(params: { chosenOrder?: int; reaction: Raw.TypeReaction; count: int }) {
       super();
       this.classType = 'types';
       this.className = 'ReactionCount';
@@ -48052,14 +48087,14 @@ export namespace Raw {
   export class MessageReactions extends TLObject {
     min?: boolean;
     canSeeList?: boolean;
-    results!: Vector<TypeReactionCount>;
-    recentReactions?: Vector<TypeMessagePeerReaction>;
+    results!: Vector<Raw.TypeReactionCount>;
+    recentReactions?: Vector<Raw.TypeMessagePeerReaction>;
 
     constructor(params: {
       min?: boolean;
       canSeeList?: boolean;
-      results: Vector<TypeReactionCount>;
-      recentReactions?: Vector<TypeMessagePeerReaction>;
+      results: Vector<Raw.TypeReactionCount>;
+      recentReactions?: Vector<Raw.TypeMessagePeerReaction>;
     }) {
       super();
       this.classType = 'types';
@@ -48120,26 +48155,26 @@ export namespace Raw {
     premium?: boolean;
     reaction!: string;
     title!: string;
-    staticIcon!: TypeDocument;
-    appearAnimation!: TypeDocument;
-    selectAnimation!: TypeDocument;
-    activateAnimation!: TypeDocument;
-    effectAnimation!: TypeDocument;
-    aroundAnimation?: TypeDocument;
-    centerIcon?: TypeDocument;
+    staticIcon!: Raw.TypeDocument;
+    appearAnimation!: Raw.TypeDocument;
+    selectAnimation!: Raw.TypeDocument;
+    activateAnimation!: Raw.TypeDocument;
+    effectAnimation!: Raw.TypeDocument;
+    aroundAnimation?: Raw.TypeDocument;
+    centerIcon?: Raw.TypeDocument;
 
     constructor(params: {
       inactive?: boolean;
       premium?: boolean;
       reaction: string;
       title: string;
-      staticIcon: TypeDocument;
-      appearAnimation: TypeDocument;
-      selectAnimation: TypeDocument;
-      activateAnimation: TypeDocument;
-      effectAnimation: TypeDocument;
-      aroundAnimation?: TypeDocument;
-      centerIcon?: TypeDocument;
+      staticIcon: Raw.TypeDocument;
+      appearAnimation: Raw.TypeDocument;
+      selectAnimation: Raw.TypeDocument;
+      activateAnimation: Raw.TypeDocument;
+      effectAnimation: Raw.TypeDocument;
+      aroundAnimation?: Raw.TypeDocument;
+      centerIcon?: Raw.TypeDocument;
     }) {
       super();
       this.classType = 'types';
@@ -48254,17 +48289,17 @@ export namespace Raw {
     big?: boolean;
     unread?: boolean;
     my?: boolean;
-    peerId!: TypePeer;
+    peerId!: Raw.TypePeer;
     date!: int;
-    reaction!: TypeReaction;
+    reaction!: Raw.TypeReaction;
 
     constructor(params: {
       big?: boolean;
       unread?: boolean;
       my?: boolean;
-      peerId: TypePeer;
+      peerId: Raw.TypePeer;
       date: int;
-      reaction: TypeReaction;
+      reaction: Raw.TypeReaction;
     }) {
       super();
       this.classType = 'types';
@@ -48425,13 +48460,13 @@ export namespace Raw {
   }
   export class AttachMenuBotIcon extends TLObject {
     name!: string;
-    icon!: TypeDocument;
-    colors?: Vector<TypeAttachMenuBotIconColor>;
+    icon!: Raw.TypeDocument;
+    colors?: Vector<Raw.TypeAttachMenuBotIconColor>;
 
     constructor(params: {
       name: string;
-      icon: TypeDocument;
-      colors?: Vector<TypeAttachMenuBotIconColor>;
+      icon: Raw.TypeDocument;
+      colors?: Vector<Raw.TypeAttachMenuBotIconColor>;
     }) {
       super();
       this.classType = 'types';
@@ -48487,8 +48522,8 @@ export namespace Raw {
     requestWriteAccess?: boolean;
     botId!: long;
     shortName!: string;
-    peerTypes!: Vector<TypeAttachMenuPeerType>;
-    icons!: Vector<TypeAttachMenuBotIcon>;
+    peerTypes!: Vector<Raw.TypeAttachMenuPeerType>;
+    icons!: Vector<Raw.TypeAttachMenuBotIcon>;
 
     constructor(params: {
       inactive?: boolean;
@@ -48496,8 +48531,8 @@ export namespace Raw {
       requestWriteAccess?: boolean;
       botId: long;
       shortName: string;
-      peerTypes: Vector<TypeAttachMenuPeerType>;
-      icons: Vector<TypeAttachMenuBotIcon>;
+      peerTypes: Vector<Raw.TypeAttachMenuPeerType>;
+      icons: Vector<Raw.TypeAttachMenuBotIcon>;
     }) {
       super();
       this.classType = 'types';
@@ -48607,10 +48642,14 @@ export namespace Raw {
   }
   export class AttachMenuBots extends TLObject {
     hash!: long;
-    bots!: Vector<TypeAttachMenuBot>;
-    users!: Vector<TypeUser>;
+    bots!: Vector<Raw.TypeAttachMenuBot>;
+    users!: Vector<Raw.TypeUser>;
 
-    constructor(params: { hash: long; bots: Vector<TypeAttachMenuBot>; users: Vector<TypeUser> }) {
+    constructor(params: {
+      hash: long;
+      bots: Vector<Raw.TypeAttachMenuBot>;
+      users: Vector<Raw.TypeUser>;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'AttachMenuBots';
@@ -48654,10 +48693,10 @@ export namespace Raw {
     }
   }
   export class AttachMenuBotsBot extends TLObject {
-    bot!: TypeAttachMenuBot;
-    users!: Vector<TypeUser>;
+    bot!: Raw.TypeAttachMenuBot;
+    users!: Vector<Raw.TypeUser>;
 
-    constructor(params: { bot: TypeAttachMenuBot; users: Vector<TypeUser> }) {
+    constructor(params: { bot: Raw.TypeAttachMenuBot; users: Vector<Raw.TypeUser> }) {
       super();
       this.classType = 'types';
       this.className = 'AttachMenuBotsBot';
@@ -48774,9 +48813,9 @@ export namespace Raw {
     }
   }
   export class WebViewMessageSent extends TLObject {
-    msgId?: TypeInputBotInlineMessageID;
+    msgId?: Raw.TypeInputBotInlineMessageID;
 
-    constructor(params: { msgId?: TypeInputBotInlineMessageID }) {
+    constructor(params: { msgId?: Raw.TypeInputBotInlineMessageID }) {
       super();
       this.classType = 'types';
       this.className = 'WebViewMessageSent';
@@ -49197,10 +49236,10 @@ export namespace Raw {
     }
   }
   export class InputInvoiceMessage extends TLObject {
-    peer!: TypeInputPeer;
+    peer!: Raw.TypeInputPeer;
     msgId!: int;
 
-    constructor(params: { peer: TypeInputPeer; msgId: int }) {
+    constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputInvoiceMessage';
@@ -49321,11 +49360,11 @@ export namespace Raw {
     }
   }
   export class InputStorePaymentGiftPremium extends TLObject {
-    userId!: TypeInputUser;
+    userId!: Raw.TypeInputUser;
     currency!: string;
     amount!: long;
 
-    constructor(params: { userId: TypeInputUser; currency: string; amount: long }) {
+    constructor(params: { userId: Raw.TypeInputUser; currency: string; amount: long }) {
       super();
       this.classType = 'types';
       this.className = 'InputStorePaymentGiftPremium';
@@ -49769,9 +49808,9 @@ export namespace Raw {
     }
   }
   export class ChatReactionsSome extends TLObject {
-    reactions!: Vector<TypeReaction>;
+    reactions!: Vector<Raw.TypeReaction>;
 
-    constructor(params: { reactions: Vector<TypeReaction> }) {
+    constructor(params: { reactions: Vector<Raw.TypeReaction> }) {
       super();
       this.classType = 'types';
       this.className = 'ChatReactionsSome';
@@ -50125,9 +50164,9 @@ export namespace Raw {
   }
   export class SendAsPeer extends TLObject {
     premiumRequired?: boolean;
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
 
-    constructor(params: { premiumRequired?: boolean; peer: TypePeer }) {
+    constructor(params: { premiumRequired?: boolean; peer: Raw.TypePeer }) {
       super();
       this.classType = 'types';
       this.className = 'SendAsPeer';
@@ -50171,10 +50210,10 @@ export namespace Raw {
   export class MessageExtendedMediaPreview extends TLObject {
     w?: int;
     h?: int;
-    thumb?: TypePhotoSize;
+    thumb?: Raw.TypePhotoSize;
     videoDuration?: int;
 
-    constructor(params: { w?: int; h?: int; thumb?: TypePhotoSize; videoDuration?: int }) {
+    constructor(params: { w?: int; h?: int; thumb?: Raw.TypePhotoSize; videoDuration?: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessageExtendedMediaPreview';
@@ -50237,9 +50276,9 @@ export namespace Raw {
     }
   }
   export class MessageExtendedMedia extends TLObject {
-    media!: TypeMessageMedia;
+    media!: Raw.TypeMessageMedia;
 
-    constructor(params: { media: TypeMessageMedia }) {
+    constructor(params: { media: Raw.TypeMessageMedia }) {
       super();
       this.classType = 'types';
       this.className = 'MessageExtendedMedia';
@@ -50416,9 +50455,9 @@ export namespace Raw {
     unreadCount!: int;
     unreadMentionsCount!: int;
     unreadReactionsCount!: int;
-    fromId!: TypePeer;
-    notifySettings!: TypePeerNotifySettings;
-    draft?: TypeDraftMessage;
+    fromId!: Raw.TypePeer;
+    notifySettings!: Raw.TypePeerNotifySettings;
+    draft?: Raw.TypeDraftMessage;
 
     constructor(params: {
       my?: boolean;
@@ -50437,9 +50476,9 @@ export namespace Raw {
       unreadCount: int;
       unreadMentionsCount: int;
       unreadReactionsCount: int;
-      fromId: TypePeer;
-      notifySettings: TypePeerNotifySettings;
-      draft?: TypeDraftMessage;
+      fromId: Raw.TypePeer;
+      notifySettings: Raw.TypePeerNotifySettings;
+      draft?: Raw.TypeDraftMessage;
     }) {
       super();
       this.classType = 'types';
@@ -50732,16 +50771,16 @@ export namespace Raw {
     botParticipant?: boolean;
     hasUsername?: Bool;
     forum?: Bool;
-    userAdminRights?: TypeChatAdminRights;
-    botAdminRights?: TypeChatAdminRights;
+    userAdminRights?: Raw.TypeChatAdminRights;
+    botAdminRights?: Raw.TypeChatAdminRights;
 
     constructor(params: {
       creator?: boolean;
       botParticipant?: boolean;
       hasUsername?: Bool;
       forum?: Bool;
-      userAdminRights?: TypeChatAdminRights;
-      botAdminRights?: TypeChatAdminRights;
+      userAdminRights?: Raw.TypeChatAdminRights;
+      botAdminRights?: Raw.TypeChatAdminRights;
     }) {
       super();
       this.classType = 'types';
@@ -50822,14 +50861,14 @@ export namespace Raw {
   export class RequestPeerTypeBroadcast extends TLObject {
     creator?: boolean;
     hasUsername?: Bool;
-    userAdminRights?: TypeChatAdminRights;
-    botAdminRights?: TypeChatAdminRights;
+    userAdminRights?: Raw.TypeChatAdminRights;
+    botAdminRights?: Raw.TypeChatAdminRights;
 
     constructor(params: {
       creator?: boolean;
       hasUsername?: Bool;
-      userAdminRights?: TypeChatAdminRights;
-      botAdminRights?: TypeChatAdminRights;
+      userAdminRights?: Raw.TypeChatAdminRights;
+      botAdminRights?: Raw.TypeChatAdminRights;
     }) {
       super();
       this.classType = 'types';
@@ -51010,9 +51049,9 @@ export namespace Raw {
   }
   export class TextWithEntities extends TLObject {
     text!: string;
-    entities!: Vector<TypeMessageEntity>;
+    entities!: Vector<Raw.TypeMessageEntity>;
 
-    constructor(params: { text: string; entities: Vector<TypeMessageEntity> }) {
+    constructor(params: { text: string; entities: Vector<Raw.TypeMessageEntity> }) {
       super();
       this.classType = 'types';
       this.className = 'TextWithEntities';
@@ -51105,10 +51144,10 @@ export namespace Raw {
     }
   }
   export class AutoSaveException extends TLObject {
-    peer!: TypePeer;
-    settings!: TypeAutoSaveSettings;
+    peer!: Raw.TypePeer;
+    settings!: Raw.TypeAutoSaveSettings;
 
-    constructor(params: { peer: TypePeer; settings: TypeAutoSaveSettings }) {
+    constructor(params: { peer: Raw.TypePeer; settings: Raw.TypeAutoSaveSettings }) {
       super();
       this.classType = 'types';
       this.className = 'AutoSaveException';
@@ -51189,10 +51228,10 @@ export namespace Raw {
     }
   }
   export class InputBotAppShortName extends TLObject {
-    botId!: TypeInputUser;
+    botId!: Raw.TypeInputUser;
     shortName!: string;
 
-    constructor(params: { botId: TypeInputUser; shortName: string }) {
+    constructor(params: { botId: Raw.TypeInputUser; shortName: string }) {
       super();
       this.classType = 'types';
       this.className = 'InputBotAppShortName';
@@ -51265,8 +51304,8 @@ export namespace Raw {
     shortName!: string;
     title!: string;
     description!: string;
-    photo!: TypePhoto;
-    document?: TypeDocument;
+    photo!: Raw.TypePhoto;
+    document?: Raw.TypeDocument;
     hash!: long;
 
     constructor(params: {
@@ -51275,8 +51314,8 @@ export namespace Raw {
       shortName: string;
       title: string;
       description: string;
-      photo: TypePhoto;
-      document?: TypeDocument;
+      photo: Raw.TypePhoto;
+      document?: Raw.TypeDocument;
       hash: long;
     }) {
       super();
@@ -51529,9 +51568,9 @@ export namespace Raw {
   export class ExportedChatlistInvite extends TLObject {
     title!: string;
     url!: string;
-    peers!: Vector<TypePeer>;
+    peers!: Vector<Raw.TypePeer>;
 
-    constructor(params: { title: string; url: string; peers: Vector<TypePeer> }) {
+    constructor(params: { title: string; url: string; peers: Vector<Raw.TypePeer> }) {
       super();
       this.classType = 'types';
       this.className = 'ExportedChatlistInvite';
@@ -51581,11 +51620,11 @@ export namespace Raw {
     }
   }
   export class MessagePeerVote extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     option!: bytes;
     date!: int;
 
-    constructor(params: { peer: TypePeer; option: bytes; date: int }) {
+    constructor(params: { peer: Raw.TypePeer; option: bytes; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessagePeerVote';
@@ -51629,10 +51668,10 @@ export namespace Raw {
     }
   }
   export class MessagePeerVoteInputOption extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     date!: int;
 
-    constructor(params: { peer: TypePeer; date: int }) {
+    constructor(params: { peer: Raw.TypePeer; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessagePeerVoteInputOption';
@@ -51671,11 +51710,11 @@ export namespace Raw {
     }
   }
   export class MessagePeerVoteMultiple extends TLObject {
-    peer!: TypePeer;
+    peer!: Raw.TypePeer;
     options!: Vector<bytes>;
     date!: int;
 
-    constructor(params: { peer: TypePeer; options: Vector<bytes>; date: int }) {
+    constructor(params: { peer: Raw.TypePeer; options: Vector<bytes>; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'MessagePeerVoteMultiple';
@@ -51721,9 +51760,9 @@ export namespace Raw {
   export class SponsoredWebPage extends TLObject {
     url!: string;
     siteName!: string;
-    photo?: TypePhoto;
+    photo?: Raw.TypePhoto;
 
-    constructor(params: { url: string; siteName: string; photo?: TypePhoto }) {
+    constructor(params: { url: string; siteName: string; photo?: Raw.TypePhoto }) {
       super();
       this.classType = 'types';
       this.className = 'SponsoredWebPage';
@@ -51931,10 +51970,10 @@ export namespace Raw {
     date!: int;
     expireDate!: int;
     caption?: string;
-    entities?: Vector<TypeMessageEntity>;
-    media!: TypeMessageMedia;
-    privacy?: Vector<TypePrivacyRule>;
-    views?: TypeStoryViews;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    media!: Raw.TypeMessageMedia;
+    privacy?: Vector<Raw.TypePrivacyRule>;
+    views?: Raw.TypeStoryViews;
 
     constructor(params: {
       pinned?: boolean;
@@ -51949,10 +51988,10 @@ export namespace Raw {
       date: int;
       expireDate: int;
       caption?: string;
-      entities?: Vector<TypeMessageEntity>;
-      media: TypeMessageMedia;
-      privacy?: Vector<TypePrivacyRule>;
-      views?: TypeStoryViews;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      media: Raw.TypeMessageMedia;
+      privacy?: Vector<Raw.TypePrivacyRule>;
+      views?: Raw.TypeStoryViews;
     }) {
       super();
       this.classType = 'types';
@@ -52091,9 +52130,9 @@ export namespace Raw {
   export class UserStories extends TLObject {
     userId!: long;
     maxReadId?: int;
-    stories!: Vector<TypeStoryItem>;
+    stories!: Vector<Raw.TypeStoryItem>;
 
-    constructor(params: { userId: long; maxReadId?: int; stories: Vector<TypeStoryItem> }) {
+    constructor(params: { userId: long; maxReadId?: int; stories: Vector<Raw.TypeStoryItem> }) {
       super();
       this.classType = 'types';
       this.className = 'UserStories';
@@ -52233,10 +52272,10 @@ export namespace Raw {
     }
   }
   export class InputReplyToStory extends TLObject {
-    userId!: TypeInputUser;
+    userId!: Raw.TypeInputUser;
     storyId!: int;
 
-    constructor(params: { userId: TypeInputUser; storyId: int }) {
+    constructor(params: { userId: Raw.TypeInputUser; storyId: int }) {
       super();
       this.classType = 'types';
       this.className = 'InputReplyToStory';
@@ -52405,8 +52444,8 @@ export namespace Raw {
     systemLangCode!: string;
     langPack!: string;
     langCode!: string;
-    proxy?: TypeInputClientProxy;
-    params?: TypeJSONValue;
+    proxy?: Raw.TypeInputClientProxy;
+    params?: Raw.TypeJSONValue;
     query!: X;
 
     constructor(params: {
@@ -52417,8 +52456,8 @@ export namespace Raw {
       systemLangCode: string;
       langPack: string;
       langCode: string;
-      proxy?: TypeInputClientProxy;
-      params?: TypeJSONValue;
+      proxy?: Raw.TypeInputClientProxy;
+      params?: Raw.TypeJSONValue;
       query: X;
     }) {
       super();
@@ -52609,10 +52648,10 @@ export namespace Raw {
   }
   export class InvokeWithMessagesRange extends TLObject {
     __response__!: X;
-    range!: TypeMessageRange;
+    range!: Raw.TypeMessageRange;
     query!: X;
 
-    constructor(params: { range: TypeMessageRange; query: X }) {
+    constructor(params: { range: Raw.TypeMessageRange; query: X }) {
       super();
       this.classType = 'functions';
       this.className = 'InvokeWithMessagesRange';
@@ -52697,13 +52736,13 @@ export namespace Raw {
     randomId!: long;
     randomBytes!: bytes;
     message!: string;
-    media!: TypeDecryptedMessageMedia;
+    media!: Raw.TypeDecryptedMessageMedia;
 
     constructor(params: {
       randomId: long;
       randomBytes: bytes;
       message: string;
-      media: TypeDecryptedMessageMedia;
+      media: Raw.TypeDecryptedMessageMedia;
     }) {
       super();
       this.classType = 'types';
@@ -52760,12 +52799,12 @@ export namespace Raw {
   export class DecryptedMessageService8 extends TLObject {
     randomId!: long;
     randomBytes!: bytes;
-    action!: TypeDecryptedMessageAction;
+    action!: Raw.TypeDecryptedMessageAction;
 
     constructor(params: {
       randomId: long;
       randomBytes: bytes;
-      action: TypeDecryptedMessageAction;
+      action: Raw.TypeDecryptedMessageAction;
     }) {
       super();
       this.classType = 'types';
@@ -53496,13 +53535,13 @@ export namespace Raw {
     randomId!: long;
     ttl!: int;
     message!: string;
-    media!: TypeDecryptedMessageMedia;
+    media!: Raw.TypeDecryptedMessageMedia;
 
     constructor(params: {
       randomId: long;
       ttl: int;
       message: string;
-      media: TypeDecryptedMessageMedia;
+      media: Raw.TypeDecryptedMessageMedia;
     }) {
       super();
       this.classType = 'types';
@@ -53558,9 +53597,9 @@ export namespace Raw {
   }
   export class DecryptedMessageService17 extends TLObject {
     randomId!: long;
-    action!: TypeDecryptedMessageAction;
+    action!: Raw.TypeDecryptedMessageAction;
 
-    constructor(params: { randomId: long; action: TypeDecryptedMessageAction }) {
+    constructor(params: { randomId: long; action: Raw.TypeDecryptedMessageAction }) {
       super();
       this.classType = 'types';
       this.className = 'DecryptedMessageService17';
@@ -53792,14 +53831,14 @@ export namespace Raw {
     layer!: int;
     inSeqNo!: int;
     outSeqNo!: int;
-    message!: TypeDecryptedMessage;
+    message!: Raw.TypeDecryptedMessage;
 
     constructor(params: {
       randomBytes: bytes;
       layer: int;
       inSeqNo: int;
       outSeqNo: int;
-      message: TypeDecryptedMessage;
+      message: Raw.TypeDecryptedMessage;
     }) {
       super();
       this.classType = 'types';
@@ -54072,9 +54111,9 @@ export namespace Raw {
     }
   }
   export class DecryptedMessageActionTyping17 extends TLObject {
-    action!: TypeSendMessageAction;
+    action!: Raw.TypeSendMessageAction;
 
-    constructor(params: { action: TypeSendMessageAction }) {
+    constructor(params: { action: Raw.TypeSendMessageAction }) {
       super();
       this.classType = 'types';
       this.className = 'DecryptedMessageActionTyping17';
@@ -54441,12 +54480,18 @@ export namespace Raw {
   }
   export class PhotoSize23 extends TLObject {
     type!: string;
-    location!: TypeFileLocation;
+    location!: Raw.TypeFileLocation;
     w!: int;
     h!: int;
     size!: int;
 
-    constructor(params: { type: string; location: TypeFileLocation; w: int; h: int; size: int }) {
+    constructor(params: {
+      type: string;
+      location: Raw.TypeFileLocation;
+      w: int;
+      h: int;
+      size: int;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'PhotoSize23';
@@ -54501,14 +54546,14 @@ export namespace Raw {
   }
   export class PhotoCachedSize23 extends TLObject {
     type!: string;
-    location!: TypeFileLocation;
+    location!: Raw.TypeFileLocation;
     w!: int;
     h!: int;
     bytes!: bytes;
 
     constructor(params: {
       type: string;
-      location: TypeFileLocation;
+      location: Raw.TypeFileLocation;
       w: int;
       h: int;
       bytes: bytes;
@@ -54688,9 +54733,9 @@ export namespace Raw {
     date!: int;
     mimeType!: string;
     size!: int;
-    thumb!: TypePhotoSize;
+    thumb!: Raw.TypePhotoSize;
     dcId!: int;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
 
     constructor(params: {
       id: long;
@@ -54698,9 +54743,9 @@ export namespace Raw {
       date: int;
       mimeType: string;
       size: int;
-      thumb: TypePhotoSize;
+      thumb: Raw.TypePhotoSize;
       dcId: int;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
     }) {
       super();
       this.classType = 'types';
@@ -54785,8 +54830,8 @@ export namespace Raw {
     randomId!: long;
     ttl!: int;
     message!: string;
-    media?: TypeDecryptedMessageMedia;
-    entities?: Vector<TypeMessageEntity>;
+    media?: Raw.TypeDecryptedMessageMedia;
+    entities?: Vector<Raw.TypeMessageEntity>;
     viaBotName?: string;
     replyToRandomId?: long;
 
@@ -54794,8 +54839,8 @@ export namespace Raw {
       randomId: long;
       ttl: int;
       message: string;
-      media?: TypeDecryptedMessageMedia;
-      entities?: Vector<TypeMessageEntity>;
+      media?: Raw.TypeDecryptedMessageMedia;
+      entities?: Vector<Raw.TypeMessageEntity>;
       viaBotName?: string;
       replyToRandomId?: long;
     }) {
@@ -55130,7 +55175,7 @@ export namespace Raw {
     size!: int;
     key!: bytes;
     iv!: bytes;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
     caption!: string;
 
     constructor(params: {
@@ -55141,7 +55186,7 @@ export namespace Raw {
       size: int;
       key: bytes;
       iv: bytes;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
       caption: string;
     }) {
       super();
@@ -55241,9 +55286,9 @@ export namespace Raw {
   }
   export class DocumentAttributeSticker45 extends TLObject {
     alt!: string;
-    stickerset!: TypeInputStickerSet;
+    stickerset!: Raw.TypeInputStickerSet;
 
-    constructor(params: { alt: string; stickerset: TypeInputStickerSet }) {
+    constructor(params: { alt: string; stickerset: Raw.TypeInputStickerSet }) {
       super();
       this.classType = 'types';
       this.className = 'DocumentAttributeSticker45';
@@ -55552,8 +55597,8 @@ export namespace Raw {
     randomId!: long;
     ttl!: int;
     message!: string;
-    media?: TypeDecryptedMessageMedia;
-    entities?: Vector<TypeMessageEntity>;
+    media?: Raw.TypeDecryptedMessageMedia;
+    entities?: Vector<Raw.TypeMessageEntity>;
     viaBotName?: string;
     replyToRandomId?: long;
     groupedId?: long;
@@ -55564,8 +55609,8 @@ export namespace Raw {
       randomId: long;
       ttl: int;
       message: string;
-      media?: TypeDecryptedMessageMedia;
-      entities?: Vector<TypeMessageEntity>;
+      media?: Raw.TypeDecryptedMessageMedia;
+      entities?: Vector<Raw.TypeMessageEntity>;
       viaBotName?: string;
       replyToRandomId?: long;
       groupedId?: long;
@@ -55683,7 +55728,7 @@ export namespace Raw {
     size!: long;
     key!: bytes;
     iv!: bytes;
-    attributes!: Vector<TypeDocumentAttribute>;
+    attributes!: Vector<Raw.TypeDocumentAttribute>;
     caption!: string;
 
     constructor(params: {
@@ -55694,7 +55739,7 @@ export namespace Raw {
       size: long;
       key: bytes;
       iv: bytes;
-      attributes: Vector<TypeDocumentAttribute>;
+      attributes: Vector<Raw.TypeDocumentAttribute>;
       caption: string;
     }) {
       super();
@@ -55814,9 +55859,9 @@ export namespace Raw {
     export class ConfigSimple extends TLObject {
       date!: int;
       expires!: int;
-      rules!: Vector<TypeAccessPointRule>;
+      rules!: Vector<Raw.TypeAccessPointRule>;
 
-      constructor(params: { date: int; expires: int; rules: Vector<TypeAccessPointRule> }) {
+      constructor(params: { date: int; expires: int; rules: Vector<Raw.TypeAccessPointRule> }) {
         super();
         this.classType = 'types';
         this.className = 'help.ConfigSimple';
@@ -55864,20 +55909,20 @@ export namespace Raw {
       id!: int;
       version!: string;
       text!: string;
-      entities!: Vector<TypeMessageEntity>;
-      document?: TypeDocument;
+      entities!: Vector<Raw.TypeMessageEntity>;
+      document?: Raw.TypeDocument;
       url?: string;
-      sticker?: TypeDocument;
+      sticker?: Raw.TypeDocument;
 
       constructor(params: {
         canNotSkip?: boolean;
         id: int;
         version: string;
         text: string;
-        entities: Vector<TypeMessageEntity>;
-        document?: TypeDocument;
+        entities: Vector<Raw.TypeMessageEntity>;
+        document?: Raw.TypeDocument;
         url?: string;
-        sticker?: TypeDocument;
+        sticker?: Raw.TypeDocument;
       }) {
         super();
         this.classType = 'types';
@@ -56037,9 +56082,9 @@ export namespace Raw {
     }
     export class Support extends TLObject {
       phoneNumber!: string;
-      user!: TypeUser;
+      user!: Raw.TypeUser;
 
-      constructor(params: { phoneNumber: string; user: TypeUser }) {
+      constructor(params: { phoneNumber: string; user: Raw.TypeUser }) {
         super();
         this.classType = 'types';
         this.className = 'help.Support';
@@ -56079,16 +56124,16 @@ export namespace Raw {
     }
     export class TermsOfService extends TLObject {
       popup?: boolean;
-      id!: TypeDataJSON;
+      id!: Raw.TypeDataJSON;
       text!: string;
-      entities!: Vector<TypeMessageEntity>;
+      entities!: Vector<Raw.TypeMessageEntity>;
       minAgeConfirm?: int;
 
       constructor(params: {
         popup?: boolean;
-        id: TypeDataJSON;
+        id: Raw.TypeDataJSON;
         text: string;
-        entities: Vector<TypeMessageEntity>;
+        entities: Vector<Raw.TypeMessageEntity>;
         minAgeConfirm?: int;
       }) {
         super();
@@ -56154,14 +56199,14 @@ export namespace Raw {
       }
     }
     export class RecentMeUrls extends TLObject {
-      urls!: Vector<TypeRecentMeUrl>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      urls!: Vector<Raw.TypeRecentMeUrl>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        urls: Vector<TypeRecentMeUrl>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        urls: Vector<Raw.TypeRecentMeUrl>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -56246,9 +56291,9 @@ export namespace Raw {
     }
     export class TermsOfServiceUpdate extends TLObject {
       expires!: int;
-      termsOfService!: help.TypeTermsOfService;
+      termsOfService!: Raw.help.TypeTermsOfService;
 
-      constructor(params: { expires: int; termsOfService: help.TypeTermsOfService }) {
+      constructor(params: { expires: int; termsOfService: Raw.help.TypeTermsOfService }) {
         super();
         this.classType = 'types';
         this.className = 'help.TermsOfServiceUpdate';
@@ -56321,12 +56366,12 @@ export namespace Raw {
     export class DeepLinkInfo extends TLObject {
       updateApp?: boolean;
       message!: string;
-      entities?: Vector<TypeMessageEntity>;
+      entities?: Vector<Raw.TypeMessageEntity>;
 
       constructor(params: {
         updateApp?: boolean;
         message: string;
-        entities?: Vector<TypeMessageEntity>;
+        entities?: Vector<Raw.TypeMessageEntity>;
       }) {
         super();
         this.classType = 'types';
@@ -56412,9 +56457,9 @@ export namespace Raw {
     }
     export class PassportConfig extends TLObject {
       hash!: int;
-      countriesLangs!: TypeDataJSON;
+      countriesLangs!: Raw.TypeDataJSON;
 
-      constructor(params: { hash: int; countriesLangs: TypeDataJSON }) {
+      constructor(params: { hash: int; countriesLangs: Raw.TypeDataJSON }) {
         super();
         this.classType = 'types';
         this.className = 'help.PassportConfig';
@@ -56519,13 +56564,13 @@ export namespace Raw {
     }
     export class UserInfo extends TLObject {
       message!: string;
-      entities!: Vector<TypeMessageEntity>;
+      entities!: Vector<Raw.TypeMessageEntity>;
       author!: string;
       date!: int;
 
       constructor(params: {
         message: string;
-        entities: Vector<TypeMessageEntity>;
+        entities: Vector<Raw.TypeMessageEntity>;
         author: string;
         date: int;
       }) {
@@ -56620,18 +56665,18 @@ export namespace Raw {
     export class PromoData extends TLObject {
       proxy?: boolean;
       expires!: int;
-      peer!: TypePeer;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      peer!: Raw.TypePeer;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
       psaType?: string;
       psaMessage?: string;
 
       constructor(params: {
         proxy?: boolean;
         expires: int;
-        peer: TypePeer;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        peer: Raw.TypePeer;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
         psaType?: string;
         psaMessage?: string;
       }) {
@@ -56778,14 +56823,14 @@ export namespace Raw {
       iso2!: string;
       defaultName!: string;
       name?: string;
-      countryCodes!: Vector<help.TypeCountryCode>;
+      countryCodes!: Vector<Raw.help.TypeCountryCode>;
 
       constructor(params: {
         hidden?: boolean;
         iso2: string;
         defaultName: string;
         name?: string;
-        countryCodes: Vector<help.TypeCountryCode>;
+        countryCodes: Vector<Raw.help.TypeCountryCode>;
       }) {
         super();
         this.classType = 'types';
@@ -56882,10 +56927,10 @@ export namespace Raw {
       }
     }
     export class CountriesList extends TLObject {
-      countries!: Vector<help.TypeCountry>;
+      countries!: Vector<Raw.help.TypeCountry>;
       hash!: int;
 
-      constructor(params: { countries: Vector<help.TypeCountry>; hash: int }) {
+      constructor(params: { countries: Vector<Raw.help.TypeCountry>; hash: int }) {
         super();
         this.classType = 'types';
         this.className = 'help.CountriesList';
@@ -56925,19 +56970,19 @@ export namespace Raw {
     }
     export class PremiumPromo extends TLObject {
       statusText!: string;
-      statusEntities!: Vector<TypeMessageEntity>;
+      statusEntities!: Vector<Raw.TypeMessageEntity>;
       videoSections!: Vector<string>;
-      videos!: Vector<TypeDocument>;
-      periodOptions!: Vector<TypePremiumSubscriptionOption>;
-      users!: Vector<TypeUser>;
+      videos!: Vector<Raw.TypeDocument>;
+      periodOptions!: Vector<Raw.TypePremiumSubscriptionOption>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         statusText: string;
-        statusEntities: Vector<TypeMessageEntity>;
+        statusEntities: Vector<Raw.TypeMessageEntity>;
         videoSections: Vector<string>;
-        videos: Vector<TypeDocument>;
-        periodOptions: Vector<TypePremiumSubscriptionOption>;
-        users: Vector<TypeUser>;
+        videos: Vector<Raw.TypeDocument>;
+        periodOptions: Vector<Raw.TypePremiumSubscriptionOption>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -57043,9 +57088,9 @@ export namespace Raw {
     }
     export class AppConfig extends TLObject {
       hash!: int;
-      config!: TypeJSONValue;
+      config!: Raw.TypeJSONValue;
 
-      constructor(params: { hash: int; config: TypeJSONValue }) {
+      constructor(params: { hash: int; config: Raw.TypeJSONValue }) {
         super();
         this.classType = 'types';
         this.className = 'help.AppConfig';
@@ -57084,7 +57129,7 @@ export namespace Raw {
       }
     }
     export class GetConfig extends TLObject {
-      __response__!: TypeConfig;
+      __response__!: Raw.TypeConfig;
 
       constructor() {
         super();
@@ -57115,7 +57160,7 @@ export namespace Raw {
       }
     }
     export class GetNearestDc extends TLObject {
-      __response__!: TypeNearestDc;
+      __response__!: Raw.TypeNearestDc;
 
       constructor() {
         super();
@@ -57146,7 +57191,7 @@ export namespace Raw {
       }
     }
     export class GetAppUpdate extends TLObject {
-      __response__!: help.TypeAppUpdate;
+      __response__!: Raw.help.TypeAppUpdate;
       source!: string;
 
       constructor(params: { source: string }) {
@@ -57183,7 +57228,7 @@ export namespace Raw {
       }
     }
     export class GetInviteText extends TLObject {
-      __response__!: help.TypeInviteText;
+      __response__!: Raw.help.TypeInviteText;
 
       constructor() {
         super();
@@ -57214,7 +57259,7 @@ export namespace Raw {
       }
     }
     export class GetSupport extends TLObject {
-      __response__!: help.TypeSupport;
+      __response__!: Raw.help.TypeSupport;
 
       constructor() {
         super();
@@ -57245,7 +57290,7 @@ export namespace Raw {
       }
     }
     export class GetAppChangelog extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       prevAppVersion!: string;
 
       constructor(params: { prevAppVersion: string }) {
@@ -57328,7 +57373,7 @@ export namespace Raw {
       }
     }
     export class GetCdnConfig extends TLObject {
-      __response__!: TypeCdnConfig;
+      __response__!: Raw.TypeCdnConfig;
 
       constructor() {
         super();
@@ -57359,7 +57404,7 @@ export namespace Raw {
       }
     }
     export class GetRecentMeUrls extends TLObject {
-      __response__!: help.TypeRecentMeUrls;
+      __response__!: Raw.help.TypeRecentMeUrls;
       referer!: string;
 
       constructor(params: { referer: string }) {
@@ -57396,7 +57441,7 @@ export namespace Raw {
       }
     }
     export class GetTermsOfServiceUpdate extends TLObject {
-      __response__!: help.TypeTermsOfServiceUpdate;
+      __response__!: Raw.help.TypeTermsOfServiceUpdate;
 
       constructor() {
         super();
@@ -57431,9 +57476,9 @@ export namespace Raw {
     }
     export class AcceptTermsOfService extends TLObject {
       __response__!: Bool;
-      id!: TypeDataJSON;
+      id!: Raw.TypeDataJSON;
 
-      constructor(params: { id: TypeDataJSON }) {
+      constructor(params: { id: Raw.TypeDataJSON }) {
         super();
         this.classType = 'functions';
         this.className = 'help.AcceptTermsOfService';
@@ -57467,7 +57512,7 @@ export namespace Raw {
       }
     }
     export class GetDeepLinkInfo extends TLObject {
-      __response__!: help.TypeDeepLinkInfo;
+      __response__!: Raw.help.TypeDeepLinkInfo;
       path!: string;
 
       constructor(params: { path: string }) {
@@ -57504,7 +57549,7 @@ export namespace Raw {
       }
     }
     export class GetAppConfig extends TLObject {
-      __response__!: help.TypeAppConfig;
+      __response__!: Raw.help.TypeAppConfig;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -57542,9 +57587,9 @@ export namespace Raw {
     }
     export class SaveAppLog extends TLObject {
       __response__!: Bool;
-      events!: Vector<TypeInputAppEvent>;
+      events!: Vector<Raw.TypeInputAppEvent>;
 
-      constructor(params: { events: Vector<TypeInputAppEvent> }) {
+      constructor(params: { events: Vector<Raw.TypeInputAppEvent> }) {
         super();
         this.classType = 'functions';
         this.className = 'help.SaveAppLog';
@@ -57578,7 +57623,7 @@ export namespace Raw {
       }
     }
     export class GetPassportConfig extends TLObject {
-      __response__!: help.TypePassportConfig;
+      __response__!: Raw.help.TypePassportConfig;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -57615,7 +57660,7 @@ export namespace Raw {
       }
     }
     export class GetSupportName extends TLObject {
-      __response__!: help.TypeSupportName;
+      __response__!: Raw.help.TypeSupportName;
 
       constructor() {
         super();
@@ -57646,10 +57691,10 @@ export namespace Raw {
       }
     }
     export class GetUserInfo extends TLObject {
-      __response__!: help.TypeUserInfo;
-      userId!: TypeInputUser;
+      __response__!: Raw.help.TypeUserInfo;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { userId: TypeInputUser }) {
+      constructor(params: { userId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'help.GetUserInfo';
@@ -57683,15 +57728,15 @@ export namespace Raw {
       }
     }
     export class EditUserInfo extends TLObject {
-      __response__!: help.TypeUserInfo;
-      userId!: TypeInputUser;
+      __response__!: Raw.help.TypeUserInfo;
+      userId!: Raw.TypeInputUser;
       message!: string;
-      entities!: Vector<TypeMessageEntity>;
+      entities!: Vector<Raw.TypeMessageEntity>;
 
       constructor(params: {
-        userId: TypeInputUser;
+        userId: Raw.TypeInputUser;
         message: string;
-        entities: Vector<TypeMessageEntity>;
+        entities: Vector<Raw.TypeMessageEntity>;
       }) {
         super();
         this.classType = 'functions';
@@ -57736,7 +57781,7 @@ export namespace Raw {
       }
     }
     export class GetPromoData extends TLObject {
-      __response__!: help.TypePromoData;
+      __response__!: Raw.help.TypePromoData;
 
       constructor() {
         super();
@@ -57768,9 +57813,9 @@ export namespace Raw {
     }
     export class HidePromoData extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'help.HidePromoData';
@@ -57805,10 +57850,10 @@ export namespace Raw {
     }
     export class DismissSuggestion extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       suggestion!: string;
 
-      constructor(params: { peer: TypeInputPeer; suggestion: string }) {
+      constructor(params: { peer: Raw.TypeInputPeer; suggestion: string }) {
         super();
         this.classType = 'functions';
         this.className = 'help.DismissSuggestion';
@@ -57847,7 +57892,7 @@ export namespace Raw {
       }
     }
     export class GetCountriesList extends TLObject {
-      __response__!: help.TypeCountriesList;
+      __response__!: Raw.help.TypeCountriesList;
       langCode!: string;
       hash!: int;
 
@@ -57890,7 +57935,7 @@ export namespace Raw {
       }
     }
     export class GetPremiumPromo extends TLObject {
-      __response__!: help.TypePremiumPromo;
+      __response__!: Raw.help.TypePremiumPromo;
 
       constructor() {
         super();
@@ -58251,15 +58296,15 @@ export namespace Raw {
       | Raw.auth.SentCodeTypeFragmentSms
       | Raw.auth.SentCodeTypeFirebaseSms;
     export class SentCode extends TLObject {
-      type!: auth.TypeSentCodeType;
+      type!: Raw.auth.TypeSentCodeType;
       phoneCodeHash!: string;
-      nextType?: auth.TypeCodeType;
+      nextType?: Raw.auth.TypeCodeType;
       timeout?: int;
 
       constructor(params: {
-        type: auth.TypeSentCodeType;
+        type: Raw.auth.TypeSentCodeType;
         phoneCodeHash: string;
-        nextType?: auth.TypeCodeType;
+        nextType?: Raw.auth.TypeCodeType;
         timeout?: int;
       }) {
         super();
@@ -58322,9 +58367,9 @@ export namespace Raw {
       }
     }
     export class SentCodeSuccess extends TLObject {
-      authorization!: auth.TypeAuthorization;
+      authorization!: Raw.auth.TypeAuthorization;
 
-      constructor(params: { authorization: auth.TypeAuthorization }) {
+      constructor(params: { authorization: Raw.auth.TypeAuthorization }) {
         super();
         this.classType = 'types';
         this.className = 'auth.SentCodeSuccess';
@@ -58362,14 +58407,14 @@ export namespace Raw {
       otherwiseReloginDays?: int;
       tmpSessions?: int;
       futureAuthToken?: bytes;
-      user!: TypeUser;
+      user!: Raw.TypeUser;
 
       constructor(params: {
         setupPasswordRequired?: boolean;
         otherwiseReloginDays?: int;
         tmpSessions?: int;
         futureAuthToken?: bytes;
-        user: TypeUser;
+        user: Raw.TypeUser;
       }) {
         super();
         this.classType = 'types';
@@ -58442,9 +58487,9 @@ export namespace Raw {
       }
     }
     export class AuthorizationSignUpRequired extends TLObject {
-      termsOfService?: help.TypeTermsOfService;
+      termsOfService?: Raw.help.TypeTermsOfService;
 
-      constructor(params: { termsOfService?: help.TypeTermsOfService }) {
+      constructor(params: { termsOfService?: Raw.help.TypeTermsOfService }) {
         super();
         this.classType = 'types';
         this.className = 'auth.AuthorizationSignUpRequired';
@@ -59234,9 +59279,9 @@ export namespace Raw {
       }
     }
     export class LoginTokenSuccess extends TLObject {
-      authorization!: auth.TypeAuthorization;
+      authorization!: Raw.auth.TypeAuthorization;
 
-      constructor(params: { authorization: auth.TypeAuthorization }) {
+      constructor(params: { authorization: Raw.auth.TypeAuthorization }) {
         super();
         this.classType = 'types';
         this.className = 'auth.LoginTokenSuccess';
@@ -59312,17 +59357,17 @@ export namespace Raw {
       }
     }
     export class SendCode extends TLObject {
-      __response__!: auth.TypeSentCode;
+      __response__!: Raw.auth.TypeSentCode;
       phoneNumber!: string;
       apiId!: int;
       apiHash!: string;
-      settings!: TypeCodeSettings;
+      settings!: Raw.TypeCodeSettings;
 
       constructor(params: {
         phoneNumber: string;
         apiId: int;
         apiHash: string;
-        settings: TypeCodeSettings;
+        settings: Raw.TypeCodeSettings;
       }) {
         super();
         this.classType = 'functions';
@@ -59377,7 +59422,7 @@ export namespace Raw {
       }
     }
     export class SignUp extends TLObject {
-      __response__!: auth.TypeAuthorization;
+      __response__!: Raw.auth.TypeAuthorization;
       phoneNumber!: string;
       phoneCodeHash!: string;
       firstName!: string;
@@ -59442,17 +59487,17 @@ export namespace Raw {
       }
     }
     export class SignIn extends TLObject {
-      __response__!: auth.TypeAuthorization;
+      __response__!: Raw.auth.TypeAuthorization;
       phoneNumber!: string;
       phoneCodeHash!: string;
       phoneCode?: string;
-      emailVerification?: TypeEmailVerification;
+      emailVerification?: Raw.TypeEmailVerification;
 
       constructor(params: {
         phoneNumber: string;
         phoneCodeHash: string;
         phoneCode?: string;
-        emailVerification?: TypeEmailVerification;
+        emailVerification?: Raw.TypeEmailVerification;
       }) {
         super();
         this.classType = 'functions';
@@ -59514,7 +59559,7 @@ export namespace Raw {
       }
     }
     export class LogOut extends TLObject {
-      __response__!: auth.TypeLoggedOut;
+      __response__!: Raw.auth.TypeLoggedOut;
 
       constructor() {
         super();
@@ -59576,7 +59621,7 @@ export namespace Raw {
       }
     }
     export class ExportAuthorization extends TLObject {
-      __response__!: auth.TypeExportedAuthorization;
+      __response__!: Raw.auth.TypeExportedAuthorization;
       dcId!: int;
 
       constructor(params: { dcId: int }) {
@@ -59613,7 +59658,7 @@ export namespace Raw {
       }
     }
     export class ImportAuthorization extends TLObject {
-      __response__!: auth.TypeAuthorization;
+      __response__!: Raw.auth.TypeAuthorization;
       id!: long;
       bytes!: bytes;
 
@@ -59721,7 +59766,7 @@ export namespace Raw {
       }
     }
     export class ImportBotAuthorization extends TLObject {
-      __response__!: auth.TypeAuthorization;
+      __response__!: Raw.auth.TypeAuthorization;
       flags!: int;
       apiId!: int;
       apiHash!: string;
@@ -59781,10 +59826,10 @@ export namespace Raw {
       }
     }
     export class CheckPassword extends TLObject {
-      __response__!: auth.TypeAuthorization;
-      password!: TypeInputCheckPasswordSRP;
+      __response__!: Raw.auth.TypeAuthorization;
+      password!: Raw.TypeInputCheckPasswordSRP;
 
-      constructor(params: { password: TypeInputCheckPasswordSRP }) {
+      constructor(params: { password: Raw.TypeInputCheckPasswordSRP }) {
         super();
         this.classType = 'functions';
         this.className = 'auth.CheckPassword';
@@ -59818,7 +59863,7 @@ export namespace Raw {
       }
     }
     export class RequestPasswordRecovery extends TLObject {
-      __response__!: auth.TypePasswordRecovery;
+      __response__!: Raw.auth.TypePasswordRecovery;
 
       constructor() {
         super();
@@ -59852,11 +59897,11 @@ export namespace Raw {
       }
     }
     export class RecoverPassword extends TLObject {
-      __response__!: auth.TypeAuthorization;
+      __response__!: Raw.auth.TypeAuthorization;
       code!: string;
-      newSettings?: account.TypePasswordInputSettings;
+      newSettings?: Raw.account.TypePasswordInputSettings;
 
-      constructor(params: { code: string; newSettings?: account.TypePasswordInputSettings }) {
+      constructor(params: { code: string; newSettings?: Raw.account.TypePasswordInputSettings }) {
         super();
         this.classType = 'functions';
         this.className = 'auth.RecoverPassword';
@@ -59901,7 +59946,7 @@ export namespace Raw {
       }
     }
     export class ResendCode extends TLObject {
-      __response__!: auth.TypeSentCode;
+      __response__!: Raw.auth.TypeSentCode;
       phoneNumber!: string;
       phoneCodeHash!: string;
 
@@ -60024,7 +60069,7 @@ export namespace Raw {
       }
     }
     export class ExportLoginToken extends TLObject {
-      __response__!: auth.TypeLoginToken;
+      __response__!: Raw.auth.TypeLoginToken;
       apiId!: int;
       apiHash!: string;
       exceptIds!: Vector<long>;
@@ -60077,7 +60122,7 @@ export namespace Raw {
       }
     }
     export class ImportLoginToken extends TLObject {
-      __response__!: auth.TypeLoginToken;
+      __response__!: Raw.auth.TypeLoginToken;
       token!: bytes;
 
       constructor(params: { token: bytes }) {
@@ -60114,7 +60159,7 @@ export namespace Raw {
       }
     }
     export class AcceptLoginToken extends TLObject {
-      __response__!: TypeAuthorization;
+      __response__!: Raw.TypeAuthorization;
       token!: bytes;
 
       constructor(params: { token: bytes }) {
@@ -60188,7 +60233,7 @@ export namespace Raw {
       }
     }
     export class ImportWebTokenAuthorization extends TLObject {
-      __response__!: auth.TypeAuthorization;
+      __response__!: Raw.auth.TypeAuthorization;
       apiId!: int;
       apiHash!: string;
       webAuthToken!: string;
@@ -60316,7 +60361,7 @@ export namespace Raw {
       }
     }
     export class ResetLoginEmail extends TLObject {
-      __response__!: auth.TypeSentCode;
+      __response__!: Raw.auth.TypeSentCode;
       phoneNumber!: string;
       phoneCodeHash!: string;
 
@@ -60405,14 +60450,14 @@ export namespace Raw {
       }
     }
     export class Contacts extends TLObject {
-      contacts!: Vector<TypeContact>;
+      contacts!: Vector<Raw.TypeContact>;
       savedCount!: int;
-      users!: Vector<TypeUser>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        contacts: Vector<TypeContact>;
+        contacts: Vector<Raw.TypeContact>;
         savedCount: int;
-        users: Vector<TypeUser>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -60461,16 +60506,16 @@ export namespace Raw {
       }
     }
     export class ImportedContacts extends TLObject {
-      imported!: Vector<TypeImportedContact>;
-      popularInvites!: Vector<TypePopularContact>;
+      imported!: Vector<Raw.TypeImportedContact>;
+      popularInvites!: Vector<Raw.TypePopularContact>;
       retryContacts!: Vector<long>;
-      users!: Vector<TypeUser>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        imported: Vector<TypeImportedContact>;
-        popularInvites: Vector<TypePopularContact>;
+        imported: Vector<Raw.TypeImportedContact>;
+        popularInvites: Vector<Raw.TypePopularContact>;
         retryContacts: Vector<long>;
-        users: Vector<TypeUser>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -60525,14 +60570,14 @@ export namespace Raw {
       }
     }
     export class Blocked extends TLObject {
-      blocked!: Vector<TypePeerBlocked>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      blocked!: Vector<Raw.TypePeerBlocked>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        blocked: Vector<TypePeerBlocked>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        blocked: Vector<Raw.TypePeerBlocked>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -60578,15 +60623,15 @@ export namespace Raw {
     }
     export class BlockedSlice extends TLObject {
       count!: int;
-      blocked!: Vector<TypePeerBlocked>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      blocked!: Vector<Raw.TypePeerBlocked>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         count: int;
-        blocked: Vector<TypePeerBlocked>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        blocked: Vector<Raw.TypePeerBlocked>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -60641,16 +60686,16 @@ export namespace Raw {
       }
     }
     export class Found extends TLObject {
-      myResults!: Vector<TypePeer>;
-      results!: Vector<TypePeer>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      myResults!: Vector<Raw.TypePeer>;
+      results!: Vector<Raw.TypePeer>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        myResults: Vector<TypePeer>;
-        results: Vector<TypePeer>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        myResults: Vector<Raw.TypePeer>;
+        results: Vector<Raw.TypePeer>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -60705,11 +60750,15 @@ export namespace Raw {
       }
     }
     export class ResolvedPeer extends TLObject {
-      peer!: TypePeer;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      peer!: Raw.TypePeer;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { peer: TypePeer; chats: Vector<TypeChat>; users: Vector<TypeUser> }) {
+      constructor(params: {
+        peer: Raw.TypePeer;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'contacts.ResolvedPeer';
@@ -60785,14 +60834,14 @@ export namespace Raw {
       }
     }
     export class TopPeers extends TLObject {
-      categories!: Vector<TypeTopPeerCategoryPeers>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      categories!: Vector<Raw.TypeTopPeerCategoryPeers>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        categories: Vector<TypeTopPeerCategoryPeers>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        categories: Vector<Raw.TypeTopPeerCategoryPeers>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -60903,7 +60952,7 @@ export namespace Raw {
       }
     }
     export class GetStatuses extends TLObject {
-      __response__!: Vector<TypeContactStatus>;
+      __response__!: Vector<Raw.TypeContactStatus>;
 
       constructor() {
         super();
@@ -60934,7 +60983,7 @@ export namespace Raw {
       }
     }
     export class GetContacts extends TLObject {
-      __response__!: contacts.TypeContacts;
+      __response__!: Raw.contacts.TypeContacts;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -60971,10 +61020,10 @@ export namespace Raw {
       }
     }
     export class ImportContacts extends TLObject {
-      __response__!: contacts.TypeImportedContacts;
-      contacts!: Vector<TypeInputContact>;
+      __response__!: Raw.contacts.TypeImportedContacts;
+      contacts!: Vector<Raw.TypeInputContact>;
 
-      constructor(params: { contacts: Vector<TypeInputContact> }) {
+      constructor(params: { contacts: Vector<Raw.TypeInputContact> }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.ImportContacts';
@@ -61008,10 +61057,10 @@ export namespace Raw {
       }
     }
     export class DeleteContacts extends TLObject {
-      __response__!: TypeUpdates;
-      id!: Vector<TypeInputUser>;
+      __response__!: Raw.TypeUpdates;
+      id!: Vector<Raw.TypeInputUser>;
 
-      constructor(params: { id: Vector<TypeInputUser> }) {
+      constructor(params: { id: Vector<Raw.TypeInputUser> }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.DeleteContacts';
@@ -61083,9 +61132,9 @@ export namespace Raw {
     }
     export class Block extends TLObject {
       __response__!: Bool;
-      id!: TypeInputPeer;
+      id!: Raw.TypeInputPeer;
 
-      constructor(params: { id: TypeInputPeer }) {
+      constructor(params: { id: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.Block';
@@ -61120,9 +61169,9 @@ export namespace Raw {
     }
     export class Unblock extends TLObject {
       __response__!: Bool;
-      id!: TypeInputPeer;
+      id!: Raw.TypeInputPeer;
 
-      constructor(params: { id: TypeInputPeer }) {
+      constructor(params: { id: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.Unblock';
@@ -61156,7 +61205,7 @@ export namespace Raw {
       }
     }
     export class GetBlocked extends TLObject {
-      __response__!: contacts.TypeBlocked;
+      __response__!: Raw.contacts.TypeBlocked;
       offset!: int;
       limit!: int;
 
@@ -61199,7 +61248,7 @@ export namespace Raw {
       }
     }
     export class Search extends TLObject {
-      __response__!: contacts.TypeFound;
+      __response__!: Raw.contacts.TypeFound;
       q!: string;
       limit!: int;
 
@@ -61242,7 +61291,7 @@ export namespace Raw {
       }
     }
     export class ResolveUsername extends TLObject {
-      __response__!: contacts.TypeResolvedPeer;
+      __response__!: Raw.contacts.TypeResolvedPeer;
       username!: string;
 
       constructor(params: { username: string }) {
@@ -61279,7 +61328,7 @@ export namespace Raw {
       }
     }
     export class GetTopPeers extends TLObject {
-      __response__!: contacts.TypeTopPeers;
+      __response__!: Raw.contacts.TypeTopPeers;
       correspondents?: boolean;
       botsPm?: boolean;
       botsInline?: boolean;
@@ -61402,10 +61451,10 @@ export namespace Raw {
     }
     export class ResetTopPeerRating extends TLObject {
       __response__!: Bool;
-      category!: TypeTopPeerCategory;
-      peer!: TypeInputPeer;
+      category!: Raw.TypeTopPeerCategory;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { category: TypeTopPeerCategory; peer: TypeInputPeer }) {
+      constructor(params: { category: Raw.TypeTopPeerCategory; peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.ResetTopPeerRating';
@@ -61475,7 +61524,7 @@ export namespace Raw {
       }
     }
     export class GetSaved extends TLObject {
-      __response__!: Vector<TypeSavedContact>;
+      __response__!: Vector<Raw.TypeSavedContact>;
 
       constructor() {
         super();
@@ -61543,16 +61592,16 @@ export namespace Raw {
       }
     }
     export class AddContact extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       addPhonePrivacyException?: boolean;
-      id!: TypeInputUser;
+      id!: Raw.TypeInputUser;
       firstName!: string;
       lastName!: string;
       phone!: string;
 
       constructor(params: {
         addPhonePrivacyException?: boolean;
-        id: TypeInputUser;
+        id: Raw.TypeInputUser;
         firstName: string;
         lastName: string;
         phone: string;
@@ -61619,10 +61668,10 @@ export namespace Raw {
       }
     }
     export class AcceptContact extends TLObject {
-      __response__!: TypeUpdates;
-      id!: TypeInputUser;
+      __response__!: Raw.TypeUpdates;
+      id!: Raw.TypeInputUser;
 
-      constructor(params: { id: TypeInputUser }) {
+      constructor(params: { id: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.AcceptContact';
@@ -61656,14 +61705,14 @@ export namespace Raw {
       }
     }
     export class GetLocated extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       background?: boolean;
-      geoPoint!: TypeInputGeoPoint;
+      geoPoint!: Raw.TypeInputGeoPoint;
       selfExpires?: int;
 
       constructor(params: {
         background?: boolean;
-        geoPoint: TypeInputGeoPoint;
+        geoPoint: Raw.TypeInputGeoPoint;
         selfExpires?: int;
       }) {
         super();
@@ -61717,7 +61766,7 @@ export namespace Raw {
       }
     }
     export class BlockFromReplies extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       deleteMessage?: boolean;
       deleteHistory?: boolean;
       reportSpam?: boolean;
@@ -61781,7 +61830,7 @@ export namespace Raw {
       }
     }
     export class ResolvePhone extends TLObject {
-      __response__!: contacts.TypeResolvedPeer;
+      __response__!: Raw.contacts.TypeResolvedPeer;
       phone!: string;
 
       constructor(params: { phone: string }) {
@@ -61818,7 +61867,7 @@ export namespace Raw {
       }
     }
     export class ExportContactToken extends TLObject {
-      __response__!: TypeExportedContactToken;
+      __response__!: Raw.TypeExportedContactToken;
 
       constructor() {
         super();
@@ -61849,7 +61898,7 @@ export namespace Raw {
       }
     }
     export class ImportContactToken extends TLObject {
-      __response__!: TypeUser;
+      __response__!: Raw.TypeUser;
       token!: string;
 
       constructor(params: { token: string }) {
@@ -61924,10 +61973,10 @@ export namespace Raw {
     }
     export class ToggleStoriesHidden extends TLObject {
       __response__!: Bool;
-      id!: TypeInputUser;
+      id!: Raw.TypeInputUser;
       hidden!: Bool;
 
-      constructor(params: { id: TypeInputUser; hidden: Bool }) {
+      constructor(params: { id: Raw.TypeInputUser; hidden: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'contacts.ToggleStoriesHidden';
@@ -62044,16 +62093,16 @@ export namespace Raw {
       | Raw.messages.MessagesNotModified;
     export type TypeStickerSet = Raw.messages.StickerSet | Raw.messages.StickerSetNotModified;
     export class Dialogs extends TLObject {
-      dialogs!: Vector<TypeDialog>;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      dialogs!: Vector<Raw.TypeDialog>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        dialogs: Vector<TypeDialog>;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        dialogs: Vector<Raw.TypeDialog>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -62109,17 +62158,17 @@ export namespace Raw {
     }
     export class DialogsSlice extends TLObject {
       count!: int;
-      dialogs!: Vector<TypeDialog>;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      dialogs!: Vector<Raw.TypeDialog>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         count: int;
-        dialogs: Vector<TypeDialog>;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        dialogs: Vector<Raw.TypeDialog>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -62216,14 +62265,14 @@ export namespace Raw {
       }
     }
     export class Messages extends TLObject {
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -62272,18 +62321,18 @@ export namespace Raw {
       count!: int;
       nextRate?: int;
       offsetIdOffset?: int;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         inexact?: boolean;
         count: int;
         nextRate?: int;
         offsetIdOffset?: int;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -62373,20 +62422,20 @@ export namespace Raw {
       pts!: int;
       count!: int;
       offsetIdOffset?: int;
-      messages!: Vector<TypeMessage>;
-      topics!: Vector<TypeForumTopic>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      messages!: Vector<Raw.TypeMessage>;
+      topics!: Vector<Raw.TypeForumTopic>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         inexact?: boolean;
         pts: int;
         count: int;
         offsetIdOffset?: int;
-        messages: Vector<TypeMessage>;
-        topics: Vector<TypeForumTopic>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        messages: Vector<Raw.TypeMessage>;
+        topics: Vector<Raw.TypeForumTopic>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -62517,9 +62566,9 @@ export namespace Raw {
       }
     }
     export class Chats extends TLObject {
-      chats!: Vector<TypeChat>;
+      chats!: Vector<Raw.TypeChat>;
 
-      constructor(params: { chats: Vector<TypeChat> }) {
+      constructor(params: { chats: Vector<Raw.TypeChat> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.Chats';
@@ -62554,9 +62603,9 @@ export namespace Raw {
     }
     export class ChatsSlice extends TLObject {
       count!: int;
-      chats!: Vector<TypeChat>;
+      chats!: Vector<Raw.TypeChat>;
 
-      constructor(params: { count: int; chats: Vector<TypeChat> }) {
+      constructor(params: { count: int; chats: Vector<Raw.TypeChat> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.ChatsSlice';
@@ -62595,14 +62644,14 @@ export namespace Raw {
       }
     }
     export class ChatFull extends TLObject {
-      fullChat!: TypeChatFull;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      fullChat!: Raw.TypeChatFull;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        fullChat: TypeChatFull;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        fullChat: Raw.TypeChatFull;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -62828,9 +62877,9 @@ export namespace Raw {
     }
     export class SentEncryptedFile extends TLObject {
       date!: int;
-      file!: TypeEncryptedFile;
+      file!: Raw.TypeEncryptedFile;
 
-      constructor(params: { date: int; file: TypeEncryptedFile }) {
+      constructor(params: { date: int; file: Raw.TypeEncryptedFile }) {
         super();
         this.classType = 'types';
         this.className = 'messages.SentEncryptedFile';
@@ -62902,9 +62951,9 @@ export namespace Raw {
     }
     export class Stickers extends TLObject {
       hash!: long;
-      stickers!: Vector<TypeDocument>;
+      stickers!: Vector<Raw.TypeDocument>;
 
-      constructor(params: { hash: long; stickers: Vector<TypeDocument> }) {
+      constructor(params: { hash: long; stickers: Vector<Raw.TypeDocument> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.Stickers';
@@ -62976,9 +63025,9 @@ export namespace Raw {
     }
     export class AllStickers extends TLObject {
       hash!: long;
-      sets!: Vector<TypeStickerSet>;
+      sets!: Vector<Raw.TypeStickerSet>;
 
-      constructor(params: { hash: long; sets: Vector<TypeStickerSet> }) {
+      constructor(params: { hash: long; sets: Vector<Raw.TypeStickerSet> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.AllStickers';
@@ -63059,16 +63108,16 @@ export namespace Raw {
       }
     }
     export class StickerSet extends TLObject {
-      set!: TypeStickerSet;
-      packs!: Vector<TypeStickerPack>;
-      keywords!: Vector<TypeStickerKeyword>;
-      documents!: Vector<TypeDocument>;
+      set!: Raw.TypeStickerSet;
+      packs!: Vector<Raw.TypeStickerPack>;
+      keywords!: Vector<Raw.TypeStickerKeyword>;
+      documents!: Vector<Raw.TypeDocument>;
 
       constructor(params: {
-        set: TypeStickerSet;
-        packs: Vector<TypeStickerPack>;
-        keywords: Vector<TypeStickerKeyword>;
-        documents: Vector<TypeDocument>;
+        set: Raw.TypeStickerSet;
+        packs: Vector<Raw.TypeStickerPack>;
+        keywords: Vector<Raw.TypeStickerKeyword>;
+        documents: Vector<Raw.TypeDocument>;
       }) {
         super();
         this.classType = 'types';
@@ -63188,9 +63237,9 @@ export namespace Raw {
     }
     export class SavedGifs extends TLObject {
       hash!: long;
-      gifs!: Vector<TypeDocument>;
+      gifs!: Vector<Raw.TypeDocument>;
 
-      constructor(params: { hash: long; gifs: Vector<TypeDocument> }) {
+      constructor(params: { hash: long; gifs: Vector<Raw.TypeDocument> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.SavedGifs';
@@ -63232,21 +63281,21 @@ export namespace Raw {
       gallery?: boolean;
       queryId!: long;
       nextOffset?: string;
-      switchPm?: TypeInlineBotSwitchPM;
-      switchWebview?: TypeInlineBotWebView;
-      results!: Vector<TypeBotInlineResult>;
+      switchPm?: Raw.TypeInlineBotSwitchPM;
+      switchWebview?: Raw.TypeInlineBotWebView;
+      results!: Vector<Raw.TypeBotInlineResult>;
       cacheTime!: int;
-      users!: Vector<TypeUser>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         gallery?: boolean;
         queryId: long;
         nextOffset?: string;
-        switchPm?: TypeInlineBotSwitchPM;
-        switchWebview?: TypeInlineBotWebView;
-        results: Vector<TypeBotInlineResult>;
+        switchPm?: Raw.TypeInlineBotSwitchPM;
+        switchWebview?: Raw.TypeInlineBotWebView;
+        results: Vector<Raw.TypeBotInlineResult>;
         cacheTime: int;
-        users: Vector<TypeUser>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -63460,18 +63509,18 @@ export namespace Raw {
       }
     }
     export class PeerDialogs extends TLObject {
-      dialogs!: Vector<TypeDialog>;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
-      state!: updates.TypeState;
+      dialogs!: Vector<Raw.TypeDialog>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+      state!: Raw.updates.TypeState;
 
       constructor(params: {
-        dialogs: Vector<TypeDialog>;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
-        state: updates.TypeState;
+        dialogs: Vector<Raw.TypeDialog>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+        state: Raw.updates.TypeState;
       }) {
         super();
         this.classType = 'types';
@@ -63574,14 +63623,14 @@ export namespace Raw {
       premium?: boolean;
       hash!: long;
       count!: int;
-      sets!: Vector<TypeStickerSetCovered>;
+      sets!: Vector<Raw.TypeStickerSetCovered>;
       unread!: Vector<long>;
 
       constructor(params: {
         premium?: boolean;
         hash: long;
         count: int;
-        sets: Vector<TypeStickerSetCovered>;
+        sets: Vector<Raw.TypeStickerSetCovered>;
         unread: Vector<long>;
       }) {
         super();
@@ -63679,14 +63728,14 @@ export namespace Raw {
     }
     export class RecentStickers extends TLObject {
       hash!: long;
-      packs!: Vector<TypeStickerPack>;
-      stickers!: Vector<TypeDocument>;
+      packs!: Vector<Raw.TypeStickerPack>;
+      stickers!: Vector<Raw.TypeDocument>;
       dates!: Vector<int>;
 
       constructor(params: {
         hash: long;
-        packs: Vector<TypeStickerPack>;
-        stickers: Vector<TypeDocument>;
+        packs: Vector<Raw.TypeStickerPack>;
+        stickers: Vector<Raw.TypeDocument>;
         dates: Vector<int>;
       }) {
         super();
@@ -63743,9 +63792,9 @@ export namespace Raw {
     }
     export class ArchivedStickers extends TLObject {
       count!: int;
-      sets!: Vector<TypeStickerSetCovered>;
+      sets!: Vector<Raw.TypeStickerSetCovered>;
 
-      constructor(params: { count: int; sets: Vector<TypeStickerSetCovered> }) {
+      constructor(params: { count: int; sets: Vector<Raw.TypeStickerSetCovered> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.ArchivedStickers';
@@ -63816,9 +63865,9 @@ export namespace Raw {
       }
     }
     export class StickerSetInstallResultArchive extends TLObject {
-      sets!: Vector<TypeStickerSetCovered>;
+      sets!: Vector<Raw.TypeStickerSetCovered>;
 
-      constructor(params: { sets: Vector<TypeStickerSetCovered> }) {
+      constructor(params: { sets: Vector<Raw.TypeStickerSetCovered> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.StickerSetInstallResultArchive';
@@ -63855,10 +63904,10 @@ export namespace Raw {
       }
     }
     export class HighScores extends TLObject {
-      scores!: Vector<TypeHighScore>;
-      users!: Vector<TypeUser>;
+      scores!: Vector<Raw.TypeHighScore>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { scores: Vector<TypeHighScore>; users: Vector<TypeUser> }) {
+      constructor(params: { scores: Vector<Raw.TypeHighScore>; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.HighScores';
@@ -63930,13 +63979,13 @@ export namespace Raw {
     }
     export class FavedStickers extends TLObject {
       hash!: long;
-      packs!: Vector<TypeStickerPack>;
-      stickers!: Vector<TypeDocument>;
+      packs!: Vector<Raw.TypeStickerPack>;
+      stickers!: Vector<Raw.TypeDocument>;
 
       constructor(params: {
         hash: long;
-        packs: Vector<TypeStickerPack>;
-        stickers: Vector<TypeDocument>;
+        packs: Vector<Raw.TypeStickerPack>;
+        stickers: Vector<Raw.TypeDocument>;
       }) {
         super();
         this.classType = 'types';
@@ -64014,9 +64063,9 @@ export namespace Raw {
     }
     export class FoundStickerSets extends TLObject {
       hash!: long;
-      sets!: Vector<TypeStickerSetCovered>;
+      sets!: Vector<Raw.TypeStickerSetCovered>;
 
-      constructor(params: { hash: long; sets: Vector<TypeStickerSetCovered> }) {
+      constructor(params: { hash: long; sets: Vector<Raw.TypeStickerSetCovered> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.FoundStickerSets';
@@ -64056,10 +64105,10 @@ export namespace Raw {
     }
     export class SearchCounter extends TLObject {
       inexact?: boolean;
-      filter!: TypeMessagesFilter;
+      filter!: Raw.TypeMessagesFilter;
       count!: int;
 
-      constructor(params: { inexact?: boolean; filter: TypeMessagesFilter; count: int }) {
+      constructor(params: { inexact?: boolean; filter: Raw.TypeMessagesFilter; count: int }) {
         super();
         this.classType = 'types';
         this.className = 'messages.SearchCounter';
@@ -64107,13 +64156,13 @@ export namespace Raw {
     }
     export class InactiveChats extends TLObject {
       dates!: Vector<int>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         dates: Vector<int>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64159,16 +64208,16 @@ export namespace Raw {
     }
     export class VotesList extends TLObject {
       count!: int;
-      votes!: Vector<TypeMessagePeerVote>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      votes!: Vector<Raw.TypeMessagePeerVote>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
       nextOffset?: string;
 
       constructor(params: {
         count: int;
-        votes: Vector<TypeMessagePeerVote>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        votes: Vector<Raw.TypeMessagePeerVote>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
         nextOffset?: string;
       }) {
         super();
@@ -64236,14 +64285,14 @@ export namespace Raw {
       }
     }
     export class MessageViews extends TLObject {
-      views!: Vector<TypeMessageViews>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      views!: Vector<Raw.TypeMessageViews>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        views: Vector<TypeMessageViews>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        views: Vector<Raw.TypeMessageViews>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64288,22 +64337,22 @@ export namespace Raw {
       }
     }
     export class DiscussionMessage extends TLObject {
-      messages!: Vector<TypeMessage>;
+      messages!: Vector<Raw.TypeMessage>;
       maxId?: int;
       readInboxMaxId?: int;
       readOutboxMaxId?: int;
       unreadCount!: int;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        messages: Vector<TypeMessage>;
+        messages: Vector<Raw.TypeMessage>;
         maxId?: int;
         readInboxMaxId?: int;
         readOutboxMaxId?: int;
         unreadCount: int;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64544,13 +64593,13 @@ export namespace Raw {
     }
     export class ExportedChatInvites extends TLObject {
       count!: int;
-      invites!: Vector<TypeExportedChatInvite>;
-      users!: Vector<TypeUser>;
+      invites!: Vector<Raw.TypeExportedChatInvite>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         count: int;
-        invites: Vector<TypeExportedChatInvite>;
-        users: Vector<TypeUser>;
+        invites: Vector<Raw.TypeExportedChatInvite>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64602,10 +64651,10 @@ export namespace Raw {
       }
     }
     export class ExportedChatInvite extends TLObject {
-      invite!: TypeExportedChatInvite;
-      users!: Vector<TypeUser>;
+      invite!: Raw.TypeExportedChatInvite;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { invite: TypeExportedChatInvite; users: Vector<TypeUser> }) {
+      constructor(params: { invite: Raw.TypeExportedChatInvite; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.ExportedChatInvite';
@@ -64644,14 +64693,14 @@ export namespace Raw {
       }
     }
     export class ExportedChatInviteReplaced extends TLObject {
-      invite!: TypeExportedChatInvite;
-      newInvite!: TypeExportedChatInvite;
-      users!: Vector<TypeUser>;
+      invite!: Raw.TypeExportedChatInvite;
+      newInvite!: Raw.TypeExportedChatInvite;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        invite: TypeExportedChatInvite;
-        newInvite: TypeExportedChatInvite;
-        users: Vector<TypeUser>;
+        invite: Raw.TypeExportedChatInvite;
+        newInvite: Raw.TypeExportedChatInvite;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64704,13 +64753,13 @@ export namespace Raw {
     }
     export class ChatInviteImporters extends TLObject {
       count!: int;
-      importers!: Vector<TypeChatInviteImporter>;
-      users!: Vector<TypeUser>;
+      importers!: Vector<Raw.TypeChatInviteImporter>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         count: int;
-        importers: Vector<TypeChatInviteImporter>;
-        users: Vector<TypeUser>;
+        importers: Vector<Raw.TypeChatInviteImporter>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64762,10 +64811,13 @@ export namespace Raw {
       }
     }
     export class ChatAdminsWithInvites extends TLObject {
-      admins!: Vector<TypeChatAdminWithInvites>;
-      users!: Vector<TypeUser>;
+      admins!: Vector<Raw.TypeChatAdminWithInvites>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { admins: Vector<TypeChatAdminWithInvites>; users: Vector<TypeUser> }) {
+      constructor(params: {
+        admins: Vector<Raw.TypeChatAdminWithInvites>;
+        users: Vector<Raw.TypeUser>;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'messages.ChatAdminsWithInvites';
@@ -64847,15 +64899,15 @@ export namespace Raw {
     }
     export class SponsoredMessages extends TLObject {
       postsBetween?: int;
-      messages!: Vector<TypeSponsoredMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      messages!: Vector<Raw.TypeSponsoredMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         postsBetween?: int;
-        messages: Vector<TypeSponsoredMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        messages: Vector<Raw.TypeSponsoredMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -64953,10 +65005,10 @@ export namespace Raw {
       minDate!: int;
       minMsgId!: int;
       offsetIdOffset?: int;
-      periods!: Vector<TypeSearchResultsCalendarPeriod>;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      periods!: Vector<Raw.TypeSearchResultsCalendarPeriod>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         inexact?: boolean;
@@ -64964,10 +65016,10 @@ export namespace Raw {
         minDate: int;
         minMsgId: int;
         offsetIdOffset?: int;
-        periods: Vector<TypeSearchResultsCalendarPeriod>;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        periods: Vector<Raw.TypeSearchResultsCalendarPeriod>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -65070,9 +65122,9 @@ export namespace Raw {
     }
     export class SearchResultsPositions extends TLObject {
       count!: int;
-      positions!: Vector<TypeSearchResultsPosition>;
+      positions!: Vector<Raw.TypeSearchResultsPosition>;
 
-      constructor(params: { count: int; positions: Vector<TypeSearchResultsPosition> }) {
+      constructor(params: { count: int; positions: Vector<Raw.TypeSearchResultsPosition> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.SearchResultsPositions';
@@ -65114,14 +65166,14 @@ export namespace Raw {
       }
     }
     export class PeerSettings extends TLObject {
-      settings!: TypePeerSettings;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      settings!: Raw.TypePeerSettings;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        settings: TypePeerSettings;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        settings: Raw.TypePeerSettings;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -65167,16 +65219,16 @@ export namespace Raw {
     }
     export class MessageReactionsList extends TLObject {
       count!: int;
-      reactions!: Vector<TypeMessagePeerReaction>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      reactions!: Vector<Raw.TypeMessagePeerReaction>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
       nextOffset?: string;
 
       constructor(params: {
         count: int;
-        reactions: Vector<TypeMessagePeerReaction>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        reactions: Vector<Raw.TypeMessagePeerReaction>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
         nextOffset?: string;
       }) {
         super();
@@ -65280,9 +65332,9 @@ export namespace Raw {
     }
     export class AvailableReactions extends TLObject {
       hash!: int;
-      reactions!: Vector<TypeAvailableReaction>;
+      reactions!: Vector<Raw.TypeAvailableReaction>;
 
-      constructor(params: { hash: int; reactions: Vector<TypeAvailableReaction> }) {
+      constructor(params: { hash: int; reactions: Vector<Raw.TypeAvailableReaction> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.AvailableReactions';
@@ -65409,9 +65461,9 @@ export namespace Raw {
     }
     export class Reactions extends TLObject {
       hash!: long;
-      reactions!: Vector<TypeReaction>;
+      reactions!: Vector<Raw.TypeReaction>;
 
-      constructor(params: { hash: long; reactions: Vector<TypeReaction> }) {
+      constructor(params: { hash: long; reactions: Vector<Raw.TypeReaction> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.Reactions';
@@ -65452,19 +65504,19 @@ export namespace Raw {
     export class ForumTopics extends TLObject {
       orderByCreateDate?: boolean;
       count!: int;
-      topics!: Vector<TypeForumTopic>;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      topics!: Vector<Raw.TypeForumTopic>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
       pts!: int;
 
       constructor(params: {
         orderByCreateDate?: boolean;
         count: int;
-        topics: Vector<TypeForumTopic>;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        topics: Vector<Raw.TypeForumTopic>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
         pts: int;
       }) {
         super();
@@ -65574,9 +65626,9 @@ export namespace Raw {
     }
     export class EmojiGroups extends TLObject {
       hash!: int;
-      groups!: Vector<TypeEmojiGroup>;
+      groups!: Vector<Raw.TypeEmojiGroup>;
 
-      constructor(params: { hash: int; groups: Vector<TypeEmojiGroup> }) {
+      constructor(params: { hash: int; groups: Vector<Raw.TypeEmojiGroup> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.EmojiGroups';
@@ -65615,9 +65667,9 @@ export namespace Raw {
       }
     }
     export class TranslateResult extends TLObject {
-      result!: Vector<TypeTextWithEntities>;
+      result!: Vector<Raw.TypeTextWithEntities>;
 
-      constructor(params: { result: Vector<TypeTextWithEntities> }) {
+      constructor(params: { result: Vector<Raw.TypeTextWithEntities> }) {
         super();
         this.classType = 'types';
         this.className = 'messages.TranslateResult';
@@ -65653,9 +65705,13 @@ export namespace Raw {
     export class BotApp extends TLObject {
       inactive?: boolean;
       requestWriteAccess?: boolean;
-      app!: TypeBotApp;
+      app!: Raw.TypeBotApp;
 
-      constructor(params: { inactive?: boolean; requestWriteAccess?: boolean; app: TypeBotApp }) {
+      constructor(params: {
+        inactive?: boolean;
+        requestWriteAccess?: boolean;
+        app: Raw.TypeBotApp;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'messages.BotApp';
@@ -65704,10 +65760,10 @@ export namespace Raw {
       }
     }
     export class GetMessages extends TLObject {
-      __response__!: messages.TypeMessages;
-      id!: Vector<TypeInputMessage>;
+      __response__!: Raw.messages.TypeMessages;
+      id!: Vector<Raw.TypeInputMessage>;
 
-      constructor(params: { id: Vector<TypeInputMessage> }) {
+      constructor(params: { id: Vector<Raw.TypeInputMessage> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetMessages';
@@ -65741,12 +65797,12 @@ export namespace Raw {
       }
     }
     export class GetDialogs extends TLObject {
-      __response__!: messages.TypeDialogs;
+      __response__!: Raw.messages.TypeDialogs;
       excludePinned?: boolean;
       folderId?: int;
       offsetDate!: int;
       offsetId!: int;
-      offsetPeer!: TypeInputPeer;
+      offsetPeer!: Raw.TypeInputPeer;
       limit!: int;
       hash!: long;
 
@@ -65755,7 +65811,7 @@ export namespace Raw {
         folderId?: int;
         offsetDate: int;
         offsetId: int;
-        offsetPeer: TypeInputPeer;
+        offsetPeer: Raw.TypeInputPeer;
         limit: int;
         hash: long;
       }) {
@@ -65842,8 +65898,8 @@ export namespace Raw {
       }
     }
     export class GetHistory extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       offsetId!: int;
       offsetDate!: int;
       addOffset!: int;
@@ -65853,7 +65909,7 @@ export namespace Raw {
       hash!: long;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         offsetId: int;
         offsetDate: int;
         addOffset: int;
@@ -65948,12 +66004,12 @@ export namespace Raw {
       }
     }
     export class Search extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       q!: string;
-      fromId?: TypeInputPeer;
+      fromId?: Raw.TypeInputPeer;
       topMsgId?: int;
-      filter!: TypeMessagesFilter;
+      filter!: Raw.TypeMessagesFilter;
       minDate!: int;
       maxDate!: int;
       offsetId!: int;
@@ -65964,11 +66020,11 @@ export namespace Raw {
       hash!: long;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         q: string;
-        fromId?: TypeInputPeer;
+        fromId?: Raw.TypeInputPeer;
         topMsgId?: int;
-        filter: TypeMessagesFilter;
+        filter: Raw.TypeMessagesFilter;
         minDate: int;
         maxDate: int;
         offsetId: int;
@@ -66106,11 +66162,11 @@ export namespace Raw {
       }
     }
     export class ReadHistory extends TLObject {
-      __response__!: messages.TypeAffectedMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeAffectedMessages;
+      peer!: Raw.TypeInputPeer;
       maxId!: int;
 
-      constructor(params: { peer: TypeInputPeer; maxId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; maxId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReadHistory';
@@ -66149,10 +66205,10 @@ export namespace Raw {
       }
     }
     export class DeleteHistory extends TLObject {
-      __response__!: messages.TypeAffectedHistory;
+      __response__!: Raw.messages.TypeAffectedHistory;
       justClear?: boolean;
       revoke?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       maxId!: int;
       minDate?: int;
       maxDate?: int;
@@ -66160,7 +66216,7 @@ export namespace Raw {
       constructor(params: {
         justClear?: boolean;
         revoke?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         maxId: int;
         minDate?: int;
         maxDate?: int;
@@ -66233,7 +66289,7 @@ export namespace Raw {
       }
     }
     export class DeleteMessages extends TLObject {
-      __response__!: messages.TypeAffectedMessages;
+      __response__!: Raw.messages.TypeAffectedMessages;
       revoke?: boolean;
       id!: Vector<int>;
 
@@ -66279,7 +66335,7 @@ export namespace Raw {
       }
     }
     export class ReceivedMessages extends TLObject {
-      __response__!: Vector<TypeReceivedNotifyMessage>;
+      __response__!: Vector<Raw.TypeReceivedNotifyMessage>;
       maxId!: int;
 
       constructor(params: { maxId: int }) {
@@ -66317,11 +66373,15 @@ export namespace Raw {
     }
     export class SetTyping extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
-      action!: TypeSendMessageAction;
+      action!: Raw.TypeSendMessageAction;
 
-      constructor(params: { peer: TypeInputPeer; topMsgId?: int; action: TypeSendMessageAction }) {
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        topMsgId?: int;
+        action: Raw.TypeSendMessageAction;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetTyping';
@@ -66371,21 +66431,21 @@ export namespace Raw {
       }
     }
     export class SendMessage extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       noWebpage?: boolean;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
-      peer!: TypeInputPeer;
-      replyTo?: TypeInputReplyTo;
+      peer!: Raw.TypeInputPeer;
+      replyTo?: Raw.TypeInputReplyTo;
       message!: string;
       randomId!: long;
-      replyMarkup?: TypeReplyMarkup;
-      entities?: Vector<TypeMessageEntity>;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
       scheduleDate?: int;
-      sendAs?: TypeInputPeer;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         noWebpage?: boolean;
@@ -66394,14 +66454,14 @@ export namespace Raw {
         clearDraft?: boolean;
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
-        peer: TypeInputPeer;
-        replyTo?: TypeInputReplyTo;
+        peer: Raw.TypeInputPeer;
+        replyTo?: Raw.TypeInputReplyTo;
         message: string;
         randomId: long;
-        replyMarkup?: TypeReplyMarkup;
-        entities?: Vector<TypeMessageEntity>;
+        replyMarkup?: Raw.TypeReplyMarkup;
+        entities?: Vector<Raw.TypeMessageEntity>;
         scheduleDate?: int;
-        sendAs?: TypeInputPeer;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -66529,21 +66589,21 @@ export namespace Raw {
       }
     }
     export class SendMedia extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
-      peer!: TypeInputPeer;
-      replyTo?: TypeInputReplyTo;
-      media!: TypeInputMedia;
+      peer!: Raw.TypeInputPeer;
+      replyTo?: Raw.TypeInputReplyTo;
+      media!: Raw.TypeInputMedia;
       message!: string;
       randomId!: long;
-      replyMarkup?: TypeReplyMarkup;
-      entities?: Vector<TypeMessageEntity>;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
       scheduleDate?: int;
-      sendAs?: TypeInputPeer;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         silent?: boolean;
@@ -66551,15 +66611,15 @@ export namespace Raw {
         clearDraft?: boolean;
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
-        peer: TypeInputPeer;
-        replyTo?: TypeInputReplyTo;
-        media: TypeInputMedia;
+        peer: Raw.TypeInputPeer;
+        replyTo?: Raw.TypeInputReplyTo;
+        media: Raw.TypeInputMedia;
         message: string;
         randomId: long;
-        replyMarkup?: TypeReplyMarkup;
-        entities?: Vector<TypeMessageEntity>;
+        replyMarkup?: Raw.TypeReplyMarkup;
+        entities?: Vector<Raw.TypeMessageEntity>;
         scheduleDate?: int;
-        sendAs?: TypeInputPeer;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -66689,20 +66749,20 @@ export namespace Raw {
       }
     }
     export class ForwardMessages extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       silent?: boolean;
       background?: boolean;
       withMyScore?: boolean;
       dropAuthor?: boolean;
       dropMediaCaptions?: boolean;
       noforwards?: boolean;
-      fromPeer!: TypeInputPeer;
+      fromPeer!: Raw.TypeInputPeer;
       id!: Vector<int>;
       randomId!: Vector<long>;
-      toPeer!: TypeInputPeer;
+      toPeer!: Raw.TypeInputPeer;
       topMsgId?: int;
       scheduleDate?: int;
-      sendAs?: TypeInputPeer;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         silent?: boolean;
@@ -66711,13 +66771,13 @@ export namespace Raw {
         dropAuthor?: boolean;
         dropMediaCaptions?: boolean;
         noforwards?: boolean;
-        fromPeer: TypeInputPeer;
+        fromPeer: Raw.TypeInputPeer;
         id: Vector<int>;
         randomId: Vector<long>;
-        toPeer: TypeInputPeer;
+        toPeer: Raw.TypeInputPeer;
         topMsgId?: int;
         scheduleDate?: int;
-        sendAs?: TypeInputPeer;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -66837,9 +66897,9 @@ export namespace Raw {
     }
     export class ReportSpam extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReportSpam';
@@ -66873,10 +66933,10 @@ export namespace Raw {
       }
     }
     export class GetPeerSettings extends TLObject {
-      __response__!: messages.TypePeerSettings;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypePeerSettings;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetPeerSettings';
@@ -66911,15 +66971,15 @@ export namespace Raw {
     }
     export class Report extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
-      reason!: TypeReportReason;
+      reason!: Raw.TypeReportReason;
       message!: string;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         id: Vector<int>;
-        reason: TypeReportReason;
+        reason: Raw.TypeReportReason;
         message: string;
       }) {
         super();
@@ -66970,7 +67030,7 @@ export namespace Raw {
       }
     }
     export class GetChats extends TLObject {
-      __response__!: messages.TypeChats;
+      __response__!: Raw.messages.TypeChats;
       id!: Vector<long>;
 
       constructor(params: { id: Vector<long> }) {
@@ -67007,7 +67067,7 @@ export namespace Raw {
       }
     }
     export class GetFullChat extends TLObject {
-      __response__!: messages.TypeChatFull;
+      __response__!: Raw.messages.TypeChatFull;
       chatId!: long;
 
       constructor(params: { chatId: long }) {
@@ -67044,7 +67104,7 @@ export namespace Raw {
       }
     }
     export class EditChatTitle extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       chatId!: long;
       title!: string;
 
@@ -67087,11 +67147,11 @@ export namespace Raw {
       }
     }
     export class EditChatPhoto extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       chatId!: long;
-      photo!: TypeInputChatPhoto;
+      photo!: Raw.TypeInputChatPhoto;
 
-      constructor(params: { chatId: long; photo: TypeInputChatPhoto }) {
+      constructor(params: { chatId: long; photo: Raw.TypeInputChatPhoto }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.EditChatPhoto';
@@ -67130,12 +67190,12 @@ export namespace Raw {
       }
     }
     export class AddChatUser extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       chatId!: long;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       fwdLimit!: int;
 
-      constructor(params: { chatId: long; userId: TypeInputUser; fwdLimit: int }) {
+      constructor(params: { chatId: long; userId: Raw.TypeInputUser; fwdLimit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.AddChatUser';
@@ -67179,12 +67239,12 @@ export namespace Raw {
       }
     }
     export class DeleteChatUser extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       revokeHistory?: boolean;
       chatId!: long;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { revokeHistory?: boolean; chatId: long; userId: TypeInputUser }) {
+      constructor(params: { revokeHistory?: boolean; chatId: long; userId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.DeleteChatUser';
@@ -67235,12 +67295,12 @@ export namespace Raw {
       }
     }
     export class CreateChat extends TLObject {
-      __response__!: TypeUpdates;
-      users!: Vector<TypeInputUser>;
+      __response__!: Raw.TypeUpdates;
+      users!: Vector<Raw.TypeInputUser>;
       title!: string;
       ttlPeriod?: int;
 
-      constructor(params: { users: Vector<TypeInputUser>; title: string; ttlPeriod?: int }) {
+      constructor(params: { users: Vector<Raw.TypeInputUser>; title: string; ttlPeriod?: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.CreateChat';
@@ -67290,7 +67350,7 @@ export namespace Raw {
       }
     }
     export class GetDhConfig extends TLObject {
-      __response__!: messages.TypeDhConfig;
+      __response__!: Raw.messages.TypeDhConfig;
       version!: int;
       randomLength!: int;
 
@@ -67333,12 +67393,12 @@ export namespace Raw {
       }
     }
     export class RequestEncryption extends TLObject {
-      __response__!: TypeEncryptedChat;
-      userId!: TypeInputUser;
+      __response__!: Raw.TypeEncryptedChat;
+      userId!: Raw.TypeInputUser;
       randomId!: int;
       gA!: bytes;
 
-      constructor(params: { userId: TypeInputUser; randomId: int; gA: bytes }) {
+      constructor(params: { userId: Raw.TypeInputUser; randomId: int; gA: bytes }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.RequestEncryption';
@@ -67382,12 +67442,12 @@ export namespace Raw {
       }
     }
     export class AcceptEncryption extends TLObject {
-      __response__!: TypeEncryptedChat;
-      peer!: TypeInputEncryptedChat;
+      __response__!: Raw.TypeEncryptedChat;
+      peer!: Raw.TypeInputEncryptedChat;
       gB!: bytes;
       keyFingerprint!: long;
 
-      constructor(params: { peer: TypeInputEncryptedChat; gB: bytes; keyFingerprint: long }) {
+      constructor(params: { peer: Raw.TypeInputEncryptedChat; gB: bytes; keyFingerprint: long }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.AcceptEncryption';
@@ -67482,10 +67542,10 @@ export namespace Raw {
     }
     export class SetEncryptedTyping extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputEncryptedChat;
+      peer!: Raw.TypeInputEncryptedChat;
       typing!: Bool;
 
-      constructor(params: { peer: TypeInputEncryptedChat; typing: Bool }) {
+      constructor(params: { peer: Raw.TypeInputEncryptedChat; typing: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetEncryptedTyping';
@@ -67525,10 +67585,10 @@ export namespace Raw {
     }
     export class ReadEncryptedHistory extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputEncryptedChat;
+      peer!: Raw.TypeInputEncryptedChat;
       maxDate!: int;
 
-      constructor(params: { peer: TypeInputEncryptedChat; maxDate: int }) {
+      constructor(params: { peer: Raw.TypeInputEncryptedChat; maxDate: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReadEncryptedHistory';
@@ -67570,15 +67630,15 @@ export namespace Raw {
       }
     }
     export class SendEncrypted extends TLObject {
-      __response__!: messages.TypeSentEncryptedMessage;
+      __response__!: Raw.messages.TypeSentEncryptedMessage;
       silent?: boolean;
-      peer!: TypeInputEncryptedChat;
+      peer!: Raw.TypeInputEncryptedChat;
       randomId!: long;
       data!: bytes;
 
       constructor(params: {
         silent?: boolean;
-        peer: TypeInputEncryptedChat;
+        peer: Raw.TypeInputEncryptedChat;
         randomId: long;
         data: bytes;
       }) {
@@ -67638,19 +67698,19 @@ export namespace Raw {
       }
     }
     export class SendEncryptedFile extends TLObject {
-      __response__!: messages.TypeSentEncryptedMessage;
+      __response__!: Raw.messages.TypeSentEncryptedMessage;
       silent?: boolean;
-      peer!: TypeInputEncryptedChat;
+      peer!: Raw.TypeInputEncryptedChat;
       randomId!: long;
       data!: bytes;
-      file!: TypeInputEncryptedFile;
+      file!: Raw.TypeInputEncryptedFile;
 
       constructor(params: {
         silent?: boolean;
-        peer: TypeInputEncryptedChat;
+        peer: Raw.TypeInputEncryptedChat;
         randomId: long;
         data: bytes;
-        file: TypeInputEncryptedFile;
+        file: Raw.TypeInputEncryptedFile;
       }) {
         super();
         this.classType = 'functions';
@@ -67714,12 +67774,12 @@ export namespace Raw {
       }
     }
     export class SendEncryptedService extends TLObject {
-      __response__!: messages.TypeSentEncryptedMessage;
-      peer!: TypeInputEncryptedChat;
+      __response__!: Raw.messages.TypeSentEncryptedMessage;
+      peer!: Raw.TypeInputEncryptedChat;
       randomId!: long;
       data!: bytes;
 
-      constructor(params: { peer: TypeInputEncryptedChat; randomId: long; data: bytes }) {
+      constructor(params: { peer: Raw.TypeInputEncryptedChat; randomId: long; data: bytes }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendEncryptedService';
@@ -67808,9 +67868,9 @@ export namespace Raw {
     }
     export class ReportEncryptedSpam extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputEncryptedChat;
+      peer!: Raw.TypeInputEncryptedChat;
 
-      constructor(params: { peer: TypeInputEncryptedChat }) {
+      constructor(params: { peer: Raw.TypeInputEncryptedChat }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReportEncryptedSpam';
@@ -67847,7 +67907,7 @@ export namespace Raw {
       }
     }
     export class ReadMessageContents extends TLObject {
-      __response__!: messages.TypeAffectedMessages;
+      __response__!: Raw.messages.TypeAffectedMessages;
       id!: Vector<int>;
 
       constructor(params: { id: Vector<int> }) {
@@ -67887,7 +67947,7 @@ export namespace Raw {
       }
     }
     export class GetStickers extends TLObject {
-      __response__!: messages.TypeStickers;
+      __response__!: Raw.messages.TypeStickers;
       emoticon!: string;
       hash!: long;
 
@@ -67930,7 +67990,7 @@ export namespace Raw {
       }
     }
     export class GetAllStickers extends TLObject {
-      __response__!: messages.TypeAllStickers;
+      __response__!: Raw.messages.TypeAllStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -67967,11 +68027,11 @@ export namespace Raw {
       }
     }
     export class GetWebPagePreview extends TLObject {
-      __response__!: TypeMessageMedia;
+      __response__!: Raw.TypeMessageMedia;
       message!: string;
-      entities?: Vector<TypeMessageEntity>;
+      entities?: Vector<Raw.TypeMessageEntity>;
 
-      constructor(params: { message: string; entities?: Vector<TypeMessageEntity> }) {
+      constructor(params: { message: string; entities?: Vector<Raw.TypeMessageEntity> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetWebPagePreview';
@@ -68016,10 +68076,10 @@ export namespace Raw {
       }
     }
     export class ExportChatInvite extends TLObject {
-      __response__!: TypeExportedChatInvite;
+      __response__!: Raw.TypeExportedChatInvite;
       legacyRevokePermanent?: boolean;
       requestNeeded?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       expireDate?: int;
       usageLimit?: int;
       title?: string;
@@ -68027,7 +68087,7 @@ export namespace Raw {
       constructor(params: {
         legacyRevokePermanent?: boolean;
         requestNeeded?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         expireDate?: int;
         usageLimit?: int;
         title?: string;
@@ -68108,7 +68168,7 @@ export namespace Raw {
       }
     }
     export class CheckChatInvite extends TLObject {
-      __response__!: TypeChatInvite;
+      __response__!: Raw.TypeChatInvite;
       hash!: string;
 
       constructor(params: { hash: string }) {
@@ -68145,7 +68205,7 @@ export namespace Raw {
       }
     }
     export class ImportChatInvite extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       hash!: string;
 
       constructor(params: { hash: string }) {
@@ -68182,11 +68242,11 @@ export namespace Raw {
       }
     }
     export class GetStickerSet extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      stickerset!: TypeInputStickerSet;
+      __response__!: Raw.messages.TypeStickerSet;
+      stickerset!: Raw.TypeInputStickerSet;
       hash!: int;
 
-      constructor(params: { stickerset: TypeInputStickerSet; hash: int }) {
+      constructor(params: { stickerset: Raw.TypeInputStickerSet; hash: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetStickerSet';
@@ -68225,11 +68285,11 @@ export namespace Raw {
       }
     }
     export class InstallStickerSet extends TLObject {
-      __response__!: messages.TypeStickerSetInstallResult;
-      stickerset!: TypeInputStickerSet;
+      __response__!: Raw.messages.TypeStickerSetInstallResult;
+      stickerset!: Raw.TypeInputStickerSet;
       archived!: Bool;
 
-      constructor(params: { stickerset: TypeInputStickerSet; archived: Bool }) {
+      constructor(params: { stickerset: Raw.TypeInputStickerSet; archived: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.InstallStickerSet';
@@ -68269,9 +68329,9 @@ export namespace Raw {
     }
     export class UninstallStickerSet extends TLObject {
       __response__!: Bool;
-      stickerset!: TypeInputStickerSet;
+      stickerset!: Raw.TypeInputStickerSet;
 
-      constructor(params: { stickerset: TypeInputStickerSet }) {
+      constructor(params: { stickerset: Raw.TypeInputStickerSet }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.UninstallStickerSet';
@@ -68308,15 +68368,15 @@ export namespace Raw {
       }
     }
     export class StartBot extends TLObject {
-      __response__!: TypeUpdates;
-      bot!: TypeInputUser;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      bot!: Raw.TypeInputUser;
+      peer!: Raw.TypeInputPeer;
       randomId!: long;
       startParam!: string;
 
       constructor(params: {
-        bot: TypeInputUser;
-        peer: TypeInputPeer;
+        bot: Raw.TypeInputUser;
+        peer: Raw.TypeInputPeer;
         randomId: long;
         startParam: string;
       }) {
@@ -68373,12 +68433,12 @@ export namespace Raw {
       }
     }
     export class GetMessagesViews extends TLObject {
-      __response__!: messages.TypeMessageViews;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessageViews;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
       increment!: Bool;
 
-      constructor(params: { peer: TypeInputPeer; id: Vector<int>; increment: Bool }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int>; increment: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetMessagesViews';
@@ -68424,10 +68484,10 @@ export namespace Raw {
     export class EditChatAdmin extends TLObject {
       __response__!: Bool;
       chatId!: long;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       isAdmin!: Bool;
 
-      constructor(params: { chatId: long; userId: TypeInputUser; isAdmin: Bool }) {
+      constructor(params: { chatId: long; userId: Raw.TypeInputUser; isAdmin: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.EditChatAdmin';
@@ -68471,7 +68531,7 @@ export namespace Raw {
       }
     }
     export class MigrateChat extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       chatId!: long;
 
       constructor(params: { chatId: long }) {
@@ -68508,25 +68568,25 @@ export namespace Raw {
       }
     }
     export class SearchGlobal extends TLObject {
-      __response__!: messages.TypeMessages;
+      __response__!: Raw.messages.TypeMessages;
       folderId?: int;
       q!: string;
-      filter!: TypeMessagesFilter;
+      filter!: Raw.TypeMessagesFilter;
       minDate!: int;
       maxDate!: int;
       offsetRate!: int;
-      offsetPeer!: TypeInputPeer;
+      offsetPeer!: Raw.TypeInputPeer;
       offsetId!: int;
       limit!: int;
 
       constructor(params: {
         folderId?: int;
         q: string;
-        filter: TypeMessagesFilter;
+        filter: Raw.TypeMessagesFilter;
         minDate: int;
         maxDate: int;
         offsetRate: int;
-        offsetPeer: TypeInputPeer;
+        offsetPeer: Raw.TypeInputPeer;
         offsetId: int;
         limit: int;
       }) {
@@ -68679,7 +68739,7 @@ export namespace Raw {
       }
     }
     export class GetDocumentByHash extends TLObject {
-      __response__!: TypeDocument;
+      __response__!: Raw.TypeDocument;
       sha256!: bytes;
       size!: long;
       mimeType!: string;
@@ -68732,7 +68792,7 @@ export namespace Raw {
       }
     }
     export class GetSavedGifs extends TLObject {
-      __response__!: messages.TypeSavedGifs;
+      __response__!: Raw.messages.TypeSavedGifs;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -68770,10 +68830,10 @@ export namespace Raw {
     }
     export class SaveGif extends TLObject {
       __response__!: Bool;
-      id!: TypeInputDocument;
+      id!: Raw.TypeInputDocument;
       unsave!: Bool;
 
-      constructor(params: { id: TypeInputDocument; unsave: Bool }) {
+      constructor(params: { id: Raw.TypeInputDocument; unsave: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SaveGif';
@@ -68812,17 +68872,17 @@ export namespace Raw {
       }
     }
     export class GetInlineBotResults extends TLObject {
-      __response__!: messages.TypeBotResults;
-      bot!: TypeInputUser;
-      peer!: TypeInputPeer;
-      geoPoint?: TypeInputGeoPoint;
+      __response__!: Raw.messages.TypeBotResults;
+      bot!: Raw.TypeInputUser;
+      peer!: Raw.TypeInputPeer;
+      geoPoint?: Raw.TypeInputGeoPoint;
       query!: string;
       offset!: string;
 
       constructor(params: {
-        bot: TypeInputUser;
-        peer: TypeInputPeer;
-        geoPoint?: TypeInputGeoPoint;
+        bot: Raw.TypeInputUser;
+        peer: Raw.TypeInputPeer;
+        geoPoint?: Raw.TypeInputGeoPoint;
         query: string;
         offset: string;
       }) {
@@ -68898,21 +68958,21 @@ export namespace Raw {
       gallery?: boolean;
       private?: boolean;
       queryId!: long;
-      results!: Vector<TypeInputBotInlineResult>;
+      results!: Vector<Raw.TypeInputBotInlineResult>;
       cacheTime!: int;
       nextOffset?: string;
-      switchPm?: TypeInlineBotSwitchPM;
-      switchWebview?: TypeInlineBotWebView;
+      switchPm?: Raw.TypeInlineBotSwitchPM;
+      switchWebview?: Raw.TypeInlineBotWebView;
 
       constructor(params: {
         gallery?: boolean;
         private?: boolean;
         queryId: long;
-        results: Vector<TypeInputBotInlineResult>;
+        results: Vector<Raw.TypeInputBotInlineResult>;
         cacheTime: int;
         nextOffset?: string;
-        switchPm?: TypeInlineBotSwitchPM;
-        switchWebview?: TypeInlineBotWebView;
+        switchPm?: Raw.TypeInlineBotSwitchPM;
+        switchWebview?: Raw.TypeInlineBotWebView;
       }) {
         super();
         this.classType = 'functions';
@@ -69007,31 +69067,31 @@ export namespace Raw {
       }
     }
     export class SendInlineBotResult extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
       hideVia?: boolean;
-      peer!: TypeInputPeer;
-      replyTo?: TypeInputReplyTo;
+      peer!: Raw.TypeInputPeer;
+      replyTo?: Raw.TypeInputReplyTo;
       randomId!: long;
       queryId!: long;
       id!: string;
       scheduleDate?: int;
-      sendAs?: TypeInputPeer;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         silent?: boolean;
         background?: boolean;
         clearDraft?: boolean;
         hideVia?: boolean;
-        peer: TypeInputPeer;
-        replyTo?: TypeInputReplyTo;
+        peer: Raw.TypeInputPeer;
+        replyTo?: Raw.TypeInputReplyTo;
         randomId: long;
         queryId: long;
         id: string;
         scheduleDate?: int;
-        sendAs?: TypeInputPeer;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -69143,11 +69203,11 @@ export namespace Raw {
       }
     }
     export class GetMessageEditData extends TLObject {
-      __response__!: messages.TypeMessageEditData;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessageEditData;
+      peer!: Raw.TypeInputPeer;
       id!: int;
 
-      constructor(params: { peer: TypeInputPeer; id: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetMessageEditData';
@@ -69186,24 +69246,24 @@ export namespace Raw {
       }
     }
     export class EditMessage extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       noWebpage?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       id!: int;
       message?: string;
-      media?: TypeInputMedia;
-      replyMarkup?: TypeReplyMarkup;
-      entities?: Vector<TypeMessageEntity>;
+      media?: Raw.TypeInputMedia;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
       scheduleDate?: int;
 
       constructor(params: {
         noWebpage?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         id: int;
         message?: string;
-        media?: TypeInputMedia;
-        replyMarkup?: TypeReplyMarkup;
-        entities?: Vector<TypeMessageEntity>;
+        media?: Raw.TypeInputMedia;
+        replyMarkup?: Raw.TypeReplyMarkup;
+        entities?: Vector<Raw.TypeMessageEntity>;
         scheduleDate?: int;
       }) {
         super();
@@ -69302,19 +69362,19 @@ export namespace Raw {
     export class EditInlineBotMessage extends TLObject {
       __response__!: Bool;
       noWebpage?: boolean;
-      id!: TypeInputBotInlineMessageID;
+      id!: Raw.TypeInputBotInlineMessageID;
       message?: string;
-      media?: TypeInputMedia;
-      replyMarkup?: TypeReplyMarkup;
-      entities?: Vector<TypeMessageEntity>;
+      media?: Raw.TypeInputMedia;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      entities?: Vector<Raw.TypeMessageEntity>;
 
       constructor(params: {
         noWebpage?: boolean;
-        id: TypeInputBotInlineMessageID;
+        id: Raw.TypeInputBotInlineMessageID;
         message?: string;
-        media?: TypeInputMedia;
-        replyMarkup?: TypeReplyMarkup;
-        entities?: Vector<TypeMessageEntity>;
+        media?: Raw.TypeInputMedia;
+        replyMarkup?: Raw.TypeReplyMarkup;
+        entities?: Vector<Raw.TypeMessageEntity>;
       }) {
         super();
         this.classType = 'functions';
@@ -69391,19 +69451,19 @@ export namespace Raw {
       }
     }
     export class GetBotCallbackAnswer extends TLObject {
-      __response__!: messages.TypeBotCallbackAnswer;
+      __response__!: Raw.messages.TypeBotCallbackAnswer;
       game?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
       data?: bytes;
-      password?: TypeInputCheckPasswordSRP;
+      password?: Raw.TypeInputCheckPasswordSRP;
 
       constructor(params: {
         game?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         msgId: int;
         data?: bytes;
-        password?: TypeInputCheckPasswordSRP;
+        password?: Raw.TypeInputCheckPasswordSRP;
       }) {
         super();
         this.classType = 'functions';
@@ -69553,10 +69613,10 @@ export namespace Raw {
       }
     }
     export class GetPeerDialogs extends TLObject {
-      __response__!: messages.TypePeerDialogs;
-      peers!: Vector<TypeInputDialogPeer>;
+      __response__!: Raw.messages.TypePeerDialogs;
+      peers!: Vector<Raw.TypeInputDialogPeer>;
 
-      constructor(params: { peers: Vector<TypeInputDialogPeer> }) {
+      constructor(params: { peers: Vector<Raw.TypeInputDialogPeer> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetPeerDialogs';
@@ -69594,17 +69654,17 @@ export namespace Raw {
       noWebpage?: boolean;
       replyToMsgId?: int;
       topMsgId?: int;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       message!: string;
-      entities?: Vector<TypeMessageEntity>;
+      entities?: Vector<Raw.TypeMessageEntity>;
 
       constructor(params: {
         noWebpage?: boolean;
         replyToMsgId?: int;
         topMsgId?: int;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         message: string;
-        entities?: Vector<TypeMessageEntity>;
+        entities?: Vector<Raw.TypeMessageEntity>;
       }) {
         super();
         this.classType = 'functions';
@@ -69677,7 +69737,7 @@ export namespace Raw {
       }
     }
     export class GetAllDrafts extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
 
       constructor() {
         super();
@@ -69708,7 +69768,7 @@ export namespace Raw {
       }
     }
     export class GetFeaturedStickers extends TLObject {
-      __response__!: messages.TypeFeaturedStickers;
+      __response__!: Raw.messages.TypeFeaturedStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -69788,7 +69848,7 @@ export namespace Raw {
       }
     }
     export class GetRecentStickers extends TLObject {
-      __response__!: messages.TypeRecentStickers;
+      __response__!: Raw.messages.TypeRecentStickers;
       attached?: boolean;
       hash!: long;
 
@@ -69836,10 +69896,10 @@ export namespace Raw {
     export class SaveRecentSticker extends TLObject {
       __response__!: Bool;
       attached?: boolean;
-      id!: TypeInputDocument;
+      id!: Raw.TypeInputDocument;
       unsave!: Bool;
 
-      constructor(params: { attached?: boolean; id: TypeInputDocument; unsave: Bool }) {
+      constructor(params: { attached?: boolean; id: Raw.TypeInputDocument; unsave: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SaveRecentSticker';
@@ -69929,7 +69989,7 @@ export namespace Raw {
       }
     }
     export class GetArchivedStickers extends TLObject {
-      __response__!: messages.TypeArchivedStickers;
+      __response__!: Raw.messages.TypeArchivedStickers;
       masks?: boolean;
       emojis?: boolean;
       offsetId!: long;
@@ -69993,7 +70053,7 @@ export namespace Raw {
       }
     }
     export class GetMaskStickers extends TLObject {
-      __response__!: messages.TypeAllStickers;
+      __response__!: Raw.messages.TypeAllStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -70030,10 +70090,10 @@ export namespace Raw {
       }
     }
     export class GetAttachedStickers extends TLObject {
-      __response__!: Vector<TypeStickerSetCovered>;
-      media!: TypeInputStickeredMedia;
+      __response__!: Vector<Raw.TypeStickerSetCovered>;
+      media!: Raw.TypeInputStickeredMedia;
 
-      constructor(params: { media: TypeInputStickeredMedia }) {
+      constructor(params: { media: Raw.TypeInputStickeredMedia }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetAttachedStickers';
@@ -70070,20 +70130,20 @@ export namespace Raw {
       }
     }
     export class SetGameScore extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       editMessage?: boolean;
       force?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       id!: int;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       score!: int;
 
       constructor(params: {
         editMessage?: boolean;
         force?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         id: int;
-        userId: TypeInputUser;
+        userId: Raw.TypeInputUser;
         score: int;
       }) {
         super();
@@ -70155,15 +70215,15 @@ export namespace Raw {
       __response__!: Bool;
       editMessage?: boolean;
       force?: boolean;
-      id!: TypeInputBotInlineMessageID;
-      userId!: TypeInputUser;
+      id!: Raw.TypeInputBotInlineMessageID;
+      userId!: Raw.TypeInputUser;
       score!: int;
 
       constructor(params: {
         editMessage?: boolean;
         force?: boolean;
-        id: TypeInputBotInlineMessageID;
-        userId: TypeInputUser;
+        id: Raw.TypeInputBotInlineMessageID;
+        userId: Raw.TypeInputUser;
         score: int;
       }) {
         super();
@@ -70226,12 +70286,12 @@ export namespace Raw {
       }
     }
     export class GetGameHighScores extends TLObject {
-      __response__!: messages.TypeHighScores;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeHighScores;
+      peer!: Raw.TypeInputPeer;
       id!: int;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { peer: TypeInputPeer; id: int; userId: TypeInputUser }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: int; userId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetGameHighScores';
@@ -70275,11 +70335,11 @@ export namespace Raw {
       }
     }
     export class GetInlineGameHighScores extends TLObject {
-      __response__!: messages.TypeHighScores;
-      id!: TypeInputBotInlineMessageID;
-      userId!: TypeInputUser;
+      __response__!: Raw.messages.TypeHighScores;
+      id!: Raw.TypeInputBotInlineMessageID;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { id: TypeInputBotInlineMessageID; userId: TypeInputUser }) {
+      constructor(params: { id: Raw.TypeInputBotInlineMessageID; userId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetInlineGameHighScores';
@@ -70321,12 +70381,12 @@ export namespace Raw {
       }
     }
     export class GetCommonChats extends TLObject {
-      __response__!: messages.TypeChats;
-      userId!: TypeInputUser;
+      __response__!: Raw.messages.TypeChats;
+      userId!: Raw.TypeInputUser;
       maxId!: long;
       limit!: int;
 
-      constructor(params: { userId: TypeInputUser; maxId: long; limit: int }) {
+      constructor(params: { userId: Raw.TypeInputUser; maxId: long; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetCommonChats';
@@ -70370,7 +70430,7 @@ export namespace Raw {
       }
     }
     export class GetWebPage extends TLObject {
-      __response__!: TypeWebPage;
+      __response__!: Raw.TypeWebPage;
       url!: string;
       hash!: int;
 
@@ -70415,9 +70475,9 @@ export namespace Raw {
     export class ToggleDialogPin extends TLObject {
       __response__!: Bool;
       pinned?: boolean;
-      peer!: TypeInputDialogPeer;
+      peer!: Raw.TypeInputDialogPeer;
 
-      constructor(params: { pinned?: boolean; peer: TypeInputDialogPeer }) {
+      constructor(params: { pinned?: boolean; peer: Raw.TypeInputDialogPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ToggleDialogPin';
@@ -70462,9 +70522,13 @@ export namespace Raw {
       __response__!: Bool;
       force?: boolean;
       folderId!: int;
-      order!: Vector<TypeInputDialogPeer>;
+      order!: Vector<Raw.TypeInputDialogPeer>;
 
-      constructor(params: { force?: boolean; folderId: int; order: Vector<TypeInputDialogPeer> }) {
+      constructor(params: {
+        force?: boolean;
+        folderId: int;
+        order: Vector<Raw.TypeInputDialogPeer>;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReorderPinnedDialogs';
@@ -70518,7 +70582,7 @@ export namespace Raw {
       }
     }
     export class GetPinnedDialogs extends TLObject {
-      __response__!: messages.TypePeerDialogs;
+      __response__!: Raw.messages.TypePeerDialogs;
       folderId!: int;
 
       constructor(params: { folderId: int }) {
@@ -70558,12 +70622,12 @@ export namespace Raw {
       __response__!: Bool;
       queryId!: long;
       error?: string;
-      shippingOptions?: Vector<TypeShippingOption>;
+      shippingOptions?: Vector<Raw.TypeShippingOption>;
 
       constructor(params: {
         queryId: long;
         error?: string;
-        shippingOptions?: Vector<TypeShippingOption>;
+        shippingOptions?: Vector<Raw.TypeShippingOption>;
       }) {
         super();
         this.classType = 'functions';
@@ -70682,11 +70746,11 @@ export namespace Raw {
       }
     }
     export class UploadMedia extends TLObject {
-      __response__!: TypeMessageMedia;
-      peer!: TypeInputPeer;
-      media!: TypeInputMedia;
+      __response__!: Raw.TypeMessageMedia;
+      peer!: Raw.TypeInputPeer;
+      media!: Raw.TypeInputMedia;
 
-      constructor(params: { peer: TypeInputPeer; media: TypeInputMedia }) {
+      constructor(params: { peer: Raw.TypeInputPeer; media: Raw.TypeInputMedia }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.UploadMedia';
@@ -70725,12 +70789,16 @@ export namespace Raw {
       }
     }
     export class SendScreenshotNotification extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
-      replyTo!: TypeInputReplyTo;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      replyTo!: Raw.TypeInputReplyTo;
       randomId!: long;
 
-      constructor(params: { peer: TypeInputPeer; replyTo: TypeInputReplyTo; randomId: long }) {
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        replyTo: Raw.TypeInputReplyTo;
+        randomId: long;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendScreenshotNotification';
@@ -70781,7 +70849,7 @@ export namespace Raw {
       }
     }
     export class GetFavedStickers extends TLObject {
-      __response__!: messages.TypeFavedStickers;
+      __response__!: Raw.messages.TypeFavedStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -70819,10 +70887,10 @@ export namespace Raw {
     }
     export class FaveSticker extends TLObject {
       __response__!: Bool;
-      id!: TypeInputDocument;
+      id!: Raw.TypeInputDocument;
       unfave!: Bool;
 
-      constructor(params: { id: TypeInputDocument; unfave: Bool }) {
+      constructor(params: { id: Raw.TypeInputDocument; unfave: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.FaveSticker';
@@ -70861,8 +70929,8 @@ export namespace Raw {
       }
     }
     export class GetUnreadMentions extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
       offsetId!: int;
       addOffset!: int;
@@ -70871,7 +70939,7 @@ export namespace Raw {
       minId!: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         topMsgId?: int;
         offsetId: int;
         addOffset: int;
@@ -70956,11 +71024,11 @@ export namespace Raw {
       }
     }
     export class ReadMentions extends TLObject {
-      __response__!: messages.TypeAffectedHistory;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeAffectedHistory;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
 
-      constructor(params: { peer: TypeInputPeer; topMsgId?: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; topMsgId?: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReadMentions';
@@ -71005,12 +71073,12 @@ export namespace Raw {
       }
     }
     export class GetRecentLocations extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       limit!: int;
       hash!: long;
 
-      constructor(params: { peer: TypeInputPeer; limit: int; hash: long }) {
+      constructor(params: { peer: Raw.TypeInputPeer; limit: int; hash: long }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetRecentLocations';
@@ -71054,17 +71122,17 @@ export namespace Raw {
       }
     }
     export class SendMultiMedia extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       silent?: boolean;
       background?: boolean;
       clearDraft?: boolean;
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
-      peer!: TypeInputPeer;
-      replyTo?: TypeInputReplyTo;
-      multiMedia!: Vector<TypeInputSingleMedia>;
+      peer!: Raw.TypeInputPeer;
+      replyTo?: Raw.TypeInputReplyTo;
+      multiMedia!: Vector<Raw.TypeInputSingleMedia>;
       scheduleDate?: int;
-      sendAs?: TypeInputPeer;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         silent?: boolean;
@@ -71072,11 +71140,11 @@ export namespace Raw {
         clearDraft?: boolean;
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
-        peer: TypeInputPeer;
-        replyTo?: TypeInputReplyTo;
-        multiMedia: Vector<TypeInputSingleMedia>;
+        peer: Raw.TypeInputPeer;
+        replyTo?: Raw.TypeInputReplyTo;
+        multiMedia: Vector<Raw.TypeInputSingleMedia>;
         scheduleDate?: int;
-        sendAs?: TypeInputPeer;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -71176,11 +71244,11 @@ export namespace Raw {
       }
     }
     export class UploadEncryptedFile extends TLObject {
-      __response__!: TypeEncryptedFile;
-      peer!: TypeInputEncryptedChat;
-      file!: TypeInputEncryptedFile;
+      __response__!: Raw.TypeEncryptedFile;
+      peer!: Raw.TypeInputEncryptedChat;
+      file!: Raw.TypeInputEncryptedFile;
 
-      constructor(params: { peer: TypeInputEncryptedChat; file: TypeInputEncryptedFile }) {
+      constructor(params: { peer: Raw.TypeInputEncryptedChat; file: Raw.TypeInputEncryptedFile }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.UploadEncryptedFile';
@@ -71222,7 +71290,7 @@ export namespace Raw {
       }
     }
     export class SearchStickerSets extends TLObject {
-      __response__!: messages.TypeFoundStickerSets;
+      __response__!: Raw.messages.TypeFoundStickerSets;
       excludeFeatured?: boolean;
       q!: string;
       hash!: long;
@@ -71278,7 +71346,7 @@ export namespace Raw {
       }
     }
     export class GetSplitRanges extends TLObject {
-      __response__!: Vector<TypeMessageRange>;
+      __response__!: Vector<Raw.TypeMessageRange>;
 
       constructor() {
         super();
@@ -71311,9 +71379,9 @@ export namespace Raw {
     export class MarkDialogUnread extends TLObject {
       __response__!: Bool;
       unread?: boolean;
-      peer!: TypeInputDialogPeer;
+      peer!: Raw.TypeInputDialogPeer;
 
-      constructor(params: { unread?: boolean; peer: TypeInputDialogPeer }) {
+      constructor(params: { unread?: boolean; peer: Raw.TypeInputDialogPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.MarkDialogUnread';
@@ -71355,7 +71423,7 @@ export namespace Raw {
       }
     }
     export class GetDialogUnreadMarks extends TLObject {
-      __response__!: Vector<TypeDialogPeer>;
+      __response__!: Vector<Raw.TypeDialogPeer>;
 
       constructor() {
         super();
@@ -71420,18 +71488,18 @@ export namespace Raw {
       }
     }
     export class UpdatePinnedMessage extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       silent?: boolean;
       unpin?: boolean;
       pmOneside?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       id!: int;
 
       constructor(params: {
         silent?: boolean;
         unpin?: boolean;
         pmOneside?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         id: int;
       }) {
         super();
@@ -71495,12 +71563,12 @@ export namespace Raw {
       }
     }
     export class SendVote extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
       options!: Vector<bytes>;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int; options: Vector<bytes> }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int; options: Vector<bytes> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendVote';
@@ -71544,11 +71612,11 @@ export namespace Raw {
       }
     }
     export class GetPollResults extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetPollResults';
@@ -71587,10 +71655,10 @@ export namespace Raw {
       }
     }
     export class GetOnlines extends TLObject {
-      __response__!: TypeChatOnlines;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeChatOnlines;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetOnlines';
@@ -71625,10 +71693,10 @@ export namespace Raw {
     }
     export class EditChatAbout extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       about!: string;
 
-      constructor(params: { peer: TypeInputPeer; about: string }) {
+      constructor(params: { peer: Raw.TypeInputPeer; about: string }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.EditChatAbout';
@@ -71667,11 +71735,11 @@ export namespace Raw {
       }
     }
     export class EditChatDefaultBannedRights extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
-      bannedRights!: TypeChatBannedRights;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      bannedRights!: Raw.TypeChatBannedRights;
 
-      constructor(params: { peer: TypeInputPeer; bannedRights: TypeChatBannedRights }) {
+      constructor(params: { peer: Raw.TypeInputPeer; bannedRights: Raw.TypeChatBannedRights }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.EditChatDefaultBannedRights';
@@ -71716,7 +71784,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiKeywords extends TLObject {
-      __response__!: TypeEmojiKeywordsDifference;
+      __response__!: Raw.TypeEmojiKeywordsDifference;
       langCode!: string;
 
       constructor(params: { langCode: string }) {
@@ -71753,7 +71821,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiKeywordsDifference extends TLObject {
-      __response__!: TypeEmojiKeywordsDifference;
+      __response__!: Raw.TypeEmojiKeywordsDifference;
       langCode!: string;
       fromVersion!: int;
 
@@ -71802,7 +71870,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiKeywordsLanguages extends TLObject {
-      __response__!: Vector<TypeEmojiLanguage>;
+      __response__!: Vector<Raw.TypeEmojiLanguage>;
       langCodes!: Vector<string>;
 
       constructor(params: { langCodes: Vector<string> }) {
@@ -71842,7 +71910,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiURL extends TLObject {
-      __response__!: TypeEmojiURL;
+      __response__!: Raw.TypeEmojiURL;
       langCode!: string;
 
       constructor(params: { langCode: string }) {
@@ -71879,15 +71947,15 @@ export namespace Raw {
       }
     }
     export class GetSearchCounters extends TLObject {
-      __response__!: Vector<messages.TypeSearchCounter>;
-      peer!: TypeInputPeer;
+      __response__!: Vector<Raw.messages.TypeSearchCounter>;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
-      filters!: Vector<TypeMessagesFilter>;
+      filters!: Vector<Raw.TypeMessagesFilter>;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         topMsgId?: int;
-        filters: Vector<TypeMessagesFilter>;
+        filters: Vector<Raw.TypeMessagesFilter>;
       }) {
         super();
         this.classType = 'functions';
@@ -71942,13 +72010,13 @@ export namespace Raw {
       }
     }
     export class RequestUrlAuth extends TLObject {
-      __response__!: TypeUrlAuthResult;
-      peer?: TypeInputPeer;
+      __response__!: Raw.TypeUrlAuthResult;
+      peer?: Raw.TypeInputPeer;
       msgId?: int;
       buttonId?: int;
       url?: string;
 
-      constructor(params: { peer?: TypeInputPeer; msgId?: int; buttonId?: int; url?: string }) {
+      constructor(params: { peer?: Raw.TypeInputPeer; msgId?: int; buttonId?: int; url?: string }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.RequestUrlAuth';
@@ -72011,16 +72079,16 @@ export namespace Raw {
       }
     }
     export class AcceptUrlAuth extends TLObject {
-      __response__!: TypeUrlAuthResult;
+      __response__!: Raw.TypeUrlAuthResult;
       writeAllowed?: boolean;
-      peer?: TypeInputPeer;
+      peer?: Raw.TypeInputPeer;
       msgId?: int;
       buttonId?: int;
       url?: string;
 
       constructor(params: {
         writeAllowed?: boolean;
-        peer?: TypeInputPeer;
+        peer?: Raw.TypeInputPeer;
         msgId?: int;
         buttonId?: int;
         url?: string;
@@ -72092,9 +72160,9 @@ export namespace Raw {
     }
     export class HidePeerSettingsBar extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.HidePeerSettingsBar';
@@ -72131,11 +72199,11 @@ export namespace Raw {
       }
     }
     export class GetScheduledHistory extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       hash!: long;
 
-      constructor(params: { peer: TypeInputPeer; hash: long }) {
+      constructor(params: { peer: Raw.TypeInputPeer; hash: long }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetScheduledHistory';
@@ -72177,11 +72245,11 @@ export namespace Raw {
       }
     }
     export class GetScheduledMessages extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
 
-      constructor(params: { peer: TypeInputPeer; id: Vector<int> }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetScheduledMessages';
@@ -72223,11 +72291,11 @@ export namespace Raw {
       }
     }
     export class SendScheduledMessages extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
 
-      constructor(params: { peer: TypeInputPeer; id: Vector<int> }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendScheduledMessages';
@@ -72269,11 +72337,11 @@ export namespace Raw {
       }
     }
     export class DeleteScheduledMessages extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
 
-      constructor(params: { peer: TypeInputPeer; id: Vector<int> }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.DeleteScheduledMessages';
@@ -72315,15 +72383,15 @@ export namespace Raw {
       }
     }
     export class GetPollVotes extends TLObject {
-      __response__!: messages.TypeVotesList;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeVotesList;
+      peer!: Raw.TypeInputPeer;
       id!: int;
       option?: bytes;
       offset?: string;
       limit!: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         id: int;
         option?: bytes;
         offset?: string;
@@ -72399,13 +72467,13 @@ export namespace Raw {
       uninstall?: boolean;
       archive?: boolean;
       unarchive?: boolean;
-      stickersets!: Vector<TypeInputStickerSet>;
+      stickersets!: Vector<Raw.TypeInputStickerSet>;
 
       constructor(params: {
         uninstall?: boolean;
         archive?: boolean;
         unarchive?: boolean;
-        stickersets: Vector<TypeInputStickerSet>;
+        stickersets: Vector<Raw.TypeInputStickerSet>;
       }) {
         super();
         this.classType = 'functions';
@@ -72459,7 +72527,7 @@ export namespace Raw {
       }
     }
     export class GetDialogFilters extends TLObject {
-      __response__!: Vector<TypeDialogFilter>;
+      __response__!: Vector<Raw.TypeDialogFilter>;
 
       constructor() {
         super();
@@ -72490,7 +72558,7 @@ export namespace Raw {
       }
     }
     export class GetSuggestedDialogFilters extends TLObject {
-      __response__!: Vector<TypeDialogFilterSuggested>;
+      __response__!: Vector<Raw.TypeDialogFilterSuggested>;
 
       constructor() {
         super();
@@ -72526,9 +72594,9 @@ export namespace Raw {
     export class UpdateDialogFilter extends TLObject {
       __response__!: Bool;
       id!: int;
-      filter?: TypeDialogFilter;
+      filter?: Raw.TypeDialogFilter;
 
-      constructor(params: { id: int; filter?: TypeDialogFilter }) {
+      constructor(params: { id: int; filter?: Raw.TypeDialogFilter }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.UpdateDialogFilter';
@@ -72613,7 +72681,7 @@ export namespace Raw {
       }
     }
     export class GetOldFeaturedStickers extends TLObject {
-      __response__!: messages.TypeFeaturedStickers;
+      __response__!: Raw.messages.TypeFeaturedStickers;
       offset!: int;
       limit!: int;
       hash!: long;
@@ -72669,8 +72737,8 @@ export namespace Raw {
       }
     }
     export class GetReplies extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
       offsetId!: int;
       offsetDate!: int;
@@ -72681,7 +72749,7 @@ export namespace Raw {
       hash!: long;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         msgId: int;
         offsetId: int;
         offsetDate: int;
@@ -72784,11 +72852,11 @@ export namespace Raw {
       }
     }
     export class GetDiscussionMessage extends TLObject {
-      __response__!: messages.TypeDiscussionMessage;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeDiscussionMessage;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetDiscussionMessage';
@@ -72831,11 +72899,11 @@ export namespace Raw {
     }
     export class ReadDiscussion extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
       readMaxId!: int;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int; readMaxId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int; readMaxId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReadDiscussion';
@@ -72879,11 +72947,11 @@ export namespace Raw {
       }
     }
     export class UnpinAllMessages extends TLObject {
-      __response__!: messages.TypeAffectedHistory;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeAffectedHistory;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
 
-      constructor(params: { peer: TypeInputPeer; topMsgId?: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; topMsgId?: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.UnpinAllMessages';
@@ -72965,7 +73033,7 @@ export namespace Raw {
       }
     }
     export class DeletePhoneCallHistory extends TLObject {
-      __response__!: messages.TypeAffectedFoundMessages;
+      __response__!: Raw.messages.TypeAffectedFoundMessages;
       revoke?: boolean;
 
       constructor(params: { revoke?: boolean }) {
@@ -73008,7 +73076,7 @@ export namespace Raw {
       }
     }
     export class CheckHistoryImport extends TLObject {
-      __response__!: messages.TypeHistoryImportParsed;
+      __response__!: Raw.messages.TypeHistoryImportParsed;
       importHead!: string;
 
       constructor(params: { importHead: string }) {
@@ -73045,12 +73113,12 @@ export namespace Raw {
       }
     }
     export class InitHistoryImport extends TLObject {
-      __response__!: messages.TypeHistoryImport;
-      peer!: TypeInputPeer;
-      file!: TypeInputFile;
+      __response__!: Raw.messages.TypeHistoryImport;
+      peer!: Raw.TypeInputPeer;
+      file!: Raw.TypeInputFile;
       mediaCount!: int;
 
-      constructor(params: { peer: TypeInputPeer; file: TypeInputFile; mediaCount: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; file: Raw.TypeInputFile; mediaCount: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.InitHistoryImport';
@@ -73098,17 +73166,17 @@ export namespace Raw {
       }
     }
     export class UploadImportedMedia extends TLObject {
-      __response__!: TypeMessageMedia;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeMessageMedia;
+      peer!: Raw.TypeInputPeer;
       importId!: long;
       fileName!: string;
-      media!: TypeInputMedia;
+      media!: Raw.TypeInputMedia;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         importId: long;
         fileName: string;
-        media: TypeInputMedia;
+        media: Raw.TypeInputMedia;
       }) {
         super();
         this.classType = 'functions';
@@ -73167,10 +73235,10 @@ export namespace Raw {
     }
     export class StartHistoryImport extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       importId!: long;
 
-      constructor(params: { peer: TypeInputPeer; importId: long }) {
+      constructor(params: { peer: Raw.TypeInputPeer; importId: long }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.StartHistoryImport';
@@ -73209,18 +73277,18 @@ export namespace Raw {
       }
     }
     export class GetExportedChatInvites extends TLObject {
-      __response__!: messages.TypeExportedChatInvites;
+      __response__!: Raw.messages.TypeExportedChatInvites;
       revoked?: boolean;
-      peer!: TypeInputPeer;
-      adminId!: TypeInputUser;
+      peer!: Raw.TypeInputPeer;
+      adminId!: Raw.TypeInputUser;
       offsetDate?: int;
       offsetLink?: string;
       limit!: int;
 
       constructor(params: {
         revoked?: boolean;
-        peer: TypeInputPeer;
-        adminId: TypeInputUser;
+        peer: Raw.TypeInputPeer;
+        adminId: Raw.TypeInputUser;
         offsetDate?: int;
         offsetLink?: string;
         limit: int;
@@ -73298,11 +73366,11 @@ export namespace Raw {
       }
     }
     export class GetExportedChatInvite extends TLObject {
-      __response__!: messages.TypeExportedChatInvite;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeExportedChatInvite;
+      peer!: Raw.TypeInputPeer;
       link!: string;
 
-      constructor(params: { peer: TypeInputPeer; link: string }) {
+      constructor(params: { peer: Raw.TypeInputPeer; link: string }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetExportedChatInvite';
@@ -73344,9 +73412,9 @@ export namespace Raw {
       }
     }
     export class EditExportedChatInvite extends TLObject {
-      __response__!: messages.TypeExportedChatInvite;
+      __response__!: Raw.messages.TypeExportedChatInvite;
       revoked?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       link!: string;
       expireDate?: int;
       usageLimit?: int;
@@ -73355,7 +73423,7 @@ export namespace Raw {
 
       constructor(params: {
         revoked?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         link: string;
         expireDate?: int;
         usageLimit?: int;
@@ -73452,10 +73520,10 @@ export namespace Raw {
     }
     export class DeleteRevokedExportedChatInvites extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
-      adminId!: TypeInputUser;
+      peer!: Raw.TypeInputPeer;
+      adminId!: Raw.TypeInputUser;
 
-      constructor(params: { peer: TypeInputPeer; adminId: TypeInputUser }) {
+      constructor(params: { peer: Raw.TypeInputPeer; adminId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.DeleteRevokedExportedChatInvites';
@@ -73498,10 +73566,10 @@ export namespace Raw {
     }
     export class DeleteExportedChatInvite extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       link!: string;
 
-      constructor(params: { peer: TypeInputPeer; link: string }) {
+      constructor(params: { peer: Raw.TypeInputPeer; link: string }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.DeleteExportedChatInvite';
@@ -73543,10 +73611,10 @@ export namespace Raw {
       }
     }
     export class GetAdminsWithInvites extends TLObject {
-      __response__!: messages.TypeChatAdminsWithInvites;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeChatAdminsWithInvites;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetAdminsWithInvites';
@@ -73583,22 +73651,22 @@ export namespace Raw {
       }
     }
     export class GetChatInviteImporters extends TLObject {
-      __response__!: messages.TypeChatInviteImporters;
+      __response__!: Raw.messages.TypeChatInviteImporters;
       requested?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       link?: string;
       q?: string;
       offsetDate!: int;
-      offsetUser!: TypeInputUser;
+      offsetUser!: Raw.TypeInputUser;
       limit!: int;
 
       constructor(params: {
         requested?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         link?: string;
         q?: string;
         offsetDate: int;
-        offsetUser: TypeInputUser;
+        offsetUser: Raw.TypeInputUser;
         limit: int;
       }) {
         super();
@@ -73680,11 +73748,11 @@ export namespace Raw {
       }
     }
     export class SetHistoryTTL extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       period!: int;
 
-      constructor(params: { peer: TypeInputPeer; period: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; period: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetHistoryTTL';
@@ -73723,10 +73791,10 @@ export namespace Raw {
       }
     }
     export class CheckHistoryImportPeer extends TLObject {
-      __response__!: messages.TypeCheckedHistoryImportPeer;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeCheckedHistoryImportPeer;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.CheckHistoryImportPeer';
@@ -73763,11 +73831,11 @@ export namespace Raw {
       }
     }
     export class SetChatTheme extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       emoticon!: string;
 
-      constructor(params: { peer: TypeInputPeer; emoticon: string }) {
+      constructor(params: { peer: Raw.TypeInputPeer; emoticon: string }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetChatTheme';
@@ -73806,11 +73874,11 @@ export namespace Raw {
       }
     }
     export class GetMessageReadParticipants extends TLObject {
-      __response__!: Vector<TypeReadParticipantDate>;
-      peer!: TypeInputPeer;
+      __response__!: Vector<Raw.TypeReadParticipantDate>;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetMessageReadParticipants';
@@ -73852,15 +73920,15 @@ export namespace Raw {
       }
     }
     export class GetSearchResultsCalendar extends TLObject {
-      __response__!: messages.TypeSearchResultsCalendar;
-      peer!: TypeInputPeer;
-      filter!: TypeMessagesFilter;
+      __response__!: Raw.messages.TypeSearchResultsCalendar;
+      peer!: Raw.TypeInputPeer;
+      filter!: Raw.TypeMessagesFilter;
       offsetId!: int;
       offsetDate!: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
-        filter: TypeMessagesFilter;
+        peer: Raw.TypeInputPeer;
+        filter: Raw.TypeMessagesFilter;
         offsetId: int;
         offsetDate: int;
       }) {
@@ -73920,15 +73988,15 @@ export namespace Raw {
       }
     }
     export class GetSearchResultsPositions extends TLObject {
-      __response__!: messages.TypeSearchResultsPositions;
-      peer!: TypeInputPeer;
-      filter!: TypeMessagesFilter;
+      __response__!: Raw.messages.TypeSearchResultsPositions;
+      peer!: Raw.TypeInputPeer;
+      filter!: Raw.TypeMessagesFilter;
       offsetId!: int;
       limit!: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
-        filter: TypeMessagesFilter;
+        peer: Raw.TypeInputPeer;
+        filter: Raw.TypeMessagesFilter;
         offsetId: int;
         limit: int;
       }) {
@@ -73988,12 +74056,16 @@ export namespace Raw {
       }
     }
     export class HideChatJoinRequest extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       approved?: boolean;
-      peer!: TypeInputPeer;
-      userId!: TypeInputUser;
+      peer!: Raw.TypeInputPeer;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { approved?: boolean; peer: TypeInputPeer; userId: TypeInputUser }) {
+      constructor(params: {
+        approved?: boolean;
+        peer: Raw.TypeInputPeer;
+        userId: Raw.TypeInputUser;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.HideChatJoinRequest';
@@ -74047,12 +74119,12 @@ export namespace Raw {
       }
     }
     export class HideAllChatJoinRequests extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       approved?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       link?: string;
 
-      constructor(params: { approved?: boolean; peer: TypeInputPeer; link?: string }) {
+      constructor(params: { approved?: boolean; peer: Raw.TypeInputPeer; link?: string }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.HideAllChatJoinRequests';
@@ -74107,11 +74179,11 @@ export namespace Raw {
       }
     }
     export class ToggleNoForwards extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       enabled!: Bool;
 
-      constructor(params: { peer: TypeInputPeer; enabled: Bool }) {
+      constructor(params: { peer: Raw.TypeInputPeer; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ToggleNoForwards';
@@ -74151,10 +74223,10 @@ export namespace Raw {
     }
     export class SaveDefaultSendAs extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
-      sendAs!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
+      sendAs!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer; sendAs: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer; sendAs: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SaveDefaultSendAs';
@@ -74193,19 +74265,19 @@ export namespace Raw {
       }
     }
     export class SendReaction extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       big?: boolean;
       addToRecent?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
-      reaction?: Vector<TypeReaction>;
+      reaction?: Vector<Raw.TypeReaction>;
 
       constructor(params: {
         big?: boolean;
         addToRecent?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         msgId: int;
-        reaction?: Vector<TypeReaction>;
+        reaction?: Vector<Raw.TypeReaction>;
       }) {
         super();
         this.classType = 'functions';
@@ -74268,11 +74340,11 @@ export namespace Raw {
       }
     }
     export class GetMessagesReactions extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
 
-      constructor(params: { peer: TypeInputPeer; id: Vector<int> }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetMessagesReactions';
@@ -74314,17 +74386,17 @@ export namespace Raw {
       }
     }
     export class GetMessageReactionsList extends TLObject {
-      __response__!: messages.TypeMessageReactionsList;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessageReactionsList;
+      peer!: Raw.TypeInputPeer;
       id!: int;
-      reaction?: TypeReaction;
+      reaction?: Raw.TypeReaction;
       offset?: string;
       limit!: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         id: int;
-        reaction?: TypeReaction;
+        reaction?: Raw.TypeReaction;
         offset?: string;
         limit: int;
       }) {
@@ -74397,11 +74469,11 @@ export namespace Raw {
       }
     }
     export class SetChatAvailableReactions extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
-      availableReactions!: TypeChatReactions;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      availableReactions!: Raw.TypeChatReactions;
 
-      constructor(params: { peer: TypeInputPeer; availableReactions: TypeChatReactions }) {
+      constructor(params: { peer: Raw.TypeInputPeer; availableReactions: Raw.TypeChatReactions }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetChatAvailableReactions';
@@ -74446,7 +74518,7 @@ export namespace Raw {
       }
     }
     export class GetAvailableReactions extends TLObject {
-      __response__!: messages.TypeAvailableReactions;
+      __response__!: Raw.messages.TypeAvailableReactions;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -74487,9 +74559,9 @@ export namespace Raw {
     }
     export class SetDefaultReaction extends TLObject {
       __response__!: Bool;
-      reaction!: TypeReaction;
+      reaction!: Raw.TypeReaction;
 
-      constructor(params: { reaction: TypeReaction }) {
+      constructor(params: { reaction: Raw.TypeReaction }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetDefaultReaction';
@@ -74523,16 +74595,16 @@ export namespace Raw {
       }
     }
     export class TranslateText extends TLObject {
-      __response__!: messages.TypeTranslatedText;
-      peer?: TypeInputPeer;
+      __response__!: Raw.messages.TypeTranslatedText;
+      peer?: Raw.TypeInputPeer;
       id?: Vector<int>;
-      text?: Vector<TypeTextWithEntities>;
+      text?: Vector<Raw.TypeTextWithEntities>;
       toLang!: string;
 
       constructor(params: {
-        peer?: TypeInputPeer;
+        peer?: Raw.TypeInputPeer;
         id?: Vector<int>;
-        text?: Vector<TypeTextWithEntities>;
+        text?: Vector<Raw.TypeTextWithEntities>;
         toLang: string;
       }) {
         super();
@@ -74591,8 +74663,8 @@ export namespace Raw {
       }
     }
     export class GetUnreadReactions extends TLObject {
-      __response__!: messages.TypeMessages;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
       offsetId!: int;
       addOffset!: int;
@@ -74601,7 +74673,7 @@ export namespace Raw {
       minId!: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         topMsgId?: int;
         offsetId: int;
         addOffset: int;
@@ -74686,11 +74758,11 @@ export namespace Raw {
       }
     }
     export class ReadReactions extends TLObject {
-      __response__!: messages.TypeAffectedHistory;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeAffectedHistory;
+      peer!: Raw.TypeInputPeer;
       topMsgId?: int;
 
-      constructor(params: { peer: TypeInputPeer; topMsgId?: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; topMsgId?: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReadReactions';
@@ -74735,12 +74807,12 @@ export namespace Raw {
       }
     }
     export class SearchSentMedia extends TLObject {
-      __response__!: messages.TypeMessages;
+      __response__!: Raw.messages.TypeMessages;
       q!: string;
-      filter!: TypeMessagesFilter;
+      filter!: Raw.TypeMessagesFilter;
       limit!: int;
 
-      constructor(params: { q: string; filter: TypeMessagesFilter; limit: int }) {
+      constructor(params: { q: string; filter: Raw.TypeMessagesFilter; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SearchSentMedia';
@@ -74784,7 +74856,7 @@ export namespace Raw {
       }
     }
     export class GetAttachMenuBots extends TLObject {
-      __response__!: TypeAttachMenuBots;
+      __response__!: Raw.TypeAttachMenuBots;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -74821,10 +74893,10 @@ export namespace Raw {
       }
     }
     export class GetAttachMenuBot extends TLObject {
-      __response__!: TypeAttachMenuBotsBot;
-      bot!: TypeInputUser;
+      __response__!: Raw.TypeAttachMenuBotsBot;
+      bot!: Raw.TypeInputUser;
 
-      constructor(params: { bot: TypeInputUser }) {
+      constructor(params: { bot: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetAttachMenuBot';
@@ -74860,10 +74932,10 @@ export namespace Raw {
     export class ToggleBotInAttachMenu extends TLObject {
       __response__!: Bool;
       writeAllowed?: boolean;
-      bot!: TypeInputUser;
+      bot!: Raw.TypeInputUser;
       enabled!: Bool;
 
-      constructor(params: { writeAllowed?: boolean; bot: TypeInputUser; enabled: Bool }) {
+      constructor(params: { writeAllowed?: boolean; bot: Raw.TypeInputUser; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ToggleBotInAttachMenu';
@@ -74917,29 +74989,29 @@ export namespace Raw {
       }
     }
     export class RequestWebView extends TLObject {
-      __response__!: TypeWebViewResult;
+      __response__!: Raw.TypeWebViewResult;
       fromBotMenu?: boolean;
       silent?: boolean;
-      peer!: TypeInputPeer;
-      bot!: TypeInputUser;
+      peer!: Raw.TypeInputPeer;
+      bot!: Raw.TypeInputUser;
       url?: string;
       startParam?: string;
-      themeParams?: TypeDataJSON;
+      themeParams?: Raw.TypeDataJSON;
       platform!: string;
-      replyTo?: TypeInputReplyTo;
-      sendAs?: TypeInputPeer;
+      replyTo?: Raw.TypeInputReplyTo;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         fromBotMenu?: boolean;
         silent?: boolean;
-        peer: TypeInputPeer;
-        bot: TypeInputUser;
+        peer: Raw.TypeInputPeer;
+        bot: Raw.TypeInputUser;
         url?: string;
         startParam?: string;
-        themeParams?: TypeDataJSON;
+        themeParams?: Raw.TypeDataJSON;
         platform: string;
-        replyTo?: TypeInputReplyTo;
-        sendAs?: TypeInputPeer;
+        replyTo?: Raw.TypeInputReplyTo;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -75049,19 +75121,19 @@ export namespace Raw {
     export class ProlongWebView extends TLObject {
       __response__!: Bool;
       silent?: boolean;
-      peer!: TypeInputPeer;
-      bot!: TypeInputUser;
+      peer!: Raw.TypeInputPeer;
+      bot!: Raw.TypeInputUser;
       queryId!: long;
-      replyTo?: TypeInputReplyTo;
-      sendAs?: TypeInputPeer;
+      replyTo?: Raw.TypeInputReplyTo;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
         silent?: boolean;
-        peer: TypeInputPeer;
-        bot: TypeInputUser;
+        peer: Raw.TypeInputPeer;
+        bot: Raw.TypeInputUser;
         queryId: long;
-        replyTo?: TypeInputReplyTo;
-        sendAs?: TypeInputPeer;
+        replyTo?: Raw.TypeInputReplyTo;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -75133,18 +75205,18 @@ export namespace Raw {
       }
     }
     export class RequestSimpleWebView extends TLObject {
-      __response__!: TypeSimpleWebViewResult;
+      __response__!: Raw.TypeSimpleWebViewResult;
       fromSwitchWebview?: boolean;
-      bot!: TypeInputUser;
+      bot!: Raw.TypeInputUser;
       url!: string;
-      themeParams?: TypeDataJSON;
+      themeParams?: Raw.TypeDataJSON;
       platform!: string;
 
       constructor(params: {
         fromSwitchWebview?: boolean;
-        bot: TypeInputUser;
+        bot: Raw.TypeInputUser;
         url: string;
-        themeParams?: TypeDataJSON;
+        themeParams?: Raw.TypeDataJSON;
         platform: string;
       }) {
         super();
@@ -75213,11 +75285,11 @@ export namespace Raw {
       }
     }
     export class SendWebViewResultMessage extends TLObject {
-      __response__!: TypeWebViewMessageSent;
+      __response__!: Raw.TypeWebViewMessageSent;
       botQueryId!: string;
-      result!: TypeInputBotInlineResult;
+      result!: Raw.TypeInputBotInlineResult;
 
-      constructor(params: { botQueryId: string; result: TypeInputBotInlineResult }) {
+      constructor(params: { botQueryId: string; result: Raw.TypeInputBotInlineResult }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendWebViewResultMessage';
@@ -75262,14 +75334,14 @@ export namespace Raw {
       }
     }
     export class SendWebViewData extends TLObject {
-      __response__!: TypeUpdates;
-      bot!: TypeInputUser;
+      __response__!: Raw.TypeUpdates;
+      bot!: Raw.TypeInputUser;
       randomId!: long;
       buttonText!: string;
       data!: string;
 
       constructor(params: {
-        bot: TypeInputUser;
+        bot: Raw.TypeInputUser;
         randomId: long;
         buttonText: string;
         data: string;
@@ -75327,11 +75399,11 @@ export namespace Raw {
       }
     }
     export class TranscribeAudio extends TLObject {
-      __response__!: messages.TypeTranscribedAudio;
-      peer!: TypeInputPeer;
+      __response__!: Raw.messages.TypeTranscribedAudio;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.TranscribeAudio';
@@ -75371,12 +75443,17 @@ export namespace Raw {
     }
     export class RateTranscribedAudio extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
       transcriptionId!: long;
       good!: Bool;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int; transcriptionId: long; good: Bool }) {
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        msgId: int;
+        transcriptionId: long;
+        good: Bool;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.RateTranscribedAudio';
@@ -75433,7 +75510,7 @@ export namespace Raw {
       }
     }
     export class GetCustomEmojiDocuments extends TLObject {
-      __response__!: Vector<TypeDocument>;
+      __response__!: Vector<Raw.TypeDocument>;
       documentId!: Vector<long>;
 
       constructor(params: { documentId: Vector<long> }) {
@@ -75473,7 +75550,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiStickers extends TLObject {
-      __response__!: messages.TypeAllStickers;
+      __response__!: Raw.messages.TypeAllStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -75510,7 +75587,7 @@ export namespace Raw {
       }
     }
     export class GetFeaturedEmojiStickers extends TLObject {
-      __response__!: messages.TypeFeaturedStickers;
+      __response__!: Raw.messages.TypeFeaturedStickers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -75551,11 +75628,11 @@ export namespace Raw {
     }
     export class ReportReaction extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       id!: int;
-      reactionPeer!: TypeInputPeer;
+      reactionPeer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer; id: int; reactionPeer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: int; reactionPeer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ReportReaction';
@@ -75599,7 +75676,7 @@ export namespace Raw {
       }
     }
     export class GetTopReactions extends TLObject {
-      __response__!: messages.TypeReactions;
+      __response__!: Raw.messages.TypeReactions;
       limit!: int;
       hash!: long;
 
@@ -75642,7 +75719,7 @@ export namespace Raw {
       }
     }
     export class GetRecentReactions extends TLObject {
-      __response__!: messages.TypeReactions;
+      __response__!: Raw.messages.TypeReactions;
       limit!: int;
       hash!: long;
 
@@ -75719,11 +75796,11 @@ export namespace Raw {
       }
     }
     export class GetExtendedMedia extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       id!: Vector<int>;
 
-      constructor(params: { peer: TypeInputPeer; id: Vector<int> }) {
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetExtendedMedia';
@@ -75802,7 +75879,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultHistoryTTL extends TLObject {
-      __response__!: TypeDefaultHistoryTTL;
+      __response__!: Raw.TypeDefaultHistoryTTL;
 
       constructor() {
         super();
@@ -75836,17 +75913,17 @@ export namespace Raw {
       }
     }
     export class SendBotRequestedPeer extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
       buttonId!: int;
-      requestedPeer!: TypeInputPeer;
+      requestedPeer!: Raw.TypeInputPeer;
 
       constructor(params: {
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         msgId: int;
         buttonId: int;
-        requestedPeer: TypeInputPeer;
+        requestedPeer: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -75904,7 +75981,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiGroups extends TLObject {
-      __response__!: messages.TypeEmojiGroups;
+      __response__!: Raw.messages.TypeEmojiGroups;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -75941,7 +76018,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiStatusGroups extends TLObject {
-      __response__!: messages.TypeEmojiGroups;
+      __response__!: Raw.messages.TypeEmojiGroups;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -75981,7 +76058,7 @@ export namespace Raw {
       }
     }
     export class GetEmojiProfilePhotoGroups extends TLObject {
-      __response__!: messages.TypeEmojiGroups;
+      __response__!: Raw.messages.TypeEmojiGroups;
       hash!: int;
 
       constructor(params: { hash: int }) {
@@ -76021,7 +76098,7 @@ export namespace Raw {
       }
     }
     export class SearchCustomEmoji extends TLObject {
-      __response__!: TypeEmojiList;
+      __response__!: Raw.TypeEmojiList;
       emoticon!: string;
       hash!: long;
 
@@ -76066,9 +76143,9 @@ export namespace Raw {
     export class TogglePeerTranslations extends TLObject {
       __response__!: Bool;
       disabled?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { disabled?: boolean; peer: TypeInputPeer }) {
+      constructor(params: { disabled?: boolean; peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.TogglePeerTranslations';
@@ -76113,11 +76190,11 @@ export namespace Raw {
       }
     }
     export class GetBotApp extends TLObject {
-      __response__!: messages.TypeBotApp;
-      app!: TypeInputBotApp;
+      __response__!: Raw.messages.TypeBotApp;
+      app!: Raw.TypeInputBotApp;
       hash!: long;
 
-      constructor(params: { app: TypeInputBotApp; hash: long }) {
+      constructor(params: { app: Raw.TypeInputBotApp; hash: long }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetBotApp';
@@ -76156,20 +76233,20 @@ export namespace Raw {
       }
     }
     export class RequestAppWebView extends TLObject {
-      __response__!: TypeAppWebViewResult;
+      __response__!: Raw.TypeAppWebViewResult;
       writeAllowed?: boolean;
-      peer!: TypeInputPeer;
-      app!: TypeInputBotApp;
+      peer!: Raw.TypeInputPeer;
+      app!: Raw.TypeInputBotApp;
       startParam?: string;
-      themeParams?: TypeDataJSON;
+      themeParams?: Raw.TypeDataJSON;
       platform!: string;
 
       constructor(params: {
         writeAllowed?: boolean;
-        peer: TypeInputPeer;
-        app: TypeInputBotApp;
+        peer: Raw.TypeInputPeer;
+        app: Raw.TypeInputBotApp;
         startParam?: string;
-        themeParams?: TypeDataJSON;
+        themeParams?: Raw.TypeDataJSON;
         platform: string;
       }) {
         super();
@@ -76242,16 +76319,16 @@ export namespace Raw {
       }
     }
     export class SetChatWallPaper extends TLObject {
-      __response__!: TypeUpdates;
-      peer!: TypeInputPeer;
-      wallpaper?: TypeInputWallPaper;
-      settings?: TypeWallPaperSettings;
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      wallpaper?: Raw.TypeInputWallPaper;
+      settings?: Raw.TypeWallPaperSettings;
       id?: int;
 
       constructor(params: {
-        peer: TypeInputPeer;
-        wallpaper?: TypeInputWallPaper;
-        settings?: TypeWallPaperSettings;
+        peer: Raw.TypeInputPeer;
+        wallpaper?: Raw.TypeInputWallPaper;
+        settings?: Raw.TypeWallPaperSettings;
         id?: int;
       }) {
         super();
@@ -76435,20 +76512,20 @@ export namespace Raw {
       }
     }
     export class Difference extends TLObject {
-      newMessages!: Vector<TypeMessage>;
-      newEncryptedMessages!: Vector<TypeEncryptedMessage>;
-      otherUpdates!: Vector<TypeUpdate>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
-      state!: updates.TypeState;
+      newMessages!: Vector<Raw.TypeMessage>;
+      newEncryptedMessages!: Vector<Raw.TypeEncryptedMessage>;
+      otherUpdates!: Vector<Raw.TypeUpdate>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+      state!: Raw.updates.TypeState;
 
       constructor(params: {
-        newMessages: Vector<TypeMessage>;
-        newEncryptedMessages: Vector<TypeEncryptedMessage>;
-        otherUpdates: Vector<TypeUpdate>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
-        state: updates.TypeState;
+        newMessages: Vector<Raw.TypeMessage>;
+        newEncryptedMessages: Vector<Raw.TypeEncryptedMessage>;
+        otherUpdates: Vector<Raw.TypeUpdate>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+        state: Raw.updates.TypeState;
       }) {
         super();
         this.classType = 'types';
@@ -76522,20 +76599,20 @@ export namespace Raw {
       }
     }
     export class DifferenceSlice extends TLObject {
-      newMessages!: Vector<TypeMessage>;
-      newEncryptedMessages!: Vector<TypeEncryptedMessage>;
-      otherUpdates!: Vector<TypeUpdate>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
-      intermediateState!: updates.TypeState;
+      newMessages!: Vector<Raw.TypeMessage>;
+      newEncryptedMessages!: Vector<Raw.TypeEncryptedMessage>;
+      otherUpdates!: Vector<Raw.TypeUpdate>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+      intermediateState!: Raw.updates.TypeState;
 
       constructor(params: {
-        newMessages: Vector<TypeMessage>;
-        newEncryptedMessages: Vector<TypeEncryptedMessage>;
-        otherUpdates: Vector<TypeUpdate>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
-        intermediateState: updates.TypeState;
+        newMessages: Vector<Raw.TypeMessage>;
+        newEncryptedMessages: Vector<Raw.TypeEncryptedMessage>;
+        otherUpdates: Vector<Raw.TypeUpdate>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+        intermediateState: Raw.updates.TypeState;
       }) {
         super();
         this.classType = 'types';
@@ -76702,18 +76779,18 @@ export namespace Raw {
     export class ChannelDifferenceTooLong extends TLObject {
       final?: boolean;
       timeout?: int;
-      dialog!: TypeDialog;
-      messages!: Vector<TypeMessage>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      dialog!: Raw.TypeDialog;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         final?: boolean;
         timeout?: int;
-        dialog: TypeDialog;
-        messages: Vector<TypeMessage>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        dialog: Raw.TypeDialog;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -76790,19 +76867,19 @@ export namespace Raw {
       final?: boolean;
       pts!: int;
       timeout?: int;
-      newMessages!: Vector<TypeMessage>;
-      otherUpdates!: Vector<TypeUpdate>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      newMessages!: Vector<Raw.TypeMessage>;
+      otherUpdates!: Vector<Raw.TypeUpdate>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         final?: boolean;
         pts: int;
         timeout?: int;
-        newMessages: Vector<TypeMessage>;
-        otherUpdates: Vector<TypeUpdate>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        newMessages: Vector<Raw.TypeMessage>;
+        otherUpdates: Vector<Raw.TypeUpdate>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -76879,7 +76956,7 @@ export namespace Raw {
       }
     }
     export class GetState extends TLObject {
-      __response__!: updates.TypeState;
+      __response__!: Raw.updates.TypeState;
 
       constructor() {
         super();
@@ -76910,7 +76987,7 @@ export namespace Raw {
       }
     }
     export class GetDifference extends TLObject {
-      __response__!: updates.TypeDifference;
+      __response__!: Raw.updates.TypeDifference;
       pts!: int;
       ptsLimit?: int;
       ptsTotalLimit?: int;
@@ -76999,17 +77076,17 @@ export namespace Raw {
       }
     }
     export class GetChannelDifference extends TLObject {
-      __response__!: updates.TypeChannelDifference;
+      __response__!: Raw.updates.TypeChannelDifference;
       force?: boolean;
-      channel!: TypeInputChannel;
-      filter!: TypeChannelMessagesFilter;
+      channel!: Raw.TypeInputChannel;
+      filter!: Raw.TypeChannelMessagesFilter;
       pts!: int;
       limit!: int;
 
       constructor(params: {
         force?: boolean;
-        channel: TypeInputChannel;
-        filter: TypeChannelMessagesFilter;
+        channel: Raw.TypeInputChannel;
+        filter: Raw.TypeChannelMessagesFilter;
         pts: int;
         limit: int;
       }) {
@@ -77082,10 +77159,10 @@ export namespace Raw {
     export type TypePhotos = Raw.photos.Photos | Raw.photos.PhotosSlice;
     export type TypePhoto = Raw.photos.Photo;
     export class Photos extends TLObject {
-      photos!: Vector<TypePhoto>;
-      users!: Vector<TypeUser>;
+      photos!: Vector<Raw.TypePhoto>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { photos: Vector<TypePhoto>; users: Vector<TypeUser> }) {
+      constructor(params: { photos: Vector<Raw.TypePhoto>; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'photos.Photos';
@@ -77125,10 +77202,14 @@ export namespace Raw {
     }
     export class PhotosSlice extends TLObject {
       count!: int;
-      photos!: Vector<TypePhoto>;
-      users!: Vector<TypeUser>;
+      photos!: Vector<Raw.TypePhoto>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { count: int; photos: Vector<TypePhoto>; users: Vector<TypeUser> }) {
+      constructor(params: {
+        count: int;
+        photos: Vector<Raw.TypePhoto>;
+        users: Vector<Raw.TypeUser>;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'photos.PhotosSlice';
@@ -77172,10 +77253,10 @@ export namespace Raw {
       }
     }
     export class Photo extends TLObject {
-      photo!: TypePhoto;
-      users!: Vector<TypeUser>;
+      photo!: Raw.TypePhoto;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { photo: TypePhoto; users: Vector<TypeUser> }) {
+      constructor(params: { photo: Raw.TypePhoto; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'photos.Photo';
@@ -77214,12 +77295,12 @@ export namespace Raw {
       }
     }
     export class UpdateProfilePhoto extends TLObject {
-      __response__!: photos.TypePhoto;
+      __response__!: Raw.photos.TypePhoto;
       fallback?: boolean;
-      bot?: TypeInputUser;
-      id!: TypeInputPhoto;
+      bot?: Raw.TypeInputUser;
+      id!: Raw.TypeInputPhoto;
 
-      constructor(params: { fallback?: boolean; bot?: TypeInputUser; id: TypeInputPhoto }) {
+      constructor(params: { fallback?: boolean; bot?: Raw.TypeInputUser; id: Raw.TypeInputPhoto }) {
         super();
         this.classType = 'functions';
         this.className = 'photos.UpdateProfilePhoto';
@@ -77267,21 +77348,21 @@ export namespace Raw {
       }
     }
     export class UploadProfilePhoto extends TLObject {
-      __response__!: photos.TypePhoto;
+      __response__!: Raw.photos.TypePhoto;
       fallback?: boolean;
-      bot?: TypeInputUser;
-      file?: TypeInputFile;
-      video?: TypeInputFile;
+      bot?: Raw.TypeInputUser;
+      file?: Raw.TypeInputFile;
+      video?: Raw.TypeInputFile;
       videoStartTs?: double;
-      videoEmojiMarkup?: TypeVideoSize;
+      videoEmojiMarkup?: Raw.TypeVideoSize;
 
       constructor(params: {
         fallback?: boolean;
-        bot?: TypeInputUser;
-        file?: TypeInputFile;
-        video?: TypeInputFile;
+        bot?: Raw.TypeInputUser;
+        file?: Raw.TypeInputFile;
+        video?: Raw.TypeInputFile;
         videoStartTs?: double;
-        videoEmojiMarkup?: TypeVideoSize;
+        videoEmojiMarkup?: Raw.TypeVideoSize;
       }) {
         super();
         this.classType = 'functions';
@@ -77357,9 +77438,9 @@ export namespace Raw {
     }
     export class DeletePhotos extends TLObject {
       __response__!: Vector<long>;
-      id!: Vector<TypeInputPhoto>;
+      id!: Vector<Raw.TypeInputPhoto>;
 
-      constructor(params: { id: Vector<TypeInputPhoto> }) {
+      constructor(params: { id: Vector<Raw.TypeInputPhoto> }) {
         super();
         this.classType = 'functions';
         this.className = 'photos.DeletePhotos';
@@ -77393,13 +77474,13 @@ export namespace Raw {
       }
     }
     export class GetUserPhotos extends TLObject {
-      __response__!: photos.TypePhotos;
-      userId!: TypeInputUser;
+      __response__!: Raw.photos.TypePhotos;
+      userId!: Raw.TypeInputUser;
       offset!: int;
       maxId!: long;
       limit!: int;
 
-      constructor(params: { userId: TypeInputUser; offset: int; maxId: long; limit: int }) {
+      constructor(params: { userId: Raw.TypeInputUser; offset: int; maxId: long; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'photos.GetUserPhotos';
@@ -77453,23 +77534,23 @@ export namespace Raw {
       }
     }
     export class UploadContactProfilePhoto extends TLObject {
-      __response__!: photos.TypePhoto;
+      __response__!: Raw.photos.TypePhoto;
       suggest?: boolean;
       save?: boolean;
-      userId!: TypeInputUser;
-      file?: TypeInputFile;
-      video?: TypeInputFile;
+      userId!: Raw.TypeInputUser;
+      file?: Raw.TypeInputFile;
+      video?: Raw.TypeInputFile;
       videoStartTs?: double;
-      videoEmojiMarkup?: TypeVideoSize;
+      videoEmojiMarkup?: Raw.TypeVideoSize;
 
       constructor(params: {
         suggest?: boolean;
         save?: boolean;
-        userId: TypeInputUser;
-        file?: TypeInputFile;
-        video?: TypeInputFile;
+        userId: Raw.TypeInputUser;
+        file?: Raw.TypeInputFile;
+        video?: Raw.TypeInputFile;
         videoStartTs?: double;
-        videoEmojiMarkup?: TypeVideoSize;
+        videoEmojiMarkup?: Raw.TypeVideoSize;
       }) {
         super();
         this.classType = 'functions';
@@ -77563,11 +77644,11 @@ export namespace Raw {
     export type TypeWebFile = Raw.upload.WebFile;
     export type TypeFile = Raw.upload.File | Raw.upload.FileCdnRedirect;
     export class File extends TLObject {
-      type!: storage.TypeFileType;
+      type!: Raw.storage.TypeFileType;
       mtime!: int;
       bytes!: bytes;
 
-      constructor(params: { type: storage.TypeFileType; mtime: int; bytes: bytes }) {
+      constructor(params: { type: Raw.storage.TypeFileType; mtime: int; bytes: bytes }) {
         super();
         this.classType = 'types';
         this.className = 'upload.File';
@@ -77615,14 +77696,14 @@ export namespace Raw {
       fileToken!: bytes;
       encryptionKey!: bytes;
       encryptionIv!: bytes;
-      fileHashes!: Vector<TypeFileHash>;
+      fileHashes!: Vector<Raw.TypeFileHash>;
 
       constructor(params: {
         dcId: int;
         fileToken: bytes;
         encryptionKey: bytes;
         encryptionIv: bytes;
-        fileHashes: Vector<TypeFileHash>;
+        fileHashes: Vector<Raw.TypeFileHash>;
       }) {
         super();
         this.classType = 'types';
@@ -77685,14 +77766,14 @@ export namespace Raw {
     export class WebFile extends TLObject {
       size!: int;
       mimeType!: string;
-      fileType!: storage.TypeFileType;
+      fileType!: Raw.storage.TypeFileType;
       mtime!: int;
       bytes!: bytes;
 
       constructor(params: {
         size: int;
         mimeType: string;
-        fileType: storage.TypeFileType;
+        fileType: Raw.storage.TypeFileType;
         mtime: int;
         bytes: bytes;
       }) {
@@ -77879,17 +77960,17 @@ export namespace Raw {
       }
     }
     export class GetFile extends TLObject {
-      __response__!: upload.TypeFile;
+      __response__!: Raw.upload.TypeFile;
       precise?: boolean;
       cdnSupported?: boolean;
-      location!: TypeInputFileLocation;
+      location!: Raw.TypeInputFileLocation;
       offset!: long;
       limit!: int;
 
       constructor(params: {
         precise?: boolean;
         cdnSupported?: boolean;
-        location: TypeInputFileLocation;
+        location: Raw.TypeInputFileLocation;
         offset: long;
         limit: int;
       }) {
@@ -78013,12 +78094,12 @@ export namespace Raw {
       }
     }
     export class GetWebFile extends TLObject {
-      __response__!: upload.TypeWebFile;
-      location!: TypeInputWebFileLocation;
+      __response__!: Raw.upload.TypeWebFile;
+      location!: Raw.TypeInputWebFileLocation;
       offset!: int;
       limit!: int;
 
-      constructor(params: { location: TypeInputWebFileLocation; offset: int; limit: int }) {
+      constructor(params: { location: Raw.TypeInputWebFileLocation; offset: int; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'upload.GetWebFile';
@@ -78062,7 +78143,7 @@ export namespace Raw {
       }
     }
     export class GetCdnFile extends TLObject {
-      __response__!: upload.TypeCdnFile;
+      __response__!: Raw.upload.TypeCdnFile;
       fileToken!: bytes;
       offset!: long;
       limit!: int;
@@ -78111,7 +78192,7 @@ export namespace Raw {
       }
     }
     export class ReuploadCdnFile extends TLObject {
-      __response__!: Vector<TypeFileHash>;
+      __response__!: Vector<Raw.TypeFileHash>;
       fileToken!: bytes;
       requestToken!: bytes;
 
@@ -78154,7 +78235,7 @@ export namespace Raw {
       }
     }
     export class GetCdnFileHashes extends TLObject {
-      __response__!: Vector<TypeFileHash>;
+      __response__!: Vector<Raw.TypeFileHash>;
       fileToken!: bytes;
       offset!: long;
 
@@ -78197,11 +78278,11 @@ export namespace Raw {
       }
     }
     export class GetFileHashes extends TLObject {
-      __response__!: Vector<TypeFileHash>;
-      location!: TypeInputFileLocation;
+      __response__!: Vector<Raw.TypeFileHash>;
+      location!: Raw.TypeInputFileLocation;
       offset!: long;
 
-      constructor(params: { location: TypeInputFileLocation; offset: long }) {
+      constructor(params: { location: Raw.TypeInputFileLocation; offset: long }) {
         super();
         this.classType = 'functions';
         this.className = 'upload.GetFileHashes';
@@ -78269,14 +78350,14 @@ export namespace Raw {
     export type TypeWallPapers = Raw.account.WallPapersNotModified | Raw.account.WallPapers;
     export type TypePasswordInputSettings = Raw.account.PasswordInputSettings;
     export class PrivacyRules extends TLObject {
-      rules!: Vector<TypePrivacyRule>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      rules!: Vector<Raw.TypePrivacyRule>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        rules: Vector<TypePrivacyRule>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        rules: Vector<Raw.TypePrivacyRule>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -78322,11 +78403,11 @@ export namespace Raw {
     }
     export class Authorizations extends TLObject {
       authorizationTtlDays!: int;
-      authorizations!: Vector<TypeAuthorization>;
+      authorizations!: Vector<Raw.TypeAuthorization>;
 
       constructor(params: {
         authorizationTtlDays: int;
-        authorizations: Vector<TypeAuthorization>;
+        authorizations: Vector<Raw.TypeAuthorization>;
       }) {
         super();
         this.classType = 'types';
@@ -78372,13 +78453,13 @@ export namespace Raw {
       hasRecovery?: boolean;
       hasSecureValues?: boolean;
       hasPassword?: boolean;
-      currentAlgo?: TypePasswordKdfAlgo;
+      currentAlgo?: Raw.TypePasswordKdfAlgo;
       srpB?: bytes;
       srpId?: long;
       hint?: string;
       emailUnconfirmedPattern?: string;
-      newAlgo!: TypePasswordKdfAlgo;
-      newSecureAlgo!: TypeSecurePasswordKdfAlgo;
+      newAlgo!: Raw.TypePasswordKdfAlgo;
+      newSecureAlgo!: Raw.TypeSecurePasswordKdfAlgo;
       secureRandom!: bytes;
       pendingResetDate?: int;
       loginEmailPattern?: string;
@@ -78387,13 +78468,13 @@ export namespace Raw {
         hasRecovery?: boolean;
         hasSecureValues?: boolean;
         hasPassword?: boolean;
-        currentAlgo?: TypePasswordKdfAlgo;
+        currentAlgo?: Raw.TypePasswordKdfAlgo;
         srpB?: bytes;
         srpId?: long;
         hint?: string;
         emailUnconfirmedPattern?: string;
-        newAlgo: TypePasswordKdfAlgo;
-        newSecureAlgo: TypeSecurePasswordKdfAlgo;
+        newAlgo: Raw.TypePasswordKdfAlgo;
+        newSecureAlgo: Raw.TypeSecurePasswordKdfAlgo;
         secureRandom: bytes;
         pendingResetDate?: int;
         loginEmailPattern?: string;
@@ -78526,9 +78607,9 @@ export namespace Raw {
     }
     export class PasswordSettings extends TLObject {
       email?: string;
-      secureSettings?: TypeSecureSecretSettings;
+      secureSettings?: Raw.TypeSecureSecretSettings;
 
-      constructor(params: { email?: string; secureSettings?: TypeSecureSecretSettings }) {
+      constructor(params: { email?: string; secureSettings?: Raw.TypeSecureSecretSettings }) {
         super();
         this.classType = 'types';
         this.className = 'account.PasswordSettings';
@@ -78574,18 +78655,18 @@ export namespace Raw {
       }
     }
     export class PasswordInputSettings extends TLObject {
-      newAlgo?: TypePasswordKdfAlgo;
+      newAlgo?: Raw.TypePasswordKdfAlgo;
       newPasswordHash?: bytes;
       hint?: string;
       email?: string;
-      newSecureSettings?: TypeSecureSecretSettings;
+      newSecureSettings?: Raw.TypeSecureSecretSettings;
 
       constructor(params: {
-        newAlgo?: TypePasswordKdfAlgo;
+        newAlgo?: Raw.TypePasswordKdfAlgo;
         newPasswordHash?: bytes;
         hint?: string;
         email?: string;
-        newSecureSettings?: TypeSecureSecretSettings;
+        newSecureSettings?: Raw.TypeSecureSecretSettings;
       }) {
         super();
         this.classType = 'types';
@@ -78701,12 +78782,12 @@ export namespace Raw {
       }
     }
     export class WebAuthorizations extends TLObject {
-      authorizations!: Vector<TypeWebAuthorization>;
-      users!: Vector<TypeUser>;
+      authorizations!: Vector<Raw.TypeWebAuthorization>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        authorizations: Vector<TypeWebAuthorization>;
-        users: Vector<TypeUser>;
+        authorizations: Vector<Raw.TypeWebAuthorization>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -78746,17 +78827,17 @@ export namespace Raw {
       }
     }
     export class AuthorizationForm extends TLObject {
-      requiredTypes!: Vector<TypeSecureRequiredType>;
-      values!: Vector<TypeSecureValue>;
-      errors!: Vector<TypeSecureValueError>;
-      users!: Vector<TypeUser>;
+      requiredTypes!: Vector<Raw.TypeSecureRequiredType>;
+      values!: Vector<Raw.TypeSecureValue>;
+      errors!: Vector<Raw.TypeSecureValueError>;
+      users!: Vector<Raw.TypeUser>;
       privacyPolicyUrl?: string;
 
       constructor(params: {
-        requiredTypes: Vector<TypeSecureRequiredType>;
-        values: Vector<TypeSecureValue>;
-        errors: Vector<TypeSecureValueError>;
-        users: Vector<TypeUser>;
+        requiredTypes: Vector<Raw.TypeSecureRequiredType>;
+        values: Vector<Raw.TypeSecureValue>;
+        errors: Vector<Raw.TypeSecureValueError>;
+        users: Vector<Raw.TypeUser>;
         privacyPolicyUrl?: string;
       }) {
         super();
@@ -78935,9 +79016,9 @@ export namespace Raw {
     }
     export class WallPapers extends TLObject {
       hash!: long;
-      wallpapers!: Vector<TypeWallPaper>;
+      wallpapers!: Vector<Raw.TypeWallPaper>;
 
-      constructor(params: { hash: long; wallpapers: Vector<TypeWallPaper> }) {
+      constructor(params: { hash: long; wallpapers: Vector<Raw.TypeWallPaper> }) {
         super();
         this.classType = 'types';
         this.className = 'account.WallPapers';
@@ -78976,14 +79057,14 @@ export namespace Raw {
       }
     }
     export class AutoDownloadSettings extends TLObject {
-      low!: TypeAutoDownloadSettings;
-      medium!: TypeAutoDownloadSettings;
-      high!: TypeAutoDownloadSettings;
+      low!: Raw.TypeAutoDownloadSettings;
+      medium!: Raw.TypeAutoDownloadSettings;
+      high!: Raw.TypeAutoDownloadSettings;
 
       constructor(params: {
-        low: TypeAutoDownloadSettings;
-        medium: TypeAutoDownloadSettings;
-        high: TypeAutoDownloadSettings;
+        low: Raw.TypeAutoDownloadSettings;
+        medium: Raw.TypeAutoDownloadSettings;
+        high: Raw.TypeAutoDownloadSettings;
       }) {
         super();
         this.classType = 'types';
@@ -79061,9 +79142,9 @@ export namespace Raw {
     }
     export class Themes extends TLObject {
       hash!: long;
-      themes!: Vector<TypeTheme>;
+      themes!: Vector<Raw.TypeTheme>;
 
-      constructor(params: { hash: long; themes: Vector<TypeTheme> }) {
+      constructor(params: { hash: long; themes: Vector<Raw.TypeTheme> }) {
         super();
         this.classType = 'types';
         this.className = 'account.Themes';
@@ -79288,9 +79369,9 @@ export namespace Raw {
     }
     export class SavedRingtones extends TLObject {
       hash!: long;
-      ringtones!: Vector<TypeDocument>;
+      ringtones!: Vector<Raw.TypeDocument>;
 
-      constructor(params: { hash: long; ringtones: Vector<TypeDocument> }) {
+      constructor(params: { hash: long; ringtones: Vector<Raw.TypeDocument> }) {
         super();
         this.classType = 'types';
         this.className = 'account.SavedRingtones';
@@ -79358,9 +79439,9 @@ export namespace Raw {
       }
     }
     export class SavedRingtoneConverted extends TLObject {
-      document!: TypeDocument;
+      document!: Raw.TypeDocument;
 
-      constructor(params: { document: TypeDocument }) {
+      constructor(params: { document: Raw.TypeDocument }) {
         super();
         this.classType = 'types';
         this.className = 'account.SavedRingtoneConverted';
@@ -79430,9 +79511,9 @@ export namespace Raw {
     }
     export class EmojiStatuses extends TLObject {
       hash!: long;
-      statuses!: Vector<TypeEmojiStatus>;
+      statuses!: Vector<Raw.TypeEmojiStatus>;
 
-      constructor(params: { hash: long; statuses: Vector<TypeEmojiStatus> }) {
+      constructor(params: { hash: long; statuses: Vector<Raw.TypeEmojiStatus> }) {
         super();
         this.classType = 'types';
         this.className = 'account.EmojiStatuses';
@@ -79508,9 +79589,9 @@ export namespace Raw {
     }
     export class EmailVerifiedLogin extends TLObject {
       email!: string;
-      sentCode!: auth.TypeSentCode;
+      sentCode!: Raw.auth.TypeSentCode;
 
-      constructor(params: { email: string; sentCode: auth.TypeSentCode }) {
+      constructor(params: { email: string; sentCode: Raw.auth.TypeSentCode }) {
         super();
         this.classType = 'types';
         this.className = 'account.EmailVerifiedLogin';
@@ -79549,20 +79630,20 @@ export namespace Raw {
       }
     }
     export class AutoSaveSettings extends TLObject {
-      usersSettings!: TypeAutoSaveSettings;
-      chatsSettings!: TypeAutoSaveSettings;
-      broadcastsSettings!: TypeAutoSaveSettings;
-      exceptions!: Vector<TypeAutoSaveException>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      usersSettings!: Raw.TypeAutoSaveSettings;
+      chatsSettings!: Raw.TypeAutoSaveSettings;
+      broadcastsSettings!: Raw.TypeAutoSaveSettings;
+      exceptions!: Vector<Raw.TypeAutoSaveException>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        usersSettings: TypeAutoSaveSettings;
-        chatsSettings: TypeAutoSaveSettings;
-        broadcastsSettings: TypeAutoSaveSettings;
-        exceptions: Vector<TypeAutoSaveException>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        usersSettings: Raw.TypeAutoSaveSettings;
+        chatsSettings: Raw.TypeAutoSaveSettings;
+        broadcastsSettings: Raw.TypeAutoSaveSettings;
+        exceptions: Vector<Raw.TypeAutoSaveException>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -79774,10 +79855,13 @@ export namespace Raw {
     }
     export class UpdateNotifySettings extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputNotifyPeer;
-      settings!: TypeInputPeerNotifySettings;
+      peer!: Raw.TypeInputNotifyPeer;
+      settings!: Raw.TypeInputPeerNotifySettings;
 
-      constructor(params: { peer: TypeInputNotifyPeer; settings: TypeInputPeerNotifySettings }) {
+      constructor(params: {
+        peer: Raw.TypeInputNotifyPeer;
+        settings: Raw.TypeInputPeerNotifySettings;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'account.UpdateNotifySettings';
@@ -79819,10 +79903,10 @@ export namespace Raw {
       }
     }
     export class GetNotifySettings extends TLObject {
-      __response__!: TypePeerNotifySettings;
-      peer!: TypeInputNotifyPeer;
+      __response__!: Raw.TypePeerNotifySettings;
+      peer!: Raw.TypeInputNotifyPeer;
 
-      constructor(params: { peer: TypeInputNotifyPeer }) {
+      constructor(params: { peer: Raw.TypeInputNotifyPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetNotifySettings';
@@ -79887,7 +79971,7 @@ export namespace Raw {
       }
     }
     export class UpdateProfile extends TLObject {
-      __response__!: TypeUser;
+      __response__!: Raw.TypeUser;
       firstName?: string;
       lastName?: string;
       about?: string;
@@ -79985,7 +80069,7 @@ export namespace Raw {
       }
     }
     export class GetWallPapers extends TLObject {
-      __response__!: account.TypeWallPapers;
+      __response__!: Raw.account.TypeWallPapers;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -80023,11 +80107,15 @@ export namespace Raw {
     }
     export class ReportPeer extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
-      reason!: TypeReportReason;
+      peer!: Raw.TypeInputPeer;
+      reason!: Raw.TypeReportReason;
       message!: string;
 
-      constructor(params: { peer: TypeInputPeer; reason: TypeReportReason; message: string }) {
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        reason: Raw.TypeReportReason;
+        message: string;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'account.ReportPeer';
@@ -80108,7 +80196,7 @@ export namespace Raw {
       }
     }
     export class UpdateUsername extends TLObject {
-      __response__!: TypeUser;
+      __response__!: Raw.TypeUser;
       username!: string;
 
       constructor(params: { username: string }) {
@@ -80145,10 +80233,10 @@ export namespace Raw {
       }
     }
     export class GetPrivacy extends TLObject {
-      __response__!: account.TypePrivacyRules;
-      key!: TypeInputPrivacyKey;
+      __response__!: Raw.account.TypePrivacyRules;
+      key!: Raw.TypeInputPrivacyKey;
 
-      constructor(params: { key: TypeInputPrivacyKey }) {
+      constructor(params: { key: Raw.TypeInputPrivacyKey }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetPrivacy';
@@ -80182,11 +80270,14 @@ export namespace Raw {
       }
     }
     export class SetPrivacy extends TLObject {
-      __response__!: account.TypePrivacyRules;
-      key!: TypeInputPrivacyKey;
-      rules!: Vector<TypeInputPrivacyRule>;
+      __response__!: Raw.account.TypePrivacyRules;
+      key!: Raw.TypeInputPrivacyKey;
+      rules!: Vector<Raw.TypeInputPrivacyRule>;
 
-      constructor(params: { key: TypeInputPrivacyKey; rules: Vector<TypeInputPrivacyRule> }) {
+      constructor(params: {
+        key: Raw.TypeInputPrivacyKey;
+        rules: Vector<Raw.TypeInputPrivacyRule>;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SetPrivacy';
@@ -80227,9 +80318,9 @@ export namespace Raw {
     export class DeleteAccount extends TLObject {
       __response__!: Bool;
       reason!: string;
-      password?: TypeInputCheckPasswordSRP;
+      password?: Raw.TypeInputCheckPasswordSRP;
 
-      constructor(params: { reason: string; password?: TypeInputCheckPasswordSRP }) {
+      constructor(params: { reason: string; password?: Raw.TypeInputCheckPasswordSRP }) {
         super();
         this.classType = 'functions';
         this.className = 'account.DeleteAccount';
@@ -80274,7 +80365,7 @@ export namespace Raw {
       }
     }
     export class GetAccountTTL extends TLObject {
-      __response__!: TypeAccountDaysTTL;
+      __response__!: Raw.TypeAccountDaysTTL;
 
       constructor() {
         super();
@@ -80306,9 +80397,9 @@ export namespace Raw {
     }
     export class SetAccountTTL extends TLObject {
       __response__!: Bool;
-      ttl!: TypeAccountDaysTTL;
+      ttl!: Raw.TypeAccountDaysTTL;
 
-      constructor(params: { ttl: TypeAccountDaysTTL }) {
+      constructor(params: { ttl: Raw.TypeAccountDaysTTL }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SetAccountTTL';
@@ -80342,11 +80433,11 @@ export namespace Raw {
       }
     }
     export class SendChangePhoneCode extends TLObject {
-      __response__!: auth.TypeSentCode;
+      __response__!: Raw.auth.TypeSentCode;
       phoneNumber!: string;
-      settings!: TypeCodeSettings;
+      settings!: Raw.TypeCodeSettings;
 
-      constructor(params: { phoneNumber: string; settings: TypeCodeSettings }) {
+      constructor(params: { phoneNumber: string; settings: Raw.TypeCodeSettings }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SendChangePhoneCode';
@@ -80388,7 +80479,7 @@ export namespace Raw {
       }
     }
     export class ChangePhone extends TLObject {
-      __response__!: TypeUser;
+      __response__!: Raw.TypeUser;
       phoneNumber!: string;
       phoneCodeHash!: string;
       phoneCode!: string;
@@ -80478,7 +80569,7 @@ export namespace Raw {
       }
     }
     export class GetAuthorizations extends TLObject {
-      __response__!: account.TypeAuthorizations;
+      __response__!: Raw.account.TypeAuthorizations;
 
       constructor() {
         super();
@@ -80546,7 +80637,7 @@ export namespace Raw {
       }
     }
     export class GetPassword extends TLObject {
-      __response__!: account.TypePassword;
+      __response__!: Raw.account.TypePassword;
 
       constructor() {
         super();
@@ -80577,10 +80668,10 @@ export namespace Raw {
       }
     }
     export class GetPasswordSettings extends TLObject {
-      __response__!: account.TypePasswordSettings;
-      password!: TypeInputCheckPasswordSRP;
+      __response__!: Raw.account.TypePasswordSettings;
+      password!: Raw.TypeInputCheckPasswordSRP;
 
-      constructor(params: { password: TypeInputCheckPasswordSRP }) {
+      constructor(params: { password: Raw.TypeInputCheckPasswordSRP }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetPasswordSettings';
@@ -80615,12 +80706,12 @@ export namespace Raw {
     }
     export class UpdatePasswordSettings extends TLObject {
       __response__!: Bool;
-      password!: TypeInputCheckPasswordSRP;
-      newSettings!: account.TypePasswordInputSettings;
+      password!: Raw.TypeInputCheckPasswordSRP;
+      newSettings!: Raw.account.TypePasswordInputSettings;
 
       constructor(params: {
-        password: TypeInputCheckPasswordSRP;
-        newSettings: account.TypePasswordInputSettings;
+        password: Raw.TypeInputCheckPasswordSRP;
+        newSettings: Raw.account.TypePasswordInputSettings;
       }) {
         super();
         this.classType = 'functions';
@@ -80666,11 +80757,11 @@ export namespace Raw {
       }
     }
     export class SendConfirmPhoneCode extends TLObject {
-      __response__!: auth.TypeSentCode;
+      __response__!: Raw.auth.TypeSentCode;
       hash!: string;
-      settings!: TypeCodeSettings;
+      settings!: Raw.TypeCodeSettings;
 
-      constructor(params: { hash: string; settings: TypeCodeSettings }) {
+      constructor(params: { hash: string; settings: Raw.TypeCodeSettings }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SendConfirmPhoneCode';
@@ -80755,11 +80846,11 @@ export namespace Raw {
       }
     }
     export class GetTmpPassword extends TLObject {
-      __response__!: account.TypeTmpPassword;
-      password!: TypeInputCheckPasswordSRP;
+      __response__!: Raw.account.TypeTmpPassword;
+      password!: Raw.TypeInputCheckPasswordSRP;
       period!: int;
 
-      constructor(params: { password: TypeInputCheckPasswordSRP; period: int }) {
+      constructor(params: { password: Raw.TypeInputCheckPasswordSRP; period: int }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetTmpPassword';
@@ -80798,7 +80889,7 @@ export namespace Raw {
       }
     }
     export class GetWebAuthorizations extends TLObject {
-      __response__!: account.TypeWebAuthorizations;
+      __response__!: Raw.account.TypeWebAuthorizations;
 
       constructor() {
         super();
@@ -80906,7 +80997,7 @@ export namespace Raw {
       }
     }
     export class GetAllSecureValues extends TLObject {
-      __response__!: Vector<TypeSecureValue>;
+      __response__!: Vector<Raw.TypeSecureValue>;
 
       constructor() {
         super();
@@ -80937,10 +81028,10 @@ export namespace Raw {
       }
     }
     export class GetSecureValue extends TLObject {
-      __response__!: Vector<TypeSecureValue>;
-      types!: Vector<TypeSecureValueType>;
+      __response__!: Vector<Raw.TypeSecureValue>;
+      types!: Vector<Raw.TypeSecureValueType>;
 
-      constructor(params: { types: Vector<TypeSecureValueType> }) {
+      constructor(params: { types: Vector<Raw.TypeSecureValueType> }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetSecureValue';
@@ -80974,11 +81065,11 @@ export namespace Raw {
       }
     }
     export class SaveSecureValue extends TLObject {
-      __response__!: TypeSecureValue;
-      value!: TypeInputSecureValue;
+      __response__!: Raw.TypeSecureValue;
+      value!: Raw.TypeInputSecureValue;
       secureSecretId!: long;
 
-      constructor(params: { value: TypeInputSecureValue; secureSecretId: long }) {
+      constructor(params: { value: Raw.TypeInputSecureValue; secureSecretId: long }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SaveSecureValue';
@@ -81018,9 +81109,9 @@ export namespace Raw {
     }
     export class DeleteSecureValue extends TLObject {
       __response__!: Bool;
-      types!: Vector<TypeSecureValueType>;
+      types!: Vector<Raw.TypeSecureValueType>;
 
-      constructor(params: { types: Vector<TypeSecureValueType> }) {
+      constructor(params: { types: Vector<Raw.TypeSecureValueType> }) {
         super();
         this.classType = 'functions';
         this.className = 'account.DeleteSecureValue';
@@ -81054,7 +81145,7 @@ export namespace Raw {
       }
     }
     export class GetAuthorizationForm extends TLObject {
-      __response__!: account.TypeAuthorizationForm;
+      __response__!: Raw.account.TypeAuthorizationForm;
       botId!: long;
       scope!: string;
       publicKey!: string;
@@ -81114,15 +81205,15 @@ export namespace Raw {
       botId!: long;
       scope!: string;
       publicKey!: string;
-      valueHashes!: Vector<TypeSecureValueHash>;
-      credentials!: TypeSecureCredentialsEncrypted;
+      valueHashes!: Vector<Raw.TypeSecureValueHash>;
+      credentials!: Raw.TypeSecureCredentialsEncrypted;
 
       constructor(params: {
         botId: long;
         scope: string;
         publicKey: string;
-        valueHashes: Vector<TypeSecureValueHash>;
-        credentials: TypeSecureCredentialsEncrypted;
+        valueHashes: Vector<Raw.TypeSecureValueHash>;
+        credentials: Raw.TypeSecureCredentialsEncrypted;
       }) {
         super();
         this.classType = 'functions';
@@ -81183,11 +81274,11 @@ export namespace Raw {
       }
     }
     export class SendVerifyPhoneCode extends TLObject {
-      __response__!: auth.TypeSentCode;
+      __response__!: Raw.auth.TypeSentCode;
       phoneNumber!: string;
-      settings!: TypeCodeSettings;
+      settings!: Raw.TypeCodeSettings;
 
-      constructor(params: { phoneNumber: string; settings: TypeCodeSettings }) {
+      constructor(params: { phoneNumber: string; settings: Raw.TypeCodeSettings }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SendVerifyPhoneCode';
@@ -81282,11 +81373,11 @@ export namespace Raw {
       }
     }
     export class SendVerifyEmailCode extends TLObject {
-      __response__!: account.TypeSentEmailCode;
-      purpose!: TypeEmailVerifyPurpose;
+      __response__!: Raw.account.TypeSentEmailCode;
+      purpose!: Raw.TypeEmailVerifyPurpose;
       email!: string;
 
-      constructor(params: { purpose: TypeEmailVerifyPurpose; email: string }) {
+      constructor(params: { purpose: Raw.TypeEmailVerifyPurpose; email: string }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SendVerifyEmailCode';
@@ -81325,13 +81416,13 @@ export namespace Raw {
       }
     }
     export class VerifyEmail extends TLObject {
-      __response__!: account.TypeEmailVerified;
-      purpose!: TypeEmailVerifyPurpose;
-      verification!: TypeEmailVerification;
+      __response__!: Raw.account.TypeEmailVerified;
+      purpose!: Raw.TypeEmailVerifyPurpose;
+      verification!: Raw.TypeEmailVerification;
 
       constructor(params: {
-        purpose: TypeEmailVerifyPurpose;
-        verification: TypeEmailVerification;
+        purpose: Raw.TypeEmailVerifyPurpose;
+        verification: Raw.TypeEmailVerification;
       }) {
         super();
         this.classType = 'functions';
@@ -81371,7 +81462,7 @@ export namespace Raw {
       }
     }
     export class InitTakeoutSession extends TLObject {
-      __response__!: account.TypeTakeout;
+      __response__!: Raw.account.TypeTakeout;
       contacts?: boolean;
       messageUsers?: boolean;
       messageChats?: boolean;
@@ -81681,15 +81772,15 @@ export namespace Raw {
       }
     }
     export class GetNotifyExceptions extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       compareSound?: boolean;
       compareStories?: boolean;
-      peer?: TypeInputNotifyPeer;
+      peer?: Raw.TypeInputNotifyPeer;
 
       constructor(params: {
         compareSound?: boolean;
         compareStories?: boolean;
-        peer?: TypeInputNotifyPeer;
+        peer?: Raw.TypeInputNotifyPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -81740,10 +81831,10 @@ export namespace Raw {
       }
     }
     export class GetWallPaper extends TLObject {
-      __response__!: TypeWallPaper;
-      wallpaper!: TypeInputWallPaper;
+      __response__!: Raw.TypeWallPaper;
+      wallpaper!: Raw.TypeInputWallPaper;
 
-      constructor(params: { wallpaper: TypeInputWallPaper }) {
+      constructor(params: { wallpaper: Raw.TypeInputWallPaper }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetWallPaper';
@@ -81777,17 +81868,17 @@ export namespace Raw {
       }
     }
     export class UploadWallPaper extends TLObject {
-      __response__!: TypeWallPaper;
+      __response__!: Raw.TypeWallPaper;
       forChat?: boolean;
-      file!: TypeInputFile;
+      file!: Raw.TypeInputFile;
       mimeType!: string;
-      settings!: TypeWallPaperSettings;
+      settings!: Raw.TypeWallPaperSettings;
 
       constructor(params: {
         forChat?: boolean;
-        file: TypeInputFile;
+        file: Raw.TypeInputFile;
         mimeType: string;
-        settings: TypeWallPaperSettings;
+        settings: Raw.TypeWallPaperSettings;
       }) {
         super();
         this.classType = 'functions';
@@ -81846,14 +81937,14 @@ export namespace Raw {
     }
     export class SaveWallPaper extends TLObject {
       __response__!: Bool;
-      wallpaper!: TypeInputWallPaper;
+      wallpaper!: Raw.TypeInputWallPaper;
       unsave!: Bool;
-      settings!: TypeWallPaperSettings;
+      settings!: Raw.TypeWallPaperSettings;
 
       constructor(params: {
-        wallpaper: TypeInputWallPaper;
+        wallpaper: Raw.TypeInputWallPaper;
         unsave: Bool;
-        settings: TypeWallPaperSettings;
+        settings: Raw.TypeWallPaperSettings;
       }) {
         super();
         this.classType = 'functions';
@@ -81903,10 +81994,13 @@ export namespace Raw {
     }
     export class InstallWallPaper extends TLObject {
       __response__!: Bool;
-      wallpaper!: TypeInputWallPaper;
-      settings!: TypeWallPaperSettings;
+      wallpaper!: Raw.TypeInputWallPaper;
+      settings!: Raw.TypeWallPaperSettings;
 
-      constructor(params: { wallpaper: TypeInputWallPaper; settings: TypeWallPaperSettings }) {
+      constructor(params: {
+        wallpaper: Raw.TypeInputWallPaper;
+        settings: Raw.TypeWallPaperSettings;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'account.InstallWallPaper';
@@ -81976,7 +82070,7 @@ export namespace Raw {
       }
     }
     export class GetAutoDownloadSettings extends TLObject {
-      __response__!: account.TypeAutoDownloadSettings;
+      __response__!: Raw.account.TypeAutoDownloadSettings;
 
       constructor() {
         super();
@@ -82013,9 +82107,13 @@ export namespace Raw {
       __response__!: Bool;
       low?: boolean;
       high?: boolean;
-      settings!: TypeAutoDownloadSettings;
+      settings!: Raw.TypeAutoDownloadSettings;
 
-      constructor(params: { low?: boolean; high?: boolean; settings: TypeAutoDownloadSettings }) {
+      constructor(params: {
+        low?: boolean;
+        high?: boolean;
+        settings: Raw.TypeAutoDownloadSettings;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SaveAutoDownloadSettings';
@@ -82067,15 +82165,15 @@ export namespace Raw {
       }
     }
     export class UploadTheme extends TLObject {
-      __response__!: TypeDocument;
-      file!: TypeInputFile;
-      thumb?: TypeInputFile;
+      __response__!: Raw.TypeDocument;
+      file!: Raw.TypeInputFile;
+      thumb?: Raw.TypeInputFile;
       fileName!: string;
       mimeType!: string;
 
       constructor(params: {
-        file: TypeInputFile;
-        thumb?: TypeInputFile;
+        file: Raw.TypeInputFile;
+        thumb?: Raw.TypeInputFile;
         fileName: string;
         mimeType: string;
       }) {
@@ -82138,17 +82236,17 @@ export namespace Raw {
       }
     }
     export class CreateTheme extends TLObject {
-      __response__!: TypeTheme;
+      __response__!: Raw.TypeTheme;
       slug!: string;
       title!: string;
-      document?: TypeInputDocument;
-      settings?: Vector<TypeInputThemeSettings>;
+      document?: Raw.TypeInputDocument;
+      settings?: Vector<Raw.TypeInputThemeSettings>;
 
       constructor(params: {
         slug: string;
         title: string;
-        document?: TypeInputDocument;
-        settings?: Vector<TypeInputThemeSettings>;
+        document?: Raw.TypeInputDocument;
+        settings?: Vector<Raw.TypeInputThemeSettings>;
       }) {
         super();
         this.classType = 'functions';
@@ -82210,21 +82308,21 @@ export namespace Raw {
       }
     }
     export class UpdateTheme extends TLObject {
-      __response__!: TypeTheme;
+      __response__!: Raw.TypeTheme;
       format!: string;
-      theme!: TypeInputTheme;
+      theme!: Raw.TypeInputTheme;
       slug?: string;
       title?: string;
-      document?: TypeInputDocument;
-      settings?: Vector<TypeInputThemeSettings>;
+      document?: Raw.TypeInputDocument;
+      settings?: Vector<Raw.TypeInputThemeSettings>;
 
       constructor(params: {
         format: string;
-        theme: TypeInputTheme;
+        theme: Raw.TypeInputTheme;
         slug?: string;
         title?: string;
-        document?: TypeInputDocument;
-        settings?: Vector<TypeInputThemeSettings>;
+        document?: Raw.TypeInputDocument;
+        settings?: Vector<Raw.TypeInputThemeSettings>;
       }) {
         super();
         this.classType = 'functions';
@@ -82301,10 +82399,10 @@ export namespace Raw {
     }
     export class SaveTheme extends TLObject {
       __response__!: Bool;
-      theme!: TypeInputTheme;
+      theme!: Raw.TypeInputTheme;
       unsave!: Bool;
 
-      constructor(params: { theme: TypeInputTheme; unsave: Bool }) {
+      constructor(params: { theme: Raw.TypeInputTheme; unsave: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SaveTheme';
@@ -82345,15 +82443,15 @@ export namespace Raw {
     export class InstallTheme extends TLObject {
       __response__!: Bool;
       dark?: boolean;
-      theme?: TypeInputTheme;
+      theme?: Raw.TypeInputTheme;
       format?: string;
-      baseTheme?: TypeBaseTheme;
+      baseTheme?: Raw.TypeBaseTheme;
 
       constructor(params: {
         dark?: boolean;
-        theme?: TypeInputTheme;
+        theme?: Raw.TypeInputTheme;
         format?: string;
-        baseTheme?: TypeBaseTheme;
+        baseTheme?: Raw.TypeBaseTheme;
       }) {
         super();
         this.classType = 'functions';
@@ -82414,11 +82512,11 @@ export namespace Raw {
       }
     }
     export class GetTheme extends TLObject {
-      __response__!: TypeTheme;
+      __response__!: Raw.TypeTheme;
       format!: string;
-      theme!: TypeInputTheme;
+      theme!: Raw.TypeInputTheme;
 
-      constructor(params: { format: string; theme: TypeInputTheme }) {
+      constructor(params: { format: string; theme: Raw.TypeInputTheme }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetTheme';
@@ -82457,7 +82555,7 @@ export namespace Raw {
       }
     }
     export class GetThemes extends TLObject {
-      __response__!: account.TypeThemes;
+      __response__!: Raw.account.TypeThemes;
       format!: string;
       hash!: long;
 
@@ -82540,7 +82638,7 @@ export namespace Raw {
       }
     }
     export class GetContentSettings extends TLObject {
-      __response__!: account.TypeContentSettings;
+      __response__!: Raw.account.TypeContentSettings;
 
       constructor() {
         super();
@@ -82571,10 +82669,10 @@ export namespace Raw {
       }
     }
     export class GetMultiWallPapers extends TLObject {
-      __response__!: Vector<TypeWallPaper>;
-      wallpapers!: Vector<TypeInputWallPaper>;
+      __response__!: Vector<Raw.TypeWallPaper>;
+      wallpapers!: Vector<Raw.TypeInputWallPaper>;
 
-      constructor(params: { wallpapers: Vector<TypeInputWallPaper> }) {
+      constructor(params: { wallpapers: Vector<Raw.TypeInputWallPaper> }) {
         super();
         this.classType = 'functions';
         this.className = 'account.GetMultiWallPapers';
@@ -82608,7 +82706,7 @@ export namespace Raw {
       }
     }
     export class GetGlobalPrivacySettings extends TLObject {
-      __response__!: TypeGlobalPrivacySettings;
+      __response__!: Raw.TypeGlobalPrivacySettings;
 
       constructor() {
         super();
@@ -82642,10 +82740,10 @@ export namespace Raw {
       }
     }
     export class SetGlobalPrivacySettings extends TLObject {
-      __response__!: TypeGlobalPrivacySettings;
-      settings!: TypeGlobalPrivacySettings;
+      __response__!: Raw.TypeGlobalPrivacySettings;
+      settings!: Raw.TypeGlobalPrivacySettings;
 
-      constructor(params: { settings: TypeGlobalPrivacySettings }) {
+      constructor(params: { settings: Raw.TypeGlobalPrivacySettings }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SetGlobalPrivacySettings';
@@ -82683,15 +82781,15 @@ export namespace Raw {
     }
     export class ReportProfilePhoto extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
-      photoId!: TypeInputPhoto;
-      reason!: TypeReportReason;
+      peer!: Raw.TypeInputPeer;
+      photoId!: Raw.TypeInputPhoto;
+      reason!: Raw.TypeReportReason;
       message!: string;
 
       constructor(params: {
-        peer: TypeInputPeer;
-        photoId: TypeInputPhoto;
-        reason: TypeReportReason;
+        peer: Raw.TypeInputPeer;
+        photoId: Raw.TypeInputPhoto;
+        reason: Raw.TypeReportReason;
         message: string;
       }) {
         super();
@@ -82747,7 +82845,7 @@ export namespace Raw {
       }
     }
     export class ResetPassword extends TLObject {
-      __response__!: account.TypeResetPasswordResult;
+      __response__!: Raw.account.TypeResetPasswordResult;
 
       constructor() {
         super();
@@ -82812,7 +82910,7 @@ export namespace Raw {
       }
     }
     export class GetChatThemes extends TLObject {
-      __response__!: account.TypeThemes;
+      __response__!: Raw.account.TypeThemes;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82953,7 +83051,7 @@ export namespace Raw {
       }
     }
     export class GetSavedRingtones extends TLObject {
-      __response__!: account.TypeSavedRingtones;
+      __response__!: Raw.account.TypeSavedRingtones;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -82990,11 +83088,11 @@ export namespace Raw {
       }
     }
     export class SaveRingtone extends TLObject {
-      __response__!: account.TypeSavedRingtone;
-      id!: TypeInputDocument;
+      __response__!: Raw.account.TypeSavedRingtone;
+      id!: Raw.TypeInputDocument;
       unsave!: Bool;
 
-      constructor(params: { id: TypeInputDocument; unsave: Bool }) {
+      constructor(params: { id: Raw.TypeInputDocument; unsave: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'account.SaveRingtone';
@@ -83033,12 +83131,12 @@ export namespace Raw {
       }
     }
     export class UploadRingtone extends TLObject {
-      __response__!: TypeDocument;
-      file!: TypeInputFile;
+      __response__!: Raw.TypeDocument;
+      file!: Raw.TypeInputFile;
       fileName!: string;
       mimeType!: string;
 
-      constructor(params: { file: TypeInputFile; fileName: string; mimeType: string }) {
+      constructor(params: { file: Raw.TypeInputFile; fileName: string; mimeType: string }) {
         super();
         this.classType = 'functions';
         this.className = 'account.UploadRingtone';
@@ -83087,9 +83185,9 @@ export namespace Raw {
     }
     export class UpdateEmojiStatus extends TLObject {
       __response__!: Bool;
-      emojiStatus!: TypeEmojiStatus;
+      emojiStatus!: Raw.TypeEmojiStatus;
 
-      constructor(params: { emojiStatus: TypeEmojiStatus }) {
+      constructor(params: { emojiStatus: Raw.TypeEmojiStatus }) {
         super();
         this.classType = 'functions';
         this.className = 'account.UpdateEmojiStatus';
@@ -83123,7 +83221,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultEmojiStatuses extends TLObject {
-      __response__!: account.TypeEmojiStatuses;
+      __response__!: Raw.account.TypeEmojiStatuses;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -83163,7 +83261,7 @@ export namespace Raw {
       }
     }
     export class GetRecentEmojiStatuses extends TLObject {
-      __response__!: account.TypeEmojiStatuses;
+      __response__!: Raw.account.TypeEmojiStatuses;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -83317,7 +83415,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultProfilePhotoEmojis extends TLObject {
-      __response__!: TypeEmojiList;
+      __response__!: Raw.TypeEmojiList;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -83357,7 +83455,7 @@ export namespace Raw {
       }
     }
     export class GetDefaultGroupPhotoEmojis extends TLObject {
-      __response__!: TypeEmojiList;
+      __response__!: Raw.TypeEmojiList;
       hash!: long;
 
       constructor(params: { hash: long }) {
@@ -83397,7 +83495,7 @@ export namespace Raw {
       }
     }
     export class GetAutoSaveSettings extends TLObject {
-      __response__!: account.TypeAutoSaveSettings;
+      __response__!: Raw.account.TypeAutoSaveSettings;
 
       constructor() {
         super();
@@ -83432,15 +83530,15 @@ export namespace Raw {
       users?: boolean;
       chats?: boolean;
       broadcasts?: boolean;
-      peer?: TypeInputPeer;
-      settings!: TypeAutoSaveSettings;
+      peer?: Raw.TypeInputPeer;
+      settings!: Raw.TypeAutoSaveSettings;
 
       constructor(params: {
         users?: boolean;
         chats?: boolean;
         broadcasts?: boolean;
-        peer?: TypeInputPeer;
-        settings: TypeAutoSaveSettings;
+        peer?: Raw.TypeInputPeer;
+        settings: Raw.TypeAutoSaveSettings;
       }) {
         super();
         this.classType = 'functions';
@@ -83587,15 +83685,15 @@ export namespace Raw {
       | Raw.channels.ChannelParticipantsNotModified;
     export class ChannelParticipants extends TLObject {
       count!: int;
-      participants!: Vector<TypeChannelParticipant>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      participants!: Vector<Raw.TypeChannelParticipant>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         count: int;
-        participants: Vector<TypeChannelParticipant>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        participants: Vector<Raw.TypeChannelParticipant>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -83685,14 +83783,14 @@ export namespace Raw {
       }
     }
     export class ChannelParticipant extends TLObject {
-      participant!: TypeChannelParticipant;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      participant!: Raw.TypeChannelParticipant;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        participant: TypeChannelParticipant;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        participant: Raw.TypeChannelParticipant;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -83741,14 +83839,14 @@ export namespace Raw {
       }
     }
     export class AdminLogResults extends TLObject {
-      events!: Vector<TypeChannelAdminLogEvent>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      events!: Vector<Raw.TypeChannelAdminLogEvent>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        events: Vector<TypeChannelAdminLogEvent>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        events: Vector<Raw.TypeChannelAdminLogEvent>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -83793,14 +83891,14 @@ export namespace Raw {
       }
     }
     export class SendAsPeers extends TLObject {
-      peers!: Vector<TypeSendAsPeer>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      peers!: Vector<Raw.TypeSendAsPeer>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        peers: Vector<TypeSendAsPeer>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        peers: Vector<Raw.TypeSendAsPeer>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -83846,10 +83944,10 @@ export namespace Raw {
     }
     export class ReadHistory extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       maxId!: int;
 
-      constructor(params: { channel: TypeInputChannel; maxId: int }) {
+      constructor(params: { channel: Raw.TypeInputChannel; maxId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ReadHistory';
@@ -83888,11 +83986,11 @@ export namespace Raw {
       }
     }
     export class DeleteMessages extends TLObject {
-      __response__!: messages.TypeAffectedMessages;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeAffectedMessages;
+      channel!: Raw.TypeInputChannel;
       id!: Vector<int>;
 
-      constructor(params: { channel: TypeInputChannel; id: Vector<int> }) {
+      constructor(params: { channel: Raw.TypeInputChannel; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.DeleteMessages';
@@ -83932,13 +84030,13 @@ export namespace Raw {
     }
     export class ReportSpam extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
-      participant!: TypeInputPeer;
+      channel!: Raw.TypeInputChannel;
+      participant!: Raw.TypeInputPeer;
       id!: Vector<int>;
 
       constructor(params: {
-        channel: TypeInputChannel;
-        participant: TypeInputPeer;
+        channel: Raw.TypeInputChannel;
+        participant: Raw.TypeInputPeer;
         id: Vector<int>;
       }) {
         super();
@@ -83984,11 +84082,11 @@ export namespace Raw {
       }
     }
     export class GetMessages extends TLObject {
-      __response__!: messages.TypeMessages;
-      channel!: TypeInputChannel;
-      id!: Vector<TypeInputMessage>;
+      __response__!: Raw.messages.TypeMessages;
+      channel!: Raw.TypeInputChannel;
+      id!: Vector<Raw.TypeInputMessage>;
 
-      constructor(params: { channel: TypeInputChannel; id: Vector<TypeInputMessage> }) {
+      constructor(params: { channel: Raw.TypeInputChannel; id: Vector<Raw.TypeInputMessage> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetMessages';
@@ -84027,16 +84125,16 @@ export namespace Raw {
       }
     }
     export class GetParticipants extends TLObject {
-      __response__!: channels.TypeChannelParticipants;
-      channel!: TypeInputChannel;
-      filter!: TypeChannelParticipantsFilter;
+      __response__!: Raw.channels.TypeChannelParticipants;
+      channel!: Raw.TypeInputChannel;
+      filter!: Raw.TypeChannelParticipantsFilter;
       offset!: int;
       limit!: int;
       hash!: long;
 
       constructor(params: {
-        channel: TypeInputChannel;
-        filter: TypeChannelParticipantsFilter;
+        channel: Raw.TypeInputChannel;
+        filter: Raw.TypeChannelParticipantsFilter;
         offset: int;
         limit: int;
         hash: long;
@@ -84100,11 +84198,11 @@ export namespace Raw {
       }
     }
     export class GetParticipant extends TLObject {
-      __response__!: channels.TypeChannelParticipant;
-      channel!: TypeInputChannel;
-      participant!: TypeInputPeer;
+      __response__!: Raw.channels.TypeChannelParticipant;
+      channel!: Raw.TypeInputChannel;
+      participant!: Raw.TypeInputPeer;
 
-      constructor(params: { channel: TypeInputChannel; participant: TypeInputPeer }) {
+      constructor(params: { channel: Raw.TypeInputChannel; participant: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetParticipant';
@@ -84143,10 +84241,10 @@ export namespace Raw {
       }
     }
     export class GetChannels extends TLObject {
-      __response__!: messages.TypeChats;
-      id!: Vector<TypeInputChannel>;
+      __response__!: Raw.messages.TypeChats;
+      id!: Vector<Raw.TypeInputChannel>;
 
-      constructor(params: { id: Vector<TypeInputChannel> }) {
+      constructor(params: { id: Vector<Raw.TypeInputChannel> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetChannels';
@@ -84180,10 +84278,10 @@ export namespace Raw {
       }
     }
     export class GetFullChannel extends TLObject {
-      __response__!: messages.TypeChatFull;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeChatFull;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetFullChannel';
@@ -84217,14 +84315,14 @@ export namespace Raw {
       }
     }
     export class CreateChannel extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       broadcast?: boolean;
       megagroup?: boolean;
       forImport?: boolean;
       forum?: boolean;
       title!: string;
       about!: string;
-      geoPoint?: TypeInputGeoPoint;
+      geoPoint?: Raw.TypeInputGeoPoint;
       address?: string;
       ttlPeriod?: int;
 
@@ -84235,7 +84333,7 @@ export namespace Raw {
         forum?: boolean;
         title: string;
         about: string;
-        geoPoint?: TypeInputGeoPoint;
+        geoPoint?: Raw.TypeInputGeoPoint;
         address?: string;
         ttlPeriod?: int;
       }) {
@@ -84332,16 +84430,16 @@ export namespace Raw {
       }
     }
     export class EditAdmin extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
-      userId!: TypeInputUser;
-      adminRights!: TypeChatAdminRights;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
+      userId!: Raw.TypeInputUser;
+      adminRights!: Raw.TypeChatAdminRights;
       rank!: string;
 
       constructor(params: {
-        channel: TypeInputChannel;
-        userId: TypeInputUser;
-        adminRights: TypeChatAdminRights;
+        channel: Raw.TypeInputChannel;
+        userId: Raw.TypeInputUser;
+        adminRights: Raw.TypeChatAdminRights;
         rank: string;
       }) {
         super();
@@ -84397,11 +84495,11 @@ export namespace Raw {
       }
     }
     export class EditTitle extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       title!: string;
 
-      constructor(params: { channel: TypeInputChannel; title: string }) {
+      constructor(params: { channel: Raw.TypeInputChannel; title: string }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.EditTitle';
@@ -84440,11 +84538,11 @@ export namespace Raw {
       }
     }
     export class EditPhoto extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
-      photo!: TypeInputChatPhoto;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
+      photo!: Raw.TypeInputChatPhoto;
 
-      constructor(params: { channel: TypeInputChannel; photo: TypeInputChatPhoto }) {
+      constructor(params: { channel: Raw.TypeInputChannel; photo: Raw.TypeInputChatPhoto }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.EditPhoto';
@@ -84484,10 +84582,10 @@ export namespace Raw {
     }
     export class CheckUsername extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       username!: string;
 
-      constructor(params: { channel: TypeInputChannel; username: string }) {
+      constructor(params: { channel: Raw.TypeInputChannel; username: string }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.CheckUsername';
@@ -84527,10 +84625,10 @@ export namespace Raw {
     }
     export class UpdateUsername extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       username!: string;
 
-      constructor(params: { channel: TypeInputChannel; username: string }) {
+      constructor(params: { channel: Raw.TypeInputChannel; username: string }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.UpdateUsername';
@@ -84569,10 +84667,10 @@ export namespace Raw {
       }
     }
     export class JoinChannel extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.JoinChannel';
@@ -84606,10 +84704,10 @@ export namespace Raw {
       }
     }
     export class LeaveChannel extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.LeaveChannel';
@@ -84643,11 +84741,11 @@ export namespace Raw {
       }
     }
     export class InviteToChannel extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
-      users!: Vector<TypeInputUser>;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
+      users!: Vector<Raw.TypeInputUser>;
 
-      constructor(params: { channel: TypeInputChannel; users: Vector<TypeInputUser> }) {
+      constructor(params: { channel: Raw.TypeInputChannel; users: Vector<Raw.TypeInputUser> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.InviteToChannel';
@@ -84686,10 +84784,10 @@ export namespace Raw {
       }
     }
     export class DeleteChannel extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.DeleteChannel';
@@ -84723,16 +84821,16 @@ export namespace Raw {
       }
     }
     export class ExportMessageLink extends TLObject {
-      __response__!: TypeExportedMessageLink;
+      __response__!: Raw.TypeExportedMessageLink;
       grouped?: boolean;
       thread?: boolean;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       id!: int;
 
       constructor(params: {
         grouped?: boolean;
         thread?: boolean;
-        channel: TypeInputChannel;
+        channel: Raw.TypeInputChannel;
         id: int;
       }) {
         super();
@@ -84789,11 +84887,11 @@ export namespace Raw {
       }
     }
     export class ToggleSignatures extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleSignatures';
@@ -84832,7 +84930,7 @@ export namespace Raw {
       }
     }
     export class GetAdminedPublicChannels extends TLObject {
-      __response__!: messages.TypeChats;
+      __response__!: Raw.messages.TypeChats;
       byLocation?: boolean;
       checkLimit?: boolean;
 
@@ -84882,15 +84980,15 @@ export namespace Raw {
       }
     }
     export class EditBanned extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
-      participant!: TypeInputPeer;
-      bannedRights!: TypeChatBannedRights;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
+      participant!: Raw.TypeInputPeer;
+      bannedRights!: Raw.TypeChatBannedRights;
 
       constructor(params: {
-        channel: TypeInputChannel;
-        participant: TypeInputPeer;
-        bannedRights: TypeChatBannedRights;
+        channel: Raw.TypeInputChannel;
+        participant: Raw.TypeInputPeer;
+        bannedRights: Raw.TypeChatBannedRights;
       }) {
         super();
         this.classType = 'functions';
@@ -84939,20 +85037,20 @@ export namespace Raw {
       }
     }
     export class GetAdminLog extends TLObject {
-      __response__!: channels.TypeAdminLogResults;
-      channel!: TypeInputChannel;
+      __response__!: Raw.channels.TypeAdminLogResults;
+      channel!: Raw.TypeInputChannel;
       q!: string;
-      eventsFilter?: TypeChannelAdminLogEventsFilter;
-      admins?: Vector<TypeInputUser>;
+      eventsFilter?: Raw.TypeChannelAdminLogEventsFilter;
+      admins?: Vector<Raw.TypeInputUser>;
       maxId!: long;
       minId!: long;
       limit!: int;
 
       constructor(params: {
-        channel: TypeInputChannel;
+        channel: Raw.TypeInputChannel;
         q: string;
-        eventsFilter?: TypeChannelAdminLogEventsFilter;
-        admins?: Vector<TypeInputUser>;
+        eventsFilter?: Raw.TypeChannelAdminLogEventsFilter;
+        admins?: Vector<Raw.TypeInputUser>;
         maxId: long;
         minId: long;
         limit: int;
@@ -85036,10 +85134,10 @@ export namespace Raw {
     }
     export class SetStickers extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
-      stickerset!: TypeInputStickerSet;
+      channel!: Raw.TypeInputChannel;
+      stickerset!: Raw.TypeInputStickerSet;
 
-      constructor(params: { channel: TypeInputChannel; stickerset: TypeInputStickerSet }) {
+      constructor(params: { channel: Raw.TypeInputChannel; stickerset: Raw.TypeInputStickerSet }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.SetStickers';
@@ -85079,10 +85177,10 @@ export namespace Raw {
     }
     export class ReadMessageContents extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       id!: Vector<int>;
 
-      constructor(params: { channel: TypeInputChannel; id: Vector<int> }) {
+      constructor(params: { channel: Raw.TypeInputChannel; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ReadMessageContents';
@@ -85124,12 +85222,12 @@ export namespace Raw {
       }
     }
     export class DeleteHistory extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       forEveryone?: boolean;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       maxId!: int;
 
-      constructor(params: { forEveryone?: boolean; channel: TypeInputChannel; maxId: int }) {
+      constructor(params: { forEveryone?: boolean; channel: Raw.TypeInputChannel; maxId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.DeleteHistory';
@@ -85180,11 +85278,11 @@ export namespace Raw {
       }
     }
     export class TogglePreHistoryHidden extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.TogglePreHistoryHidden';
@@ -85226,7 +85324,7 @@ export namespace Raw {
       }
     }
     export class GetLeftChannels extends TLObject {
-      __response__!: messages.TypeChats;
+      __response__!: Raw.messages.TypeChats;
       offset!: int;
 
       constructor(params: { offset: int }) {
@@ -85263,7 +85361,7 @@ export namespace Raw {
       }
     }
     export class GetGroupsForDiscussion extends TLObject {
-      __response__!: messages.TypeChats;
+      __response__!: Raw.messages.TypeChats;
 
       constructor() {
         super();
@@ -85298,10 +85396,10 @@ export namespace Raw {
     }
     export class SetDiscussionGroup extends TLObject {
       __response__!: Bool;
-      broadcast!: TypeInputChannel;
-      group!: TypeInputChannel;
+      broadcast!: Raw.TypeInputChannel;
+      group!: Raw.TypeInputChannel;
 
-      constructor(params: { broadcast: TypeInputChannel; group: TypeInputChannel }) {
+      constructor(params: { broadcast: Raw.TypeInputChannel; group: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.SetDiscussionGroup';
@@ -85340,15 +85438,15 @@ export namespace Raw {
       }
     }
     export class EditCreator extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
-      userId!: TypeInputUser;
-      password!: TypeInputCheckPasswordSRP;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
+      userId!: Raw.TypeInputUser;
+      password!: Raw.TypeInputCheckPasswordSRP;
 
       constructor(params: {
-        channel: TypeInputChannel;
-        userId: TypeInputUser;
-        password: TypeInputCheckPasswordSRP;
+        channel: Raw.TypeInputChannel;
+        userId: Raw.TypeInputUser;
+        password: Raw.TypeInputCheckPasswordSRP;
       }) {
         super();
         this.classType = 'functions';
@@ -85398,13 +85496,13 @@ export namespace Raw {
     }
     export class EditLocation extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
-      geoPoint!: TypeInputGeoPoint;
+      channel!: Raw.TypeInputChannel;
+      geoPoint!: Raw.TypeInputGeoPoint;
       address!: string;
 
       constructor(params: {
-        channel: TypeInputChannel;
-        geoPoint: TypeInputGeoPoint;
+        channel: Raw.TypeInputChannel;
+        geoPoint: Raw.TypeInputGeoPoint;
         address: string;
       }) {
         super();
@@ -85454,11 +85552,11 @@ export namespace Raw {
       }
     }
     export class ToggleSlowMode extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       seconds!: int;
 
-      constructor(params: { channel: TypeInputChannel; seconds: int }) {
+      constructor(params: { channel: Raw.TypeInputChannel; seconds: int }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleSlowMode';
@@ -85497,7 +85595,7 @@ export namespace Raw {
       }
     }
     export class GetInactiveChannels extends TLObject {
-      __response__!: messages.TypeInactiveChats;
+      __response__!: Raw.messages.TypeInactiveChats;
 
       constructor() {
         super();
@@ -85531,10 +85629,10 @@ export namespace Raw {
       }
     }
     export class ConvertToGigagroup extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ConvertToGigagroup';
@@ -85569,10 +85667,10 @@ export namespace Raw {
     }
     export class ViewSponsoredMessage extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       randomId!: bytes;
 
-      constructor(params: { channel: TypeInputChannel; randomId: bytes }) {
+      constructor(params: { channel: Raw.TypeInputChannel; randomId: bytes }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ViewSponsoredMessage';
@@ -85614,10 +85712,10 @@ export namespace Raw {
       }
     }
     export class GetSponsoredMessages extends TLObject {
-      __response__!: messages.TypeSponsoredMessages;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeSponsoredMessages;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetSponsoredMessages';
@@ -85654,10 +85752,10 @@ export namespace Raw {
       }
     }
     export class GetSendAs extends TLObject {
-      __response__!: channels.TypeSendAsPeers;
-      peer!: TypeInputPeer;
+      __response__!: Raw.channels.TypeSendAsPeers;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetSendAs';
@@ -85691,11 +85789,11 @@ export namespace Raw {
       }
     }
     export class DeleteParticipantHistory extends TLObject {
-      __response__!: messages.TypeAffectedHistory;
-      channel!: TypeInputChannel;
-      participant!: TypeInputPeer;
+      __response__!: Raw.messages.TypeAffectedHistory;
+      channel!: Raw.TypeInputChannel;
+      participant!: Raw.TypeInputPeer;
 
-      constructor(params: { channel: TypeInputChannel; participant: TypeInputPeer }) {
+      constructor(params: { channel: Raw.TypeInputChannel; participant: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.DeleteParticipantHistory';
@@ -85740,11 +85838,11 @@ export namespace Raw {
       }
     }
     export class ToggleJoinToSend extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleJoinToSend';
@@ -85783,11 +85881,11 @@ export namespace Raw {
       }
     }
     export class ToggleJoinRequest extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleJoinRequest';
@@ -85827,10 +85925,10 @@ export namespace Raw {
     }
     export class ReorderUsernames extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       order!: Vector<string>;
 
-      constructor(params: { channel: TypeInputChannel; order: Vector<string> }) {
+      constructor(params: { channel: Raw.TypeInputChannel; order: Vector<string> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ReorderUsernames';
@@ -85870,11 +85968,11 @@ export namespace Raw {
     }
     export class ToggleUsername extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       username!: string;
       active!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; username: string; active: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; username: string; active: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleUsername';
@@ -85923,9 +86021,9 @@ export namespace Raw {
     }
     export class DeactivateAllUsernames extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { channel: TypeInputChannel }) {
+      constructor(params: { channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.DeactivateAllUsernames';
@@ -85962,11 +86060,11 @@ export namespace Raw {
       }
     }
     export class ToggleForum extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleForum';
@@ -86005,21 +86103,21 @@ export namespace Raw {
       }
     }
     export class CreateForumTopic extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       title!: string;
       iconColor?: int;
       iconEmojiId?: long;
       randomId!: long;
-      sendAs?: TypeInputPeer;
+      sendAs?: Raw.TypeInputPeer;
 
       constructor(params: {
-        channel: TypeInputChannel;
+        channel: Raw.TypeInputChannel;
         title: string;
         iconColor?: int;
         iconEmojiId?: long;
         randomId: long;
-        sendAs?: TypeInputPeer;
+        sendAs?: Raw.TypeInputPeer;
       }) {
         super();
         this.classType = 'functions';
@@ -86094,8 +86192,8 @@ export namespace Raw {
       }
     }
     export class GetForumTopics extends TLObject {
-      __response__!: messages.TypeForumTopics;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeForumTopics;
+      channel!: Raw.TypeInputChannel;
       q?: string;
       offsetDate!: int;
       offsetId!: int;
@@ -86103,7 +86201,7 @@ export namespace Raw {
       limit!: int;
 
       constructor(params: {
-        channel: TypeInputChannel;
+        channel: Raw.TypeInputChannel;
         q?: string;
         offsetDate: int;
         offsetId: int;
@@ -86181,11 +86279,11 @@ export namespace Raw {
       }
     }
     export class GetForumTopicsByID extends TLObject {
-      __response__!: messages.TypeForumTopics;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeForumTopics;
+      channel!: Raw.TypeInputChannel;
       topics!: Vector<int>;
 
-      constructor(params: { channel: TypeInputChannel; topics: Vector<int> }) {
+      constructor(params: { channel: Raw.TypeInputChannel; topics: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetForumTopicsByID';
@@ -86224,8 +86322,8 @@ export namespace Raw {
       }
     }
     export class EditForumTopic extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       topicId!: int;
       title?: string;
       iconEmojiId?: long;
@@ -86233,7 +86331,7 @@ export namespace Raw {
       hidden?: Bool;
 
       constructor(params: {
-        channel: TypeInputChannel;
+        channel: Raw.TypeInputChannel;
         topicId: int;
         title?: string;
         iconEmojiId?: long;
@@ -86314,12 +86412,12 @@ export namespace Raw {
       }
     }
     export class UpdatePinnedForumTopic extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       topicId!: int;
       pinned!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; topicId: int; pinned: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; topicId: int; pinned: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.UpdatePinnedForumTopic';
@@ -86370,11 +86468,11 @@ export namespace Raw {
       }
     }
     export class DeleteTopicHistory extends TLObject {
-      __response__!: messages.TypeAffectedHistory;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeAffectedHistory;
+      channel!: Raw.TypeInputChannel;
       topMsgId!: int;
 
-      constructor(params: { channel: TypeInputChannel; topMsgId: int }) {
+      constructor(params: { channel: Raw.TypeInputChannel; topMsgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.DeleteTopicHistory';
@@ -86413,12 +86511,12 @@ export namespace Raw {
       }
     }
     export class ReorderPinnedForumTopics extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       force?: boolean;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       order!: Vector<int>;
 
-      constructor(params: { force?: boolean; channel: TypeInputChannel; order: Vector<int> }) {
+      constructor(params: { force?: boolean; channel: Raw.TypeInputChannel; order: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ReorderPinnedForumTopics';
@@ -86472,11 +86570,11 @@ export namespace Raw {
       }
     }
     export class ToggleAntiSpam extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleAntiSpam';
@@ -86516,10 +86614,10 @@ export namespace Raw {
     }
     export class ReportAntiSpamFalsePositive extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       msgId!: int;
 
-      constructor(params: { channel: TypeInputChannel; msgId: int }) {
+      constructor(params: { channel: Raw.TypeInputChannel; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ReportAntiSpamFalsePositive';
@@ -86561,11 +86659,11 @@ export namespace Raw {
       }
     }
     export class ToggleParticipantsHidden extends TLObject {
-      __response__!: TypeUpdates;
-      channel!: TypeInputChannel;
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
       enabled!: Bool;
 
-      constructor(params: { channel: TypeInputChannel; enabled: Bool }) {
+      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleParticipantsHidden';
@@ -86608,10 +86706,10 @@ export namespace Raw {
     }
     export class ClickSponsoredMessage extends TLObject {
       __response__!: Bool;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       randomId!: bytes;
 
-      constructor(params: { channel: TypeInputChannel; randomId: bytes }) {
+      constructor(params: { channel: Raw.TypeInputChannel; randomId: bytes }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ClickSponsoredMessage';
@@ -86670,16 +86768,16 @@ export namespace Raw {
       botId!: long;
       title!: string;
       description!: string;
-      photo?: TypeWebDocument;
-      invoice!: TypeInvoice;
+      photo?: Raw.TypeWebDocument;
+      invoice!: Raw.TypeInvoice;
       providerId!: long;
       url!: string;
       nativeProvider?: string;
-      nativeParams?: TypeDataJSON;
-      additionalMethods?: Vector<TypePaymentFormMethod>;
-      savedInfo?: TypePaymentRequestedInfo;
-      savedCredentials?: Vector<TypePaymentSavedCredentials>;
-      users!: Vector<TypeUser>;
+      nativeParams?: Raw.TypeDataJSON;
+      additionalMethods?: Vector<Raw.TypePaymentFormMethod>;
+      savedInfo?: Raw.TypePaymentRequestedInfo;
+      savedCredentials?: Vector<Raw.TypePaymentSavedCredentials>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         canSaveCredentials?: boolean;
@@ -86688,16 +86786,16 @@ export namespace Raw {
         botId: long;
         title: string;
         description: string;
-        photo?: TypeWebDocument;
-        invoice: TypeInvoice;
+        photo?: Raw.TypeWebDocument;
+        invoice: Raw.TypeInvoice;
         providerId: long;
         url: string;
         nativeProvider?: string;
-        nativeParams?: TypeDataJSON;
-        additionalMethods?: Vector<TypePaymentFormMethod>;
-        savedInfo?: TypePaymentRequestedInfo;
-        savedCredentials?: Vector<TypePaymentSavedCredentials>;
-        users: Vector<TypeUser>;
+        nativeParams?: Raw.TypeDataJSON;
+        additionalMethods?: Vector<Raw.TypePaymentFormMethod>;
+        savedInfo?: Raw.TypePaymentRequestedInfo;
+        savedCredentials?: Vector<Raw.TypePaymentSavedCredentials>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -86849,9 +86947,9 @@ export namespace Raw {
     }
     export class ValidatedRequestedInfo extends TLObject {
       id?: string;
-      shippingOptions?: Vector<TypeShippingOption>;
+      shippingOptions?: Vector<Raw.TypeShippingOption>;
 
-      constructor(params: { id?: string; shippingOptions?: Vector<TypeShippingOption> }) {
+      constructor(params: { id?: string; shippingOptions?: Vector<Raw.TypeShippingOption> }) {
         super();
         this.classType = 'types';
         this.className = 'payments.ValidatedRequestedInfo';
@@ -86903,9 +87001,9 @@ export namespace Raw {
       }
     }
     export class PaymentResult extends TLObject {
-      updates!: TypeUpdates;
+      updates!: Raw.TypeUpdates;
 
-      constructor(params: { updates: TypeUpdates }) {
+      constructor(params: { updates: Raw.TypeUpdates }) {
         super();
         this.classType = 'types';
         this.className = 'payments.PaymentResult';
@@ -86983,15 +87081,15 @@ export namespace Raw {
       providerId!: long;
       title!: string;
       description!: string;
-      photo?: TypeWebDocument;
-      invoice!: TypeInvoice;
-      info?: TypePaymentRequestedInfo;
-      shipping?: TypeShippingOption;
+      photo?: Raw.TypeWebDocument;
+      invoice!: Raw.TypeInvoice;
+      info?: Raw.TypePaymentRequestedInfo;
+      shipping?: Raw.TypeShippingOption;
       tipAmount?: long;
       currency!: string;
       totalAmount!: long;
       credentialsTitle!: string;
-      users!: Vector<TypeUser>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         date: int;
@@ -86999,15 +87097,15 @@ export namespace Raw {
         providerId: long;
         title: string;
         description: string;
-        photo?: TypeWebDocument;
-        invoice: TypeInvoice;
-        info?: TypePaymentRequestedInfo;
-        shipping?: TypeShippingOption;
+        photo?: Raw.TypeWebDocument;
+        invoice: Raw.TypeInvoice;
+        info?: Raw.TypePaymentRequestedInfo;
+        shipping?: Raw.TypeShippingOption;
         tipAmount?: long;
         currency: string;
         totalAmount: long;
         credentialsTitle: string;
-        users: Vector<TypeUser>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -87147,9 +87245,12 @@ export namespace Raw {
     }
     export class SavedInfo extends TLObject {
       hasSavedCredentials?: boolean;
-      savedInfo?: TypePaymentRequestedInfo;
+      savedInfo?: Raw.TypePaymentRequestedInfo;
 
-      constructor(params: { hasSavedCredentials?: boolean; savedInfo?: TypePaymentRequestedInfo }) {
+      constructor(params: {
+        hasSavedCredentials?: boolean;
+        savedInfo?: Raw.TypePaymentRequestedInfo;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'payments.SavedInfo';
@@ -87196,9 +87297,9 @@ export namespace Raw {
     }
     export class BankCardData extends TLObject {
       title!: string;
-      openUrls!: Vector<TypeBankCardOpenUrl>;
+      openUrls!: Vector<Raw.TypeBankCardOpenUrl>;
 
-      constructor(params: { title: string; openUrls: Vector<TypeBankCardOpenUrl> }) {
+      constructor(params: { title: string; openUrls: Vector<Raw.TypeBankCardOpenUrl> }) {
         super();
         this.classType = 'types';
         this.className = 'payments.BankCardData';
@@ -87273,11 +87374,11 @@ export namespace Raw {
       }
     }
     export class GetPaymentForm extends TLObject {
-      __response__!: payments.TypePaymentForm;
-      invoice!: TypeInputInvoice;
-      themeParams?: TypeDataJSON;
+      __response__!: Raw.payments.TypePaymentForm;
+      invoice!: Raw.TypeInputInvoice;
+      themeParams?: Raw.TypeDataJSON;
 
-      constructor(params: { invoice: TypeInputInvoice; themeParams?: TypeDataJSON }) {
+      constructor(params: { invoice: Raw.TypeInputInvoice; themeParams?: Raw.TypeDataJSON }) {
         super();
         this.classType = 'functions';
         this.className = 'payments.GetPaymentForm';
@@ -87322,11 +87423,11 @@ export namespace Raw {
       }
     }
     export class GetPaymentReceipt extends TLObject {
-      __response__!: payments.TypePaymentReceipt;
-      peer!: TypeInputPeer;
+      __response__!: Raw.payments.TypePaymentReceipt;
+      peer!: Raw.TypeInputPeer;
       msgId!: int;
 
-      constructor(params: { peer: TypeInputPeer; msgId: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'payments.GetPaymentReceipt';
@@ -87365,15 +87466,15 @@ export namespace Raw {
       }
     }
     export class ValidateRequestedInfo extends TLObject {
-      __response__!: payments.TypeValidatedRequestedInfo;
+      __response__!: Raw.payments.TypeValidatedRequestedInfo;
       save?: boolean;
-      invoice!: TypeInputInvoice;
-      info!: TypePaymentRequestedInfo;
+      invoice!: Raw.TypeInputInvoice;
+      info!: Raw.TypePaymentRequestedInfo;
 
       constructor(params: {
         save?: boolean;
-        invoice: TypeInputInvoice;
-        info: TypePaymentRequestedInfo;
+        invoice: Raw.TypeInputInvoice;
+        info: Raw.TypePaymentRequestedInfo;
       }) {
         super();
         this.classType = 'functions';
@@ -87424,20 +87525,20 @@ export namespace Raw {
       }
     }
     export class SendPaymentForm extends TLObject {
-      __response__!: payments.TypePaymentResult;
+      __response__!: Raw.payments.TypePaymentResult;
       formId!: long;
-      invoice!: TypeInputInvoice;
+      invoice!: Raw.TypeInputInvoice;
       requestedInfoId?: string;
       shippingOptionId?: string;
-      credentials!: TypeInputPaymentCredentials;
+      credentials!: Raw.TypeInputPaymentCredentials;
       tipAmount?: long;
 
       constructor(params: {
         formId: long;
-        invoice: TypeInputInvoice;
+        invoice: Raw.TypeInputInvoice;
         requestedInfoId?: string;
         shippingOptionId?: string;
-        credentials: TypeInputPaymentCredentials;
+        credentials: Raw.TypeInputPaymentCredentials;
         tipAmount?: long;
       }) {
         super();
@@ -87520,7 +87621,7 @@ export namespace Raw {
       }
     }
     export class GetSavedInfo extends TLObject {
-      __response__!: payments.TypeSavedInfo;
+      __response__!: Raw.payments.TypeSavedInfo;
 
       constructor() {
         super();
@@ -87595,7 +87696,7 @@ export namespace Raw {
       }
     }
     export class GetBankCardData extends TLObject {
-      __response__!: payments.TypeBankCardData;
+      __response__!: Raw.payments.TypeBankCardData;
       number!: string;
 
       constructor(params: { number: string }) {
@@ -87632,10 +87733,10 @@ export namespace Raw {
       }
     }
     export class ExportInvoice extends TLObject {
-      __response__!: payments.TypeExportedInvoice;
-      invoiceMedia!: TypeInputMedia;
+      __response__!: Raw.payments.TypeExportedInvoice;
+      invoiceMedia!: Raw.TypeInputMedia;
 
-      constructor(params: { invoiceMedia: TypeInputMedia }) {
+      constructor(params: { invoiceMedia: Raw.TypeInputMedia }) {
         super();
         this.classType = 'functions';
         this.className = 'payments.ExportInvoice';
@@ -87669,11 +87770,11 @@ export namespace Raw {
       }
     }
     export class AssignAppStoreTransaction extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       receipt!: bytes;
-      purpose!: TypeInputStorePaymentPurpose;
+      purpose!: Raw.TypeInputStorePaymentPurpose;
 
-      constructor(params: { receipt: bytes; purpose: TypeInputStorePaymentPurpose }) {
+      constructor(params: { receipt: bytes; purpose: Raw.TypeInputStorePaymentPurpose }) {
         super();
         this.classType = 'functions';
         this.className = 'payments.AssignAppStoreTransaction';
@@ -87715,11 +87816,14 @@ export namespace Raw {
       }
     }
     export class AssignPlayMarketTransaction extends TLObject {
-      __response__!: TypeUpdates;
-      receipt!: TypeDataJSON;
-      purpose!: TypeInputStorePaymentPurpose;
+      __response__!: Raw.TypeUpdates;
+      receipt!: Raw.TypeDataJSON;
+      purpose!: Raw.TypeInputStorePaymentPurpose;
 
-      constructor(params: { receipt: TypeDataJSON; purpose: TypeInputStorePaymentPurpose }) {
+      constructor(params: {
+        receipt: Raw.TypeDataJSON;
+        purpose: Raw.TypeInputStorePaymentPurpose;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'payments.AssignPlayMarketTransaction';
@@ -87762,9 +87866,9 @@ export namespace Raw {
     }
     export class CanPurchasePremium extends TLObject {
       __response__!: Bool;
-      purpose!: TypeInputStorePaymentPurpose;
+      purpose!: Raw.TypeInputStorePaymentPurpose;
 
-      constructor(params: { purpose: TypeInputStorePaymentPurpose }) {
+      constructor(params: { purpose: Raw.TypeInputStorePaymentPurpose }) {
         super();
         this.classType = 'functions';
         this.className = 'payments.CanPurchasePremium';
@@ -87807,10 +87911,10 @@ export namespace Raw {
     export type TypeGroupCall = Raw.phone.GroupCall;
     export type TypePhoneCall = Raw.phone.PhoneCall;
     export class PhoneCall extends TLObject {
-      phoneCall!: TypePhoneCall;
-      users!: Vector<TypeUser>;
+      phoneCall!: Raw.TypePhoneCall;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { phoneCall: TypePhoneCall; users: Vector<TypeUser> }) {
+      constructor(params: { phoneCall: Raw.TypePhoneCall; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'phone.PhoneCall';
@@ -87849,18 +87953,18 @@ export namespace Raw {
       }
     }
     export class GroupCall extends TLObject {
-      call!: TypeGroupCall;
-      participants!: Vector<TypeGroupCallParticipant>;
+      call!: Raw.TypeGroupCall;
+      participants!: Vector<Raw.TypeGroupCallParticipant>;
       participantsNextOffset!: string;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        call: TypeGroupCall;
-        participants: Vector<TypeGroupCallParticipant>;
+        call: Raw.TypeGroupCall;
+        participants: Vector<Raw.TypeGroupCallParticipant>;
         participantsNextOffset: string;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -87922,18 +88026,18 @@ export namespace Raw {
     }
     export class GroupParticipants extends TLObject {
       count!: int;
-      participants!: Vector<TypeGroupCallParticipant>;
+      participants!: Vector<Raw.TypeGroupCallParticipant>;
       nextOffset!: string;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
       version!: int;
 
       constructor(params: {
         count: int;
-        participants: Vector<TypeGroupCallParticipant>;
+        participants: Vector<Raw.TypeGroupCallParticipant>;
         nextOffset: string;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
         version: int;
       }) {
         super();
@@ -88001,14 +88105,14 @@ export namespace Raw {
       }
     }
     export class JoinAsPeers extends TLObject {
-      peers!: Vector<TypePeer>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      peers!: Vector<Raw.TypePeer>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        peers: Vector<TypePeer>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        peers: Vector<Raw.TypePeer>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -88092,9 +88196,9 @@ export namespace Raw {
       }
     }
     export class GroupCallStreamChannels extends TLObject {
-      channels!: Vector<TypeGroupCallStreamChannel>;
+      channels!: Vector<Raw.TypeGroupCallStreamChannel>;
 
-      constructor(params: { channels: Vector<TypeGroupCallStreamChannel> }) {
+      constructor(params: { channels: Vector<Raw.TypeGroupCallStreamChannel> }) {
         super();
         this.classType = 'types';
         this.className = 'phone.GroupCallStreamChannels';
@@ -88176,7 +88280,7 @@ export namespace Raw {
       }
     }
     export class GetCallConfig extends TLObject {
-      __response__!: TypeDataJSON;
+      __response__!: Raw.TypeDataJSON;
 
       constructor() {
         super();
@@ -88207,19 +88311,19 @@ export namespace Raw {
       }
     }
     export class RequestCall extends TLObject {
-      __response__!: phone.TypePhoneCall;
+      __response__!: Raw.phone.TypePhoneCall;
       video?: boolean;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       randomId!: int;
       gAHash!: bytes;
-      protocol!: TypePhoneCallProtocol;
+      protocol!: Raw.TypePhoneCallProtocol;
 
       constructor(params: {
         video?: boolean;
-        userId: TypeInputUser;
+        userId: Raw.TypeInputUser;
         randomId: int;
         gAHash: bytes;
-        protocol: TypePhoneCallProtocol;
+        protocol: Raw.TypePhoneCallProtocol;
       }) {
         super();
         this.classType = 'functions';
@@ -88283,15 +88387,15 @@ export namespace Raw {
       }
     }
     export class AcceptCall extends TLObject {
-      __response__!: phone.TypePhoneCall;
-      peer!: TypeInputPhoneCall;
+      __response__!: Raw.phone.TypePhoneCall;
+      peer!: Raw.TypeInputPhoneCall;
       gB!: bytes;
-      protocol!: TypePhoneCallProtocol;
+      protocol!: Raw.TypePhoneCallProtocol;
 
       constructor(params: {
-        peer: TypeInputPhoneCall;
+        peer: Raw.TypeInputPhoneCall;
         gB: bytes;
-        protocol: TypePhoneCallProtocol;
+        protocol: Raw.TypePhoneCallProtocol;
       }) {
         super();
         this.classType = 'functions';
@@ -88336,17 +88440,17 @@ export namespace Raw {
       }
     }
     export class ConfirmCall extends TLObject {
-      __response__!: phone.TypePhoneCall;
-      peer!: TypeInputPhoneCall;
+      __response__!: Raw.phone.TypePhoneCall;
+      peer!: Raw.TypeInputPhoneCall;
       gA!: bytes;
       keyFingerprint!: long;
-      protocol!: TypePhoneCallProtocol;
+      protocol!: Raw.TypePhoneCallProtocol;
 
       constructor(params: {
-        peer: TypeInputPhoneCall;
+        peer: Raw.TypeInputPhoneCall;
         gA: bytes;
         keyFingerprint: long;
-        protocol: TypePhoneCallProtocol;
+        protocol: Raw.TypePhoneCallProtocol;
       }) {
         super();
         this.classType = 'functions';
@@ -88402,9 +88506,9 @@ export namespace Raw {
     }
     export class ReceivedCall extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPhoneCall;
+      peer!: Raw.TypeInputPhoneCall;
 
-      constructor(params: { peer: TypeInputPhoneCall }) {
+      constructor(params: { peer: Raw.TypeInputPhoneCall }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.ReceivedCall';
@@ -88438,18 +88542,18 @@ export namespace Raw {
       }
     }
     export class DiscardCall extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       video?: boolean;
-      peer!: TypeInputPhoneCall;
+      peer!: Raw.TypeInputPhoneCall;
       duration!: int;
-      reason!: TypePhoneCallDiscardReason;
+      reason!: Raw.TypePhoneCallDiscardReason;
       connectionId!: long;
 
       constructor(params: {
         video?: boolean;
-        peer: TypeInputPhoneCall;
+        peer: Raw.TypeInputPhoneCall;
         duration: int;
-        reason: TypePhoneCallDiscardReason;
+        reason: Raw.TypePhoneCallDiscardReason;
         connectionId: long;
       }) {
         super();
@@ -88514,15 +88618,15 @@ export namespace Raw {
       }
     }
     export class SetCallRating extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       userInitiative?: boolean;
-      peer!: TypeInputPhoneCall;
+      peer!: Raw.TypeInputPhoneCall;
       rating!: int;
       comment!: string;
 
       constructor(params: {
         userInitiative?: boolean;
-        peer: TypeInputPhoneCall;
+        peer: Raw.TypeInputPhoneCall;
         rating: int;
         comment: string;
       }) {
@@ -88583,10 +88687,10 @@ export namespace Raw {
     }
     export class SaveCallDebug extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPhoneCall;
-      debug!: TypeDataJSON;
+      peer!: Raw.TypeInputPhoneCall;
+      debug!: Raw.TypeDataJSON;
 
-      constructor(params: { peer: TypeInputPhoneCall; debug: TypeDataJSON }) {
+      constructor(params: { peer: Raw.TypeInputPhoneCall; debug: Raw.TypeDataJSON }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.SaveCallDebug';
@@ -88626,10 +88730,10 @@ export namespace Raw {
     }
     export class SendSignalingData extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPhoneCall;
+      peer!: Raw.TypeInputPhoneCall;
       data!: bytes;
 
-      constructor(params: { peer: TypeInputPhoneCall; data: bytes }) {
+      constructor(params: { peer: Raw.TypeInputPhoneCall; data: bytes }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.SendSignalingData';
@@ -88668,16 +88772,16 @@ export namespace Raw {
       }
     }
     export class CreateGroupCall extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       rtmpStream?: boolean;
-      peer!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
       randomId!: int;
       title?: string;
       scheduleDate?: int;
 
       constructor(params: {
         rtmpStream?: boolean;
-        peer: TypeInputPeer;
+        peer: Raw.TypeInputPeer;
         randomId: int;
         title?: string;
         scheduleDate?: int;
@@ -88746,21 +88850,21 @@ export namespace Raw {
       }
     }
     export class JoinGroupCall extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       muted?: boolean;
       videoStopped?: boolean;
-      call!: TypeInputGroupCall;
-      joinAs!: TypeInputPeer;
+      call!: Raw.TypeInputGroupCall;
+      joinAs!: Raw.TypeInputPeer;
       inviteHash?: string;
-      params!: TypeDataJSON;
+      params!: Raw.TypeDataJSON;
 
       constructor(params: {
         muted?: boolean;
         videoStopped?: boolean;
-        call: TypeInputGroupCall;
-        joinAs: TypeInputPeer;
+        call: Raw.TypeInputGroupCall;
+        joinAs: Raw.TypeInputPeer;
         inviteHash?: string;
-        params: TypeDataJSON;
+        params: Raw.TypeDataJSON;
       }) {
         super();
         this.classType = 'functions';
@@ -88829,11 +88933,11 @@ export namespace Raw {
       }
     }
     export class LeaveGroupCall extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
       source!: int;
 
-      constructor(params: { call: TypeInputGroupCall; source: int }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; source: int }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.LeaveGroupCall';
@@ -88872,11 +88976,11 @@ export namespace Raw {
       }
     }
     export class InviteToGroupCall extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
-      users!: Vector<TypeInputUser>;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
+      users!: Vector<Raw.TypeInputUser>;
 
-      constructor(params: { call: TypeInputGroupCall; users: Vector<TypeInputUser> }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; users: Vector<Raw.TypeInputUser> }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.InviteToGroupCall';
@@ -88915,10 +89019,10 @@ export namespace Raw {
       }
     }
     export class DiscardGroupCall extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
 
-      constructor(params: { call: TypeInputGroupCall }) {
+      constructor(params: { call: Raw.TypeInputGroupCall }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.DiscardGroupCall';
@@ -88952,14 +89056,14 @@ export namespace Raw {
       }
     }
     export class ToggleGroupCallSettings extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       resetInviteHash?: boolean;
-      call!: TypeInputGroupCall;
+      call!: Raw.TypeInputGroupCall;
       joinMuted?: Bool;
 
       constructor(params: {
         resetInviteHash?: boolean;
-        call: TypeInputGroupCall;
+        call: Raw.TypeInputGroupCall;
         joinMuted?: Bool;
       }) {
         super();
@@ -89016,11 +89120,11 @@ export namespace Raw {
       }
     }
     export class GetGroupCall extends TLObject {
-      __response__!: phone.TypeGroupCall;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.phone.TypeGroupCall;
+      call!: Raw.TypeInputGroupCall;
       limit!: int;
 
-      constructor(params: { call: TypeInputGroupCall; limit: int }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.GetGroupCall';
@@ -89059,16 +89163,16 @@ export namespace Raw {
       }
     }
     export class GetGroupParticipants extends TLObject {
-      __response__!: phone.TypeGroupParticipants;
-      call!: TypeInputGroupCall;
-      ids!: Vector<TypeInputPeer>;
+      __response__!: Raw.phone.TypeGroupParticipants;
+      call!: Raw.TypeInputGroupCall;
+      ids!: Vector<Raw.TypeInputPeer>;
       sources!: Vector<int>;
       offset!: string;
       limit!: int;
 
       constructor(params: {
-        call: TypeInputGroupCall;
-        ids: Vector<TypeInputPeer>;
+        call: Raw.TypeInputGroupCall;
+        ids: Vector<Raw.TypeInputPeer>;
         sources: Vector<int>;
         offset: string;
         limit: int;
@@ -89133,10 +89237,10 @@ export namespace Raw {
     }
     export class CheckGroupCall extends TLObject {
       __response__!: Vector<int>;
-      call!: TypeInputGroupCall;
+      call!: Raw.TypeInputGroupCall;
       sources!: Vector<int>;
 
-      constructor(params: { call: TypeInputGroupCall; sources: Vector<int> }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; sources: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.CheckGroupCall';
@@ -89175,17 +89279,17 @@ export namespace Raw {
       }
     }
     export class ToggleGroupCallRecord extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       start?: boolean;
       video?: boolean;
-      call!: TypeInputGroupCall;
+      call!: Raw.TypeInputGroupCall;
       title?: string;
       videoPortrait?: Bool;
 
       constructor(params: {
         start?: boolean;
         video?: boolean;
-        call: TypeInputGroupCall;
+        call: Raw.TypeInputGroupCall;
         title?: string;
         videoPortrait?: Bool;
       }) {
@@ -89251,9 +89355,9 @@ export namespace Raw {
       }
     }
     export class EditGroupCallParticipant extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
-      participant!: TypeInputPeer;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
+      participant!: Raw.TypeInputPeer;
       muted?: Bool;
       volume?: int;
       raiseHand?: Bool;
@@ -89262,8 +89366,8 @@ export namespace Raw {
       presentationPaused?: Bool;
 
       constructor(params: {
-        call: TypeInputGroupCall;
-        participant: TypeInputPeer;
+        call: Raw.TypeInputGroupCall;
+        participant: Raw.TypeInputPeer;
         muted?: Bool;
         volume?: int;
         raiseHand?: Bool;
@@ -89371,11 +89475,11 @@ export namespace Raw {
       }
     }
     export class EditGroupCallTitle extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
       title!: string;
 
-      constructor(params: { call: TypeInputGroupCall; title: string }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; title: string }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.EditGroupCallTitle';
@@ -89414,10 +89518,10 @@ export namespace Raw {
       }
     }
     export class GetGroupCallJoinAs extends TLObject {
-      __response__!: phone.TypeJoinAsPeers;
-      peer!: TypeInputPeer;
+      __response__!: Raw.phone.TypeJoinAsPeers;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.GetGroupCallJoinAs';
@@ -89451,11 +89555,11 @@ export namespace Raw {
       }
     }
     export class ExportGroupCallInvite extends TLObject {
-      __response__!: phone.TypeExportedGroupCallInvite;
+      __response__!: Raw.phone.TypeExportedGroupCallInvite;
       canSelfUnmute?: boolean;
-      call!: TypeInputGroupCall;
+      call!: Raw.TypeInputGroupCall;
 
-      constructor(params: { canSelfUnmute?: boolean; call: TypeInputGroupCall }) {
+      constructor(params: { canSelfUnmute?: boolean; call: Raw.TypeInputGroupCall }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.ExportGroupCallInvite';
@@ -89497,11 +89601,11 @@ export namespace Raw {
       }
     }
     export class ToggleGroupCallStartSubscription extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
       subscribed!: Bool;
 
-      constructor(params: { call: TypeInputGroupCall; subscribed: Bool }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; subscribed: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.ToggleGroupCallStartSubscription';
@@ -89546,10 +89650,10 @@ export namespace Raw {
       }
     }
     export class StartScheduledGroupCall extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
 
-      constructor(params: { call: TypeInputGroupCall }) {
+      constructor(params: { call: Raw.TypeInputGroupCall }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.StartScheduledGroupCall';
@@ -89587,10 +89691,10 @@ export namespace Raw {
     }
     export class SaveDefaultGroupCallJoinAs extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPeer;
-      joinAs!: TypeInputPeer;
+      peer!: Raw.TypeInputPeer;
+      joinAs!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: TypeInputPeer; joinAs: TypeInputPeer }) {
+      constructor(params: { peer: Raw.TypeInputPeer; joinAs: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.SaveDefaultGroupCallJoinAs';
@@ -89632,11 +89736,11 @@ export namespace Raw {
       }
     }
     export class JoinGroupCallPresentation extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
-      params!: TypeDataJSON;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
+      params!: Raw.TypeDataJSON;
 
-      constructor(params: { call: TypeInputGroupCall; params: TypeDataJSON }) {
+      constructor(params: { call: Raw.TypeInputGroupCall; params: Raw.TypeDataJSON }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.JoinGroupCallPresentation';
@@ -89678,10 +89782,10 @@ export namespace Raw {
       }
     }
     export class LeaveGroupCallPresentation extends TLObject {
-      __response__!: TypeUpdates;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.TypeUpdates;
+      call!: Raw.TypeInputGroupCall;
 
-      constructor(params: { call: TypeInputGroupCall }) {
+      constructor(params: { call: Raw.TypeInputGroupCall }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.LeaveGroupCallPresentation';
@@ -89718,10 +89822,10 @@ export namespace Raw {
       }
     }
     export class GetGroupCallStreamChannels extends TLObject {
-      __response__!: phone.TypeGroupCallStreamChannels;
-      call!: TypeInputGroupCall;
+      __response__!: Raw.phone.TypeGroupCallStreamChannels;
+      call!: Raw.TypeInputGroupCall;
 
-      constructor(params: { call: TypeInputGroupCall }) {
+      constructor(params: { call: Raw.TypeInputGroupCall }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.GetGroupCallStreamChannels';
@@ -89758,11 +89862,11 @@ export namespace Raw {
       }
     }
     export class GetGroupCallStreamRtmpUrl extends TLObject {
-      __response__!: phone.TypeGroupCallStreamRtmpUrl;
-      peer!: TypeInputPeer;
+      __response__!: Raw.phone.TypeGroupCallStreamRtmpUrl;
+      peer!: Raw.TypeInputPeer;
       revoke!: Bool;
 
-      constructor(params: { peer: TypeInputPeer; revoke: Bool }) {
+      constructor(params: { peer: Raw.TypeInputPeer; revoke: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.GetGroupCallStreamRtmpUrl';
@@ -89805,10 +89909,10 @@ export namespace Raw {
     }
     export class SaveCallLog extends TLObject {
       __response__!: Bool;
-      peer!: TypeInputPhoneCall;
-      file!: TypeInputFile;
+      peer!: Raw.TypeInputPhoneCall;
+      file!: Raw.TypeInputFile;
 
-      constructor(params: { peer: TypeInputPhoneCall; file: TypeInputFile }) {
+      constructor(params: { peer: Raw.TypeInputPhoneCall; file: Raw.TypeInputFile }) {
         super();
         this.classType = 'functions';
         this.className = 'phone.SaveCallLog';
@@ -89852,38 +89956,38 @@ export namespace Raw {
     export type TypeMegagroupStats = Raw.stats.MegagroupStats;
     export type TypeBroadcastStats = Raw.stats.BroadcastStats;
     export class BroadcastStats extends TLObject {
-      period!: TypeStatsDateRangeDays;
-      followers!: TypeStatsAbsValueAndPrev;
-      viewsPerPost!: TypeStatsAbsValueAndPrev;
-      sharesPerPost!: TypeStatsAbsValueAndPrev;
-      enabledNotifications!: TypeStatsPercentValue;
-      growthGraph!: TypeStatsGraph;
-      followersGraph!: TypeStatsGraph;
-      muteGraph!: TypeStatsGraph;
-      topHoursGraph!: TypeStatsGraph;
-      interactionsGraph!: TypeStatsGraph;
-      ivInteractionsGraph!: TypeStatsGraph;
-      viewsBySourceGraph!: TypeStatsGraph;
-      newFollowersBySourceGraph!: TypeStatsGraph;
-      languagesGraph!: TypeStatsGraph;
-      recentMessageInteractions!: Vector<TypeMessageInteractionCounters>;
+      period!: Raw.TypeStatsDateRangeDays;
+      followers!: Raw.TypeStatsAbsValueAndPrev;
+      viewsPerPost!: Raw.TypeStatsAbsValueAndPrev;
+      sharesPerPost!: Raw.TypeStatsAbsValueAndPrev;
+      enabledNotifications!: Raw.TypeStatsPercentValue;
+      growthGraph!: Raw.TypeStatsGraph;
+      followersGraph!: Raw.TypeStatsGraph;
+      muteGraph!: Raw.TypeStatsGraph;
+      topHoursGraph!: Raw.TypeStatsGraph;
+      interactionsGraph!: Raw.TypeStatsGraph;
+      ivInteractionsGraph!: Raw.TypeStatsGraph;
+      viewsBySourceGraph!: Raw.TypeStatsGraph;
+      newFollowersBySourceGraph!: Raw.TypeStatsGraph;
+      languagesGraph!: Raw.TypeStatsGraph;
+      recentMessageInteractions!: Vector<Raw.TypeMessageInteractionCounters>;
 
       constructor(params: {
-        period: TypeStatsDateRangeDays;
-        followers: TypeStatsAbsValueAndPrev;
-        viewsPerPost: TypeStatsAbsValueAndPrev;
-        sharesPerPost: TypeStatsAbsValueAndPrev;
-        enabledNotifications: TypeStatsPercentValue;
-        growthGraph: TypeStatsGraph;
-        followersGraph: TypeStatsGraph;
-        muteGraph: TypeStatsGraph;
-        topHoursGraph: TypeStatsGraph;
-        interactionsGraph: TypeStatsGraph;
-        ivInteractionsGraph: TypeStatsGraph;
-        viewsBySourceGraph: TypeStatsGraph;
-        newFollowersBySourceGraph: TypeStatsGraph;
-        languagesGraph: TypeStatsGraph;
-        recentMessageInteractions: Vector<TypeMessageInteractionCounters>;
+        period: Raw.TypeStatsDateRangeDays;
+        followers: Raw.TypeStatsAbsValueAndPrev;
+        viewsPerPost: Raw.TypeStatsAbsValueAndPrev;
+        sharesPerPost: Raw.TypeStatsAbsValueAndPrev;
+        enabledNotifications: Raw.TypeStatsPercentValue;
+        growthGraph: Raw.TypeStatsGraph;
+        followersGraph: Raw.TypeStatsGraph;
+        muteGraph: Raw.TypeStatsGraph;
+        topHoursGraph: Raw.TypeStatsGraph;
+        interactionsGraph: Raw.TypeStatsGraph;
+        ivInteractionsGraph: Raw.TypeStatsGraph;
+        viewsBySourceGraph: Raw.TypeStatsGraph;
+        newFollowersBySourceGraph: Raw.TypeStatsGraph;
+        languagesGraph: Raw.TypeStatsGraph;
+        recentMessageInteractions: Vector<Raw.TypeMessageInteractionCounters>;
       }) {
         super();
         this.classType = 'types';
@@ -90020,42 +90124,42 @@ export namespace Raw {
       }
     }
     export class MegagroupStats extends TLObject {
-      period!: TypeStatsDateRangeDays;
-      members!: TypeStatsAbsValueAndPrev;
-      messages!: TypeStatsAbsValueAndPrev;
-      viewers!: TypeStatsAbsValueAndPrev;
-      posters!: TypeStatsAbsValueAndPrev;
-      growthGraph!: TypeStatsGraph;
-      membersGraph!: TypeStatsGraph;
-      newMembersBySourceGraph!: TypeStatsGraph;
-      languagesGraph!: TypeStatsGraph;
-      messagesGraph!: TypeStatsGraph;
-      actionsGraph!: TypeStatsGraph;
-      topHoursGraph!: TypeStatsGraph;
-      weekdaysGraph!: TypeStatsGraph;
-      topPosters!: Vector<TypeStatsGroupTopPoster>;
-      topAdmins!: Vector<TypeStatsGroupTopAdmin>;
-      topInviters!: Vector<TypeStatsGroupTopInviter>;
-      users!: Vector<TypeUser>;
+      period!: Raw.TypeStatsDateRangeDays;
+      members!: Raw.TypeStatsAbsValueAndPrev;
+      messages!: Raw.TypeStatsAbsValueAndPrev;
+      viewers!: Raw.TypeStatsAbsValueAndPrev;
+      posters!: Raw.TypeStatsAbsValueAndPrev;
+      growthGraph!: Raw.TypeStatsGraph;
+      membersGraph!: Raw.TypeStatsGraph;
+      newMembersBySourceGraph!: Raw.TypeStatsGraph;
+      languagesGraph!: Raw.TypeStatsGraph;
+      messagesGraph!: Raw.TypeStatsGraph;
+      actionsGraph!: Raw.TypeStatsGraph;
+      topHoursGraph!: Raw.TypeStatsGraph;
+      weekdaysGraph!: Raw.TypeStatsGraph;
+      topPosters!: Vector<Raw.TypeStatsGroupTopPoster>;
+      topAdmins!: Vector<Raw.TypeStatsGroupTopAdmin>;
+      topInviters!: Vector<Raw.TypeStatsGroupTopInviter>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        period: TypeStatsDateRangeDays;
-        members: TypeStatsAbsValueAndPrev;
-        messages: TypeStatsAbsValueAndPrev;
-        viewers: TypeStatsAbsValueAndPrev;
-        posters: TypeStatsAbsValueAndPrev;
-        growthGraph: TypeStatsGraph;
-        membersGraph: TypeStatsGraph;
-        newMembersBySourceGraph: TypeStatsGraph;
-        languagesGraph: TypeStatsGraph;
-        messagesGraph: TypeStatsGraph;
-        actionsGraph: TypeStatsGraph;
-        topHoursGraph: TypeStatsGraph;
-        weekdaysGraph: TypeStatsGraph;
-        topPosters: Vector<TypeStatsGroupTopPoster>;
-        topAdmins: Vector<TypeStatsGroupTopAdmin>;
-        topInviters: Vector<TypeStatsGroupTopInviter>;
-        users: Vector<TypeUser>;
+        period: Raw.TypeStatsDateRangeDays;
+        members: Raw.TypeStatsAbsValueAndPrev;
+        messages: Raw.TypeStatsAbsValueAndPrev;
+        viewers: Raw.TypeStatsAbsValueAndPrev;
+        posters: Raw.TypeStatsAbsValueAndPrev;
+        growthGraph: Raw.TypeStatsGraph;
+        membersGraph: Raw.TypeStatsGraph;
+        newMembersBySourceGraph: Raw.TypeStatsGraph;
+        languagesGraph: Raw.TypeStatsGraph;
+        messagesGraph: Raw.TypeStatsGraph;
+        actionsGraph: Raw.TypeStatsGraph;
+        topHoursGraph: Raw.TypeStatsGraph;
+        weekdaysGraph: Raw.TypeStatsGraph;
+        topPosters: Vector<Raw.TypeStatsGroupTopPoster>;
+        topAdmins: Vector<Raw.TypeStatsGroupTopAdmin>;
+        topInviters: Vector<Raw.TypeStatsGroupTopInviter>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -90206,9 +90310,9 @@ export namespace Raw {
       }
     }
     export class MessageStats extends TLObject {
-      viewsGraph!: TypeStatsGraph;
+      viewsGraph!: Raw.TypeStatsGraph;
 
-      constructor(params: { viewsGraph: TypeStatsGraph }) {
+      constructor(params: { viewsGraph: Raw.TypeStatsGraph }) {
         super();
         this.classType = 'types';
         this.className = 'stats.MessageStats';
@@ -90242,11 +90346,11 @@ export namespace Raw {
       }
     }
     export class GetBroadcastStats extends TLObject {
-      __response__!: stats.TypeBroadcastStats;
+      __response__!: Raw.stats.TypeBroadcastStats;
       dark?: boolean;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { dark?: boolean; channel: TypeInputChannel }) {
+      constructor(params: { dark?: boolean; channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'stats.GetBroadcastStats';
@@ -90288,7 +90392,7 @@ export namespace Raw {
       }
     }
     export class LoadAsyncGraph extends TLObject {
-      __response__!: TypeStatsGraph;
+      __response__!: Raw.TypeStatsGraph;
       token!: string;
       x?: long;
 
@@ -90337,11 +90441,11 @@ export namespace Raw {
       }
     }
     export class GetMegagroupStats extends TLObject {
-      __response__!: stats.TypeMegagroupStats;
+      __response__!: Raw.stats.TypeMegagroupStats;
       dark?: boolean;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
 
-      constructor(params: { dark?: boolean; channel: TypeInputChannel }) {
+      constructor(params: { dark?: boolean; channel: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'stats.GetMegagroupStats';
@@ -90383,19 +90487,19 @@ export namespace Raw {
       }
     }
     export class GetMessagePublicForwards extends TLObject {
-      __response__!: messages.TypeMessages;
-      channel!: TypeInputChannel;
+      __response__!: Raw.messages.TypeMessages;
+      channel!: Raw.TypeInputChannel;
       msgId!: int;
       offsetRate!: int;
-      offsetPeer!: TypeInputPeer;
+      offsetPeer!: Raw.TypeInputPeer;
       offsetId!: int;
       limit!: int;
 
       constructor(params: {
-        channel: TypeInputChannel;
+        channel: Raw.TypeInputChannel;
         msgId: int;
         offsetRate: int;
-        offsetPeer: TypeInputPeer;
+        offsetPeer: Raw.TypeInputPeer;
         offsetId: int;
         limit: int;
       }) {
@@ -90467,12 +90571,12 @@ export namespace Raw {
       }
     }
     export class GetMessageStats extends TLObject {
-      __response__!: stats.TypeMessageStats;
+      __response__!: Raw.stats.TypeMessageStats;
       dark?: boolean;
-      channel!: TypeInputChannel;
+      channel!: Raw.TypeInputChannel;
       msgId!: int;
 
-      constructor(params: { dark?: boolean; channel: TypeInputChannel; msgId: int }) {
+      constructor(params: { dark?: boolean; channel: Raw.TypeInputChannel; msgId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'stats.GetMessageStats';
@@ -90558,17 +90662,17 @@ export namespace Raw {
       }
     }
     export class CreateStickerSet extends TLObject {
-      __response__!: messages.TypeStickerSet;
+      __response__!: Raw.messages.TypeStickerSet;
       masks?: boolean;
       animated?: boolean;
       videos?: boolean;
       emojis?: boolean;
       textColor?: boolean;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       title!: string;
       shortName!: string;
-      thumb?: TypeInputDocument;
-      stickers!: Vector<TypeInputStickerSetItem>;
+      thumb?: Raw.TypeInputDocument;
+      stickers!: Vector<Raw.TypeInputStickerSetItem>;
       software?: string;
 
       constructor(params: {
@@ -90577,11 +90681,11 @@ export namespace Raw {
         videos?: boolean;
         emojis?: boolean;
         textColor?: boolean;
-        userId: TypeInputUser;
+        userId: Raw.TypeInputUser;
         title: string;
         shortName: string;
-        thumb?: TypeInputDocument;
-        stickers: Vector<TypeInputStickerSetItem>;
+        thumb?: Raw.TypeInputDocument;
+        stickers: Vector<Raw.TypeInputStickerSetItem>;
         software?: string;
       }) {
         super();
@@ -90688,10 +90792,10 @@ export namespace Raw {
       }
     }
     export class RemoveStickerFromSet extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      sticker!: TypeInputDocument;
+      __response__!: Raw.messages.TypeStickerSet;
+      sticker!: Raw.TypeInputDocument;
 
-      constructor(params: { sticker: TypeInputDocument }) {
+      constructor(params: { sticker: Raw.TypeInputDocument }) {
         super();
         this.classType = 'functions';
         this.className = 'stickers.RemoveStickerFromSet';
@@ -90728,11 +90832,11 @@ export namespace Raw {
       }
     }
     export class ChangeStickerPosition extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      sticker!: TypeInputDocument;
+      __response__!: Raw.messages.TypeStickerSet;
+      sticker!: Raw.TypeInputDocument;
       position!: int;
 
-      constructor(params: { sticker: TypeInputDocument; position: int }) {
+      constructor(params: { sticker: Raw.TypeInputDocument; position: int }) {
         super();
         this.classType = 'functions';
         this.className = 'stickers.ChangeStickerPosition';
@@ -90774,11 +90878,14 @@ export namespace Raw {
       }
     }
     export class AddStickerToSet extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      stickerset!: TypeInputStickerSet;
-      sticker!: TypeInputStickerSetItem;
+      __response__!: Raw.messages.TypeStickerSet;
+      stickerset!: Raw.TypeInputStickerSet;
+      sticker!: Raw.TypeInputStickerSetItem;
 
-      constructor(params: { stickerset: TypeInputStickerSet; sticker: TypeInputStickerSetItem }) {
+      constructor(params: {
+        stickerset: Raw.TypeInputStickerSet;
+        sticker: Raw.TypeInputStickerSetItem;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'stickers.AddStickerToSet';
@@ -90817,14 +90924,14 @@ export namespace Raw {
       }
     }
     export class SetStickerSetThumb extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      stickerset!: TypeInputStickerSet;
-      thumb?: TypeInputDocument;
+      __response__!: Raw.messages.TypeStickerSet;
+      stickerset!: Raw.TypeInputStickerSet;
+      thumb?: Raw.TypeInputDocument;
       thumbDocumentId?: long;
 
       constructor(params: {
-        stickerset: TypeInputStickerSet;
-        thumb?: TypeInputDocument;
+        stickerset: Raw.TypeInputStickerSet;
+        thumb?: Raw.TypeInputDocument;
         thumbDocumentId?: long;
       }) {
         super();
@@ -90918,7 +91025,7 @@ export namespace Raw {
       }
     }
     export class SuggestShortName extends TLObject {
-      __response__!: stickers.TypeSuggestedShortName;
+      __response__!: Raw.stickers.TypeSuggestedShortName;
       title!: string;
 
       constructor(params: { title: string }) {
@@ -90955,16 +91062,16 @@ export namespace Raw {
       }
     }
     export class ChangeSticker extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      sticker!: TypeInputDocument;
+      __response__!: Raw.messages.TypeStickerSet;
+      sticker!: Raw.TypeInputDocument;
       emoji?: string;
-      maskCoords?: TypeMaskCoords;
+      maskCoords?: Raw.TypeMaskCoords;
       keywords?: string;
 
       constructor(params: {
-        sticker: TypeInputDocument;
+        sticker: Raw.TypeInputDocument;
         emoji?: string;
-        maskCoords?: TypeMaskCoords;
+        maskCoords?: Raw.TypeMaskCoords;
         keywords?: string;
       }) {
         super();
@@ -91028,11 +91135,11 @@ export namespace Raw {
       }
     }
     export class RenameStickerSet extends TLObject {
-      __response__!: messages.TypeStickerSet;
-      stickerset!: TypeInputStickerSet;
+      __response__!: Raw.messages.TypeStickerSet;
+      stickerset!: Raw.TypeInputStickerSet;
       title!: string;
 
-      constructor(params: { stickerset: TypeInputStickerSet; title: string }) {
+      constructor(params: { stickerset: Raw.TypeInputStickerSet; title: string }) {
         super();
         this.classType = 'functions';
         this.className = 'stickers.RenameStickerSet';
@@ -91072,9 +91179,9 @@ export namespace Raw {
     }
     export class DeleteStickerSet extends TLObject {
       __response__!: Bool;
-      stickerset!: TypeInputStickerSet;
+      stickerset!: Raw.TypeInputStickerSet;
 
-      constructor(params: { stickerset: TypeInputStickerSet }) {
+      constructor(params: { stickerset: Raw.TypeInputStickerSet }) {
         super();
         this.classType = 'functions';
         this.className = 'stickers.DeleteStickerSet';
@@ -91111,14 +91218,14 @@ export namespace Raw {
   export namespace users {
     export type TypeUserFull = Raw.users.UserFull;
     export class UserFull extends TLObject {
-      fullUser!: TypeUserFull;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      fullUser!: Raw.TypeUserFull;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        fullUser: TypeUserFull;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        fullUser: Raw.TypeUserFull;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -91163,10 +91270,10 @@ export namespace Raw {
       }
     }
     export class GetUsers extends TLObject {
-      __response__!: Vector<TypeUser>;
-      id!: Vector<TypeInputUser>;
+      __response__!: Vector<Raw.TypeUser>;
+      id!: Vector<Raw.TypeInputUser>;
 
-      constructor(params: { id: Vector<TypeInputUser> }) {
+      constructor(params: { id: Vector<Raw.TypeInputUser> }) {
         super();
         this.classType = 'functions';
         this.className = 'users.GetUsers';
@@ -91200,10 +91307,10 @@ export namespace Raw {
       }
     }
     export class GetFullUser extends TLObject {
-      __response__!: users.TypeUserFull;
-      id!: TypeInputUser;
+      __response__!: Raw.users.TypeUserFull;
+      id!: Raw.TypeInputUser;
 
-      constructor(params: { id: TypeInputUser }) {
+      constructor(params: { id: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'users.GetFullUser';
@@ -91238,10 +91345,10 @@ export namespace Raw {
     }
     export class SetSecureValueErrors extends TLObject {
       __response__!: Bool;
-      id!: TypeInputUser;
-      errors!: Vector<TypeSecureValueError>;
+      id!: Raw.TypeInputUser;
+      errors!: Vector<Raw.TypeSecureValueError>;
 
-      constructor(params: { id: TypeInputUser; errors: Vector<TypeSecureValueError> }) {
+      constructor(params: { id: Raw.TypeInputUser; errors: Vector<Raw.TypeSecureValueError> }) {
         super();
         this.classType = 'functions';
         this.className = 'users.SetSecureValueErrors';
@@ -91281,9 +91388,9 @@ export namespace Raw {
     }
     export class GetStoriesMaxIDs extends TLObject {
       __response__!: Vector<int>;
-      id!: Vector<TypeInputUser>;
+      id!: Vector<Raw.TypeInputUser>;
 
-      constructor(params: { id: Vector<TypeInputUser> }) {
+      constructor(params: { id: Vector<Raw.TypeInputUser> }) {
         super();
         this.classType = 'functions';
         this.className = 'users.GetStoriesMaxIDs';
@@ -91325,10 +91432,13 @@ export namespace Raw {
     export type TypeExportedInvites = Raw.chatlists.ExportedInvites;
     export type TypeExportedChatlistInvite = Raw.chatlists.ExportedChatlistInvite;
     export class ExportedChatlistInvite extends TLObject {
-      filter!: TypeDialogFilter;
-      invite!: TypeExportedChatlistInvite;
+      filter!: Raw.TypeDialogFilter;
+      invite!: Raw.TypeExportedChatlistInvite;
 
-      constructor(params: { filter: TypeDialogFilter; invite: TypeExportedChatlistInvite }) {
+      constructor(params: {
+        filter: Raw.TypeDialogFilter;
+        invite: Raw.TypeExportedChatlistInvite;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'chatlists.ExportedChatlistInvite';
@@ -91370,14 +91480,14 @@ export namespace Raw {
       }
     }
     export class ExportedInvites extends TLObject {
-      invites!: Vector<TypeExportedChatlistInvite>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      invites!: Vector<Raw.TypeExportedChatlistInvite>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        invites: Vector<TypeExportedChatlistInvite>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        invites: Vector<Raw.TypeExportedChatlistInvite>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -91423,17 +91533,17 @@ export namespace Raw {
     }
     export class ChatlistInviteAlready extends TLObject {
       filterId!: int;
-      missingPeers!: Vector<TypePeer>;
-      alreadyPeers!: Vector<TypePeer>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      missingPeers!: Vector<Raw.TypePeer>;
+      alreadyPeers!: Vector<Raw.TypePeer>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         filterId: int;
-        missingPeers: Vector<TypePeer>;
-        alreadyPeers: Vector<TypePeer>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        missingPeers: Vector<Raw.TypePeer>;
+        alreadyPeers: Vector<Raw.TypePeer>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -91499,16 +91609,16 @@ export namespace Raw {
     export class ChatlistInvite extends TLObject {
       title!: string;
       emoticon?: string;
-      peers!: Vector<TypePeer>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      peers!: Vector<Raw.TypePeer>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         title: string;
         emoticon?: string;
-        peers: Vector<TypePeer>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        peers: Vector<Raw.TypePeer>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -91575,14 +91685,14 @@ export namespace Raw {
       }
     }
     export class ChatlistUpdates extends TLObject {
-      missingPeers!: Vector<TypePeer>;
-      chats!: Vector<TypeChat>;
-      users!: Vector<TypeUser>;
+      missingPeers!: Vector<Raw.TypePeer>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
-        missingPeers: Vector<TypePeer>;
-        chats: Vector<TypeChat>;
-        users: Vector<TypeUser>;
+        missingPeers: Vector<Raw.TypePeer>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -91631,15 +91741,15 @@ export namespace Raw {
       }
     }
     export class ExportChatlistInvite extends TLObject {
-      __response__!: chatlists.TypeExportedChatlistInvite;
-      chatlist!: TypeInputChatlist;
+      __response__!: Raw.chatlists.TypeExportedChatlistInvite;
+      chatlist!: Raw.TypeInputChatlist;
       title!: string;
-      peers!: Vector<TypeInputPeer>;
+      peers!: Vector<Raw.TypeInputPeer>;
 
       constructor(params: {
-        chatlist: TypeInputChatlist;
+        chatlist: Raw.TypeInputChatlist;
         title: string;
-        peers: Vector<TypeInputPeer>;
+        peers: Vector<Raw.TypeInputPeer>;
       }) {
         super();
         this.classType = 'functions';
@@ -91692,10 +91802,10 @@ export namespace Raw {
     }
     export class DeleteExportedInvite extends TLObject {
       __response__!: Bool;
-      chatlist!: TypeInputChatlist;
+      chatlist!: Raw.TypeInputChatlist;
       slug!: string;
 
-      constructor(params: { chatlist: TypeInputChatlist; slug: string }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist; slug: string }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.DeleteExportedInvite';
@@ -91737,17 +91847,17 @@ export namespace Raw {
       }
     }
     export class EditExportedInvite extends TLObject {
-      __response__!: TypeExportedChatlistInvite;
-      chatlist!: TypeInputChatlist;
+      __response__!: Raw.TypeExportedChatlistInvite;
+      chatlist!: Raw.TypeInputChatlist;
       slug!: string;
       title?: string;
-      peers?: Vector<TypeInputPeer>;
+      peers?: Vector<Raw.TypeInputPeer>;
 
       constructor(params: {
-        chatlist: TypeInputChatlist;
+        chatlist: Raw.TypeInputChatlist;
         slug: string;
         title?: string;
-        peers?: Vector<TypeInputPeer>;
+        peers?: Vector<Raw.TypeInputPeer>;
       }) {
         super();
         this.classType = 'functions';
@@ -91812,10 +91922,10 @@ export namespace Raw {
       }
     }
     export class GetExportedInvites extends TLObject {
-      __response__!: chatlists.TypeExportedInvites;
-      chatlist!: TypeInputChatlist;
+      __response__!: Raw.chatlists.TypeExportedInvites;
+      chatlist!: Raw.TypeInputChatlist;
 
-      constructor(params: { chatlist: TypeInputChatlist }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.GetExportedInvites';
@@ -91852,7 +91962,7 @@ export namespace Raw {
       }
     }
     export class CheckChatlistInvite extends TLObject {
-      __response__!: chatlists.TypeChatlistInvite;
+      __response__!: Raw.chatlists.TypeChatlistInvite;
       slug!: string;
 
       constructor(params: { slug: string }) {
@@ -91892,11 +92002,11 @@ export namespace Raw {
       }
     }
     export class JoinChatlistInvite extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       slug!: string;
-      peers!: Vector<TypeInputPeer>;
+      peers!: Vector<Raw.TypeInputPeer>;
 
-      constructor(params: { slug: string; peers: Vector<TypeInputPeer> }) {
+      constructor(params: { slug: string; peers: Vector<Raw.TypeInputPeer> }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.JoinChatlistInvite';
@@ -91938,10 +92048,10 @@ export namespace Raw {
       }
     }
     export class GetChatlistUpdates extends TLObject {
-      __response__!: chatlists.TypeChatlistUpdates;
-      chatlist!: TypeInputChatlist;
+      __response__!: Raw.chatlists.TypeChatlistUpdates;
+      chatlist!: Raw.TypeInputChatlist;
 
-      constructor(params: { chatlist: TypeInputChatlist }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.GetChatlistUpdates';
@@ -91978,11 +92088,11 @@ export namespace Raw {
       }
     }
     export class JoinChatlistUpdates extends TLObject {
-      __response__!: TypeUpdates;
-      chatlist!: TypeInputChatlist;
-      peers!: Vector<TypeInputPeer>;
+      __response__!: Raw.TypeUpdates;
+      chatlist!: Raw.TypeInputChatlist;
+      peers!: Vector<Raw.TypeInputPeer>;
 
-      constructor(params: { chatlist: TypeInputChatlist; peers: Vector<TypeInputPeer> }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist; peers: Vector<Raw.TypeInputPeer> }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.JoinChatlistUpdates';
@@ -92025,9 +92135,9 @@ export namespace Raw {
     }
     export class HideChatlistUpdates extends TLObject {
       __response__!: Bool;
-      chatlist!: TypeInputChatlist;
+      chatlist!: Raw.TypeInputChatlist;
 
-      constructor(params: { chatlist: TypeInputChatlist }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.HideChatlistUpdates';
@@ -92064,10 +92174,10 @@ export namespace Raw {
       }
     }
     export class GetLeaveChatlistSuggestions extends TLObject {
-      __response__!: Vector<TypePeer>;
-      chatlist!: TypeInputChatlist;
+      __response__!: Vector<Raw.TypePeer>;
+      chatlist!: Raw.TypeInputChatlist;
 
-      constructor(params: { chatlist: TypeInputChatlist }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.GetLeaveChatlistSuggestions';
@@ -92104,11 +92214,11 @@ export namespace Raw {
       }
     }
     export class LeaveChatlist extends TLObject {
-      __response__!: TypeUpdates;
-      chatlist!: TypeInputChatlist;
-      peers!: Vector<TypeInputPeer>;
+      __response__!: Raw.TypeUpdates;
+      chatlist!: Raw.TypeInputChatlist;
+      peers!: Vector<Raw.TypeInputPeer>;
 
-      constructor(params: { chatlist: TypeInputChatlist; peers: Vector<TypeInputPeer> }) {
+      constructor(params: { chatlist: Raw.TypeInputChatlist; peers: Vector<Raw.TypeInputPeer> }) {
         super();
         this.classType = 'functions';
         this.className = 'chatlists.LeaveChatlist';
@@ -92198,11 +92308,11 @@ export namespace Raw {
       }
     }
     export class SendCustomRequest extends TLObject {
-      __response__!: TypeDataJSON;
+      __response__!: Raw.TypeDataJSON;
       customMethod!: string;
-      params!: TypeDataJSON;
+      params!: Raw.TypeDataJSON;
 
-      constructor(params: { customMethod: string; params: TypeDataJSON }) {
+      constructor(params: { customMethod: string; params: Raw.TypeDataJSON }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.SendCustomRequest';
@@ -92243,9 +92353,9 @@ export namespace Raw {
     export class AnswerWebhookJSONQuery extends TLObject {
       __response__!: Bool;
       queryId!: long;
-      data!: TypeDataJSON;
+      data!: Raw.TypeDataJSON;
 
-      constructor(params: { queryId: long; data: TypeDataJSON }) {
+      constructor(params: { queryId: long; data: Raw.TypeDataJSON }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.AnswerWebhookJSONQuery';
@@ -92285,14 +92395,14 @@ export namespace Raw {
     }
     export class SetBotCommands extends TLObject {
       __response__!: Bool;
-      scope!: TypeBotCommandScope;
+      scope!: Raw.TypeBotCommandScope;
       langCode!: string;
-      commands!: Vector<TypeBotCommand>;
+      commands!: Vector<Raw.TypeBotCommand>;
 
       constructor(params: {
-        scope: TypeBotCommandScope;
+        scope: Raw.TypeBotCommandScope;
         langCode: string;
-        commands: Vector<TypeBotCommand>;
+        commands: Vector<Raw.TypeBotCommand>;
       }) {
         super();
         this.classType = 'functions';
@@ -92342,10 +92452,10 @@ export namespace Raw {
     }
     export class ResetBotCommands extends TLObject {
       __response__!: Bool;
-      scope!: TypeBotCommandScope;
+      scope!: Raw.TypeBotCommandScope;
       langCode!: string;
 
-      constructor(params: { scope: TypeBotCommandScope; langCode: string }) {
+      constructor(params: { scope: Raw.TypeBotCommandScope; langCode: string }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.ResetBotCommands';
@@ -92384,11 +92494,11 @@ export namespace Raw {
       }
     }
     export class GetBotCommands extends TLObject {
-      __response__!: Vector<TypeBotCommand>;
-      scope!: TypeBotCommandScope;
+      __response__!: Vector<Raw.TypeBotCommand>;
+      scope!: Raw.TypeBotCommandScope;
       langCode!: string;
 
-      constructor(params: { scope: TypeBotCommandScope; langCode: string }) {
+      constructor(params: { scope: Raw.TypeBotCommandScope; langCode: string }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.GetBotCommands';
@@ -92428,10 +92538,10 @@ export namespace Raw {
     }
     export class SetBotMenuButton extends TLObject {
       __response__!: Bool;
-      userId!: TypeInputUser;
-      button!: TypeBotMenuButton;
+      userId!: Raw.TypeInputUser;
+      button!: Raw.TypeBotMenuButton;
 
-      constructor(params: { userId: TypeInputUser; button: TypeBotMenuButton }) {
+      constructor(params: { userId: Raw.TypeInputUser; button: Raw.TypeBotMenuButton }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.SetBotMenuButton';
@@ -92470,10 +92580,10 @@ export namespace Raw {
       }
     }
     export class GetBotMenuButton extends TLObject {
-      __response__!: TypeBotMenuButton;
-      userId!: TypeInputUser;
+      __response__!: Raw.TypeBotMenuButton;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { userId: TypeInputUser }) {
+      constructor(params: { userId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.GetBotMenuButton';
@@ -92508,9 +92618,9 @@ export namespace Raw {
     }
     export class SetBotBroadcastDefaultAdminRights extends TLObject {
       __response__!: Bool;
-      adminRights!: TypeChatAdminRights;
+      adminRights!: Raw.TypeChatAdminRights;
 
-      constructor(params: { adminRights: TypeChatAdminRights }) {
+      constructor(params: { adminRights: Raw.TypeChatAdminRights }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.SetBotBroadcastDefaultAdminRights';
@@ -92548,9 +92658,9 @@ export namespace Raw {
     }
     export class SetBotGroupDefaultAdminRights extends TLObject {
       __response__!: Bool;
-      adminRights!: TypeChatAdminRights;
+      adminRights!: Raw.TypeChatAdminRights;
 
-      constructor(params: { adminRights: TypeChatAdminRights }) {
+      constructor(params: { adminRights: Raw.TypeChatAdminRights }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.SetBotGroupDefaultAdminRights';
@@ -92588,14 +92698,14 @@ export namespace Raw {
     }
     export class SetBotInfo extends TLObject {
       __response__!: Bool;
-      bot?: TypeInputUser;
+      bot?: Raw.TypeInputUser;
       langCode!: string;
       name?: string;
       about?: string;
       description?: string;
 
       constructor(params: {
-        bot?: TypeInputUser;
+        bot?: Raw.TypeInputUser;
         langCode: string;
         name?: string;
         about?: string;
@@ -92669,11 +92779,11 @@ export namespace Raw {
       }
     }
     export class GetBotInfo extends TLObject {
-      __response__!: bots.TypeBotInfo;
-      bot?: TypeInputUser;
+      __response__!: Raw.bots.TypeBotInfo;
+      bot?: Raw.TypeInputUser;
       langCode!: string;
 
-      constructor(params: { bot?: TypeInputUser; langCode: string }) {
+      constructor(params: { bot?: Raw.TypeInputUser; langCode: string }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.GetBotInfo';
@@ -92719,10 +92829,10 @@ export namespace Raw {
     }
     export class ReorderUsernames extends TLObject {
       __response__!: Bool;
-      bot!: TypeInputUser;
+      bot!: Raw.TypeInputUser;
       order!: Vector<string>;
 
-      constructor(params: { bot: TypeInputUser; order: Vector<string> }) {
+      constructor(params: { bot: Raw.TypeInputUser; order: Vector<string> }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.ReorderUsernames';
@@ -92762,11 +92872,11 @@ export namespace Raw {
     }
     export class ToggleUsername extends TLObject {
       __response__!: Bool;
-      bot!: TypeInputUser;
+      bot!: Raw.TypeInputUser;
       username!: string;
       active!: Bool;
 
-      constructor(params: { bot: TypeInputUser; username: string; active: Bool }) {
+      constructor(params: { bot: Raw.TypeInputUser; username: string; active: Bool }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.ToggleUsername';
@@ -92859,15 +92969,15 @@ export namespace Raw {
       hasMore?: boolean;
       count!: int;
       state!: string;
-      userStories!: Vector<TypeUserStories>;
-      users!: Vector<TypeUser>;
+      userStories!: Vector<Raw.TypeUserStories>;
+      users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         hasMore?: boolean;
         count: int;
         state: string;
-        userStories: Vector<TypeUserStories>;
-        users: Vector<TypeUser>;
+        userStories: Vector<Raw.TypeUserStories>;
+        users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
@@ -92932,10 +93042,14 @@ export namespace Raw {
     }
     export class Stories extends TLObject {
       count!: int;
-      stories!: Vector<TypeStoryItem>;
-      users!: Vector<TypeUser>;
+      stories!: Vector<Raw.TypeStoryItem>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { count: int; stories: Vector<TypeStoryItem>; users: Vector<TypeUser> }) {
+      constructor(params: {
+        count: int;
+        stories: Vector<Raw.TypeStoryItem>;
+        users: Vector<Raw.TypeUser>;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'stories.Stories';
@@ -92979,10 +93093,10 @@ export namespace Raw {
       }
     }
     export class UserStories extends TLObject {
-      stories!: TypeUserStories;
-      users!: Vector<TypeUser>;
+      stories!: Raw.TypeUserStories;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { stories: TypeUserStories; users: Vector<TypeUser> }) {
+      constructor(params: { stories: Raw.TypeUserStories; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'stories.UserStories';
@@ -93022,10 +93136,14 @@ export namespace Raw {
     }
     export class StoryViewsList extends TLObject {
       count!: int;
-      views!: Vector<TypeStoryView>;
-      users!: Vector<TypeUser>;
+      views!: Vector<Raw.TypeStoryView>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { count: int; views: Vector<TypeStoryView>; users: Vector<TypeUser> }) {
+      constructor(params: {
+        count: int;
+        views: Vector<Raw.TypeStoryView>;
+        users: Vector<Raw.TypeUser>;
+      }) {
         super();
         this.classType = 'types';
         this.className = 'stories.StoryViewsList';
@@ -93069,10 +93187,10 @@ export namespace Raw {
       }
     }
     export class StoryViews extends TLObject {
-      views!: Vector<TypeStoryViews>;
-      users!: Vector<TypeUser>;
+      views!: Vector<Raw.TypeStoryViews>;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { views: Vector<TypeStoryViews>; users: Vector<TypeUser> }) {
+      constructor(params: { views: Vector<Raw.TypeStoryViews>; users: Vector<Raw.TypeUser> }) {
         super();
         this.classType = 'types';
         this.className = 'stories.StoryViews';
@@ -93111,23 +93229,23 @@ export namespace Raw {
       }
     }
     export class SendStory extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       pinned?: boolean;
       noforwards?: boolean;
-      media!: TypeInputMedia;
+      media!: Raw.TypeInputMedia;
       caption?: string;
-      entities?: Vector<TypeMessageEntity>;
-      privacyRules!: Vector<TypeInputPrivacyRule>;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      privacyRules!: Vector<Raw.TypeInputPrivacyRule>;
       randomId!: long;
       period?: int;
 
       constructor(params: {
         pinned?: boolean;
         noforwards?: boolean;
-        media: TypeInputMedia;
+        media: Raw.TypeInputMedia;
         caption?: string;
-        entities?: Vector<TypeMessageEntity>;
-        privacyRules: Vector<TypeInputPrivacyRule>;
+        entities?: Vector<Raw.TypeMessageEntity>;
+        privacyRules: Vector<Raw.TypeInputPrivacyRule>;
         randomId: long;
         period?: int;
       }) {
@@ -93221,19 +93339,19 @@ export namespace Raw {
       }
     }
     export class EditStory extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
       id!: int;
-      media?: TypeInputMedia;
+      media?: Raw.TypeInputMedia;
       caption?: string;
-      entities?: Vector<TypeMessageEntity>;
-      privacyRules?: Vector<TypeInputPrivacyRule>;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      privacyRules?: Vector<Raw.TypeInputPrivacyRule>;
 
       constructor(params: {
         id: int;
-        media?: TypeInputMedia;
+        media?: Raw.TypeInputMedia;
         caption?: string;
-        entities?: Vector<TypeMessageEntity>;
-        privacyRules?: Vector<TypeInputPrivacyRule>;
+        entities?: Vector<Raw.TypeMessageEntity>;
+        privacyRules?: Vector<Raw.TypeInputPrivacyRule>;
       }) {
         super();
         this.classType = 'functions';
@@ -93383,7 +93501,7 @@ export namespace Raw {
       }
     }
     export class GetAllStories extends TLObject {
-      __response__!: stories.TypeAllStories;
+      __response__!: Raw.stories.TypeAllStories;
       next?: boolean;
       hidden?: boolean;
       state?: string;
@@ -93434,10 +93552,10 @@ export namespace Raw {
       }
     }
     export class GetUserStories extends TLObject {
-      __response__!: stories.TypeUserStories;
-      userId!: TypeInputUser;
+      __response__!: Raw.stories.TypeUserStories;
+      userId!: Raw.TypeInputUser;
 
-      constructor(params: { userId: TypeInputUser }) {
+      constructor(params: { userId: Raw.TypeInputUser }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.GetUserStories';
@@ -93471,12 +93589,12 @@ export namespace Raw {
       }
     }
     export class GetPinnedStories extends TLObject {
-      __response__!: stories.TypeStories;
-      userId!: TypeInputUser;
+      __response__!: Raw.stories.TypeStories;
+      userId!: Raw.TypeInputUser;
       offsetId!: int;
       limit!: int;
 
-      constructor(params: { userId: TypeInputUser; offsetId: int; limit: int }) {
+      constructor(params: { userId: Raw.TypeInputUser; offsetId: int; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.GetPinnedStories';
@@ -93524,7 +93642,7 @@ export namespace Raw {
       }
     }
     export class GetStoriesArchive extends TLObject {
-      __response__!: stories.TypeStories;
+      __response__!: Raw.stories.TypeStories;
       offsetId!: int;
       limit!: int;
 
@@ -93567,11 +93685,11 @@ export namespace Raw {
       }
     }
     export class GetStoriesByID extends TLObject {
-      __response__!: stories.TypeStories;
-      userId!: TypeInputUser;
+      __response__!: Raw.stories.TypeStories;
+      userId!: Raw.TypeInputUser;
       id!: Vector<int>;
 
-      constructor(params: { userId: TypeInputUser; id: Vector<int> }) {
+      constructor(params: { userId: Raw.TypeInputUser; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.GetStoriesByID';
@@ -93650,7 +93768,7 @@ export namespace Raw {
       }
     }
     export class GetAllReadUserStories extends TLObject {
-      __response__!: TypeUpdates;
+      __response__!: Raw.TypeUpdates;
 
       constructor() {
         super();
@@ -93685,10 +93803,10 @@ export namespace Raw {
     }
     export class ReadStories extends TLObject {
       __response__!: Vector<int>;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       maxId!: int;
 
-      constructor(params: { userId: TypeInputUser; maxId: int }) {
+      constructor(params: { userId: Raw.TypeInputUser; maxId: int }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.ReadStories';
@@ -93728,10 +93846,10 @@ export namespace Raw {
     }
     export class IncrementStoryViews extends TLObject {
       __response__!: Bool;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       id!: Vector<int>;
 
-      constructor(params: { userId: TypeInputUser; id: Vector<int> }) {
+      constructor(params: { userId: Raw.TypeInputUser; id: Vector<int> }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.IncrementStoryViews';
@@ -93770,7 +93888,7 @@ export namespace Raw {
       }
     }
     export class GetStoryViewsList extends TLObject {
-      __response__!: stories.TypeStoryViewsList;
+      __response__!: Raw.stories.TypeStoryViewsList;
       id!: int;
       offsetDate!: int;
       offsetId!: long;
@@ -93830,7 +93948,7 @@ export namespace Raw {
       }
     }
     export class GetStoriesViews extends TLObject {
-      __response__!: stories.TypeStoryViews;
+      __response__!: Raw.stories.TypeStoryViews;
       id!: Vector<int>;
 
       constructor(params: { id: Vector<int> }) {
@@ -93867,11 +93985,11 @@ export namespace Raw {
       }
     }
     export class ExportStoryLink extends TLObject {
-      __response__!: TypeExportedStoryLink;
-      userId!: TypeInputUser;
+      __response__!: Raw.TypeExportedStoryLink;
+      userId!: Raw.TypeInputUser;
       id!: int;
 
-      constructor(params: { userId: TypeInputUser; id: int }) {
+      constructor(params: { userId: Raw.TypeInputUser; id: int }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.ExportStoryLink';
@@ -93911,15 +94029,15 @@ export namespace Raw {
     }
     export class Report extends TLObject {
       __response__!: Bool;
-      userId!: TypeInputUser;
+      userId!: Raw.TypeInputUser;
       id!: Vector<int>;
-      reason!: TypeReportReason;
+      reason!: Raw.TypeReportReason;
       message!: string;
 
       constructor(params: {
-        userId: TypeInputUser;
+        userId: Raw.TypeInputUser;
         id: Vector<int>;
-        reason: TypeReportReason;
+        reason: Raw.TypeReportReason;
         message: string;
       }) {
         super();
@@ -93972,7 +94090,7 @@ export namespace Raw {
   }
   export namespace langpack {
     export class GetLangPack extends TLObject {
-      __response__!: TypeLangPackDifference;
+      __response__!: Raw.TypeLangPackDifference;
       langPack!: string;
       langCode!: string;
 
@@ -94015,7 +94133,7 @@ export namespace Raw {
       }
     }
     export class GetStrings extends TLObject {
-      __response__!: Vector<TypeLangPackString>;
+      __response__!: Vector<Raw.TypeLangPackString>;
       langPack!: string;
       langCode!: string;
       keys!: Vector<string>;
@@ -94064,7 +94182,7 @@ export namespace Raw {
       }
     }
     export class GetDifference extends TLObject {
-      __response__!: TypeLangPackDifference;
+      __response__!: Raw.TypeLangPackDifference;
       langPack!: string;
       langCode!: string;
       fromVersion!: int;
@@ -94117,7 +94235,7 @@ export namespace Raw {
       }
     }
     export class GetLanguages extends TLObject {
-      __response__!: Vector<TypeLangPackLanguage>;
+      __response__!: Vector<Raw.TypeLangPackLanguage>;
       langPack!: string;
 
       constructor(params: { langPack: string }) {
@@ -94154,7 +94272,7 @@ export namespace Raw {
       }
     }
     export class GetLanguage extends TLObject {
-      __response__!: TypeLangPackLanguage;
+      __response__!: Raw.TypeLangPackLanguage;
       langPack!: string;
       langCode!: string;
 
@@ -94199,10 +94317,10 @@ export namespace Raw {
   }
   export namespace folders {
     export class EditPeerFolders extends TLObject {
-      __response__!: TypeUpdates;
-      folderPeers!: Vector<TypeInputFolderPeer>;
+      __response__!: Raw.TypeUpdates;
+      folderPeers!: Vector<Raw.TypeInputFolderPeer>;
 
-      constructor(params: { folderPeers: Vector<TypeInputFolderPeer> }) {
+      constructor(params: { folderPeers: Vector<Raw.TypeInputFolderPeer> }) {
         super();
         this.classType = 'functions';
         this.className = 'folders.EditPeerFolders';
