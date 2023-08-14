@@ -1,4 +1,14 @@
- <a name="1.9.0"></a>
+ <a name="1.9.1"></a>
+
+## [1.9.1](https://github.com/tgsnake/core/compare/1.9.0...1.9.1)
+
+> 2023-08-14
+
+### Change
+
+- update version - update version - Update CHANGELOG.md  ### Fix
+
+- looping types in raw api   <a name="1.9.0"></a>
 
 ## [1.9.0](https://github.com/tgsnake/core/compare/1.8.0...1.9.0)
 
