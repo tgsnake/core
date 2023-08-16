@@ -57,7 +57,6 @@ export class WebSocketError extends Error {
 }
 
 export class Disconnected extends WebSocketError {
-  description!: string;
   constructor() {
     super(
       'WebSocket Disconnected',
@@ -66,7 +65,6 @@ export class Disconnected extends WebSocketError {
   }
 }
 export class ReadClosed extends WebSocketError {
-  description!: string;
   constructor() {
     super(
       'WebSocket connection closed when reading data',
@@ -75,7 +73,6 @@ export class ReadClosed extends WebSocketError {
   }
 }
 export class ProxyUnsupported extends WebSocketError {
-  description!: string;
   constructor() {
     super(
       'WebSocket proxy unsupported',
