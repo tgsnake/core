@@ -36,7 +36,9 @@ export class File extends Duplex {
    */
   _read(length?: number) {}
   // _final(callback){}
-
+  get bytes() {
+    return this._bytes;
+  }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,

@@ -21,6 +21,7 @@ import * as _Session from './Session.ts';
 import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
 import * as helpers from '../helpers.ts';
+import * as Files from '../file/index.ts';
 import type { ProxyInterface } from '../connection/connection.ts';
 import type { Session } from '../session/index.ts';
 
@@ -523,6 +524,55 @@ export class Client {
    */
   async destroySecretChat(chatId: number) {
     return this._secretChat.destroy(chatId);
+  }
+  /**
+   * Save file to telegram without actually sending.
+   * @since v1.10.0
+   */
+  saveFile({
+    source,
+    fileName,
+    fileId,
+    filePart,
+    progress,
+  }: Files.SaveFileParams): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
+    return Files.upload(this, source, fileName, fileId, filePart, progress);
+  }
+  /**
+   * Save file to telegram without actually sending.
+   * This method is different with classic saveFile, this method using streamable. So, you can upload content without actually save the file (example if you want to upload file from internet).
+   * Make sure the source is Readable, so it can be piped to writeable.
+   * @since v1.10.0
+   */
+  saveFileStream({
+    source,
+    fileName,
+    fileId,
+    filePart,
+    progress,
+  }: Files.SaveFileStreamParams): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
+    const file = new Files.File();
+    let promiseResolve: (value: Raw.InputFile | Raw.InputFileBig | undefined) => void = (
+      value,
+    ) => {};
+    const promise: Promise<Raw.InputFile | Raw.InputFileBig | undefined> = new Promise<
+      Raw.InputFile | Raw.InputFileBig | undefined
+    >((resolve) => {
+      promiseResolve = resolve;
+    });
+    file.on('finish', async () => {
+      const res: Raw.InputFile | Raw.InputFileBig | undefined = await Files.upload(
+        this,
+        file.bytes.buffer,
+        fileName,
+        fileId,
+        filePart,
+        progress,
+      );
+      promiseResolve(res);
+    });
+    source.pipe(file);
+    return promise;
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {

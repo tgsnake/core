@@ -15,6 +15,7 @@ export * as Clients from './client/index.ts';
 export * as Connections from './connection/index.ts';
 export * as Cryptos from './crypto/index.ts';
 export * as Errors from './errors/index.ts';
+export * as Files from './file/index.ts';
 export * as Raws from './raw/index.ts';
 export * as Sessions from './session/index.ts';
 export * as Storages from './storage/index.ts';
