@@ -29,7 +29,7 @@ export function xor(a: Buffer, b: Buffer) {
 }
 /**
  * Compute passowrd with PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
- * @param {Object} algo - The PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
+ * @param {Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow} algo - The PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo.
  * @param {String} password - The plain password will be encrypt with algo.
  */
 
@@ -48,8 +48,8 @@ export function computePasswordHash(
 }
 /**
  * Check the plain password with current password.
- * @param {Object} r - Current password.
- * @parame {String} password - Plain password will be check with current password.
+ * @param {Raw.account.Password} r - Current password.
+ * @param {String} password - Plain password will be check with current password.
  */
 export function computePasswordCheck(
   r: Raw.account.Password,

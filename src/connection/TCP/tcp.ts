@@ -18,8 +18,8 @@ import type { ProxyInterface } from '../connection.ts';
 /**
  * @class TCP
  * This class is for connecting to telegram server.
- * This class will use @link {WebSocket} class to connecting to telegram server.
- * You can extend this class to make the MTProto transport (see {@link https://core.telegram.org/mtproto/mtproto-transports})
+ * This class will use {@link WebSocket} class to connecting to telegram server.
+ * You can extend this class to make the MTProto transport (see {@link https://core.telegram.org/mtproto/mtproto-transports transport})
  */
 export class TCP {
   /** @hidden */
@@ -58,7 +58,7 @@ export class TCP {
   }
   /**
    * Send requests to telegram using websocket. The message must be of bytes supported by telegram for the message to be valid.
-   * see {@link https://core.telegram.org/mtproto/mtproto-transports}
+   * see {@link https://core.telegram.org/mtproto/mtproto-transports transport}
    * @param {Buffer} data - message to be sent to telegram server. The message must be encrypted according to what is explained on the Telegram website.
    */
   async send(data: Buffer) {
@@ -89,7 +89,7 @@ export class TCP {
     }
     return data;
   }
-  /** @hidden */
+  /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -97,17 +97,18 @@ export class TCP {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
         }
       }
     }
     return toPrint;
   }
+  /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
-  /** @hidden */
+  /** @ignore */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -115,14 +116,14 @@ export class TCP {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
         }
       }
     }
     return toPrint;
   }
-  /** @hidden */
+  /** @ignore */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

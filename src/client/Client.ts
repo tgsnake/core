@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { os, inspect } from '../platform.deno.ts';
+import { os, inspect, Semaphore } from '../platform.deno.ts';
 import * as Errors from '../errors/index.ts';
 import {
   Raw,
@@ -91,63 +91,48 @@ export interface ClientOptions {
    * Only for browser platform! Set false when you deployed your app offside the local machine. it wil use `ws://` in local machine and `wss://` in deployment.
    */
   local?: boolean;
+  /**
+   * Set the maximum amount of concurrent transmissions (uploads & downloads).
+   * A value that is too high may result in network related issues.
+   * Defaults to 1.
+   */
+  maxConcurrentTransmissions?: number;
 }
 
 export class Client {
-  /** @hidden */
   _apiId!: number;
-  /** @hidden */
   _apiHash!: string;
-  /** @hidden */
   _storage!: AbstractSession;
-  /** @hidden */
   _testMode!: boolean;
-  /** @hidden */
   _proxy?: ProxyInterface;
-  /** @hidden */
   _ipv6!: boolean;
-  /** @hidden */
   _deviceModel!: string;
-  /** @hidden */
   _systemVersion!: string;
-  /** @hidden */
   _appVersion!: string;
-  /** @hidden */
   _systemLangCode!: string;
-  /** @hidden */
   _langCode!: string;
-  /** @hidden */
   _maxRetries!: number;
-  /** @hidden */
   _isCdn!: boolean;
-  /** @hidden */
   _sleepTreshold!: number;
-  /** @hidden */
   _takeout!: boolean;
-  /** @hidden */
   _noUpdates!: boolean;
-  /** @hidden */
   _takeoutId!: bigint;
-  /** @hidden */
   _dcId!: string;
-  /** @hidden */
   _session!: Session;
-  /** @hidden */
   _isConnected!: boolean;
-  /** @hidden */
   _connectionMode!: number;
-  /** @hidden */
   _local!: boolean;
-  /** @hidden */
   _secretChat!: SecretChat;
-  /** @hidden */
+  _getFileSemaphore!: Semaphore;
+  _saveFileSemaphore!: Semaphore;
+  _me?: Raw.users.UserFull;
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
    * Client Constructor.
-   * @param {Object} session - What the session will be used for login to telegram.
+   * @param {AbstractSession} session - What the session will be used for login to telegram.
    * @param {String} apiHash - Your api hash, got it from my.telegram.org.
    * @param {Number} apiId - Your api id, got it from my.telegram.org.
-   * @param {Object} clientOptions - Client options for initializing client.
+   * @param {ClientOptions} clientOptions - Client options for initializing client.
    */
   constructor(
     session: AbstractSession,
@@ -182,6 +167,8 @@ export class Client {
     this._connectionMode = clientOptions?.tcp ?? 0;
     this._local = clientOptions?.local ?? true;
     this._secretChat = new SecretChat(session, this);
+    this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
+    this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
   }
   /**
    * Exporting current session to string.
@@ -373,7 +360,7 @@ export class Client {
           peer.phone ? peer.phone : undefined,
         ]);
       } else if (peer instanceof Raw.Chat || peer instanceof Raw.ChatForbidden) {
-        parsedPeers.push([-peer.id, BigInt(0), 'group', undefined, undefined]);
+        parsedPeers.push([BigInt(-peer.id), BigInt(0), 'group', undefined, undefined]);
       } else if (peer instanceof Raw.Channel || peer instanceof Raw.ChannelForbidden) {
         parsedPeers.push([
           helpers.getChannelId(peer.id),
@@ -537,7 +524,7 @@ export class Client {
   async destroySecretChat(chatId: number) {
     return this._secretChat.destroy(chatId);
   }
-
+  /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -545,16 +532,18 @@ export class Client {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
         }
       }
     }
     return toPrint;
   }
+  /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
+  /** @ignore */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -562,14 +551,14 @@ export class Client {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
         }
       }
     }
     return toPrint;
   }
-  /** @hidden */
+  /** @ignore */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

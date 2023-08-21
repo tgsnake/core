@@ -18,7 +18,7 @@ import type { ProxyInterface } from '../connection.ts';
 /**
  * @class TCPIntermediateO
  * The TCPObfuscated wraped with TCPIntermediate.
- * see https://core.telegram.org/mtproto/mtproto-transports#transport-obfuscation
+ * see {@link https://core.telegram.org/mtproto/mtproto-transports#transport-obfuscation TCPObfuscated}
  */
 export class TCPIntermediateO extends TCP {
   /** @hidden */

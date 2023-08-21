@@ -51,7 +51,7 @@ export interface SigInUser {
 }
 /**
  * Sigin as bot.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  * @param {String} botToken - Bot token from bot father.
  */
 export async function siginBot(client: Client, botToken: string): Promise<Raw.User | undefined> {
@@ -102,8 +102,8 @@ export async function siginBot(client: Client, botToken: string): Promise<Raw.Us
 }
 /**
  * Sigin as user.
- * @param {Object} client - Telegram client.
- * @param {Object} auth - The required parameter to be used for creating account or login.
+ * @param {Client} client - Telegram client.
+ * @param {Client} auth - The required parameter to be used for creating account or login.
  */
 export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.User | undefined> {
   let _phoneNumber;
@@ -226,7 +226,7 @@ export async function siginUser(client: Client, auth: SigInUser): Promise<Raw.Us
 }
 /**
  * Sending telegram OTP code.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
  */
 export async function sendCode(
@@ -277,7 +277,7 @@ export async function sendCode(
 }
 /**
  * Authorize a user in Telegram with a valid confirmation code.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
  * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
  * @param {String} phoneCode - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
@@ -309,7 +309,7 @@ export async function sigin(
 }
 /**
  * Recover your password with recovery code and login.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  * @param {String} code - The recovery code has been send in connected email with 2FA.
  */
 export async function recoverPassword(client: Client, code: string): Promise<Raw.User | undefined> {
@@ -328,7 +328,7 @@ export async function recoverPassword(client: Client, code: string): Promise<Raw
 }
 /**
  * Send the recovery code to cennected email to reset the 2FA.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  */
 export async function sendRecoveryCode(client: Client): Promise<string> {
   let r = await client.invoke(new Raw.auth.RequestPasswordRecovery(), 0);
@@ -336,7 +336,7 @@ export async function sendRecoveryCode(client: Client): Promise<string> {
 }
 /**
  * Check the givens password is correct or not.
- * @param {Object} client - Telegram client
+ * @param {Client} client - Telegram client
  * @param {String} password - Password will be check.
  */
 export async function checkPassword(
@@ -361,7 +361,7 @@ export async function checkPassword(
 }
 /**
  * Accepting Terms Of Service for creating a account.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  * @param {String} id - TOS Id,The terms of service identifier.
  */
 export async function acceptTOS(client: Client, id: string): Promise<boolean> {
@@ -376,7 +376,7 @@ export async function acceptTOS(client: Client, id: string): Promise<boolean> {
 }
 /**
  * Get hint of 2FA password.
- * @param {Object} client - Telegram client
+ * @param {Client} client - Telegram client
  */
 export async function getPasswordHint(client: Client): Promise<string> {
   let r = await client.invoke(new Raw.account.GetPassword(), 0);
@@ -384,7 +384,7 @@ export async function getPasswordHint(client: Client): Promise<string> {
 }
 /**
  * Sigin and create a new fresh account.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
  * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
  * @param {String} firstname - New user firstname.

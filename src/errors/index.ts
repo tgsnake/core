@@ -13,6 +13,7 @@ export * as Exceptions from './exceptions/index.ts';
 export * as ClientError from './Client.ts';
 export * as WSError from './WebSocket.ts';
 export * as SecretChatError from './SecretChat.ts';
+export * as FileErrors from './File.ts';
 
 export class TimeoutError extends Error {
   message!: string;

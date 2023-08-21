@@ -10,6 +10,7 @@
 
 export { Client } from './client/Client.ts';
 export { Raw } from './raw/index.ts';
+export { Queue } from './Queue.ts';
 export * as Clients from './client/index.ts';
 export * as Connections from './connection/index.ts';
 export * as Cryptos from './crypto/index.ts';

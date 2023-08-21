@@ -143,7 +143,7 @@ export async function unpack(
       throw new SecurityCheckMismatch('Msg id is equal to any of the stored values');
     }
     let msgId = new MsgId();
-    let timeDiff = (message.msgId - msgId.getMsgId()) / BigInt(2 ** 32);
+    let timeDiff = BigInt(message.msgId - msgId.getMsgId()) / BigInt(2 ** 32);
     // Ignored message: msg_id belongs over 30 seconds in the future
     if (timeDiff > BigInt(30)) {
       throw new SecurityCheckMismatch('Msg id belongs over 30 seconds in the future');

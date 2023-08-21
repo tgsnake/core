@@ -15,7 +15,6 @@ import { inspect } from '../../platform.deno.ts';
 async function req(paths: string): Promise<{ [key: string]: any }> {
   let res = {};
   if ('Deno' in globalThis) {
-    let done = false;
     // @ts-ignore
     res = await import(paths);
   } else {
@@ -72,6 +71,7 @@ export class TLObject {
   write(...args: Array<any>): Buffer {
     return this.cls.write(...args);
   }
+  /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.className,
@@ -81,16 +81,18 @@ export class TLObject {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
         if (ignore.includes(key)) continue;
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
         }
       }
     }
     return toPrint;
   }
+  /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
+  /** @ignore */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.className,
@@ -100,13 +102,14 @@ export class TLObject {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
         if (ignore.includes(key)) continue;
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
         }
       }
     }
     return toPrint;
   }
+  /** @ignore */
   toString() {
     return `[constructor of ${this.className}] ${JSON.stringify(this, null, 2)}`;
   }

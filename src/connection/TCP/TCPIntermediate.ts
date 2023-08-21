@@ -14,7 +14,7 @@ import type { ProxyInterface } from '../connection.ts';
 /**
  * @class TCPIntermediate
  * One of the TCP classes that implements simple level connection.
- * see https://core.telegram.org/mtproto/mtproto-transports#intermediate
+ * see {@link https://core.telegram.org/mtproto/mtproto-transports#intermediate TCPIntermediate}
  */
 export class TCPIntermediate extends TCP {
   constructor() {

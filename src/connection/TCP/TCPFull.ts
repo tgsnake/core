@@ -15,7 +15,7 @@ import type { ProxyInterface } from '../connection.ts';
 /**
  * @class TCPFull
  * One of the TCP classes that implements basic MTProto transport protocol.
- * see https://core.telegram.org/mtproto/mtproto-transports#full
+ * see {@link https://core.telegram.org/mtproto/mtproto-transports#full TCPFull}
  */
 export class TCPFull extends TCP {
   /** @hidden */

@@ -16,19 +16,18 @@ import type { ProxyInterface } from './connection.ts';
 const mutex = new Mutex();
 
 /**
- * Promised version of {@link net.Socket}
+ * Promised version of {@link net.Socket Socket}
  */
 export class Socket {
-  /** @hidden */
   private _client!: any;
-  /** @hidden */
+
   private _data!: Buffer;
-  /** @hidden */
+
   private _read!: boolean | Promise<boolean>;
-  /** @hidden */
+
   private _promisedReading!: (value?: any) => void;
   /**
-   * The timeout used to run the function of the {@link net.Socket}. If more than the time has been found, it will return a TimeoutError error.
+   * The timeout used to run the function of the {@link net.Socket Socket}. If more than the time has been found, it will return a TimeoutError error.
    */
   timeout!: number;
   /**
@@ -41,7 +40,7 @@ export class Socket {
     this.timeout = timeout;
   }
   /**
-   * Connecting {@link net.Socket} to the server asynchronously.
+   * Connecting {@link net.Socket Socket} to the server asynchronously.
    * @param {String} ip - IP Server
    * @param {Number} port - Port server
    */
@@ -142,7 +141,7 @@ export class Socket {
     }
   }
   /**
-   * Disconnect {@link net.Socket} from server.
+   * Disconnect {@link net.Socket Socket} from server.
    */
   async destroy() {
     if (this._client && !this._connectionClosed) {
@@ -215,7 +214,7 @@ export class Socket {
   }
   /**
    * Read data updates from the server asynchronously.
-   * If the client is not connected to the client, it will return an {@linknWSError.ReadClosed} error.
+   * If the client is not connected to the client, it will return an {@link WSError.ReadClosed} error.
    * @param {Number} length - How many bytes of data to read.
    */
   async read(length: number) {
@@ -237,7 +236,7 @@ export class Socket {
   }
   /**
    * Read data updates from the server asynchronously.
-   * If the client is not connected to the client, it will return an {@linknWSError.ReadClosed} error.
+   * If the client is not connected to the client, it will return an {@link WSError.ReadClosed} error.
    * @param {Number} length - How many bytes of data to read.
    */
   async reading(length: number) {
@@ -253,6 +252,7 @@ export class Socket {
       throw new WSError.ReadClosed();
     }
   }
+  /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -260,17 +260,18 @@ export class Socket {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
         }
       }
     }
     return toPrint;
   }
+  /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
-  /** @hidden */
+  /** @ignore */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -278,14 +279,14 @@ export class Socket {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
         }
       }
     }
     return toPrint;
   }
-  /** @hidden */
+  /** @ignore */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

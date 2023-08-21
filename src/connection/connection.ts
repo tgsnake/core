@@ -149,6 +149,7 @@ export class Connection {
     }
     return await this._protocol.recv();
   }
+  /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -156,17 +157,18 @@ export class Connection {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
         }
       }
     }
     return toPrint;
   }
+  /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
-  /** @hidden */
+  /** @ignore */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.constructor.name,
@@ -174,14 +176,14 @@ export class Connection {
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
-        if (!key.startsWith('_')) {
+        if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
         }
       }
     }
     return toPrint;
   }
-  /** @hidden */
+  /** @ignore */
   toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }

@@ -17,7 +17,7 @@ import type { ProxyInterface } from '../connection.ts';
 /**
  * @class TCPAbridgedO
  * The TCPObfuscated wraped with TCPAbridged.
- * see https://core.telegram.org/mtproto/mtproto-transports#transport-obfuscation
+ * see {@link https://core.telegram.org/mtproto/mtproto-transports#transport-obfuscation TCPObfuscated}
  */
 export class TCPAbridgedO extends TCP {
   /** @hidden */

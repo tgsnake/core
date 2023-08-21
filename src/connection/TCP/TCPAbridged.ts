@@ -15,7 +15,7 @@ import type { ProxyInterface } from '../connection.ts';
 /**
  * @class TCPAbridged
  * One of the TCP classes that implements The lightest protocol available.
- * see https://core.telegram.org/mtproto/mtproto-transports#abridged
+ * see {@link https://core.telegram.org/mtproto/mtproto-transports#abridged TCPAbridged}
  */
 export class TCPAbridged extends TCP {
   constructor() {
