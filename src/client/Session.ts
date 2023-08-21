@@ -16,7 +16,7 @@ import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  */
 export async function loadSession(client: Client): Promise<void> {
   await client._storage.load();
@@ -44,7 +44,7 @@ export async function loadSession(client: Client): Promise<void> {
 /**
  * Connecting client to telegram server.<br/>
  * You can't receive any updates if you not call getMe after connected.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  */
 export async function connect(client: Client): Promise<void> {
   if (!client._isConnected) {
@@ -69,14 +69,16 @@ export async function start(
   auth?: _Auth.SigInBot | _Auth.SigInUser,
 ): Promise<Raw.users.UserFull> {
   await connect(client);
-  if (auth) {
-    // @ts-ignore
-    if (auth?.botToken) {
+  if (client._storage.userId === undefined) {
+    if (auth) {
       // @ts-ignore
-      await _Auth.siginBot(client, await auth?.botToken);
-    } else {
-      // @ts-ignore
-      await _Auth.siginUser(client, { ...auth });
+      if (auth?.botToken) {
+        // @ts-ignore
+        await _Auth.siginBot(client, await auth?.botToken);
+      } else {
+        // @ts-ignore
+        await _Auth.siginUser(client, { ...auth });
+      }
     }
   }
   if (!client._storage.authKey) {
@@ -88,11 +90,13 @@ export async function start(
     Logger.warning(`[104] Takeout session ${client._takeoutId} initiated.`);
   }
   await client.invoke(new Raw.updates.GetState());
-  return await _Auth.getMe(client);
+  const me = await _Auth.getMe(client);
+  client._me = me;
+  return me;
 }
 /**
  * Logout and kill the client.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  */
 export async function logout(client: Client): Promise<any> {
   await client.invoke(new Raw.auth.LogOut());
@@ -102,11 +106,11 @@ export async function logout(client: Client): Promise<any> {
 }
 /**
  * Exporting current session to string.
- * @param {Object} client - Telegram client.
+ * @param {Client} client - Telegram client.
  */
 export async function exportSession(client: Client): Promise<string> {
   if (!client._storage.userId) {
-    const me = await _Auth.getMe(client);
+    const me = client._me ?? (await _Auth.getMe(client));
     client._storage.setUserId((me.fullUser as unknown as Raw.UserFull).id);
     // @ts-ignore
     client._storage.setIsBot(Boolean(me.users[0].bot));
@@ -116,8 +120,8 @@ export async function exportSession(client: Client): Promise<string> {
 /**
  * Sending request to telegram. <br/>
  * Only telegram method can be invoked.
- * @param {Object} client - Telegram client.
- * @param {Object} query - Raw class from telegram method.
+ * @param {Client} client - Telegram client.
+ * @param {Client} query - Raw class from telegram method.
  * @param {Number} retries - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
  * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
  * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
