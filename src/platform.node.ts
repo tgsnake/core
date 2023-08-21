@@ -16,7 +16,8 @@ export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'zlib';
 export { Logger } from '@tgsnake/log';
 export { SocksClient } from 'socks';
-export { Mutex } from 'async-mutex';
+export { Mutex, Semaphore } from 'async-mutex';
+export { Readable, Writable, Duplex } from 'stream';
 export const aesjs = {
   ModeOfOperation: {
     ecb: class ECB {
