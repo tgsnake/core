@@ -46,6 +46,7 @@ export class Session {
   private _testMode!: boolean;
   private _proxy?: ProxyInterface;
   private _isMedia!: boolean;
+  private _isCdn!: boolean;
   private _authKeyId!: Buffer;
   private _connection!: Connection;
   private _pingTask!: any;
@@ -70,6 +71,7 @@ export class Session {
     testMode: boolean,
     proxy?: ProxyInterface,
     isMedia: boolean = false,
+    isCdn: boolean = false,
   ) {
     this._client = client;
     this._dcId = dcId;
@@ -77,6 +79,7 @@ export class Session {
     this._testMode = testMode;
     this._proxy = proxy;
     this._isMedia = isMedia;
+    this._isCdn = isCdn;
     this._authKeyId = crypto.createHash('sha1').update(this._authKey).digest().slice(-8);
     this.MAX_RETRIES = client._maxRetries ?? 5;
   }
@@ -418,7 +421,7 @@ export class Session {
           true,
           this.START_TIMEOUT,
         );
-        if (!this._client._isCdn) {
+        if (!this._isCdn) {
           await this._send(
             new Raw.InvokeWithLayer({
               layer: Raw.Layer,

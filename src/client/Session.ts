@@ -56,6 +56,8 @@ export async function connect(client: Client): Promise<void> {
       client._storage.authKey,
       client._storage.testMode,
       client._proxy,
+      false,
+      client._isCdn,
     );
     await client._session.start();
     client._isConnected = true;

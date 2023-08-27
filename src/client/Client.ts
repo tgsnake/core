@@ -574,6 +574,26 @@ export class Client {
     source.pipe(file);
     return promise;
   }
+  /**
+   * Downloading file.
+   * This function will be return Readable stream, you can use fs.createWriteStream to save it in local storage.
+   * You can pipe the results to writeable stream.
+   * @since v1.10.0
+   */
+  downloadStream(
+    peer: Raw.TypeInputPeer,
+    { file, dcId, fileSize, limit, offset }: Files.DownloadParam,
+  ): Files.File {
+    return Files.downloadStream(
+      this,
+      file,
+      peer,
+      dcId,
+      fileSize || 0,
+      limit || 0,
+      offset || BigInt(0),
+    );
+  }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {

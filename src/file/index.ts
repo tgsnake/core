@@ -10,3 +10,4 @@
 
 export { File } from './File.ts';
 export { upload, Progress, SaveFileParams, SaveFileStreamParams } from './Upload.ts';
+export { handleDownload, downloadStream, DownloadParam } from './Download.ts';
