@@ -170,6 +170,8 @@ export async function upload(
       for (let _ of workers) {
         await queue.put(null);
       }
+      await queue.put(null);
+      await queue.get();
       await session.stop();
       if (isBig) {
         return new Raw.InputFileBig({
