@@ -252,7 +252,7 @@ export class Client {
     const modUpdate = await UpdateSecretChatMessage.generate(update, this._secretChat);
     if (modUpdate.message instanceof SecretChatMessageService) {
       const msg = (modUpdate.message as SecretChatMessageService).message;
-      if ('action' in msg) {
+      if (msg && 'action' in msg) {
         const action = msg.action;
         if (action instanceof Raw.DecryptedMessageActionRequestKey20) {
           await this._secretChat.acceptRekeying(

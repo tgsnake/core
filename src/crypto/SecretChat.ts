@@ -35,7 +35,7 @@ export function kdf(
   v1: boolean = false,
 ): Array<Buffer> {
   // https://corefork.telegram.org/api/end-to-end#serialization-and-encryption-of-outgoing-messages
-  const x = isAdmin ? 8 : 0;
+  const x = isAdmin ? 0 : 8;
   if (v1) {
     // https://corefork.telegram.org/api/end-to-end_v1#serialization-and-encryption-of-outgoing-messages
     const sha1A = sha1(Buffer.concat([msgKey, sharedKey.slice(x, x + 32)]));
@@ -119,11 +119,10 @@ export async function unpack(
   const msgKey = data.read(16);
   const encryptedMsg = data.read();
   const [aesKey, aesIv] =
-    mtproto === 1 ? kdf(sharedKey, msgKey, isAdmin, true) : kdf(sharedKey, msgKey, isAdmin, false);
+    mtproto === 1 ? kdf(sharedKey, msgKey, isAdmin, true) : kdf(sharedKey, msgKey, !isAdmin, false);
   const decryptedMsg = new BytesIO(ige256Decrypt(encryptedMsg, aesKey, aesIv));
   const msgLength = decryptedMsg.readUInt32LE();
   const payload = decryptedMsg.read();
-  const msg = await TLObject.read(new BytesIO(payload));
   const padding = payload.slice(msgLength);
   const msgKeyLarge = sha256(
     Buffer.concat([
@@ -135,7 +134,10 @@ export async function unpack(
     mtproto === 1
       ? sha1(decryptedMsg.buffer.slice(0, 4 + msgLength)).slice(-16)
       : msgKeyLarge.slice(8, 8 + 16);
-
+  SecurityCheckMismatch.check(
+    msgKey.equals(clientMsgKey),
+    'Given message key is not equal with client side',
+  );
   SecurityCheckMismatch.check(
     padding.length >= 12 && padding.length <= 1024,
     'Payload padding is lower than 12 or bigger than 1024',
@@ -144,9 +146,6 @@ export async function unpack(
     mod(padding.length, 4) === 0,
     'Mod of padding length with 4 is equal with zero',
   );
-  SecurityCheckMismatch.check(
-    msgKey.equals(clientMsgKey),
-    'Given message key is not equal with client side',
-  );
+  const msg = await TLObject.read(new BytesIO(payload));
   return msg;
 }
