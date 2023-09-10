@@ -1,4 +1,14 @@
- <a name="1.9.1"></a>
+ <a name="1.10.0"></a>
+
+## [1.10.0](https://github.com/tgsnake/core/compare/1.9.1...1.10.0)
+
+> 2023-08-27
+
+### Add
+
+- download file - saveFile and saveFileStream method - import streamable library - Streamable file class - error types when upload file - queue  ### Change
+
+- dont show undefined or null in console and json stringify - ignore auth params when session is already - target to ES2022 and moduleResolution to node - Update TLSchema - Update CHANGELOG.md   <a name="1.9.1"></a>
 
 ## [1.9.1](https://github.com/tgsnake/core/compare/1.9.0...1.9.1)
 
