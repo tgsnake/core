@@ -34,7 +34,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 162;
+  export const Layer: number = 163;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -1103,6 +1103,7 @@ export namespace Raw {
     | Raw.UpdateChatParticipants
     | Raw.UpdateUserStatus
     | Raw.UpdateUserName
+    | Raw.UpdateNewAuthorization
     | Raw.UpdateNewEncryptedMessage
     | Raw.UpdateEncryptedChatTyping
     | Raw.UpdateEncryption
@@ -15047,6 +15048,84 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class UpdateNewAuthorization extends TLObject {
+    unconfirmed?: boolean;
+    hash!: long;
+    date?: int;
+    device?: string;
+    location?: string;
+
+    constructor(params: {
+      unconfirmed?: boolean;
+      hash: long;
+      date?: int;
+      device?: string;
+      location?: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateNewAuthorization';
+      this.constructorId = 0x8951abef;
+      this.subclassOfId = 0x9f89304e;
+      this.slots = ['unconfirmed', 'hash', 'date', 'device', 'location'];
+      this.unconfirmed = params.unconfirmed;
+      this.hash = params.hash;
+      this.date = params.date;
+      this.device = params.device;
+      this.location = params.location;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateNewAuthorization> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let unconfirmed = flags & (1 << 0) ? true : false;
+      let hash = await Primitive.Long.read(b);
+      let date = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
+      let device = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+      let location = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+      return new Raw.UpdateNewAuthorization({
+        unconfirmed: unconfirmed,
+        hash: hash,
+        date: date,
+        device: device,
+        location: location,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.unconfirmed ? 1 << 0 : 0;
+      flags |= this.date !== undefined ? 1 << 0 : 0;
+      flags |= this.device !== undefined ? 1 << 0 : 0;
+      flags |= this.location !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.hash !== undefined) {
+        b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
+      if (this.device !== undefined) {
+        b.write(Primitive.String.write(this.device) as unknown as Buffer);
+      }
+      if (this.location !== undefined) {
+        b.write(Primitive.String.write(this.location) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class UpdateNewEncryptedMessage extends TLObject {
     message!: Raw.TypeEncryptedMessage;
     qts!: int;
@@ -15776,17 +15855,19 @@ export namespace Raw {
     messages!: Vector<int>;
     pts!: int;
     ptsCount!: int;
+    date?: int;
 
-    constructor(params: { messages: Vector<int>; pts: int; ptsCount: int }) {
+    constructor(params: { messages: Vector<int>; pts: int; ptsCount: int; date?: int }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateReadMessagesContents';
-      this.constructorId = 0x68c13933;
+      this.constructorId = 0xf8227181;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['messages', 'pts', 'ptsCount'];
+      this.slots = ['messages', 'pts', 'ptsCount', 'date'];
       this.messages = params.messages;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
+      this.date = params.date;
     }
     /**
      * Generate the TLObject from buffer.
@@ -15795,13 +15876,17 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateReadMessagesContents> {
       // no flags
 
+      let flags = await Primitive.Int.read(b);
+
       let messages = await TLObject.read(b, Primitive.Int);
       let pts = await Primitive.Int.read(b);
       let ptsCount = await Primitive.Int.read(b);
+      let date = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
       return new Raw.UpdateReadMessagesContents({
         messages: messages,
         pts: pts,
         ptsCount: ptsCount,
+        date: date,
       });
     }
     /**
@@ -15812,6 +15897,10 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      let flags = 0;
+      flags |= this.date !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       if (this.messages) {
         b.write(Primitive.Vector.write(this.messages, Primitive.Int) as unknown as Buffer);
       }
@@ -15820,6 +15909,9 @@ export namespace Raw {
       }
       if (this.ptsCount !== undefined) {
         b.write(Primitive.Int.write(this.ptsCount) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -25653,6 +25745,7 @@ export namespace Raw {
     passwordPending?: boolean;
     encryptedRequestsDisabled?: boolean;
     callRequestsDisabled?: boolean;
+    unconfirmed?: boolean;
     hash!: long;
     deviceModel!: string;
     platform!: string;
@@ -25672,6 +25765,7 @@ export namespace Raw {
       passwordPending?: boolean;
       encryptedRequestsDisabled?: boolean;
       callRequestsDisabled?: boolean;
+      unconfirmed?: boolean;
       hash: long;
       deviceModel: string;
       platform: string;
@@ -25696,6 +25790,7 @@ export namespace Raw {
         'passwordPending',
         'encryptedRequestsDisabled',
         'callRequestsDisabled',
+        'unconfirmed',
         'hash',
         'deviceModel',
         'platform',
@@ -25714,6 +25809,7 @@ export namespace Raw {
       this.passwordPending = params.passwordPending;
       this.encryptedRequestsDisabled = params.encryptedRequestsDisabled;
       this.callRequestsDisabled = params.callRequestsDisabled;
+      this.unconfirmed = params.unconfirmed;
       this.hash = params.hash;
       this.deviceModel = params.deviceModel;
       this.platform = params.platform;
@@ -25741,6 +25837,7 @@ export namespace Raw {
       let passwordPending = flags & (1 << 2) ? true : false;
       let encryptedRequestsDisabled = flags & (1 << 3) ? true : false;
       let callRequestsDisabled = flags & (1 << 4) ? true : false;
+      let unconfirmed = flags & (1 << 5) ? true : false;
       let hash = await Primitive.Long.read(b);
       let deviceModel = await Primitive.String.read(b);
       let platform = await Primitive.String.read(b);
@@ -25759,6 +25856,7 @@ export namespace Raw {
         passwordPending: passwordPending,
         encryptedRequestsDisabled: encryptedRequestsDisabled,
         callRequestsDisabled: callRequestsDisabled,
+        unconfirmed: unconfirmed,
         hash: hash,
         deviceModel: deviceModel,
         platform: platform,
@@ -25787,6 +25885,7 @@ export namespace Raw {
       flags |= this.passwordPending ? 1 << 2 : 0;
       flags |= this.encryptedRequestsDisabled ? 1 << 3 : 0;
       flags |= this.callRequestsDisabled ? 1 << 4 : 0;
+      flags |= this.unconfirmed ? 1 << 5 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.hash !== undefined) {
@@ -48677,29 +48776,38 @@ export namespace Raw {
     inactive?: boolean;
     hasSettings?: boolean;
     requestWriteAccess?: boolean;
+    showInAttachMenu?: boolean;
+    showInSideMenu?: boolean;
+    sideMenuDisclaimerNeeded?: boolean;
     botId!: long;
     shortName!: string;
-    peerTypes!: Vector<Raw.TypeAttachMenuPeerType>;
+    peerTypes?: Vector<Raw.TypeAttachMenuPeerType>;
     icons!: Vector<Raw.TypeAttachMenuBotIcon>;
 
     constructor(params: {
       inactive?: boolean;
       hasSettings?: boolean;
       requestWriteAccess?: boolean;
+      showInAttachMenu?: boolean;
+      showInSideMenu?: boolean;
+      sideMenuDisclaimerNeeded?: boolean;
       botId: long;
       shortName: string;
-      peerTypes: Vector<Raw.TypeAttachMenuPeerType>;
+      peerTypes?: Vector<Raw.TypeAttachMenuPeerType>;
       icons: Vector<Raw.TypeAttachMenuBotIcon>;
     }) {
       super();
       this.classType = 'types';
       this.className = 'AttachMenuBot';
-      this.constructorId = 0xc8aa2cd2;
+      this.constructorId = 0xd90d8dfe;
       this.subclassOfId = 0x9f087446;
       this.slots = [
         'inactive',
         'hasSettings',
         'requestWriteAccess',
+        'showInAttachMenu',
+        'showInSideMenu',
+        'sideMenuDisclaimerNeeded',
         'botId',
         'shortName',
         'peerTypes',
@@ -48708,6 +48816,9 @@ export namespace Raw {
       this.inactive = params.inactive;
       this.hasSettings = params.hasSettings;
       this.requestWriteAccess = params.requestWriteAccess;
+      this.showInAttachMenu = params.showInAttachMenu;
+      this.showInSideMenu = params.showInSideMenu;
+      this.sideMenuDisclaimerNeeded = params.sideMenuDisclaimerNeeded;
       this.botId = params.botId;
       this.shortName = params.shortName;
       this.peerTypes = params.peerTypes;
@@ -48725,14 +48836,20 @@ export namespace Raw {
       let inactive = flags & (1 << 0) ? true : false;
       let hasSettings = flags & (1 << 1) ? true : false;
       let requestWriteAccess = flags & (1 << 2) ? true : false;
+      let showInAttachMenu = flags & (1 << 3) ? true : false;
+      let showInSideMenu = flags & (1 << 4) ? true : false;
+      let sideMenuDisclaimerNeeded = flags & (1 << 5) ? true : false;
       let botId = await Primitive.Long.read(b);
       let shortName = await Primitive.String.read(b);
-      let peerTypes = await TLObject.read(b);
+      let peerTypes = flags & (1 << 3) ? await TLObject.read(b) : [];
       let icons = await TLObject.read(b);
       return new Raw.AttachMenuBot({
         inactive: inactive,
         hasSettings: hasSettings,
         requestWriteAccess: requestWriteAccess,
+        showInAttachMenu: showInAttachMenu,
+        showInSideMenu: showInSideMenu,
+        sideMenuDisclaimerNeeded: sideMenuDisclaimerNeeded,
         botId: botId,
         shortName: shortName,
         peerTypes: peerTypes,
@@ -48751,6 +48868,10 @@ export namespace Raw {
       flags |= this.inactive ? 1 << 0 : 0;
       flags |= this.hasSettings ? 1 << 1 : 0;
       flags |= this.requestWriteAccess ? 1 << 2 : 0;
+      flags |= this.showInAttachMenu ? 1 << 3 : 0;
+      flags |= this.showInSideMenu ? 1 << 4 : 0;
+      flags |= this.sideMenuDisclaimerNeeded ? 1 << 5 : 0;
+      flags |= this.peerTypes ? 1 << 3 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.botId !== undefined) {
@@ -66315,11 +66436,13 @@ export namespace Raw {
     export class BotApp extends TLObject {
       inactive?: boolean;
       requestWriteAccess?: boolean;
+      hasSettings?: boolean;
       app!: Raw.TypeBotApp;
 
       constructor(params: {
         inactive?: boolean;
         requestWriteAccess?: boolean;
+        hasSettings?: boolean;
         app: Raw.TypeBotApp;
       }) {
         super();
@@ -66327,9 +66450,10 @@ export namespace Raw {
         this.className = 'messages.BotApp';
         this.constructorId = 0xeb50adf5;
         this.subclassOfId = 0x8f7243a7;
-        this.slots = ['inactive', 'requestWriteAccess', 'app'];
+        this.slots = ['inactive', 'requestWriteAccess', 'hasSettings', 'app'];
         this.inactive = params.inactive;
         this.requestWriteAccess = params.requestWriteAccess;
+        this.hasSettings = params.hasSettings;
         this.app = params.app;
       }
       /**
@@ -66343,10 +66467,12 @@ export namespace Raw {
 
         let inactive = flags & (1 << 0) ? true : false;
         let requestWriteAccess = flags & (1 << 1) ? true : false;
+        let hasSettings = flags & (1 << 2) ? true : false;
         let app = await TLObject.read(b);
         return new Raw.messages.BotApp({
           inactive: inactive,
           requestWriteAccess: requestWriteAccess,
+          hasSettings: hasSettings,
           app: app,
         });
       }
@@ -66361,6 +66487,7 @@ export namespace Raw {
         let flags = 0;
         flags |= this.inactive ? 1 << 0 : 0;
         flags |= this.requestWriteAccess ? 1 << 1 : 0;
+        flags |= this.hasSettings ? 1 << 2 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.app !== undefined) {
@@ -75817,27 +75944,41 @@ export namespace Raw {
     export class RequestSimpleWebView extends TLObject {
       __response__!: Raw.TypeSimpleWebViewResult;
       fromSwitchWebview?: boolean;
+      fromSideMenu?: boolean;
       bot!: Raw.TypeInputUser;
-      url!: string;
+      url?: string;
+      startParam?: string;
       themeParams?: Raw.TypeDataJSON;
       platform!: string;
 
       constructor(params: {
         fromSwitchWebview?: boolean;
+        fromSideMenu?: boolean;
         bot: Raw.TypeInputUser;
-        url: string;
+        url?: string;
+        startParam?: string;
         themeParams?: Raw.TypeDataJSON;
         platform: string;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.RequestSimpleWebView';
-        this.constructorId = 0x299bec8e;
+        this.constructorId = 0x1a46500a;
         this.subclassOfId = 0x15eee3db;
-        this.slots = ['fromSwitchWebview', 'bot', 'url', 'themeParams', 'platform'];
+        this.slots = [
+          'fromSwitchWebview',
+          'fromSideMenu',
+          'bot',
+          'url',
+          'startParam',
+          'themeParams',
+          'platform',
+        ];
         this.fromSwitchWebview = params.fromSwitchWebview;
+        this.fromSideMenu = params.fromSideMenu;
         this.bot = params.bot;
         this.url = params.url;
+        this.startParam = params.startParam;
         this.themeParams = params.themeParams;
         this.platform = params.platform;
       }
@@ -75854,14 +75995,18 @@ export namespace Raw {
         let flags = await Primitive.Int.read(b);
 
         let fromSwitchWebview = flags & (1 << 1) ? true : false;
+        let fromSideMenu = flags & (1 << 2) ? true : false;
         let bot = await TLObject.read(b);
-        let url = await Primitive.String.read(b);
+        let url = flags & (1 << 3) ? await Primitive.String.read(b) : undefined;
+        let startParam = flags & (1 << 4) ? await Primitive.String.read(b) : undefined;
         let themeParams = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         let platform = await Primitive.String.read(b);
         return new Raw.messages.RequestSimpleWebView({
           fromSwitchWebview: fromSwitchWebview,
+          fromSideMenu: fromSideMenu,
           bot: bot,
           url: url,
+          startParam: startParam,
           themeParams: themeParams,
           platform: platform,
         });
@@ -75876,6 +76021,9 @@ export namespace Raw {
 
         let flags = 0;
         flags |= this.fromSwitchWebview ? 1 << 1 : 0;
+        flags |= this.fromSideMenu ? 1 << 2 : 0;
+        flags |= this.url !== undefined ? 1 << 3 : 0;
+        flags |= this.startParam !== undefined ? 1 << 4 : 0;
         flags |= this.themeParams !== undefined ? 1 << 0 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -75884,6 +76032,9 @@ export namespace Raw {
         }
         if (this.url !== undefined) {
           b.write(Primitive.String.write(this.url) as unknown as Buffer);
+        }
+        if (this.startParam !== undefined) {
+          b.write(Primitive.String.write(this.startParam) as unknown as Buffer);
         }
         if (this.themeParams !== undefined) {
           b.write(this.themeParams.write() as unknown as Buffer);
@@ -83595,11 +83746,13 @@ export namespace Raw {
     }
     export class ChangeAuthorizationSettings extends TLObject {
       __response__!: Bool;
+      confirmed?: boolean;
       hash!: long;
       encryptedRequestsDisabled?: Bool;
       callRequestsDisabled?: Bool;
 
       constructor(params: {
+        confirmed?: boolean;
         hash: long;
         encryptedRequestsDisabled?: Bool;
         callRequestsDisabled?: Bool;
@@ -83609,7 +83762,8 @@ export namespace Raw {
         this.className = 'account.ChangeAuthorizationSettings';
         this.constructorId = 0x40f48462;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['hash', 'encryptedRequestsDisabled', 'callRequestsDisabled'];
+        this.slots = ['confirmed', 'hash', 'encryptedRequestsDisabled', 'callRequestsDisabled'];
+        this.confirmed = params.confirmed;
         this.hash = params.hash;
         this.encryptedRequestsDisabled = params.encryptedRequestsDisabled;
         this.callRequestsDisabled = params.callRequestsDisabled;
@@ -83626,10 +83780,12 @@ export namespace Raw {
 
         let flags = await Primitive.Int.read(b);
 
+        let confirmed = flags & (1 << 3) ? true : false;
         let hash = await Primitive.Long.read(b);
         let encryptedRequestsDisabled = flags & (1 << 0) ? await Primitive.Bool.read(b) : undefined;
         let callRequestsDisabled = flags & (1 << 1) ? await Primitive.Bool.read(b) : undefined;
         return new Raw.account.ChangeAuthorizationSettings({
+          confirmed: confirmed,
           hash: hash,
           encryptedRequestsDisabled: encryptedRequestsDisabled,
           callRequestsDisabled: callRequestsDisabled,
@@ -83644,6 +83800,7 @@ export namespace Raw {
         // no flags
 
         let flags = 0;
+        flags |= this.confirmed ? 1 << 3 : 0;
         flags |= this.encryptedRequestsDisabled !== undefined ? 1 << 0 : 0;
         flags |= this.callRequestsDisabled !== undefined ? 1 << 1 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
