@@ -34,7 +34,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 164;
+  export const Layer: number = 165;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -62958,6 +62958,7 @@ export namespace Raw {
     export type TypeFavedStickers =
       | Raw.messages.FavedStickersNotModified
       | Raw.messages.FavedStickers;
+    export type TypeWebPage = Raw.messages.WebPage;
     export type TypeHighScores = Raw.messages.HighScores;
     export type TypeArchivedStickers = Raw.messages.ArchivedStickers;
     export type TypeRecentStickers =
@@ -66665,6 +66666,58 @@ export namespace Raw {
 
         if (this.app !== undefined) {
           b.write(this.app.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class WebPage extends TLObject {
+      webpage!: Raw.TypeWebPage;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        webpage: Raw.TypeWebPage;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.WebPage';
+        this.constructorId = 0xfd5e12bd;
+        this.subclassOfId = 0x2cf8b154;
+        this.slots = ['webpage', 'chats', 'users'];
+        this.webpage = params.webpage;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.WebPage> {
+        // no flags
+
+        let webpage = await TLObject.read(b);
+        let chats = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.messages.WebPage({ webpage: webpage, chats: chats, users: users });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.webpage !== undefined) {
+          b.write(this.webpage.write() as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -71340,7 +71393,7 @@ export namespace Raw {
       }
     }
     export class GetWebPage extends TLObject {
-      __response__!: Raw.TypeWebPage;
+      __response__!: Raw.messages.TypeWebPage;
       url!: string;
       hash!: int;
 
@@ -71348,8 +71401,8 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetWebPage';
-        this.constructorId = 0x32ca8f91;
-        this.subclassOfId = 0x55a97481;
+        this.constructorId = 0x8d9692a3;
+        this.subclassOfId = 0x2cf8b154;
         this.slots = ['url', 'hash'];
         this.url = params.url;
         this.hash = params.hash;
@@ -94353,6 +94406,7 @@ export namespace Raw {
       boosts!: int;
       nextLevelBoosts?: int;
       premiumAudience?: Raw.TypeStatsPercentValue;
+      boostUrl!: string;
 
       constructor(params: {
         myBoost?: boolean;
@@ -94361,11 +94415,12 @@ export namespace Raw {
         boosts: int;
         nextLevelBoosts?: int;
         premiumAudience?: Raw.TypeStatsPercentValue;
+        boostUrl: string;
       }) {
         super();
         this.classType = 'types';
         this.className = 'stories.BoostsStatus';
-        this.constructorId = 0x66ea1fef;
+        this.constructorId = 0xe5c1aa5c;
         this.subclassOfId = 0xdb73c5e4;
         this.slots = [
           'myBoost',
@@ -94374,6 +94429,7 @@ export namespace Raw {
           'boosts',
           'nextLevelBoosts',
           'premiumAudience',
+          'boostUrl',
         ];
         this.myBoost = params.myBoost;
         this.level = params.level;
@@ -94381,6 +94437,7 @@ export namespace Raw {
         this.boosts = params.boosts;
         this.nextLevelBoosts = params.nextLevelBoosts;
         this.premiumAudience = params.premiumAudience;
+        this.boostUrl = params.boostUrl;
       }
       /**
        * Generate the TLObject from buffer.
@@ -94397,6 +94454,7 @@ export namespace Raw {
         let boosts = await Primitive.Int.read(b);
         let nextLevelBoosts = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
         let premiumAudience = flags & (1 << 1) ? await TLObject.read(b) : undefined;
+        let boostUrl = await Primitive.String.read(b);
         return new Raw.stories.BoostsStatus({
           myBoost: myBoost,
           level: level,
@@ -94404,6 +94462,7 @@ export namespace Raw {
           boosts: boosts,
           nextLevelBoosts: nextLevelBoosts,
           premiumAudience: premiumAudience,
+          boostUrl: boostUrl,
         });
       }
       /**
@@ -94434,6 +94493,9 @@ export namespace Raw {
         }
         if (this.premiumAudience !== undefined) {
           b.write(this.premiumAudience.write() as unknown as Buffer);
+        }
+        if (this.boostUrl !== undefined) {
+          b.write(Primitive.String.write(this.boostUrl) as unknown as Buffer);
         }
         return b.buffer;
       }
