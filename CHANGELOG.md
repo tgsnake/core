@@ -1,4 +1,14 @@
- <a name="1.10.0"></a>
+ <a name="1.10.1"></a>
+
+## [1.10.1](https://github.com/tgsnake/core/compare/1.10.0...1.10.1)
+
+> 2023-09-10
+
+### Change
+
+- Update CHANGELOG.md - Update TLSchema  ### Fix
+
+- security error in secret chat - bug file part missing when uploading file   <a name="1.10.0"></a>
 
 ## [1.10.0](https://github.com/tgsnake/core/compare/1.9.1...1.10.0)
 
