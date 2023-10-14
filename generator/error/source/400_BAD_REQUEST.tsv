@@ -263,6 +263,7 @@ RESULT_ID_EMPTY	Result ID empty
 RESULT_ID_INVALID	The given result cannot be used to send the selection to the bot
 RESULT_TYPE_INVALID	The result type is invalid
 REVOTE_NOT_ALLOWED	You cannot change your vote
+REPLY_TO_INVALID The specified replyTo field is invalid
 RSA_DECRYPT_FAILED	Internal RSA decryption failed
 SCHEDULE_BOT_NOT_ALLOWED	Bots are not allowed to schedule messages
 SCHEDULE_DATE_INVALID	Invalid schedule date provided

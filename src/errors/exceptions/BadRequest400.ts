@@ -1094,6 +1094,10 @@ export class RevoteNotAllowed extends BadRequest {
   id: string = 'REVOTE_NOT_ALLOWED';
   message: string = 'You cannot change your vote';
 }
+export class ReplyToInvalidTheSpecifiedReplytoFieldIsInvalid extends BadRequest {
+  id: string = 'REPLY_TO_INVALID_The_specified_replyTo_field_is_invalid';
+  message: string = '';
+}
 export class RsaDecryptFailed extends BadRequest {
   id: string = 'RSA_DECRYPT_FAILED';
   message: string = 'Internal RSA decryption failed';

@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 455;
+const count = 456;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -290,6 +290,8 @@ const Exceptions = {
     RESULT_ID_INVALID: 'BadRequest.ResultIdInvalid',
     RESULT_TYPE_INVALID: 'BadRequest.ResultTypeInvalid',
     REVOTE_NOT_ALLOWED: 'BadRequest.RevoteNotAllowed',
+    REPLY_TO_INVALID_The_specified_replyTo_field_is_invalid:
+      'BadRequest.ReplyToInvalidTheSpecifiedReplytoFieldIsInvalid',
     RSA_DECRYPT_FAILED: 'BadRequest.RsaDecryptFailed',
     SCHEDULE_BOT_NOT_ALLOWED: 'BadRequest.ScheduleBotNotAllowed',
     SCHEDULE_DATE_INVALID: 'BadRequest.ScheduleDateInvalid',
