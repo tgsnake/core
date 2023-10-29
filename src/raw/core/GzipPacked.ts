@@ -19,7 +19,7 @@ export class GzipPacked extends TLObject {
   constructor(packedData: TLObject) {
     super();
     this.className = 'GzipPacked';
-    this.slots = ['packedData'];
+    this._slots = ['packedData'];
     this.packedData = packedData;
   }
   static async read(data: BytesIO, ...args: Array<any>) {

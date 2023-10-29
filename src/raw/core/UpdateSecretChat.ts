@@ -29,7 +29,7 @@ export class UpdateSecretChatMessage extends TLObject {
     this.className = 'UpdateSecretChatMessage';
     this.constructorId = 1;
     this.subclassOfId = 0x9f89304e;
-    this.slots = ['message', 'qts'];
+    this._slots = ['message', 'qts'];
     this.message = params.message;
     this.qts = params.qts;
     this._original = params.original;
@@ -91,7 +91,7 @@ export class SecretChatMessage extends TLObject {
     this.className = 'SecretChatMessage';
     this.constructorId = 2;
     this.subclassOfId = 0x239f2e51;
-    this.slots = ['randomId', 'chatId', 'date', 'message', 'file'];
+    this._slots = ['randomId', 'chatId', 'date', 'message', 'file'];
     this.randomId = params.randomId;
     this.chatId = params.chatId;
     this.date = params.date;
@@ -115,7 +115,7 @@ export class SecretChatMessageService extends TLObject {
     this.className = 'SecretChatMessageService';
     this.constructorId = 3;
     this.subclassOfId = 0x239f2e51;
-    this.slots = ['randomId', 'chatId', 'date', 'message'];
+    this._slots = ['randomId', 'chatId', 'date', 'message'];
     this.randomId = params.randomId;
     this.chatId = params.chatId;
     this.date = params.date;

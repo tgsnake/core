@@ -34,7 +34,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 165;
+  export const Layer: number = 166;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -169,6 +169,8 @@ export namespace Raw {
     | Raw.account.SaveAutoSaveSettings
     | Raw.account.DeleteAutoSaveExceptions
     | Raw.account.InvalidateSignInCodes
+    | Raw.account.UpdateColor
+    | Raw.account.GetDefaultBackgroundEmojis
     | Raw.users.GetUsers
     | Raw.users.GetFullUser
     | Raw.users.SetSecureValueErrors
@@ -479,6 +481,7 @@ export namespace Raw {
     | Raw.channels.ReportAntiSpamFalsePositive
     | Raw.channels.ToggleParticipantsHidden
     | Raw.channels.ClickSponsoredMessage
+    | Raw.channels.UpdateColor
     | Raw.bots.SendCustomRequest
     | Raw.bots.AnswerWebhookJSONQuery
     | Raw.bots.SetBotCommands
@@ -506,6 +509,11 @@ export namespace Raw {
     | Raw.payments.AssignAppStoreTransaction
     | Raw.payments.AssignPlayMarketTransaction
     | Raw.payments.CanPurchasePremium
+    | Raw.payments.GetPremiumGiftCodeOptions
+    | Raw.payments.CheckGiftCode
+    | Raw.payments.ApplyGiftCode
+    | Raw.payments.GetGiveawayInfo
+    | Raw.payments.LaunchPrepaidGiveaway
     | Raw.stickers.CreateStickerSet
     | Raw.stickers.RemoveStickerFromSet
     | Raw.stickers.ChangeStickerPosition
@@ -592,10 +600,10 @@ export namespace Raw {
     | Raw.stories.GetPeerMaxIDs
     | Raw.stories.GetChatsToSend
     | Raw.stories.TogglePeerStoriesHidden
-    | Raw.stories.GetBoostsStatus
-    | Raw.stories.GetBoostersList
-    | Raw.stories.CanApplyBoost
-    | Raw.stories.ApplyBoost;
+    | Raw.premium.GetBoostsList
+    | Raw.premium.GetMyBoosts
+    | Raw.premium.ApplyBoost
+    | Raw.premium.GetBoostsStatus;
   export type TypeFileLocation = Raw.FileLocationUnavailable23 | Raw.FileLocation23;
   export type TypeDecryptedMessage =
     | Raw.DecryptedMessage8
@@ -641,15 +649,15 @@ export namespace Raw {
   export type TypeLangPackLanguage = Raw.LangPackLanguage;
   export type TypeInputPhoneCall = Raw.InputPhoneCall;
   export type TypeInputStickerSetItem = Raw.InputStickerSetItem;
-  export type TypeInputStorePaymentPurpose =
-    | Raw.InputStorePaymentPremiumSubscription
-    | Raw.InputStorePaymentGiftPremium;
   export type TypeInputPaymentCredentials =
     | Raw.InputPaymentCredentialsSaved
     | Raw.InputPaymentCredentials
     | Raw.InputPaymentCredentialsApplePay
     | Raw.InputPaymentCredentialsGooglePay;
-  export type TypeInputInvoice = Raw.InputInvoiceMessage | Raw.InputInvoiceSlug;
+  export type TypeInputInvoice =
+    | Raw.InputInvoiceMessage
+    | Raw.InputInvoiceSlug
+    | Raw.InputInvoicePremiumGiftCode;
   export type TypeBotCommandScope =
     | Raw.BotCommandScopeDefault
     | Raw.BotCommandScopeUsers
@@ -729,7 +737,6 @@ export namespace Raw {
     | Raw.InputChatPhotoEmpty
     | Raw.InputChatUploadedPhoto
     | Raw.InputChatPhoto;
-  export type TypeInputReplyTo = Raw.InputReplyToMessage | Raw.InputReplyToStory;
   export type TypeReceivedNotifyMessage = Raw.ReceivedNotifyMessage;
   export type TypeInputMessage =
     | Raw.InputMessageID
@@ -797,7 +804,9 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
-  export type TypeBooster = Raw.Booster;
+  export type TypePrepaidGiveaway = Raw.PrepaidGiveaway;
+  export type TypeMyBoost = Raw.MyBoost;
+  export type TypeBoost = Raw.Boost;
   export type TypeMediaAreaCoordinates = Raw.MediaAreaCoordinates;
   export type TypeStoryView = Raw.StoryView;
   export type TypeStoryViews = Raw.StoryViews;
@@ -812,6 +821,12 @@ export namespace Raw {
   export type TypeTextWithEntities = Raw.TextWithEntities;
   export type TypeEmojiGroup = Raw.EmojiGroup;
   export type TypePremiumSubscriptionOption = Raw.PremiumSubscriptionOption;
+  export type TypePremiumGiftCodeOption = Raw.PremiumGiftCodeOption;
+  export type TypeInputStorePaymentPurpose =
+    | Raw.InputStorePaymentPremiumSubscription
+    | Raw.InputStorePaymentGiftPremium
+    | Raw.InputStorePaymentPremiumGiftCode
+    | Raw.InputStorePaymentPremiumGiveaway;
   export type TypeAttachMenuBot = Raw.AttachMenuBot;
   export type TypeAttachMenuBotIcon = Raw.AttachMenuBotIcon;
   export type TypeAttachMenuPeerType =
@@ -958,7 +973,9 @@ export namespace Raw {
     | Raw.ChannelAdminLogEventActionEditTopic
     | Raw.ChannelAdminLogEventActionDeleteTopic
     | Raw.ChannelAdminLogEventActionPinTopic
-    | Raw.ChannelAdminLogEventActionToggleAntiSpam;
+    | Raw.ChannelAdminLogEventActionToggleAntiSpam
+    | Raw.ChannelAdminLogEventActionChangeColor
+    | Raw.ChannelAdminLogEventActionChangeBackgroundEmoji;
   export type TypeLangPackString =
     | Raw.LangPackString
     | Raw.LangPackStringPluralized
@@ -1036,6 +1053,7 @@ export namespace Raw {
     | Raw.StickerSetMultiCovered
     | Raw.StickerSetFullCovered
     | Raw.StickerSetNoCovered;
+  export type TypeInputReplyTo = Raw.InputReplyToMessage | Raw.InputReplyToStory;
   export type TypeTopPeerCategoryPeers = Raw.TopPeerCategoryPeers;
   export type TypeTopPeer = Raw.TopPeer;
   export type TypeTopPeerCategory =
@@ -1056,7 +1074,8 @@ export namespace Raw {
     | Raw.BotInlineMessageMediaGeo
     | Raw.BotInlineMessageMediaVenue
     | Raw.BotInlineMessageMediaContact
-    | Raw.BotInlineMessageMediaInvoice;
+    | Raw.BotInlineMessageMediaInvoice
+    | Raw.BotInlineMessageMediaWebPage;
   export type TypeInputBotInlineMessage =
     | Raw.InputBotInlineMessageMediaAuto
     | Raw.InputBotInlineMessageText
@@ -1064,7 +1083,8 @@ export namespace Raw {
     | Raw.InputBotInlineMessageMediaVenue
     | Raw.InputBotInlineMessageMediaContact
     | Raw.InputBotInlineMessageGame
-    | Raw.InputBotInlineMessageMediaInvoice;
+    | Raw.InputBotInlineMessageMediaInvoice
+    | Raw.InputBotInlineMessageMediaWebPage;
   export type TypeMessageRange = Raw.MessageRange;
   export type TypeKeyboardButtonRow = Raw.KeyboardButtonRow;
   export type TypeKeyboardButton =
@@ -1440,7 +1460,9 @@ export namespace Raw {
     | Raw.MessageActionSuggestProfilePhoto
     | Raw.MessageActionRequestedPeer
     | Raw.MessageActionSetChatWallPaper
-    | Raw.MessageActionSetSameChatWallPaper;
+    | Raw.MessageActionSetSameChatWallPaper
+    | Raw.MessageActionGiftCode
+    | Raw.MessageActionGiveawayLaunch;
   export type TypeMessageReactions = Raw.MessageReactions;
   export type TypeMessageReplies = Raw.MessageReplies;
   export type TypeReplyMarkup =
@@ -1462,7 +1484,8 @@ export namespace Raw {
     | Raw.MessageMediaGeoLive
     | Raw.MessageMediaPoll
     | Raw.MessageMediaDice
-    | Raw.MessageMediaStory;
+    | Raw.MessageMediaStory
+    | Raw.MessageMediaGiveaway;
   export type TypeMessageReplyHeader = Raw.MessageReplyHeader | Raw.MessageReplyStoryHeader;
   export type TypeMessageFwdHeader = Raw.MessageFwdHeader;
   export type TypeChatParticipant =
@@ -1531,10 +1554,10 @@ export namespace Raw {
     | Raw.MessageEntityCashtag
     | Raw.MessageEntityUnderline
     | Raw.MessageEntityStrike
-    | Raw.MessageEntityBlockquote
     | Raw.MessageEntityBankCard
     | Raw.MessageEntitySpoiler
-    | Raw.MessageEntityCustomEmoji;
+    | Raw.MessageEntityCustomEmoji
+    | Raw.MessageEntityBlockquote;
   export type TypePoll = Raw.Poll;
   export type TypeInputMedia =
     | Raw.InputMediaEmpty
@@ -1552,7 +1575,8 @@ export namespace Raw {
     | Raw.InputMediaGeoLive
     | Raw.InputMediaPoll
     | Raw.InputMediaDice
-    | Raw.InputMediaStory;
+    | Raw.InputMediaStory
+    | Raw.InputMediaWebPage;
   export type TypeDataJSON = Raw.DataJSON;
   export type TypeInvoice = Raw.Invoice;
   export type TypeInputWebDocument = Raw.InputWebDocument;
@@ -1618,7 +1642,7 @@ export namespace Raw {
       this.className = 'ResPQ';
       this.constructorId = 0x05162463;
       this.subclassOfId = 0x786986b8;
-      this.slots = ['nonce', 'serverNonce', 'pq', 'serverPublicKeyFingerprints'];
+      this._slots = ['nonce', 'serverNonce', 'pq', 'serverPublicKeyFingerprints'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.pq = params.pq;
@@ -1691,7 +1715,7 @@ export namespace Raw {
       this.className = 'PQInnerData';
       this.constructorId = 0x83c95aec;
       this.subclassOfId = 0x41701377;
-      this.slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce'];
+      this._slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce'];
       this.pq = params.pq;
       this.p = params.p;
       this.q = params.q;
@@ -1773,7 +1797,7 @@ export namespace Raw {
       this.className = 'PQInnerDataDc';
       this.constructorId = 0xa9f55f95;
       this.subclassOfId = 0x41701377;
-      this.slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce', 'dc'];
+      this._slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce', 'dc'];
       this.pq = params.pq;
       this.p = params.p;
       this.q = params.q;
@@ -1861,7 +1885,7 @@ export namespace Raw {
       this.className = 'PQInnerDataTemp';
       this.constructorId = 0x3c6a84d4;
       this.subclassOfId = 0x41701377;
-      this.slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce', 'expiresIn'];
+      this._slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce', 'expiresIn'];
       this.pq = params.pq;
       this.p = params.p;
       this.q = params.q;
@@ -1951,7 +1975,7 @@ export namespace Raw {
       this.className = 'PQInnerDataTempDc';
       this.constructorId = 0x56fddf88;
       this.subclassOfId = 0x41701377;
-      this.slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce', 'dc', 'expiresIn'];
+      this._slots = ['pq', 'p', 'q', 'nonce', 'serverNonce', 'newNonce', 'dc', 'expiresIn'];
       this.pq = params.pq;
       this.p = params.p;
       this.q = params.q;
@@ -2041,7 +2065,7 @@ export namespace Raw {
       this.className = 'BindAuthKeyInner';
       this.constructorId = 0x75a3f765;
       this.subclassOfId = 0x2f099171;
-      this.slots = ['nonce', 'tempAuthKeyId', 'permAuthKeyId', 'tempSessionId', 'expiresAt'];
+      this._slots = ['nonce', 'tempAuthKeyId', 'permAuthKeyId', 'tempSessionId', 'expiresAt'];
       this.nonce = params.nonce;
       this.tempAuthKeyId = params.tempAuthKeyId;
       this.permAuthKeyId = params.permAuthKeyId;
@@ -2105,7 +2129,7 @@ export namespace Raw {
       this.className = 'ServerDhParamsFail';
       this.constructorId = 0x79cb045d;
       this.subclassOfId = 0xa6188d9e;
-      this.slots = ['nonce', 'serverNonce', 'newNonceHash'];
+      this._slots = ['nonce', 'serverNonce', 'newNonceHash'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.newNonceHash = params.newNonceHash;
@@ -2157,7 +2181,7 @@ export namespace Raw {
       this.className = 'ServerDhParamsOk';
       this.constructorId = 0xd0e8075c;
       this.subclassOfId = 0xa6188d9e;
-      this.slots = ['nonce', 'serverNonce', 'encryptedAnswer'];
+      this._slots = ['nonce', 'serverNonce', 'encryptedAnswer'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.encryptedAnswer = params.encryptedAnswer;
@@ -2219,7 +2243,7 @@ export namespace Raw {
       this.className = 'ServerDhInnerData';
       this.constructorId = 0xb5890dba;
       this.subclassOfId = 0xc69a67bc;
-      this.slots = ['nonce', 'serverNonce', 'g', 'dhPrime', 'gA', 'serverTime'];
+      this._slots = ['nonce', 'serverNonce', 'g', 'dhPrime', 'gA', 'serverTime'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.g = params.g;
@@ -2290,7 +2314,7 @@ export namespace Raw {
       this.className = 'ClientDhInnerData';
       this.constructorId = 0x6643b654;
       this.subclassOfId = 0xf8eeef6a;
-      this.slots = ['nonce', 'serverNonce', 'retryId', 'gB'];
+      this._slots = ['nonce', 'serverNonce', 'retryId', 'gB'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.retryId = params.retryId;
@@ -2348,7 +2372,7 @@ export namespace Raw {
       this.className = 'DhGenOk';
       this.constructorId = 0x3bcbf734;
       this.subclassOfId = 0x55dd6cdb;
-      this.slots = ['nonce', 'serverNonce', 'newNonceHash1'];
+      this._slots = ['nonce', 'serverNonce', 'newNonceHash1'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.newNonceHash1 = params.newNonceHash1;
@@ -2400,7 +2424,7 @@ export namespace Raw {
       this.className = 'DhGenRetry';
       this.constructorId = 0x46dc1fb9;
       this.subclassOfId = 0x55dd6cdb;
-      this.slots = ['nonce', 'serverNonce', 'newNonceHash2'];
+      this._slots = ['nonce', 'serverNonce', 'newNonceHash2'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.newNonceHash2 = params.newNonceHash2;
@@ -2452,7 +2476,7 @@ export namespace Raw {
       this.className = 'DhGenFail';
       this.constructorId = 0xa69dae02;
       this.subclassOfId = 0x55dd6cdb;
-      this.slots = ['nonce', 'serverNonce', 'newNonceHash3'];
+      this._slots = ['nonce', 'serverNonce', 'newNonceHash3'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.newNonceHash3 = params.newNonceHash3;
@@ -2500,7 +2524,7 @@ export namespace Raw {
       this.className = 'DestroyAuthKeyOk';
       this.constructorId = 0xf660e1d4;
       this.subclassOfId = 0x8291e68e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -2529,7 +2553,7 @@ export namespace Raw {
       this.className = 'DestroyAuthKeyNone';
       this.constructorId = 0x0a9f2259;
       this.subclassOfId = 0x8291e68e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -2558,7 +2582,7 @@ export namespace Raw {
       this.className = 'DestroyAuthKeyFail';
       this.constructorId = 0xea109b13;
       this.subclassOfId = 0x8291e68e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -2590,7 +2614,7 @@ export namespace Raw {
       this.className = 'ReqPq';
       this.constructorId = 0x60469778;
       this.subclassOfId = 0x786986b8;
-      this.slots = ['nonce'];
+      this._slots = ['nonce'];
       this.nonce = params.nonce;
     }
     /**
@@ -2627,7 +2651,7 @@ export namespace Raw {
       this.className = 'ReqPqMulti';
       this.constructorId = 0xbe7e8ef1;
       this.subclassOfId = 0x786986b8;
-      this.slots = ['nonce'];
+      this._slots = ['nonce'];
       this.nonce = params.nonce;
     }
     /**
@@ -2676,7 +2700,7 @@ export namespace Raw {
       this.className = 'ReqDhParams';
       this.constructorId = 0xd712e4be;
       this.subclassOfId = 0xa6188d9e;
-      this.slots = ['nonce', 'serverNonce', 'p', 'q', 'publicKeyFingerprint', 'encryptedData'];
+      this._slots = ['nonce', 'serverNonce', 'p', 'q', 'publicKeyFingerprint', 'encryptedData'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.p = params.p;
@@ -2747,7 +2771,7 @@ export namespace Raw {
       this.className = 'SetClientDhParams';
       this.constructorId = 0xf5045f1f;
       this.subclassOfId = 0x55dd6cdb;
-      this.slots = ['nonce', 'serverNonce', 'encryptedData'];
+      this._slots = ['nonce', 'serverNonce', 'encryptedData'];
       this.nonce = params.nonce;
       this.serverNonce = params.serverNonce;
       this.encryptedData = params.encryptedData;
@@ -2797,7 +2821,7 @@ export namespace Raw {
       this.className = 'DestroyAuthKey';
       this.constructorId = 0xd1435160;
       this.subclassOfId = 0x8291e68e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -2828,7 +2852,7 @@ export namespace Raw {
       this.className = 'MsgsAck';
       this.constructorId = 0x62d6b459;
       this.subclassOfId = 0x827677c4;
-      this.slots = ['msgIds'];
+      this._slots = ['msgIds'];
       this.msgIds = params.msgIds;
     }
     /**
@@ -2866,7 +2890,7 @@ export namespace Raw {
       this.className = 'BadMsgNotification';
       this.constructorId = 0xa7eff811;
       this.subclassOfId = 0xcebaa157;
-      this.slots = ['badMsgId', 'badMsgSeqno', 'errorCode'];
+      this._slots = ['badMsgId', 'badMsgSeqno', 'errorCode'];
       this.badMsgId = params.badMsgId;
       this.badMsgSeqno = params.badMsgSeqno;
       this.errorCode = params.errorCode;
@@ -2919,7 +2943,7 @@ export namespace Raw {
       this.className = 'BadServerSalt';
       this.constructorId = 0xedab447b;
       this.subclassOfId = 0xcebaa157;
-      this.slots = ['badMsgId', 'badMsgSeqno', 'errorCode', 'newServerSalt'];
+      this._slots = ['badMsgId', 'badMsgSeqno', 'errorCode', 'newServerSalt'];
       this.badMsgId = params.badMsgId;
       this.badMsgSeqno = params.badMsgSeqno;
       this.errorCode = params.errorCode;
@@ -2975,7 +2999,7 @@ export namespace Raw {
       this.className = 'MsgsStateReq';
       this.constructorId = 0xda69fb52;
       this.subclassOfId = 0x18f01dd0;
-      this.slots = ['msgIds'];
+      this._slots = ['msgIds'];
       this.msgIds = params.msgIds;
     }
     /**
@@ -3012,7 +3036,7 @@ export namespace Raw {
       this.className = 'MsgsStateInfo';
       this.constructorId = 0x04deb57d;
       this.subclassOfId = 0x70a0a64;
-      this.slots = ['reqMsgId', 'info'];
+      this._slots = ['reqMsgId', 'info'];
       this.reqMsgId = params.reqMsgId;
       this.info = params.info;
     }
@@ -3054,7 +3078,7 @@ export namespace Raw {
       this.className = 'MsgsAllInfo';
       this.constructorId = 0x8cc0d131;
       this.subclassOfId = 0xfa8fcb54;
-      this.slots = ['msgIds', 'info'];
+      this._slots = ['msgIds', 'info'];
       this.msgIds = params.msgIds;
       this.info = params.info;
     }
@@ -3098,7 +3122,7 @@ export namespace Raw {
       this.className = 'MsgDetailedInfo';
       this.constructorId = 0x276d3ec6;
       this.subclassOfId = 0x5f32d5ee;
-      this.slots = ['msgId', 'answerMsgId', 'bytes', 'status'];
+      this._slots = ['msgId', 'answerMsgId', 'bytes', 'status'];
       this.msgId = params.msgId;
       this.answerMsgId = params.answerMsgId;
       this.bytes = params.bytes;
@@ -3156,7 +3180,7 @@ export namespace Raw {
       this.className = 'MsgNewDetailedInfo';
       this.constructorId = 0x809db6df;
       this.subclassOfId = 0x5f32d5ee;
-      this.slots = ['answerMsgId', 'bytes', 'status'];
+      this._slots = ['answerMsgId', 'bytes', 'status'];
       this.answerMsgId = params.answerMsgId;
       this.bytes = params.bytes;
       this.status = params.status;
@@ -3202,7 +3226,7 @@ export namespace Raw {
       this.className = 'MsgResendReq';
       this.constructorId = 0x7d861a08;
       this.subclassOfId = 0x2024514;
-      this.slots = ['msgIds'];
+      this._slots = ['msgIds'];
       this.msgIds = params.msgIds;
     }
     /**
@@ -3239,7 +3263,7 @@ export namespace Raw {
       this.className = 'RpcResult';
       this.constructorId = 0xf35c6d01;
       this.subclassOfId = 0x9a7df30;
-      this.slots = ['reqMsgId', 'result'];
+      this._slots = ['reqMsgId', 'result'];
       this.reqMsgId = params.reqMsgId;
       this.result = params.result;
     }
@@ -3281,7 +3305,7 @@ export namespace Raw {
       this.className = 'RpcError';
       this.constructorId = 0x2144ca19;
       this.subclassOfId = 0x4a17e265;
-      this.slots = ['errorCode', 'errorMessage'];
+      this._slots = ['errorCode', 'errorMessage'];
       this.errorCode = params.errorCode;
       this.errorMessage = params.errorMessage;
     }
@@ -3320,7 +3344,7 @@ export namespace Raw {
       this.className = 'RpcAnswerUnknown';
       this.constructorId = 0x5e2ad36e;
       this.subclassOfId = 0x4bca7570;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -3349,7 +3373,7 @@ export namespace Raw {
       this.className = 'RpcAnswerDroppedRunning';
       this.constructorId = 0xcd78e586;
       this.subclassOfId = 0x4bca7570;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -3382,7 +3406,7 @@ export namespace Raw {
       this.className = 'RpcAnswerDropped';
       this.constructorId = 0xa43ad8b7;
       this.subclassOfId = 0x4bca7570;
-      this.slots = ['msgId', 'seqNo', 'bytes'];
+      this._slots = ['msgId', 'seqNo', 'bytes'];
       this.msgId = params.msgId;
       this.seqNo = params.seqNo;
       this.bytes = params.bytes;
@@ -3430,7 +3454,7 @@ export namespace Raw {
       this.className = 'FutureSalt';
       this.constructorId = 0x0949d9dc;
       this.subclassOfId = 0x45e53dcf;
-      this.slots = ['validSince', 'validUntil', 'salt'];
+      this._slots = ['validSince', 'validUntil', 'salt'];
       this.validSince = params.validSince;
       this.validUntil = params.validUntil;
       this.salt = params.salt;
@@ -3478,7 +3502,7 @@ export namespace Raw {
       this.className = 'FutureSalts';
       this.constructorId = 0xae500895;
       this.subclassOfId = 0x1090f517;
-      this.slots = ['reqMsgId', 'now', 'salts'];
+      this._slots = ['reqMsgId', 'now', 'salts'];
       this.reqMsgId = params.reqMsgId;
       this.now = params.now;
       this.salts = params.salts;
@@ -3525,7 +3549,7 @@ export namespace Raw {
       this.className = 'Pong';
       this.constructorId = 0x347773c5;
       this.subclassOfId = 0x816aee71;
-      this.slots = ['msgId', 'pingId'];
+      this._slots = ['msgId', 'pingId'];
       this.msgId = params.msgId;
       this.pingId = params.pingId;
     }
@@ -3566,7 +3590,7 @@ export namespace Raw {
       this.className = 'DestroySessionOk';
       this.constructorId = 0xe22045fc;
       this.subclassOfId = 0xaf0ce7bd;
-      this.slots = ['sessionId'];
+      this._slots = ['sessionId'];
       this.sessionId = params.sessionId;
     }
     /**
@@ -3602,7 +3626,7 @@ export namespace Raw {
       this.className = 'DestroySessionNone';
       this.constructorId = 0x62d350c9;
       this.subclassOfId = 0xaf0ce7bd;
-      this.slots = ['sessionId'];
+      this._slots = ['sessionId'];
       this.sessionId = params.sessionId;
     }
     /**
@@ -3640,7 +3664,7 @@ export namespace Raw {
       this.className = 'NewSessionCreated';
       this.constructorId = 0x9ec20908;
       this.subclassOfId = 0x510d3031;
-      this.slots = ['firstMsgId', 'uniqueId', 'serverSalt'];
+      this._slots = ['firstMsgId', 'uniqueId', 'serverSalt'];
       this.firstMsgId = params.firstMsgId;
       this.uniqueId = params.uniqueId;
       this.serverSalt = params.serverSalt;
@@ -3692,7 +3716,7 @@ export namespace Raw {
       this.className = 'HttpWait';
       this.constructorId = 0x9299359f;
       this.subclassOfId = 0x1284aed6;
-      this.slots = ['maxDelay', 'waitAfter', 'maxWait'];
+      this._slots = ['maxDelay', 'waitAfter', 'maxWait'];
       this.maxDelay = params.maxDelay;
       this.waitAfter = params.waitAfter;
       this.maxWait = params.maxWait;
@@ -3739,7 +3763,7 @@ export namespace Raw {
       this.className = 'IpPort';
       this.constructorId = 0xd433ad73;
       this.subclassOfId = 0xa2a03726;
-      this.slots = ['ipv4', 'port'];
+      this._slots = ['ipv4', 'port'];
       this.ipv4 = params.ipv4;
       this.port = params.port;
     }
@@ -3782,7 +3806,7 @@ export namespace Raw {
       this.className = 'IpPortSecret';
       this.constructorId = 0x37982646;
       this.subclassOfId = 0xa2a03726;
-      this.slots = ['ipv4', 'port', 'secret'];
+      this._slots = ['ipv4', 'port', 'secret'];
       this.ipv4 = params.ipv4;
       this.port = params.port;
       this.secret = params.secret;
@@ -3830,7 +3854,7 @@ export namespace Raw {
       this.className = 'AccessPointRule';
       this.constructorId = 0x4679b65f;
       this.subclassOfId = 0xb1aca0fd;
-      this.slots = ['phonePrefixRules', 'dcId', 'ips'];
+      this._slots = ['phonePrefixRules', 'dcId', 'ips'];
       this.phonePrefixRules = params.phonePrefixRules;
       this.dcId = params.dcId;
       this.ips = params.ips;
@@ -3877,7 +3901,7 @@ export namespace Raw {
       this.className = 'RpcDropAnswer';
       this.constructorId = 0x58e4a740;
       this.subclassOfId = 0x4bca7570;
-      this.slots = ['reqMsgId'];
+      this._slots = ['reqMsgId'];
       this.reqMsgId = params.reqMsgId;
     }
     /**
@@ -3914,7 +3938,7 @@ export namespace Raw {
       this.className = 'GetFutureSalts';
       this.constructorId = 0xb921bd04;
       this.subclassOfId = 0x1090f517;
-      this.slots = ['num'];
+      this._slots = ['num'];
       this.num = params.num;
     }
     /**
@@ -3951,7 +3975,7 @@ export namespace Raw {
       this.className = 'Ping';
       this.constructorId = 0x7abe77ec;
       this.subclassOfId = 0x816aee71;
-      this.slots = ['pingId'];
+      this._slots = ['pingId'];
       this.pingId = params.pingId;
     }
     /**
@@ -3989,7 +4013,7 @@ export namespace Raw {
       this.className = 'PingDelayDisconnect';
       this.constructorId = 0xf3427b8c;
       this.subclassOfId = 0x816aee71;
-      this.slots = ['pingId', 'disconnectDelay'];
+      this._slots = ['pingId', 'disconnectDelay'];
       this.pingId = params.pingId;
       this.disconnectDelay = params.disconnectDelay;
     }
@@ -4031,7 +4055,7 @@ export namespace Raw {
       this.className = 'DestroySession';
       this.constructorId = 0xe7512126;
       this.subclassOfId = 0xaf0ce7bd;
-      this.slots = ['sessionId'];
+      this._slots = ['sessionId'];
       this.sessionId = params.sessionId;
     }
     /**
@@ -4065,7 +4089,7 @@ export namespace Raw {
       this.className = 'InputPeerEmpty';
       this.constructorId = 0x7f3b18ea;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -4094,7 +4118,7 @@ export namespace Raw {
       this.className = 'InputPeerSelf';
       this.constructorId = 0x7da07ec9;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -4125,7 +4149,7 @@ export namespace Raw {
       this.className = 'InputPeerChat';
       this.constructorId = 0x35a95cb9;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = ['chatId'];
+      this._slots = ['chatId'];
       this.chatId = params.chatId;
     }
     /**
@@ -4162,7 +4186,7 @@ export namespace Raw {
       this.className = 'InputPeerUser';
       this.constructorId = 0xdde8a54c;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = ['userId', 'accessHash'];
+      this._slots = ['userId', 'accessHash'];
       this.userId = params.userId;
       this.accessHash = params.accessHash;
     }
@@ -4204,7 +4228,7 @@ export namespace Raw {
       this.className = 'InputPeerChannel';
       this.constructorId = 0x27bcbbfc;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = ['channelId', 'accessHash'];
+      this._slots = ['channelId', 'accessHash'];
       this.channelId = params.channelId;
       this.accessHash = params.accessHash;
     }
@@ -4247,7 +4271,7 @@ export namespace Raw {
       this.className = 'InputPeerUserFromMessage';
       this.constructorId = 0xa87b0a1c;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = ['peer', 'msgId', 'userId'];
+      this._slots = ['peer', 'msgId', 'userId'];
       this.peer = params.peer;
       this.msgId = params.msgId;
       this.userId = params.userId;
@@ -4295,7 +4319,7 @@ export namespace Raw {
       this.className = 'InputPeerChannelFromMessage';
       this.constructorId = 0xbd2a0840;
       this.subclassOfId = 0xc91c90b6;
-      this.slots = ['peer', 'msgId', 'channelId'];
+      this._slots = ['peer', 'msgId', 'channelId'];
       this.peer = params.peer;
       this.msgId = params.msgId;
       this.channelId = params.channelId;
@@ -4343,7 +4367,7 @@ export namespace Raw {
       this.className = 'InputUserEmpty';
       this.constructorId = 0xb98886cf;
       this.subclassOfId = 0xe669bf46;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -4372,7 +4396,7 @@ export namespace Raw {
       this.className = 'InputUserSelf';
       this.constructorId = 0xf7c1b13f;
       this.subclassOfId = 0xe669bf46;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -4404,7 +4428,7 @@ export namespace Raw {
       this.className = 'InputUser';
       this.constructorId = 0xf21158c6;
       this.subclassOfId = 0xe669bf46;
-      this.slots = ['userId', 'accessHash'];
+      this._slots = ['userId', 'accessHash'];
       this.userId = params.userId;
       this.accessHash = params.accessHash;
     }
@@ -4447,7 +4471,7 @@ export namespace Raw {
       this.className = 'InputUserFromMessage';
       this.constructorId = 0x1da448e2;
       this.subclassOfId = 0xe669bf46;
-      this.slots = ['peer', 'msgId', 'userId'];
+      this._slots = ['peer', 'msgId', 'userId'];
       this.peer = params.peer;
       this.msgId = params.msgId;
       this.userId = params.userId;
@@ -4496,7 +4520,7 @@ export namespace Raw {
       this.className = 'InputPhoneContact';
       this.constructorId = 0xf392b7f4;
       this.subclassOfId = 0xae696a82;
-      this.slots = ['clientId', 'phone', 'firstName', 'lastName'];
+      this._slots = ['clientId', 'phone', 'firstName', 'lastName'];
       this.clientId = params.clientId;
       this.phone = params.phone;
       this.firstName = params.firstName;
@@ -4555,7 +4579,7 @@ export namespace Raw {
       this.className = 'InputFile';
       this.constructorId = 0xf52ff27f;
       this.subclassOfId = 0xe7655f1f;
-      this.slots = ['id', 'parts', 'name', 'md5Checksum'];
+      this._slots = ['id', 'parts', 'name', 'md5Checksum'];
       this.id = params.id;
       this.parts = params.parts;
       this.name = params.name;
@@ -4608,7 +4632,7 @@ export namespace Raw {
       this.className = 'InputFileBig';
       this.constructorId = 0xfa4f0bb5;
       this.subclassOfId = 0xe7655f1f;
-      this.slots = ['id', 'parts', 'name'];
+      this._slots = ['id', 'parts', 'name'];
       this.id = params.id;
       this.parts = params.parts;
       this.name = params.name;
@@ -4652,7 +4676,7 @@ export namespace Raw {
       this.className = 'InputMediaEmpty';
       this.constructorId = 0x9664f57f;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -4691,7 +4715,7 @@ export namespace Raw {
       this.className = 'InputMediaUploadedPhoto';
       this.constructorId = 0x1e287d04;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['spoiler', 'file', 'stickers', 'ttlSeconds'];
+      this._slots = ['spoiler', 'file', 'stickers', 'ttlSeconds'];
       this.spoiler = params.spoiler;
       this.file = params.file;
       this.stickers = params.stickers;
@@ -4754,7 +4778,7 @@ export namespace Raw {
       this.className = 'InputMediaPhoto';
       this.constructorId = 0xb3ba0635;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['spoiler', 'id', 'ttlSeconds'];
+      this._slots = ['spoiler', 'id', 'ttlSeconds'];
       this.spoiler = params.spoiler;
       this.id = params.id;
       this.ttlSeconds = params.ttlSeconds;
@@ -4804,7 +4828,7 @@ export namespace Raw {
       this.className = 'InputMediaGeoPoint';
       this.constructorId = 0xf9c44144;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['geoPoint'];
+      this._slots = ['geoPoint'];
       this.geoPoint = params.geoPoint;
     }
     /**
@@ -4848,7 +4872,7 @@ export namespace Raw {
       this.className = 'InputMediaContact';
       this.constructorId = 0xf8ab7dfb;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['phoneNumber', 'firstName', 'lastName', 'vcard'];
+      this._slots = ['phoneNumber', 'firstName', 'lastName', 'vcard'];
       this.phoneNumber = params.phoneNumber;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -4922,7 +4946,7 @@ export namespace Raw {
       this.className = 'InputMediaUploadedDocument';
       this.constructorId = 0x5b38c6c1;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = [
+      this._slots = [
         'nosoundVideo',
         'forceFile',
         'spoiler',
@@ -5028,7 +5052,7 @@ export namespace Raw {
       this.className = 'InputMediaDocument';
       this.constructorId = 0x33473058;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['spoiler', 'id', 'ttlSeconds', 'query'];
+      this._slots = ['spoiler', 'id', 'ttlSeconds', 'query'];
       this.spoiler = params.spoiler;
       this.id = params.id;
       this.ttlSeconds = params.ttlSeconds;
@@ -5101,7 +5125,7 @@ export namespace Raw {
       this.className = 'InputMediaVenue';
       this.constructorId = 0xc13d1c11;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['geoPoint', 'title', 'address', 'provider', 'venueId', 'venueType'];
+      this._slots = ['geoPoint', 'title', 'address', 'provider', 'venueId', 'venueType'];
       this.geoPoint = params.geoPoint;
       this.title = params.title;
       this.address = params.address;
@@ -5171,7 +5195,7 @@ export namespace Raw {
       this.className = 'InputMediaPhotoExternal';
       this.constructorId = 0xe5bbfe1a;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['spoiler', 'url', 'ttlSeconds'];
+      this._slots = ['spoiler', 'url', 'ttlSeconds'];
       this.spoiler = params.spoiler;
       this.url = params.url;
       this.ttlSeconds = params.ttlSeconds;
@@ -5227,7 +5251,7 @@ export namespace Raw {
       this.className = 'InputMediaDocumentExternal';
       this.constructorId = 0xfb52dc99;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['spoiler', 'url', 'ttlSeconds'];
+      this._slots = ['spoiler', 'url', 'ttlSeconds'];
       this.spoiler = params.spoiler;
       this.url = params.url;
       this.ttlSeconds = params.ttlSeconds;
@@ -5281,7 +5305,7 @@ export namespace Raw {
       this.className = 'InputMediaGame';
       this.constructorId = 0xd33f43f3;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -5335,7 +5359,7 @@ export namespace Raw {
       this.className = 'InputMediaInvoice';
       this.constructorId = 0x8eb5a6d5;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = [
+      this._slots = [
         'title',
         'description',
         'photo',
@@ -5449,7 +5473,7 @@ export namespace Raw {
       this.className = 'InputMediaGeoLive';
       this.constructorId = 0x971fa843;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['stopped', 'geoPoint', 'heading', 'period', 'proximityNotificationRadius'];
+      this._slots = ['stopped', 'geoPoint', 'heading', 'period', 'proximityNotificationRadius'];
       this.stopped = params.stopped;
       this.geoPoint = params.geoPoint;
       this.heading = params.heading;
@@ -5525,7 +5549,7 @@ export namespace Raw {
       this.className = 'InputMediaPoll';
       this.constructorId = 0xf94e5f1;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['poll', 'correctAnswers', 'solution', 'solutionEntities'];
+      this._slots = ['poll', 'correctAnswers', 'solution', 'solutionEntities'];
       this.poll = params.poll;
       this.correctAnswers = params.correctAnswers;
       this.solution = params.solution;
@@ -5589,7 +5613,7 @@ export namespace Raw {
       this.className = 'InputMediaDice';
       this.constructorId = 0xe66fbf7b;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['emoticon'];
+      this._slots = ['emoticon'];
       this.emoticon = params.emoticon;
     }
     /**
@@ -5626,7 +5650,7 @@ export namespace Raw {
       this.className = 'InputMediaStory';
       this.constructorId = 0x89fdd778;
       this.subclassOfId = 0xfaf846f4;
-      this.slots = ['peer', 'id'];
+      this._slots = ['peer', 'id'];
       this.peer = params.peer;
       this.id = params.id;
     }
@@ -5658,6 +5682,69 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class InputMediaWebPage extends TLObject {
+    forceLargeMedia?: boolean;
+    forceSmallMedia?: boolean;
+    optional?: boolean;
+    url!: string;
+
+    constructor(params: {
+      forceLargeMedia?: boolean;
+      forceSmallMedia?: boolean;
+      optional?: boolean;
+      url: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputMediaWebPage';
+      this.constructorId = 0xc21b8849;
+      this.subclassOfId = 0xfaf846f4;
+      this._slots = ['forceLargeMedia', 'forceSmallMedia', 'optional', 'url'];
+      this.forceLargeMedia = params.forceLargeMedia;
+      this.forceSmallMedia = params.forceSmallMedia;
+      this.optional = params.optional;
+      this.url = params.url;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputMediaWebPage> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let forceLargeMedia = flags & (1 << 0) ? true : false;
+      let forceSmallMedia = flags & (1 << 1) ? true : false;
+      let optional = flags & (1 << 2) ? true : false;
+      let url = await Primitive.String.read(b);
+      return new Raw.InputMediaWebPage({
+        forceLargeMedia: forceLargeMedia,
+        forceSmallMedia: forceSmallMedia,
+        optional: optional,
+        url: url,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.forceLargeMedia ? 1 << 0 : 0;
+      flags |= this.forceSmallMedia ? 1 << 1 : 0;
+      flags |= this.optional ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class InputChatPhotoEmpty extends TLObject {
     constructor() {
       super();
@@ -5665,7 +5752,7 @@ export namespace Raw {
       this.className = 'InputChatPhotoEmpty';
       this.constructorId = 0x1ca48f57;
       this.subclassOfId = 0xd4eb2d74;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -5704,7 +5791,7 @@ export namespace Raw {
       this.className = 'InputChatUploadedPhoto';
       this.constructorId = 0xbdcdaec0;
       this.subclassOfId = 0xd4eb2d74;
-      this.slots = ['file', 'video', 'videoStartTs', 'videoEmojiMarkup'];
+      this._slots = ['file', 'video', 'videoStartTs', 'videoEmojiMarkup'];
       this.file = params.file;
       this.video = params.video;
       this.videoStartTs = params.videoStartTs;
@@ -5769,7 +5856,7 @@ export namespace Raw {
       this.className = 'InputChatPhoto';
       this.constructorId = 0x8953ad37;
       this.subclassOfId = 0xd4eb2d74;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -5803,7 +5890,7 @@ export namespace Raw {
       this.className = 'InputGeoPointEmpty';
       this.constructorId = 0xe4c123d6;
       this.subclassOfId = 0x430d225;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -5836,7 +5923,7 @@ export namespace Raw {
       this.className = 'InputGeoPoint';
       this.constructorId = 0x48222faf;
       this.subclassOfId = 0x430d225;
-      this.slots = ['lat', 'long', 'accuracyRadius'];
+      this._slots = ['lat', 'long', 'accuracyRadius'];
       this.lat = params.lat;
       this.long = params.long;
       this.accuracyRadius = params.accuracyRadius;
@@ -5886,7 +5973,7 @@ export namespace Raw {
       this.className = 'InputPhotoEmpty';
       this.constructorId = 0x1cd7bf0d;
       this.subclassOfId = 0x846363e0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -5919,7 +6006,7 @@ export namespace Raw {
       this.className = 'InputPhoto';
       this.constructorId = 0x3bb3b94a;
       this.subclassOfId = 0x846363e0;
-      this.slots = ['id', 'accessHash', 'fileReference'];
+      this._slots = ['id', 'accessHash', 'fileReference'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.fileReference = params.fileReference;
@@ -5968,7 +6055,7 @@ export namespace Raw {
       this.className = 'InputFileLocation';
       this.constructorId = 0xdfdaabe1;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['volumeId', 'localId', 'secret', 'fileReference'];
+      this._slots = ['volumeId', 'localId', 'secret', 'fileReference'];
       this.volumeId = params.volumeId;
       this.localId = params.localId;
       this.secret = params.secret;
@@ -6025,7 +6112,7 @@ export namespace Raw {
       this.className = 'InputEncryptedFileLocation';
       this.constructorId = 0xf5235d55;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -6069,7 +6156,7 @@ export namespace Raw {
       this.className = 'InputDocumentFileLocation';
       this.constructorId = 0xbad07584;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['id', 'accessHash', 'fileReference', 'thumbSize'];
+      this._slots = ['id', 'accessHash', 'fileReference', 'thumbSize'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.fileReference = params.fileReference;
@@ -6126,7 +6213,7 @@ export namespace Raw {
       this.className = 'InputSecureFileLocation';
       this.constructorId = 0xcbc7ee28;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -6165,7 +6252,7 @@ export namespace Raw {
       this.className = 'InputTakeoutFileLocation';
       this.constructorId = 0x29be5899;
       this.subclassOfId = 0x1523d462;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -6199,7 +6286,7 @@ export namespace Raw {
       this.className = 'InputPhotoFileLocation';
       this.constructorId = 0x40181ffe;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['id', 'accessHash', 'fileReference', 'thumbSize'];
+      this._slots = ['id', 'accessHash', 'fileReference', 'thumbSize'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.fileReference = params.fileReference;
@@ -6267,7 +6354,7 @@ export namespace Raw {
       this.className = 'InputPhotoLegacyFileLocation';
       this.constructorId = 0xd83466f3;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['id', 'accessHash', 'fileReference', 'volumeId', 'localId', 'secret'];
+      this._slots = ['id', 'accessHash', 'fileReference', 'volumeId', 'localId', 'secret'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.fileReference = params.fileReference;
@@ -6337,7 +6424,7 @@ export namespace Raw {
       this.className = 'InputPeerPhotoFileLocation';
       this.constructorId = 0x37257e99;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['big', 'peer', 'photoId'];
+      this._slots = ['big', 'peer', 'photoId'];
       this.big = params.big;
       this.peer = params.peer;
       this.photoId = params.photoId;
@@ -6387,7 +6474,7 @@ export namespace Raw {
       this.className = 'InputStickerSetThumb';
       this.constructorId = 0x9d84f3db;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['stickerset', 'thumbVersion'];
+      this._slots = ['stickerset', 'thumbVersion'];
       this.stickerset = params.stickerset;
       this.thumbVersion = params.thumbVersion;
     }
@@ -6438,7 +6525,7 @@ export namespace Raw {
       this.className = 'InputGroupCallStream';
       this.constructorId = 0x598a92a;
       this.subclassOfId = 0x1523d462;
-      this.slots = ['call', 'timeMs', 'scale', 'videoChannel', 'videoQuality'];
+      this._slots = ['call', 'timeMs', 'scale', 'videoChannel', 'videoQuality'];
       this.call = params.call;
       this.timeMs = params.timeMs;
       this.scale = params.scale;
@@ -6507,7 +6594,7 @@ export namespace Raw {
       this.className = 'PeerUser';
       this.constructorId = 0x59511722;
       this.subclassOfId = 0x2d45687;
-      this.slots = ['userId'];
+      this._slots = ['userId'];
       this.userId = params.userId;
     }
     /**
@@ -6543,7 +6630,7 @@ export namespace Raw {
       this.className = 'PeerChat';
       this.constructorId = 0x36c6019a;
       this.subclassOfId = 0x2d45687;
-      this.slots = ['chatId'];
+      this._slots = ['chatId'];
       this.chatId = params.chatId;
     }
     /**
@@ -6579,7 +6666,7 @@ export namespace Raw {
       this.className = 'PeerChannel';
       this.constructorId = 0xa2a5371e;
       this.subclassOfId = 0x2d45687;
-      this.slots = ['channelId'];
+      this._slots = ['channelId'];
       this.channelId = params.channelId;
     }
     /**
@@ -6615,7 +6702,7 @@ export namespace Raw {
       this.className = 'UserEmpty';
       this.constructorId = 0xd3bc4b7a;
       this.subclassOfId = 0x2da17977;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -6680,6 +6767,8 @@ export namespace Raw {
     emojiStatus?: Raw.TypeEmojiStatus;
     usernames?: Vector<Raw.TypeUsername>;
     storiesMaxId?: int;
+    color?: int;
+    backgroundEmojiId?: long;
 
     constructor(params: {
       self?: boolean;
@@ -6719,13 +6808,15 @@ export namespace Raw {
       emojiStatus?: Raw.TypeEmojiStatus;
       usernames?: Vector<Raw.TypeUsername>;
       storiesMaxId?: int;
+      color?: int;
+      backgroundEmojiId?: long;
     }) {
       super();
       this.classType = 'types';
       this.className = 'User';
-      this.constructorId = 0xabb5f120;
+      this.constructorId = 0xeb602f25;
       this.subclassOfId = 0x2da17977;
-      this.slots = [
+      this._slots = [
         'self',
         'contact',
         'mutualContact',
@@ -6763,6 +6854,8 @@ export namespace Raw {
         'emojiStatus',
         'usernames',
         'storiesMaxId',
+        'color',
+        'backgroundEmojiId',
       ];
       this.self = params.self;
       this.contact = params.contact;
@@ -6801,6 +6894,8 @@ export namespace Raw {
       this.emojiStatus = params.emojiStatus;
       this.usernames = params.usernames;
       this.storiesMaxId = params.storiesMaxId;
+      this.color = params.color;
+      this.backgroundEmojiId = params.backgroundEmojiId;
     }
     /**
      * Generate the TLObject from buffer.
@@ -6848,6 +6943,8 @@ export namespace Raw {
       let emojiStatus = flags & (1 << 30) ? await TLObject.read(b) : undefined;
       let usernames = flags2 & (1 << 0) ? await TLObject.read(b) : [];
       let storiesMaxId = flags2 & (1 << 5) ? await Primitive.Int.read(b) : undefined;
+      let color = flags2 & (1 << 7) ? await Primitive.Int.read(b) : undefined;
+      let backgroundEmojiId = flags2 & (1 << 6) ? await Primitive.Long.read(b) : undefined;
       return new Raw.User({
         self: self,
         contact: contact,
@@ -6886,6 +6983,8 @@ export namespace Raw {
         emojiStatus: emojiStatus,
         usernames: usernames,
         storiesMaxId: storiesMaxId,
+        color: color,
+        backgroundEmojiId: backgroundEmojiId,
       });
     }
     /**
@@ -6935,6 +7034,8 @@ export namespace Raw {
       flags2 |= this.storiesUnavailable ? 1 << 4 : 0;
       flags2 |= this.usernames ? 1 << 0 : 0;
       flags2 |= this.storiesMaxId !== undefined ? 1 << 5 : 0;
+      flags2 |= this.color !== undefined ? 1 << 7 : 0;
+      flags2 |= this.backgroundEmojiId !== undefined ? 1 << 6 : 0;
       b.write(Primitive.Int.write(flags2) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -6982,6 +7083,12 @@ export namespace Raw {
       if (this.storiesMaxId !== undefined) {
         b.write(Primitive.Int.write(this.storiesMaxId) as unknown as Buffer);
       }
+      if (this.color !== undefined) {
+        b.write(Primitive.Int.write(this.color) as unknown as Buffer);
+      }
+      if (this.backgroundEmojiId !== undefined) {
+        b.write(Primitive.Long.write(this.backgroundEmojiId) as unknown as Buffer);
+      }
       return b.buffer;
     }
   }
@@ -6992,7 +7099,7 @@ export namespace Raw {
       this.className = 'UserProfilePhotoEmpty';
       this.constructorId = 0x4f11bae1;
       this.subclassOfId = 0xc6338f7d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -7033,7 +7140,7 @@ export namespace Raw {
       this.className = 'UserProfilePhoto';
       this.constructorId = 0x82d1f706;
       this.subclassOfId = 0xc6338f7d;
-      this.slots = ['hasVideo', 'personal', 'photoId', 'strippedThumb', 'dcId'];
+      this._slots = ['hasVideo', 'personal', 'photoId', 'strippedThumb', 'dcId'];
       this.hasVideo = params.hasVideo;
       this.personal = params.personal;
       this.photoId = params.photoId;
@@ -7095,7 +7202,7 @@ export namespace Raw {
       this.className = 'UserStatusEmpty';
       this.constructorId = 0x9d05049;
       this.subclassOfId = 0x5b0b743e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -7126,7 +7233,7 @@ export namespace Raw {
       this.className = 'UserStatusOnline';
       this.constructorId = 0xedb93949;
       this.subclassOfId = 0x5b0b743e;
-      this.slots = ['expires'];
+      this._slots = ['expires'];
       this.expires = params.expires;
     }
     /**
@@ -7162,7 +7269,7 @@ export namespace Raw {
       this.className = 'UserStatusOffline';
       this.constructorId = 0x8c703f;
       this.subclassOfId = 0x5b0b743e;
-      this.slots = ['wasOnline'];
+      this._slots = ['wasOnline'];
       this.wasOnline = params.wasOnline;
     }
     /**
@@ -7196,7 +7303,7 @@ export namespace Raw {
       this.className = 'UserStatusRecently';
       this.constructorId = 0xe26f42f1;
       this.subclassOfId = 0x5b0b743e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -7225,7 +7332,7 @@ export namespace Raw {
       this.className = 'UserStatusLastWeek';
       this.constructorId = 0x7bf09fc;
       this.subclassOfId = 0x5b0b743e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -7254,7 +7361,7 @@ export namespace Raw {
       this.className = 'UserStatusLastMonth';
       this.constructorId = 0x77ebc742;
       this.subclassOfId = 0x5b0b743e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -7285,7 +7392,7 @@ export namespace Raw {
       this.className = 'ChatEmpty';
       this.constructorId = 0x29562865;
       this.subclassOfId = 0xc5af5d94;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -7351,7 +7458,7 @@ export namespace Raw {
       this.className = 'Chat';
       this.constructorId = 0x41cbf256;
       this.subclassOfId = 0xc5af5d94;
-      this.slots = [
+      this._slots = [
         'creator',
         'left',
         'deactivated',
@@ -7486,7 +7593,7 @@ export namespace Raw {
       this.className = 'ChatForbidden';
       this.constructorId = 0x6592a1a7;
       this.subclassOfId = 0xc5af5d94;
-      this.slots = ['id', 'title'];
+      this._slots = ['id', 'title'];
       this.id = params.id;
       this.title = params.title;
     }
@@ -7555,6 +7662,8 @@ export namespace Raw {
     participantsCount?: int;
     usernames?: Vector<Raw.TypeUsername>;
     storiesMaxId?: int;
+    color?: int;
+    backgroundEmojiId?: long;
 
     constructor(params: {
       creator?: boolean;
@@ -7593,13 +7702,15 @@ export namespace Raw {
       participantsCount?: int;
       usernames?: Vector<Raw.TypeUsername>;
       storiesMaxId?: int;
+      color?: int;
+      backgroundEmojiId?: long;
     }) {
       super();
       this.classType = 'types';
       this.className = 'Channel';
-      this.constructorId = 0x94f592db;
+      this.constructorId = 0x1981ea7e;
       this.subclassOfId = 0xc5af5d94;
-      this.slots = [
+      this._slots = [
         'creator',
         'left',
         'broadcast',
@@ -7636,6 +7747,8 @@ export namespace Raw {
         'participantsCount',
         'usernames',
         'storiesMaxId',
+        'color',
+        'backgroundEmojiId',
       ];
       this.creator = params.creator;
       this.left = params.left;
@@ -7673,6 +7786,8 @@ export namespace Raw {
       this.participantsCount = params.participantsCount;
       this.usernames = params.usernames;
       this.storiesMaxId = params.storiesMaxId;
+      this.color = params.color;
+      this.backgroundEmojiId = params.backgroundEmojiId;
     }
     /**
      * Generate the TLObject from buffer.
@@ -7719,6 +7834,8 @@ export namespace Raw {
       let participantsCount = flags & (1 << 17) ? await Primitive.Int.read(b) : undefined;
       let usernames = flags2 & (1 << 0) ? await TLObject.read(b) : [];
       let storiesMaxId = flags2 & (1 << 4) ? await Primitive.Int.read(b) : undefined;
+      let color = flags2 & (1 << 6) ? await Primitive.Int.read(b) : undefined;
+      let backgroundEmojiId = flags2 & (1 << 5) ? await Primitive.Long.read(b) : undefined;
       return new Raw.Channel({
         creator: creator,
         left: left,
@@ -7756,6 +7873,8 @@ export namespace Raw {
         participantsCount: participantsCount,
         usernames: usernames,
         storiesMaxId: storiesMaxId,
+        color: color,
+        backgroundEmojiId: backgroundEmojiId,
       });
     }
     /**
@@ -7801,6 +7920,8 @@ export namespace Raw {
       flags2 |= this.storiesUnavailable ? 1 << 3 : 0;
       flags2 |= this.usernames ? 1 << 0 : 0;
       flags2 |= this.storiesMaxId !== undefined ? 1 << 4 : 0;
+      flags2 |= this.color !== undefined ? 1 << 6 : 0;
+      flags2 |= this.backgroundEmojiId !== undefined ? 1 << 5 : 0;
       b.write(Primitive.Int.write(flags2) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -7842,6 +7963,12 @@ export namespace Raw {
       if (this.storiesMaxId !== undefined) {
         b.write(Primitive.Int.write(this.storiesMaxId) as unknown as Buffer);
       }
+      if (this.color !== undefined) {
+        b.write(Primitive.Int.write(this.color) as unknown as Buffer);
+      }
+      if (this.backgroundEmojiId !== undefined) {
+        b.write(Primitive.Long.write(this.backgroundEmojiId) as unknown as Buffer);
+      }
       return b.buffer;
     }
   }
@@ -7866,7 +7993,7 @@ export namespace Raw {
       this.className = 'ChannelForbidden';
       this.constructorId = 0x17d493d5;
       this.subclassOfId = 0xc5af5d94;
-      this.slots = ['broadcast', 'megagroup', 'id', 'accessHash', 'title', 'untilDate'];
+      this._slots = ['broadcast', 'megagroup', 'id', 'accessHash', 'title', 'untilDate'];
       this.broadcast = params.broadcast;
       this.megagroup = params.megagroup;
       this.id = params.id;
@@ -7974,7 +8101,7 @@ export namespace Raw {
       this.className = 'ChatFull';
       this.constructorId = 0xc9d31138;
       this.subclassOfId = 0xd49a2697;
-      this.slots = [
+      this._slots = [
         'canSetUsername',
         'hasScheduled',
         'translationsDisabled',
@@ -8249,7 +8376,7 @@ export namespace Raw {
       this.className = 'ChannelFull';
       this.constructorId = 0x723027bd;
       this.subclassOfId = 0xd49a2697;
-      this.slots = [
+      this._slots = [
         'canViewParticipants',
         'canSetUsername',
         'canSetStickers',
@@ -8637,7 +8764,7 @@ export namespace Raw {
       this.className = 'ChatParticipant';
       this.constructorId = 0xc02d4007;
       this.subclassOfId = 0x7d7c6f86;
-      this.slots = ['userId', 'inviterId', 'date'];
+      this._slots = ['userId', 'inviterId', 'date'];
       this.userId = params.userId;
       this.inviterId = params.inviterId;
       this.date = params.date;
@@ -8683,7 +8810,7 @@ export namespace Raw {
       this.className = 'ChatParticipantCreator';
       this.constructorId = 0xe46bcee4;
       this.subclassOfId = 0x7d7c6f86;
-      this.slots = ['userId'];
+      this._slots = ['userId'];
       this.userId = params.userId;
     }
     /**
@@ -8721,7 +8848,7 @@ export namespace Raw {
       this.className = 'ChatParticipantAdmin';
       this.constructorId = 0xa0933f5b;
       this.subclassOfId = 0x7d7c6f86;
-      this.slots = ['userId', 'inviterId', 'date'];
+      this._slots = ['userId', 'inviterId', 'date'];
       this.userId = params.userId;
       this.inviterId = params.inviterId;
       this.date = params.date;
@@ -8768,7 +8895,7 @@ export namespace Raw {
       this.className = 'ChatParticipantsForbidden';
       this.constructorId = 0x8763d3e1;
       this.subclassOfId = 0x1fa89571;
-      this.slots = ['chatId', 'selfParticipant'];
+      this._slots = ['chatId', 'selfParticipant'];
       this.chatId = params.chatId;
       this.selfParticipant = params.selfParticipant;
     }
@@ -8824,7 +8951,7 @@ export namespace Raw {
       this.className = 'ChatParticipants';
       this.constructorId = 0x3cbc93f8;
       this.subclassOfId = 0x1fa89571;
-      this.slots = ['chatId', 'participants', 'version'];
+      this._slots = ['chatId', 'participants', 'version'];
       this.chatId = params.chatId;
       this.participants = params.participants;
       this.version = params.version;
@@ -8872,7 +8999,7 @@ export namespace Raw {
       this.className = 'ChatPhotoEmpty';
       this.constructorId = 0x37c1011c;
       this.subclassOfId = 0xac3ec4e5;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -8906,7 +9033,7 @@ export namespace Raw {
       this.className = 'ChatPhoto';
       this.constructorId = 0x1c6e1c11;
       this.subclassOfId = 0xac3ec4e5;
-      this.slots = ['hasVideo', 'photoId', 'strippedThumb', 'dcId'];
+      this._slots = ['hasVideo', 'photoId', 'strippedThumb', 'dcId'];
       this.hasVideo = params.hasVideo;
       this.photoId = params.photoId;
       this.strippedThumb = params.strippedThumb;
@@ -8967,7 +9094,7 @@ export namespace Raw {
       this.className = 'MessageEmpty';
       this.constructorId = 0x90a6ca84;
       this.subclassOfId = 0x790009e3;
-      this.slots = ['id', 'peerId'];
+      this._slots = ['id', 'peerId'];
       this.id = params.id;
       this.peerId = params.peerId;
     }
@@ -9016,6 +9143,7 @@ export namespace Raw {
     editHide?: boolean;
     pinned?: boolean;
     noforwards?: boolean;
+    invertMedia?: boolean;
     id!: int;
     fromId?: Raw.TypePeer;
     peerId!: Raw.TypePeer;
@@ -9048,6 +9176,7 @@ export namespace Raw {
       editHide?: boolean;
       pinned?: boolean;
       noforwards?: boolean;
+      invertMedia?: boolean;
       id: int;
       fromId?: Raw.TypePeer;
       peerId: Raw.TypePeer;
@@ -9074,7 +9203,7 @@ export namespace Raw {
       this.className = 'Message';
       this.constructorId = 0x38116ee0;
       this.subclassOfId = 0x790009e3;
-      this.slots = [
+      this._slots = [
         'out',
         'mentioned',
         'mediaUnread',
@@ -9085,6 +9214,7 @@ export namespace Raw {
         'editHide',
         'pinned',
         'noforwards',
+        'invertMedia',
         'id',
         'fromId',
         'peerId',
@@ -9116,6 +9246,7 @@ export namespace Raw {
       this.editHide = params.editHide;
       this.pinned = params.pinned;
       this.noforwards = params.noforwards;
+      this.invertMedia = params.invertMedia;
       this.id = params.id;
       this.fromId = params.fromId;
       this.peerId = params.peerId;
@@ -9156,6 +9287,7 @@ export namespace Raw {
       let editHide = flags & (1 << 21) ? true : false;
       let pinned = flags & (1 << 24) ? true : false;
       let noforwards = flags & (1 << 26) ? true : false;
+      let invertMedia = flags & (1 << 27) ? true : false;
       let id = await Primitive.Int.read(b);
       let fromId = flags & (1 << 8) ? await TLObject.read(b) : undefined;
       let peerId = await TLObject.read(b);
@@ -9187,6 +9319,7 @@ export namespace Raw {
         editHide: editHide,
         pinned: pinned,
         noforwards: noforwards,
+        invertMedia: invertMedia,
         id: id,
         fromId: fromId,
         peerId: peerId,
@@ -9228,6 +9361,7 @@ export namespace Raw {
       flags |= this.editHide ? 1 << 21 : 0;
       flags |= this.pinned ? 1 << 24 : 0;
       flags |= this.noforwards ? 1 << 26 : 0;
+      flags |= this.invertMedia ? 1 << 27 : 0;
       flags |= this.fromId !== undefined ? 1 << 8 : 0;
       flags |= this.fwdFrom !== undefined ? 1 << 2 : 0;
       flags |= this.viaBotId !== undefined ? 1 << 11 : 0;
@@ -9344,7 +9478,7 @@ export namespace Raw {
       this.className = 'MessageService';
       this.constructorId = 0x2b085862;
       this.subclassOfId = 0x790009e3;
-      this.slots = [
+      this._slots = [
         'out',
         'mentioned',
         'mediaUnread',
@@ -9462,7 +9596,7 @@ export namespace Raw {
       this.className = 'MessageMediaEmpty';
       this.constructorId = 0x3ded6320;
       this.subclassOfId = 0x476cbe32;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -9495,7 +9629,7 @@ export namespace Raw {
       this.className = 'MessageMediaPhoto';
       this.constructorId = 0x695150d7;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['spoiler', 'photo', 'ttlSeconds'];
+      this._slots = ['spoiler', 'photo', 'ttlSeconds'];
       this.spoiler = params.spoiler;
       this.photo = params.photo;
       this.ttlSeconds = params.ttlSeconds;
@@ -9546,7 +9680,7 @@ export namespace Raw {
       this.className = 'MessageMediaGeo';
       this.constructorId = 0x56e0d474;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['geo'];
+      this._slots = ['geo'];
       this.geo = params.geo;
     }
     /**
@@ -9592,7 +9726,7 @@ export namespace Raw {
       this.className = 'MessageMediaContact';
       this.constructorId = 0x70322949;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['phoneNumber', 'firstName', 'lastName', 'vcard', 'userId'];
+      this._slots = ['phoneNumber', 'firstName', 'lastName', 'vcard', 'userId'];
       this.phoneNumber = params.phoneNumber;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -9652,7 +9786,7 @@ export namespace Raw {
       this.className = 'MessageMediaUnsupported';
       this.constructorId = 0x9f84f49e;
       this.subclassOfId = 0x476cbe32;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -9693,7 +9827,7 @@ export namespace Raw {
       this.className = 'MessageMediaDocument';
       this.constructorId = 0x4cf4d72d;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['nopremium', 'spoiler', 'document', 'altDocument', 'ttlSeconds'];
+      this._slots = ['nopremium', 'spoiler', 'document', 'altDocument', 'ttlSeconds'];
       this.nopremium = params.nopremium;
       this.spoiler = params.spoiler;
       this.document = params.document;
@@ -9751,15 +9885,29 @@ export namespace Raw {
     }
   }
   export class MessageMediaWebPage extends TLObject {
+    forceLargeMedia?: boolean;
+    forceSmallMedia?: boolean;
+    manual?: boolean;
+    safe?: boolean;
     webpage!: Raw.TypeWebPage;
 
-    constructor(params: { webpage: Raw.TypeWebPage }) {
+    constructor(params: {
+      forceLargeMedia?: boolean;
+      forceSmallMedia?: boolean;
+      manual?: boolean;
+      safe?: boolean;
+      webpage: Raw.TypeWebPage;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaWebPage';
-      this.constructorId = 0xa32dd600;
+      this.constructorId = 0xddf10c3b;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['webpage'];
+      this._slots = ['forceLargeMedia', 'forceSmallMedia', 'manual', 'safe', 'webpage'];
+      this.forceLargeMedia = params.forceLargeMedia;
+      this.forceSmallMedia = params.forceSmallMedia;
+      this.manual = params.manual;
+      this.safe = params.safe;
       this.webpage = params.webpage;
     }
     /**
@@ -9769,8 +9917,20 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MessageMediaWebPage> {
       // no flags
 
+      let flags = await Primitive.Int.read(b);
+
+      let forceLargeMedia = flags & (1 << 0) ? true : false;
+      let forceSmallMedia = flags & (1 << 1) ? true : false;
+      let manual = flags & (1 << 3) ? true : false;
+      let safe = flags & (1 << 4) ? true : false;
       let webpage = await TLObject.read(b);
-      return new Raw.MessageMediaWebPage({ webpage: webpage });
+      return new Raw.MessageMediaWebPage({
+        forceLargeMedia: forceLargeMedia,
+        forceSmallMedia: forceSmallMedia,
+        manual: manual,
+        safe: safe,
+        webpage: webpage,
+      });
     }
     /**
      * Generate buffer from TLObject.
@@ -9779,6 +9939,13 @@ export namespace Raw {
       let b: BytesIO = new BytesIO();
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
+
+      let flags = 0;
+      flags |= this.forceLargeMedia ? 1 << 0 : 0;
+      flags |= this.forceSmallMedia ? 1 << 1 : 0;
+      flags |= this.manual ? 1 << 3 : 0;
+      flags |= this.safe ? 1 << 4 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.webpage !== undefined) {
         b.write(this.webpage.write() as unknown as Buffer);
@@ -9807,7 +9974,7 @@ export namespace Raw {
       this.className = 'MessageMediaVenue';
       this.constructorId = 0x2ec0533f;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['geo', 'title', 'address', 'provider', 'venueId', 'venueType'];
+      this._slots = ['geo', 'title', 'address', 'provider', 'venueId', 'venueType'];
       this.geo = params.geo;
       this.title = params.title;
       this.address = params.address;
@@ -9875,7 +10042,7 @@ export namespace Raw {
       this.className = 'MessageMediaGame';
       this.constructorId = 0xfdb19008;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['game'];
+      this._slots = ['game'];
       this.game = params.game;
     }
     /**
@@ -9931,7 +10098,7 @@ export namespace Raw {
       this.className = 'MessageMediaInvoice';
       this.constructorId = 0xf6a548d3;
       this.subclassOfId = 0x476cbe32;
-      this.slots = [
+      this._slots = [
         'shippingAddressRequested',
         'test',
         'title',
@@ -10046,7 +10213,7 @@ export namespace Raw {
       this.className = 'MessageMediaGeoLive';
       this.constructorId = 0xb940c666;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['geo', 'heading', 'period', 'proximityNotificationRadius'];
+      this._slots = ['geo', 'heading', 'period', 'proximityNotificationRadius'];
       this.geo = params.geo;
       this.heading = params.heading;
       this.period = params.period;
@@ -10110,7 +10277,7 @@ export namespace Raw {
       this.className = 'MessageMediaPoll';
       this.constructorId = 0x4bd6e798;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['poll', 'results'];
+      this._slots = ['poll', 'results'];
       this.poll = params.poll;
       this.results = params.results;
     }
@@ -10152,7 +10319,7 @@ export namespace Raw {
       this.className = 'MessageMediaDice';
       this.constructorId = 0x3f7ee58b;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['value', 'emoticon'];
+      this._slots = ['value', 'emoticon'];
       this.value = params.value;
       this.emoticon = params.emoticon;
     }
@@ -10201,7 +10368,7 @@ export namespace Raw {
       this.className = 'MessageMediaStory';
       this.constructorId = 0x68cb6283;
       this.subclassOfId = 0x476cbe32;
-      this.slots = ['viaMention', 'peer', 'id', 'story'];
+      this._slots = ['viaMention', 'peer', 'id', 'story'];
       this.viaMention = params.viaMention;
       this.peer = params.peer;
       this.id = params.id;
@@ -10252,6 +10419,97 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class MessageMediaGiveaway extends TLObject {
+    onlyNewSubscribers?: boolean;
+    channels!: Vector<long>;
+    countriesIso2?: Vector<string>;
+    quantity!: int;
+    months!: int;
+    untilDate!: int;
+
+    constructor(params: {
+      onlyNewSubscribers?: boolean;
+      channels: Vector<long>;
+      countriesIso2?: Vector<string>;
+      quantity: int;
+      months: int;
+      untilDate: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageMediaGiveaway';
+      this.constructorId = 0x58260664;
+      this.subclassOfId = 0x476cbe32;
+      this._slots = [
+        'onlyNewSubscribers',
+        'channels',
+        'countriesIso2',
+        'quantity',
+        'months',
+        'untilDate',
+      ];
+      this.onlyNewSubscribers = params.onlyNewSubscribers;
+      this.channels = params.channels;
+      this.countriesIso2 = params.countriesIso2;
+      this.quantity = params.quantity;
+      this.months = params.months;
+      this.untilDate = params.untilDate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MessageMediaGiveaway> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let onlyNewSubscribers = flags & (1 << 0) ? true : false;
+      let channels = await TLObject.read(b, Primitive.Long);
+      let countriesIso2 = flags & (1 << 1) ? await TLObject.read(b, Primitive.String) : [];
+      let quantity = await Primitive.Int.read(b);
+      let months = await Primitive.Int.read(b);
+      let untilDate = await Primitive.Int.read(b);
+      return new Raw.MessageMediaGiveaway({
+        onlyNewSubscribers: onlyNewSubscribers,
+        channels: channels,
+        countriesIso2: countriesIso2,
+        quantity: quantity,
+        months: months,
+        untilDate: untilDate,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.onlyNewSubscribers ? 1 << 0 : 0;
+      flags |= this.countriesIso2 ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.channels) {
+        b.write(Primitive.Vector.write(this.channels, Primitive.Long) as unknown as Buffer);
+      }
+      if (this.countriesIso2) {
+        b.write(Primitive.Vector.write(this.countriesIso2, Primitive.String) as unknown as Buffer);
+      }
+      if (this.quantity !== undefined) {
+        b.write(Primitive.Int.write(this.quantity) as unknown as Buffer);
+      }
+      if (this.months !== undefined) {
+        b.write(Primitive.Int.write(this.months) as unknown as Buffer);
+      }
+      if (this.untilDate !== undefined) {
+        b.write(Primitive.Int.write(this.untilDate) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class MessageActionEmpty extends TLObject {
     constructor() {
       super();
@@ -10259,7 +10517,7 @@ export namespace Raw {
       this.className = 'MessageActionEmpty';
       this.constructorId = 0xb6aef7b0;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -10291,7 +10549,7 @@ export namespace Raw {
       this.className = 'MessageActionChatCreate';
       this.constructorId = 0xbd47cbad;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['title', 'users'];
+      this._slots = ['title', 'users'];
       this.title = params.title;
       this.users = params.users;
     }
@@ -10332,7 +10590,7 @@ export namespace Raw {
       this.className = 'MessageActionChatEditTitle';
       this.constructorId = 0xb5a1ce5a;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['title'];
+      this._slots = ['title'];
       this.title = params.title;
     }
     /**
@@ -10368,7 +10626,7 @@ export namespace Raw {
       this.className = 'MessageActionChatEditPhoto';
       this.constructorId = 0x7fcb13a8;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['photo'];
+      this._slots = ['photo'];
       this.photo = params.photo;
     }
     /**
@@ -10402,7 +10660,7 @@ export namespace Raw {
       this.className = 'MessageActionChatDeletePhoto';
       this.constructorId = 0x95e3fbef;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -10433,7 +10691,7 @@ export namespace Raw {
       this.className = 'MessageActionChatAddUser';
       this.constructorId = 0x15cefd00;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['users'];
+      this._slots = ['users'];
       this.users = params.users;
     }
     /**
@@ -10469,7 +10727,7 @@ export namespace Raw {
       this.className = 'MessageActionChatDeleteUser';
       this.constructorId = 0xa43f30cc;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['userId'];
+      this._slots = ['userId'];
       this.userId = params.userId;
     }
     /**
@@ -10505,7 +10763,7 @@ export namespace Raw {
       this.className = 'MessageActionChatJoinedByLink';
       this.constructorId = 0x31224c3;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['inviterId'];
+      this._slots = ['inviterId'];
       this.inviterId = params.inviterId;
     }
     /**
@@ -10541,7 +10799,7 @@ export namespace Raw {
       this.className = 'MessageActionChannelCreate';
       this.constructorId = 0x95d2ac92;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['title'];
+      this._slots = ['title'];
       this.title = params.title;
     }
     /**
@@ -10577,7 +10835,7 @@ export namespace Raw {
       this.className = 'MessageActionChatMigrateTo';
       this.constructorId = 0xe1037f92;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['channelId'];
+      this._slots = ['channelId'];
       this.channelId = params.channelId;
     }
     /**
@@ -10614,7 +10872,7 @@ export namespace Raw {
       this.className = 'MessageActionChannelMigrateFrom';
       this.constructorId = 0xea3948e9;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['title', 'chatId'];
+      this._slots = ['title', 'chatId'];
       this.title = params.title;
       this.chatId = params.chatId;
     }
@@ -10656,7 +10914,7 @@ export namespace Raw {
       this.className = 'MessageActionPinMessage';
       this.constructorId = 0x94bd38ed;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -10685,7 +10943,7 @@ export namespace Raw {
       this.className = 'MessageActionHistoryClear';
       this.constructorId = 0x9fbab604;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -10717,7 +10975,7 @@ export namespace Raw {
       this.className = 'MessageActionGameScore';
       this.constructorId = 0x92a72876;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['gameId', 'score'];
+      this._slots = ['gameId', 'score'];
       this.gameId = params.gameId;
       this.score = params.score;
     }
@@ -10774,7 +11032,7 @@ export namespace Raw {
       this.className = 'MessageActionPaymentSentMe';
       this.constructorId = 0x8f31b327;
       this.subclassOfId = 0x8680d126;
-      this.slots = [
+      this._slots = [
         'recurringInit',
         'recurringUsed',
         'currency',
@@ -10876,7 +11134,7 @@ export namespace Raw {
       this.className = 'MessageActionPaymentSent';
       this.constructorId = 0x96163f56;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['recurringInit', 'recurringUsed', 'currency', 'totalAmount', 'invoiceSlug'];
+      this._slots = ['recurringInit', 'recurringUsed', 'currency', 'totalAmount', 'invoiceSlug'];
       this.recurringInit = params.recurringInit;
       this.recurringUsed = params.recurringUsed;
       this.currency = params.currency;
@@ -10948,7 +11206,7 @@ export namespace Raw {
       this.className = 'MessageActionPhoneCall';
       this.constructorId = 0x80e11a7f;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['video', 'callId', 'reason', 'duration'];
+      this._slots = ['video', 'callId', 'reason', 'duration'];
       this.video = params.video;
       this.callId = params.callId;
       this.reason = params.reason;
@@ -11007,7 +11265,7 @@ export namespace Raw {
       this.className = 'MessageActionScreenshotTaken';
       this.constructorId = 0x4792929b;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -11038,7 +11296,7 @@ export namespace Raw {
       this.className = 'MessageActionCustomAction';
       this.constructorId = 0xfae69f56;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['message'];
+      this._slots = ['message'];
       this.message = params.message;
     }
     /**
@@ -11082,7 +11340,7 @@ export namespace Raw {
       this.className = 'MessageActionBotAllowed';
       this.constructorId = 0xc516d679;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['attachMenu', 'fromRequest', 'domain', 'app'];
+      this._slots = ['attachMenu', 'fromRequest', 'domain', 'app'];
       this.attachMenu = params.attachMenu;
       this.fromRequest = params.fromRequest;
       this.domain = params.domain;
@@ -11145,7 +11403,7 @@ export namespace Raw {
       this.className = 'MessageActionSecureValuesSentMe';
       this.constructorId = 0x1b287353;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['values', 'credentials'];
+      this._slots = ['values', 'credentials'];
       this.values = params.values;
       this.credentials = params.credentials;
     }
@@ -11189,7 +11447,7 @@ export namespace Raw {
       this.className = 'MessageActionSecureValuesSent';
       this.constructorId = 0xd95c6154;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['types'];
+      this._slots = ['types'];
       this.types = params.types;
     }
     /**
@@ -11223,7 +11481,7 @@ export namespace Raw {
       this.className = 'MessageActionContactSignUp';
       this.constructorId = 0xf3f25f76;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -11256,7 +11514,7 @@ export namespace Raw {
       this.className = 'MessageActionGeoProximityReached';
       this.constructorId = 0x98e0d697;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['fromId', 'toId', 'distance'];
+      this._slots = ['fromId', 'toId', 'distance'];
       this.fromId = params.fromId;
       this.toId = params.toId;
       this.distance = params.distance;
@@ -11310,7 +11568,7 @@ export namespace Raw {
       this.className = 'MessageActionGroupCall';
       this.constructorId = 0x7a0d7f42;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['call', 'duration'];
+      this._slots = ['call', 'duration'];
       this.call = params.call;
       this.duration = params.duration;
     }
@@ -11358,7 +11616,7 @@ export namespace Raw {
       this.className = 'MessageActionInviteToGroupCall';
       this.constructorId = 0x502f92f7;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['call', 'users'];
+      this._slots = ['call', 'users'];
       this.call = params.call;
       this.users = params.users;
     }
@@ -11403,7 +11661,7 @@ export namespace Raw {
       this.className = 'MessageActionSetMessagesTTL';
       this.constructorId = 0x3c134d7b;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['period', 'autoSettingFrom'];
+      this._slots = ['period', 'autoSettingFrom'];
       this.period = params.period;
       this.autoSettingFrom = params.autoSettingFrom;
     }
@@ -11454,7 +11712,7 @@ export namespace Raw {
       this.className = 'MessageActionGroupCallScheduled';
       this.constructorId = 0xb3a07661;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['call', 'scheduleDate'];
+      this._slots = ['call', 'scheduleDate'];
       this.call = params.call;
       this.scheduleDate = params.scheduleDate;
     }
@@ -11498,7 +11756,7 @@ export namespace Raw {
       this.className = 'MessageActionSetChatTheme';
       this.constructorId = 0xaa786345;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['emoticon'];
+      this._slots = ['emoticon'];
       this.emoticon = params.emoticon;
     }
     /**
@@ -11532,7 +11790,7 @@ export namespace Raw {
       this.className = 'MessageActionChatJoinedByRequest';
       this.constructorId = 0xebbca3cb;
       this.subclassOfId = 0x8680d126;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -11567,7 +11825,7 @@ export namespace Raw {
       this.className = 'MessageActionWebViewDataSentMe';
       this.constructorId = 0x47dd8079;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['text', 'data'];
+      this._slots = ['text', 'data'];
       this.text = params.text;
       this.data = params.data;
     }
@@ -11611,7 +11869,7 @@ export namespace Raw {
       this.className = 'MessageActionWebViewDataSent';
       this.constructorId = 0xb4c38cb5;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -11657,7 +11915,7 @@ export namespace Raw {
       this.className = 'MessageActionGiftPremium';
       this.constructorId = 0xc83d6aec;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['currency', 'amount', 'months', 'cryptoCurrency', 'cryptoAmount'];
+      this._slots = ['currency', 'amount', 'months', 'cryptoCurrency', 'cryptoAmount'];
       this.currency = params.currency;
       this.amount = params.amount;
       this.months = params.months;
@@ -11728,7 +11986,7 @@ export namespace Raw {
       this.className = 'MessageActionTopicCreate';
       this.constructorId = 0xd999256;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['title', 'iconColor', 'iconEmojiId'];
+      this._slots = ['title', 'iconColor', 'iconEmojiId'];
       this.title = params.title;
       this.iconColor = params.iconColor;
       this.iconEmojiId = params.iconEmojiId;
@@ -11787,7 +12045,7 @@ export namespace Raw {
       this.className = 'MessageActionTopicEdit';
       this.constructorId = 0xc0944820;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['title', 'iconEmojiId', 'closed', 'hidden'];
+      this._slots = ['title', 'iconEmojiId', 'closed', 'hidden'];
       this.title = params.title;
       this.iconEmojiId = params.iconEmojiId;
       this.closed = params.closed;
@@ -11852,7 +12110,7 @@ export namespace Raw {
       this.className = 'MessageActionSuggestProfilePhoto';
       this.constructorId = 0x57de635e;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['photo'];
+      this._slots = ['photo'];
       this.photo = params.photo;
     }
     /**
@@ -11892,7 +12150,7 @@ export namespace Raw {
       this.className = 'MessageActionRequestedPeer';
       this.constructorId = 0xfe77345d;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['buttonId', 'peer'];
+      this._slots = ['buttonId', 'peer'];
       this.buttonId = params.buttonId;
       this.peer = params.peer;
     }
@@ -11933,7 +12191,7 @@ export namespace Raw {
       this.className = 'MessageActionSetChatWallPaper';
       this.constructorId = 0xbc44a927;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['wallpaper'];
+      this._slots = ['wallpaper'];
       this.wallpaper = params.wallpaper;
     }
     /**
@@ -11969,7 +12227,7 @@ export namespace Raw {
       this.className = 'MessageActionSetSameChatWallPaper';
       this.constructorId = 0xc0787d6d;
       this.subclassOfId = 0x8680d126;
-      this.slots = ['wallpaper'];
+      this._slots = ['wallpaper'];
       this.wallpaper = params.wallpaper;
     }
     /**
@@ -11996,6 +12254,109 @@ export namespace Raw {
       if (this.wallpaper !== undefined) {
         b.write(this.wallpaper.write() as unknown as Buffer);
       }
+      return b.buffer;
+    }
+  }
+  export class MessageActionGiftCode extends TLObject {
+    viaGiveaway?: boolean;
+    unclaimed?: boolean;
+    boostPeer?: Raw.TypePeer;
+    months!: int;
+    slug!: string;
+
+    constructor(params: {
+      viaGiveaway?: boolean;
+      unclaimed?: boolean;
+      boostPeer?: Raw.TypePeer;
+      months: int;
+      slug: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionGiftCode';
+      this.constructorId = 0xd2cfdb0e;
+      this.subclassOfId = 0x8680d126;
+      this._slots = ['viaGiveaway', 'unclaimed', 'boostPeer', 'months', 'slug'];
+      this.viaGiveaway = params.viaGiveaway;
+      this.unclaimed = params.unclaimed;
+      this.boostPeer = params.boostPeer;
+      this.months = params.months;
+      this.slug = params.slug;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MessageActionGiftCode> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let viaGiveaway = flags & (1 << 0) ? true : false;
+      let unclaimed = flags & (1 << 2) ? true : false;
+      let boostPeer = flags & (1 << 1) ? await TLObject.read(b) : undefined;
+      let months = await Primitive.Int.read(b);
+      let slug = await Primitive.String.read(b);
+      return new Raw.MessageActionGiftCode({
+        viaGiveaway: viaGiveaway,
+        unclaimed: unclaimed,
+        boostPeer: boostPeer,
+        months: months,
+        slug: slug,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.viaGiveaway ? 1 << 0 : 0;
+      flags |= this.unclaimed ? 1 << 2 : 0;
+      flags |= this.boostPeer !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.boostPeer !== undefined) {
+        b.write(this.boostPeer.write() as unknown as Buffer);
+      }
+      if (this.months !== undefined) {
+        b.write(Primitive.Int.write(this.months) as unknown as Buffer);
+      }
+      if (this.slug !== undefined) {
+        b.write(Primitive.String.write(this.slug) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class MessageActionGiveawayLaunch extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionGiveawayLaunch';
+      this.constructorId = 0x332ba9ed;
+      this.subclassOfId = 0x8680d126;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MessageActionGiveawayLaunch> {
+      // no flags
+
+      return new Raw.MessageActionGiveawayLaunch();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
       return b.buffer;
     }
   }
@@ -12036,7 +12397,7 @@ export namespace Raw {
       this.className = 'Dialog';
       this.constructorId = 0xd58a08c6;
       this.subclassOfId = 0x42cddd54;
-      this.slots = [
+      this._slots = [
         'pinned',
         'unreadMark',
         'peer',
@@ -12188,7 +12549,7 @@ export namespace Raw {
       this.className = 'DialogFolder';
       this.constructorId = 0x71bd134c;
       this.subclassOfId = 0x42cddd54;
-      this.slots = [
+      this._slots = [
         'pinned',
         'folder',
         'peer',
@@ -12280,7 +12641,7 @@ export namespace Raw {
       this.className = 'PhotoEmpty';
       this.constructorId = 0x2331b22d;
       this.subclassOfId = 0xd576ab1c;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -12332,7 +12693,7 @@ export namespace Raw {
       this.className = 'Photo';
       this.constructorId = 0xfb197a65;
       this.subclassOfId = 0xd576ab1c;
-      this.slots = [
+      this._slots = [
         'hasStickers',
         'id',
         'accessHash',
@@ -12425,7 +12786,7 @@ export namespace Raw {
       this.className = 'PhotoSizeEmpty';
       this.constructorId = 0xe17e23c;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type'];
+      this._slots = ['type'];
       this.type = params.type;
     }
     /**
@@ -12464,7 +12825,7 @@ export namespace Raw {
       this.className = 'PhotoSize';
       this.constructorId = 0x75c78e60;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'w', 'h', 'size'];
+      this._slots = ['type', 'w', 'h', 'size'];
       this.type = params.type;
       this.w = params.w;
       this.h = params.h;
@@ -12518,7 +12879,7 @@ export namespace Raw {
       this.className = 'PhotoCachedSize';
       this.constructorId = 0x21e1ad6;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'w', 'h', 'bytes'];
+      this._slots = ['type', 'w', 'h', 'bytes'];
       this.type = params.type;
       this.w = params.w;
       this.h = params.h;
@@ -12570,7 +12931,7 @@ export namespace Raw {
       this.className = 'PhotoStrippedSize';
       this.constructorId = 0xe0b0bc2e;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'bytes'];
+      this._slots = ['type', 'bytes'];
       this.type = params.type;
       this.bytes = params.bytes;
     }
@@ -12614,7 +12975,7 @@ export namespace Raw {
       this.className = 'PhotoSizeProgressive';
       this.constructorId = 0xfa3efb95;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'w', 'h', 'sizes'];
+      this._slots = ['type', 'w', 'h', 'sizes'];
       this.type = params.type;
       this.w = params.w;
       this.h = params.h;
@@ -12666,7 +13027,7 @@ export namespace Raw {
       this.className = 'PhotoPathSize';
       this.constructorId = 0xd8214d41;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'bytes'];
+      this._slots = ['type', 'bytes'];
       this.type = params.type;
       this.bytes = params.bytes;
     }
@@ -12705,7 +13066,7 @@ export namespace Raw {
       this.className = 'GeoPointEmpty';
       this.constructorId = 0x1117dd5f;
       this.subclassOfId = 0xd610e16d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -12739,7 +13100,7 @@ export namespace Raw {
       this.className = 'GeoPoint';
       this.constructorId = 0xb2a2f663;
       this.subclassOfId = 0xd610e16d;
-      this.slots = ['long', 'lat', 'accessHash', 'accuracyRadius'];
+      this._slots = ['long', 'lat', 'accessHash', 'accuracyRadius'];
       this.long = params.long;
       this.lat = params.lat;
       this.accessHash = params.accessHash;
@@ -12801,7 +13162,7 @@ export namespace Raw {
       this.className = 'InputNotifyPeer';
       this.constructorId = 0xb8bc5b0c;
       this.subclassOfId = 0x58981615;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -12835,7 +13196,7 @@ export namespace Raw {
       this.className = 'InputNotifyUsers';
       this.constructorId = 0x193b4417;
       this.subclassOfId = 0x58981615;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -12864,7 +13225,7 @@ export namespace Raw {
       this.className = 'InputNotifyChats';
       this.constructorId = 0x4a95e84e;
       this.subclassOfId = 0x58981615;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -12893,7 +13254,7 @@ export namespace Raw {
       this.className = 'InputNotifyBroadcasts';
       this.constructorId = 0xb1db7c7e;
       this.subclassOfId = 0x58981615;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -12925,7 +13286,7 @@ export namespace Raw {
       this.className = 'InputNotifyForumTopic';
       this.constructorId = 0x5c467992;
       this.subclassOfId = 0x58981615;
-      this.slots = ['peer', 'topMsgId'];
+      this._slots = ['peer', 'topMsgId'];
       this.peer = params.peer;
       this.topMsgId = params.topMsgId;
     }
@@ -12980,7 +13341,7 @@ export namespace Raw {
       this.className = 'InputPeerNotifySettings';
       this.constructorId = 0xcacb6ae2;
       this.subclassOfId = 0x90db0b0d;
-      this.slots = [
+      this._slots = [
         'showPreviews',
         'silent',
         'muteUntil',
@@ -13096,7 +13457,7 @@ export namespace Raw {
       this.className = 'PeerNotifySettings';
       this.constructorId = 0x99622c0c;
       this.subclassOfId = 0xcf20c074;
-      this.slots = [
+      this._slots = [
         'showPreviews',
         'silent',
         'muteUntil',
@@ -13246,7 +13607,7 @@ export namespace Raw {
       this.className = 'PeerSettings';
       this.constructorId = 0xa518110d;
       this.subclassOfId = 0xf6a79f84;
-      this.slots = [
+      this._slots = [
         'reportSpam',
         'addContact',
         'blockContact',
@@ -13371,7 +13732,7 @@ export namespace Raw {
       this.className = 'WallPaper';
       this.constructorId = 0xa437c3ed;
       this.subclassOfId = 0x96a2c98b;
-      this.slots = [
+      this._slots = [
         'id',
         'creator',
         'default',
@@ -13473,7 +13834,7 @@ export namespace Raw {
       this.className = 'WallPaperNoFile';
       this.constructorId = 0xe0804116;
       this.subclassOfId = 0x96a2c98b;
-      this.slots = ['id', 'default', 'dark', 'settings'];
+      this._slots = ['id', 'default', 'dark', 'settings'];
       this.id = params.id;
       this.default = params.default;
       this.dark = params.dark;
@@ -13524,7 +13885,7 @@ export namespace Raw {
       this.className = 'InputReportReasonSpam';
       this.constructorId = 0x58dbcab8;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13553,7 +13914,7 @@ export namespace Raw {
       this.className = 'InputReportReasonViolence';
       this.constructorId = 0x1e22c78d;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13582,7 +13943,7 @@ export namespace Raw {
       this.className = 'InputReportReasonPornography';
       this.constructorId = 0x2e59d922;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13611,7 +13972,7 @@ export namespace Raw {
       this.className = 'InputReportReasonChildAbuse';
       this.constructorId = 0xadf44ee3;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13640,7 +14001,7 @@ export namespace Raw {
       this.className = 'InputReportReasonOther';
       this.constructorId = 0xc1e4a2b1;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13669,7 +14030,7 @@ export namespace Raw {
       this.className = 'InputReportReasonCopyright';
       this.constructorId = 0x9b89f93a;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13698,7 +14059,7 @@ export namespace Raw {
       this.className = 'InputReportReasonGeoIrrelevant';
       this.constructorId = 0xdbd4feed;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13730,7 +14091,7 @@ export namespace Raw {
       this.className = 'InputReportReasonFake';
       this.constructorId = 0xf5ddd6e7;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13759,7 +14120,7 @@ export namespace Raw {
       this.className = 'InputReportReasonIllegalDrugs';
       this.constructorId = 0xa8eb2be;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13788,7 +14149,7 @@ export namespace Raw {
       this.className = 'InputReportReasonPersonalDetails';
       this.constructorId = 0x9ec7863d;
       this.subclassOfId = 0x8401bd27;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -13880,7 +14241,7 @@ export namespace Raw {
       this.className = 'UserFull';
       this.constructorId = 0xb9b12c6c;
       this.subclassOfId = 0x1f4661b9;
-      this.slots = [
+      this._slots = [
         'blocked',
         'phoneCallsAvailable',
         'phoneCallsPrivate',
@@ -14117,7 +14478,7 @@ export namespace Raw {
       this.className = 'Contact';
       this.constructorId = 0x145ade0b;
       this.subclassOfId = 0x83dfdfa4;
-      this.slots = ['userId', 'mutual'];
+      this._slots = ['userId', 'mutual'];
       this.userId = params.userId;
       this.mutual = params.mutual;
     }
@@ -14159,7 +14520,7 @@ export namespace Raw {
       this.className = 'ImportedContact';
       this.constructorId = 0xc13e3c50;
       this.subclassOfId = 0xb545bbda;
-      this.slots = ['userId', 'clientId'];
+      this._slots = ['userId', 'clientId'];
       this.userId = params.userId;
       this.clientId = params.clientId;
     }
@@ -14201,7 +14562,7 @@ export namespace Raw {
       this.className = 'ContactStatus';
       this.constructorId = 0x16d9703b;
       this.subclassOfId = 0x68c0d74c;
-      this.slots = ['userId', 'status'];
+      this._slots = ['userId', 'status'];
       this.userId = params.userId;
       this.status = params.status;
     }
@@ -14240,7 +14601,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterEmpty';
       this.constructorId = 0x57e2f66c;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14269,7 +14630,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterPhotos';
       this.constructorId = 0x9609a51c;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14298,7 +14659,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterVideo';
       this.constructorId = 0x9fc00e65;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14327,7 +14688,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterPhotoVideo';
       this.constructorId = 0x56e9f0e4;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14356,7 +14717,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterDocument';
       this.constructorId = 0x9eddf188;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14385,7 +14746,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterUrl';
       this.constructorId = 0x7ef0dd87;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14414,7 +14775,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterGif';
       this.constructorId = 0xffc86587;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14443,7 +14804,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterVoice';
       this.constructorId = 0x50f5c392;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14472,7 +14833,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterMusic';
       this.constructorId = 0x3751b49e;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14501,7 +14862,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterChatPhotos';
       this.constructorId = 0x3a20ecb8;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14532,7 +14893,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterPhoneCalls';
       this.constructorId = 0x80c99768;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = ['missed'];
+      this._slots = ['missed'];
       this.missed = params.missed;
     }
     /**
@@ -14569,7 +14930,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterRoundVoice';
       this.constructorId = 0x7a7c17a4;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14598,7 +14959,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterRoundVideo';
       this.constructorId = 0xb549da53;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14627,7 +14988,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterMyMentions';
       this.constructorId = 0xc1f8e69a;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14656,7 +15017,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterGeo';
       this.constructorId = 0xe7026d0d;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14685,7 +15046,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterContacts';
       this.constructorId = 0xe062db83;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14714,7 +15075,7 @@ export namespace Raw {
       this.className = 'InputMessagesFilterPinned';
       this.constructorId = 0x1bb00451;
       this.subclassOfId = 0x8a36ec14;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -14747,7 +15108,7 @@ export namespace Raw {
       this.className = 'UpdateNewMessage';
       this.constructorId = 0x1f2b0afd;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['message', 'pts', 'ptsCount'];
+      this._slots = ['message', 'pts', 'ptsCount'];
       this.message = params.message;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -14794,7 +15155,7 @@ export namespace Raw {
       this.className = 'UpdateMessageID';
       this.constructorId = 0x4e90bfd6;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['id', 'randomId'];
+      this._slots = ['id', 'randomId'];
       this.id = params.id;
       this.randomId = params.randomId;
     }
@@ -14837,7 +15198,7 @@ export namespace Raw {
       this.className = 'UpdateDeleteMessages';
       this.constructorId = 0xa20db0e5;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['messages', 'pts', 'ptsCount'];
+      this._slots = ['messages', 'pts', 'ptsCount'];
       this.messages = params.messages;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -14884,7 +15245,7 @@ export namespace Raw {
       this.className = 'UpdateUserTyping';
       this.constructorId = 0xc01e857f;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'action'];
+      this._slots = ['userId', 'action'];
       this.userId = params.userId;
       this.action = params.action;
     }
@@ -14927,7 +15288,7 @@ export namespace Raw {
       this.className = 'UpdateChatUserTyping';
       this.constructorId = 0x83487af0;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId', 'fromId', 'action'];
+      this._slots = ['chatId', 'fromId', 'action'];
       this.chatId = params.chatId;
       this.fromId = params.fromId;
       this.action = params.action;
@@ -14973,7 +15334,7 @@ export namespace Raw {
       this.className = 'UpdateChatParticipants';
       this.constructorId = 0x7761198;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['participants'];
+      this._slots = ['participants'];
       this.participants = params.participants;
     }
     /**
@@ -15010,7 +15371,7 @@ export namespace Raw {
       this.className = 'UpdateUserStatus';
       this.constructorId = 0xe5bdf8de;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'status'];
+      this._slots = ['userId', 'status'];
       this.userId = params.userId;
       this.status = params.status;
     }
@@ -15059,7 +15420,7 @@ export namespace Raw {
       this.className = 'UpdateUserName';
       this.constructorId = 0xa7848924;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'firstName', 'lastName', 'usernames'];
+      this._slots = ['userId', 'firstName', 'lastName', 'usernames'];
       this.userId = params.userId;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -15125,7 +15486,7 @@ export namespace Raw {
       this.className = 'UpdateNewAuthorization';
       this.constructorId = 0x8951abef;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['unconfirmed', 'hash', 'date', 'device', 'location'];
+      this._slots = ['unconfirmed', 'hash', 'date', 'device', 'location'];
       this.unconfirmed = params.unconfirmed;
       this.hash = params.hash;
       this.date = params.date;
@@ -15194,7 +15555,7 @@ export namespace Raw {
       this.className = 'UpdateNewEncryptedMessage';
       this.constructorId = 0x12bcbd9a;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['message', 'qts'];
+      this._slots = ['message', 'qts'];
       this.message = params.message;
       this.qts = params.qts;
     }
@@ -15235,7 +15596,7 @@ export namespace Raw {
       this.className = 'UpdateEncryptedChatTyping';
       this.constructorId = 0x1710f156;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId'];
+      this._slots = ['chatId'];
       this.chatId = params.chatId;
     }
     /**
@@ -15272,7 +15633,7 @@ export namespace Raw {
       this.className = 'UpdateEncryption';
       this.constructorId = 0xb4a2e88d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chat', 'date'];
+      this._slots = ['chat', 'date'];
       this.chat = params.chat;
       this.date = params.date;
     }
@@ -15315,7 +15676,7 @@ export namespace Raw {
       this.className = 'UpdateEncryptedMessagesRead';
       this.constructorId = 0x38fe25b7;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId', 'maxDate', 'date'];
+      this._slots = ['chatId', 'maxDate', 'date'];
       this.chatId = params.chatId;
       this.maxDate = params.maxDate;
       this.date = params.date;
@@ -15365,7 +15726,7 @@ export namespace Raw {
       this.className = 'UpdateChatParticipantAdd';
       this.constructorId = 0x3dda5451;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId', 'userId', 'inviterId', 'date', 'version'];
+      this._slots = ['chatId', 'userId', 'inviterId', 'date', 'version'];
       this.chatId = params.chatId;
       this.userId = params.userId;
       this.inviterId = params.inviterId;
@@ -15429,7 +15790,7 @@ export namespace Raw {
       this.className = 'UpdateChatParticipantDelete';
       this.constructorId = 0xe32f3d77;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId', 'userId', 'version'];
+      this._slots = ['chatId', 'userId', 'version'];
       this.chatId = params.chatId;
       this.userId = params.userId;
       this.version = params.version;
@@ -15479,7 +15840,7 @@ export namespace Raw {
       this.className = 'UpdateDcOptions';
       this.constructorId = 0x8e5e9873;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['dcOptions'];
+      this._slots = ['dcOptions'];
       this.dcOptions = params.dcOptions;
     }
     /**
@@ -15516,7 +15877,7 @@ export namespace Raw {
       this.className = 'UpdateNotifySettings';
       this.constructorId = 0xbec268ef;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'notifySettings'];
+      this._slots = ['peer', 'notifySettings'];
       this.peer = params.peer;
       this.notifySettings = params.notifySettings;
     }
@@ -15550,6 +15911,7 @@ export namespace Raw {
   }
   export class UpdateServiceNotification extends TLObject {
     popup?: boolean;
+    invertMedia?: boolean;
     inboxDate?: int;
     type!: string;
     message!: string;
@@ -15558,6 +15920,7 @@ export namespace Raw {
 
     constructor(params: {
       popup?: boolean;
+      invertMedia?: boolean;
       inboxDate?: int;
       type: string;
       message: string;
@@ -15569,8 +15932,9 @@ export namespace Raw {
       this.className = 'UpdateServiceNotification';
       this.constructorId = 0xebe46819;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['popup', 'inboxDate', 'type', 'message', 'media', 'entities'];
+      this._slots = ['popup', 'invertMedia', 'inboxDate', 'type', 'message', 'media', 'entities'];
       this.popup = params.popup;
+      this.invertMedia = params.invertMedia;
       this.inboxDate = params.inboxDate;
       this.type = params.type;
       this.message = params.message;
@@ -15587,6 +15951,7 @@ export namespace Raw {
       let flags = await Primitive.Int.read(b);
 
       let popup = flags & (1 << 0) ? true : false;
+      let invertMedia = flags & (1 << 2) ? true : false;
       let inboxDate = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
       let type = await Primitive.String.read(b);
       let message = await Primitive.String.read(b);
@@ -15594,6 +15959,7 @@ export namespace Raw {
       let entities = await TLObject.read(b);
       return new Raw.UpdateServiceNotification({
         popup: popup,
+        invertMedia: invertMedia,
         inboxDate: inboxDate,
         type: type,
         message: message,
@@ -15611,6 +15977,7 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.popup ? 1 << 0 : 0;
+      flags |= this.invertMedia ? 1 << 2 : 0;
       flags |= this.inboxDate !== undefined ? 1 << 1 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -15642,7 +16009,7 @@ export namespace Raw {
       this.className = 'UpdatePrivacy';
       this.constructorId = 0xee3b272a;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['key', 'rules'];
+      this._slots = ['key', 'rules'];
       this.key = params.key;
       this.rules = params.rules;
     }
@@ -15684,7 +16051,7 @@ export namespace Raw {
       this.className = 'UpdateUserPhone';
       this.constructorId = 0x5492a13;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'phone'];
+      this._slots = ['userId', 'phone'];
       this.userId = params.userId;
       this.phone = params.phone;
     }
@@ -15737,7 +16104,7 @@ export namespace Raw {
       this.className = 'UpdateReadHistoryInbox';
       this.constructorId = 0x9c974fdf;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['folderId', 'peer', 'maxId', 'stillUnreadCount', 'pts', 'ptsCount'];
+      this._slots = ['folderId', 'peer', 'maxId', 'stillUnreadCount', 'pts', 'ptsCount'];
       this.folderId = params.folderId;
       this.peer = params.peer;
       this.maxId = params.maxId;
@@ -15814,7 +16181,7 @@ export namespace Raw {
       this.className = 'UpdateReadHistoryOutbox';
       this.constructorId = 0x2f2f21bf;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'maxId', 'pts', 'ptsCount'];
+      this._slots = ['peer', 'maxId', 'pts', 'ptsCount'];
       this.peer = params.peer;
       this.maxId = params.maxId;
       this.pts = params.pts;
@@ -15872,7 +16239,7 @@ export namespace Raw {
       this.className = 'UpdateWebPage';
       this.constructorId = 0x7f891213;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['webpage', 'pts', 'ptsCount'];
+      this._slots = ['webpage', 'pts', 'ptsCount'];
       this.webpage = params.webpage;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -15921,7 +16288,7 @@ export namespace Raw {
       this.className = 'UpdateReadMessagesContents';
       this.constructorId = 0xf8227181;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['messages', 'pts', 'ptsCount', 'date'];
+      this._slots = ['messages', 'pts', 'ptsCount', 'date'];
       this.messages = params.messages;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -15984,7 +16351,7 @@ export namespace Raw {
       this.className = 'UpdateChannelTooLong';
       this.constructorId = 0x108d941f;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'pts'];
+      this._slots = ['channelId', 'pts'];
       this.channelId = params.channelId;
       this.pts = params.pts;
     }
@@ -16031,7 +16398,7 @@ export namespace Raw {
       this.className = 'UpdateChannel';
       this.constructorId = 0x635b4c09;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId'];
+      this._slots = ['channelId'];
       this.channelId = params.channelId;
     }
     /**
@@ -16069,7 +16436,7 @@ export namespace Raw {
       this.className = 'UpdateNewChannelMessage';
       this.constructorId = 0x62ba04d9;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['message', 'pts', 'ptsCount'];
+      this._slots = ['message', 'pts', 'ptsCount'];
       this.message = params.message;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -16125,7 +16492,7 @@ export namespace Raw {
       this.className = 'UpdateReadChannelInbox';
       this.constructorId = 0x922e6e10;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['folderId', 'channelId', 'maxId', 'stillUnreadCount', 'pts'];
+      this._slots = ['folderId', 'channelId', 'maxId', 'stillUnreadCount', 'pts'];
       this.folderId = params.folderId;
       this.channelId = params.channelId;
       this.maxId = params.maxId;
@@ -16196,7 +16563,7 @@ export namespace Raw {
       this.className = 'UpdateDeleteChannelMessages';
       this.constructorId = 0xc32d5b12;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'messages', 'pts', 'ptsCount'];
+      this._slots = ['channelId', 'messages', 'pts', 'ptsCount'];
       this.channelId = params.channelId;
       this.messages = params.messages;
       this.pts = params.pts;
@@ -16254,7 +16621,7 @@ export namespace Raw {
       this.className = 'UpdateChannelMessageViews';
       this.constructorId = 0xf226ac08;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'id', 'views'];
+      this._slots = ['channelId', 'id', 'views'];
       this.channelId = params.channelId;
       this.id = params.id;
       this.views = params.views;
@@ -16303,7 +16670,7 @@ export namespace Raw {
       this.className = 'UpdateChatParticipantAdmin';
       this.constructorId = 0xd7ca61a2;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId', 'userId', 'isAdmin', 'version'];
+      this._slots = ['chatId', 'userId', 'isAdmin', 'version'];
       this.chatId = params.chatId;
       this.userId = params.userId;
       this.isAdmin = params.isAdmin;
@@ -16359,7 +16726,7 @@ export namespace Raw {
       this.className = 'UpdateNewStickerSet';
       this.constructorId = 0x688a30aa;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['stickerset'];
+      this._slots = ['stickerset'];
       this.stickerset = params.stickerset;
     }
     /**
@@ -16397,7 +16764,7 @@ export namespace Raw {
       this.className = 'UpdateStickerSetsOrder';
       this.constructorId = 0xbb2d201;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['masks', 'emojis', 'order'];
+      this._slots = ['masks', 'emojis', 'order'];
       this.masks = params.masks;
       this.emojis = params.emojis;
       this.order = params.order;
@@ -16445,7 +16812,7 @@ export namespace Raw {
       this.className = 'UpdateStickerSets';
       this.constructorId = 0x31c24808;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['masks', 'emojis'];
+      this._slots = ['masks', 'emojis'];
       this.masks = params.masks;
       this.emojis = params.emojis;
     }
@@ -16485,7 +16852,7 @@ export namespace Raw {
       this.className = 'UpdateSavedGifs';
       this.constructorId = 0x9375341e;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -16528,7 +16895,7 @@ export namespace Raw {
       this.className = 'UpdateBotInlineQuery';
       this.constructorId = 0x496f379c;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['queryId', 'userId', 'query', 'geo', 'peerType', 'offset'];
+      this._slots = ['queryId', 'userId', 'query', 'geo', 'peerType', 'offset'];
       this.queryId = params.queryId;
       this.userId = params.userId;
       this.query = params.query;
@@ -16613,7 +16980,7 @@ export namespace Raw {
       this.className = 'UpdateBotInlineSend';
       this.constructorId = 0x12f12a07;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'query', 'geo', 'id', 'msgId'];
+      this._slots = ['userId', 'query', 'geo', 'id', 'msgId'];
       this.userId = params.userId;
       this.query = params.query;
       this.geo = params.geo;
@@ -16684,7 +17051,7 @@ export namespace Raw {
       this.className = 'UpdateEditChannelMessage';
       this.constructorId = 0x1b3f4df7;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['message', 'pts', 'ptsCount'];
+      this._slots = ['message', 'pts', 'ptsCount'];
       this.message = params.message;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -16744,7 +17111,7 @@ export namespace Raw {
       this.className = 'UpdateBotCallbackQuery';
       this.constructorId = 0xb9cfc48d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['queryId', 'userId', 'peer', 'msgId', 'chatInstance', 'data', 'gameShortName'];
+      this._slots = ['queryId', 'userId', 'peer', 'msgId', 'chatInstance', 'data', 'gameShortName'];
       this.queryId = params.queryId;
       this.userId = params.userId;
       this.peer = params.peer;
@@ -16827,7 +17194,7 @@ export namespace Raw {
       this.className = 'UpdateEditMessage';
       this.constructorId = 0xe40370a3;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['message', 'pts', 'ptsCount'];
+      this._slots = ['message', 'pts', 'ptsCount'];
       this.message = params.message;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -16885,7 +17252,7 @@ export namespace Raw {
       this.className = 'UpdateInlineBotCallbackQuery';
       this.constructorId = 0x691e9052;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['queryId', 'userId', 'msgId', 'chatInstance', 'data', 'gameShortName'];
+      this._slots = ['queryId', 'userId', 'msgId', 'chatInstance', 'data', 'gameShortName'];
       this.queryId = params.queryId;
       this.userId = params.userId;
       this.msgId = params.msgId;
@@ -16961,7 +17328,7 @@ export namespace Raw {
       this.className = 'UpdateReadChannelOutbox';
       this.constructorId = 0xb75f99a9;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'maxId'];
+      this._slots = ['channelId', 'maxId'];
       this.channelId = params.channelId;
       this.maxId = params.maxId;
     }
@@ -17004,7 +17371,7 @@ export namespace Raw {
       this.className = 'UpdateDraftMessage';
       this.constructorId = 0x1b49ec6d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'topMsgId', 'draft'];
+      this._slots = ['peer', 'topMsgId', 'draft'];
       this.peer = params.peer;
       this.topMsgId = params.topMsgId;
       this.draft = params.draft;
@@ -17054,7 +17421,7 @@ export namespace Raw {
       this.className = 'UpdateReadFeaturedStickers';
       this.constructorId = 0x571d2742;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -17083,7 +17450,7 @@ export namespace Raw {
       this.className = 'UpdateRecentStickers';
       this.constructorId = 0x9a422c20;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -17112,7 +17479,7 @@ export namespace Raw {
       this.className = 'UpdateConfig';
       this.constructorId = 0xa229dd06;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -17141,7 +17508,7 @@ export namespace Raw {
       this.className = 'UpdatePtsChanged';
       this.constructorId = 0x3354678f;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -17175,7 +17542,7 @@ export namespace Raw {
       this.className = 'UpdateChannelWebPage';
       this.constructorId = 0x2f2ba99f;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'webpage', 'pts', 'ptsCount'];
+      this._slots = ['channelId', 'webpage', 'pts', 'ptsCount'];
       this.channelId = params.channelId;
       this.webpage = params.webpage;
       this.pts = params.pts;
@@ -17233,7 +17600,7 @@ export namespace Raw {
       this.className = 'UpdateDialogPinned';
       this.constructorId = 0x6e6fe51c;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pinned', 'folderId', 'peer'];
+      this._slots = ['pinned', 'folderId', 'peer'];
       this.pinned = params.pinned;
       this.folderId = params.folderId;
       this.peer = params.peer;
@@ -17284,7 +17651,7 @@ export namespace Raw {
       this.className = 'UpdatePinnedDialogs';
       this.constructorId = 0xfa0f3ca2;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['folderId', 'order'];
+      this._slots = ['folderId', 'order'];
       this.folderId = params.folderId;
       this.order = params.order;
     }
@@ -17332,7 +17699,7 @@ export namespace Raw {
       this.className = 'UpdateBotWebhookJSON';
       this.constructorId = 0x8317c0c3;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['data'];
+      this._slots = ['data'];
       this.data = params.data;
     }
     /**
@@ -17370,7 +17737,7 @@ export namespace Raw {
       this.className = 'UpdateBotWebhookJSONQuery';
       this.constructorId = 0x9b9240a6;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['queryId', 'data', 'timeout'];
+      this._slots = ['queryId', 'data', 'timeout'];
       this.queryId = params.queryId;
       this.data = params.data;
       this.timeout = params.timeout;
@@ -17424,7 +17791,7 @@ export namespace Raw {
       this.className = 'UpdateBotShippingQuery';
       this.constructorId = 0xb5aefd7d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['queryId', 'userId', 'payload', 'shippingAddress'];
+      this._slots = ['queryId', 'userId', 'payload', 'shippingAddress'];
       this.queryId = params.queryId;
       this.userId = params.userId;
       this.payload = params.payload;
@@ -17494,7 +17861,7 @@ export namespace Raw {
       this.className = 'UpdateBotPrecheckoutQuery';
       this.constructorId = 0x8caa9a96;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [
+      this._slots = [
         'queryId',
         'userId',
         'payload',
@@ -17583,7 +17950,7 @@ export namespace Raw {
       this.className = 'UpdatePhoneCall';
       this.constructorId = 0xab0f6b1e;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['phoneCall'];
+      this._slots = ['phoneCall'];
       this.phoneCall = params.phoneCall;
     }
     /**
@@ -17619,7 +17986,7 @@ export namespace Raw {
       this.className = 'UpdateLangPackTooLong';
       this.constructorId = 0x46560264;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['langCode'];
+      this._slots = ['langCode'];
       this.langCode = params.langCode;
     }
     /**
@@ -17655,7 +18022,7 @@ export namespace Raw {
       this.className = 'UpdateLangPack';
       this.constructorId = 0x56022f4d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['difference'];
+      this._slots = ['difference'];
       this.difference = params.difference;
     }
     /**
@@ -17689,7 +18056,7 @@ export namespace Raw {
       this.className = 'UpdateFavedStickers';
       this.constructorId = 0xe511996d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -17722,7 +18089,7 @@ export namespace Raw {
       this.className = 'UpdateChannelReadMessagesContents';
       this.constructorId = 0xea29055d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'topMsgId', 'messages'];
+      this._slots = ['channelId', 'topMsgId', 'messages'];
       this.channelId = params.channelId;
       this.topMsgId = params.topMsgId;
       this.messages = params.messages;
@@ -17779,7 +18146,7 @@ export namespace Raw {
       this.className = 'UpdateContactsReset';
       this.constructorId = 0x7084a7be;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -17811,7 +18178,7 @@ export namespace Raw {
       this.className = 'UpdateChannelAvailableMessages';
       this.constructorId = 0xb23fc698;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'availableMinId'];
+      this._slots = ['channelId', 'availableMinId'];
       this.channelId = params.channelId;
       this.availableMinId = params.availableMinId;
     }
@@ -17859,7 +18226,7 @@ export namespace Raw {
       this.className = 'UpdateDialogUnreadMark';
       this.constructorId = 0xe16459c3;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['unread', 'peer'];
+      this._slots = ['unread', 'peer'];
       this.unread = params.unread;
       this.peer = params.peer;
     }
@@ -17905,7 +18272,7 @@ export namespace Raw {
       this.className = 'UpdateMessagePoll';
       this.constructorId = 0xaca1657b;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pollId', 'poll', 'results'];
+      this._slots = ['pollId', 'poll', 'results'];
       this.pollId = params.pollId;
       this.poll = params.poll;
       this.results = params.results;
@@ -17963,7 +18330,7 @@ export namespace Raw {
       this.className = 'UpdateChatDefaultBannedRights';
       this.constructorId = 0x54c01850;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'defaultBannedRights', 'version'];
+      this._slots = ['peer', 'defaultBannedRights', 'version'];
       this.peer = params.peer;
       this.defaultBannedRights = params.defaultBannedRights;
       this.version = params.version;
@@ -18015,7 +18382,7 @@ export namespace Raw {
       this.className = 'UpdateFolderPeers';
       this.constructorId = 0x19360dc0;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['folderPeers', 'pts', 'ptsCount'];
+      this._slots = ['folderPeers', 'pts', 'ptsCount'];
       this.folderPeers = params.folderPeers;
       this.pts = params.pts;
       this.ptsCount = params.ptsCount;
@@ -18062,7 +18429,7 @@ export namespace Raw {
       this.className = 'UpdatePeerSettings';
       this.constructorId = 0x6a7e7366;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'settings'];
+      this._slots = ['peer', 'settings'];
       this.peer = params.peer;
       this.settings = params.settings;
     }
@@ -18103,7 +18470,7 @@ export namespace Raw {
       this.className = 'UpdatePeerLocated';
       this.constructorId = 0xb4afcfb0;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peers'];
+      this._slots = ['peers'];
       this.peers = params.peers;
     }
     /**
@@ -18139,7 +18506,7 @@ export namespace Raw {
       this.className = 'UpdateNewScheduledMessage';
       this.constructorId = 0x39a51dfb;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['message'];
+      this._slots = ['message'];
       this.message = params.message;
     }
     /**
@@ -18176,7 +18543,7 @@ export namespace Raw {
       this.className = 'UpdateDeleteScheduledMessages';
       this.constructorId = 0x90866cee;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'messages'];
+      this._slots = ['peer', 'messages'];
       this.peer = params.peer;
       this.messages = params.messages;
     }
@@ -18217,7 +18584,7 @@ export namespace Raw {
       this.className = 'UpdateTheme';
       this.constructorId = 0x8216fba3;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['theme'];
+      this._slots = ['theme'];
       this.theme = params.theme;
     }
     /**
@@ -18254,7 +18621,7 @@ export namespace Raw {
       this.className = 'UpdateGeoLiveViewed';
       this.constructorId = 0x871fb939;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'msgId'];
+      this._slots = ['peer', 'msgId'];
       this.peer = params.peer;
       this.msgId = params.msgId;
     }
@@ -18293,7 +18660,7 @@ export namespace Raw {
       this.className = 'UpdateLoginToken';
       this.constructorId = 0x564fe691;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -18327,7 +18694,7 @@ export namespace Raw {
       this.className = 'UpdateMessagePollVote';
       this.constructorId = 0x24f40e77;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pollId', 'peer', 'options', 'qts'];
+      this._slots = ['pollId', 'peer', 'options', 'qts'];
       this.pollId = params.pollId;
       this.peer = params.peer;
       this.options = params.options;
@@ -18384,7 +18751,7 @@ export namespace Raw {
       this.className = 'UpdateDialogFilter';
       this.constructorId = 0x26ffde7d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['id', 'filter'];
+      this._slots = ['id', 'filter'];
       this.id = params.id;
       this.filter = params.filter;
     }
@@ -18431,7 +18798,7 @@ export namespace Raw {
       this.className = 'UpdateDialogFilterOrder';
       this.constructorId = 0xa5d72105;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['order'];
+      this._slots = ['order'];
       this.order = params.order;
     }
     /**
@@ -18465,7 +18832,7 @@ export namespace Raw {
       this.className = 'UpdateDialogFilters';
       this.constructorId = 0x3504914f;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -18497,7 +18864,7 @@ export namespace Raw {
       this.className = 'UpdatePhoneCallSignalingData';
       this.constructorId = 0x2661bf09;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['phoneCallId', 'data'];
+      this._slots = ['phoneCallId', 'data'];
       this.phoneCallId = params.phoneCallId;
       this.data = params.data;
     }
@@ -18540,7 +18907,7 @@ export namespace Raw {
       this.className = 'UpdateChannelMessageForwards';
       this.constructorId = 0xd29a27f4;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'id', 'forwards'];
+      this._slots = ['channelId', 'id', 'forwards'];
       this.channelId = params.channelId;
       this.id = params.id;
       this.forwards = params.forwards;
@@ -18600,7 +18967,7 @@ export namespace Raw {
       this.className = 'UpdateReadChannelDiscussionInbox';
       this.constructorId = 0xd6b19546;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'topMsgId', 'readMaxId', 'broadcastId', 'broadcastPost'];
+      this._slots = ['channelId', 'topMsgId', 'readMaxId', 'broadcastId', 'broadcastPost'];
       this.channelId = params.channelId;
       this.topMsgId = params.topMsgId;
       this.readMaxId = params.readMaxId;
@@ -18674,7 +19041,7 @@ export namespace Raw {
       this.className = 'UpdateReadChannelDiscussionOutbox';
       this.constructorId = 0x695c9e7c;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'topMsgId', 'readMaxId'];
+      this._slots = ['channelId', 'topMsgId', 'readMaxId'];
       this.channelId = params.channelId;
       this.topMsgId = params.topMsgId;
       this.readMaxId = params.readMaxId;
@@ -18733,7 +19100,7 @@ export namespace Raw {
       this.className = 'UpdatePeerBlocked';
       this.constructorId = 0xebe07752;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['blocked', 'blockedMyStoriesFrom', 'peerId'];
+      this._slots = ['blocked', 'blockedMyStoriesFrom', 'peerId'];
       this.blocked = params.blocked;
       this.blockedMyStoriesFrom = params.blockedMyStoriesFrom;
       this.peerId = params.peerId;
@@ -18792,7 +19159,7 @@ export namespace Raw {
       this.className = 'UpdateChannelUserTyping';
       this.constructorId = 0x8c88c923;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'topMsgId', 'fromId', 'action'];
+      this._slots = ['channelId', 'topMsgId', 'fromId', 'action'];
       this.channelId = params.channelId;
       this.topMsgId = params.topMsgId;
       this.fromId = params.fromId;
@@ -18864,7 +19231,7 @@ export namespace Raw {
       this.className = 'UpdatePinnedMessages';
       this.constructorId = 0xed85eab5;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pinned', 'peer', 'messages', 'pts', 'ptsCount'];
+      this._slots = ['pinned', 'peer', 'messages', 'pts', 'ptsCount'];
       this.pinned = params.pinned;
       this.peer = params.peer;
       this.messages = params.messages;
@@ -18939,7 +19306,7 @@ export namespace Raw {
       this.className = 'UpdatePinnedChannelMessages';
       this.constructorId = 0x5bb98608;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pinned', 'channelId', 'messages', 'pts', 'ptsCount'];
+      this._slots = ['pinned', 'channelId', 'messages', 'pts', 'ptsCount'];
       this.pinned = params.pinned;
       this.channelId = params.channelId;
       this.messages = params.messages;
@@ -19004,7 +19371,7 @@ export namespace Raw {
       this.className = 'UpdateChat';
       this.constructorId = 0xf89a6a4e;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId'];
+      this._slots = ['chatId'];
       this.chatId = params.chatId;
     }
     /**
@@ -19046,7 +19413,7 @@ export namespace Raw {
       this.className = 'UpdateGroupCallParticipants';
       this.constructorId = 0xf2ebdb4e;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['call', 'participants', 'version'];
+      this._slots = ['call', 'participants', 'version'];
       this.call = params.call;
       this.participants = params.participants;
       this.version = params.version;
@@ -19097,7 +19464,7 @@ export namespace Raw {
       this.className = 'UpdateGroupCall';
       this.constructorId = 0x14b24500;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['chatId', 'call'];
+      this._slots = ['chatId', 'call'];
       this.chatId = params.chatId;
       this.call = params.call;
     }
@@ -19139,7 +19506,7 @@ export namespace Raw {
       this.className = 'UpdatePeerHistoryTTL';
       this.constructorId = 0xbb9bb9a5;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'ttlPeriod'];
+      this._slots = ['peer', 'ttlPeriod'];
       this.peer = params.peer;
       this.ttlPeriod = params.ttlPeriod;
     }
@@ -19202,7 +19569,7 @@ export namespace Raw {
       this.className = 'UpdateChatParticipant';
       this.constructorId = 0xd087663a;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [
+      this._slots = [
         'chatId',
         'date',
         'actorId',
@@ -19317,7 +19684,7 @@ export namespace Raw {
       this.className = 'UpdateChannelParticipant';
       this.constructorId = 0x985d3abb;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [
+      this._slots = [
         'viaChatlist',
         'channelId',
         'date',
@@ -19422,7 +19789,7 @@ export namespace Raw {
       this.className = 'UpdateBotStopped';
       this.constructorId = 0xc4870a49;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'date', 'stopped', 'qts'];
+      this._slots = ['userId', 'date', 'stopped', 'qts'];
       this.userId = params.userId;
       this.date = params.date;
       this.stopped = params.stopped;
@@ -19474,7 +19841,7 @@ export namespace Raw {
       this.className = 'UpdateGroupCallConnection';
       this.constructorId = 0xb783982;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['presentation', 'params'];
+      this._slots = ['presentation', 'params'];
       this.presentation = params.presentation;
       this.params = params.params;
     }
@@ -19520,7 +19887,7 @@ export namespace Raw {
       this.className = 'UpdateBotCommands';
       this.constructorId = 0x4d712f2e;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'botId', 'commands'];
+      this._slots = ['peer', 'botId', 'commands'];
       this.peer = params.peer;
       this.botId = params.botId;
       this.commands = params.commands;
@@ -19572,7 +19939,7 @@ export namespace Raw {
       this.className = 'UpdatePendingJoinRequests';
       this.constructorId = 0x7063c3db;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'requestsPending', 'recentRequesters'];
+      this._slots = ['peer', 'requestsPending', 'recentRequesters'];
       this.peer = params.peer;
       this.requestsPending = params.requestsPending;
       this.recentRequesters = params.recentRequesters;
@@ -19634,7 +20001,7 @@ export namespace Raw {
       this.className = 'UpdateBotChatInviteRequester';
       this.constructorId = 0x11dfa986;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'date', 'userId', 'about', 'invite', 'qts'];
+      this._slots = ['peer', 'date', 'userId', 'about', 'invite', 'qts'];
       this.peer = params.peer;
       this.date = params.date;
       this.userId = params.userId;
@@ -19710,7 +20077,7 @@ export namespace Raw {
       this.className = 'UpdateMessageReactions';
       this.constructorId = 0x5e1b3cb8;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'msgId', 'topMsgId', 'reactions'];
+      this._slots = ['peer', 'msgId', 'topMsgId', 'reactions'];
       this.peer = params.peer;
       this.msgId = params.msgId;
       this.topMsgId = params.topMsgId;
@@ -19770,7 +20137,7 @@ export namespace Raw {
       this.className = 'UpdateAttachMenuBots';
       this.constructorId = 0x17b7a20b;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -19801,7 +20168,7 @@ export namespace Raw {
       this.className = 'UpdateWebViewResultSent';
       this.constructorId = 0x1592b79d;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['queryId'];
+      this._slots = ['queryId'];
       this.queryId = params.queryId;
     }
     /**
@@ -19838,7 +20205,7 @@ export namespace Raw {
       this.className = 'UpdateBotMenuButton';
       this.constructorId = 0x14b85813;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['botId', 'button'];
+      this._slots = ['botId', 'button'];
       this.botId = params.botId;
       this.button = params.button;
     }
@@ -19877,7 +20244,7 @@ export namespace Raw {
       this.className = 'UpdateSavedRingtones';
       this.constructorId = 0x74d8be99;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -19918,7 +20285,7 @@ export namespace Raw {
       this.className = 'UpdateTranscribedAudio';
       this.constructorId = 0x84cd5a;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pending', 'peer', 'msgId', 'transcriptionId', 'text'];
+      this._slots = ['pending', 'peer', 'msgId', 'transcriptionId', 'text'];
       this.pending = params.pending;
       this.peer = params.peer;
       this.msgId = params.msgId;
@@ -19981,7 +20348,7 @@ export namespace Raw {
       this.className = 'UpdateReadFeaturedEmojiStickers';
       this.constructorId = 0xfb4c496c;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -20016,7 +20383,7 @@ export namespace Raw {
       this.className = 'UpdateUserEmojiStatus';
       this.constructorId = 0x28373599;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId', 'emojiStatus'];
+      this._slots = ['userId', 'emojiStatus'];
       this.userId = params.userId;
       this.emojiStatus = params.emojiStatus;
     }
@@ -20055,7 +20422,7 @@ export namespace Raw {
       this.className = 'UpdateRecentEmojiStatuses';
       this.constructorId = 0x30f443db;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -20084,7 +20451,7 @@ export namespace Raw {
       this.className = 'UpdateRecentReactions';
       this.constructorId = 0x6f7863f4;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -20117,7 +20484,7 @@ export namespace Raw {
       this.className = 'UpdateMoveStickerSetToTop';
       this.constructorId = 0x86fccf85;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['masks', 'emojis', 'stickerset'];
+      this._slots = ['masks', 'emojis', 'stickerset'];
       this.masks = params.masks;
       this.emojis = params.emojis;
       this.stickerset = params.stickerset;
@@ -20174,7 +20541,7 @@ export namespace Raw {
       this.className = 'UpdateMessageExtendedMedia';
       this.constructorId = 0x5a73a98c;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'msgId', 'extendedMedia'];
+      this._slots = ['peer', 'msgId', 'extendedMedia'];
       this.peer = params.peer;
       this.msgId = params.msgId;
       this.extendedMedia = params.extendedMedia;
@@ -20226,7 +20593,7 @@ export namespace Raw {
       this.className = 'UpdateChannelPinnedTopic';
       this.constructorId = 0x192efbe3;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['pinned', 'channelId', 'topicId'];
+      this._slots = ['pinned', 'channelId', 'topicId'];
       this.pinned = params.pinned;
       this.channelId = params.channelId;
       this.topicId = params.topicId;
@@ -20280,7 +20647,7 @@ export namespace Raw {
       this.className = 'UpdateChannelPinnedTopics';
       this.constructorId = 0xfe198602;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['channelId', 'order'];
+      this._slots = ['channelId', 'order'];
       this.channelId = params.channelId;
       this.order = params.order;
     }
@@ -20327,7 +20694,7 @@ export namespace Raw {
       this.className = 'UpdateUser';
       this.constructorId = 0x20529438;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId'];
+      this._slots = ['userId'];
       this.userId = params.userId;
     }
     /**
@@ -20361,7 +20728,7 @@ export namespace Raw {
       this.className = 'UpdateAutoSaveSettings';
       this.constructorId = 0xec05b097;
       this.subclassOfId = 0x9f89304e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -20392,7 +20759,7 @@ export namespace Raw {
       this.className = 'UpdateGroupInvitePrivacyForbidden';
       this.constructorId = 0xccf08ad6;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['userId'];
+      this._slots = ['userId'];
       this.userId = params.userId;
     }
     /**
@@ -20432,7 +20799,7 @@ export namespace Raw {
       this.className = 'UpdateStory';
       this.constructorId = 0x75b3b798;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'story'];
+      this._slots = ['peer', 'story'];
       this.peer = params.peer;
       this.story = params.story;
     }
@@ -20474,7 +20841,7 @@ export namespace Raw {
       this.className = 'UpdateReadStories';
       this.constructorId = 0xf74e932b;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'maxId'];
+      this._slots = ['peer', 'maxId'];
       this.peer = params.peer;
       this.maxId = params.maxId;
     }
@@ -20516,7 +20883,7 @@ export namespace Raw {
       this.className = 'UpdateStoryID';
       this.constructorId = 0x1bf335b9;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['id', 'randomId'];
+      this._slots = ['id', 'randomId'];
       this.id = params.id;
       this.randomId = params.randomId;
     }
@@ -20557,7 +20924,7 @@ export namespace Raw {
       this.className = 'UpdateStoriesStealthMode';
       this.constructorId = 0x2c084dc1;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['stealthMode'];
+      this._slots = ['stealthMode'];
       this.stealthMode = params.stealthMode;
     }
     /**
@@ -20595,7 +20962,7 @@ export namespace Raw {
       this.className = 'UpdateSentStoryReaction';
       this.constructorId = 0x7d627683;
       this.subclassOfId = 0x9f89304e;
-      this.slots = ['peer', 'storyId', 'reaction'];
+      this._slots = ['peer', 'storyId', 'reaction'];
       this.peer = params.peer;
       this.storyId = params.storyId;
       this.reaction = params.reaction;
@@ -20639,7 +21006,7 @@ export namespace Raw {
       this.className = 'UpdatesTooLong';
       this.constructorId = 0xe317af7e;
       this.subclassOfId = 0x8af52aac;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -20700,7 +21067,7 @@ export namespace Raw {
       this.className = 'UpdateShortMessage';
       this.constructorId = 0x313bc7f8;
       this.subclassOfId = 0x8af52aac;
-      this.slots = [
+      this._slots = [
         'out',
         'mentioned',
         'mediaUnread',
@@ -20872,7 +21239,7 @@ export namespace Raw {
       this.className = 'UpdateShortChatMessage';
       this.constructorId = 0x4d6deea5;
       this.subclassOfId = 0x8af52aac;
-      this.slots = [
+      this._slots = [
         'out',
         'mentioned',
         'mediaUnread',
@@ -21020,7 +21387,7 @@ export namespace Raw {
       this.className = 'UpdateShort';
       this.constructorId = 0x78d4dec1;
       this.subclassOfId = 0x8af52aac;
-      this.slots = ['update', 'date'];
+      this._slots = ['update', 'date'];
       this.update = params.update;
       this.date = params.date;
     }
@@ -21073,7 +21440,7 @@ export namespace Raw {
       this.className = 'UpdatesCombined';
       this.constructorId = 0x725b04c3;
       this.subclassOfId = 0x8af52aac;
-      this.slots = ['updates', 'users', 'chats', 'date', 'seqStart', 'seq'];
+      this._slots = ['updates', 'users', 'chats', 'date', 'seqStart', 'seq'];
       this.updates = params.updates;
       this.users = params.users;
       this.chats = params.chats;
@@ -21151,7 +21518,7 @@ export namespace Raw {
       this.className = 'Updates';
       this.constructorId = 0x74ae4240;
       this.subclassOfId = 0x8af52aac;
-      this.slots = ['updates', 'users', 'chats', 'date', 'seq'];
+      this._slots = ['updates', 'users', 'chats', 'date', 'seq'];
       this.updates = params.updates;
       this.users = params.users;
       this.chats = params.chats;
@@ -21229,7 +21596,7 @@ export namespace Raw {
       this.className = 'UpdateShortSentMessage';
       this.constructorId = 0x9015e101;
       this.subclassOfId = 0x8af52aac;
-      this.slots = ['out', 'id', 'pts', 'ptsCount', 'date', 'media', 'entities', 'ttlPeriod'];
+      this._slots = ['out', 'id', 'pts', 'ptsCount', 'date', 'media', 'entities', 'ttlPeriod'];
       this.out = params.out;
       this.id = params.id;
       this.pts = params.pts;
@@ -21335,7 +21702,7 @@ export namespace Raw {
       this.className = 'DcOption';
       this.constructorId = 0x18b7a10d;
       this.subclassOfId = 0x9e43e123;
-      this.slots = [
+      this._slots = [
         'ipv6',
         'mediaOnly',
         'tcpoOnly',
@@ -21526,7 +21893,7 @@ export namespace Raw {
       this.className = 'Config';
       this.constructorId = 0xcc1a241e;
       this.subclassOfId = 0xd3262a4a;
-      this.slots = [
+      this._slots = [
         'defaultP2pContacts',
         'preloadFeaturedStickers',
         'revokePmInbox',
@@ -21896,7 +22263,7 @@ export namespace Raw {
       this.className = 'NearestDc';
       this.constructorId = 0x8e1a1775;
       this.subclassOfId = 0x3877045f;
-      this.slots = ['country', 'thisDc', 'nearestDc'];
+      this._slots = ['country', 'thisDc', 'nearestDc'];
       this.country = params.country;
       this.thisDc = params.thisDc;
       this.nearestDc = params.nearestDc;
@@ -21942,7 +22309,7 @@ export namespace Raw {
       this.className = 'EncryptedChatEmpty';
       this.constructorId = 0xab7ec0a0;
       this.subclassOfId = 0x6d28a37a;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -21988,7 +22355,7 @@ export namespace Raw {
       this.className = 'EncryptedChatWaiting';
       this.constructorId = 0x66b25953;
       this.subclassOfId = 0x6d28a37a;
-      this.slots = ['id', 'accessHash', 'date', 'adminId', 'participantId'];
+      this._slots = ['id', 'accessHash', 'date', 'adminId', 'participantId'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.date = params.date;
@@ -22064,7 +22431,7 @@ export namespace Raw {
       this.className = 'EncryptedChatRequested';
       this.constructorId = 0x48f1d94c;
       this.subclassOfId = 0x6d28a37a;
-      this.slots = ['folderId', 'id', 'accessHash', 'date', 'adminId', 'participantId', 'gA'];
+      this._slots = ['folderId', 'id', 'accessHash', 'date', 'adminId', 'participantId', 'gA'];
       this.folderId = params.folderId;
       this.id = params.id;
       this.accessHash = params.accessHash;
@@ -22158,7 +22525,7 @@ export namespace Raw {
       this.className = 'EncryptedChat';
       this.constructorId = 0x61f0d4c7;
       this.subclassOfId = 0x6d28a37a;
-      this.slots = [
+      this._slots = [
         'id',
         'accessHash',
         'date',
@@ -22241,7 +22608,7 @@ export namespace Raw {
       this.className = 'EncryptedChatDiscarded';
       this.constructorId = 0x1e1c7c45;
       this.subclassOfId = 0x6d28a37a;
-      this.slots = ['historyDeleted', 'id'];
+      this._slots = ['historyDeleted', 'id'];
       this.historyDeleted = params.historyDeleted;
       this.id = params.id;
     }
@@ -22286,7 +22653,7 @@ export namespace Raw {
       this.className = 'InputEncryptedChat';
       this.constructorId = 0xf141b5e1;
       this.subclassOfId = 0x6c7606c0;
-      this.slots = ['chatId', 'accessHash'];
+      this._slots = ['chatId', 'accessHash'];
       this.chatId = params.chatId;
       this.accessHash = params.accessHash;
     }
@@ -22325,7 +22692,7 @@ export namespace Raw {
       this.className = 'EncryptedFileEmpty';
       this.constructorId = 0xc21f497e;
       this.subclassOfId = 0x842a67c0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -22366,7 +22733,7 @@ export namespace Raw {
       this.className = 'EncryptedFile';
       this.constructorId = 0xa8008cd8;
       this.subclassOfId = 0x842a67c0;
-      this.slots = ['id', 'accessHash', 'size', 'dcId', 'keyFingerprint'];
+      this._slots = ['id', 'accessHash', 'size', 'dcId', 'keyFingerprint'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.size = params.size;
@@ -22426,7 +22793,7 @@ export namespace Raw {
       this.className = 'InputEncryptedFileEmpty';
       this.constructorId = 0x1837c364;
       this.subclassOfId = 0x8574c27a;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -22460,7 +22827,7 @@ export namespace Raw {
       this.className = 'InputEncryptedFileUploaded';
       this.constructorId = 0x64bd0306;
       this.subclassOfId = 0x8574c27a;
-      this.slots = ['id', 'parts', 'md5Checksum', 'keyFingerprint'];
+      this._slots = ['id', 'parts', 'md5Checksum', 'keyFingerprint'];
       this.id = params.id;
       this.parts = params.parts;
       this.md5Checksum = params.md5Checksum;
@@ -22517,7 +22884,7 @@ export namespace Raw {
       this.className = 'InputEncryptedFile';
       this.constructorId = 0x5a17b5e5;
       this.subclassOfId = 0x8574c27a;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -22560,7 +22927,7 @@ export namespace Raw {
       this.className = 'InputEncryptedFileBigUploaded';
       this.constructorId = 0x2dc173c8;
       this.subclassOfId = 0x8574c27a;
-      this.slots = ['id', 'parts', 'keyFingerprint'];
+      this._slots = ['id', 'parts', 'keyFingerprint'];
       this.id = params.id;
       this.parts = params.parts;
       this.keyFingerprint = params.keyFingerprint;
@@ -22620,7 +22987,7 @@ export namespace Raw {
       this.className = 'EncryptedMessage';
       this.constructorId = 0xed18c118;
       this.subclassOfId = 0x239f2e51;
-      this.slots = ['randomId', 'chatId', 'date', 'bytes', 'file'];
+      this._slots = ['randomId', 'chatId', 'date', 'bytes', 'file'];
       this.randomId = params.randomId;
       this.chatId = params.chatId;
       this.date = params.date;
@@ -22685,7 +23052,7 @@ export namespace Raw {
       this.className = 'EncryptedMessageService';
       this.constructorId = 0x23734b06;
       this.subclassOfId = 0x239f2e51;
-      this.slots = ['randomId', 'chatId', 'date', 'bytes'];
+      this._slots = ['randomId', 'chatId', 'date', 'bytes'];
       this.randomId = params.randomId;
       this.chatId = params.chatId;
       this.date = params.date;
@@ -22739,7 +23106,7 @@ export namespace Raw {
       this.className = 'InputDocumentEmpty';
       this.constructorId = 0x72f0eaae;
       this.subclassOfId = 0xf33fdb68;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -22772,7 +23139,7 @@ export namespace Raw {
       this.className = 'InputDocument';
       this.constructorId = 0x1abfb575;
       this.subclassOfId = 0xf33fdb68;
-      this.slots = ['id', 'accessHash', 'fileReference'];
+      this._slots = ['id', 'accessHash', 'fileReference'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.fileReference = params.fileReference;
@@ -22822,7 +23189,7 @@ export namespace Raw {
       this.className = 'DocumentEmpty';
       this.constructorId = 0x36f8c871;
       this.subclassOfId = 0x211fe820;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -22878,7 +23245,7 @@ export namespace Raw {
       this.className = 'Document';
       this.constructorId = 0x8fd4c4d8;
       this.subclassOfId = 0x211fe820;
-      this.slots = [
+      this._slots = [
         'id',
         'accessHash',
         'fileReference',
@@ -22988,7 +23355,7 @@ export namespace Raw {
       this.className = 'NotifyPeer';
       this.constructorId = 0x9fd40bd8;
       this.subclassOfId = 0xdfe8602e;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -23022,7 +23389,7 @@ export namespace Raw {
       this.className = 'NotifyUsers';
       this.constructorId = 0xb4c83b4c;
       this.subclassOfId = 0xdfe8602e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23051,7 +23418,7 @@ export namespace Raw {
       this.className = 'NotifyChats';
       this.constructorId = 0xc007cec3;
       this.subclassOfId = 0xdfe8602e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23080,7 +23447,7 @@ export namespace Raw {
       this.className = 'NotifyBroadcasts';
       this.constructorId = 0xd612e8ef;
       this.subclassOfId = 0xdfe8602e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23112,7 +23479,7 @@ export namespace Raw {
       this.className = 'NotifyForumTopic';
       this.constructorId = 0x226e6308;
       this.subclassOfId = 0xdfe8602e;
-      this.slots = ['peer', 'topMsgId'];
+      this._slots = ['peer', 'topMsgId'];
       this.peer = params.peer;
       this.topMsgId = params.topMsgId;
     }
@@ -23151,7 +23518,7 @@ export namespace Raw {
       this.className = 'SendMessageTypingAction';
       this.constructorId = 0x16bf744e;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23180,7 +23547,7 @@ export namespace Raw {
       this.className = 'SendMessageCancelAction';
       this.constructorId = 0xfd5ec8f5;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23209,7 +23576,7 @@ export namespace Raw {
       this.className = 'SendMessageRecordVideoAction';
       this.constructorId = 0xa187d66f;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23240,7 +23607,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadVideoAction';
       this.constructorId = 0xe9763aec;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['progress'];
+      this._slots = ['progress'];
       this.progress = params.progress;
     }
     /**
@@ -23274,7 +23641,7 @@ export namespace Raw {
       this.className = 'SendMessageRecordAudioAction';
       this.constructorId = 0xd52f73f7;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23305,7 +23672,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadAudioAction';
       this.constructorId = 0xf351d7ab;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['progress'];
+      this._slots = ['progress'];
       this.progress = params.progress;
     }
     /**
@@ -23341,7 +23708,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadPhotoAction';
       this.constructorId = 0xd1d34a26;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['progress'];
+      this._slots = ['progress'];
       this.progress = params.progress;
     }
     /**
@@ -23377,7 +23744,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadDocumentAction';
       this.constructorId = 0xaa0cd9e4;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['progress'];
+      this._slots = ['progress'];
       this.progress = params.progress;
     }
     /**
@@ -23414,7 +23781,7 @@ export namespace Raw {
       this.className = 'SendMessageGeoLocationAction';
       this.constructorId = 0x176f8ba1;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23443,7 +23810,7 @@ export namespace Raw {
       this.className = 'SendMessageChooseContactAction';
       this.constructorId = 0x628cbc6f;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23475,7 +23842,7 @@ export namespace Raw {
       this.className = 'SendMessageGamePlayAction';
       this.constructorId = 0xdd6a8f48;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23504,7 +23871,7 @@ export namespace Raw {
       this.className = 'SendMessageRecordRoundAction';
       this.constructorId = 0x88f27fbc;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23535,7 +23902,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadRoundAction';
       this.constructorId = 0x243e1c66;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['progress'];
+      this._slots = ['progress'];
       this.progress = params.progress;
     }
     /**
@@ -23569,7 +23936,7 @@ export namespace Raw {
       this.className = 'SpeakingInGroupCallAction';
       this.constructorId = 0xd92c2285;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23600,7 +23967,7 @@ export namespace Raw {
       this.className = 'SendMessageHistoryImportAction';
       this.constructorId = 0xdbda9246;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['progress'];
+      this._slots = ['progress'];
       this.progress = params.progress;
     }
     /**
@@ -23637,7 +24004,7 @@ export namespace Raw {
       this.className = 'SendMessageChooseStickerAction';
       this.constructorId = 0xb05ac6b1;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23673,7 +24040,7 @@ export namespace Raw {
       this.className = 'SendMessageEmojiInteraction';
       this.constructorId = 0x25972bcb;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['emoticon', 'msgId', 'interaction'];
+      this._slots = ['emoticon', 'msgId', 'interaction'];
       this.emoticon = params.emoticon;
       this.msgId = params.msgId;
       this.interaction = params.interaction;
@@ -23723,7 +24090,7 @@ export namespace Raw {
       this.className = 'SendMessageEmojiInteractionSeen';
       this.constructorId = 0xb665902e;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = ['emoticon'];
+      this._slots = ['emoticon'];
       this.emoticon = params.emoticon;
     }
     /**
@@ -23760,7 +24127,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyStatusTimestamp';
       this.constructorId = 0x4f96cb18;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23792,7 +24159,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyChatInvite';
       this.constructorId = 0xbdfb0426;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23821,7 +24188,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyPhoneCall';
       this.constructorId = 0xfabadc5f;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23850,7 +24217,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyPhoneP2P';
       this.constructorId = 0xdb9e70d2;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23879,7 +24246,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyForwards';
       this.constructorId = 0xa4dd4c08;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23908,7 +24275,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyProfilePhoto';
       this.constructorId = 0x5719bacc;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23937,7 +24304,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyPhoneNumber';
       this.constructorId = 0x352dafa;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23966,7 +24333,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyAddedByPhone';
       this.constructorId = 0xd1219bdd;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -23995,7 +24362,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyVoiceMessages';
       this.constructorId = 0xaee69d68;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24024,7 +24391,7 @@ export namespace Raw {
       this.className = 'InputPrivacyKeyAbout';
       this.constructorId = 0x3823cc40;
       this.subclassOfId = 0x53627f8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24053,7 +24420,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyStatusTimestamp';
       this.constructorId = 0xbc2eab30;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24082,7 +24449,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyChatInvite';
       this.constructorId = 0x500e6dfa;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24111,7 +24478,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyPhoneCall';
       this.constructorId = 0x3d662b7b;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24140,7 +24507,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyPhoneP2P';
       this.constructorId = 0x39491cc8;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24169,7 +24536,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyForwards';
       this.constructorId = 0x69ec56a3;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24198,7 +24565,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyProfilePhoto';
       this.constructorId = 0x96151fed;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24227,7 +24594,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyPhoneNumber';
       this.constructorId = 0xd19ae46d;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24256,7 +24623,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyAddedByPhone';
       this.constructorId = 0x42ffd42b;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24285,7 +24652,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyVoiceMessages';
       this.constructorId = 0x697f414;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24314,7 +24681,7 @@ export namespace Raw {
       this.className = 'PrivacyKeyAbout';
       this.constructorId = 0xa486b761;
       this.subclassOfId = 0x824651c3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24343,7 +24710,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueAllowContacts';
       this.constructorId = 0xd09e07b;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24375,7 +24742,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueAllowAll';
       this.constructorId = 0x184b35ce;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24406,7 +24773,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueAllowUsers';
       this.constructorId = 0x131cc67f;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = ['users'];
+      this._slots = ['users'];
       this.users = params.users;
     }
     /**
@@ -24440,7 +24807,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueDisallowContacts';
       this.constructorId = 0xba52007;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24472,7 +24839,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueDisallowAll';
       this.constructorId = 0xd66b66c9;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24503,7 +24870,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueDisallowUsers';
       this.constructorId = 0x90110467;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = ['users'];
+      this._slots = ['users'];
       this.users = params.users;
     }
     /**
@@ -24542,7 +24909,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueAllowChatParticipants';
       this.constructorId = 0x840649cf;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = ['chats'];
+      this._slots = ['chats'];
       this.chats = params.chats;
     }
     /**
@@ -24581,7 +24948,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueDisallowChatParticipants';
       this.constructorId = 0xe94f0f86;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = ['chats'];
+      this._slots = ['chats'];
       this.chats = params.chats;
     }
     /**
@@ -24618,7 +24985,7 @@ export namespace Raw {
       this.className = 'InputPrivacyValueAllowCloseFriends';
       this.constructorId = 0x2f453e49;
       this.subclassOfId = 0x5a3b6b22;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24650,7 +25017,7 @@ export namespace Raw {
       this.className = 'PrivacyValueAllowContacts';
       this.constructorId = 0xfffe1bac;
       this.subclassOfId = 0xebb7f270;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24679,7 +25046,7 @@ export namespace Raw {
       this.className = 'PrivacyValueAllowAll';
       this.constructorId = 0x65427b82;
       this.subclassOfId = 0xebb7f270;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24710,7 +25077,7 @@ export namespace Raw {
       this.className = 'PrivacyValueAllowUsers';
       this.constructorId = 0xb8905fb2;
       this.subclassOfId = 0xebb7f270;
-      this.slots = ['users'];
+      this._slots = ['users'];
       this.users = params.users;
     }
     /**
@@ -24744,7 +25111,7 @@ export namespace Raw {
       this.className = 'PrivacyValueDisallowContacts';
       this.constructorId = 0xf888fa1a;
       this.subclassOfId = 0xebb7f270;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24773,7 +25140,7 @@ export namespace Raw {
       this.className = 'PrivacyValueDisallowAll';
       this.constructorId = 0x8b73e763;
       this.subclassOfId = 0xebb7f270;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24804,7 +25171,7 @@ export namespace Raw {
       this.className = 'PrivacyValueDisallowUsers';
       this.constructorId = 0xe4621141;
       this.subclassOfId = 0xebb7f270;
-      this.slots = ['users'];
+      this._slots = ['users'];
       this.users = params.users;
     }
     /**
@@ -24840,7 +25207,7 @@ export namespace Raw {
       this.className = 'PrivacyValueAllowChatParticipants';
       this.constructorId = 0x6b134e8e;
       this.subclassOfId = 0xebb7f270;
-      this.slots = ['chats'];
+      this._slots = ['chats'];
       this.chats = params.chats;
     }
     /**
@@ -24879,7 +25246,7 @@ export namespace Raw {
       this.className = 'PrivacyValueDisallowChatParticipants';
       this.constructorId = 0x41c87565;
       this.subclassOfId = 0xebb7f270;
-      this.slots = ['chats'];
+      this._slots = ['chats'];
       this.chats = params.chats;
     }
     /**
@@ -24916,7 +25283,7 @@ export namespace Raw {
       this.className = 'PrivacyValueAllowCloseFriends';
       this.constructorId = 0xf7e8d89b;
       this.subclassOfId = 0xebb7f270;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -24947,7 +25314,7 @@ export namespace Raw {
       this.className = 'AccountDaysTTL';
       this.constructorId = 0xb8d0afdf;
       this.subclassOfId = 0xbaa39d88;
-      this.slots = ['days'];
+      this._slots = ['days'];
       this.days = params.days;
     }
     /**
@@ -24984,7 +25351,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeImageSize';
       this.constructorId = 0x6c37c15c;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['w', 'h'];
+      this._slots = ['w', 'h'];
       this.w = params.w;
       this.h = params.h;
     }
@@ -25023,7 +25390,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeAnimated';
       this.constructorId = 0x11b58939;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -25062,7 +25429,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeSticker';
       this.constructorId = 0x6319d612;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['mask', 'alt', 'stickerset', 'maskCoords'];
+      this._slots = ['mask', 'alt', 'stickerset', 'maskCoords'];
       this.mask = params.mask;
       this.alt = params.alt;
       this.stickerset = params.stickerset;
@@ -25136,7 +25503,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeVideo';
       this.constructorId = 0xd38ff1c2;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = [
+      this._slots = [
         'roundMessage',
         'supportsStreaming',
         'nosound',
@@ -25228,7 +25595,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeAudio';
       this.constructorId = 0x9852f9c6;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['voice', 'duration', 'title', 'performer', 'waveform'];
+      this._slots = ['voice', 'duration', 'title', 'performer', 'waveform'];
       this.voice = params.voice;
       this.duration = params.duration;
       this.title = params.title;
@@ -25296,7 +25663,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeFilename';
       this.constructorId = 0x15590068;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['fileName'];
+      this._slots = ['fileName'];
       this.fileName = params.fileName;
     }
     /**
@@ -25330,7 +25697,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeHasStickers';
       this.constructorId = 0x9801d2f7;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -25369,7 +25736,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeCustomEmoji';
       this.constructorId = 0xfd149899;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['free', 'textColor', 'alt', 'stickerset'];
+      this._slots = ['free', 'textColor', 'alt', 'stickerset'];
       this.free = params.free;
       this.textColor = params.textColor;
       this.alt = params.alt;
@@ -25427,7 +25794,7 @@ export namespace Raw {
       this.className = 'StickerPack';
       this.constructorId = 0x12b299d4;
       this.subclassOfId = 0x9fefa4d4;
-      this.slots = ['emoticon', 'documents'];
+      this._slots = ['emoticon', 'documents'];
       this.emoticon = params.emoticon;
       this.documents = params.documents;
     }
@@ -25461,15 +25828,17 @@ export namespace Raw {
   }
   export class WebPageEmpty extends TLObject {
     id!: long;
+    url?: string;
 
-    constructor(params: { id: long }) {
+    constructor(params: { id: long; url?: string }) {
       super();
       this.classType = 'types';
       this.className = 'WebPageEmpty';
-      this.constructorId = 0xeb1477e8;
+      this.constructorId = 0x211a1788;
       this.subclassOfId = 0x55a97481;
-      this.slots = ['id'];
+      this._slots = ['id', 'url'];
       this.id = params.id;
+      this.url = params.url;
     }
     /**
      * Generate the TLObject from buffer.
@@ -25478,8 +25847,11 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.WebPageEmpty> {
       // no flags
 
+      let flags = await Primitive.Int.read(b);
+
       let id = await Primitive.Long.read(b);
-      return new Raw.WebPageEmpty({ id: id });
+      let url = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+      return new Raw.WebPageEmpty({ id: id, url: url });
     }
     /**
      * Generate buffer from TLObject.
@@ -25489,24 +25861,33 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      let flags = 0;
+      flags |= this.url !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       if (this.id !== undefined) {
         b.write(Primitive.Long.write(this.id) as unknown as Buffer);
+      }
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
       }
       return b.buffer;
     }
   }
   export class WebPagePending extends TLObject {
     id!: long;
+    url?: string;
     date!: int;
 
-    constructor(params: { id: long; date: int }) {
+    constructor(params: { id: long; url?: string; date: int }) {
       super();
       this.classType = 'types';
       this.className = 'WebPagePending';
-      this.constructorId = 0xc586da1c;
+      this.constructorId = 0xb0d13e47;
       this.subclassOfId = 0x55a97481;
-      this.slots = ['id', 'date'];
+      this._slots = ['id', 'url', 'date'];
       this.id = params.id;
+      this.url = params.url;
       this.date = params.date;
     }
     /**
@@ -25516,9 +25897,12 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.WebPagePending> {
       // no flags
 
+      let flags = await Primitive.Int.read(b);
+
       let id = await Primitive.Long.read(b);
+      let url = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
       let date = await Primitive.Int.read(b);
-      return new Raw.WebPagePending({ id: id, date: date });
+      return new Raw.WebPagePending({ id: id, url: url, date: date });
     }
     /**
      * Generate buffer from TLObject.
@@ -25528,8 +25912,15 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      let flags = 0;
+      flags |= this.url !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       if (this.id !== undefined) {
         b.write(Primitive.Long.write(this.id) as unknown as Buffer);
+      }
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
       }
       if (this.date !== undefined) {
         b.write(Primitive.Int.write(this.date) as unknown as Buffer);
@@ -25538,6 +25929,7 @@ export namespace Raw {
     }
   }
   export class WebPage extends TLObject {
+    hasLargeMedia?: boolean;
     id!: long;
     url!: string;
     displayUrl!: string;
@@ -25558,6 +25950,7 @@ export namespace Raw {
     attributes?: Vector<Raw.TypeWebPageAttribute>;
 
     constructor(params: {
+      hasLargeMedia?: boolean;
       id: long;
       url: string;
       displayUrl: string;
@@ -25582,7 +25975,8 @@ export namespace Raw {
       this.className = 'WebPage';
       this.constructorId = 0xe89c45b2;
       this.subclassOfId = 0x55a97481;
-      this.slots = [
+      this._slots = [
+        'hasLargeMedia',
         'id',
         'url',
         'displayUrl',
@@ -25602,6 +25996,7 @@ export namespace Raw {
         'cachedPage',
         'attributes',
       ];
+      this.hasLargeMedia = params.hasLargeMedia;
       this.id = params.id;
       this.url = params.url;
       this.displayUrl = params.displayUrl;
@@ -25630,6 +26025,7 @@ export namespace Raw {
 
       let flags = await Primitive.Int.read(b);
 
+      let hasLargeMedia = flags & (1 << 13) ? true : false;
       let id = await Primitive.Long.read(b);
       let url = await Primitive.String.read(b);
       let displayUrl = await Primitive.String.read(b);
@@ -25649,6 +26045,7 @@ export namespace Raw {
       let cachedPage = flags & (1 << 10) ? await TLObject.read(b) : undefined;
       let attributes = flags & (1 << 12) ? await TLObject.read(b) : [];
       return new Raw.WebPage({
+        hasLargeMedia: hasLargeMedia,
         id: id,
         url: url,
         displayUrl: displayUrl,
@@ -25678,6 +26075,7 @@ export namespace Raw {
       // no flags
 
       let flags = 0;
+      flags |= this.hasLargeMedia ? 1 << 13 : 0;
       flags |= this.type !== undefined ? 1 << 0 : 0;
       flags |= this.siteName !== undefined ? 1 << 1 : 0;
       flags |= this.title !== undefined ? 1 << 2 : 0;
@@ -25760,7 +26158,7 @@ export namespace Raw {
       this.className = 'WebPageNotModified';
       this.constructorId = 0x7311ca11;
       this.subclassOfId = 0x55a97481;
-      this.slots = ['cachedPageViews'];
+      this._slots = ['cachedPageViews'];
       this.cachedPageViews = params.cachedPageViews;
     }
     /**
@@ -25838,7 +26236,7 @@ export namespace Raw {
       this.className = 'Authorization';
       this.constructorId = 0xad01d61d;
       this.subclassOfId = 0xc913c01a;
-      this.slots = [
+      this._slots = [
         'current',
         'officialApp',
         'passwordPending',
@@ -25991,7 +26389,7 @@ export namespace Raw {
       this.className = 'ReceivedNotifyMessage';
       this.constructorId = 0xa384b779;
       this.subclassOfId = 0xa962381e;
-      this.slots = ['id', 'flags'];
+      this._slots = ['id', 'flags'];
       this.id = params.id;
       this.flags = params.flags;
     }
@@ -26056,7 +26454,7 @@ export namespace Raw {
       this.className = 'ChatInviteExported';
       this.constructorId = 0xab4a819;
       this.subclassOfId = 0xb4748a58;
-      this.slots = [
+      this._slots = [
         'revoked',
         'permanent',
         'requestNeeded',
@@ -26176,7 +26574,7 @@ export namespace Raw {
       this.className = 'ChatInvitePublicJoinRequests';
       this.constructorId = 0xed107ab7;
       this.subclassOfId = 0xb4748a58;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26207,7 +26605,7 @@ export namespace Raw {
       this.className = 'ChatInviteAlready';
       this.constructorId = 0x5a686d7c;
       this.subclassOfId = 0x4561736;
-      this.slots = ['chat'];
+      this._slots = ['chat'];
       this.chat = params.chat;
     }
     /**
@@ -26248,6 +26646,7 @@ export namespace Raw {
     photo!: Raw.TypePhoto;
     participantsCount!: int;
     participants?: Vector<Raw.TypeUser>;
+    color!: int;
 
     constructor(params: {
       channel?: boolean;
@@ -26263,13 +26662,14 @@ export namespace Raw {
       photo: Raw.TypePhoto;
       participantsCount: int;
       participants?: Vector<Raw.TypeUser>;
+      color: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'ChatInvite';
-      this.constructorId = 0x300c44c1;
+      this.constructorId = 0xcde0ec40;
       this.subclassOfId = 0x4561736;
-      this.slots = [
+      this._slots = [
         'channel',
         'broadcast',
         'public',
@@ -26283,6 +26683,7 @@ export namespace Raw {
         'photo',
         'participantsCount',
         'participants',
+        'color',
       ];
       this.channel = params.channel;
       this.broadcast = params.broadcast;
@@ -26297,6 +26698,7 @@ export namespace Raw {
       this.photo = params.photo;
       this.participantsCount = params.participantsCount;
       this.participants = params.participants;
+      this.color = params.color;
     }
     /**
      * Generate the TLObject from buffer.
@@ -26320,6 +26722,7 @@ export namespace Raw {
       let photo = await TLObject.read(b);
       let participantsCount = await Primitive.Int.read(b);
       let participants = flags & (1 << 4) ? await TLObject.read(b) : [];
+      let color = await Primitive.Int.read(b);
       return new Raw.ChatInvite({
         channel: channel,
         broadcast: broadcast,
@@ -26334,6 +26737,7 @@ export namespace Raw {
         photo: photo,
         participantsCount: participantsCount,
         participants: participants,
+        color: color,
       });
     }
     /**
@@ -26372,6 +26776,9 @@ export namespace Raw {
       if (this.participants) {
         b.write(Primitive.Vector.write(this.participants) as unknown as Buffer);
       }
+      if (this.color !== undefined) {
+        b.write(Primitive.Int.write(this.color) as unknown as Buffer);
+      }
       return b.buffer;
     }
   }
@@ -26385,7 +26792,7 @@ export namespace Raw {
       this.className = 'ChatInvitePeek';
       this.constructorId = 0x61695cb0;
       this.subclassOfId = 0x4561736;
-      this.slots = ['chat', 'expires'];
+      this._slots = ['chat', 'expires'];
       this.chat = params.chat;
       this.expires = params.expires;
     }
@@ -26424,7 +26831,7 @@ export namespace Raw {
       this.className = 'InputStickerSetEmpty';
       this.constructorId = 0xffb62b95;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26456,7 +26863,7 @@ export namespace Raw {
       this.className = 'InputStickerSetID';
       this.constructorId = 0x9de7a269;
       this.subclassOfId = 0x3da389aa;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -26497,7 +26904,7 @@ export namespace Raw {
       this.className = 'InputStickerSetShortName';
       this.constructorId = 0x861cc8a0;
       this.subclassOfId = 0x3da389aa;
-      this.slots = ['shortName'];
+      this._slots = ['shortName'];
       this.shortName = params.shortName;
     }
     /**
@@ -26531,7 +26938,7 @@ export namespace Raw {
       this.className = 'InputStickerSetAnimatedEmoji';
       this.constructorId = 0x28703c8;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26562,7 +26969,7 @@ export namespace Raw {
       this.className = 'InputStickerSetDice';
       this.constructorId = 0xe67f520e;
       this.subclassOfId = 0x3da389aa;
-      this.slots = ['emoticon'];
+      this._slots = ['emoticon'];
       this.emoticon = params.emoticon;
     }
     /**
@@ -26596,7 +27003,7 @@ export namespace Raw {
       this.className = 'InputStickerSetAnimatedEmojiAnimations';
       this.constructorId = 0xcde3739;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26628,7 +27035,7 @@ export namespace Raw {
       this.className = 'InputStickerSetPremiumGifts';
       this.constructorId = 0xc88b3b02;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26657,7 +27064,7 @@ export namespace Raw {
       this.className = 'InputStickerSetEmojiGenericAnimations';
       this.constructorId = 0x4c4d4ce;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26689,7 +27096,7 @@ export namespace Raw {
       this.className = 'InputStickerSetEmojiDefaultStatuses';
       this.constructorId = 0x29d0f5ee;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26721,7 +27128,7 @@ export namespace Raw {
       this.className = 'InputStickerSetEmojiDefaultTopicIcons';
       this.constructorId = 0x44c1f8e9;
       this.subclassOfId = 0x3da389aa;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -26753,6 +27160,7 @@ export namespace Raw {
     animated?: boolean;
     videos?: boolean;
     emojis?: boolean;
+    textColor?: boolean;
     installedDate?: int;
     id!: long;
     accessHash!: long;
@@ -26772,6 +27180,7 @@ export namespace Raw {
       animated?: boolean;
       videos?: boolean;
       emojis?: boolean;
+      textColor?: boolean;
       installedDate?: int;
       id: long;
       accessHash: long;
@@ -26789,13 +27198,14 @@ export namespace Raw {
       this.className = 'StickerSet';
       this.constructorId = 0x2dd14edc;
       this.subclassOfId = 0xbad3ff91;
-      this.slots = [
+      this._slots = [
         'archived',
         'official',
         'masks',
         'animated',
         'videos',
         'emojis',
+        'textColor',
         'installedDate',
         'id',
         'accessHash',
@@ -26814,6 +27224,7 @@ export namespace Raw {
       this.animated = params.animated;
       this.videos = params.videos;
       this.emojis = params.emojis;
+      this.textColor = params.textColor;
       this.installedDate = params.installedDate;
       this.id = params.id;
       this.accessHash = params.accessHash;
@@ -26841,6 +27252,7 @@ export namespace Raw {
       let animated = flags & (1 << 5) ? true : false;
       let videos = flags & (1 << 6) ? true : false;
       let emojis = flags & (1 << 7) ? true : false;
+      let textColor = flags & (1 << 9) ? true : false;
       let installedDate = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
       let id = await Primitive.Long.read(b);
       let accessHash = await Primitive.Long.read(b);
@@ -26859,6 +27271,7 @@ export namespace Raw {
         animated: animated,
         videos: videos,
         emojis: emojis,
+        textColor: textColor,
         installedDate: installedDate,
         id: id,
         accessHash: accessHash,
@@ -26887,6 +27300,7 @@ export namespace Raw {
       flags |= this.animated ? 1 << 5 : 0;
       flags |= this.videos ? 1 << 6 : 0;
       flags |= this.emojis ? 1 << 7 : 0;
+      flags |= this.textColor ? 1 << 9 : 0;
       flags |= this.installedDate !== undefined ? 1 << 0 : 0;
       flags |= this.thumbs ? 1 << 4 : 0;
       flags |= this.thumbDcId !== undefined ? 1 << 4 : 0;
@@ -26940,7 +27354,7 @@ export namespace Raw {
       this.className = 'BotCommand';
       this.constructorId = 0xc27ac8c7;
       this.subclassOfId = 0xe1e62c2;
-      this.slots = ['command', 'description'];
+      this._slots = ['command', 'description'];
       this.command = params.command;
       this.description = params.description;
     }
@@ -26993,7 +27407,7 @@ export namespace Raw {
       this.className = 'BotInfo';
       this.constructorId = 0x8f300b57;
       this.subclassOfId = 0xf1f701db;
-      this.slots = [
+      this._slots = [
         'userId',
         'description',
         'descriptionPhoto',
@@ -27079,7 +27493,7 @@ export namespace Raw {
       this.className = 'KeyboardButton';
       this.constructorId = 0xa2fa4880;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -27116,7 +27530,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonUrl';
       this.constructorId = 0x258aff05;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'url'];
+      this._slots = ['text', 'url'];
       this.text = params.text;
       this.url = params.url;
     }
@@ -27159,7 +27573,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonCallback';
       this.constructorId = 0x35bbdb6b;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['requiresPassword', 'text', 'data'];
+      this._slots = ['requiresPassword', 'text', 'data'];
       this.requiresPassword = params.requiresPassword;
       this.text = params.text;
       this.data = params.data;
@@ -27212,7 +27626,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonRequestPhone';
       this.constructorId = 0xb16a6c29;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -27248,7 +27662,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonRequestGeoLocation';
       this.constructorId = 0xfc796b3f;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -27295,7 +27709,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonSwitchInline';
       this.constructorId = 0x93b9fbb5;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['samePeer', 'text', 'query', 'peerTypes'];
+      this._slots = ['samePeer', 'text', 'query', 'peerTypes'];
       this.samePeer = params.samePeer;
       this.text = params.text;
       this.query = params.query;
@@ -27355,7 +27769,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonGame';
       this.constructorId = 0x50f41ccf;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -27391,7 +27805,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonBuy';
       this.constructorId = 0xafd93fbb;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -27430,7 +27844,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonUrlAuth';
       this.constructorId = 0x10b78d29;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'fwdText', 'url', 'buttonId'];
+      this._slots = ['text', 'fwdText', 'url', 'buttonId'];
       this.text = params.text;
       this.fwdText = params.fwdText;
       this.url = params.url;
@@ -27502,7 +27916,7 @@ export namespace Raw {
       this.className = 'InputKeyboardButtonUrlAuth';
       this.constructorId = 0xd02e7fd4;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['requestWriteAccess', 'text', 'fwdText', 'url', 'bot'];
+      this._slots = ['requestWriteAccess', 'text', 'fwdText', 'url', 'bot'];
       this.requestWriteAccess = params.requestWriteAccess;
       this.text = params.text;
       this.fwdText = params.fwdText;
@@ -27569,7 +27983,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonRequestPoll';
       this.constructorId = 0xbbc7515d;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['quiz', 'text'];
+      this._slots = ['quiz', 'text'];
       this.quiz = params.quiz;
       this.text = params.text;
     }
@@ -27617,7 +28031,7 @@ export namespace Raw {
       this.className = 'InputKeyboardButtonUserProfile';
       this.constructorId = 0xe988037b;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'userId'];
+      this._slots = ['text', 'userId'];
       this.text = params.text;
       this.userId = params.userId;
     }
@@ -27662,7 +28076,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonUserProfile';
       this.constructorId = 0x308660c1;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'userId'];
+      this._slots = ['text', 'userId'];
       this.text = params.text;
       this.userId = params.userId;
     }
@@ -27704,7 +28118,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonWebView';
       this.constructorId = 0x13767230;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'url'];
+      this._slots = ['text', 'url'];
       this.text = params.text;
       this.url = params.url;
     }
@@ -27746,7 +28160,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonSimpleWebView';
       this.constructorId = 0xa0c0505c;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'url'];
+      this._slots = ['text', 'url'];
       this.text = params.text;
       this.url = params.url;
     }
@@ -27789,7 +28203,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonRequestPeer';
       this.constructorId = 0xd0b468c;
       this.subclassOfId = 0xbad74a3;
-      this.slots = ['text', 'buttonId', 'peerType'];
+      this._slots = ['text', 'buttonId', 'peerType'];
       this.text = params.text;
       this.buttonId = params.buttonId;
       this.peerType = params.peerType;
@@ -27839,7 +28253,7 @@ export namespace Raw {
       this.className = 'KeyboardButtonRow';
       this.constructorId = 0x77608b83;
       this.subclassOfId = 0x847730ae;
-      this.slots = ['buttons'];
+      this._slots = ['buttons'];
       this.buttons = params.buttons;
     }
     /**
@@ -27875,7 +28289,7 @@ export namespace Raw {
       this.className = 'ReplyKeyboardHide';
       this.constructorId = 0xa03e5b85;
       this.subclassOfId = 0xe2e10ef2;
-      this.slots = ['selective'];
+      this._slots = ['selective'];
       this.selective = params.selective;
     }
     /**
@@ -27916,7 +28330,7 @@ export namespace Raw {
       this.className = 'ReplyKeyboardForceReply';
       this.constructorId = 0x86b40b08;
       this.subclassOfId = 0xe2e10ef2;
-      this.slots = ['singleUse', 'selective', 'placeholder'];
+      this._slots = ['singleUse', 'selective', 'placeholder'];
       this.singleUse = params.singleUse;
       this.selective = params.selective;
       this.placeholder = params.placeholder;
@@ -27980,7 +28394,7 @@ export namespace Raw {
       this.className = 'ReplyKeyboardMarkup';
       this.constructorId = 0x85dd99d1;
       this.subclassOfId = 0xe2e10ef2;
-      this.slots = ['resize', 'singleUse', 'selective', 'persistent', 'rows', 'placeholder'];
+      this._slots = ['resize', 'singleUse', 'selective', 'persistent', 'rows', 'placeholder'];
       this.resize = params.resize;
       this.singleUse = params.singleUse;
       this.selective = params.selective;
@@ -28046,7 +28460,7 @@ export namespace Raw {
       this.className = 'ReplyInlineMarkup';
       this.constructorId = 0x48a30254;
       this.subclassOfId = 0xe2e10ef2;
-      this.slots = ['rows'];
+      this._slots = ['rows'];
       this.rows = params.rows;
     }
     /**
@@ -28083,7 +28497,7 @@ export namespace Raw {
       this.className = 'MessageEntityUnknown';
       this.constructorId = 0xbb92ba95;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28125,7 +28539,7 @@ export namespace Raw {
       this.className = 'MessageEntityMention';
       this.constructorId = 0xfa04579d;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28167,7 +28581,7 @@ export namespace Raw {
       this.className = 'MessageEntityHashtag';
       this.constructorId = 0x6f635b0d;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28209,7 +28623,7 @@ export namespace Raw {
       this.className = 'MessageEntityBotCommand';
       this.constructorId = 0x6cef8ac7;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28251,7 +28665,7 @@ export namespace Raw {
       this.className = 'MessageEntityUrl';
       this.constructorId = 0x6ed02538;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28293,7 +28707,7 @@ export namespace Raw {
       this.className = 'MessageEntityEmail';
       this.constructorId = 0x64e475c2;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28335,7 +28749,7 @@ export namespace Raw {
       this.className = 'MessageEntityBold';
       this.constructorId = 0xbd610bc9;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28377,7 +28791,7 @@ export namespace Raw {
       this.className = 'MessageEntityItalic';
       this.constructorId = 0x826f8b60;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28419,7 +28833,7 @@ export namespace Raw {
       this.className = 'MessageEntityCode';
       this.constructorId = 0x28a20571;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28462,7 +28876,7 @@ export namespace Raw {
       this.className = 'MessageEntityPre';
       this.constructorId = 0x73924be0;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length', 'language'];
+      this._slots = ['offset', 'length', 'language'];
       this.offset = params.offset;
       this.length = params.length;
       this.language = params.language;
@@ -28510,7 +28924,7 @@ export namespace Raw {
       this.className = 'MessageEntityTextUrl';
       this.constructorId = 0x76a6d327;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length', 'url'];
+      this._slots = ['offset', 'length', 'url'];
       this.offset = params.offset;
       this.length = params.length;
       this.url = params.url;
@@ -28558,7 +28972,7 @@ export namespace Raw {
       this.className = 'MessageEntityMentionName';
       this.constructorId = 0xdc7b1140;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length', 'userId'];
+      this._slots = ['offset', 'length', 'userId'];
       this.offset = params.offset;
       this.length = params.length;
       this.userId = params.userId;
@@ -28606,7 +29020,7 @@ export namespace Raw {
       this.className = 'InputMessageEntityMentionName';
       this.constructorId = 0x208e68c9;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length', 'userId'];
+      this._slots = ['offset', 'length', 'userId'];
       this.offset = params.offset;
       this.length = params.length;
       this.userId = params.userId;
@@ -28657,7 +29071,7 @@ export namespace Raw {
       this.className = 'MessageEntityPhone';
       this.constructorId = 0x9b69e34b;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28699,7 +29113,7 @@ export namespace Raw {
       this.className = 'MessageEntityCashtag';
       this.constructorId = 0x4c4e743f;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28741,7 +29155,7 @@ export namespace Raw {
       this.className = 'MessageEntityUnderline';
       this.constructorId = 0x9c4e7e8b;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28783,7 +29197,7 @@ export namespace Raw {
       this.className = 'MessageEntityStrike';
       this.constructorId = 0xbf0693d4;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28815,48 +29229,6 @@ export namespace Raw {
       return b.buffer;
     }
   }
-  export class MessageEntityBlockquote extends TLObject {
-    offset!: int;
-    length!: int;
-
-    constructor(params: { offset: int; length: int }) {
-      super();
-      this.classType = 'types';
-      this.className = 'MessageEntityBlockquote';
-      this.constructorId = 0x20df5d0;
-      this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
-      this.offset = params.offset;
-      this.length = params.length;
-    }
-    /**
-     * Generate the TLObject from buffer.
-     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-     */
-    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MessageEntityBlockquote> {
-      // no flags
-
-      let offset = await Primitive.Int.read(b);
-      let length = await Primitive.Int.read(b);
-      return new Raw.MessageEntityBlockquote({ offset: offset, length: length });
-    }
-    /**
-     * Generate buffer from TLObject.
-     */
-    write(): Buffer {
-      let b: BytesIO = new BytesIO();
-      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-      // no flags
-
-      if (this.offset !== undefined) {
-        b.write(Primitive.Int.write(this.offset) as unknown as Buffer);
-      }
-      if (this.length !== undefined) {
-        b.write(Primitive.Int.write(this.length) as unknown as Buffer);
-      }
-      return b.buffer;
-    }
-  }
   export class MessageEntityBankCard extends TLObject {
     offset!: int;
     length!: int;
@@ -28867,7 +29239,7 @@ export namespace Raw {
       this.className = 'MessageEntityBankCard';
       this.constructorId = 0x761e6af4;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28909,7 +29281,7 @@ export namespace Raw {
       this.className = 'MessageEntitySpoiler';
       this.constructorId = 0x32ca960f;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length'];
+      this._slots = ['offset', 'length'];
       this.offset = params.offset;
       this.length = params.length;
     }
@@ -28952,7 +29324,7 @@ export namespace Raw {
       this.className = 'MessageEntityCustomEmoji';
       this.constructorId = 0xc8cf05f8;
       this.subclassOfId = 0xcf6419dc;
-      this.slots = ['offset', 'length', 'documentId'];
+      this._slots = ['offset', 'length', 'documentId'];
       this.offset = params.offset;
       this.length = params.length;
       this.documentId = params.documentId;
@@ -28993,6 +29365,48 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class MessageEntityBlockquote extends TLObject {
+    offset!: int;
+    length!: int;
+
+    constructor(params: { offset: int; length: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageEntityBlockquote';
+      this.constructorId = 0x20df5d0;
+      this.subclassOfId = 0xcf6419dc;
+      this._slots = ['offset', 'length'];
+      this.offset = params.offset;
+      this.length = params.length;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MessageEntityBlockquote> {
+      // no flags
+
+      let offset = await Primitive.Int.read(b);
+      let length = await Primitive.Int.read(b);
+      return new Raw.MessageEntityBlockquote({ offset: offset, length: length });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.offset !== undefined) {
+        b.write(Primitive.Int.write(this.offset) as unknown as Buffer);
+      }
+      if (this.length !== undefined) {
+        b.write(Primitive.Int.write(this.length) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class InputChannelEmpty extends TLObject {
     constructor() {
       super();
@@ -29000,7 +29414,7 @@ export namespace Raw {
       this.className = 'InputChannelEmpty';
       this.constructorId = 0xee8c1e86;
       this.subclassOfId = 0x40f202fd;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -29032,7 +29446,7 @@ export namespace Raw {
       this.className = 'InputChannel';
       this.constructorId = 0xf35aec28;
       this.subclassOfId = 0x40f202fd;
-      this.slots = ['channelId', 'accessHash'];
+      this._slots = ['channelId', 'accessHash'];
       this.channelId = params.channelId;
       this.accessHash = params.accessHash;
     }
@@ -29075,7 +29489,7 @@ export namespace Raw {
       this.className = 'InputChannelFromMessage';
       this.constructorId = 0x5b934f9d;
       this.subclassOfId = 0x40f202fd;
-      this.slots = ['peer', 'msgId', 'channelId'];
+      this._slots = ['peer', 'msgId', 'channelId'];
       this.peer = params.peer;
       this.msgId = params.msgId;
       this.channelId = params.channelId;
@@ -29122,7 +29536,7 @@ export namespace Raw {
       this.className = 'MessageRange';
       this.constructorId = 0xae30253;
       this.subclassOfId = 0xbec74577;
-      this.slots = ['minId', 'maxId'];
+      this._slots = ['minId', 'maxId'];
       this.minId = params.minId;
       this.maxId = params.maxId;
     }
@@ -29161,7 +29575,7 @@ export namespace Raw {
       this.className = 'ChannelMessagesFilterEmpty';
       this.constructorId = 0x94d42ee7;
       this.subclassOfId = 0x13336a56;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -29193,7 +29607,7 @@ export namespace Raw {
       this.className = 'ChannelMessagesFilter';
       this.constructorId = 0xcd77d957;
       this.subclassOfId = 0x13336a56;
-      this.slots = ['excludeNewMessages', 'ranges'];
+      this._slots = ['excludeNewMessages', 'ranges'];
       this.excludeNewMessages = params.excludeNewMessages;
       this.ranges = params.ranges;
     }
@@ -29241,7 +29655,7 @@ export namespace Raw {
       this.className = 'ChannelParticipant';
       this.constructorId = 0xc00c07c0;
       this.subclassOfId = 0xd9c7fc18;
-      this.slots = ['userId', 'date'];
+      this._slots = ['userId', 'date'];
       this.userId = params.userId;
       this.date = params.date;
     }
@@ -29285,7 +29699,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantSelf';
       this.constructorId = 0x35a8bfa7;
       this.subclassOfId = 0xd9c7fc18;
-      this.slots = ['viaRequest', 'userId', 'inviterId', 'date'];
+      this._slots = ['viaRequest', 'userId', 'inviterId', 'date'];
       this.viaRequest = params.viaRequest;
       this.userId = params.userId;
       this.inviterId = params.inviterId;
@@ -29346,7 +29760,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantCreator';
       this.constructorId = 0x2fe601d3;
       this.subclassOfId = 0xd9c7fc18;
-      this.slots = ['userId', 'adminRights', 'rank'];
+      this._slots = ['userId', 'adminRights', 'rank'];
       this.userId = params.userId;
       this.adminRights = params.adminRights;
       this.rank = params.rank;
@@ -29418,7 +29832,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantAdmin';
       this.constructorId = 0x34c3bb53;
       this.subclassOfId = 0xd9c7fc18;
-      this.slots = [
+      this._slots = [
         'canEdit',
         'self',
         'userId',
@@ -29520,7 +29934,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantBanned';
       this.constructorId = 0x6df8014e;
       this.subclassOfId = 0xd9c7fc18;
-      this.slots = ['left', 'peer', 'kickedBy', 'date', 'bannedRights'];
+      this._slots = ['left', 'peer', 'kickedBy', 'date', 'bannedRights'];
       this.left = params.left;
       this.peer = params.peer;
       this.kickedBy = params.kickedBy;
@@ -29585,7 +29999,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantLeft';
       this.constructorId = 0x1b03f006;
       this.subclassOfId = 0xd9c7fc18;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -29619,7 +30033,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsRecent';
       this.constructorId = 0xde3f3c79;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -29648,7 +30062,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsAdmins';
       this.constructorId = 0xb4608969;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -29679,7 +30093,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsKicked';
       this.constructorId = 0xa3b54985;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = ['q'];
+      this._slots = ['q'];
       this.q = params.q;
     }
     /**
@@ -29713,7 +30127,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsBots';
       this.constructorId = 0xb0d1865b;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -29744,7 +30158,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsBanned';
       this.constructorId = 0x1427a5e1;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = ['q'];
+      this._slots = ['q'];
       this.q = params.q;
     }
     /**
@@ -29780,7 +30194,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsSearch';
       this.constructorId = 0x656ac4b;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = ['q'];
+      this._slots = ['q'];
       this.q = params.q;
     }
     /**
@@ -29816,7 +30230,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsContacts';
       this.constructorId = 0xbb6ae88d;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = ['q'];
+      this._slots = ['q'];
       this.q = params.q;
     }
     /**
@@ -29853,7 +30267,7 @@ export namespace Raw {
       this.className = 'ChannelParticipantsMentions';
       this.constructorId = 0xe04b5ceb;
       this.subclassOfId = 0xbf4e2753;
-      this.slots = ['q', 'topMsgId'];
+      this._slots = ['q', 'topMsgId'];
       this.q = params.q;
       this.topMsgId = params.topMsgId;
     }
@@ -29893,11 +30307,13 @@ export namespace Raw {
     }
   }
   export class InputBotInlineMessageMediaAuto extends TLObject {
+    invertMedia?: boolean;
     message!: string;
     entities?: Vector<Raw.TypeMessageEntity>;
     replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
+      invertMedia?: boolean;
       message: string;
       entities?: Vector<Raw.TypeMessageEntity>;
       replyMarkup?: Raw.TypeReplyMarkup;
@@ -29907,7 +30323,8 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageMediaAuto';
       this.constructorId = 0x3380c786;
       this.subclassOfId = 0x53fb4010;
-      this.slots = ['message', 'entities', 'replyMarkup'];
+      this._slots = ['invertMedia', 'message', 'entities', 'replyMarkup'];
+      this.invertMedia = params.invertMedia;
       this.message = params.message;
       this.entities = params.entities;
       this.replyMarkup = params.replyMarkup;
@@ -29924,10 +30341,12 @@ export namespace Raw {
 
       let flags = await Primitive.Int.read(b);
 
+      let invertMedia = flags & (1 << 3) ? true : false;
       let message = await Primitive.String.read(b);
       let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
       let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
       return new Raw.InputBotInlineMessageMediaAuto({
+        invertMedia: invertMedia,
         message: message,
         entities: entities,
         replyMarkup: replyMarkup,
@@ -29942,6 +30361,7 @@ export namespace Raw {
       // no flags
 
       let flags = 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
       flags |= this.entities ? 1 << 1 : 0;
       flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
@@ -29960,12 +30380,14 @@ export namespace Raw {
   }
   export class InputBotInlineMessageText extends TLObject {
     noWebpage?: boolean;
+    invertMedia?: boolean;
     message!: string;
     entities?: Vector<Raw.TypeMessageEntity>;
     replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       noWebpage?: boolean;
+      invertMedia?: boolean;
       message: string;
       entities?: Vector<Raw.TypeMessageEntity>;
       replyMarkup?: Raw.TypeReplyMarkup;
@@ -29975,8 +30397,9 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageText';
       this.constructorId = 0x3dcd7a87;
       this.subclassOfId = 0x53fb4010;
-      this.slots = ['noWebpage', 'message', 'entities', 'replyMarkup'];
+      this._slots = ['noWebpage', 'invertMedia', 'message', 'entities', 'replyMarkup'];
       this.noWebpage = params.noWebpage;
+      this.invertMedia = params.invertMedia;
       this.message = params.message;
       this.entities = params.entities;
       this.replyMarkup = params.replyMarkup;
@@ -29991,11 +30414,13 @@ export namespace Raw {
       let flags = await Primitive.Int.read(b);
 
       let noWebpage = flags & (1 << 0) ? true : false;
+      let invertMedia = flags & (1 << 3) ? true : false;
       let message = await Primitive.String.read(b);
       let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
       let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
       return new Raw.InputBotInlineMessageText({
         noWebpage: noWebpage,
+        invertMedia: invertMedia,
         message: message,
         entities: entities,
         replyMarkup: replyMarkup,
@@ -30011,6 +30436,7 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.noWebpage ? 1 << 0 : 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
       flags |= this.entities ? 1 << 1 : 0;
       flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
@@ -30046,7 +30472,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageMediaGeo';
       this.constructorId = 0x96929a85;
       this.subclassOfId = 0x53fb4010;
-      this.slots = ['geoPoint', 'heading', 'period', 'proximityNotificationRadius', 'replyMarkup'];
+      this._slots = ['geoPoint', 'heading', 'period', 'proximityNotificationRadius', 'replyMarkup'];
       this.geoPoint = params.geoPoint;
       this.heading = params.heading;
       this.period = params.period;
@@ -30131,7 +30557,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageMediaVenue';
       this.constructorId = 0x417bbf11;
       this.subclassOfId = 0x53fb4010;
-      this.slots = [
+      this._slots = [
         'geoPoint',
         'title',
         'address',
@@ -30232,7 +30658,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageMediaContact';
       this.constructorId = 0xa6edbffd;
       this.subclassOfId = 0x53fb4010;
-      this.slots = ['phoneNumber', 'firstName', 'lastName', 'vcard', 'replyMarkup'];
+      this._slots = ['phoneNumber', 'firstName', 'lastName', 'vcard', 'replyMarkup'];
       this.phoneNumber = params.phoneNumber;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -30303,7 +30729,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageGame';
       this.constructorId = 0x4b425864;
       this.subclassOfId = 0x53fb4010;
-      this.slots = ['replyMarkup'];
+      this._slots = ['replyMarkup'];
       this.replyMarkup = params.replyMarkup;
     }
     /**
@@ -30361,7 +30787,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageMediaInvoice';
       this.constructorId = 0xd7e78225;
       this.subclassOfId = 0x53fb4010;
-      this.slots = [
+      this._slots = [
         'title',
         'description',
         'photo',
@@ -30451,6 +30877,113 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class InputBotInlineMessageMediaWebPage extends TLObject {
+    invertMedia?: boolean;
+    forceLargeMedia?: boolean;
+    forceSmallMedia?: boolean;
+    optional?: boolean;
+    message!: string;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    url!: string;
+    replyMarkup?: Raw.TypeReplyMarkup;
+
+    constructor(params: {
+      invertMedia?: boolean;
+      forceLargeMedia?: boolean;
+      forceSmallMedia?: boolean;
+      optional?: boolean;
+      message: string;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      url: string;
+      replyMarkup?: Raw.TypeReplyMarkup;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputBotInlineMessageMediaWebPage';
+      this.constructorId = 0xbddcc510;
+      this.subclassOfId = 0x53fb4010;
+      this._slots = [
+        'invertMedia',
+        'forceLargeMedia',
+        'forceSmallMedia',
+        'optional',
+        'message',
+        'entities',
+        'url',
+        'replyMarkup',
+      ];
+      this.invertMedia = params.invertMedia;
+      this.forceLargeMedia = params.forceLargeMedia;
+      this.forceSmallMedia = params.forceSmallMedia;
+      this.optional = params.optional;
+      this.message = params.message;
+      this.entities = params.entities;
+      this.url = params.url;
+      this.replyMarkup = params.replyMarkup;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.InputBotInlineMessageMediaWebPage> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let invertMedia = flags & (1 << 3) ? true : false;
+      let forceLargeMedia = flags & (1 << 4) ? true : false;
+      let forceSmallMedia = flags & (1 << 5) ? true : false;
+      let optional = flags & (1 << 6) ? true : false;
+      let message = await Primitive.String.read(b);
+      let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
+      let url = await Primitive.String.read(b);
+      let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
+      return new Raw.InputBotInlineMessageMediaWebPage({
+        invertMedia: invertMedia,
+        forceLargeMedia: forceLargeMedia,
+        forceSmallMedia: forceSmallMedia,
+        optional: optional,
+        message: message,
+        entities: entities,
+        url: url,
+        replyMarkup: replyMarkup,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
+      flags |= this.forceLargeMedia ? 1 << 4 : 0;
+      flags |= this.forceSmallMedia ? 1 << 5 : 0;
+      flags |= this.optional ? 1 << 6 : 0;
+      flags |= this.entities ? 1 << 1 : 0;
+      flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.message !== undefined) {
+        b.write(Primitive.String.write(this.message) as unknown as Buffer);
+      }
+      if (this.entities) {
+        b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
+      }
+      if (this.replyMarkup !== undefined) {
+        b.write(this.replyMarkup.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class InputBotInlineResult extends TLObject {
     id!: string;
     type!: string;
@@ -30476,7 +31009,16 @@ export namespace Raw {
       this.className = 'InputBotInlineResult';
       this.constructorId = 0x88bf9319;
       this.subclassOfId = 0x80a4a3de;
-      this.slots = ['id', 'type', 'title', 'description', 'url', 'thumb', 'content', 'sendMessage'];
+      this._slots = [
+        'id',
+        'type',
+        'title',
+        'description',
+        'url',
+        'thumb',
+        'content',
+        'sendMessage',
+      ];
       this.id = params.id;
       this.type = params.type;
       this.title = params.title;
@@ -30574,7 +31116,7 @@ export namespace Raw {
       this.className = 'InputBotInlineResultPhoto';
       this.constructorId = 0xa8d864a7;
       this.subclassOfId = 0x80a4a3de;
-      this.slots = ['id', 'type', 'photo', 'sendMessage'];
+      this._slots = ['id', 'type', 'photo', 'sendMessage'];
       this.id = params.id;
       this.type = params.type;
       this.photo = params.photo;
@@ -30642,7 +31184,7 @@ export namespace Raw {
       this.className = 'InputBotInlineResultDocument';
       this.constructorId = 0xfff8fdc4;
       this.subclassOfId = 0x80a4a3de;
-      this.slots = ['id', 'type', 'title', 'description', 'document', 'sendMessage'];
+      this._slots = ['id', 'type', 'title', 'description', 'document', 'sendMessage'];
       this.id = params.id;
       this.type = params.type;
       this.title = params.title;
@@ -30723,7 +31265,7 @@ export namespace Raw {
       this.className = 'InputBotInlineResultGame';
       this.constructorId = 0x4fa417f2;
       this.subclassOfId = 0x80a4a3de;
-      this.slots = ['id', 'shortName', 'sendMessage'];
+      this._slots = ['id', 'shortName', 'sendMessage'];
       this.id = params.id;
       this.shortName = params.shortName;
       this.sendMessage = params.sendMessage;
@@ -30765,11 +31307,13 @@ export namespace Raw {
     }
   }
   export class BotInlineMessageMediaAuto extends TLObject {
+    invertMedia?: boolean;
     message!: string;
     entities?: Vector<Raw.TypeMessageEntity>;
     replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
+      invertMedia?: boolean;
       message: string;
       entities?: Vector<Raw.TypeMessageEntity>;
       replyMarkup?: Raw.TypeReplyMarkup;
@@ -30779,7 +31323,8 @@ export namespace Raw {
       this.className = 'BotInlineMessageMediaAuto';
       this.constructorId = 0x764cf810;
       this.subclassOfId = 0xc4910f88;
-      this.slots = ['message', 'entities', 'replyMarkup'];
+      this._slots = ['invertMedia', 'message', 'entities', 'replyMarkup'];
+      this.invertMedia = params.invertMedia;
       this.message = params.message;
       this.entities = params.entities;
       this.replyMarkup = params.replyMarkup;
@@ -30793,10 +31338,12 @@ export namespace Raw {
 
       let flags = await Primitive.Int.read(b);
 
+      let invertMedia = flags & (1 << 3) ? true : false;
       let message = await Primitive.String.read(b);
       let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
       let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
       return new Raw.BotInlineMessageMediaAuto({
+        invertMedia: invertMedia,
         message: message,
         entities: entities,
         replyMarkup: replyMarkup,
@@ -30811,6 +31358,7 @@ export namespace Raw {
       // no flags
 
       let flags = 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
       flags |= this.entities ? 1 << 1 : 0;
       flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
@@ -30829,12 +31377,14 @@ export namespace Raw {
   }
   export class BotInlineMessageText extends TLObject {
     noWebpage?: boolean;
+    invertMedia?: boolean;
     message!: string;
     entities?: Vector<Raw.TypeMessageEntity>;
     replyMarkup?: Raw.TypeReplyMarkup;
 
     constructor(params: {
       noWebpage?: boolean;
+      invertMedia?: boolean;
       message: string;
       entities?: Vector<Raw.TypeMessageEntity>;
       replyMarkup?: Raw.TypeReplyMarkup;
@@ -30844,8 +31394,9 @@ export namespace Raw {
       this.className = 'BotInlineMessageText';
       this.constructorId = 0x8c7f65e2;
       this.subclassOfId = 0xc4910f88;
-      this.slots = ['noWebpage', 'message', 'entities', 'replyMarkup'];
+      this._slots = ['noWebpage', 'invertMedia', 'message', 'entities', 'replyMarkup'];
       this.noWebpage = params.noWebpage;
+      this.invertMedia = params.invertMedia;
       this.message = params.message;
       this.entities = params.entities;
       this.replyMarkup = params.replyMarkup;
@@ -30860,11 +31411,13 @@ export namespace Raw {
       let flags = await Primitive.Int.read(b);
 
       let noWebpage = flags & (1 << 0) ? true : false;
+      let invertMedia = flags & (1 << 3) ? true : false;
       let message = await Primitive.String.read(b);
       let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
       let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
       return new Raw.BotInlineMessageText({
         noWebpage: noWebpage,
+        invertMedia: invertMedia,
         message: message,
         entities: entities,
         replyMarkup: replyMarkup,
@@ -30880,6 +31433,7 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.noWebpage ? 1 << 0 : 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
       flags |= this.entities ? 1 << 1 : 0;
       flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
@@ -30915,7 +31469,7 @@ export namespace Raw {
       this.className = 'BotInlineMessageMediaGeo';
       this.constructorId = 0x51846fd;
       this.subclassOfId = 0xc4910f88;
-      this.slots = ['geo', 'heading', 'period', 'proximityNotificationRadius', 'replyMarkup'];
+      this._slots = ['geo', 'heading', 'period', 'proximityNotificationRadius', 'replyMarkup'];
       this.geo = params.geo;
       this.heading = params.heading;
       this.period = params.period;
@@ -31000,7 +31554,7 @@ export namespace Raw {
       this.className = 'BotInlineMessageMediaVenue';
       this.constructorId = 0x8a86659c;
       this.subclassOfId = 0xc4910f88;
-      this.slots = ['geo', 'title', 'address', 'provider', 'venueId', 'venueType', 'replyMarkup'];
+      this._slots = ['geo', 'title', 'address', 'provider', 'venueId', 'venueType', 'replyMarkup'];
       this.geo = params.geo;
       this.title = params.title;
       this.address = params.address;
@@ -31090,7 +31644,7 @@ export namespace Raw {
       this.className = 'BotInlineMessageMediaContact';
       this.constructorId = 0x18d1cdc2;
       this.subclassOfId = 0xc4910f88;
-      this.slots = ['phoneNumber', 'firstName', 'lastName', 'vcard', 'replyMarkup'];
+      this._slots = ['phoneNumber', 'firstName', 'lastName', 'vcard', 'replyMarkup'];
       this.phoneNumber = params.phoneNumber;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -31174,7 +31728,7 @@ export namespace Raw {
       this.className = 'BotInlineMessageMediaInvoice';
       this.constructorId = 0x354a9b09;
       this.subclassOfId = 0xc4910f88;
-      this.slots = [
+      this._slots = [
         'shippingAddressRequested',
         'test',
         'title',
@@ -31257,6 +31811,117 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class BotInlineMessageMediaWebPage extends TLObject {
+    invertMedia?: boolean;
+    forceLargeMedia?: boolean;
+    forceSmallMedia?: boolean;
+    manual?: boolean;
+    safe?: boolean;
+    message!: string;
+    entities?: Vector<Raw.TypeMessageEntity>;
+    url!: string;
+    replyMarkup?: Raw.TypeReplyMarkup;
+
+    constructor(params: {
+      invertMedia?: boolean;
+      forceLargeMedia?: boolean;
+      forceSmallMedia?: boolean;
+      manual?: boolean;
+      safe?: boolean;
+      message: string;
+      entities?: Vector<Raw.TypeMessageEntity>;
+      url: string;
+      replyMarkup?: Raw.TypeReplyMarkup;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BotInlineMessageMediaWebPage';
+      this.constructorId = 0x809ad9a6;
+      this.subclassOfId = 0xc4910f88;
+      this._slots = [
+        'invertMedia',
+        'forceLargeMedia',
+        'forceSmallMedia',
+        'manual',
+        'safe',
+        'message',
+        'entities',
+        'url',
+        'replyMarkup',
+      ];
+      this.invertMedia = params.invertMedia;
+      this.forceLargeMedia = params.forceLargeMedia;
+      this.forceSmallMedia = params.forceSmallMedia;
+      this.manual = params.manual;
+      this.safe = params.safe;
+      this.message = params.message;
+      this.entities = params.entities;
+      this.url = params.url;
+      this.replyMarkup = params.replyMarkup;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BotInlineMessageMediaWebPage> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let invertMedia = flags & (1 << 3) ? true : false;
+      let forceLargeMedia = flags & (1 << 4) ? true : false;
+      let forceSmallMedia = flags & (1 << 5) ? true : false;
+      let manual = flags & (1 << 7) ? true : false;
+      let safe = flags & (1 << 8) ? true : false;
+      let message = await Primitive.String.read(b);
+      let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
+      let url = await Primitive.String.read(b);
+      let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
+      return new Raw.BotInlineMessageMediaWebPage({
+        invertMedia: invertMedia,
+        forceLargeMedia: forceLargeMedia,
+        forceSmallMedia: forceSmallMedia,
+        manual: manual,
+        safe: safe,
+        message: message,
+        entities: entities,
+        url: url,
+        replyMarkup: replyMarkup,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
+      flags |= this.forceLargeMedia ? 1 << 4 : 0;
+      flags |= this.forceSmallMedia ? 1 << 5 : 0;
+      flags |= this.manual ? 1 << 7 : 0;
+      flags |= this.safe ? 1 << 8 : 0;
+      flags |= this.entities ? 1 << 1 : 0;
+      flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.message !== undefined) {
+        b.write(Primitive.String.write(this.message) as unknown as Buffer);
+      }
+      if (this.entities) {
+        b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
+      }
+      if (this.replyMarkup !== undefined) {
+        b.write(this.replyMarkup.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class BotInlineResult extends TLObject {
     id!: string;
     type!: string;
@@ -31282,7 +31947,16 @@ export namespace Raw {
       this.className = 'BotInlineResult';
       this.constructorId = 0x11965f3a;
       this.subclassOfId = 0x3832b3d5;
-      this.slots = ['id', 'type', 'title', 'description', 'url', 'thumb', 'content', 'sendMessage'];
+      this._slots = [
+        'id',
+        'type',
+        'title',
+        'description',
+        'url',
+        'thumb',
+        'content',
+        'sendMessage',
+      ];
       this.id = params.id;
       this.type = params.type;
       this.title = params.title;
@@ -31386,7 +32060,7 @@ export namespace Raw {
       this.className = 'BotInlineMediaResult';
       this.constructorId = 0x17db940b;
       this.subclassOfId = 0x3832b3d5;
-      this.slots = ['id', 'type', 'photo', 'document', 'title', 'description', 'sendMessage'];
+      this._slots = ['id', 'type', 'photo', 'document', 'title', 'description', 'sendMessage'];
       this.id = params.id;
       this.type = params.type;
       this.photo = params.photo;
@@ -31470,7 +32144,7 @@ export namespace Raw {
       this.className = 'ExportedMessageLink';
       this.constructorId = 0x5dab1af4;
       this.subclassOfId = 0xdee644cc;
-      this.slots = ['link', 'html'];
+      this._slots = ['link', 'html'];
       this.link = params.link;
       this.html = params.html;
     }
@@ -31529,7 +32203,7 @@ export namespace Raw {
       this.className = 'MessageFwdHeader';
       this.constructorId = 0x5f777dce;
       this.subclassOfId = 0x7a286804;
-      this.slots = [
+      this._slots = [
         'imported',
         'fromId',
         'fromName',
@@ -31637,7 +32311,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageID';
       this.constructorId = 0x890c3d89;
       this.subclassOfId = 0x2dcd6300;
-      this.slots = ['dcId', 'id', 'accessHash'];
+      this._slots = ['dcId', 'id', 'accessHash'];
       this.dcId = params.dcId;
       this.id = params.id;
       this.accessHash = params.accessHash;
@@ -31686,7 +32360,7 @@ export namespace Raw {
       this.className = 'InputBotInlineMessageID64';
       this.constructorId = 0xb6d915d7;
       this.subclassOfId = 0x2dcd6300;
-      this.slots = ['dcId', 'ownerId', 'id', 'accessHash'];
+      this._slots = ['dcId', 'ownerId', 'id', 'accessHash'];
       this.dcId = params.dcId;
       this.ownerId = params.ownerId;
       this.id = params.id;
@@ -31743,7 +32417,7 @@ export namespace Raw {
       this.className = 'InlineBotSwitchPM';
       this.constructorId = 0x3c20629f;
       this.subclassOfId = 0x82b1f73b;
-      this.slots = ['text', 'startParam'];
+      this._slots = ['text', 'startParam'];
       this.text = params.text;
       this.startParam = params.startParam;
     }
@@ -31785,7 +32459,7 @@ export namespace Raw {
       this.className = 'TopPeer';
       this.constructorId = 0xedcdc05b;
       this.subclassOfId = 0x6916c601;
-      this.slots = ['peer', 'rating'];
+      this._slots = ['peer', 'rating'];
       this.peer = params.peer;
       this.rating = params.rating;
     }
@@ -31824,7 +32498,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryBotsPM';
       this.constructorId = 0xab661b5b;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -31853,7 +32527,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryBotsInline';
       this.constructorId = 0x148677e2;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -31882,7 +32556,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryCorrespondents';
       this.constructorId = 0x637b7ed;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -31911,7 +32585,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryGroups';
       this.constructorId = 0xbd17a14a;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -31940,7 +32614,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryChannels';
       this.constructorId = 0x161d9628;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -31969,7 +32643,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryPhoneCalls';
       this.constructorId = 0x1e76a78c;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -31998,7 +32672,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryForwardUsers';
       this.constructorId = 0xa8406ca9;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -32027,7 +32701,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryForwardChats';
       this.constructorId = 0xfbeec0f0;
       this.subclassOfId = 0xddf02502;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -32064,7 +32738,7 @@ export namespace Raw {
       this.className = 'TopPeerCategoryPeers';
       this.constructorId = 0xfb834291;
       this.subclassOfId = 0x4aec930;
-      this.slots = ['category', 'count', 'peers'];
+      this._slots = ['category', 'count', 'peers'];
       this.category = params.category;
       this.count = params.count;
       this.peers = params.peers;
@@ -32110,7 +32784,7 @@ export namespace Raw {
       this.className = 'DraftMessageEmpty';
       this.constructorId = 0x1b0c841a;
       this.subclassOfId = 0x33d47f45;
-      this.slots = ['date'];
+      this._slots = ['date'];
       this.date = params.date;
     }
     /**
@@ -32145,28 +32819,34 @@ export namespace Raw {
   }
   export class DraftMessage extends TLObject {
     noWebpage?: boolean;
-    replyToMsgId?: int;
+    invertMedia?: boolean;
+    replyTo?: Raw.TypeInputReplyTo;
     message!: string;
     entities?: Vector<Raw.TypeMessageEntity>;
+    media?: Raw.TypeInputMedia;
     date!: int;
 
     constructor(params: {
       noWebpage?: boolean;
-      replyToMsgId?: int;
+      invertMedia?: boolean;
+      replyTo?: Raw.TypeInputReplyTo;
       message: string;
       entities?: Vector<Raw.TypeMessageEntity>;
+      media?: Raw.TypeInputMedia;
       date: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'DraftMessage';
-      this.constructorId = 0xfd8e711f;
+      this.constructorId = 0x3fccf7ef;
       this.subclassOfId = 0x33d47f45;
-      this.slots = ['noWebpage', 'replyToMsgId', 'message', 'entities', 'date'];
+      this._slots = ['noWebpage', 'invertMedia', 'replyTo', 'message', 'entities', 'media', 'date'];
       this.noWebpage = params.noWebpage;
-      this.replyToMsgId = params.replyToMsgId;
+      this.invertMedia = params.invertMedia;
+      this.replyTo = params.replyTo;
       this.message = params.message;
       this.entities = params.entities;
+      this.media = params.media;
       this.date = params.date;
     }
     /**
@@ -32179,15 +32859,19 @@ export namespace Raw {
       let flags = await Primitive.Int.read(b);
 
       let noWebpage = flags & (1 << 1) ? true : false;
-      let replyToMsgId = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
+      let invertMedia = flags & (1 << 6) ? true : false;
+      let replyTo = flags & (1 << 4) ? await TLObject.read(b) : undefined;
       let message = await Primitive.String.read(b);
       let entities = flags & (1 << 3) ? await TLObject.read(b) : [];
+      let media = flags & (1 << 5) ? await TLObject.read(b) : undefined;
       let date = await Primitive.Int.read(b);
       return new Raw.DraftMessage({
         noWebpage: noWebpage,
-        replyToMsgId: replyToMsgId,
+        invertMedia: invertMedia,
+        replyTo: replyTo,
         message: message,
         entities: entities,
+        media: media,
         date: date,
       });
     }
@@ -32201,18 +32885,23 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.noWebpage ? 1 << 1 : 0;
-      flags |= this.replyToMsgId !== undefined ? 1 << 0 : 0;
+      flags |= this.invertMedia ? 1 << 6 : 0;
+      flags |= this.replyTo !== undefined ? 1 << 4 : 0;
       flags |= this.entities ? 1 << 3 : 0;
+      flags |= this.media !== undefined ? 1 << 5 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
-      if (this.replyToMsgId !== undefined) {
-        b.write(Primitive.Int.write(this.replyToMsgId) as unknown as Buffer);
+      if (this.replyTo !== undefined) {
+        b.write(this.replyTo.write() as unknown as Buffer);
       }
       if (this.message !== undefined) {
         b.write(Primitive.String.write(this.message) as unknown as Buffer);
       }
       if (this.entities) {
         b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      if (this.media !== undefined) {
+        b.write(this.media.write() as unknown as Buffer);
       }
       if (this.date !== undefined) {
         b.write(Primitive.Int.write(this.date) as unknown as Buffer);
@@ -32230,7 +32919,7 @@ export namespace Raw {
       this.className = 'StickerSetCovered';
       this.constructorId = 0x6410a5d2;
       this.subclassOfId = 0x7f86e4e5;
-      this.slots = ['set', 'cover'];
+      this._slots = ['set', 'cover'];
       this.set = params.set;
       this.cover = params.cover;
     }
@@ -32272,7 +32961,7 @@ export namespace Raw {
       this.className = 'StickerSetMultiCovered';
       this.constructorId = 0x3407e51b;
       this.subclassOfId = 0x7f86e4e5;
-      this.slots = ['set', 'covers'];
+      this._slots = ['set', 'covers'];
       this.set = params.set;
       this.covers = params.covers;
     }
@@ -32321,7 +33010,7 @@ export namespace Raw {
       this.className = 'StickerSetFullCovered';
       this.constructorId = 0x40d13c0e;
       this.subclassOfId = 0x7f86e4e5;
-      this.slots = ['set', 'packs', 'keywords', 'documents'];
+      this._slots = ['set', 'packs', 'keywords', 'documents'];
       this.set = params.set;
       this.packs = params.packs;
       this.keywords = params.keywords;
@@ -32377,7 +33066,7 @@ export namespace Raw {
       this.className = 'StickerSetNoCovered';
       this.constructorId = 0x77b15d1c;
       this.subclassOfId = 0x7f86e4e5;
-      this.slots = ['set'];
+      this._slots = ['set'];
       this.set = params.set;
     }
     /**
@@ -32416,7 +33105,7 @@ export namespace Raw {
       this.className = 'MaskCoords';
       this.constructorId = 0xaed6dbb2;
       this.subclassOfId = 0x6bbb2fd;
-      this.slots = ['n', 'x', 'y', 'zoom'];
+      this._slots = ['n', 'x', 'y', 'zoom'];
       this.n = params.n;
       this.x = params.x;
       this.y = params.y;
@@ -32467,7 +33156,7 @@ export namespace Raw {
       this.className = 'InputStickeredMediaPhoto';
       this.constructorId = 0x4a992157;
       this.subclassOfId = 0x5146d99e;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -32503,7 +33192,7 @@ export namespace Raw {
       this.className = 'InputStickeredMediaDocument';
       this.constructorId = 0x438865b;
       this.subclassOfId = 0x5146d99e;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -32553,7 +33242,7 @@ export namespace Raw {
       this.className = 'Game';
       this.constructorId = 0xbdf9653b;
       this.subclassOfId = 0x83199eb2;
-      this.slots = ['id', 'accessHash', 'shortName', 'title', 'description', 'photo', 'document'];
+      this._slots = ['id', 'accessHash', 'shortName', 'title', 'description', 'photo', 'document'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.shortName = params.shortName;
@@ -32634,7 +33323,7 @@ export namespace Raw {
       this.className = 'InputGameID';
       this.constructorId = 0x32c3e77;
       this.subclassOfId = 0x48d15883;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -32676,7 +33365,7 @@ export namespace Raw {
       this.className = 'InputGameShortName';
       this.constructorId = 0xc331e80a;
       this.subclassOfId = 0x48d15883;
-      this.slots = ['botId', 'shortName'];
+      this._slots = ['botId', 'shortName'];
       this.botId = params.botId;
       this.shortName = params.shortName;
     }
@@ -32719,7 +33408,7 @@ export namespace Raw {
       this.className = 'HighScore';
       this.constructorId = 0x73a379eb;
       this.subclassOfId = 0xd32b1e35;
-      this.slots = ['pos', 'userId', 'score'];
+      this._slots = ['pos', 'userId', 'score'];
       this.pos = params.pos;
       this.userId = params.userId;
       this.score = params.score;
@@ -32763,7 +33452,7 @@ export namespace Raw {
       this.className = 'TextEmpty';
       this.constructorId = 0xdc3d824f;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -32794,7 +33483,7 @@ export namespace Raw {
       this.className = 'TextPlain';
       this.constructorId = 0x744694e0;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -32830,7 +33519,7 @@ export namespace Raw {
       this.className = 'TextBold';
       this.constructorId = 0x6724abc4;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -32866,7 +33555,7 @@ export namespace Raw {
       this.className = 'TextItalic';
       this.constructorId = 0xd912a59c;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -32902,7 +33591,7 @@ export namespace Raw {
       this.className = 'TextUnderline';
       this.constructorId = 0xc12622c4;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -32938,7 +33627,7 @@ export namespace Raw {
       this.className = 'TextStrike';
       this.constructorId = 0x9bf8bb95;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -32974,7 +33663,7 @@ export namespace Raw {
       this.className = 'TextFixed';
       this.constructorId = 0x6c3f19b9;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33012,7 +33701,7 @@ export namespace Raw {
       this.className = 'TextUrl';
       this.constructorId = 0x3c2884c1;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text', 'url', 'webpageId'];
+      this._slots = ['text', 'url', 'webpageId'];
       this.text = params.text;
       this.url = params.url;
       this.webpageId = params.webpageId;
@@ -33059,7 +33748,7 @@ export namespace Raw {
       this.className = 'TextEmail';
       this.constructorId = 0xde5a0dd6;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text', 'email'];
+      this._slots = ['text', 'email'];
       this.text = params.text;
       this.email = params.email;
     }
@@ -33100,7 +33789,7 @@ export namespace Raw {
       this.className = 'TextConcat';
       this.constructorId = 0x7e6260d7;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['texts'];
+      this._slots = ['texts'];
       this.texts = params.texts;
     }
     /**
@@ -33136,7 +33825,7 @@ export namespace Raw {
       this.className = 'TextSubscript';
       this.constructorId = 0xed6a8504;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33172,7 +33861,7 @@ export namespace Raw {
       this.className = 'TextSuperscript';
       this.constructorId = 0xc7fb5e01;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33208,7 +33897,7 @@ export namespace Raw {
       this.className = 'TextMarked';
       this.constructorId = 0x34b8621;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33245,7 +33934,7 @@ export namespace Raw {
       this.className = 'TextPhone';
       this.constructorId = 0x1ccb966a;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text', 'phone'];
+      this._slots = ['text', 'phone'];
       this.text = params.text;
       this.phone = params.phone;
     }
@@ -33288,7 +33977,7 @@ export namespace Raw {
       this.className = 'TextImage';
       this.constructorId = 0x81ccf4f;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['documentId', 'w', 'h'];
+      this._slots = ['documentId', 'w', 'h'];
       this.documentId = params.documentId;
       this.w = params.w;
       this.h = params.h;
@@ -33335,7 +34024,7 @@ export namespace Raw {
       this.className = 'TextAnchor';
       this.constructorId = 0x35553762;
       this.subclassOfId = 0xf1d0b479;
-      this.slots = ['text', 'name'];
+      this._slots = ['text', 'name'];
       this.text = params.text;
       this.name = params.name;
     }
@@ -33374,7 +34063,7 @@ export namespace Raw {
       this.className = 'PageBlockUnsupported';
       this.constructorId = 0x13567e8a;
       this.subclassOfId = 0x1aca5644;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -33405,7 +34094,7 @@ export namespace Raw {
       this.className = 'PageBlockTitle';
       this.constructorId = 0x70abc3fd;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33441,7 +34130,7 @@ export namespace Raw {
       this.className = 'PageBlockSubtitle';
       this.constructorId = 0x8ffa9a1f;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33478,7 +34167,7 @@ export namespace Raw {
       this.className = 'PageBlockAuthorDate';
       this.constructorId = 0xbaafe5e0;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['author', 'publishedDate'];
+      this._slots = ['author', 'publishedDate'];
       this.author = params.author;
       this.publishedDate = params.publishedDate;
     }
@@ -33519,7 +34208,7 @@ export namespace Raw {
       this.className = 'PageBlockHeader';
       this.constructorId = 0xbfd064ec;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33555,7 +34244,7 @@ export namespace Raw {
       this.className = 'PageBlockSubheader';
       this.constructorId = 0xf12bb6e1;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33591,7 +34280,7 @@ export namespace Raw {
       this.className = 'PageBlockParagraph';
       this.constructorId = 0x467a0766;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33628,7 +34317,7 @@ export namespace Raw {
       this.className = 'PageBlockPreformatted';
       this.constructorId = 0xc070d93e;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text', 'language'];
+      this._slots = ['text', 'language'];
       this.text = params.text;
       this.language = params.language;
     }
@@ -33669,7 +34358,7 @@ export namespace Raw {
       this.className = 'PageBlockFooter';
       this.constructorId = 0x48870999;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -33703,7 +34392,7 @@ export namespace Raw {
       this.className = 'PageBlockDivider';
       this.constructorId = 0xdb20b188;
       this.subclassOfId = 0x1aca5644;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -33734,7 +34423,7 @@ export namespace Raw {
       this.className = 'PageBlockAnchor';
       this.constructorId = 0xce0d37b0;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['name'];
+      this._slots = ['name'];
       this.name = params.name;
     }
     /**
@@ -33770,7 +34459,7 @@ export namespace Raw {
       this.className = 'PageBlockList';
       this.constructorId = 0xe4e88011;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['items'];
+      this._slots = ['items'];
       this.items = params.items;
     }
     /**
@@ -33807,7 +34496,7 @@ export namespace Raw {
       this.className = 'PageBlockBlockquote';
       this.constructorId = 0x263d7c26;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text', 'caption'];
+      this._slots = ['text', 'caption'];
       this.text = params.text;
       this.caption = params.caption;
     }
@@ -33849,7 +34538,7 @@ export namespace Raw {
       this.className = 'PageBlockPullquote';
       this.constructorId = 0x4f4456d3;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text', 'caption'];
+      this._slots = ['text', 'caption'];
       this.text = params.text;
       this.caption = params.caption;
     }
@@ -33898,7 +34587,7 @@ export namespace Raw {
       this.className = 'PageBlockPhoto';
       this.constructorId = 0x1759c560;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['photoId', 'caption', 'url', 'webpageId'];
+      this._slots = ['photoId', 'caption', 'url', 'webpageId'];
       this.photoId = params.photoId;
       this.caption = params.caption;
       this.url = params.url;
@@ -33969,7 +34658,7 @@ export namespace Raw {
       this.className = 'PageBlockVideo';
       this.constructorId = 0x7c8fe7b6;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['autoplay', 'loop', 'videoId', 'caption'];
+      this._slots = ['autoplay', 'loop', 'videoId', 'caption'];
       this.autoplay = params.autoplay;
       this.loop = params.loop;
       this.videoId = params.videoId;
@@ -34026,7 +34715,7 @@ export namespace Raw {
       this.className = 'PageBlockCover';
       this.constructorId = 0x39f23300;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['cover'];
+      this._slots = ['cover'];
       this.cover = params.cover;
     }
     /**
@@ -34078,7 +34767,7 @@ export namespace Raw {
       this.className = 'PageBlockEmbed';
       this.constructorId = 0xa8718dc5;
       this.subclassOfId = 0x1aca5644;
-      this.slots = [
+      this._slots = [
         'fullWidth',
         'allowScrolling',
         'url',
@@ -34187,7 +34876,7 @@ export namespace Raw {
       this.className = 'PageBlockEmbedPost';
       this.constructorId = 0xf259a80b;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['url', 'webpageId', 'authorPhotoId', 'author', 'date', 'blocks', 'caption'];
+      this._slots = ['url', 'webpageId', 'authorPhotoId', 'author', 'date', 'blocks', 'caption'];
       this.url = params.url;
       this.webpageId = params.webpageId;
       this.authorPhotoId = params.authorPhotoId;
@@ -34262,7 +34951,7 @@ export namespace Raw {
       this.className = 'PageBlockCollage';
       this.constructorId = 0x65a0fa4d;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['items', 'caption'];
+      this._slots = ['items', 'caption'];
       this.items = params.items;
       this.caption = params.caption;
     }
@@ -34304,7 +34993,7 @@ export namespace Raw {
       this.className = 'PageBlockSlideshow';
       this.constructorId = 0x31f9590;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['items', 'caption'];
+      this._slots = ['items', 'caption'];
       this.items = params.items;
       this.caption = params.caption;
     }
@@ -34345,7 +35034,7 @@ export namespace Raw {
       this.className = 'PageBlockChannel';
       this.constructorId = 0xef1751b5;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['channel'];
+      this._slots = ['channel'];
       this.channel = params.channel;
     }
     /**
@@ -34382,7 +35071,7 @@ export namespace Raw {
       this.className = 'PageBlockAudio';
       this.constructorId = 0x804361ea;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['audioId', 'caption'];
+      this._slots = ['audioId', 'caption'];
       this.audioId = params.audioId;
       this.caption = params.caption;
     }
@@ -34423,7 +35112,7 @@ export namespace Raw {
       this.className = 'PageBlockKicker';
       this.constructorId = 0x1e148390;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -34467,7 +35156,7 @@ export namespace Raw {
       this.className = 'PageBlockTable';
       this.constructorId = 0xbf4dea82;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['bordered', 'striped', 'title', 'rows'];
+      this._slots = ['bordered', 'striped', 'title', 'rows'];
       this.bordered = params.bordered;
       this.striped = params.striped;
       this.title = params.title;
@@ -34524,7 +35213,7 @@ export namespace Raw {
       this.className = 'PageBlockOrderedList';
       this.constructorId = 0x9a8ae1e1;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['items'];
+      this._slots = ['items'];
       this.items = params.items;
     }
     /**
@@ -34566,7 +35255,7 @@ export namespace Raw {
       this.className = 'PageBlockDetails';
       this.constructorId = 0x76768bed;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['open', 'blocks', 'title'];
+      this._slots = ['open', 'blocks', 'title'];
       this.open = params.open;
       this.blocks = params.blocks;
       this.title = params.title;
@@ -34616,7 +35305,7 @@ export namespace Raw {
       this.className = 'PageBlockRelatedArticles';
       this.constructorId = 0x16115a96;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['title', 'articles'];
+      this._slots = ['title', 'articles'];
       this.title = params.title;
       this.articles = params.articles;
     }
@@ -34667,7 +35356,7 @@ export namespace Raw {
       this.className = 'PageBlockMap';
       this.constructorId = 0xa44f3ef6;
       this.subclassOfId = 0x1aca5644;
-      this.slots = ['geo', 'zoom', 'w', 'h', 'caption'];
+      this._slots = ['geo', 'zoom', 'w', 'h', 'caption'];
       this.geo = params.geo;
       this.zoom = params.zoom;
       this.w = params.w;
@@ -34721,7 +35410,7 @@ export namespace Raw {
       this.className = 'PhoneCallDiscardReasonMissed';
       this.constructorId = 0x85e42301;
       this.subclassOfId = 0xd89bad3d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -34750,7 +35439,7 @@ export namespace Raw {
       this.className = 'PhoneCallDiscardReasonDisconnect';
       this.constructorId = 0xe095c1a0;
       this.subclassOfId = 0xd89bad3d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -34782,7 +35471,7 @@ export namespace Raw {
       this.className = 'PhoneCallDiscardReasonHangup';
       this.constructorId = 0x57adc690;
       this.subclassOfId = 0xd89bad3d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -34811,7 +35500,7 @@ export namespace Raw {
       this.className = 'PhoneCallDiscardReasonBusy';
       this.constructorId = 0xfaf7e8c9;
       this.subclassOfId = 0xd89bad3d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -34842,7 +35531,7 @@ export namespace Raw {
       this.className = 'DataJSON';
       this.constructorId = 0x7d748d04;
       this.subclassOfId = 0xad0352e8;
-      this.slots = ['data'];
+      this._slots = ['data'];
       this.data = params.data;
     }
     /**
@@ -34879,7 +35568,7 @@ export namespace Raw {
       this.className = 'LabeledPrice';
       this.constructorId = 0xcb296bf8;
       this.subclassOfId = 0x1c84047a;
-      this.slots = ['label', 'amount'];
+      this._slots = ['label', 'amount'];
       this.label = params.label;
       this.amount = params.amount;
     }
@@ -34948,7 +35637,7 @@ export namespace Raw {
       this.className = 'Invoice';
       this.constructorId = 0x5db95a15;
       this.subclassOfId = 0x5fd82ed8;
-      this.slots = [
+      this._slots = [
         'test',
         'nameRequested',
         'phoneRequested',
@@ -35072,7 +35761,7 @@ export namespace Raw {
       this.className = 'PaymentCharge';
       this.constructorId = 0xea02c27e;
       this.subclassOfId = 0x3cc830d9;
-      this.slots = ['id', 'providerChargeId'];
+      this._slots = ['id', 'providerChargeId'];
       this.id = params.id;
       this.providerChargeId = params.providerChargeId;
     }
@@ -35125,7 +35814,7 @@ export namespace Raw {
       this.className = 'PostAddress';
       this.constructorId = 0x1e8caaeb;
       this.subclassOfId = 0x8d7eda2c;
-      this.slots = ['streetLine1', 'streetLine2', 'city', 'state', 'countryIso2', 'postCode'];
+      this._slots = ['streetLine1', 'streetLine2', 'city', 'state', 'countryIso2', 'postCode'];
       this.streetLine1 = params.streetLine1;
       this.streetLine2 = params.streetLine2;
       this.city = params.city;
@@ -35201,7 +35890,7 @@ export namespace Raw {
       this.className = 'PaymentRequestedInfo';
       this.constructorId = 0x909c3f94;
       this.subclassOfId = 0x8db03146;
-      this.slots = ['name', 'phone', 'email', 'shippingAddress'];
+      this._slots = ['name', 'phone', 'email', 'shippingAddress'];
       this.name = params.name;
       this.phone = params.phone;
       this.email = params.email;
@@ -35267,7 +35956,7 @@ export namespace Raw {
       this.className = 'PaymentSavedCredentialsCard';
       this.constructorId = 0xcdc27a1f;
       this.subclassOfId = 0xb3627ee3;
-      this.slots = ['id', 'title'];
+      this._slots = ['id', 'title'];
       this.id = params.id;
       this.title = params.title;
     }
@@ -35318,7 +36007,7 @@ export namespace Raw {
       this.className = 'WebDocument';
       this.constructorId = 0x1c570ed1;
       this.subclassOfId = 0x3b642814;
-      this.slots = ['url', 'accessHash', 'size', 'mimeType', 'attributes'];
+      this._slots = ['url', 'accessHash', 'size', 'mimeType', 'attributes'];
       this.url = params.url;
       this.accessHash = params.accessHash;
       this.size = params.size;
@@ -35388,7 +36077,7 @@ export namespace Raw {
       this.className = 'WebDocumentNoProxy';
       this.constructorId = 0xf9c8bcc6;
       this.subclassOfId = 0x3b642814;
-      this.slots = ['url', 'size', 'mimeType', 'attributes'];
+      this._slots = ['url', 'size', 'mimeType', 'attributes'];
       this.url = params.url;
       this.size = params.size;
       this.mimeType = params.mimeType;
@@ -35452,7 +36141,7 @@ export namespace Raw {
       this.className = 'InputWebDocument';
       this.constructorId = 0x9bed434d;
       this.subclassOfId = 0x8ae8b146;
-      this.slots = ['url', 'size', 'mimeType', 'attributes'];
+      this._slots = ['url', 'size', 'mimeType', 'attributes'];
       this.url = params.url;
       this.size = params.size;
       this.mimeType = params.mimeType;
@@ -35509,7 +36198,7 @@ export namespace Raw {
       this.className = 'InputWebFileLocation';
       this.constructorId = 0xc239d686;
       this.subclassOfId = 0xf72ed8d9;
-      this.slots = ['url', 'accessHash'];
+      this._slots = ['url', 'accessHash'];
       this.url = params.url;
       this.accessHash = params.accessHash;
     }
@@ -35562,7 +36251,7 @@ export namespace Raw {
       this.className = 'InputWebFileGeoPointLocation';
       this.constructorId = 0x9f2221c9;
       this.subclassOfId = 0xf72ed8d9;
-      this.slots = ['geoPoint', 'accessHash', 'w', 'h', 'zoom', 'scale'];
+      this._slots = ['geoPoint', 'accessHash', 'w', 'h', 'zoom', 'scale'];
       this.geoPoint = params.geoPoint;
       this.accessHash = params.accessHash;
       this.w = params.w;
@@ -35638,7 +36327,7 @@ export namespace Raw {
       this.className = 'InputWebFileAudioAlbumThumbLocation';
       this.constructorId = 0xf46fe924;
       this.subclassOfId = 0xf72ed8d9;
-      this.slots = ['small', 'document', 'title', 'performer'];
+      this._slots = ['small', 'document', 'title', 'performer'];
       this.small = params.small;
       this.document = params.document;
       this.title = params.title;
@@ -35704,7 +36393,7 @@ export namespace Raw {
       this.className = 'InputPaymentCredentialsSaved';
       this.constructorId = 0xc10eb2cf;
       this.subclassOfId = 0x2899a53d;
-      this.slots = ['id', 'tmpPassword'];
+      this._slots = ['id', 'tmpPassword'];
       this.id = params.id;
       this.tmpPassword = params.tmpPassword;
     }
@@ -35746,7 +36435,7 @@ export namespace Raw {
       this.className = 'InputPaymentCredentials';
       this.constructorId = 0x3417d728;
       this.subclassOfId = 0x2899a53d;
-      this.slots = ['save', 'data'];
+      this._slots = ['save', 'data'];
       this.save = params.save;
       this.data = params.data;
     }
@@ -35790,7 +36479,7 @@ export namespace Raw {
       this.className = 'InputPaymentCredentialsApplePay';
       this.constructorId = 0xaa1c39f;
       this.subclassOfId = 0x2899a53d;
-      this.slots = ['paymentData'];
+      this._slots = ['paymentData'];
       this.paymentData = params.paymentData;
     }
     /**
@@ -35829,7 +36518,7 @@ export namespace Raw {
       this.className = 'InputPaymentCredentialsGooglePay';
       this.constructorId = 0x8ac32801;
       this.subclassOfId = 0x2899a53d;
-      this.slots = ['paymentToken'];
+      this._slots = ['paymentToken'];
       this.paymentToken = params.paymentToken;
     }
     /**
@@ -35870,7 +36559,7 @@ export namespace Raw {
       this.className = 'ShippingOption';
       this.constructorId = 0xb6213cdf;
       this.subclassOfId = 0xf4e94c78;
-      this.slots = ['id', 'title', 'prices'];
+      this._slots = ['id', 'title', 'prices'];
       this.id = params.id;
       this.title = params.title;
       this.prices = params.prices;
@@ -35924,7 +36613,7 @@ export namespace Raw {
       this.className = 'InputStickerSetItem';
       this.constructorId = 0x32da9e9c;
       this.subclassOfId = 0xae59f075;
-      this.slots = ['document', 'emoji', 'maskCoords', 'keywords'];
+      this._slots = ['document', 'emoji', 'maskCoords', 'keywords'];
       this.document = params.document;
       this.emoji = params.emoji;
       this.maskCoords = params.maskCoords;
@@ -35988,7 +36677,7 @@ export namespace Raw {
       this.className = 'InputPhoneCall';
       this.constructorId = 0x1e36fded;
       this.subclassOfId = 0xbcaaf240;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -36029,7 +36718,7 @@ export namespace Raw {
       this.className = 'PhoneCallEmpty';
       this.constructorId = 0x5366c915;
       this.subclassOfId = 0xc47f1bd1;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -36081,7 +36770,7 @@ export namespace Raw {
       this.className = 'PhoneCallWaiting';
       this.constructorId = 0xc5226f17;
       this.subclassOfId = 0xc47f1bd1;
-      this.slots = [
+      this._slots = [
         'video',
         'id',
         'accessHash',
@@ -36190,7 +36879,7 @@ export namespace Raw {
       this.className = 'PhoneCallRequested';
       this.constructorId = 0x14b0ed0c;
       this.subclassOfId = 0xc47f1bd1;
-      this.slots = [
+      this._slots = [
         'video',
         'id',
         'accessHash',
@@ -36298,7 +36987,7 @@ export namespace Raw {
       this.className = 'PhoneCallAccepted';
       this.constructorId = 0x3660c311;
       this.subclassOfId = 0xc47f1bd1;
-      this.slots = [
+      this._slots = [
         'video',
         'id',
         'accessHash',
@@ -36414,7 +37103,7 @@ export namespace Raw {
       this.className = 'PhoneCall';
       this.constructorId = 0x967f7c67;
       this.subclassOfId = 0xc47f1bd1;
-      this.slots = [
+      this._slots = [
         'p2pAllowed',
         'video',
         'id',
@@ -36544,7 +37233,7 @@ export namespace Raw {
       this.className = 'PhoneCallDiscarded';
       this.constructorId = 0x50ca4de1;
       this.subclassOfId = 0xc47f1bd1;
-      this.slots = ['needRating', 'needDebug', 'video', 'id', 'reason', 'duration'];
+      this._slots = ['needRating', 'needDebug', 'video', 'id', 'reason', 'duration'];
       this.needRating = params.needRating;
       this.needDebug = params.needDebug;
       this.video = params.video;
@@ -36625,7 +37314,7 @@ export namespace Raw {
       this.className = 'PhoneConnection';
       this.constructorId = 0x9cc123c7;
       this.subclassOfId = 0xaa8de40d;
-      this.slots = ['tcp', 'id', 'ip', 'ipv6', 'port', 'peerTag'];
+      this._slots = ['tcp', 'id', 'ip', 'ipv6', 'port', 'peerTag'];
       this.tcp = params.tcp;
       this.id = params.id;
       this.ip = params.ip;
@@ -36712,7 +37401,7 @@ export namespace Raw {
       this.className = 'PhoneConnectionWebrtc';
       this.constructorId = 0x635fe375;
       this.subclassOfId = 0xaa8de40d;
-      this.slots = ['turn', 'stun', 'id', 'ip', 'ipv6', 'port', 'username', 'password'];
+      this._slots = ['turn', 'stun', 'id', 'ip', 'ipv6', 'port', 'username', 'password'];
       this.turn = params.turn;
       this.stun = params.stun;
       this.id = params.id;
@@ -36803,7 +37492,7 @@ export namespace Raw {
       this.className = 'PhoneCallProtocol';
       this.constructorId = 0xfc878fc8;
       this.subclassOfId = 0x783991a3;
-      this.slots = ['udpP2p', 'udpReflector', 'minLayer', 'maxLayer', 'libraryVersions'];
+      this._slots = ['udpP2p', 'udpReflector', 'minLayer', 'maxLayer', 'libraryVersions'];
       this.udpP2p = params.udpP2p;
       this.udpReflector = params.udpReflector;
       this.minLayer = params.minLayer;
@@ -36869,7 +37558,7 @@ export namespace Raw {
       this.className = 'CdnPublicKey';
       this.constructorId = 0xc982eaba;
       this.subclassOfId = 0x16db47f3;
-      this.slots = ['dcId', 'publicKey'];
+      this._slots = ['dcId', 'publicKey'];
       this.dcId = params.dcId;
       this.publicKey = params.publicKey;
     }
@@ -36910,7 +37599,7 @@ export namespace Raw {
       this.className = 'CdnConfig';
       this.constructorId = 0x5725e40a;
       this.subclassOfId = 0xecda397c;
-      this.slots = ['publicKeys'];
+      this._slots = ['publicKeys'];
       this.publicKeys = params.publicKeys;
     }
     /**
@@ -36947,7 +37636,7 @@ export namespace Raw {
       this.className = 'LangPackString';
       this.constructorId = 0xcad181f6;
       this.subclassOfId = 0xdc179ab9;
-      this.slots = ['key', 'value'];
+      this._slots = ['key', 'value'];
       this.key = params.key;
       this.value = params.value;
     }
@@ -37002,7 +37691,7 @@ export namespace Raw {
       this.className = 'LangPackStringPluralized';
       this.constructorId = 0x6c47ac9f;
       this.subclassOfId = 0xdc179ab9;
-      this.slots = [
+      this._slots = [
         'key',
         'zeroValue',
         'oneValue',
@@ -37094,7 +37783,7 @@ export namespace Raw {
       this.className = 'LangPackStringDeleted';
       this.constructorId = 0x2979eeb2;
       this.subclassOfId = 0xdc179ab9;
-      this.slots = ['key'];
+      this._slots = ['key'];
       this.key = params.key;
     }
     /**
@@ -37138,7 +37827,7 @@ export namespace Raw {
       this.className = 'LangPackDifference';
       this.constructorId = 0xf385c1f6;
       this.subclassOfId = 0x52662d55;
-      this.slots = ['langCode', 'fromVersion', 'version', 'strings'];
+      this._slots = ['langCode', 'fromVersion', 'version', 'strings'];
       this.langCode = params.langCode;
       this.fromVersion = params.fromVersion;
       this.version = params.version;
@@ -37216,7 +37905,7 @@ export namespace Raw {
       this.className = 'LangPackLanguage';
       this.constructorId = 0xeeca5ce3;
       this.subclassOfId = 0xabac89b7;
-      this.slots = [
+      this._slots = [
         'official',
         'rtl',
         'beta',
@@ -37327,7 +38016,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeTitle';
       this.constructorId = 0xe6dfb825;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -37375,7 +38064,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeAbout';
       this.constructorId = 0x55188a2e;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -37423,7 +38112,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeUsername';
       this.constructorId = 0x6a4afc38;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -37471,7 +38160,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangePhoto';
       this.constructorId = 0x434bd2af;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevPhoto', 'newPhoto'];
+      this._slots = ['prevPhoto', 'newPhoto'];
       this.prevPhoto = params.prevPhoto;
       this.newPhoto = params.newPhoto;
     }
@@ -37518,7 +38207,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleInvites';
       this.constructorId = 0x1b7907ae;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['newValue'];
+      this._slots = ['newValue'];
       this.newValue = params.newValue;
     }
     /**
@@ -37557,7 +38246,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleSignatures';
       this.constructorId = 0x26ae0971;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['newValue'];
+      this._slots = ['newValue'];
       this.newValue = params.newValue;
     }
     /**
@@ -37596,7 +38285,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionUpdatePinned';
       this.constructorId = 0xe9e82c18;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['message'];
+      this._slots = ['message'];
       this.message = params.message;
     }
     /**
@@ -37636,7 +38325,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionEditMessage';
       this.constructorId = 0x709b2405;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevMessage', 'newMessage'];
+      this._slots = ['prevMessage', 'newMessage'];
       this.prevMessage = params.prevMessage;
       this.newMessage = params.newMessage;
     }
@@ -37683,7 +38372,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionDeleteMessage';
       this.constructorId = 0x42e047bb;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['message'];
+      this._slots = ['message'];
       this.message = params.message;
     }
     /**
@@ -37720,7 +38409,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantJoin';
       this.constructorId = 0x183040d3;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -37752,7 +38441,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantLeave';
       this.constructorId = 0xf89777f2;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -37786,7 +38475,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantInvite';
       this.constructorId = 0xe31c34d8;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['participant'];
+      this._slots = ['participant'];
       this.participant = params.participant;
     }
     /**
@@ -37829,7 +38518,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantToggleBan';
       this.constructorId = 0xe6d83d7e;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevParticipant', 'newParticipant'];
+      this._slots = ['prevParticipant', 'newParticipant'];
       this.prevParticipant = params.prevParticipant;
       this.newParticipant = params.newParticipant;
     }
@@ -37880,7 +38569,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantToggleAdmin';
       this.constructorId = 0xd5676710;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevParticipant', 'newParticipant'];
+      this._slots = ['prevParticipant', 'newParticipant'];
       this.prevParticipant = params.prevParticipant;
       this.newParticipant = params.newParticipant;
     }
@@ -37931,7 +38620,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeStickerSet';
       this.constructorId = 0xb1c3caa7;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevStickerset', 'newStickerset'];
+      this._slots = ['prevStickerset', 'newStickerset'];
       this.prevStickerset = params.prevStickerset;
       this.newStickerset = params.newStickerset;
     }
@@ -37978,7 +38667,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionTogglePreHistoryHidden';
       this.constructorId = 0x5f5c95f1;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['newValue'];
+      this._slots = ['newValue'];
       this.newValue = params.newValue;
     }
     /**
@@ -38021,7 +38710,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionDefaultBannedRights';
       this.constructorId = 0x2df5fc0a;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevBannedRights', 'newBannedRights'];
+      this._slots = ['prevBannedRights', 'newBannedRights'];
       this.prevBannedRights = params.prevBannedRights;
       this.newBannedRights = params.newBannedRights;
     }
@@ -38068,7 +38757,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionStopPoll';
       this.constructorId = 0x8f079643;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['message'];
+      this._slots = ['message'];
       this.message = params.message;
     }
     /**
@@ -38108,7 +38797,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeLinkedChat';
       this.constructorId = 0x50c7ac8;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -38156,7 +38845,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeLocation';
       this.constructorId = 0xe6b76ae;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -38204,7 +38893,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleSlowMode';
       this.constructorId = 0x53909779;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -38251,7 +38940,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionStartGroupCall';
       this.constructorId = 0x23209745;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['call'];
+      this._slots = ['call'];
       this.call = params.call;
     }
     /**
@@ -38290,7 +38979,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionDiscardGroupCall';
       this.constructorId = 0xdb9f9140;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['call'];
+      this._slots = ['call'];
       this.call = params.call;
     }
     /**
@@ -38329,7 +39018,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantMute';
       this.constructorId = 0xf92424d2;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['participant'];
+      this._slots = ['participant'];
       this.participant = params.participant;
     }
     /**
@@ -38368,7 +39057,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantUnmute';
       this.constructorId = 0xe64429c0;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['participant'];
+      this._slots = ['participant'];
       this.participant = params.participant;
     }
     /**
@@ -38407,7 +39096,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleGroupCallSetting';
       this.constructorId = 0x56d6a247;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['joinMuted'];
+      this._slots = ['joinMuted'];
       this.joinMuted = params.joinMuted;
     }
     /**
@@ -38447,7 +39136,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantJoinByInvite';
       this.constructorId = 0xfe9fc158;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['viaChatlist', 'invite'];
+      this._slots = ['viaChatlist', 'invite'];
       this.viaChatlist = params.viaChatlist;
       this.invite = params.invite;
     }
@@ -38497,7 +39186,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionExportedInviteDelete';
       this.constructorId = 0x5a50fca4;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['invite'];
+      this._slots = ['invite'];
       this.invite = params.invite;
     }
     /**
@@ -38536,7 +39225,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionExportedInviteRevoke';
       this.constructorId = 0x410a134e;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['invite'];
+      this._slots = ['invite'];
       this.invite = params.invite;
     }
     /**
@@ -38579,7 +39268,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionExportedInviteEdit';
       this.constructorId = 0xe90ebb59;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevInvite', 'newInvite'];
+      this._slots = ['prevInvite', 'newInvite'];
       this.prevInvite = params.prevInvite;
       this.newInvite = params.newInvite;
     }
@@ -38626,7 +39315,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantVolume';
       this.constructorId = 0x3e7f6847;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['participant'];
+      this._slots = ['participant'];
       this.participant = params.participant;
     }
     /**
@@ -38666,7 +39355,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeHistoryTTL';
       this.constructorId = 0x6e941a38;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -38714,7 +39403,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionParticipantJoinByRequest';
       this.constructorId = 0xafb6144a;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['invite', 'approvedBy'];
+      this._slots = ['invite', 'approvedBy'];
       this.invite = params.invite;
       this.approvedBy = params.approvedBy;
     }
@@ -38761,7 +39450,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleNoForwards';
       this.constructorId = 0xcb2ac766;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['newValue'];
+      this._slots = ['newValue'];
       this.newValue = params.newValue;
     }
     /**
@@ -38800,7 +39489,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionSendMessage';
       this.constructorId = 0x278f2868;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['message'];
+      this._slots = ['message'];
       this.message = params.message;
     }
     /**
@@ -38840,7 +39529,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeAvailableReactions';
       this.constructorId = 0xbe4e0ef8;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -38888,7 +39577,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionChangeUsernames';
       this.constructorId = 0xf04fb3a9;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevValue', 'newValue'];
+      this._slots = ['prevValue', 'newValue'];
       this.prevValue = params.prevValue;
       this.newValue = params.newValue;
     }
@@ -38935,7 +39624,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleForum';
       this.constructorId = 0x2cc6383;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['newValue'];
+      this._slots = ['newValue'];
       this.newValue = params.newValue;
     }
     /**
@@ -38974,7 +39663,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionCreateTopic';
       this.constructorId = 0x58707d28;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['topic'];
+      this._slots = ['topic'];
       this.topic = params.topic;
     }
     /**
@@ -39014,7 +39703,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionEditTopic';
       this.constructorId = 0xf06fe208;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevTopic', 'newTopic'];
+      this._slots = ['prevTopic', 'newTopic'];
       this.prevTopic = params.prevTopic;
       this.newTopic = params.newTopic;
     }
@@ -39061,7 +39750,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionDeleteTopic';
       this.constructorId = 0xae168909;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['topic'];
+      this._slots = ['topic'];
       this.topic = params.topic;
     }
     /**
@@ -39101,7 +39790,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionPinTopic';
       this.constructorId = 0x5d8d353b;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['prevTopic', 'newTopic'];
+      this._slots = ['prevTopic', 'newTopic'];
       this.prevTopic = params.prevTopic;
       this.newTopic = params.newTopic;
     }
@@ -39155,7 +39844,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventActionToggleAntiSpam';
       this.constructorId = 0x64f36dfc;
       this.subclassOfId = 0xb2b987f3;
-      this.slots = ['newValue'];
+      this._slots = ['newValue'];
       this.newValue = params.newValue;
     }
     /**
@@ -39185,6 +39874,102 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class ChannelAdminLogEventActionChangeColor extends TLObject {
+    prevValue!: int;
+    newValue!: int;
+
+    constructor(params: { prevValue: int; newValue: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'ChannelAdminLogEventActionChangeColor';
+      this.constructorId = 0x3c2b247b;
+      this.subclassOfId = 0xb2b987f3;
+      this._slots = ['prevValue', 'newValue'];
+      this.prevValue = params.prevValue;
+      this.newValue = params.newValue;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.ChannelAdminLogEventActionChangeColor> {
+      // no flags
+
+      let prevValue = await Primitive.Int.read(b);
+      let newValue = await Primitive.Int.read(b);
+      return new Raw.ChannelAdminLogEventActionChangeColor({
+        prevValue: prevValue,
+        newValue: newValue,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.prevValue !== undefined) {
+        b.write(Primitive.Int.write(this.prevValue) as unknown as Buffer);
+      }
+      if (this.newValue !== undefined) {
+        b.write(Primitive.Int.write(this.newValue) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class ChannelAdminLogEventActionChangeBackgroundEmoji extends TLObject {
+    prevValue!: long;
+    newValue!: long;
+
+    constructor(params: { prevValue: long; newValue: long }) {
+      super();
+      this.classType = 'types';
+      this.className = 'ChannelAdminLogEventActionChangeBackgroundEmoji';
+      this.constructorId = 0x445fc434;
+      this.subclassOfId = 0xb2b987f3;
+      this._slots = ['prevValue', 'newValue'];
+      this.prevValue = params.prevValue;
+      this.newValue = params.newValue;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.ChannelAdminLogEventActionChangeBackgroundEmoji> {
+      // no flags
+
+      let prevValue = await Primitive.Long.read(b);
+      let newValue = await Primitive.Long.read(b);
+      return new Raw.ChannelAdminLogEventActionChangeBackgroundEmoji({
+        prevValue: prevValue,
+        newValue: newValue,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.prevValue !== undefined) {
+        b.write(Primitive.Long.write(this.prevValue) as unknown as Buffer);
+      }
+      if (this.newValue !== undefined) {
+        b.write(Primitive.Long.write(this.newValue) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class ChannelAdminLogEvent extends TLObject {
     id!: long;
     date!: int;
@@ -39202,7 +39987,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEvent';
       this.constructorId = 0x1fad68cd;
       this.subclassOfId = 0x408f0999;
-      this.slots = ['id', 'date', 'userId', 'action'];
+      this._slots = ['id', 'date', 'userId', 'action'];
       this.id = params.id;
       this.date = params.date;
       this.userId = params.userId;
@@ -39289,7 +40074,7 @@ export namespace Raw {
       this.className = 'ChannelAdminLogEventsFilter';
       this.constructorId = 0xea107ae4;
       this.subclassOfId = 0x7cbbf319;
-      this.slots = [
+      this._slots = [
         'join',
         'leave',
         'invite',
@@ -39418,7 +40203,7 @@ export namespace Raw {
       this.className = 'PopularContact';
       this.constructorId = 0x5ce14175;
       this.subclassOfId = 0x409255a;
-      this.slots = ['clientId', 'importers'];
+      this._slots = ['clientId', 'importers'];
       this.clientId = params.clientId;
       this.importers = params.importers;
     }
@@ -39459,7 +40244,7 @@ export namespace Raw {
       this.className = 'RecentMeUrlUnknown';
       this.constructorId = 0x46e1d13d;
       this.subclassOfId = 0x55a53079;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -39496,7 +40281,7 @@ export namespace Raw {
       this.className = 'RecentMeUrlUser';
       this.constructorId = 0xb92c09e2;
       this.subclassOfId = 0x55a53079;
-      this.slots = ['url', 'userId'];
+      this._slots = ['url', 'userId'];
       this.url = params.url;
       this.userId = params.userId;
     }
@@ -39538,7 +40323,7 @@ export namespace Raw {
       this.className = 'RecentMeUrlChat';
       this.constructorId = 0xb2da71d2;
       this.subclassOfId = 0x55a53079;
-      this.slots = ['url', 'chatId'];
+      this._slots = ['url', 'chatId'];
       this.url = params.url;
       this.chatId = params.chatId;
     }
@@ -39580,7 +40365,7 @@ export namespace Raw {
       this.className = 'RecentMeUrlChatInvite';
       this.constructorId = 0xeb49081d;
       this.subclassOfId = 0x55a53079;
-      this.slots = ['url', 'chatInvite'];
+      this._slots = ['url', 'chatInvite'];
       this.url = params.url;
       this.chatInvite = params.chatInvite;
     }
@@ -39622,7 +40407,7 @@ export namespace Raw {
       this.className = 'RecentMeUrlStickerSet';
       this.constructorId = 0xbc0a57dc;
       this.subclassOfId = 0x55a53079;
-      this.slots = ['url', 'set'];
+      this._slots = ['url', 'set'];
       this.url = params.url;
       this.set = params.set;
     }
@@ -39671,7 +40456,7 @@ export namespace Raw {
       this.className = 'InputSingleMedia';
       this.constructorId = 0x1cc6e91f;
       this.subclassOfId = 0x21ca8ed8;
-      this.slots = ['media', 'randomId', 'message', 'entities'];
+      this._slots = ['media', 'randomId', 'message', 'entities'];
       this.media = params.media;
       this.randomId = params.randomId;
       this.message = params.message;
@@ -39751,7 +40536,7 @@ export namespace Raw {
       this.className = 'WebAuthorization';
       this.constructorId = 0xa6f8f452;
       this.subclassOfId = 0x3764d30;
-      this.slots = [
+      this._slots = [
         'hash',
         'botId',
         'domain',
@@ -39847,7 +40632,7 @@ export namespace Raw {
       this.className = 'InputMessageID';
       this.constructorId = 0xa676a322;
       this.subclassOfId = 0x54b6bcc5;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -39883,7 +40668,7 @@ export namespace Raw {
       this.className = 'InputMessageReplyTo';
       this.constructorId = 0xbad88395;
       this.subclassOfId = 0x54b6bcc5;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -39917,7 +40702,7 @@ export namespace Raw {
       this.className = 'InputMessagePinned';
       this.constructorId = 0x86872538;
       this.subclassOfId = 0x54b6bcc5;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -39949,7 +40734,7 @@ export namespace Raw {
       this.className = 'InputMessageCallbackQuery';
       this.constructorId = 0xacfa1a7e;
       this.subclassOfId = 0x54b6bcc5;
-      this.slots = ['id', 'queryId'];
+      this._slots = ['id', 'queryId'];
       this.id = params.id;
       this.queryId = params.queryId;
     }
@@ -39990,7 +40775,7 @@ export namespace Raw {
       this.className = 'InputDialogPeer';
       this.constructorId = 0xfcaafeb7;
       this.subclassOfId = 0xa21c9795;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -40026,7 +40811,7 @@ export namespace Raw {
       this.className = 'InputDialogPeerFolder';
       this.constructorId = 0x64600527;
       this.subclassOfId = 0xa21c9795;
-      this.slots = ['folderId'];
+      this._slots = ['folderId'];
       this.folderId = params.folderId;
     }
     /**
@@ -40062,7 +40847,7 @@ export namespace Raw {
       this.className = 'DialogPeer';
       this.constructorId = 0xe56dbf05;
       this.subclassOfId = 0x256ce1ae;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -40098,7 +40883,7 @@ export namespace Raw {
       this.className = 'DialogPeerFolder';
       this.constructorId = 0x514519e2;
       this.subclassOfId = 0x256ce1ae;
-      this.slots = ['folderId'];
+      this._slots = ['folderId'];
       this.folderId = params.folderId;
     }
     /**
@@ -40136,7 +40921,7 @@ export namespace Raw {
       this.className = 'FileHash';
       this.constructorId = 0xf39b035c;
       this.subclassOfId = 0xead438b3;
-      this.slots = ['offset', 'limit', 'hash'];
+      this._slots = ['offset', 'limit', 'hash'];
       this.offset = params.offset;
       this.limit = params.limit;
       this.hash = params.hash;
@@ -40183,7 +40968,7 @@ export namespace Raw {
       this.className = 'InputClientProxy';
       this.constructorId = 0x75588b3f;
       this.subclassOfId = 0x91a4346;
-      this.slots = ['address', 'port'];
+      this._slots = ['address', 'port'];
       this.address = params.address;
       this.port = params.port;
     }
@@ -40234,7 +41019,7 @@ export namespace Raw {
       this.className = 'InputSecureFileUploaded';
       this.constructorId = 0x3334b0f0;
       this.subclassOfId = 0xdac8adfc;
-      this.slots = ['id', 'parts', 'md5Checksum', 'fileHash', 'secret'];
+      this._slots = ['id', 'parts', 'md5Checksum', 'fileHash', 'secret'];
       this.id = params.id;
       this.parts = params.parts;
       this.md5Checksum = params.md5Checksum;
@@ -40297,7 +41082,7 @@ export namespace Raw {
       this.className = 'InputSecureFile';
       this.constructorId = 0x5367e5be;
       this.subclassOfId = 0xdac8adfc;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -40336,7 +41121,7 @@ export namespace Raw {
       this.className = 'SecureFileEmpty';
       this.constructorId = 0x64199744;
       this.subclassOfId = 0x5db8dbc7;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40381,7 +41166,7 @@ export namespace Raw {
       this.className = 'SecureFile';
       this.constructorId = 0x7d09c27e;
       this.subclassOfId = 0x5db8dbc7;
-      this.slots = ['id', 'accessHash', 'size', 'dcId', 'date', 'fileHash', 'secret'];
+      this._slots = ['id', 'accessHash', 'size', 'dcId', 'date', 'fileHash', 'secret'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.size = params.size;
@@ -40457,7 +41242,7 @@ export namespace Raw {
       this.className = 'SecureData';
       this.constructorId = 0x8aeabec3;
       this.subclassOfId = 0x7cd41eb4;
-      this.slots = ['data', 'dataHash', 'secret'];
+      this._slots = ['data', 'dataHash', 'secret'];
       this.data = params.data;
       this.dataHash = params.dataHash;
       this.secret = params.secret;
@@ -40503,7 +41288,7 @@ export namespace Raw {
       this.className = 'SecurePlainPhone';
       this.constructorId = 0x7d6099dd;
       this.subclassOfId = 0x23b2afb6;
-      this.slots = ['phone'];
+      this._slots = ['phone'];
       this.phone = params.phone;
     }
     /**
@@ -40539,7 +41324,7 @@ export namespace Raw {
       this.className = 'SecurePlainEmail';
       this.constructorId = 0x21ec5a5f;
       this.subclassOfId = 0x23b2afb6;
-      this.slots = ['email'];
+      this._slots = ['email'];
       this.email = params.email;
     }
     /**
@@ -40573,7 +41358,7 @@ export namespace Raw {
       this.className = 'SecureValueTypePersonalDetails';
       this.constructorId = 0x9d2a81e3;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40605,7 +41390,7 @@ export namespace Raw {
       this.className = 'SecureValueTypePassport';
       this.constructorId = 0x3dac6a00;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40634,7 +41419,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeDriverLicense';
       this.constructorId = 0x6e425c4;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40663,7 +41448,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeIdentityCard';
       this.constructorId = 0xa0d0744b;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40692,7 +41477,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeInternalPassport';
       this.constructorId = 0x99a48f23;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40724,7 +41509,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeAddress';
       this.constructorId = 0xcbe31e26;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40753,7 +41538,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeUtilityBill';
       this.constructorId = 0xfc36954e;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40782,7 +41567,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeBankStatement';
       this.constructorId = 0x89137c0d;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40811,7 +41596,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeRentalAgreement';
       this.constructorId = 0x8b883488;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40843,7 +41628,7 @@ export namespace Raw {
       this.className = 'SecureValueTypePassportRegistration';
       this.constructorId = 0x99e3806a;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40875,7 +41660,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeTemporaryRegistration';
       this.constructorId = 0xea02ec33;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40907,7 +41692,7 @@ export namespace Raw {
       this.className = 'SecureValueTypePhone';
       this.constructorId = 0xb320aadb;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40936,7 +41721,7 @@ export namespace Raw {
       this.className = 'SecureValueTypeEmail';
       this.constructorId = 0x8e3ca7ee;
       this.subclassOfId = 0x8893f596;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -40985,7 +41770,7 @@ export namespace Raw {
       this.className = 'SecureValue';
       this.constructorId = 0x187fa0ca;
       this.subclassOfId = 0x51138ae;
-      this.slots = [
+      this._slots = [
         'type',
         'data',
         'frontSide',
@@ -41109,7 +41894,7 @@ export namespace Raw {
       this.className = 'InputSecureValue';
       this.constructorId = 0xdb21d0a7;
       this.subclassOfId = 0xb49da1fc;
-      this.slots = [
+      this._slots = [
         'type',
         'data',
         'frontSide',
@@ -41211,7 +41996,7 @@ export namespace Raw {
       this.className = 'SecureValueHash';
       this.constructorId = 0xed1ecdb0;
       this.subclassOfId = 0xd5f5c007;
-      this.slots = ['type', 'hash'];
+      this._slots = ['type', 'hash'];
       this.type = params.type;
       this.hash = params.hash;
     }
@@ -41260,7 +42045,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorData';
       this.constructorId = 0xe8a40bd9;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'dataHash', 'field', 'text'];
+      this._slots = ['type', 'dataHash', 'field', 'text'];
       this.type = params.type;
       this.dataHash = params.dataHash;
       this.field = params.field;
@@ -41318,7 +42103,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorFrontSide';
       this.constructorId = 0xbe3dfa;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41366,7 +42151,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorReverseSide';
       this.constructorId = 0x868a2aa5;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41414,7 +42199,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorSelfie';
       this.constructorId = 0xe537ced6;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41462,7 +42247,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorFile';
       this.constructorId = 0x7a700873;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41510,7 +42295,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorFiles';
       this.constructorId = 0x666220e9;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41558,7 +42343,7 @@ export namespace Raw {
       this.className = 'SecureValueError';
       this.constructorId = 0x869d758f;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'hash', 'text'];
+      this._slots = ['type', 'hash', 'text'];
       this.type = params.type;
       this.hash = params.hash;
       this.text = params.text;
@@ -41606,7 +42391,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorTranslationFile';
       this.constructorId = 0xa1144770;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41661,7 +42446,7 @@ export namespace Raw {
       this.className = 'SecureValueErrorTranslationFiles';
       this.constructorId = 0x34636dd8;
       this.subclassOfId = 0x6075fce;
-      this.slots = ['type', 'fileHash', 'text'];
+      this._slots = ['type', 'fileHash', 'text'];
       this.type = params.type;
       this.fileHash = params.fileHash;
       this.text = params.text;
@@ -41716,7 +42501,7 @@ export namespace Raw {
       this.className = 'SecureCredentialsEncrypted';
       this.constructorId = 0x33f0ea47;
       this.subclassOfId = 0x94dc7633;
-      this.slots = ['data', 'hash', 'secret'];
+      this._slots = ['data', 'hash', 'secret'];
       this.data = params.data;
       this.hash = params.hash;
       this.secret = params.secret;
@@ -41765,7 +42550,7 @@ export namespace Raw {
       this.className = 'SavedPhoneContact';
       this.constructorId = 0x1142bd56;
       this.subclassOfId = 0x6db98c4;
-      this.slots = ['phone', 'firstName', 'lastName', 'date'];
+      this._slots = ['phone', 'firstName', 'lastName', 'date'];
       this.phone = params.phone;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -41819,7 +42604,7 @@ export namespace Raw {
       this.className = 'PasswordKdfAlgoUnknown';
       this.constructorId = 0xd45ab096;
       this.subclassOfId = 0x37bcf5cc;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -41853,7 +42638,7 @@ export namespace Raw {
       this.className = 'PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow';
       this.constructorId = 0x3a912d4a;
       this.subclassOfId = 0x37bcf5cc;
-      this.slots = ['salt1', 'salt2', 'g', 'p'];
+      this._slots = ['salt1', 'salt2', 'g', 'p'];
       this.salt1 = params.salt1;
       this.salt2 = params.salt2;
       this.g = params.g;
@@ -41910,7 +42695,7 @@ export namespace Raw {
       this.className = 'SecurePasswordKdfAlgoUnknown';
       this.constructorId = 0x4a8537;
       this.subclassOfId = 0x77262943;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -41941,7 +42726,7 @@ export namespace Raw {
       this.className = 'SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000';
       this.constructorId = 0xbbf2dda0;
       this.subclassOfId = 0x77262943;
-      this.slots = ['salt'];
+      this._slots = ['salt'];
       this.salt = params.salt;
     }
     /**
@@ -41980,7 +42765,7 @@ export namespace Raw {
       this.className = 'SecurePasswordKdfAlgoSHA512';
       this.constructorId = 0x86471d92;
       this.subclassOfId = 0x77262943;
-      this.slots = ['salt'];
+      this._slots = ['salt'];
       this.salt = params.salt;
     }
     /**
@@ -42022,7 +42807,7 @@ export namespace Raw {
       this.className = 'SecureSecretSettings';
       this.constructorId = 0x1527bcac;
       this.subclassOfId = 0xc6c802fb;
-      this.slots = ['secureAlgo', 'secureSecret', 'secureSecretId'];
+      this._slots = ['secureAlgo', 'secureSecret', 'secureSecretId'];
       this.secureAlgo = params.secureAlgo;
       this.secureSecret = params.secureSecret;
       this.secureSecretId = params.secureSecretId;
@@ -42070,7 +42855,7 @@ export namespace Raw {
       this.className = 'InputCheckPasswordEmpty';
       this.constructorId = 0x9880f658;
       this.subclassOfId = 0xd41af560;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -42103,7 +42888,7 @@ export namespace Raw {
       this.className = 'InputCheckPasswordSRP';
       this.constructorId = 0xd27ff082;
       this.subclassOfId = 0xd41af560;
-      this.slots = ['srpId', 'a', 'm1'];
+      this._slots = ['srpId', 'a', 'm1'];
       this.srpId = params.srpId;
       this.a = params.a;
       this.m1 = params.m1;
@@ -42157,7 +42942,7 @@ export namespace Raw {
       this.className = 'SecureRequiredType';
       this.constructorId = 0x829d99da;
       this.subclassOfId = 0x7c7b420a;
-      this.slots = ['nativeNames', 'selfieRequired', 'translationRequired', 'type'];
+      this._slots = ['nativeNames', 'selfieRequired', 'translationRequired', 'type'];
       this.nativeNames = params.nativeNames;
       this.selfieRequired = params.selfieRequired;
       this.translationRequired = params.translationRequired;
@@ -42212,7 +42997,7 @@ export namespace Raw {
       this.className = 'SecureRequiredTypeOneOf';
       this.constructorId = 0x27477b4;
       this.subclassOfId = 0x7c7b420a;
-      this.slots = ['types'];
+      this._slots = ['types'];
       this.types = params.types;
     }
     /**
@@ -42251,7 +43036,7 @@ export namespace Raw {
       this.className = 'InputAppEvent';
       this.constructorId = 0x1d1b1245;
       this.subclassOfId = 0x89322106;
-      this.slots = ['time', 'type', 'peer', 'data'];
+      this._slots = ['time', 'type', 'peer', 'data'];
       this.time = params.time;
       this.type = params.type;
       this.peer = params.peer;
@@ -42303,7 +43088,7 @@ export namespace Raw {
       this.className = 'JsonObjectValue';
       this.constructorId = 0xc0de1bd9;
       this.subclassOfId = 0x937fceb9;
-      this.slots = ['key', 'value'];
+      this._slots = ['key', 'value'];
       this.key = params.key;
       this.value = params.value;
     }
@@ -42342,7 +43127,7 @@ export namespace Raw {
       this.className = 'JsonNull';
       this.constructorId = 0x3f6d7b68;
       this.subclassOfId = 0xeb9987b3;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -42373,7 +43158,7 @@ export namespace Raw {
       this.className = 'JsonBool';
       this.constructorId = 0xc7345e6a;
       this.subclassOfId = 0xeb9987b3;
-      this.slots = ['value'];
+      this._slots = ['value'];
       this.value = params.value;
     }
     /**
@@ -42409,7 +43194,7 @@ export namespace Raw {
       this.className = 'JsonNumber';
       this.constructorId = 0x2be0dfa4;
       this.subclassOfId = 0xeb9987b3;
-      this.slots = ['value'];
+      this._slots = ['value'];
       this.value = params.value;
     }
     /**
@@ -42445,7 +43230,7 @@ export namespace Raw {
       this.className = 'JsonString';
       this.constructorId = 0xb71e767a;
       this.subclassOfId = 0xeb9987b3;
-      this.slots = ['value'];
+      this._slots = ['value'];
       this.value = params.value;
     }
     /**
@@ -42481,7 +43266,7 @@ export namespace Raw {
       this.className = 'JsonArray';
       this.constructorId = 0xf7444763;
       this.subclassOfId = 0xeb9987b3;
-      this.slots = ['value'];
+      this._slots = ['value'];
       this.value = params.value;
     }
     /**
@@ -42517,7 +43302,7 @@ export namespace Raw {
       this.className = 'JsonObject';
       this.constructorId = 0x99c1d49d;
       this.subclassOfId = 0xeb9987b3;
-      this.slots = ['value'];
+      this._slots = ['value'];
       this.value = params.value;
     }
     /**
@@ -42569,7 +43354,7 @@ export namespace Raw {
       this.className = 'PageTableCell';
       this.constructorId = 0x34566b6a;
       this.subclassOfId = 0xb0eb3054;
-      this.slots = [
+      this._slots = [
         'header',
         'alignCenter',
         'alignRight',
@@ -42656,7 +43441,7 @@ export namespace Raw {
       this.className = 'PageTableRow';
       this.constructorId = 0xe0c0c5e5;
       this.subclassOfId = 0x59acee11;
-      this.slots = ['cells'];
+      this._slots = ['cells'];
       this.cells = params.cells;
     }
     /**
@@ -42693,7 +43478,7 @@ export namespace Raw {
       this.className = 'PageCaption';
       this.constructorId = 0x6f747657;
       this.subclassOfId = 0x29b8eeb3;
-      this.slots = ['text', 'credit'];
+      this._slots = ['text', 'credit'];
       this.text = params.text;
       this.credit = params.credit;
     }
@@ -42734,7 +43519,7 @@ export namespace Raw {
       this.className = 'PageListItemText';
       this.constructorId = 0xb92fb6cd;
       this.subclassOfId = 0x8caebcb1;
-      this.slots = ['text'];
+      this._slots = ['text'];
       this.text = params.text;
     }
     /**
@@ -42770,7 +43555,7 @@ export namespace Raw {
       this.className = 'PageListItemBlocks';
       this.constructorId = 0x25e073fc;
       this.subclassOfId = 0x8caebcb1;
-      this.slots = ['blocks'];
+      this._slots = ['blocks'];
       this.blocks = params.blocks;
     }
     /**
@@ -42807,7 +43592,7 @@ export namespace Raw {
       this.className = 'PageListOrderedItemText';
       this.constructorId = 0x5e068047;
       this.subclassOfId = 0xeeda0eb8;
-      this.slots = ['num', 'text'];
+      this._slots = ['num', 'text'];
       this.num = params.num;
       this.text = params.text;
     }
@@ -42849,7 +43634,7 @@ export namespace Raw {
       this.className = 'PageListOrderedItemBlocks';
       this.constructorId = 0x98dd8936;
       this.subclassOfId = 0xeeda0eb8;
-      this.slots = ['num', 'blocks'];
+      this._slots = ['num', 'blocks'];
       this.num = params.num;
       this.blocks = params.blocks;
     }
@@ -42904,7 +43689,7 @@ export namespace Raw {
       this.className = 'PageRelatedArticle';
       this.constructorId = 0xb390dc08;
       this.subclassOfId = 0x36d05822;
-      this.slots = [
+      this._slots = [
         'url',
         'webpageId',
         'title',
@@ -43012,7 +43797,7 @@ export namespace Raw {
       this.className = 'Page';
       this.constructorId = 0x98657f0d;
       this.subclassOfId = 0xb438191e;
-      this.slots = ['part', 'rtl', 'v2', 'url', 'blocks', 'photos', 'documents', 'views'];
+      this._slots = ['part', 'rtl', 'v2', 'url', 'blocks', 'photos', 'documents', 'views'];
       this.part = params.part;
       this.rtl = params.rtl;
       this.v2 = params.v2;
@@ -43093,7 +43878,7 @@ export namespace Raw {
       this.className = 'PollAnswer';
       this.constructorId = 0x6ca9c2e9;
       this.subclassOfId = 0x7ea5dd9e;
-      this.slots = ['text', 'option'];
+      this._slots = ['text', 'option'];
       this.text = params.text;
       this.option = params.option;
     }
@@ -43152,7 +43937,7 @@ export namespace Raw {
       this.className = 'Poll';
       this.constructorId = 0x86e18161;
       this.subclassOfId = 0x248e557b;
-      this.slots = [
+      this._slots = [
         'id',
         'closed',
         'publicVoters',
@@ -43250,7 +44035,7 @@ export namespace Raw {
       this.className = 'PollAnswerVoters';
       this.constructorId = 0x3b6ddad2;
       this.subclassOfId = 0x7ce0cf91;
-      this.slots = ['chosen', 'correct', 'option', 'voters'];
+      this._slots = ['chosen', 'correct', 'option', 'voters'];
       this.chosen = params.chosen;
       this.correct = params.correct;
       this.option = params.option;
@@ -43319,7 +44104,7 @@ export namespace Raw {
       this.className = 'PollResults';
       this.constructorId = 0x7adf2420;
       this.subclassOfId = 0xc3b4f687;
-      this.slots = [
+      this._slots = [
         'min',
         'results',
         'totalVoters',
@@ -43402,7 +44187,7 @@ export namespace Raw {
       this.className = 'ChatOnlines';
       this.constructorId = 0xf041e250;
       this.subclassOfId = 0x8c81903a;
-      this.slots = ['onlines'];
+      this._slots = ['onlines'];
       this.onlines = params.onlines;
     }
     /**
@@ -43438,7 +44223,7 @@ export namespace Raw {
       this.className = 'StatsURL';
       this.constructorId = 0x47a971e0;
       this.subclassOfId = 0x8d4c94c0;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -43504,7 +44289,7 @@ export namespace Raw {
       this.className = 'ChatAdminRights';
       this.constructorId = 0x5fb224d5;
       this.subclassOfId = 0x863dc7c4;
-      this.slots = [
+      this._slots = [
         'changeInfo',
         'postMessages',
         'editMessages',
@@ -43659,7 +44444,7 @@ export namespace Raw {
       this.className = 'ChatBannedRights';
       this.constructorId = 0x9f120418;
       this.subclassOfId = 0x4b5445a9;
-      this.slots = [
+      this._slots = [
         'viewMessages',
         'sendMessages',
         'sendMedia',
@@ -43805,7 +44590,7 @@ export namespace Raw {
       this.className = 'InputWallPaper';
       this.constructorId = 0xe630b979;
       this.subclassOfId = 0xee77201a;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -43846,7 +44631,7 @@ export namespace Raw {
       this.className = 'InputWallPaperSlug';
       this.constructorId = 0x72091c80;
       this.subclassOfId = 0xee77201a;
-      this.slots = ['slug'];
+      this._slots = ['slug'];
       this.slug = params.slug;
     }
     /**
@@ -43882,7 +44667,7 @@ export namespace Raw {
       this.className = 'InputWallPaperNoFile';
       this.constructorId = 0x967a462e;
       this.subclassOfId = 0xee77201a;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -43934,7 +44719,7 @@ export namespace Raw {
       this.className = 'CodeSettings';
       this.constructorId = 0xad253d78;
       this.subclassOfId = 0x48edbc8a;
-      this.slots = [
+      this._slots = [
         'allowFlashcall',
         'currentNumber',
         'allowAppHash',
@@ -44037,7 +44822,7 @@ export namespace Raw {
       this.className = 'WallPaperSettings';
       this.constructorId = 0x1dc1bca4;
       this.subclassOfId = 0x4175e312;
-      this.slots = [
+      this._slots = [
         'blur',
         'motion',
         'backgroundColor',
@@ -44155,7 +44940,7 @@ export namespace Raw {
       this.className = 'AutoDownloadSettings';
       this.constructorId = 0xbaa57628;
       this.subclassOfId = 0x512819c7;
-      this.slots = [
+      this._slots = [
         'disabled',
         'videoPreloadLarge',
         'audioPreloadNext',
@@ -44261,7 +45046,7 @@ export namespace Raw {
       this.className = 'EmojiKeyword';
       this.constructorId = 0xd5b3b9f9;
       this.subclassOfId = 0x6612a53e;
-      this.slots = ['keyword', 'emoticons'];
+      this._slots = ['keyword', 'emoticons'];
       this.keyword = params.keyword;
       this.emoticons = params.emoticons;
     }
@@ -44303,7 +45088,7 @@ export namespace Raw {
       this.className = 'EmojiKeywordDeleted';
       this.constructorId = 0x236df622;
       this.subclassOfId = 0x6612a53e;
-      this.slots = ['keyword', 'emoticons'];
+      this._slots = ['keyword', 'emoticons'];
       this.keyword = params.keyword;
       this.emoticons = params.emoticons;
     }
@@ -44352,7 +45137,7 @@ export namespace Raw {
       this.className = 'EmojiKeywordsDifference';
       this.constructorId = 0x5cc761bd;
       this.subclassOfId = 0xd279c672;
-      this.slots = ['langCode', 'fromVersion', 'version', 'keywords'];
+      this._slots = ['langCode', 'fromVersion', 'version', 'keywords'];
       this.langCode = params.langCode;
       this.fromVersion = params.fromVersion;
       this.version = params.version;
@@ -44408,7 +45193,7 @@ export namespace Raw {
       this.className = 'EmojiURL';
       this.constructorId = 0xa575739d;
       this.subclassOfId = 0x1fa08a19;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -44444,7 +45229,7 @@ export namespace Raw {
       this.className = 'EmojiLanguage';
       this.constructorId = 0xb3fb5361;
       this.subclassOfId = 0xa48d04ee;
-      this.slots = ['langCode'];
+      this._slots = ['langCode'];
       this.langCode = params.langCode;
     }
     /**
@@ -44492,7 +45277,7 @@ export namespace Raw {
       this.className = 'Folder';
       this.constructorId = 0xff544e65;
       this.subclassOfId = 0xeb0e0cfb;
-      this.slots = [
+      this._slots = [
         'autofillNewBroadcasts',
         'autofillPublicGroups',
         'autofillNewCorrespondents',
@@ -44568,7 +45353,7 @@ export namespace Raw {
       this.className = 'InputFolderPeer';
       this.constructorId = 0xfbd2c296;
       this.subclassOfId = 0x74825e00;
-      this.slots = ['peer', 'folderId'];
+      this._slots = ['peer', 'folderId'];
       this.peer = params.peer;
       this.folderId = params.folderId;
     }
@@ -44610,7 +45395,7 @@ export namespace Raw {
       this.className = 'FolderPeer';
       this.constructorId = 0xe9baa668;
       this.subclassOfId = 0xf3f2283b;
-      this.slots = ['peer', 'folderId'];
+      this._slots = ['peer', 'folderId'];
       this.peer = params.peer;
       this.folderId = params.folderId;
     }
@@ -44653,7 +45438,7 @@ export namespace Raw {
       this.className = 'UrlAuthResultRequest';
       this.constructorId = 0x92d33a0e;
       this.subclassOfId = 0x7765cb1e;
-      this.slots = ['requestWriteAccess', 'bot', 'domain'];
+      this._slots = ['requestWriteAccess', 'bot', 'domain'];
       this.requestWriteAccess = params.requestWriteAccess;
       this.bot = params.bot;
       this.domain = params.domain;
@@ -44706,7 +45491,7 @@ export namespace Raw {
       this.className = 'UrlAuthResultAccepted';
       this.constructorId = 0x8f8c0e4e;
       this.subclassOfId = 0x7765cb1e;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -44740,7 +45525,7 @@ export namespace Raw {
       this.className = 'UrlAuthResultDefault';
       this.constructorId = 0xa9d6db1f;
       this.subclassOfId = 0x7765cb1e;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -44769,7 +45554,7 @@ export namespace Raw {
       this.className = 'ChannelLocationEmpty';
       this.constructorId = 0xbfb5ad8b;
       this.subclassOfId = 0xec260b7f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -44801,7 +45586,7 @@ export namespace Raw {
       this.className = 'ChannelLocation';
       this.constructorId = 0x209b82db;
       this.subclassOfId = 0xec260b7f;
-      this.slots = ['geoPoint', 'address'];
+      this._slots = ['geoPoint', 'address'];
       this.geoPoint = params.geoPoint;
       this.address = params.address;
     }
@@ -44844,7 +45629,7 @@ export namespace Raw {
       this.className = 'PeerLocated';
       this.constructorId = 0xca461b5d;
       this.subclassOfId = 0xfada34ac;
-      this.slots = ['peer', 'expires', 'distance'];
+      this._slots = ['peer', 'expires', 'distance'];
       this.peer = params.peer;
       this.expires = params.expires;
       this.distance = params.distance;
@@ -44890,7 +45675,7 @@ export namespace Raw {
       this.className = 'PeerSelfLocated';
       this.constructorId = 0xf8ec284b;
       this.subclassOfId = 0xfada34ac;
-      this.slots = ['expires'];
+      this._slots = ['expires'];
       this.expires = params.expires;
     }
     /**
@@ -44928,7 +45713,7 @@ export namespace Raw {
       this.className = 'RestrictionReason';
       this.constructorId = 0xd072acb4;
       this.subclassOfId = 0x6ad95ad;
-      this.slots = ['platform', 'reason', 'text'];
+      this._slots = ['platform', 'reason', 'text'];
       this.platform = params.platform;
       this.reason = params.reason;
       this.text = params.text;
@@ -44975,7 +45760,7 @@ export namespace Raw {
       this.className = 'InputTheme';
       this.constructorId = 0x3c5693e9;
       this.subclassOfId = 0x7a100f0;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -45016,7 +45801,7 @@ export namespace Raw {
       this.className = 'InputThemeSlug';
       this.constructorId = 0xf5890df1;
       this.subclassOfId = 0x7a100f0;
-      this.slots = ['slug'];
+      this._slots = ['slug'];
       this.slug = params.slug;
     }
     /**
@@ -45074,7 +45859,7 @@ export namespace Raw {
       this.className = 'Theme';
       this.constructorId = 0xa00e67d6;
       this.subclassOfId = 0x56b4c80c;
-      this.slots = [
+      this._slots = [
         'creator',
         'default',
         'forChat',
@@ -45185,7 +45970,7 @@ export namespace Raw {
       this.className = 'BaseThemeClassic';
       this.constructorId = 0xc3a12462;
       this.subclassOfId = 0x1f03f444;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -45214,7 +45999,7 @@ export namespace Raw {
       this.className = 'BaseThemeDay';
       this.constructorId = 0xfbd81688;
       this.subclassOfId = 0x1f03f444;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -45243,7 +46028,7 @@ export namespace Raw {
       this.className = 'BaseThemeNight';
       this.constructorId = 0xb7b31ea8;
       this.subclassOfId = 0x1f03f444;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -45272,7 +46057,7 @@ export namespace Raw {
       this.className = 'BaseThemeTinted';
       this.constructorId = 0x6d5f77ee;
       this.subclassOfId = 0x1f03f444;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -45301,7 +46086,7 @@ export namespace Raw {
       this.className = 'BaseThemeArctic';
       this.constructorId = 0x5b11125a;
       this.subclassOfId = 0x1f03f444;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -45346,7 +46131,7 @@ export namespace Raw {
       this.className = 'InputThemeSettings';
       this.constructorId = 0x8fde504f;
       this.subclassOfId = 0x8338c882;
-      this.slots = [
+      this._slots = [
         'messageColorsAnimated',
         'baseTheme',
         'accentColor',
@@ -45447,7 +46232,7 @@ export namespace Raw {
       this.className = 'ThemeSettings';
       this.constructorId = 0xfa58b6d4;
       this.subclassOfId = 0x82666d38;
-      this.slots = [
+      this._slots = [
         'messageColorsAnimated',
         'baseTheme',
         'accentColor',
@@ -45532,7 +46317,7 @@ export namespace Raw {
       this.className = 'WebPageAttributeTheme';
       this.constructorId = 0x54b56617;
       this.subclassOfId = 0xafcfe9c7;
-      this.slots = ['documents', 'settings'];
+      this._slots = ['documents', 'settings'];
       this.documents = params.documents;
       this.settings = params.settings;
     }
@@ -45582,7 +46367,7 @@ export namespace Raw {
       this.className = 'WebPageAttributeStory';
       this.constructorId = 0x2e94c3e7;
       this.subclassOfId = 0xafcfe9c7;
-      this.slots = ['peer', 'id', 'story'];
+      this._slots = ['peer', 'id', 'story'];
       this.peer = params.peer;
       this.id = params.id;
       this.story = params.story;
@@ -45635,7 +46420,7 @@ export namespace Raw {
       this.className = 'BankCardOpenUrl';
       this.constructorId = 0xf568028a;
       this.subclassOfId = 0xf2e2460e;
-      this.slots = ['url', 'name'];
+      this._slots = ['url', 'name'];
       this.url = params.url;
       this.name = params.name;
     }
@@ -45704,7 +46489,7 @@ export namespace Raw {
       this.className = 'DialogFilter';
       this.constructorId = 0x7438f7e8;
       this.subclassOfId = 0x692bc457;
-      this.slots = [
+      this._slots = [
         'contacts',
         'nonContacts',
         'groups',
@@ -45823,7 +46608,7 @@ export namespace Raw {
       this.className = 'DialogFilterDefault';
       this.constructorId = 0x363293ae;
       this.subclassOfId = 0x692bc457;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -45866,7 +46651,7 @@ export namespace Raw {
       this.className = 'DialogFilterChatlist';
       this.constructorId = 0xd64a04a8;
       this.subclassOfId = 0x692bc457;
-      this.slots = ['hasMyInvites', 'id', 'title', 'emoticon', 'pinnedPeers', 'includePeers'];
+      this._slots = ['hasMyInvites', 'id', 'title', 'emoticon', 'pinnedPeers', 'includePeers'];
       this.hasMyInvites = params.hasMyInvites;
       this.id = params.id;
       this.title = params.title;
@@ -45939,7 +46724,7 @@ export namespace Raw {
       this.className = 'DialogFilterSuggested';
       this.constructorId = 0x77744d4a;
       this.subclassOfId = 0x31ede086;
-      this.slots = ['filter', 'description'];
+      this._slots = ['filter', 'description'];
       this.filter = params.filter;
       this.description = params.description;
     }
@@ -45981,7 +46766,7 @@ export namespace Raw {
       this.className = 'StatsDateRangeDays';
       this.constructorId = 0xb637edaf;
       this.subclassOfId = 0x81236245;
-      this.slots = ['minDate', 'maxDate'];
+      this._slots = ['minDate', 'maxDate'];
       this.minDate = params.minDate;
       this.maxDate = params.maxDate;
     }
@@ -46023,7 +46808,7 @@ export namespace Raw {
       this.className = 'StatsAbsValueAndPrev';
       this.constructorId = 0xcb43acde;
       this.subclassOfId = 0x3ebe59af;
-      this.slots = ['current', 'previous'];
+      this._slots = ['current', 'previous'];
       this.current = params.current;
       this.previous = params.previous;
     }
@@ -46065,7 +46850,7 @@ export namespace Raw {
       this.className = 'StatsPercentValue';
       this.constructorId = 0xcbce2fe0;
       this.subclassOfId = 0x9702c51e;
-      this.slots = ['part', 'total'];
+      this._slots = ['part', 'total'];
       this.part = params.part;
       this.total = params.total;
     }
@@ -46106,7 +46891,7 @@ export namespace Raw {
       this.className = 'StatsGraphAsync';
       this.constructorId = 0x4a27eb2d;
       this.subclassOfId = 0x9b903153;
-      this.slots = ['token'];
+      this._slots = ['token'];
       this.token = params.token;
     }
     /**
@@ -46142,7 +46927,7 @@ export namespace Raw {
       this.className = 'StatsGraphError';
       this.constructorId = 0xbedc9822;
       this.subclassOfId = 0x9b903153;
-      this.slots = ['error'];
+      this._slots = ['error'];
       this.error = params.error;
     }
     /**
@@ -46179,7 +46964,7 @@ export namespace Raw {
       this.className = 'StatsGraph';
       this.constructorId = 0x8ea464b6;
       this.subclassOfId = 0x9b903153;
-      this.slots = ['json', 'zoomToken'];
+      this._slots = ['json', 'zoomToken'];
       this.json = params.json;
       this.zoomToken = params.zoomToken;
     }
@@ -46228,7 +47013,7 @@ export namespace Raw {
       this.className = 'MessageInteractionCounters';
       this.constructorId = 0xad4fc9bd;
       this.subclassOfId = 0x2638b720;
-      this.slots = ['msgId', 'views', 'forwards'];
+      this._slots = ['msgId', 'views', 'forwards'];
       this.msgId = params.msgId;
       this.views = params.views;
       this.forwards = params.forwards;
@@ -46278,7 +47063,7 @@ export namespace Raw {
       this.className = 'VideoSize';
       this.constructorId = 0xde33b094;
       this.subclassOfId = 0x62f1d509;
-      this.slots = ['type', 'w', 'h', 'size', 'videoStartTs'];
+      this._slots = ['type', 'w', 'h', 'size', 'videoStartTs'];
       this.type = params.type;
       this.w = params.w;
       this.h = params.h;
@@ -46341,7 +47126,7 @@ export namespace Raw {
       this.className = 'VideoSizeEmojiMarkup';
       this.constructorId = 0xf85c413c;
       this.subclassOfId = 0x62f1d509;
-      this.slots = ['emojiId', 'backgroundColors'];
+      this._slots = ['emojiId', 'backgroundColors'];
       this.emojiId = params.emojiId;
       this.backgroundColors = params.backgroundColors;
     }
@@ -46388,7 +47173,7 @@ export namespace Raw {
       this.className = 'VideoSizeStickerMarkup';
       this.constructorId = 0xda082fe;
       this.subclassOfId = 0x62f1d509;
-      this.slots = ['stickerset', 'stickerId', 'backgroundColors'];
+      this._slots = ['stickerset', 'stickerId', 'backgroundColors'];
       this.stickerset = params.stickerset;
       this.stickerId = params.stickerId;
       this.backgroundColors = params.backgroundColors;
@@ -46440,7 +47225,7 @@ export namespace Raw {
       this.className = 'StatsGroupTopPoster';
       this.constructorId = 0x9d04af9b;
       this.subclassOfId = 0x81c5ce23;
-      this.slots = ['userId', 'messages', 'avgChars'];
+      this._slots = ['userId', 'messages', 'avgChars'];
       this.userId = params.userId;
       this.messages = params.messages;
       this.avgChars = params.avgChars;
@@ -46493,7 +47278,7 @@ export namespace Raw {
       this.className = 'StatsGroupTopAdmin';
       this.constructorId = 0xd7584c87;
       this.subclassOfId = 0x80359c5d;
-      this.slots = ['userId', 'deleted', 'kicked', 'banned'];
+      this._slots = ['userId', 'deleted', 'kicked', 'banned'];
       this.userId = params.userId;
       this.deleted = params.deleted;
       this.kicked = params.kicked;
@@ -46550,7 +47335,7 @@ export namespace Raw {
       this.className = 'StatsGroupTopInviter';
       this.constructorId = 0x535f779d;
       this.subclassOfId = 0x85010c7a;
-      this.slots = ['userId', 'invitations'];
+      this._slots = ['userId', 'invitations'];
       this.userId = params.userId;
       this.invitations = params.invitations;
     }
@@ -46597,7 +47382,7 @@ export namespace Raw {
       this.className = 'GlobalPrivacySettings';
       this.constructorId = 0x734c4ccb;
       this.subclassOfId = 0xc90e5770;
-      this.slots = [
+      this._slots = [
         'archiveAndMuteNewNoncontactPeers',
         'keepArchivedUnmuted',
         'keepArchivedFolders',
@@ -46652,7 +47437,7 @@ export namespace Raw {
       this.className = 'MessageViews';
       this.constructorId = 0x455b853d;
       this.subclassOfId = 0x3cb083b9;
-      this.slots = ['views', 'forwards', 'replies'];
+      this._slots = ['views', 'forwards', 'replies'];
       this.views = params.views;
       this.forwards = params.forwards;
       this.replies = params.replies;
@@ -46700,34 +47485,54 @@ export namespace Raw {
   export class MessageReplyHeader extends TLObject {
     replyToScheduled?: boolean;
     forumTopic?: boolean;
-    replyToMsgId!: int;
+    quote?: boolean;
+    replyToMsgId?: int;
     replyToPeerId?: Raw.TypePeer;
+    replyFrom?: Raw.TypeMessageFwdHeader;
+    replyMedia?: Raw.TypeMessageMedia;
     replyToTopId?: int;
+    quoteText?: string;
+    quoteEntities?: Vector<Raw.TypeMessageEntity>;
 
     constructor(params: {
       replyToScheduled?: boolean;
       forumTopic?: boolean;
-      replyToMsgId: int;
+      quote?: boolean;
+      replyToMsgId?: int;
       replyToPeerId?: Raw.TypePeer;
+      replyFrom?: Raw.TypeMessageFwdHeader;
+      replyMedia?: Raw.TypeMessageMedia;
       replyToTopId?: int;
+      quoteText?: string;
+      quoteEntities?: Vector<Raw.TypeMessageEntity>;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessageReplyHeader';
-      this.constructorId = 0xa6d57763;
+      this.constructorId = 0x6eebcabd;
       this.subclassOfId = 0x5b4d9167;
-      this.slots = [
+      this._slots = [
         'replyToScheduled',
         'forumTopic',
+        'quote',
         'replyToMsgId',
         'replyToPeerId',
+        'replyFrom',
+        'replyMedia',
         'replyToTopId',
+        'quoteText',
+        'quoteEntities',
       ];
       this.replyToScheduled = params.replyToScheduled;
       this.forumTopic = params.forumTopic;
+      this.quote = params.quote;
       this.replyToMsgId = params.replyToMsgId;
       this.replyToPeerId = params.replyToPeerId;
+      this.replyFrom = params.replyFrom;
+      this.replyMedia = params.replyMedia;
       this.replyToTopId = params.replyToTopId;
+      this.quoteText = params.quoteText;
+      this.quoteEntities = params.quoteEntities;
     }
     /**
      * Generate the TLObject from buffer.
@@ -46740,15 +47545,25 @@ export namespace Raw {
 
       let replyToScheduled = flags & (1 << 2) ? true : false;
       let forumTopic = flags & (1 << 3) ? true : false;
-      let replyToMsgId = await Primitive.Int.read(b);
+      let quote = flags & (1 << 9) ? true : false;
+      let replyToMsgId = flags & (1 << 4) ? await Primitive.Int.read(b) : undefined;
       let replyToPeerId = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+      let replyFrom = flags & (1 << 5) ? await TLObject.read(b) : undefined;
+      let replyMedia = flags & (1 << 8) ? await TLObject.read(b) : undefined;
       let replyToTopId = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
+      let quoteText = flags & (1 << 6) ? await Primitive.String.read(b) : undefined;
+      let quoteEntities = flags & (1 << 7) ? await TLObject.read(b) : [];
       return new Raw.MessageReplyHeader({
         replyToScheduled: replyToScheduled,
         forumTopic: forumTopic,
+        quote: quote,
         replyToMsgId: replyToMsgId,
         replyToPeerId: replyToPeerId,
+        replyFrom: replyFrom,
+        replyMedia: replyMedia,
         replyToTopId: replyToTopId,
+        quoteText: quoteText,
+        quoteEntities: quoteEntities,
       });
     }
     /**
@@ -46762,8 +47577,14 @@ export namespace Raw {
       let flags = 0;
       flags |= this.replyToScheduled ? 1 << 2 : 0;
       flags |= this.forumTopic ? 1 << 3 : 0;
+      flags |= this.quote ? 1 << 9 : 0;
+      flags |= this.replyToMsgId !== undefined ? 1 << 4 : 0;
       flags |= this.replyToPeerId !== undefined ? 1 << 0 : 0;
+      flags |= this.replyFrom !== undefined ? 1 << 5 : 0;
+      flags |= this.replyMedia !== undefined ? 1 << 8 : 0;
       flags |= this.replyToTopId !== undefined ? 1 << 1 : 0;
+      flags |= this.quoteText !== undefined ? 1 << 6 : 0;
+      flags |= this.quoteEntities ? 1 << 7 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.replyToMsgId !== undefined) {
@@ -46772,8 +47593,20 @@ export namespace Raw {
       if (this.replyToPeerId !== undefined) {
         b.write(this.replyToPeerId.write() as unknown as Buffer);
       }
+      if (this.replyFrom !== undefined) {
+        b.write(this.replyFrom.write() as unknown as Buffer);
+      }
+      if (this.replyMedia !== undefined) {
+        b.write(this.replyMedia.write() as unknown as Buffer);
+      }
       if (this.replyToTopId !== undefined) {
         b.write(Primitive.Int.write(this.replyToTopId) as unknown as Buffer);
+      }
+      if (this.quoteText !== undefined) {
+        b.write(Primitive.String.write(this.quoteText) as unknown as Buffer);
+      }
+      if (this.quoteEntities) {
+        b.write(Primitive.Vector.write(this.quoteEntities) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -46788,7 +47621,7 @@ export namespace Raw {
       this.className = 'MessageReplyStoryHeader';
       this.constructorId = 0x9c98bfc1;
       this.subclassOfId = 0x5b4d9167;
-      this.slots = ['userId', 'storyId'];
+      this._slots = ['userId', 'storyId'];
       this.userId = params.userId;
       this.storyId = params.storyId;
     }
@@ -46843,7 +47676,7 @@ export namespace Raw {
       this.className = 'MessageReplies';
       this.constructorId = 0x83d60fc2;
       this.subclassOfId = 0x6ccd5ce2;
-      this.slots = [
+      this._slots = [
         'comments',
         'replies',
         'repliesPts',
@@ -46933,7 +47766,7 @@ export namespace Raw {
       this.className = 'PeerBlocked';
       this.constructorId = 0xe8fd8014;
       this.subclassOfId = 0x54f2fc98;
-      this.slots = ['peerId', 'date'];
+      this._slots = ['peerId', 'date'];
       this.peerId = params.peerId;
       this.date = params.date;
     }
@@ -46976,7 +47809,7 @@ export namespace Raw {
       this.className = 'GroupCallDiscarded';
       this.constructorId = 0x7780bcb4;
       this.subclassOfId = 0x20b4f320;
-      this.slots = ['id', 'accessHash', 'duration'];
+      this._slots = ['id', 'accessHash', 'duration'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.duration = params.duration;
@@ -47058,7 +47891,7 @@ export namespace Raw {
       this.className = 'GroupCall';
       this.constructorId = 0xd597650c;
       this.subclassOfId = 0x20b4f320;
-      this.slots = [
+      this._slots = [
         'joinMuted',
         'canChangeJoinMuted',
         'joinDateAsc',
@@ -47212,7 +48045,7 @@ export namespace Raw {
       this.className = 'InputGroupCall';
       this.constructorId = 0xd8aa840f;
       this.subclassOfId = 0x58611ab1;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -47291,7 +48124,7 @@ export namespace Raw {
       this.className = 'GroupCallParticipant';
       this.constructorId = 0xeba636fe;
       this.subclassOfId = 0xc01aaf4c;
-      this.slots = [
+      this._slots = [
         'muted',
         'left',
         'canSelfUnmute',
@@ -47446,7 +48279,7 @@ export namespace Raw {
       this.className = 'InlineQueryPeerTypeSameBotPM';
       this.constructorId = 0x3081ed9d;
       this.subclassOfId = 0xafb0fa1f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47475,7 +48308,7 @@ export namespace Raw {
       this.className = 'InlineQueryPeerTypePM';
       this.constructorId = 0x833c0fac;
       this.subclassOfId = 0xafb0fa1f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47504,7 +48337,7 @@ export namespace Raw {
       this.className = 'InlineQueryPeerTypeChat';
       this.constructorId = 0xd766c50a;
       this.subclassOfId = 0xafb0fa1f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47533,7 +48366,7 @@ export namespace Raw {
       this.className = 'InlineQueryPeerTypeMegagroup';
       this.constructorId = 0x5ec4be43;
       this.subclassOfId = 0xafb0fa1f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47562,7 +48395,7 @@ export namespace Raw {
       this.className = 'InlineQueryPeerTypeBroadcast';
       this.constructorId = 0x6334ee9a;
       this.subclassOfId = 0xafb0fa1f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47591,7 +48424,7 @@ export namespace Raw {
       this.className = 'InlineQueryPeerTypeBotPM';
       this.constructorId = 0xe3b2d0c;
       this.subclassOfId = 0xafb0fa1f;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47634,7 +48467,7 @@ export namespace Raw {
       this.className = 'ChatInviteImporter';
       this.constructorId = 0x8c5adfd9;
       this.subclassOfId = 0x5312542e;
-      this.slots = ['requested', 'viaChatlist', 'userId', 'date', 'about', 'approvedBy'];
+      this._slots = ['requested', 'viaChatlist', 'userId', 'date', 'about', 'approvedBy'];
       this.requested = params.requested;
       this.viaChatlist = params.viaChatlist;
       this.userId = params.userId;
@@ -47707,7 +48540,7 @@ export namespace Raw {
       this.className = 'ChatAdminWithInvites';
       this.constructorId = 0xf2ecef23;
       this.subclassOfId = 0x5063f398;
-      this.slots = ['adminId', 'invitesCount', 'revokedInvitesCount'];
+      this._slots = ['adminId', 'invitesCount', 'revokedInvitesCount'];
       this.adminId = params.adminId;
       this.invitesCount = params.invitesCount;
       this.revokedInvitesCount = params.revokedInvitesCount;
@@ -47758,7 +48591,7 @@ export namespace Raw {
       this.className = 'GroupCallParticipantVideoSourceGroup';
       this.constructorId = 0xdcb118b7;
       this.subclassOfId = 0x3015f87c;
-      this.slots = ['semantics', 'sources'];
+      this._slots = ['semantics', 'sources'];
       this.semantics = params.semantics;
       this.sources = params.sources;
     }
@@ -47813,7 +48646,7 @@ export namespace Raw {
       this.className = 'GroupCallParticipantVideo';
       this.constructorId = 0x67753ac8;
       this.subclassOfId = 0xef46b8db;
-      this.slots = ['paused', 'endpoint', 'sourceGroups', 'audioSource'];
+      this._slots = ['paused', 'endpoint', 'sourceGroups', 'audioSource'];
       this.paused = params.paused;
       this.endpoint = params.endpoint;
       this.sourceGroups = params.sourceGroups;
@@ -47871,7 +48704,7 @@ export namespace Raw {
       this.className = 'BotCommandScopeDefault';
       this.constructorId = 0x2f6cb2ab;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47900,7 +48733,7 @@ export namespace Raw {
       this.className = 'BotCommandScopeUsers';
       this.constructorId = 0x3c4f04d8;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47929,7 +48762,7 @@ export namespace Raw {
       this.className = 'BotCommandScopeChats';
       this.constructorId = 0x6fe1a881;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47958,7 +48791,7 @@ export namespace Raw {
       this.className = 'BotCommandScopeChatAdmins';
       this.constructorId = 0xb9aa606a;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -47989,7 +48822,7 @@ export namespace Raw {
       this.className = 'BotCommandScopePeer';
       this.constructorId = 0xdb9d897d;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -48025,7 +48858,7 @@ export namespace Raw {
       this.className = 'BotCommandScopePeerAdmins';
       this.constructorId = 0x3fd863d1;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = ['peer'];
+      this._slots = ['peer'];
       this.peer = params.peer;
     }
     /**
@@ -48062,7 +48895,7 @@ export namespace Raw {
       this.className = 'BotCommandScopePeerUser';
       this.constructorId = 0xa1321f3;
       this.subclassOfId = 0x4baf5d10;
-      this.slots = ['peer', 'userId'];
+      this._slots = ['peer', 'userId'];
       this.peer = params.peer;
       this.userId = params.userId;
     }
@@ -48129,7 +48962,7 @@ export namespace Raw {
       this.className = 'SponsoredMessage';
       this.constructorId = 0xdaafff6b;
       this.subclassOfId = 0xe157d836;
-      this.slots = [
+      this._slots = [
         'recommended',
         'showPeerPhoto',
         'randomId',
@@ -48266,7 +49099,7 @@ export namespace Raw {
       this.className = 'SearchResultsCalendarPeriod';
       this.constructorId = 0xc9b0539f;
       this.subclassOfId = 0xe25cf8ff;
-      this.slots = ['date', 'minMsgId', 'maxMsgId', 'count'];
+      this._slots = ['date', 'minMsgId', 'maxMsgId', 'count'];
       this.date = params.date;
       this.minMsgId = params.minMsgId;
       this.maxMsgId = params.maxMsgId;
@@ -48324,7 +49157,7 @@ export namespace Raw {
       this.className = 'SearchResultPosition';
       this.constructorId = 0x7f648b67;
       this.subclassOfId = 0xb8e21614;
-      this.slots = ['msgId', 'date', 'offset'];
+      this._slots = ['msgId', 'date', 'offset'];
       this.msgId = params.msgId;
       this.date = params.date;
       this.offset = params.offset;
@@ -48372,7 +49205,7 @@ export namespace Raw {
       this.className = 'ReactionCount';
       this.constructorId = 0xa3d1cb80;
       this.subclassOfId = 0xd208ce3f;
-      this.slots = ['chosenOrder', 'reaction', 'count'];
+      this._slots = ['chosenOrder', 'reaction', 'count'];
       this.chosenOrder = params.chosenOrder;
       this.reaction = params.reaction;
       this.count = params.count;
@@ -48432,7 +49265,7 @@ export namespace Raw {
       this.className = 'MessageReactions';
       this.constructorId = 0x4f2b9479;
       this.subclassOfId = 0x8a5b071c;
-      this.slots = ['min', 'canSeeList', 'results', 'recentReactions'];
+      this._slots = ['min', 'canSeeList', 'results', 'recentReactions'];
       this.min = params.min;
       this.canSeeList = params.canSeeList;
       this.results = params.results;
@@ -48512,7 +49345,7 @@ export namespace Raw {
       this.className = 'AvailableReaction';
       this.constructorId = 0xc077ec01;
       this.subclassOfId = 0x8c1c9d73;
-      this.slots = [
+      this._slots = [
         'inactive',
         'premium',
         'reaction',
@@ -48637,7 +49470,7 @@ export namespace Raw {
       this.className = 'MessagePeerReaction';
       this.constructorId = 0x8c79b63c;
       this.subclassOfId = 0xaf73a2a5;
-      this.slots = ['big', 'unread', 'my', 'peerId', 'date', 'reaction'];
+      this._slots = ['big', 'unread', 'my', 'peerId', 'date', 'reaction'];
       this.big = params.big;
       this.unread = params.unread;
       this.my = params.my;
@@ -48706,7 +49539,7 @@ export namespace Raw {
       this.className = 'GroupCallStreamChannel';
       this.constructorId = 0x80eb48af;
       this.subclassOfId = 0xdd44b258;
-      this.slots = ['channel', 'scale', 'lastTimestampMs'];
+      this._slots = ['channel', 'scale', 'lastTimestampMs'];
       this.channel = params.channel;
       this.scale = params.scale;
       this.lastTimestampMs = params.lastTimestampMs;
@@ -48757,7 +49590,7 @@ export namespace Raw {
       this.className = 'AttachMenuBotIconColor';
       this.constructorId = 0x4576f3f0;
       this.subclassOfId = 0xbea4cb6a;
-      this.slots = ['name', 'color'];
+      this._slots = ['name', 'color'];
       this.name = params.name;
       this.color = params.color;
     }
@@ -48804,7 +49637,7 @@ export namespace Raw {
       this.className = 'AttachMenuBotIcon';
       this.constructorId = 0xb2a7386b;
       this.subclassOfId = 0x80484555;
-      this.slots = ['name', 'icon', 'colors'];
+      this._slots = ['name', 'icon', 'colors'];
       this.name = params.name;
       this.icon = params.icon;
       this.colors = params.colors;
@@ -48876,7 +49709,7 @@ export namespace Raw {
       this.className = 'AttachMenuBot';
       this.constructorId = 0xd90d8dfe;
       this.subclassOfId = 0x9f087446;
-      this.slots = [
+      this._slots = [
         'inactive',
         'hasSettings',
         'requestWriteAccess',
@@ -48971,7 +49804,7 @@ export namespace Raw {
       this.className = 'AttachMenuBotsNotModified';
       this.constructorId = 0xf1d88a5c;
       this.subclassOfId = 0x842e23da;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49008,7 +49841,7 @@ export namespace Raw {
       this.className = 'AttachMenuBots';
       this.constructorId = 0x3c4301c0;
       this.subclassOfId = 0x842e23da;
-      this.slots = ['hash', 'bots', 'users'];
+      this._slots = ['hash', 'bots', 'users'];
       this.hash = params.hash;
       this.bots = params.bots;
       this.users = params.users;
@@ -49055,7 +49888,7 @@ export namespace Raw {
       this.className = 'AttachMenuBotsBot';
       this.constructorId = 0x93bf667f;
       this.subclassOfId = 0xdb33883d;
-      this.slots = ['bot', 'users'];
+      this._slots = ['bot', 'users'];
       this.bot = params.bot;
       this.users = params.users;
     }
@@ -49097,7 +49930,7 @@ export namespace Raw {
       this.className = 'WebViewResultUrl';
       this.constructorId = 0xc14557c;
       this.subclassOfId = 0x93cea746;
-      this.slots = ['queryId', 'url'];
+      this._slots = ['queryId', 'url'];
       this.queryId = params.queryId;
       this.url = params.url;
     }
@@ -49138,7 +49971,7 @@ export namespace Raw {
       this.className = 'SimpleWebViewResultUrl';
       this.constructorId = 0x882f76bb;
       this.subclassOfId = 0x15eee3db;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -49174,7 +50007,7 @@ export namespace Raw {
       this.className = 'WebViewMessageSent';
       this.constructorId = 0xc94511c;
       this.subclassOfId = 0x75e49312;
-      this.slots = ['msgId'];
+      this._slots = ['msgId'];
       this.msgId = params.msgId;
     }
     /**
@@ -49214,7 +50047,7 @@ export namespace Raw {
       this.className = 'BotMenuButtonDefault';
       this.constructorId = 0x7533a588;
       this.subclassOfId = 0x4c71bd3c;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49243,7 +50076,7 @@ export namespace Raw {
       this.className = 'BotMenuButtonCommands';
       this.constructorId = 0x4258c205;
       this.subclassOfId = 0x4c71bd3c;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49275,7 +50108,7 @@ export namespace Raw {
       this.className = 'BotMenuButton';
       this.constructorId = 0xc7b57ce6;
       this.subclassOfId = 0x4c71bd3c;
-      this.slots = ['text', 'url'];
+      this._slots = ['text', 'url'];
       this.text = params.text;
       this.url = params.url;
     }
@@ -49314,7 +50147,7 @@ export namespace Raw {
       this.className = 'NotificationSoundDefault';
       this.constructorId = 0x97e8bebe;
       this.subclassOfId = 0xf2f5e55b;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49343,7 +50176,7 @@ export namespace Raw {
       this.className = 'NotificationSoundNone';
       this.constructorId = 0x6f0c34df;
       this.subclassOfId = 0xf2f5e55b;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49375,7 +50208,7 @@ export namespace Raw {
       this.className = 'NotificationSoundLocal';
       this.constructorId = 0x830b9ae4;
       this.subclassOfId = 0xf2f5e55b;
-      this.slots = ['title', 'data'];
+      this._slots = ['title', 'data'];
       this.title = params.title;
       this.data = params.data;
     }
@@ -49416,7 +50249,7 @@ export namespace Raw {
       this.className = 'NotificationSoundRingtone';
       this.constructorId = 0xff6c8049;
       this.subclassOfId = 0xf2f5e55b;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -49450,7 +50283,7 @@ export namespace Raw {
       this.className = 'AttachMenuPeerTypeSameBotPM';
       this.constructorId = 0x7d6be90e;
       this.subclassOfId = 0xd1d886d0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49479,7 +50312,7 @@ export namespace Raw {
       this.className = 'AttachMenuPeerTypeBotPM';
       this.constructorId = 0xc32bfa1a;
       this.subclassOfId = 0xd1d886d0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49508,7 +50341,7 @@ export namespace Raw {
       this.className = 'AttachMenuPeerTypePM';
       this.constructorId = 0xf146d31f;
       this.subclassOfId = 0xd1d886d0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49537,7 +50370,7 @@ export namespace Raw {
       this.className = 'AttachMenuPeerTypeChat';
       this.constructorId = 0x509113f;
       this.subclassOfId = 0xd1d886d0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49566,7 +50399,7 @@ export namespace Raw {
       this.className = 'AttachMenuPeerTypeBroadcast';
       this.constructorId = 0x7bfbdefc;
       this.subclassOfId = 0xd1d886d0;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49598,7 +50431,7 @@ export namespace Raw {
       this.className = 'InputInvoiceMessage';
       this.constructorId = 0xc5b56859;
       this.subclassOfId = 0x726e9bfe;
-      this.slots = ['peer', 'msgId'];
+      this._slots = ['peer', 'msgId'];
       this.peer = params.peer;
       this.msgId = params.msgId;
     }
@@ -49639,7 +50472,7 @@ export namespace Raw {
       this.className = 'InputInvoiceSlug';
       this.constructorId = 0xc326caef;
       this.subclassOfId = 0x726e9bfe;
-      this.slots = ['slug'];
+      this._slots = ['slug'];
       this.slug = params.slug;
     }
     /**
@@ -49666,6 +50499,51 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class InputInvoicePremiumGiftCode extends TLObject {
+    purpose!: Raw.TypeInputStorePaymentPurpose;
+    option!: Raw.TypePremiumGiftCodeOption;
+
+    constructor(params: {
+      purpose: Raw.TypeInputStorePaymentPurpose;
+      option: Raw.TypePremiumGiftCodeOption;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputInvoicePremiumGiftCode';
+      this.constructorId = 0x98986c0d;
+      this.subclassOfId = 0x726e9bfe;
+      this._slots = ['purpose', 'option'];
+      this.purpose = params.purpose;
+      this.option = params.option;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputInvoicePremiumGiftCode> {
+      // no flags
+
+      let purpose = await TLObject.read(b);
+      let option = await TLObject.read(b);
+      return new Raw.InputInvoicePremiumGiftCode({ purpose: purpose, option: option });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.purpose !== undefined) {
+        b.write(this.purpose.write() as unknown as Buffer);
+      }
+      if (this.option !== undefined) {
+        b.write(this.option.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class InputStorePaymentPremiumSubscription extends TLObject {
     restore?: boolean;
     upgrade?: boolean;
@@ -49676,7 +50554,7 @@ export namespace Raw {
       this.className = 'InputStorePaymentPremiumSubscription';
       this.constructorId = 0xa6751e66;
       this.subclassOfId = 0xe7a4174d;
-      this.slots = ['restore', 'upgrade'];
+      this._slots = ['restore', 'upgrade'];
       this.restore = params.restore;
       this.upgrade = params.upgrade;
     }
@@ -49723,7 +50601,7 @@ export namespace Raw {
       this.className = 'InputStorePaymentGiftPremium';
       this.constructorId = 0x616f7fe8;
       this.subclassOfId = 0xe7a4174d;
-      this.slots = ['userId', 'currency', 'amount'];
+      this._slots = ['userId', 'currency', 'amount'];
       this.userId = params.userId;
       this.currency = params.currency;
       this.amount = params.amount;
@@ -49764,6 +50642,192 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class InputStorePaymentPremiumGiftCode extends TLObject {
+    users!: Vector<Raw.TypeInputUser>;
+    boostPeer?: Raw.TypeInputPeer;
+    currency!: string;
+    amount!: long;
+
+    constructor(params: {
+      users: Vector<Raw.TypeInputUser>;
+      boostPeer?: Raw.TypeInputPeer;
+      currency: string;
+      amount: long;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputStorePaymentPremiumGiftCode';
+      this.constructorId = 0xa3805f3f;
+      this.subclassOfId = 0xe7a4174d;
+      this._slots = ['users', 'boostPeer', 'currency', 'amount'];
+      this.users = params.users;
+      this.boostPeer = params.boostPeer;
+      this.currency = params.currency;
+      this.amount = params.amount;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.InputStorePaymentPremiumGiftCode> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let users = await TLObject.read(b);
+      let boostPeer = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+      let currency = await Primitive.String.read(b);
+      let amount = await Primitive.Long.read(b);
+      return new Raw.InputStorePaymentPremiumGiftCode({
+        users: users,
+        boostPeer: boostPeer,
+        currency: currency,
+        amount: amount,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.boostPeer !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.users) {
+        b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+      }
+      if (this.boostPeer !== undefined) {
+        b.write(this.boostPeer.write() as unknown as Buffer);
+      }
+      if (this.currency !== undefined) {
+        b.write(Primitive.String.write(this.currency) as unknown as Buffer);
+      }
+      if (this.amount !== undefined) {
+        b.write(Primitive.Long.write(this.amount) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class InputStorePaymentPremiumGiveaway extends TLObject {
+    onlyNewSubscribers?: boolean;
+    boostPeer!: Raw.TypeInputPeer;
+    additionalPeers?: Vector<Raw.TypeInputPeer>;
+    countriesIso2?: Vector<string>;
+    randomId!: long;
+    untilDate!: int;
+    currency!: string;
+    amount!: long;
+
+    constructor(params: {
+      onlyNewSubscribers?: boolean;
+      boostPeer: Raw.TypeInputPeer;
+      additionalPeers?: Vector<Raw.TypeInputPeer>;
+      countriesIso2?: Vector<string>;
+      randomId: long;
+      untilDate: int;
+      currency: string;
+      amount: long;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputStorePaymentPremiumGiveaway';
+      this.constructorId = 0x7c9375e6;
+      this.subclassOfId = 0xe7a4174d;
+      this._slots = [
+        'onlyNewSubscribers',
+        'boostPeer',
+        'additionalPeers',
+        'countriesIso2',
+        'randomId',
+        'untilDate',
+        'currency',
+        'amount',
+      ];
+      this.onlyNewSubscribers = params.onlyNewSubscribers;
+      this.boostPeer = params.boostPeer;
+      this.additionalPeers = params.additionalPeers;
+      this.countriesIso2 = params.countriesIso2;
+      this.randomId = params.randomId;
+      this.untilDate = params.untilDate;
+      this.currency = params.currency;
+      this.amount = params.amount;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.InputStorePaymentPremiumGiveaway> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let onlyNewSubscribers = flags & (1 << 0) ? true : false;
+      let boostPeer = await TLObject.read(b);
+      let additionalPeers = flags & (1 << 1) ? await TLObject.read(b) : [];
+      let countriesIso2 = flags & (1 << 2) ? await TLObject.read(b, Primitive.String) : [];
+      let randomId = await Primitive.Long.read(b);
+      let untilDate = await Primitive.Int.read(b);
+      let currency = await Primitive.String.read(b);
+      let amount = await Primitive.Long.read(b);
+      return new Raw.InputStorePaymentPremiumGiveaway({
+        onlyNewSubscribers: onlyNewSubscribers,
+        boostPeer: boostPeer,
+        additionalPeers: additionalPeers,
+        countriesIso2: countriesIso2,
+        randomId: randomId,
+        untilDate: untilDate,
+        currency: currency,
+        amount: amount,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.onlyNewSubscribers ? 1 << 0 : 0;
+      flags |= this.additionalPeers ? 1 << 1 : 0;
+      flags |= this.countriesIso2 ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.boostPeer !== undefined) {
+        b.write(this.boostPeer.write() as unknown as Buffer);
+      }
+      if (this.additionalPeers) {
+        b.write(Primitive.Vector.write(this.additionalPeers) as unknown as Buffer);
+      }
+      if (this.countriesIso2) {
+        b.write(Primitive.Vector.write(this.countriesIso2, Primitive.String) as unknown as Buffer);
+      }
+      if (this.randomId !== undefined) {
+        b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+      }
+      if (this.untilDate !== undefined) {
+        b.write(Primitive.Int.write(this.untilDate) as unknown as Buffer);
+      }
+      if (this.currency !== undefined) {
+        b.write(Primitive.String.write(this.currency) as unknown as Buffer);
+      }
+      if (this.amount !== undefined) {
+        b.write(Primitive.Long.write(this.amount) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class PremiumGiftOption extends TLObject {
     months!: int;
     currency!: string;
@@ -49783,7 +50847,7 @@ export namespace Raw {
       this.className = 'PremiumGiftOption';
       this.constructorId = 0x74c34319;
       this.subclassOfId = 0x5182b03e;
-      this.slots = ['months', 'currency', 'amount', 'botUrl', 'storeProduct'];
+      this._slots = ['months', 'currency', 'amount', 'botUrl', 'storeProduct'];
       this.months = params.months;
       this.currency = params.currency;
       this.amount = params.amount;
@@ -49852,7 +50916,7 @@ export namespace Raw {
       this.className = 'PaymentFormMethod';
       this.constructorId = 0x88f8f21b;
       this.subclassOfId = 0x3fc1c816;
-      this.slots = ['url', 'title'];
+      this._slots = ['url', 'title'];
       this.url = params.url;
       this.title = params.title;
     }
@@ -49891,7 +50955,7 @@ export namespace Raw {
       this.className = 'EmojiStatusEmpty';
       this.constructorId = 0x2de11aae;
       this.subclassOfId = 0xf930b138;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -49922,7 +50986,7 @@ export namespace Raw {
       this.className = 'EmojiStatus';
       this.constructorId = 0x929b619d;
       this.subclassOfId = 0xf930b138;
-      this.slots = ['documentId'];
+      this._slots = ['documentId'];
       this.documentId = params.documentId;
     }
     /**
@@ -49959,7 +51023,7 @@ export namespace Raw {
       this.className = 'EmojiStatusUntil';
       this.constructorId = 0xfa30a8c7;
       this.subclassOfId = 0xf930b138;
-      this.slots = ['documentId', 'until'];
+      this._slots = ['documentId', 'until'];
       this.documentId = params.documentId;
       this.until = params.until;
     }
@@ -49998,7 +51062,7 @@ export namespace Raw {
       this.className = 'ReactionEmpty';
       this.constructorId = 0x79f5d419;
       this.subclassOfId = 0x5da165a1;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -50029,7 +51093,7 @@ export namespace Raw {
       this.className = 'ReactionEmoji';
       this.constructorId = 0x1b2286b8;
       this.subclassOfId = 0x5da165a1;
-      this.slots = ['emoticon'];
+      this._slots = ['emoticon'];
       this.emoticon = params.emoticon;
     }
     /**
@@ -50065,7 +51129,7 @@ export namespace Raw {
       this.className = 'ReactionCustomEmoji';
       this.constructorId = 0x8935fc73;
       this.subclassOfId = 0x5da165a1;
-      this.slots = ['documentId'];
+      this._slots = ['documentId'];
       this.documentId = params.documentId;
     }
     /**
@@ -50099,7 +51163,7 @@ export namespace Raw {
       this.className = 'ChatReactionsNone';
       this.constructorId = 0xeafc32bc;
       this.subclassOfId = 0x131e24b5;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -50130,7 +51194,7 @@ export namespace Raw {
       this.className = 'ChatReactionsAll';
       this.constructorId = 0x52928bca;
       this.subclassOfId = 0x131e24b5;
-      this.slots = ['allowCustom'];
+      this._slots = ['allowCustom'];
       this.allowCustom = params.allowCustom;
     }
     /**
@@ -50169,7 +51233,7 @@ export namespace Raw {
       this.className = 'ChatReactionsSome';
       this.constructorId = 0x661d4037;
       this.subclassOfId = 0x131e24b5;
-      this.slots = ['reactions'];
+      this._slots = ['reactions'];
       this.reactions = params.reactions;
     }
     /**
@@ -50206,7 +51270,7 @@ export namespace Raw {
       this.className = 'EmailVerifyPurposeLoginSetup';
       this.constructorId = 0x4345be73;
       this.subclassOfId = 0xb9686ae8;
-      this.slots = ['phoneNumber', 'phoneCodeHash'];
+      this._slots = ['phoneNumber', 'phoneCodeHash'];
       this.phoneNumber = params.phoneNumber;
       this.phoneCodeHash = params.phoneCodeHash;
     }
@@ -50248,7 +51312,7 @@ export namespace Raw {
       this.className = 'EmailVerifyPurposeLoginChange';
       this.constructorId = 0x527d22eb;
       this.subclassOfId = 0xb9686ae8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -50277,7 +51341,7 @@ export namespace Raw {
       this.className = 'EmailVerifyPurposePassport';
       this.constructorId = 0xbbf51685;
       this.subclassOfId = 0xb9686ae8;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -50308,7 +51372,7 @@ export namespace Raw {
       this.className = 'EmailVerificationCode';
       this.constructorId = 0x922e55a9;
       this.subclassOfId = 0x241ee240;
-      this.slots = ['code'];
+      this._slots = ['code'];
       this.code = params.code;
     }
     /**
@@ -50344,7 +51408,7 @@ export namespace Raw {
       this.className = 'EmailVerificationGoogle';
       this.constructorId = 0xdb909ec2;
       this.subclassOfId = 0x241ee240;
-      this.slots = ['token'];
+      this._slots = ['token'];
       this.token = params.token;
     }
     /**
@@ -50380,7 +51444,7 @@ export namespace Raw {
       this.className = 'EmailVerificationApple';
       this.constructorId = 0x96d074fd;
       this.subclassOfId = 0x241ee240;
-      this.slots = ['token'];
+      this._slots = ['token'];
       this.token = params.token;
     }
     /**
@@ -50432,7 +51496,7 @@ export namespace Raw {
       this.className = 'PremiumSubscriptionOption';
       this.constructorId = 0x5f2d1df2;
       this.subclassOfId = 0x2e2dc73f;
-      this.slots = [
+      this._slots = [
         'current',
         'canPurchaseUpgrade',
         'transaction',
@@ -50525,7 +51589,7 @@ export namespace Raw {
       this.className = 'SendAsPeer';
       this.constructorId = 0xb81c7034;
       this.subclassOfId = 0x442381e4;
-      this.slots = ['premiumRequired', 'peer'];
+      this._slots = ['premiumRequired', 'peer'];
       this.premiumRequired = params.premiumRequired;
       this.peer = params.peer;
     }
@@ -50572,7 +51636,7 @@ export namespace Raw {
       this.className = 'MessageExtendedMediaPreview';
       this.constructorId = 0xad628cc8;
       this.subclassOfId = 0x9727d95d;
-      this.slots = ['w', 'h', 'thumb', 'videoDuration'];
+      this._slots = ['w', 'h', 'thumb', 'videoDuration'];
       this.w = params.w;
       this.h = params.h;
       this.thumb = params.thumb;
@@ -50637,7 +51701,7 @@ export namespace Raw {
       this.className = 'MessageExtendedMedia';
       this.constructorId = 0xee479c64;
       this.subclassOfId = 0x9727d95d;
-      this.slots = ['media'];
+      this._slots = ['media'];
       this.media = params.media;
     }
     /**
@@ -50674,7 +51738,7 @@ export namespace Raw {
       this.className = 'StickerKeyword';
       this.constructorId = 0xfcfeb29c;
       this.subclassOfId = 0x55951d6b;
-      this.slots = ['documentId', 'keyword'];
+      this._slots = ['documentId', 'keyword'];
       this.documentId = params.documentId;
       this.keyword = params.keyword;
     }
@@ -50717,7 +51781,7 @@ export namespace Raw {
       this.className = 'Username';
       this.constructorId = 0xb4073647;
       this.subclassOfId = 0x1286421;
-      this.slots = ['editable', 'active', 'username'];
+      this._slots = ['editable', 'active', 'username'];
       this.editable = params.editable;
       this.active = params.active;
       this.username = params.username;
@@ -50764,7 +51828,7 @@ export namespace Raw {
       this.className = 'ForumTopicDeleted';
       this.constructorId = 0x23f109b;
       this.subclassOfId = 0x8d182203;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -50838,7 +51902,7 @@ export namespace Raw {
       this.className = 'ForumTopic';
       this.constructorId = 0x71701da9;
       this.subclassOfId = 0x8d182203;
-      this.slots = [
+      this._slots = [
         'my',
         'closed',
         'pinned',
@@ -51001,7 +52065,7 @@ export namespace Raw {
       this.className = 'DefaultHistoryTTL';
       this.constructorId = 0x43b46b20;
       this.subclassOfId = 0xf00d3367;
-      this.slots = ['period'];
+      this._slots = ['period'];
       this.period = params.period;
     }
     /**
@@ -51038,7 +52102,7 @@ export namespace Raw {
       this.className = 'ExportedContactToken';
       this.constructorId = 0x41bf109b;
       this.subclassOfId = 0x86ddbed1;
-      this.slots = ['url', 'expires'];
+      this._slots = ['url', 'expires'];
       this.url = params.url;
       this.expires = params.expires;
     }
@@ -51080,7 +52144,7 @@ export namespace Raw {
       this.className = 'RequestPeerTypeUser';
       this.constructorId = 0x5f3b8a00;
       this.subclassOfId = 0xe9a0e814;
-      this.slots = ['bot', 'premium'];
+      this._slots = ['bot', 'premium'];
       this.bot = params.bot;
       this.premium = params.premium;
     }
@@ -51140,7 +52204,7 @@ export namespace Raw {
       this.className = 'RequestPeerTypeChat';
       this.constructorId = 0xc9f06e1b;
       this.subclassOfId = 0xe9a0e814;
-      this.slots = [
+      this._slots = [
         'creator',
         'botParticipant',
         'hasUsername',
@@ -51228,7 +52292,7 @@ export namespace Raw {
       this.className = 'RequestPeerTypeBroadcast';
       this.constructorId = 0x339bef6c;
       this.subclassOfId = 0xe9a0e814;
-      this.slots = ['creator', 'hasUsername', 'userAdminRights', 'botAdminRights'];
+      this._slots = ['creator', 'hasUsername', 'userAdminRights', 'botAdminRights'];
       this.creator = params.creator;
       this.hasUsername = params.hasUsername;
       this.userAdminRights = params.userAdminRights;
@@ -51288,7 +52352,7 @@ export namespace Raw {
       this.className = 'EmojiListNotModified';
       this.constructorId = 0x481eadfa;
       this.subclassOfId = 0xbcef6aba;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -51320,7 +52384,7 @@ export namespace Raw {
       this.className = 'EmojiList';
       this.constructorId = 0x7a1e11d1;
       this.subclassOfId = 0xbcef6aba;
-      this.slots = ['hash', 'documentId'];
+      this._slots = ['hash', 'documentId'];
       this.hash = params.hash;
       this.documentId = params.documentId;
     }
@@ -51363,7 +52427,7 @@ export namespace Raw {
       this.className = 'EmojiGroup';
       this.constructorId = 0x7a9abda9;
       this.subclassOfId = 0x55e0a193;
-      this.slots = ['title', 'iconEmojiId', 'emoticons'];
+      this._slots = ['title', 'iconEmojiId', 'emoticons'];
       this.title = params.title;
       this.iconEmojiId = params.iconEmojiId;
       this.emoticons = params.emoticons;
@@ -51410,7 +52474,7 @@ export namespace Raw {
       this.className = 'TextWithEntities';
       this.constructorId = 0x751f3146;
       this.subclassOfId = 0x95ca4b05;
-      this.slots = ['text', 'entities'];
+      this._slots = ['text', 'entities'];
       this.text = params.text;
       this.entities = params.entities;
     }
@@ -51453,7 +52517,7 @@ export namespace Raw {
       this.className = 'AutoSaveSettings';
       this.constructorId = 0xc84834ce;
       this.subclassOfId = 0xcd3b96e6;
-      this.slots = ['photos', 'videos', 'videoMaxSize'];
+      this._slots = ['photos', 'videos', 'videoMaxSize'];
       this.photos = params.photos;
       this.videos = params.videos;
       this.videoMaxSize = params.videoMaxSize;
@@ -51506,7 +52570,7 @@ export namespace Raw {
       this.className = 'AutoSaveException';
       this.constructorId = 0x81602d47;
       this.subclassOfId = 0xdd868129;
-      this.slots = ['peer', 'settings'];
+      this._slots = ['peer', 'settings'];
       this.peer = params.peer;
       this.settings = params.settings;
     }
@@ -51548,7 +52612,7 @@ export namespace Raw {
       this.className = 'InputBotAppID';
       this.constructorId = 0xa920bd7a;
       this.subclassOfId = 0xb6559951;
-      this.slots = ['id', 'accessHash'];
+      this._slots = ['id', 'accessHash'];
       this.id = params.id;
       this.accessHash = params.accessHash;
     }
@@ -51590,7 +52654,7 @@ export namespace Raw {
       this.className = 'InputBotAppShortName';
       this.constructorId = 0x908c0407;
       this.subclassOfId = 0xb6559951;
-      this.slots = ['botId', 'shortName'];
+      this._slots = ['botId', 'shortName'];
       this.botId = params.botId;
       this.shortName = params.shortName;
     }
@@ -51629,7 +52693,7 @@ export namespace Raw {
       this.className = 'BotAppNotModified';
       this.constructorId = 0x5da674b7;
       this.subclassOfId = 0x20f32ae;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -51676,7 +52740,7 @@ export namespace Raw {
       this.className = 'BotApp';
       this.constructorId = 0x95fcd1d6;
       this.subclassOfId = 0x20f32ae;
-      this.slots = [
+      this._slots = [
         'id',
         'accessHash',
         'shortName',
@@ -51771,7 +52835,7 @@ export namespace Raw {
       this.className = 'AppWebViewResultUrl';
       this.constructorId = 0x3c1b4f0d;
       this.subclassOfId = 0x1c24a413;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -51808,7 +52872,7 @@ export namespace Raw {
       this.className = 'InlineBotWebView';
       this.constructorId = 0xb57295d5;
       this.subclassOfId = 0x6ce015ea;
-      this.slots = ['text', 'url'];
+      this._slots = ['text', 'url'];
       this.text = params.text;
       this.url = params.url;
     }
@@ -51850,7 +52914,7 @@ export namespace Raw {
       this.className = 'ReadParticipantDate';
       this.constructorId = 0x4a4ff172;
       this.subclassOfId = 0xfd078ce2;
-      this.slots = ['userId', 'date'];
+      this._slots = ['userId', 'date'];
       this.userId = params.userId;
       this.date = params.date;
     }
@@ -51891,7 +52955,7 @@ export namespace Raw {
       this.className = 'InputChatlistDialogFilter';
       this.constructorId = 0xf3e0da33;
       this.subclassOfId = 0x23f9659;
-      this.slots = ['filterId'];
+      this._slots = ['filterId'];
       this.filterId = params.filterId;
     }
     /**
@@ -51929,7 +52993,7 @@ export namespace Raw {
       this.className = 'ExportedChatlistInvite';
       this.constructorId = 0xc5181ac;
       this.subclassOfId = 0x7711f8ff;
-      this.slots = ['title', 'url', 'peers'];
+      this._slots = ['title', 'url', 'peers'];
       this.title = params.title;
       this.url = params.url;
       this.peers = params.peers;
@@ -51983,7 +53047,7 @@ export namespace Raw {
       this.className = 'MessagePeerVote';
       this.constructorId = 0xb6cc2d5c;
       this.subclassOfId = 0x85c27202;
-      this.slots = ['peer', 'option', 'date'];
+      this._slots = ['peer', 'option', 'date'];
       this.peer = params.peer;
       this.option = params.option;
       this.date = params.date;
@@ -52030,7 +53094,7 @@ export namespace Raw {
       this.className = 'MessagePeerVoteInputOption';
       this.constructorId = 0x74cda504;
       this.subclassOfId = 0x85c27202;
-      this.slots = ['peer', 'date'];
+      this._slots = ['peer', 'date'];
       this.peer = params.peer;
       this.date = params.date;
     }
@@ -52073,7 +53137,7 @@ export namespace Raw {
       this.className = 'MessagePeerVoteMultiple';
       this.constructorId = 0x4628f6e6;
       this.subclassOfId = 0x85c27202;
-      this.slots = ['peer', 'options', 'date'];
+      this._slots = ['peer', 'options', 'date'];
       this.peer = params.peer;
       this.options = params.options;
       this.date = params.date;
@@ -52121,7 +53185,7 @@ export namespace Raw {
       this.className = 'SponsoredWebPage';
       this.constructorId = 0x3db8ec63;
       this.subclassOfId = 0xcdfea554;
-      this.slots = ['url', 'siteName', 'photo'];
+      this._slots = ['url', 'siteName', 'photo'];
       this.url = params.url;
       this.siteName = params.siteName;
       this.photo = params.photo;
@@ -52185,7 +53249,7 @@ export namespace Raw {
       this.className = 'StoryViews';
       this.constructorId = 0x8d595cd6;
       this.subclassOfId = 0x54e4ac66;
-      this.slots = [
+      this._slots = [
         'hasViewers',
         'viewsCount',
         'forwardsCount',
@@ -52267,7 +53331,7 @@ export namespace Raw {
       this.className = 'StoryItemDeleted';
       this.constructorId = 0x51e6ee4f;
       this.subclassOfId = 0xd477b133;
-      this.slots = ['id'];
+      this._slots = ['id'];
       this.id = params.id;
     }
     /**
@@ -52306,7 +53370,7 @@ export namespace Raw {
       this.className = 'StoryItemSkipped';
       this.constructorId = 0xffadc913;
       this.subclassOfId = 0xd477b133;
-      this.slots = ['closeFriends', 'id', 'date', 'expireDate'];
+      this._slots = ['closeFriends', 'id', 'date', 'expireDate'];
       this.closeFriends = params.closeFriends;
       this.id = params.id;
       this.date = params.date;
@@ -52403,7 +53467,7 @@ export namespace Raw {
       this.className = 'StoryItem';
       this.constructorId = 0x44c457ce;
       this.subclassOfId = 0xd477b133;
-      this.slots = [
+      this._slots = [
         'pinned',
         'public',
         'closeFriends',
@@ -52572,7 +53636,7 @@ export namespace Raw {
       this.className = 'StoryView';
       this.constructorId = 0xb0bdeac5;
       this.subclassOfId = 0x35913fa3;
-      this.slots = ['blocked', 'blockedMyStoriesFrom', 'userId', 'date', 'reaction'];
+      this._slots = ['blocked', 'blockedMyStoriesFrom', 'userId', 'date', 'reaction'];
       this.blocked = params.blocked;
       this.blockedMyStoriesFrom = params.blockedMyStoriesFrom;
       this.userId = params.userId;
@@ -52630,16 +53694,28 @@ export namespace Raw {
   export class InputReplyToMessage extends TLObject {
     replyToMsgId!: int;
     topMsgId?: int;
+    replyToPeerId?: Raw.TypeInputPeer;
+    quoteText?: string;
+    quoteEntities?: Vector<Raw.TypeMessageEntity>;
 
-    constructor(params: { replyToMsgId: int; topMsgId?: int }) {
+    constructor(params: {
+      replyToMsgId: int;
+      topMsgId?: int;
+      replyToPeerId?: Raw.TypeInputPeer;
+      quoteText?: string;
+      quoteEntities?: Vector<Raw.TypeMessageEntity>;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'InputReplyToMessage';
-      this.constructorId = 0x9c5386e4;
+      this.constructorId = 0x73ec805;
       this.subclassOfId = 0x8c71131d;
-      this.slots = ['replyToMsgId', 'topMsgId'];
+      this._slots = ['replyToMsgId', 'topMsgId', 'replyToPeerId', 'quoteText', 'quoteEntities'];
       this.replyToMsgId = params.replyToMsgId;
       this.topMsgId = params.topMsgId;
+      this.replyToPeerId = params.replyToPeerId;
+      this.quoteText = params.quoteText;
+      this.quoteEntities = params.quoteEntities;
     }
     /**
      * Generate the TLObject from buffer.
@@ -52652,7 +53728,16 @@ export namespace Raw {
 
       let replyToMsgId = await Primitive.Int.read(b);
       let topMsgId = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
-      return new Raw.InputReplyToMessage({ replyToMsgId: replyToMsgId, topMsgId: topMsgId });
+      let replyToPeerId = flags & (1 << 1) ? await TLObject.read(b) : undefined;
+      let quoteText = flags & (1 << 2) ? await Primitive.String.read(b) : undefined;
+      let quoteEntities = flags & (1 << 3) ? await TLObject.read(b) : [];
+      return new Raw.InputReplyToMessage({
+        replyToMsgId: replyToMsgId,
+        topMsgId: topMsgId,
+        replyToPeerId: replyToPeerId,
+        quoteText: quoteText,
+        quoteEntities: quoteEntities,
+      });
     }
     /**
      * Generate buffer from TLObject.
@@ -52664,6 +53749,9 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.topMsgId !== undefined ? 1 << 0 : 0;
+      flags |= this.replyToPeerId !== undefined ? 1 << 1 : 0;
+      flags |= this.quoteText !== undefined ? 1 << 2 : 0;
+      flags |= this.quoteEntities ? 1 << 3 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.replyToMsgId !== undefined) {
@@ -52671,6 +53759,15 @@ export namespace Raw {
       }
       if (this.topMsgId !== undefined) {
         b.write(Primitive.Int.write(this.topMsgId) as unknown as Buffer);
+      }
+      if (this.replyToPeerId !== undefined) {
+        b.write(this.replyToPeerId.write() as unknown as Buffer);
+      }
+      if (this.quoteText !== undefined) {
+        b.write(Primitive.String.write(this.quoteText) as unknown as Buffer);
+      }
+      if (this.quoteEntities) {
+        b.write(Primitive.Vector.write(this.quoteEntities) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -52685,7 +53782,7 @@ export namespace Raw {
       this.className = 'InputReplyToStory';
       this.constructorId = 0x15b0f283;
       this.subclassOfId = 0x8c71131d;
-      this.slots = ['userId', 'storyId'];
+      this._slots = ['userId', 'storyId'];
       this.userId = params.userId;
       this.storyId = params.storyId;
     }
@@ -52726,7 +53823,7 @@ export namespace Raw {
       this.className = 'ExportedStoryLink';
       this.constructorId = 0x3fc9053b;
       this.subclassOfId = 0xfc541a6;
-      this.slots = ['link'];
+      this._slots = ['link'];
       this.link = params.link;
     }
     /**
@@ -52763,7 +53860,7 @@ export namespace Raw {
       this.className = 'StoriesStealthMode';
       this.constructorId = 0x712e27fd;
       this.subclassOfId = 0x2ed8401;
-      this.slots = ['activeUntilDate', 'cooldownUntilDate'];
+      this._slots = ['activeUntilDate', 'cooldownUntilDate'];
       this.activeUntilDate = params.activeUntilDate;
       this.cooldownUntilDate = params.cooldownUntilDate;
     }
@@ -52818,7 +53915,7 @@ export namespace Raw {
       this.className = 'MediaAreaCoordinates';
       this.constructorId = 0x3d1ea4e;
       this.subclassOfId = 0x1d448c39;
-      this.slots = ['x', 'y', 'w', 'h', 'rotation'];
+      this._slots = ['x', 'y', 'w', 'h', 'rotation'];
       this.x = params.x;
       this.y = params.y;
       this.w = params.w;
@@ -52888,7 +53985,7 @@ export namespace Raw {
       this.className = 'MediaAreaVenue';
       this.constructorId = 0xbe82db9c;
       this.subclassOfId = 0xf36d7bf2;
-      this.slots = ['coordinates', 'geo', 'title', 'address', 'provider', 'venueId', 'venueType'];
+      this._slots = ['coordinates', 'geo', 'title', 'address', 'provider', 'venueId', 'venueType'];
       this.coordinates = params.coordinates;
       this.geo = params.geo;
       this.title = params.title;
@@ -52968,7 +54065,7 @@ export namespace Raw {
       this.className = 'InputMediaAreaVenue';
       this.constructorId = 0xb282217f;
       this.subclassOfId = 0xf36d7bf2;
-      this.slots = ['coordinates', 'queryId', 'resultId'];
+      this._slots = ['coordinates', 'queryId', 'resultId'];
       this.coordinates = params.coordinates;
       this.queryId = params.queryId;
       this.resultId = params.resultId;
@@ -53019,7 +54116,7 @@ export namespace Raw {
       this.className = 'MediaAreaGeoPoint';
       this.constructorId = 0xdf8b3b22;
       this.subclassOfId = 0xf36d7bf2;
-      this.slots = ['coordinates', 'geo'];
+      this._slots = ['coordinates', 'geo'];
       this.coordinates = params.coordinates;
       this.geo = params.geo;
     }
@@ -53068,7 +54165,7 @@ export namespace Raw {
       this.className = 'MediaAreaSuggestedReaction';
       this.constructorId = 0x14455871;
       this.subclassOfId = 0xf36d7bf2;
-      this.slots = ['dark', 'flipped', 'coordinates', 'reaction'];
+      this._slots = ['dark', 'flipped', 'coordinates', 'reaction'];
       this.dark = params.dark;
       this.flipped = params.flipped;
       this.coordinates = params.coordinates;
@@ -53131,7 +54228,7 @@ export namespace Raw {
       this.className = 'PeerStories';
       this.constructorId = 0x9a35e999;
       this.subclassOfId = 0x122c8a47;
-      this.slots = ['peer', 'maxReadId', 'stories'];
+      this._slots = ['peer', 'maxReadId', 'stories'];
       this.peer = params.peer;
       this.maxReadId = params.maxReadId;
       this.stories = params.stories;
@@ -53174,30 +54271,58 @@ export namespace Raw {
       return b.buffer;
     }
   }
-  export class Booster extends TLObject {
-    userId!: long;
-    expires!: int;
+  export class PremiumGiftCodeOption extends TLObject {
+    users!: int;
+    months!: int;
+    storeProduct?: string;
+    storeQuantity?: int;
+    currency!: string;
+    amount!: long;
 
-    constructor(params: { userId: long; expires: int }) {
+    constructor(params: {
+      users: int;
+      months: int;
+      storeProduct?: string;
+      storeQuantity?: int;
+      currency: string;
+      amount: long;
+    }) {
       super();
       this.classType = 'types';
-      this.className = 'Booster';
-      this.constructorId = 0xe9e6380;
-      this.subclassOfId = 0x20cba631;
-      this.slots = ['userId', 'expires'];
-      this.userId = params.userId;
-      this.expires = params.expires;
+      this.className = 'PremiumGiftCodeOption';
+      this.constructorId = 0x257e962b;
+      this.subclassOfId = 0x21d3c2;
+      this._slots = ['users', 'months', 'storeProduct', 'storeQuantity', 'currency', 'amount'];
+      this.users = params.users;
+      this.months = params.months;
+      this.storeProduct = params.storeProduct;
+      this.storeQuantity = params.storeQuantity;
+      this.currency = params.currency;
+      this.amount = params.amount;
     }
     /**
      * Generate the TLObject from buffer.
      * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
      */
-    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.Booster> {
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.PremiumGiftCodeOption> {
       // no flags
 
-      let userId = await Primitive.Long.read(b);
-      let expires = await Primitive.Int.read(b);
-      return new Raw.Booster({ userId: userId, expires: expires });
+      let flags = await Primitive.Int.read(b);
+
+      let users = await Primitive.Int.read(b);
+      let months = await Primitive.Int.read(b);
+      let storeProduct = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+      let storeQuantity = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
+      let currency = await Primitive.String.read(b);
+      let amount = await Primitive.Long.read(b);
+      return new Raw.PremiumGiftCodeOption({
+        users: users,
+        months: months,
+        storeProduct: storeProduct,
+        storeQuantity: storeQuantity,
+        currency: currency,
+        amount: amount,
+      });
     }
     /**
      * Generate buffer from TLObject.
@@ -53207,11 +54332,287 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      let flags = 0;
+      flags |= this.storeProduct !== undefined ? 1 << 0 : 0;
+      flags |= this.storeQuantity !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.users !== undefined) {
+        b.write(Primitive.Int.write(this.users) as unknown as Buffer);
+      }
+      if (this.months !== undefined) {
+        b.write(Primitive.Int.write(this.months) as unknown as Buffer);
+      }
+      if (this.storeProduct !== undefined) {
+        b.write(Primitive.String.write(this.storeProduct) as unknown as Buffer);
+      }
+      if (this.storeQuantity !== undefined) {
+        b.write(Primitive.Int.write(this.storeQuantity) as unknown as Buffer);
+      }
+      if (this.currency !== undefined) {
+        b.write(Primitive.String.write(this.currency) as unknown as Buffer);
+      }
+      if (this.amount !== undefined) {
+        b.write(Primitive.Long.write(this.amount) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class PrepaidGiveaway extends TLObject {
+    id!: long;
+    months!: int;
+    quantity!: int;
+    date!: int;
+
+    constructor(params: { id: long; months: int; quantity: int; date: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'PrepaidGiveaway';
+      this.constructorId = 0xb2539d54;
+      this.subclassOfId = 0xee3e6780;
+      this._slots = ['id', 'months', 'quantity', 'date'];
+      this.id = params.id;
+      this.months = params.months;
+      this.quantity = params.quantity;
+      this.date = params.date;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.PrepaidGiveaway> {
+      // no flags
+
+      let id = await Primitive.Long.read(b);
+      let months = await Primitive.Int.read(b);
+      let quantity = await Primitive.Int.read(b);
+      let date = await Primitive.Int.read(b);
+      return new Raw.PrepaidGiveaway({ id: id, months: months, quantity: quantity, date: date });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.id !== undefined) {
+        b.write(Primitive.Long.write(this.id) as unknown as Buffer);
+      }
+      if (this.months !== undefined) {
+        b.write(Primitive.Int.write(this.months) as unknown as Buffer);
+      }
+      if (this.quantity !== undefined) {
+        b.write(Primitive.Int.write(this.quantity) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class Boost extends TLObject {
+    gift?: boolean;
+    giveaway?: boolean;
+    unclaimed?: boolean;
+    id!: string;
+    userId?: long;
+    giveawayMsgId?: int;
+    date!: int;
+    expires!: int;
+    usedGiftSlug?: string;
+    multiplier?: int;
+
+    constructor(params: {
+      gift?: boolean;
+      giveaway?: boolean;
+      unclaimed?: boolean;
+      id: string;
+      userId?: long;
+      giveawayMsgId?: int;
+      date: int;
+      expires: int;
+      usedGiftSlug?: string;
+      multiplier?: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'Boost';
+      this.constructorId = 0x2a1c8c71;
+      this.subclassOfId = 0x97a5086c;
+      this._slots = [
+        'gift',
+        'giveaway',
+        'unclaimed',
+        'id',
+        'userId',
+        'giveawayMsgId',
+        'date',
+        'expires',
+        'usedGiftSlug',
+        'multiplier',
+      ];
+      this.gift = params.gift;
+      this.giveaway = params.giveaway;
+      this.unclaimed = params.unclaimed;
+      this.id = params.id;
+      this.userId = params.userId;
+      this.giveawayMsgId = params.giveawayMsgId;
+      this.date = params.date;
+      this.expires = params.expires;
+      this.usedGiftSlug = params.usedGiftSlug;
+      this.multiplier = params.multiplier;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.Boost> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let gift = flags & (1 << 1) ? true : false;
+      let giveaway = flags & (1 << 2) ? true : false;
+      let unclaimed = flags & (1 << 3) ? true : false;
+      let id = await Primitive.String.read(b);
+      let userId = flags & (1 << 0) ? await Primitive.Long.read(b) : undefined;
+      let giveawayMsgId = flags & (1 << 2) ? await Primitive.Int.read(b) : undefined;
+      let date = await Primitive.Int.read(b);
+      let expires = await Primitive.Int.read(b);
+      let usedGiftSlug = flags & (1 << 4) ? await Primitive.String.read(b) : undefined;
+      let multiplier = flags & (1 << 5) ? await Primitive.Int.read(b) : undefined;
+      return new Raw.Boost({
+        gift: gift,
+        giveaway: giveaway,
+        unclaimed: unclaimed,
+        id: id,
+        userId: userId,
+        giveawayMsgId: giveawayMsgId,
+        date: date,
+        expires: expires,
+        usedGiftSlug: usedGiftSlug,
+        multiplier: multiplier,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.gift ? 1 << 1 : 0;
+      flags |= this.giveaway ? 1 << 2 : 0;
+      flags |= this.unclaimed ? 1 << 3 : 0;
+      flags |= this.userId !== undefined ? 1 << 0 : 0;
+      flags |= this.giveawayMsgId !== undefined ? 1 << 2 : 0;
+      flags |= this.usedGiftSlug !== undefined ? 1 << 4 : 0;
+      flags |= this.multiplier !== undefined ? 1 << 5 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
       if (this.userId !== undefined) {
         b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
       }
+      if (this.giveawayMsgId !== undefined) {
+        b.write(Primitive.Int.write(this.giveawayMsgId) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
       if (this.expires !== undefined) {
         b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+      }
+      if (this.usedGiftSlug !== undefined) {
+        b.write(Primitive.String.write(this.usedGiftSlug) as unknown as Buffer);
+      }
+      if (this.multiplier !== undefined) {
+        b.write(Primitive.Int.write(this.multiplier) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class MyBoost extends TLObject {
+    slot!: int;
+    peer?: Raw.TypePeer;
+    date!: int;
+    expires!: int;
+    cooldownUntilDate?: int;
+
+    constructor(params: {
+      slot: int;
+      peer?: Raw.TypePeer;
+      date: int;
+      expires: int;
+      cooldownUntilDate?: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MyBoost';
+      this.constructorId = 0xc448415c;
+      this.subclassOfId = 0xc51a68bf;
+      this._slots = ['slot', 'peer', 'date', 'expires', 'cooldownUntilDate'];
+      this.slot = params.slot;
+      this.peer = params.peer;
+      this.date = params.date;
+      this.expires = params.expires;
+      this.cooldownUntilDate = params.cooldownUntilDate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.MyBoost> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let slot = await Primitive.Int.read(b);
+      let peer = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+      let date = await Primitive.Int.read(b);
+      let expires = await Primitive.Int.read(b);
+      let cooldownUntilDate = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
+      return new Raw.MyBoost({
+        slot: slot,
+        peer: peer,
+        date: date,
+        expires: expires,
+        cooldownUntilDate: cooldownUntilDate,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.peer !== undefined ? 1 << 0 : 0;
+      flags |= this.cooldownUntilDate !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.slot !== undefined) {
+        b.write(Primitive.Int.write(this.slot) as unknown as Buffer);
+      }
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
+      if (this.expires !== undefined) {
+        b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+      }
+      if (this.cooldownUntilDate !== undefined) {
+        b.write(Primitive.Int.write(this.cooldownUntilDate) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -53227,7 +54628,7 @@ export namespace Raw {
       this.className = 'InvokeAfterMsg';
       this.constructorId = 0xcb9f372d;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = ['msgId', 'query'];
+      this._slots = ['msgId', 'query'];
       this.msgId = params.msgId;
       this.query = params.query;
     }
@@ -53270,7 +54671,7 @@ export namespace Raw {
       this.className = 'InvokeAfterMsgs';
       this.constructorId = 0x3dc4b4f0;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = ['msgIds', 'query'];
+      this._slots = ['msgIds', 'query'];
       this.msgIds = params.msgIds;
       this.query = params.query;
     }
@@ -53332,7 +54733,7 @@ export namespace Raw {
       this.className = 'InitConnection';
       this.constructorId = 0xc1cd5ea9;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = [
+      this._slots = [
         'apiId',
         'deviceModel',
         'systemVersion',
@@ -53444,7 +54845,7 @@ export namespace Raw {
       this.className = 'InvokeWithLayer';
       this.constructorId = 0xda9b0d0d;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = ['layer', 'query'];
+      this._slots = ['layer', 'query'];
       this.layer = params.layer;
       this.query = params.query;
     }
@@ -53486,7 +54887,7 @@ export namespace Raw {
       this.className = 'InvokeWithoutUpdates';
       this.constructorId = 0xbf9459b7;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = ['query'];
+      this._slots = ['query'];
       this.query = params.query;
     }
     /**
@@ -53524,7 +54925,7 @@ export namespace Raw {
       this.className = 'InvokeWithMessagesRange';
       this.constructorId = 0x365275f2;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = ['range', 'query'];
+      this._slots = ['range', 'query'];
       this.range = params.range;
       this.query = params.query;
     }
@@ -53567,7 +54968,7 @@ export namespace Raw {
       this.className = 'InvokeWithTakeout';
       this.constructorId = 0xaca9fd2e;
       this.subclassOfId = 0xb7b2364b;
-      this.slots = ['takeoutId', 'query'];
+      this._slots = ['takeoutId', 'query'];
       this.takeoutId = params.takeoutId;
       this.query = params.query;
     }
@@ -53616,7 +55017,7 @@ export namespace Raw {
       this.className = 'DecryptedMessage8';
       this.constructorId = 0x1f814f1f;
       this.subclassOfId = 0x5303193e;
-      this.slots = ['randomId', 'randomBytes', 'message', 'media'];
+      this._slots = ['randomId', 'randomBytes', 'message', 'media'];
       this.randomId = params.randomId;
       this.randomBytes = params.randomBytes;
       this.message = params.message;
@@ -53678,7 +55079,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageService8';
       this.constructorId = 0xaa48327d;
       this.subclassOfId = 0x5303193e;
-      this.slots = ['randomId', 'randomBytes', 'action'];
+      this._slots = ['randomId', 'randomBytes', 'action'];
       this.randomId = params.randomId;
       this.randomBytes = params.randomBytes;
       this.action = params.action;
@@ -53726,7 +55127,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaEmpty8';
       this.constructorId = 0x89f5c4a;
       this.subclassOfId = 0xb3d2034;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -53773,7 +55174,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaPhoto8';
       this.constructorId = 0x32798a8c;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['thumb', 'thumbW', 'thumbH', 'w', 'h', 'size', 'key', 'iv'];
+      this._slots = ['thumb', 'thumbW', 'thumbH', 'w', 'h', 'size', 'key', 'iv'];
       this.thumb = params.thumb;
       this.thumbW = params.thumbW;
       this.thumbH = params.thumbH;
@@ -53871,7 +55272,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaVideo8';
       this.constructorId = 0x4cee6ef3;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['thumb', 'thumbW', 'thumbH', 'duration', 'w', 'h', 'size', 'key', 'iv'];
+      this._slots = ['thumb', 'thumbW', 'thumbH', 'duration', 'w', 'h', 'size', 'key', 'iv'];
       this.thumb = params.thumb;
       this.thumbW = params.thumbW;
       this.thumbH = params.thumbH;
@@ -53958,7 +55359,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaGeoPoint8';
       this.constructorId = 0x35480a59;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['lat', 'long'];
+      this._slots = ['lat', 'long'];
       this.lat = params.lat;
       this.long = params.long;
     }
@@ -54005,7 +55406,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaContact8';
       this.constructorId = 0x588a0a97;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['phoneNumber', 'firstName', 'lastName', 'userId'];
+      this._slots = ['phoneNumber', 'firstName', 'lastName', 'userId'];
       this.phoneNumber = params.phoneNumber;
       this.firstName = params.firstName;
       this.lastName = params.lastName;
@@ -54061,7 +55462,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionSetMessageTTL8';
       this.constructorId = 0xa1733aec;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['ttlSeconds'];
+      this._slots = ['ttlSeconds'];
       this.ttlSeconds = params.ttlSeconds;
     }
     /**
@@ -54116,7 +55517,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaDocument8';
       this.constructorId = 0xb095434b;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['thumb', 'thumbW', 'thumbH', 'fileName', 'mimeType', 'size', 'key', 'iv'];
+      this._slots = ['thumb', 'thumbW', 'thumbH', 'fileName', 'mimeType', 'size', 'key', 'iv'];
       this.thumb = params.thumb;
       this.thumbW = params.thumbW;
       this.thumbH = params.thumbH;
@@ -54202,7 +55603,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaAudio8';
       this.constructorId = 0x6080758f;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['duration', 'size', 'key', 'iv'];
+      this._slots = ['duration', 'size', 'key', 'iv'];
       this.duration = params.duration;
       this.size = params.size;
       this.key = params.key;
@@ -54258,7 +55659,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionReadMessages8';
       this.constructorId = 0xc4f40be;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['randomIds'];
+      this._slots = ['randomIds'];
       this.randomIds = params.randomIds;
     }
     /**
@@ -54297,7 +55698,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionDeleteMessages8';
       this.constructorId = 0x65614304;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['randomIds'];
+      this._slots = ['randomIds'];
       this.randomIds = params.randomIds;
     }
     /**
@@ -54336,7 +55737,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionScreenshotMessages8';
       this.constructorId = 0x8ac1f475;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['randomIds'];
+      this._slots = ['randomIds'];
       this.randomIds = params.randomIds;
     }
     /**
@@ -54373,7 +55774,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionFlushHistory8';
       this.constructorId = 0x6719e45c;
       this.subclassOfId = 0x6faf258d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -54415,7 +55816,7 @@ export namespace Raw {
       this.className = 'DecryptedMessage17';
       this.constructorId = 0x204d3878;
       this.subclassOfId = 0x5303193e;
-      this.slots = ['randomId', 'ttl', 'message', 'media'];
+      this._slots = ['randomId', 'ttl', 'message', 'media'];
       this.randomId = params.randomId;
       this.ttl = params.ttl;
       this.message = params.message;
@@ -54472,7 +55873,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageService17';
       this.constructorId = 0x73164160;
       this.subclassOfId = 0x5303193e;
-      this.slots = ['randomId', 'action'];
+      this._slots = ['randomId', 'action'];
       this.randomId = params.randomId;
       this.action = params.action;
     }
@@ -54533,7 +55934,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaVideo17';
       this.constructorId = 0x524a415d;
       this.subclassOfId = 0xb3d2034;
-      this.slots = [
+      this._slots = [
         'thumb',
         'thumbW',
         'thumbH',
@@ -54640,7 +56041,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaAudio17';
       this.constructorId = 0x57e0a9cb;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['duration', 'mimeType', 'size', 'key', 'iv'];
+      this._slots = ['duration', 'mimeType', 'size', 'key', 'iv'];
       this.duration = params.duration;
       this.mimeType = params.mimeType;
       this.size = params.size;
@@ -54712,7 +56113,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageLayer17';
       this.constructorId = 0x1be31789;
       this.subclassOfId = 0x85caa022;
-      this.slots = ['randomBytes', 'layer', 'inSeqNo', 'outSeqNo', 'message'];
+      this._slots = ['randomBytes', 'layer', 'inSeqNo', 'outSeqNo', 'message'];
       this.randomBytes = params.randomBytes;
       this.layer = params.layer;
       this.inSeqNo = params.inSeqNo;
@@ -54772,7 +56173,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadVideoAction17';
       this.constructorId = 0x92042ff7;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -54804,7 +56205,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadAudioAction17';
       this.constructorId = 0xe6ac8a6f;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -54836,7 +56237,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadPhotoAction17';
       this.constructorId = 0x990a3c1a;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -54868,7 +56269,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadDocumentAction17';
       this.constructorId = 0x8faee98e;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -54903,7 +56304,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionResend17';
       this.constructorId = 0x511110b0;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['startSeqNo', 'endSeqNo'];
+      this._slots = ['startSeqNo', 'endSeqNo'];
       this.startSeqNo = params.startSeqNo;
       this.endSeqNo = params.endSeqNo;
     }
@@ -54947,7 +56348,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionNotifyLayer17';
       this.constructorId = 0xf3048883;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['layer'];
+      this._slots = ['layer'];
       this.layer = params.layer;
     }
     /**
@@ -54986,7 +56387,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionTyping17';
       this.constructorId = 0xccb27641;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['action'];
+      this._slots = ['action'];
       this.action = params.action;
     }
     /**
@@ -55026,7 +56427,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionRequestKey20';
       this.constructorId = 0xf3c9611b;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['exchangeId', 'gA'];
+      this._slots = ['exchangeId', 'gA'];
       this.exchangeId = params.exchangeId;
       this.gA = params.gA;
     }
@@ -55072,7 +56473,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionAcceptKey20';
       this.constructorId = 0x6fe1735b;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['exchangeId', 'gB', 'keyFingerprint'];
+      this._slots = ['exchangeId', 'gB', 'keyFingerprint'];
       this.exchangeId = params.exchangeId;
       this.gB = params.gB;
       this.keyFingerprint = params.keyFingerprint;
@@ -55125,7 +56526,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionAbortKey20';
       this.constructorId = 0xdd05ec6b;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['exchangeId'];
+      this._slots = ['exchangeId'];
       this.exchangeId = params.exchangeId;
     }
     /**
@@ -55165,7 +56566,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionCommitKey20';
       this.constructorId = 0xec2e0b9b;
       this.subclassOfId = 0x6faf258d;
-      this.slots = ['exchangeId', 'keyFingerprint'];
+      this._slots = ['exchangeId', 'keyFingerprint'];
       this.exchangeId = params.exchangeId;
       this.keyFingerprint = params.keyFingerprint;
     }
@@ -55210,7 +56611,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageActionNoop20';
       this.constructorId = 0xa82fdd63;
       this.subclassOfId = 0x6faf258d;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -55239,7 +56640,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeSticker23';
       this.constructorId = 0xfb0a5727;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -55272,7 +56673,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeVideo23';
       this.constructorId = 0x5910cccb;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['duration', 'w', 'h'];
+      this._slots = ['duration', 'w', 'h'];
       this.duration = params.duration;
       this.w = params.w;
       this.h = params.h;
@@ -55318,7 +56719,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeAudio23';
       this.constructorId = 0x51448e5;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['duration'];
+      this._slots = ['duration'];
       this.duration = params.duration;
     }
     /**
@@ -55364,7 +56765,7 @@ export namespace Raw {
       this.className = 'PhotoSize23';
       this.constructorId = 0x77bfb61b;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'location', 'w', 'h', 'size'];
+      this._slots = ['type', 'location', 'w', 'h', 'size'];
       this.type = params.type;
       this.location = params.location;
       this.w = params.w;
@@ -55430,7 +56831,7 @@ export namespace Raw {
       this.className = 'PhotoCachedSize23';
       this.constructorId = 0xe9a734fa;
       this.subclassOfId = 0x17cc29d9;
-      this.slots = ['type', 'location', 'w', 'h', 'bytes'];
+      this._slots = ['type', 'location', 'w', 'h', 'bytes'];
       this.type = params.type;
       this.location = params.location;
       this.w = params.w;
@@ -55494,7 +56895,7 @@ export namespace Raw {
       this.className = 'FileLocationUnavailable23';
       this.constructorId = 0x7c596b46;
       this.subclassOfId = 0x90f76823;
-      this.slots = ['volumeId', 'localId', 'secret'];
+      this._slots = ['volumeId', 'localId', 'secret'];
       this.volumeId = params.volumeId;
       this.localId = params.localId;
       this.secret = params.secret;
@@ -55547,7 +56948,7 @@ export namespace Raw {
       this.className = 'FileLocation23';
       this.constructorId = 0x53d69076;
       this.subclassOfId = 0x90f76823;
-      this.slots = ['dcId', 'volumeId', 'localId', 'secret'];
+      this._slots = ['dcId', 'volumeId', 'localId', 'secret'];
       this.dcId = params.dcId;
       this.volumeId = params.volumeId;
       this.localId = params.localId;
@@ -55619,7 +57020,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaExternalDocument23';
       this.constructorId = 0xfa95b0dd;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['id', 'accessHash', 'date', 'mimeType', 'size', 'thumb', 'dcId', 'attributes'];
+      this._slots = ['id', 'accessHash', 'date', 'mimeType', 'size', 'thumb', 'dcId', 'attributes'];
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.date = params.date;
@@ -55716,7 +57117,7 @@ export namespace Raw {
       this.className = 'DecryptedMessage45';
       this.constructorId = 0x36b091de;
       this.subclassOfId = 0x5303193e;
-      this.slots = [
+      this._slots = [
         'randomId',
         'ttl',
         'message',
@@ -55825,7 +57226,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaPhoto45';
       this.constructorId = 0xf1fa8d78;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['thumb', 'thumbW', 'thumbH', 'w', 'h', 'size', 'key', 'iv', 'caption'];
+      this._slots = ['thumb', 'thumbW', 'thumbH', 'w', 'h', 'size', 'key', 'iv', 'caption'];
       this.thumb = params.thumb;
       this.thumbW = params.thumbW;
       this.thumbH = params.thumbH;
@@ -55933,7 +57334,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaVideo45';
       this.constructorId = 0x970c8c0e;
       this.subclassOfId = 0xb3d2034;
-      this.slots = [
+      this._slots = [
         'thumb',
         'thumbW',
         'thumbH',
@@ -56061,7 +57462,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaDocument45';
       this.constructorId = 0x7afe8ae2;
       this.subclassOfId = 0xb3d2034;
-      this.slots = [
+      this._slots = [
         'thumb',
         'thumbW',
         'thumbH',
@@ -56161,7 +57562,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeSticker45';
       this.constructorId = 0x3a556302;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['alt', 'stickerset'];
+      this._slots = ['alt', 'stickerset'];
       this.alt = params.alt;
       this.stickerset = params.stickerset;
     }
@@ -56204,7 +57605,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeAudio45';
       this.constructorId = 0xded218e0;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['duration', 'title', 'performer'];
+      this._slots = ['duration', 'title', 'performer'];
       this.duration = params.duration;
       this.title = params.title;
       this.performer = params.performer;
@@ -56266,7 +57667,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaVenue45';
       this.constructorId = 0x8a0df56f;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['lat', 'long', 'title', 'address', 'provider', 'venueId'];
+      this._slots = ['lat', 'long', 'title', 'address', 'provider', 'venueId'];
       this.lat = params.lat;
       this.long = params.long;
       this.title = params.title;
@@ -56334,7 +57735,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaWebPage45';
       this.constructorId = 0xe50511d8;
       this.subclassOfId = 0xb3d2034;
-      this.slots = ['url'];
+      this._slots = ['url'];
       this.url = params.url;
     }
     /**
@@ -56376,7 +57777,7 @@ export namespace Raw {
       this.className = 'DocumentAttributeVideo66';
       this.constructorId = 0xef02ce6;
       this.subclassOfId = 0xf729eb9b;
-      this.slots = ['roundMessage', 'duration', 'w', 'h'];
+      this._slots = ['roundMessage', 'duration', 'w', 'h'];
       this.roundMessage = params.roundMessage;
       this.duration = params.duration;
       this.w = params.w;
@@ -56433,7 +57834,7 @@ export namespace Raw {
       this.className = 'SendMessageUploadRoundAction66';
       this.constructorId = 0xbb718624;
       this.subclassOfId = 0x20b2cc21;
-      this.slots = [];
+      this._slots = [];
     }
     /**
      * Generate the TLObject from buffer.
@@ -56487,7 +57888,7 @@ export namespace Raw {
       this.className = 'DecryptedMessage73';
       this.constructorId = 0x91cc4674;
       this.subclassOfId = 0x5303193e;
-      this.slots = [
+      this._slots = [
         'noWebpage',
         'silent',
         'randomId',
@@ -56614,7 +58015,7 @@ export namespace Raw {
       this.className = 'DecryptedMessageMediaDocument143';
       this.constructorId = 0x6abd9782;
       this.subclassOfId = 0xb3d2034;
-      this.slots = [
+      this._slots = [
         'thumb',
         'thumbW',
         'thumbH',
@@ -56734,7 +58135,7 @@ export namespace Raw {
         this.className = 'help.ConfigSimple';
         this.constructorId = 0x5a592a6c;
         this.subclassOfId = 0x29183ac4;
-        this.slots = ['date', 'expires', 'rules'];
+        this._slots = ['date', 'expires', 'rules'];
         this.date = params.date;
         this.expires = params.expires;
         this.rules = params.rules;
@@ -56796,7 +58197,7 @@ export namespace Raw {
         this.className = 'help.AppUpdate';
         this.constructorId = 0xccbbce30;
         this.subclassOfId = 0x5897069e;
-        this.slots = [
+        this._slots = [
           'canNotSkip',
           'id',
           'version',
@@ -56889,7 +58290,7 @@ export namespace Raw {
         this.className = 'help.NoAppUpdate';
         this.constructorId = 0xc45a6536;
         this.subclassOfId = 0x5897069e;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -56920,7 +58321,7 @@ export namespace Raw {
         this.className = 'help.InviteText';
         this.constructorId = 0x18cb9f78;
         this.subclassOfId = 0xcf70aa35;
-        this.slots = ['message'];
+        this._slots = ['message'];
         this.message = params.message;
       }
       /**
@@ -56957,7 +58358,7 @@ export namespace Raw {
         this.className = 'help.Support';
         this.constructorId = 0x17c6b5f6;
         this.subclassOfId = 0x7159bceb;
-        this.slots = ['phoneNumber', 'user'];
+        this._slots = ['phoneNumber', 'user'];
         this.phoneNumber = params.phoneNumber;
         this.user = params.user;
       }
@@ -57008,7 +58409,7 @@ export namespace Raw {
         this.className = 'help.TermsOfService';
         this.constructorId = 0x780a0310;
         this.subclassOfId = 0x20ee8312;
-        this.slots = ['popup', 'id', 'text', 'entities', 'minAgeConfirm'];
+        this._slots = ['popup', 'id', 'text', 'entities', 'minAgeConfirm'];
         this.popup = params.popup;
         this.id = params.id;
         this.text = params.text;
@@ -57080,7 +58481,7 @@ export namespace Raw {
         this.className = 'help.RecentMeUrls';
         this.constructorId = 0xe0310d7;
         this.subclassOfId = 0xf269c477;
-        this.slots = ['urls', 'chats', 'users'];
+        this._slots = ['urls', 'chats', 'users'];
         this.urls = params.urls;
         this.chats = params.chats;
         this.users = params.users;
@@ -57126,7 +58527,7 @@ export namespace Raw {
         this.className = 'help.TermsOfServiceUpdateEmpty';
         this.constructorId = 0xe3309f7f;
         this.subclassOfId = 0x293c2977;
-        this.slots = ['expires'];
+        this._slots = ['expires'];
         this.expires = params.expires;
       }
       /**
@@ -57166,7 +58567,7 @@ export namespace Raw {
         this.className = 'help.TermsOfServiceUpdate';
         this.constructorId = 0x28ecf961;
         this.subclassOfId = 0x293c2977;
-        this.slots = ['expires', 'termsOfService'];
+        this._slots = ['expires', 'termsOfService'];
         this.expires = params.expires;
         this.termsOfService = params.termsOfService;
       }
@@ -57208,7 +58609,7 @@ export namespace Raw {
         this.className = 'help.DeepLinkInfoEmpty';
         this.constructorId = 0x66afa166;
         this.subclassOfId = 0x984aac38;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -57245,7 +58646,7 @@ export namespace Raw {
         this.className = 'help.DeepLinkInfo';
         this.constructorId = 0x6a4ee832;
         this.subclassOfId = 0x984aac38;
-        this.slots = ['updateApp', 'message', 'entities'];
+        this._slots = ['updateApp', 'message', 'entities'];
         this.updateApp = params.updateApp;
         this.message = params.message;
         this.entities = params.entities;
@@ -57297,7 +58698,7 @@ export namespace Raw {
         this.className = 'help.PassportConfigNotModified';
         this.constructorId = 0xbfb9f457;
         this.subclassOfId = 0xc666c0ad;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -57332,7 +58733,7 @@ export namespace Raw {
         this.className = 'help.PassportConfig';
         this.constructorId = 0xa098d6af;
         this.subclassOfId = 0xc666c0ad;
-        this.slots = ['hash', 'countriesLangs'];
+        this._slots = ['hash', 'countriesLangs'];
         this.hash = params.hash;
         this.countriesLangs = params.countriesLangs;
       }
@@ -57373,7 +58774,7 @@ export namespace Raw {
         this.className = 'help.SupportName';
         this.constructorId = 0x8c05f1c9;
         this.subclassOfId = 0x7f50b7c2;
-        this.slots = ['name'];
+        this._slots = ['name'];
         this.name = params.name;
       }
       /**
@@ -57407,7 +58808,7 @@ export namespace Raw {
         this.className = 'help.UserInfoEmpty';
         this.constructorId = 0xf3ae2eed;
         this.subclassOfId = 0x5c53d7d8;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -57446,7 +58847,7 @@ export namespace Raw {
         this.className = 'help.UserInfo';
         this.constructorId = 0x1eb3758;
         this.subclassOfId = 0x5c53d7d8;
-        this.slots = ['message', 'entities', 'author', 'date'];
+        this._slots = ['message', 'entities', 'author', 'date'];
         this.message = params.message;
         this.entities = params.entities;
         this.author = params.author;
@@ -57502,7 +58903,7 @@ export namespace Raw {
         this.className = 'help.PromoDataEmpty';
         this.constructorId = 0x98f6ac75;
         this.subclassOfId = 0x9d595542;
-        this.slots = ['expires'];
+        this._slots = ['expires'];
         this.expires = params.expires;
       }
       /**
@@ -57552,7 +58953,7 @@ export namespace Raw {
         this.className = 'help.PromoData';
         this.constructorId = 0x8c39793f;
         this.subclassOfId = 0x9d595542;
-        this.slots = ['proxy', 'expires', 'peer', 'chats', 'users', 'psaType', 'psaMessage'];
+        this._slots = ['proxy', 'expires', 'peer', 'chats', 'users', 'psaType', 'psaMessage'];
         this.proxy = params.proxy;
         this.expires = params.expires;
         this.peer = params.peer;
@@ -57637,7 +59038,7 @@ export namespace Raw {
         this.className = 'help.CountryCode';
         this.constructorId = 0x4203c5ef;
         this.subclassOfId = 0x76f34665;
-        this.slots = ['countryCode', 'prefixes', 'patterns'];
+        this._slots = ['countryCode', 'prefixes', 'patterns'];
         this.countryCode = params.countryCode;
         this.prefixes = params.prefixes;
         this.patterns = params.patterns;
@@ -57704,7 +59105,7 @@ export namespace Raw {
         this.className = 'help.Country';
         this.constructorId = 0xc3878e23;
         this.subclassOfId = 0xa22e9e28;
-        this.slots = ['hidden', 'iso2', 'defaultName', 'name', 'countryCodes'];
+        this._slots = ['hidden', 'iso2', 'defaultName', 'name', 'countryCodes'];
         this.hidden = params.hidden;
         this.iso2 = params.iso2;
         this.defaultName = params.defaultName;
@@ -57768,7 +59169,7 @@ export namespace Raw {
         this.className = 'help.CountriesListNotModified';
         this.constructorId = 0x93cc1f32;
         this.subclassOfId = 0xea31fe88;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -57803,7 +59204,7 @@ export namespace Raw {
         this.className = 'help.CountriesList';
         this.constructorId = 0x87d0759e;
         this.subclassOfId = 0xea31fe88;
-        this.slots = ['countries', 'hash'];
+        this._slots = ['countries', 'hash'];
         this.countries = params.countries;
         this.hash = params.hash;
       }
@@ -57856,7 +59257,7 @@ export namespace Raw {
         this.className = 'help.PremiumPromo';
         this.constructorId = 0x5334759c;
         this.subclassOfId = 0xc987a338;
-        this.slots = [
+        this._slots = [
           'statusText',
           'statusEntities',
           'videoSections',
@@ -57931,7 +59332,7 @@ export namespace Raw {
         this.className = 'help.AppConfigNotModified';
         this.constructorId = 0x7cde641d;
         this.subclassOfId = 0x14381c9a;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -57963,7 +59364,7 @@ export namespace Raw {
         this.className = 'help.AppConfig';
         this.constructorId = 0xdd18782e;
         this.subclassOfId = 0x14381c9a;
-        this.slots = ['hash', 'config'];
+        this._slots = ['hash', 'config'];
         this.hash = params.hash;
         this.config = params.config;
       }
@@ -58004,7 +59405,7 @@ export namespace Raw {
         this.className = 'help.GetConfig';
         this.constructorId = 0xc4f9186b;
         this.subclassOfId = 0xd3262a4a;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58035,7 +59436,7 @@ export namespace Raw {
         this.className = 'help.GetNearestDc';
         this.constructorId = 0x1fb33026;
         this.subclassOfId = 0x3877045f;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58067,7 +59468,7 @@ export namespace Raw {
         this.className = 'help.GetAppUpdate';
         this.constructorId = 0x522d5a7d;
         this.subclassOfId = 0x5897069e;
-        this.slots = ['source'];
+        this._slots = ['source'];
         this.source = params.source;
       }
       /**
@@ -58103,7 +59504,7 @@ export namespace Raw {
         this.className = 'help.GetInviteText';
         this.constructorId = 0x4d392343;
         this.subclassOfId = 0xcf70aa35;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58134,7 +59535,7 @@ export namespace Raw {
         this.className = 'help.GetSupport';
         this.constructorId = 0x9cdf08cd;
         this.subclassOfId = 0x7159bceb;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58166,7 +59567,7 @@ export namespace Raw {
         this.className = 'help.GetAppChangelog';
         this.constructorId = 0x9010ef6f;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['prevAppVersion'];
+        this._slots = ['prevAppVersion'];
         this.prevAppVersion = params.prevAppVersion;
       }
       /**
@@ -58204,7 +59605,7 @@ export namespace Raw {
         this.className = 'help.SetBotUpdatesStatus';
         this.constructorId = 0xec22cfcd;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['pendingUpdatesCount', 'message'];
+        this._slots = ['pendingUpdatesCount', 'message'];
         this.pendingUpdatesCount = params.pendingUpdatesCount;
         this.message = params.message;
       }
@@ -58248,7 +59649,7 @@ export namespace Raw {
         this.className = 'help.GetCdnConfig';
         this.constructorId = 0x52029342;
         this.subclassOfId = 0xecda397c;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58280,7 +59681,7 @@ export namespace Raw {
         this.className = 'help.GetRecentMeUrls';
         this.constructorId = 0x3dc0f114;
         this.subclassOfId = 0xf269c477;
-        this.slots = ['referer'];
+        this._slots = ['referer'];
         this.referer = params.referer;
       }
       /**
@@ -58316,7 +59717,7 @@ export namespace Raw {
         this.className = 'help.GetTermsOfServiceUpdate';
         this.constructorId = 0x2ca51fd1;
         this.subclassOfId = 0x293c2977;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58351,7 +59752,7 @@ export namespace Raw {
         this.className = 'help.AcceptTermsOfService';
         this.constructorId = 0xee72f79a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -58388,7 +59789,7 @@ export namespace Raw {
         this.className = 'help.GetDeepLinkInfo';
         this.constructorId = 0x3fedc75f;
         this.subclassOfId = 0x984aac38;
-        this.slots = ['path'];
+        this._slots = ['path'];
         this.path = params.path;
       }
       /**
@@ -58425,7 +59826,7 @@ export namespace Raw {
         this.className = 'help.GetAppConfig';
         this.constructorId = 0x61e3f854;
         this.subclassOfId = 0x14381c9a;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -58462,7 +59863,7 @@ export namespace Raw {
         this.className = 'help.SaveAppLog';
         this.constructorId = 0x6f02f748;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['events'];
+        this._slots = ['events'];
         this.events = params.events;
       }
       /**
@@ -58499,7 +59900,7 @@ export namespace Raw {
         this.className = 'help.GetPassportConfig';
         this.constructorId = 0xc661ad08;
         this.subclassOfId = 0xc666c0ad;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -58535,7 +59936,7 @@ export namespace Raw {
         this.className = 'help.GetSupportName';
         this.constructorId = 0xd360e72c;
         this.subclassOfId = 0x7f50b7c2;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58567,7 +59968,7 @@ export namespace Raw {
         this.className = 'help.GetUserInfo';
         this.constructorId = 0x38a08d3;
         this.subclassOfId = 0x5c53d7d8;
-        this.slots = ['userId'];
+        this._slots = ['userId'];
         this.userId = params.userId;
       }
       /**
@@ -58610,7 +60011,7 @@ export namespace Raw {
         this.className = 'help.EditUserInfo';
         this.constructorId = 0x66b91b70;
         this.subclassOfId = 0x5c53d7d8;
-        this.slots = ['userId', 'message', 'entities'];
+        this._slots = ['userId', 'message', 'entities'];
         this.userId = params.userId;
         this.message = params.message;
         this.entities = params.entities;
@@ -58656,7 +60057,7 @@ export namespace Raw {
         this.className = 'help.GetPromoData';
         this.constructorId = 0xc0977421;
         this.subclassOfId = 0x9d595542;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58688,7 +60089,7 @@ export namespace Raw {
         this.className = 'help.HidePromoData';
         this.constructorId = 0x1e251c95;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -58726,7 +60127,7 @@ export namespace Raw {
         this.className = 'help.DismissSuggestion';
         this.constructorId = 0xf50dbaa1;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'suggestion'];
+        this._slots = ['peer', 'suggestion'];
         this.peer = params.peer;
         this.suggestion = params.suggestion;
       }
@@ -58769,7 +60170,7 @@ export namespace Raw {
         this.className = 'help.GetCountriesList';
         this.constructorId = 0x735787a8;
         this.subclassOfId = 0xea31fe88;
-        this.slots = ['langCode', 'hash'];
+        this._slots = ['langCode', 'hash'];
         this.langCode = params.langCode;
         this.hash = params.hash;
       }
@@ -58810,7 +60211,7 @@ export namespace Raw {
         this.className = 'help.GetPremiumPromo';
         this.constructorId = 0xb81b93d4;
         this.subclassOfId = 0xc987a338;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58852,7 +60253,7 @@ export namespace Raw {
         this.className = 'storage.FileUnknown';
         this.constructorId = 0xaa963b05;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58881,7 +60282,7 @@ export namespace Raw {
         this.className = 'storage.FilePartial';
         this.constructorId = 0x40bc6f52;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58910,7 +60311,7 @@ export namespace Raw {
         this.className = 'storage.FileJpeg';
         this.constructorId = 0x7efe0e;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58939,7 +60340,7 @@ export namespace Raw {
         this.className = 'storage.FileGif';
         this.constructorId = 0xcae1aadf;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58968,7 +60369,7 @@ export namespace Raw {
         this.className = 'storage.FilePng';
         this.constructorId = 0xa4f63c0;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -58997,7 +60398,7 @@ export namespace Raw {
         this.className = 'storage.FilePdf';
         this.constructorId = 0xae1e508d;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59026,7 +60427,7 @@ export namespace Raw {
         this.className = 'storage.FileMp3';
         this.constructorId = 0x528a0677;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59055,7 +60456,7 @@ export namespace Raw {
         this.className = 'storage.FileMov';
         this.constructorId = 0x4b09ebbc;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59084,7 +60485,7 @@ export namespace Raw {
         this.className = 'storage.FileMp4';
         this.constructorId = 0xb3cea0e4;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59113,7 +60514,7 @@ export namespace Raw {
         this.className = 'storage.FileWebp';
         this.constructorId = 0x1081464c;
         this.subclassOfId = 0xf3a1e6f3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59179,7 +60580,7 @@ export namespace Raw {
         this.className = 'auth.SentCode';
         this.constructorId = 0x5e002502;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['type', 'phoneCodeHash', 'nextType', 'timeout'];
+        this._slots = ['type', 'phoneCodeHash', 'nextType', 'timeout'];
         this.type = params.type;
         this.phoneCodeHash = params.phoneCodeHash;
         this.nextType = params.nextType;
@@ -59242,7 +60643,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeSuccess';
         this.constructorId = 0x2390fe44;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['authorization'];
+        this._slots = ['authorization'];
         this.authorization = params.authorization;
       }
       /**
@@ -59288,7 +60689,7 @@ export namespace Raw {
         this.className = 'auth.Authorization';
         this.constructorId = 0x2ea2c0d4;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = [
+        this._slots = [
           'setupPasswordRequired',
           'otherwiseReloginDays',
           'tmpSessions',
@@ -59362,7 +60763,7 @@ export namespace Raw {
         this.className = 'auth.AuthorizationSignUpRequired';
         this.constructorId = 0x44747e9a;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['termsOfService'];
+        this._slots = ['termsOfService'];
         this.termsOfService = params.termsOfService;
       }
       /**
@@ -59408,7 +60809,7 @@ export namespace Raw {
         this.className = 'auth.ExportedAuthorization';
         this.constructorId = 0xb434e2b8;
         this.subclassOfId = 0x5fd1ec51;
-        this.slots = ['id', 'bytes'];
+        this._slots = ['id', 'bytes'];
         this.id = params.id;
         this.bytes = params.bytes;
       }
@@ -59449,7 +60850,7 @@ export namespace Raw {
         this.className = 'auth.PasswordRecovery';
         this.constructorId = 0x137948a5;
         this.subclassOfId = 0xfa72d43a;
-        this.slots = ['emailPattern'];
+        this._slots = ['emailPattern'];
         this.emailPattern = params.emailPattern;
       }
       /**
@@ -59483,7 +60884,7 @@ export namespace Raw {
         this.className = 'auth.CodeTypeSms';
         this.constructorId = 0x72a3158c;
         this.subclassOfId = 0xb3f3e401;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59512,7 +60913,7 @@ export namespace Raw {
         this.className = 'auth.CodeTypeCall';
         this.constructorId = 0x741cd3e3;
         this.subclassOfId = 0xb3f3e401;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59541,7 +60942,7 @@ export namespace Raw {
         this.className = 'auth.CodeTypeFlashCall';
         this.constructorId = 0x226ccefb;
         this.subclassOfId = 0xb3f3e401;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59570,7 +60971,7 @@ export namespace Raw {
         this.className = 'auth.CodeTypeMissedCall';
         this.constructorId = 0xd61ad6ee;
         this.subclassOfId = 0xb3f3e401;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59599,7 +61000,7 @@ export namespace Raw {
         this.className = 'auth.CodeTypeFragmentSms';
         this.constructorId = 0x6ed998c;
         this.subclassOfId = 0xb3f3e401;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -59630,7 +61031,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeApp';
         this.constructorId = 0x3dbb5986;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['length'];
+        this._slots = ['length'];
         this.length = params.length;
       }
       /**
@@ -59666,7 +61067,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeSms';
         this.constructorId = 0xc000bba2;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['length'];
+        this._slots = ['length'];
         this.length = params.length;
       }
       /**
@@ -59702,7 +61103,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeCall';
         this.constructorId = 0x5353e5a7;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['length'];
+        this._slots = ['length'];
         this.length = params.length;
       }
       /**
@@ -59738,7 +61139,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeFlashCall';
         this.constructorId = 0xab03c6d9;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['pattern'];
+        this._slots = ['pattern'];
         this.pattern = params.pattern;
       }
       /**
@@ -59775,7 +61176,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeMissedCall';
         this.constructorId = 0x82006484;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['prefix', 'length'];
+        this._slots = ['prefix', 'length'];
         this.prefix = params.prefix;
         this.length = params.length;
       }
@@ -59828,7 +61229,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeEmailCode';
         this.constructorId = 0xf450f59b;
         this.subclassOfId = 0xff5b158e;
-        this.slots = [
+        this._slots = [
           'appleSigninAllowed',
           'googleSigninAllowed',
           'emailPattern',
@@ -59907,7 +61308,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeSetUpEmailRequired';
         this.constructorId = 0xa5491dea;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['appleSigninAllowed', 'googleSigninAllowed'];
+        this._slots = ['appleSigninAllowed', 'googleSigninAllowed'];
         this.appleSigninAllowed = params.appleSigninAllowed;
         this.googleSigninAllowed = params.googleSigninAllowed;
       }
@@ -59956,7 +61357,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeFragmentSms';
         this.constructorId = 0xd9565c39;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['url', 'length'];
+        this._slots = ['url', 'length'];
         this.url = params.url;
         this.length = params.length;
       }
@@ -60003,7 +61404,7 @@ export namespace Raw {
         this.className = 'auth.SentCodeTypeFirebaseSms';
         this.constructorId = 0xe57b1432;
         this.subclassOfId = 0xff5b158e;
-        this.slots = ['nonce', 'receipt', 'pushTimeout', 'length'];
+        this._slots = ['nonce', 'receipt', 'pushTimeout', 'length'];
         this.nonce = params.nonce;
         this.receipt = params.receipt;
         this.pushTimeout = params.pushTimeout;
@@ -60071,7 +61472,7 @@ export namespace Raw {
         this.className = 'auth.LoginToken';
         this.constructorId = 0x629f1980;
         this.subclassOfId = 0x6b55f636;
-        this.slots = ['expires', 'token'];
+        this._slots = ['expires', 'token'];
         this.expires = params.expires;
         this.token = params.token;
       }
@@ -60113,7 +61514,7 @@ export namespace Raw {
         this.className = 'auth.LoginTokenMigrateTo';
         this.constructorId = 0x68e9916;
         this.subclassOfId = 0x6b55f636;
-        this.slots = ['dcId', 'token'];
+        this._slots = ['dcId', 'token'];
         this.dcId = params.dcId;
         this.token = params.token;
       }
@@ -60154,7 +61555,7 @@ export namespace Raw {
         this.className = 'auth.LoginTokenSuccess';
         this.constructorId = 0x390d5c5e;
         this.subclassOfId = 0x6b55f636;
-        this.slots = ['authorization'];
+        this._slots = ['authorization'];
         this.authorization = params.authorization;
       }
       /**
@@ -60190,7 +61591,7 @@ export namespace Raw {
         this.className = 'auth.LoggedOut';
         this.constructorId = 0xc3a2835f;
         this.subclassOfId = 0xa804315;
-        this.slots = ['futureAuthToken'];
+        this._slots = ['futureAuthToken'];
         this.futureAuthToken = params.futureAuthToken;
       }
       /**
@@ -60241,7 +61642,7 @@ export namespace Raw {
         this.className = 'auth.SendCode';
         this.constructorId = 0xa677244f;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['phoneNumber', 'apiId', 'apiHash', 'settings'];
+        this._slots = ['phoneNumber', 'apiId', 'apiHash', 'settings'];
         this.phoneNumber = params.phoneNumber;
         this.apiId = params.apiId;
         this.apiHash = params.apiHash;
@@ -60306,7 +61707,7 @@ export namespace Raw {
         this.className = 'auth.SignUp';
         this.constructorId = 0x80eee427;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['phoneNumber', 'phoneCodeHash', 'firstName', 'lastName'];
+        this._slots = ['phoneNumber', 'phoneCodeHash', 'firstName', 'lastName'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
         this.firstName = params.firstName;
@@ -60371,7 +61772,7 @@ export namespace Raw {
         this.className = 'auth.SignIn';
         this.constructorId = 0x8d52a951;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['phoneNumber', 'phoneCodeHash', 'phoneCode', 'emailVerification'];
+        this._slots = ['phoneNumber', 'phoneCodeHash', 'phoneCode', 'emailVerification'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
         this.phoneCode = params.phoneCode;
@@ -60434,7 +61835,7 @@ export namespace Raw {
         this.className = 'auth.LogOut';
         this.constructorId = 0x3e72ba19;
         this.subclassOfId = 0xa804315;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -60465,7 +61866,7 @@ export namespace Raw {
         this.className = 'auth.ResetAuthorizations';
         this.constructorId = 0x9fab0d1a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -60497,7 +61898,7 @@ export namespace Raw {
         this.className = 'auth.ExportAuthorization';
         this.constructorId = 0xe5bfffcd;
         this.subclassOfId = 0x5fd1ec51;
-        this.slots = ['dcId'];
+        this._slots = ['dcId'];
         this.dcId = params.dcId;
       }
       /**
@@ -60535,7 +61936,7 @@ export namespace Raw {
         this.className = 'auth.ImportAuthorization';
         this.constructorId = 0xa57a7dad;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['id', 'bytes'];
+        this._slots = ['id', 'bytes'];
         this.id = params.id;
         this.bytes = params.bytes;
       }
@@ -60585,7 +61986,7 @@ export namespace Raw {
         this.className = 'auth.BindTempAuthKey';
         this.constructorId = 0xcdd42a05;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['permAuthKeyId', 'nonce', 'expiresAt', 'encryptedMessage'];
+        this._slots = ['permAuthKeyId', 'nonce', 'expiresAt', 'encryptedMessage'];
         this.permAuthKeyId = params.permAuthKeyId;
         this.nonce = params.nonce;
         this.expiresAt = params.expiresAt;
@@ -60645,7 +62046,7 @@ export namespace Raw {
         this.className = 'auth.ImportBotAuthorization';
         this.constructorId = 0x67a3ff2c;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['flags', 'apiId', 'apiHash', 'botAuthToken'];
+        this._slots = ['flags', 'apiId', 'apiHash', 'botAuthToken'];
         this.flags = params.flags;
         this.apiId = params.apiId;
         this.apiHash = params.apiHash;
@@ -60702,7 +62103,7 @@ export namespace Raw {
         this.className = 'auth.CheckPassword';
         this.constructorId = 0xd18b4d16;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['password'];
+        this._slots = ['password'];
         this.password = params.password;
       }
       /**
@@ -60738,7 +62139,7 @@ export namespace Raw {
         this.className = 'auth.RequestPasswordRecovery';
         this.constructorId = 0xd897bc66;
         this.subclassOfId = 0xfa72d43a;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -60774,7 +62175,7 @@ export namespace Raw {
         this.className = 'auth.RecoverPassword';
         this.constructorId = 0x37096c70;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['code', 'newSettings'];
+        this._slots = ['code', 'newSettings'];
         this.code = params.code;
         this.newSettings = params.newSettings;
       }
@@ -60823,7 +62224,7 @@ export namespace Raw {
         this.className = 'auth.ResendCode';
         this.constructorId = 0x3ef1a9bf;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['phoneNumber', 'phoneCodeHash'];
+        this._slots = ['phoneNumber', 'phoneCodeHash'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
       }
@@ -60866,7 +62267,7 @@ export namespace Raw {
         this.className = 'auth.CancelCode';
         this.constructorId = 0x1f040578;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['phoneNumber', 'phoneCodeHash'];
+        this._slots = ['phoneNumber', 'phoneCodeHash'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
       }
@@ -60908,7 +62309,7 @@ export namespace Raw {
         this.className = 'auth.DropTempAuthKeys';
         this.constructorId = 0x8e48a188;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['exceptAuthKeys'];
+        this._slots = ['exceptAuthKeys'];
         this.exceptAuthKeys = params.exceptAuthKeys;
       }
       /**
@@ -60947,7 +62348,7 @@ export namespace Raw {
         this.className = 'auth.ExportLoginToken';
         this.constructorId = 0xb7e085fe;
         this.subclassOfId = 0x6b55f636;
-        this.slots = ['apiId', 'apiHash', 'exceptIds'];
+        this._slots = ['apiId', 'apiHash', 'exceptIds'];
         this.apiId = params.apiId;
         this.apiHash = params.apiHash;
         this.exceptIds = params.exceptIds;
@@ -60998,7 +62399,7 @@ export namespace Raw {
         this.className = 'auth.ImportLoginToken';
         this.constructorId = 0x95ac5ce4;
         this.subclassOfId = 0x6b55f636;
-        this.slots = ['token'];
+        this._slots = ['token'];
         this.token = params.token;
       }
       /**
@@ -61035,7 +62436,7 @@ export namespace Raw {
         this.className = 'auth.AcceptLoginToken';
         this.constructorId = 0xe894ad4d;
         this.subclassOfId = 0xc913c01a;
-        this.slots = ['token'];
+        this._slots = ['token'];
         this.token = params.token;
       }
       /**
@@ -61072,7 +62473,7 @@ export namespace Raw {
         this.className = 'auth.CheckRecoveryPassword';
         this.constructorId = 0xd36bf79;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['code'];
+        this._slots = ['code'];
         this.code = params.code;
       }
       /**
@@ -61111,7 +62512,7 @@ export namespace Raw {
         this.className = 'auth.ImportWebTokenAuthorization';
         this.constructorId = 0x2db873a9;
         this.subclassOfId = 0xb9e04e39;
-        this.slots = ['apiId', 'apiHash', 'webAuthToken'];
+        this._slots = ['apiId', 'apiHash', 'webAuthToken'];
         this.apiId = params.apiId;
         this.apiHash = params.apiHash;
         this.webAuthToken = params.webAuthToken;
@@ -61173,7 +62574,7 @@ export namespace Raw {
         this.className = 'auth.RequestFirebaseSms';
         this.constructorId = 0x89464b50;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['phoneNumber', 'phoneCodeHash', 'safetyNetToken', 'iosPushSecret'];
+        this._slots = ['phoneNumber', 'phoneCodeHash', 'safetyNetToken', 'iosPushSecret'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
         this.safetyNetToken = params.safetyNetToken;
@@ -61238,7 +62639,7 @@ export namespace Raw {
         this.className = 'auth.ResetLoginEmail';
         this.constructorId = 0x7e960193;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['phoneNumber', 'phoneCodeHash'];
+        this._slots = ['phoneNumber', 'phoneCodeHash'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
       }
@@ -61291,7 +62692,7 @@ export namespace Raw {
         this.className = 'contacts.ContactsNotModified';
         this.constructorId = 0xb74ba9d2;
         this.subclassOfId = 0x38be25f6;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -61331,7 +62732,7 @@ export namespace Raw {
         this.className = 'contacts.Contacts';
         this.constructorId = 0xeae87e42;
         this.subclassOfId = 0x38be25f6;
-        this.slots = ['contacts', 'savedCount', 'users'];
+        this._slots = ['contacts', 'savedCount', 'users'];
         this.contacts = params.contacts;
         this.savedCount = params.savedCount;
         this.users = params.users;
@@ -61389,7 +62790,7 @@ export namespace Raw {
         this.className = 'contacts.ImportedContacts';
         this.constructorId = 0x77d01c3b;
         this.subclassOfId = 0x8172ad93;
-        this.slots = ['imported', 'popularInvites', 'retryContacts', 'users'];
+        this._slots = ['imported', 'popularInvites', 'retryContacts', 'users'];
         this.imported = params.imported;
         this.popularInvites = params.popularInvites;
         this.retryContacts = params.retryContacts;
@@ -61451,7 +62852,7 @@ export namespace Raw {
         this.className = 'contacts.Blocked';
         this.constructorId = 0xade1591;
         this.subclassOfId = 0xffba4f4f;
-        this.slots = ['blocked', 'chats', 'users'];
+        this._slots = ['blocked', 'chats', 'users'];
         this.blocked = params.blocked;
         this.chats = params.chats;
         this.users = params.users;
@@ -61505,7 +62906,7 @@ export namespace Raw {
         this.className = 'contacts.BlockedSlice';
         this.constructorId = 0xe1664194;
         this.subclassOfId = 0xffba4f4f;
-        this.slots = ['count', 'blocked', 'chats', 'users'];
+        this._slots = ['count', 'blocked', 'chats', 'users'];
         this.count = params.count;
         this.blocked = params.blocked;
         this.chats = params.chats;
@@ -61569,7 +62970,7 @@ export namespace Raw {
         this.className = 'contacts.Found';
         this.constructorId = 0xb3134d9d;
         this.subclassOfId = 0x4386a2e3;
-        this.slots = ['myResults', 'results', 'chats', 'users'];
+        this._slots = ['myResults', 'results', 'chats', 'users'];
         this.myResults = params.myResults;
         this.results = params.results;
         this.chats = params.chats;
@@ -61631,7 +63032,7 @@ export namespace Raw {
         this.className = 'contacts.ResolvedPeer';
         this.constructorId = 0x7f077ad9;
         this.subclassOfId = 0xf065b3a8;
-        this.slots = ['peer', 'chats', 'users'];
+        this._slots = ['peer', 'chats', 'users'];
         this.peer = params.peer;
         this.chats = params.chats;
         this.users = params.users;
@@ -61675,7 +63076,7 @@ export namespace Raw {
         this.className = 'contacts.TopPeersNotModified';
         this.constructorId = 0xde266ef5;
         this.subclassOfId = 0x9ee8bb88;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -61715,7 +63116,7 @@ export namespace Raw {
         this.className = 'contacts.TopPeers';
         this.constructorId = 0x70b772a8;
         this.subclassOfId = 0x9ee8bb88;
-        this.slots = ['categories', 'chats', 'users'];
+        this._slots = ['categories', 'chats', 'users'];
         this.categories = params.categories;
         this.chats = params.chats;
         this.users = params.users;
@@ -61759,7 +63160,7 @@ export namespace Raw {
         this.className = 'contacts.TopPeersDisabled';
         this.constructorId = 0xb52c939d;
         this.subclassOfId = 0x9ee8bb88;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -61791,7 +63192,7 @@ export namespace Raw {
         this.className = 'contacts.GetContactIDs';
         this.constructorId = 0x7adc669d;
         this.subclassOfId = 0x5026710f;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -61827,7 +63228,7 @@ export namespace Raw {
         this.className = 'contacts.GetStatuses';
         this.constructorId = 0xc4a353ee;
         this.subclassOfId = 0xdf815c90;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -61859,7 +63260,7 @@ export namespace Raw {
         this.className = 'contacts.GetContacts';
         this.constructorId = 0x5dd69e12;
         this.subclassOfId = 0x38be25f6;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -61896,7 +63297,7 @@ export namespace Raw {
         this.className = 'contacts.ImportContacts';
         this.constructorId = 0x2c800be5;
         this.subclassOfId = 0x8172ad93;
-        this.slots = ['contacts'];
+        this._slots = ['contacts'];
         this.contacts = params.contacts;
       }
       /**
@@ -61933,7 +63334,7 @@ export namespace Raw {
         this.className = 'contacts.DeleteContacts';
         this.constructorId = 0x96a0e00;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -61970,7 +63371,7 @@ export namespace Raw {
         this.className = 'contacts.DeleteByPhones';
         this.constructorId = 0x1013fd9e;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['phones'];
+        this._slots = ['phones'];
         this.phones = params.phones;
       }
       /**
@@ -62008,7 +63409,7 @@ export namespace Raw {
         this.className = 'contacts.Block';
         this.constructorId = 0x2e2e8734;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['myStoriesFrom', 'id'];
+        this._slots = ['myStoriesFrom', 'id'];
         this.myStoriesFrom = params.myStoriesFrom;
         this.id = params.id;
       }
@@ -62054,7 +63455,7 @@ export namespace Raw {
         this.className = 'contacts.Unblock';
         this.constructorId = 0xb550d328;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['myStoriesFrom', 'id'];
+        this._slots = ['myStoriesFrom', 'id'];
         this.myStoriesFrom = params.myStoriesFrom;
         this.id = params.id;
       }
@@ -62101,7 +63502,7 @@ export namespace Raw {
         this.className = 'contacts.GetBlocked';
         this.constructorId = 0x9a868f80;
         this.subclassOfId = 0xffba4f4f;
-        this.slots = ['myStoriesFrom', 'offset', 'limit'];
+        this._slots = ['myStoriesFrom', 'offset', 'limit'];
         this.myStoriesFrom = params.myStoriesFrom;
         this.offset = params.offset;
         this.limit = params.limit;
@@ -62156,7 +63557,7 @@ export namespace Raw {
         this.className = 'contacts.Search';
         this.constructorId = 0x11f812d8;
         this.subclassOfId = 0x4386a2e3;
-        this.slots = ['q', 'limit'];
+        this._slots = ['q', 'limit'];
         this.q = params.q;
         this.limit = params.limit;
       }
@@ -62198,7 +63599,7 @@ export namespace Raw {
         this.className = 'contacts.ResolveUsername';
         this.constructorId = 0xf93ccba3;
         this.subclassOfId = 0xf065b3a8;
-        this.slots = ['username'];
+        this._slots = ['username'];
         this.username = params.username;
       }
       /**
@@ -62257,7 +63658,7 @@ export namespace Raw {
         this.className = 'contacts.GetTopPeers';
         this.constructorId = 0x973478b6;
         this.subclassOfId = 0x9ee8bb88;
-        this.slots = [
+        this._slots = [
           'correspondents',
           'botsPm',
           'botsInline',
@@ -62358,7 +63759,7 @@ export namespace Raw {
         this.className = 'contacts.ResetTopPeerRating';
         this.constructorId = 0x1ae373ac;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['category', 'peer'];
+        this._slots = ['category', 'peer'];
         this.category = params.category;
         this.peer = params.peer;
       }
@@ -62399,7 +63800,7 @@ export namespace Raw {
         this.className = 'contacts.ResetSaved';
         this.constructorId = 0x879537f1;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -62430,7 +63831,7 @@ export namespace Raw {
         this.className = 'contacts.GetSaved';
         this.constructorId = 0x82f1e39f;
         this.subclassOfId = 0x975dbef;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -62462,7 +63863,7 @@ export namespace Raw {
         this.className = 'contacts.ToggleTopPeers';
         this.constructorId = 0x8514bdda;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['enabled'];
+        this._slots = ['enabled'];
         this.enabled = params.enabled;
       }
       /**
@@ -62509,7 +63910,7 @@ export namespace Raw {
         this.className = 'contacts.AddContact';
         this.constructorId = 0xe8f463d0;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['addPhonePrivacyException', 'id', 'firstName', 'lastName', 'phone'];
+        this._slots = ['addPhonePrivacyException', 'id', 'firstName', 'lastName', 'phone'];
         this.addPhonePrivacyException = params.addPhonePrivacyException;
         this.id = params.id;
         this.firstName = params.firstName;
@@ -62575,7 +63976,7 @@ export namespace Raw {
         this.className = 'contacts.AcceptContact';
         this.constructorId = 0xf831a20f;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -62618,7 +64019,7 @@ export namespace Raw {
         this.className = 'contacts.GetLocated';
         this.constructorId = 0xd348bc44;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['background', 'geoPoint', 'selfExpires'];
+        this._slots = ['background', 'geoPoint', 'selfExpires'];
         this.background = params.background;
         this.geoPoint = params.geoPoint;
         this.selfExpires = params.selfExpires;
@@ -62681,7 +64082,7 @@ export namespace Raw {
         this.className = 'contacts.BlockFromReplies';
         this.constructorId = 0x29a8962c;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['deleteMessage', 'deleteHistory', 'reportSpam', 'msgId'];
+        this._slots = ['deleteMessage', 'deleteHistory', 'reportSpam', 'msgId'];
         this.deleteMessage = params.deleteMessage;
         this.deleteHistory = params.deleteHistory;
         this.reportSpam = params.reportSpam;
@@ -62737,7 +64138,7 @@ export namespace Raw {
         this.className = 'contacts.ResolvePhone';
         this.constructorId = 0x8af94344;
         this.subclassOfId = 0xf065b3a8;
-        this.slots = ['phone'];
+        this._slots = ['phone'];
         this.phone = params.phone;
       }
       /**
@@ -62773,7 +64174,7 @@ export namespace Raw {
         this.className = 'contacts.ExportContactToken';
         this.constructorId = 0xf8654027;
         this.subclassOfId = 0x86ddbed1;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -62805,7 +64206,7 @@ export namespace Raw {
         this.className = 'contacts.ImportContactToken';
         this.constructorId = 0x13005788;
         this.subclassOfId = 0x2da17977;
-        this.slots = ['token'];
+        this._slots = ['token'];
         this.token = params.token;
       }
       /**
@@ -62842,7 +64243,7 @@ export namespace Raw {
         this.className = 'contacts.EditCloseFriends';
         this.constructorId = 0xba6705f0;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -62881,7 +64282,7 @@ export namespace Raw {
         this.className = 'contacts.SetBlocked';
         this.constructorId = 0x94c65c76;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['myStoriesFrom', 'id', 'limit'];
+        this._slots = ['myStoriesFrom', 'id', 'limit'];
         this.myStoriesFrom = params.myStoriesFrom;
         this.id = params.id;
         this.limit = params.limit;
@@ -63014,7 +64415,7 @@ export namespace Raw {
         this.className = 'messages.Dialogs';
         this.constructorId = 0x15ba6c40;
         this.subclassOfId = 0xe1b52ee;
-        this.slots = ['dialogs', 'messages', 'chats', 'users'];
+        this._slots = ['dialogs', 'messages', 'chats', 'users'];
         this.dialogs = params.dialogs;
         this.messages = params.messages;
         this.chats = params.chats;
@@ -63080,7 +64481,7 @@ export namespace Raw {
         this.className = 'messages.DialogsSlice';
         this.constructorId = 0x71e094f3;
         this.subclassOfId = 0xe1b52ee;
-        this.slots = ['count', 'dialogs', 'messages', 'chats', 'users'];
+        this._slots = ['count', 'dialogs', 'messages', 'chats', 'users'];
         this.count = params.count;
         this.dialogs = params.dialogs;
         this.messages = params.messages;
@@ -63142,7 +64543,7 @@ export namespace Raw {
         this.className = 'messages.DialogsNotModified';
         this.constructorId = 0xf0e3e596;
         this.subclassOfId = 0xe1b52ee;
-        this.slots = ['count'];
+        this._slots = ['count'];
         this.count = params.count;
       }
       /**
@@ -63184,7 +64585,7 @@ export namespace Raw {
         this.className = 'messages.Messages';
         this.constructorId = 0x8c718e87;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['messages', 'chats', 'users'];
+        this._slots = ['messages', 'chats', 'users'];
         this.messages = params.messages;
         this.chats = params.chats;
         this.users = params.users;
@@ -63244,7 +64645,7 @@ export namespace Raw {
         this.className = 'messages.MessagesSlice';
         this.constructorId = 0x3a54685e;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = [
+        this._slots = [
           'inexact',
           'count',
           'nextRate',
@@ -63347,7 +64748,7 @@ export namespace Raw {
         this.className = 'messages.ChannelMessages';
         this.constructorId = 0xc776ba4e;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = [
+        this._slots = [
           'inexact',
           'pts',
           'count',
@@ -63440,7 +64841,7 @@ export namespace Raw {
         this.className = 'messages.MessagesNotModified';
         this.constructorId = 0x74535f21;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['count'];
+        this._slots = ['count'];
         this.count = params.count;
       }
       /**
@@ -63479,7 +64880,7 @@ export namespace Raw {
         this.className = 'messages.Chats';
         this.constructorId = 0x64ff9fd5;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['chats'];
+        this._slots = ['chats'];
         this.chats = params.chats;
       }
       /**
@@ -63516,7 +64917,7 @@ export namespace Raw {
         this.className = 'messages.ChatsSlice';
         this.constructorId = 0x9cd81144;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['count', 'chats'];
+        this._slots = ['count', 'chats'];
         this.count = params.count;
         this.chats = params.chats;
       }
@@ -63563,7 +64964,7 @@ export namespace Raw {
         this.className = 'messages.ChatFull';
         this.constructorId = 0xe5d7d19c;
         this.subclassOfId = 0x225a5109;
-        this.slots = ['fullChat', 'chats', 'users'];
+        this._slots = ['fullChat', 'chats', 'users'];
         this.fullChat = params.fullChat;
         this.chats = params.chats;
         this.users = params.users;
@@ -63611,7 +65012,7 @@ export namespace Raw {
         this.className = 'messages.AffectedHistory';
         this.constructorId = 0xb45c69d1;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['pts', 'ptsCount', 'offset'];
+        this._slots = ['pts', 'ptsCount', 'offset'];
         this.pts = params.pts;
         this.ptsCount = params.ptsCount;
         this.offset = params.offset;
@@ -63657,7 +65058,7 @@ export namespace Raw {
         this.className = 'messages.DhConfigNotModified';
         this.constructorId = 0xc0e24635;
         this.subclassOfId = 0xe488ed8b;
-        this.slots = ['random'];
+        this._slots = ['random'];
         this.random = params.random;
       }
       /**
@@ -63699,7 +65100,7 @@ export namespace Raw {
         this.className = 'messages.DhConfig';
         this.constructorId = 0x2c221edd;
         this.subclassOfId = 0xe488ed8b;
-        this.slots = ['g', 'p', 'version', 'random'];
+        this._slots = ['g', 'p', 'version', 'random'];
         this.g = params.g;
         this.p = params.p;
         this.version = params.version;
@@ -63750,7 +65151,7 @@ export namespace Raw {
         this.className = 'messages.SentEncryptedMessage';
         this.constructorId = 0x560f8935;
         this.subclassOfId = 0xc99e3e50;
-        this.slots = ['date'];
+        this._slots = ['date'];
         this.date = params.date;
       }
       /**
@@ -63790,7 +65191,7 @@ export namespace Raw {
         this.className = 'messages.SentEncryptedFile';
         this.constructorId = 0x9493ff32;
         this.subclassOfId = 0xc99e3e50;
-        this.slots = ['date', 'file'];
+        this._slots = ['date', 'file'];
         this.date = params.date;
         this.file = params.file;
       }
@@ -63829,7 +65230,7 @@ export namespace Raw {
         this.className = 'messages.StickersNotModified';
         this.constructorId = 0xf1749a22;
         this.subclassOfId = 0xd73bb9de;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -63864,7 +65265,7 @@ export namespace Raw {
         this.className = 'messages.Stickers';
         this.constructorId = 0x30a6ec7e;
         this.subclassOfId = 0xd73bb9de;
-        this.slots = ['hash', 'stickers'];
+        this._slots = ['hash', 'stickers'];
         this.hash = params.hash;
         this.stickers = params.stickers;
       }
@@ -63903,7 +65304,7 @@ export namespace Raw {
         this.className = 'messages.AllStickersNotModified';
         this.constructorId = 0xe86602c3;
         this.subclassOfId = 0x45834829;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -63938,7 +65339,7 @@ export namespace Raw {
         this.className = 'messages.AllStickers';
         this.constructorId = 0xcdbbcebb;
         this.subclassOfId = 0x45834829;
-        this.slots = ['hash', 'sets'];
+        this._slots = ['hash', 'sets'];
         this.hash = params.hash;
         this.sets = params.sets;
       }
@@ -63980,7 +65381,7 @@ export namespace Raw {
         this.className = 'messages.AffectedMessages';
         this.constructorId = 0x84d19185;
         this.subclassOfId = 0xced3c06e;
-        this.slots = ['pts', 'ptsCount'];
+        this._slots = ['pts', 'ptsCount'];
         this.pts = params.pts;
         this.ptsCount = params.ptsCount;
       }
@@ -64029,7 +65430,7 @@ export namespace Raw {
         this.className = 'messages.StickerSet';
         this.constructorId = 0x6e153f16;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['set', 'packs', 'keywords', 'documents'];
+        this._slots = ['set', 'packs', 'keywords', 'documents'];
         this.set = params.set;
         this.packs = params.packs;
         this.keywords = params.keywords;
@@ -64083,7 +65484,7 @@ export namespace Raw {
         this.className = 'messages.StickerSetNotModified';
         this.constructorId = 0xd3f924eb;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -64115,7 +65516,7 @@ export namespace Raw {
         this.className = 'messages.SavedGifsNotModified';
         this.constructorId = 0xe8025ca2;
         this.subclassOfId = 0xa68b61f5;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -64150,7 +65551,7 @@ export namespace Raw {
         this.className = 'messages.SavedGifs';
         this.constructorId = 0x84a02a0d;
         this.subclassOfId = 0xa68b61f5;
-        this.slots = ['hash', 'gifs'];
+        this._slots = ['hash', 'gifs'];
         this.hash = params.hash;
         this.gifs = params.gifs;
       }
@@ -64207,7 +65608,7 @@ export namespace Raw {
         this.className = 'messages.BotResults';
         this.constructorId = 0xe021f2f6;
         this.subclassOfId = 0x3ed4d9c9;
-        this.slots = [
+        this._slots = [
           'gallery',
           'queryId',
           'nextOffset',
@@ -64314,7 +65715,7 @@ export namespace Raw {
         this.className = 'messages.BotCallbackAnswer';
         this.constructorId = 0x36585ea4;
         this.subclassOfId = 0x6c4dd18c;
-        this.slots = ['alert', 'hasUrl', 'nativeUi', 'message', 'url', 'cacheTime'];
+        this._slots = ['alert', 'hasUrl', 'nativeUi', 'message', 'url', 'cacheTime'];
         this.alert = params.alert;
         this.hasUrl = params.hasUrl;
         this.nativeUi = params.nativeUi;
@@ -64383,7 +65784,7 @@ export namespace Raw {
         this.className = 'messages.MessageEditData';
         this.constructorId = 0x26b5dde6;
         this.subclassOfId = 0xfb47949d;
-        this.slots = ['caption'];
+        this._slots = ['caption'];
         this.caption = params.caption;
       }
       /**
@@ -64432,7 +65833,7 @@ export namespace Raw {
         this.className = 'messages.PeerDialogs';
         this.constructorId = 0x3371c354;
         this.subclassOfId = 0x3ac70132;
-        this.slots = ['dialogs', 'messages', 'chats', 'users', 'state'];
+        this._slots = ['dialogs', 'messages', 'chats', 'users', 'state'];
         this.dialogs = params.dialogs;
         this.messages = params.messages;
         this.chats = params.chats;
@@ -64494,7 +65895,7 @@ export namespace Raw {
         this.className = 'messages.FeaturedStickersNotModified';
         this.constructorId = 0xc6dc0c66;
         this.subclassOfId = 0x2614b722;
-        this.slots = ['count'];
+        this._slots = ['count'];
         this.count = params.count;
       }
       /**
@@ -64543,7 +65944,7 @@ export namespace Raw {
         this.className = 'messages.FeaturedStickers';
         this.constructorId = 0xbe382906;
         this.subclassOfId = 0x2614b722;
-        this.slots = ['premium', 'hash', 'count', 'sets', 'unread'];
+        this._slots = ['premium', 'hash', 'count', 'sets', 'unread'];
         this.premium = params.premium;
         this.hash = params.hash;
         this.count = params.count;
@@ -64606,7 +66007,7 @@ export namespace Raw {
         this.className = 'messages.RecentStickersNotModified';
         this.constructorId = 0xb17f890;
         this.subclassOfId = 0xf76f8683;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -64648,7 +66049,7 @@ export namespace Raw {
         this.className = 'messages.RecentStickers';
         this.constructorId = 0x88d37c56;
         this.subclassOfId = 0xf76f8683;
-        this.slots = ['hash', 'packs', 'stickers', 'dates'];
+        this._slots = ['hash', 'packs', 'stickers', 'dates'];
         this.hash = params.hash;
         this.packs = params.packs;
         this.stickers = params.stickers;
@@ -64705,7 +66106,7 @@ export namespace Raw {
         this.className = 'messages.ArchivedStickers';
         this.constructorId = 0x4fcba9c8;
         this.subclassOfId = 0x7296d771;
-        this.slots = ['count', 'sets'];
+        this._slots = ['count', 'sets'];
         this.count = params.count;
         this.sets = params.sets;
       }
@@ -64744,7 +66145,7 @@ export namespace Raw {
         this.className = 'messages.StickerSetInstallResultSuccess';
         this.constructorId = 0x38641628;
         this.subclassOfId = 0x67cb3fe8;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -64778,7 +66179,7 @@ export namespace Raw {
         this.className = 'messages.StickerSetInstallResultArchive';
         this.constructorId = 0x35e410a8;
         this.subclassOfId = 0x67cb3fe8;
-        this.slots = ['sets'];
+        this._slots = ['sets'];
         this.sets = params.sets;
       }
       /**
@@ -64818,7 +66219,7 @@ export namespace Raw {
         this.className = 'messages.HighScores';
         this.constructorId = 0x9a3bfd99;
         this.subclassOfId = 0x6ccd95fd;
-        this.slots = ['scores', 'users'];
+        this._slots = ['scores', 'users'];
         this.scores = params.scores;
         this.users = params.users;
       }
@@ -64857,7 +66258,7 @@ export namespace Raw {
         this.className = 'messages.FavedStickersNotModified';
         this.constructorId = 0x9e8fa6d3;
         this.subclassOfId = 0x8e736fb9;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -64897,7 +66298,7 @@ export namespace Raw {
         this.className = 'messages.FavedStickers';
         this.constructorId = 0x2cb51097;
         this.subclassOfId = 0x8e736fb9;
-        this.slots = ['hash', 'packs', 'stickers'];
+        this._slots = ['hash', 'packs', 'stickers'];
         this.hash = params.hash;
         this.packs = params.packs;
         this.stickers = params.stickers;
@@ -64941,7 +66342,7 @@ export namespace Raw {
         this.className = 'messages.FoundStickerSetsNotModified';
         this.constructorId = 0xd54b65d;
         this.subclassOfId = 0x40df361;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -64976,7 +66377,7 @@ export namespace Raw {
         this.className = 'messages.FoundStickerSets';
         this.constructorId = 0x8af09dd2;
         this.subclassOfId = 0x40df361;
-        this.slots = ['hash', 'sets'];
+        this._slots = ['hash', 'sets'];
         this.hash = params.hash;
         this.sets = params.sets;
       }
@@ -65019,7 +66420,7 @@ export namespace Raw {
         this.className = 'messages.SearchCounter';
         this.constructorId = 0xe844ebff;
         this.subclassOfId = 0xd6a7bfa2;
-        this.slots = ['inexact', 'filter', 'count'];
+        this._slots = ['inexact', 'filter', 'count'];
         this.inexact = params.inexact;
         this.filter = params.filter;
         this.count = params.count;
@@ -65074,7 +66475,7 @@ export namespace Raw {
         this.className = 'messages.InactiveChats';
         this.constructorId = 0xa927fec5;
         this.subclassOfId = 0x8bf3d7d4;
-        this.slots = ['dates', 'chats', 'users'];
+        this._slots = ['dates', 'chats', 'users'];
         this.dates = params.dates;
         this.chats = params.chats;
         this.users = params.users;
@@ -65130,7 +66531,7 @@ export namespace Raw {
         this.className = 'messages.VotesList';
         this.constructorId = 0x4899484e;
         this.subclassOfId = 0xc2199885;
-        this.slots = ['count', 'votes', 'chats', 'users', 'nextOffset'];
+        this._slots = ['count', 'votes', 'chats', 'users', 'nextOffset'];
         this.count = params.count;
         this.votes = params.votes;
         this.chats = params.chats;
@@ -65204,7 +66605,7 @@ export namespace Raw {
         this.className = 'messages.MessageViews';
         this.constructorId = 0xb6c4f543;
         this.subclassOfId = 0xafb5eb9c;
-        this.slots = ['views', 'chats', 'users'];
+        this._slots = ['views', 'chats', 'users'];
         this.views = params.views;
         this.chats = params.chats;
         this.users = params.users;
@@ -65264,7 +66665,7 @@ export namespace Raw {
         this.className = 'messages.DiscussionMessage';
         this.constructorId = 0xa6341782;
         this.subclassOfId = 0x53f8e3e8;
-        this.slots = [
+        this._slots = [
           'messages',
           'maxId',
           'readInboxMaxId',
@@ -65354,7 +66755,7 @@ export namespace Raw {
         this.className = 'messages.HistoryImport';
         this.constructorId = 0x1662af0b;
         this.subclassOfId = 0xb18bb50a;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -65392,7 +66793,7 @@ export namespace Raw {
         this.className = 'messages.HistoryImportParsed';
         this.constructorId = 0x5e0fb7b9;
         this.subclassOfId = 0x5bb2720b;
-        this.slots = ['pm', 'group', 'title'];
+        this._slots = ['pm', 'group', 'title'];
         this.pm = params.pm;
         this.group = params.group;
         this.title = params.title;
@@ -65446,7 +66847,7 @@ export namespace Raw {
         this.className = 'messages.AffectedFoundMessages';
         this.constructorId = 0xef8d3e6c;
         this.subclassOfId = 0xf817652e;
-        this.slots = ['pts', 'ptsCount', 'offset', 'messages'];
+        this._slots = ['pts', 'ptsCount', 'offset', 'messages'];
         this.pts = params.pts;
         this.ptsCount = params.ptsCount;
         this.offset = params.offset;
@@ -65511,7 +66912,7 @@ export namespace Raw {
         this.className = 'messages.ExportedChatInvites';
         this.constructorId = 0xbdc62dcc;
         this.subclassOfId = 0x603d3871;
-        this.slots = ['count', 'invites', 'users'];
+        this._slots = ['count', 'invites', 'users'];
         this.count = params.count;
         this.invites = params.invites;
         this.users = params.users;
@@ -65565,7 +66966,7 @@ export namespace Raw {
         this.className = 'messages.ExportedChatInvite';
         this.constructorId = 0x1871be50;
         this.subclassOfId = 0x82dcd4ca;
-        this.slots = ['invite', 'users'];
+        this._slots = ['invite', 'users'];
         this.invite = params.invite;
         this.users = params.users;
       }
@@ -65612,7 +67013,7 @@ export namespace Raw {
         this.className = 'messages.ExportedChatInviteReplaced';
         this.constructorId = 0x222600ef;
         this.subclassOfId = 0x82dcd4ca;
-        this.slots = ['invite', 'newInvite', 'users'];
+        this._slots = ['invite', 'newInvite', 'users'];
         this.invite = params.invite;
         this.newInvite = params.newInvite;
         this.users = params.users;
@@ -65671,7 +67072,7 @@ export namespace Raw {
         this.className = 'messages.ChatInviteImporters';
         this.constructorId = 0x81b6b00a;
         this.subclassOfId = 0xd9bc8aa6;
-        this.slots = ['count', 'importers', 'users'];
+        this._slots = ['count', 'importers', 'users'];
         this.count = params.count;
         this.importers = params.importers;
         this.users = params.users;
@@ -65728,7 +67129,7 @@ export namespace Raw {
         this.className = 'messages.ChatAdminsWithInvites';
         this.constructorId = 0xb69b72d7;
         this.subclassOfId = 0x8f5bad2b;
-        this.slots = ['admins', 'users'];
+        this._slots = ['admins', 'users'];
         this.admins = params.admins;
         this.users = params.users;
       }
@@ -65772,7 +67173,7 @@ export namespace Raw {
         this.className = 'messages.CheckedHistoryImportPeer';
         this.constructorId = 0xa24de717;
         this.subclassOfId = 0xb84bb337;
-        this.slots = ['confirmText'];
+        this._slots = ['confirmText'];
         this.confirmText = params.confirmText;
       }
       /**
@@ -65819,7 +67220,7 @@ export namespace Raw {
         this.className = 'messages.SponsoredMessages';
         this.constructorId = 0xc9ee1d87;
         this.subclassOfId = 0x7f4169e0;
-        this.slots = ['postsBetween', 'messages', 'chats', 'users'];
+        this._slots = ['postsBetween', 'messages', 'chats', 'users'];
         this.postsBetween = params.postsBetween;
         this.messages = params.messages;
         this.chats = params.chats;
@@ -65879,7 +67280,7 @@ export namespace Raw {
         this.className = 'messages.SponsoredMessagesEmpty';
         this.constructorId = 0x1839490f;
         this.subclassOfId = 0x7f4169e0;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -65931,7 +67332,7 @@ export namespace Raw {
         this.className = 'messages.SearchResultsCalendar';
         this.constructorId = 0x147ee23c;
         this.subclassOfId = 0x92c5640f;
-        this.slots = [
+        this._slots = [
           'inexact',
           'count',
           'minDate',
@@ -66035,7 +67436,7 @@ export namespace Raw {
         this.className = 'messages.SearchResultsPositions';
         this.constructorId = 0x53b22baf;
         this.subclassOfId = 0xd963708d;
-        this.slots = ['count', 'positions'];
+        this._slots = ['count', 'positions'];
         this.count = params.count;
         this.positions = params.positions;
       }
@@ -66085,7 +67486,7 @@ export namespace Raw {
         this.className = 'messages.PeerSettings';
         this.constructorId = 0x6880b94d;
         this.subclassOfId = 0x65a2f7a1;
-        this.slots = ['settings', 'chats', 'users'];
+        this._slots = ['settings', 'chats', 'users'];
         this.settings = params.settings;
         this.chats = params.chats;
         this.users = params.users;
@@ -66141,7 +67542,7 @@ export namespace Raw {
         this.className = 'messages.MessageReactionsList';
         this.constructorId = 0x31bd492d;
         this.subclassOfId = 0x60fce5e6;
-        this.slots = ['count', 'reactions', 'chats', 'users', 'nextOffset'];
+        this._slots = ['count', 'reactions', 'chats', 'users', 'nextOffset'];
         this.count = params.count;
         this.reactions = params.reactions;
         this.chats = params.chats;
@@ -66210,7 +67611,7 @@ export namespace Raw {
         this.className = 'messages.AvailableReactionsNotModified';
         this.constructorId = 0x9f071957;
         this.subclassOfId = 0xe426ad82;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -66245,7 +67646,7 @@ export namespace Raw {
         this.className = 'messages.AvailableReactions';
         this.constructorId = 0x768e3aad;
         this.subclassOfId = 0xe426ad82;
-        this.slots = ['hash', 'reactions'];
+        this._slots = ['hash', 'reactions'];
         this.hash = params.hash;
         this.reactions = params.reactions;
       }
@@ -66288,7 +67689,7 @@ export namespace Raw {
         this.className = 'messages.TranscribedAudio';
         this.constructorId = 0x93752c52;
         this.subclassOfId = 0x21b24936;
-        this.slots = ['pending', 'transcriptionId', 'text'];
+        this._slots = ['pending', 'transcriptionId', 'text'];
         this.pending = params.pending;
         this.transcriptionId = params.transcriptionId;
         this.text = params.text;
@@ -66339,7 +67740,7 @@ export namespace Raw {
         this.className = 'messages.ReactionsNotModified';
         this.constructorId = 0xb06fdbdf;
         this.subclassOfId = 0xadc38324;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -66374,7 +67775,7 @@ export namespace Raw {
         this.className = 'messages.Reactions';
         this.constructorId = 0xeafdf716;
         this.subclassOfId = 0xadc38324;
-        this.slots = ['hash', 'reactions'];
+        this._slots = ['hash', 'reactions'];
         this.hash = params.hash;
         this.reactions = params.reactions;
       }
@@ -66429,7 +67830,7 @@ export namespace Raw {
         this.className = 'messages.ForumTopics';
         this.constructorId = 0x367617d3;
         this.subclassOfId = 0x8e1d3e1e;
-        this.slots = ['orderByCreateDate', 'count', 'topics', 'messages', 'chats', 'users', 'pts'];
+        this._slots = ['orderByCreateDate', 'count', 'topics', 'messages', 'chats', 'users', 'pts'];
         this.orderByCreateDate = params.orderByCreateDate;
         this.count = params.count;
         this.topics = params.topics;
@@ -66504,7 +67905,7 @@ export namespace Raw {
         this.className = 'messages.EmojiGroupsNotModified';
         this.constructorId = 0x6fb4ad87;
         this.subclassOfId = 0x7eca55d9;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -66539,7 +67940,7 @@ export namespace Raw {
         this.className = 'messages.EmojiGroups';
         this.constructorId = 0x881fb94b;
         this.subclassOfId = 0x7eca55d9;
-        this.slots = ['hash', 'groups'];
+        this._slots = ['hash', 'groups'];
         this.hash = params.hash;
         this.groups = params.groups;
       }
@@ -66580,7 +67981,7 @@ export namespace Raw {
         this.className = 'messages.TranslateResult';
         this.constructorId = 0x33db32f8;
         this.subclassOfId = 0x24243e8;
-        this.slots = ['result'];
+        this._slots = ['result'];
         this.result = params.result;
       }
       /**
@@ -66624,7 +68025,7 @@ export namespace Raw {
         this.className = 'messages.BotApp';
         this.constructorId = 0xeb50adf5;
         this.subclassOfId = 0x8f7243a7;
-        this.slots = ['inactive', 'requestWriteAccess', 'hasSettings', 'app'];
+        this._slots = ['inactive', 'requestWriteAccess', 'hasSettings', 'app'];
         this.inactive = params.inactive;
         this.requestWriteAccess = params.requestWriteAccess;
         this.hasSettings = params.hasSettings;
@@ -66685,7 +68086,7 @@ export namespace Raw {
         this.className = 'messages.WebPage';
         this.constructorId = 0xfd5e12bd;
         this.subclassOfId = 0x2cf8b154;
-        this.slots = ['webpage', 'chats', 'users'];
+        this._slots = ['webpage', 'chats', 'users'];
         this.webpage = params.webpage;
         this.chats = params.chats;
         this.users = params.users;
@@ -66732,7 +68133,7 @@ export namespace Raw {
         this.className = 'messages.GetMessages';
         this.constructorId = 0x63c66506;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -66783,7 +68184,7 @@ export namespace Raw {
         this.className = 'messages.GetDialogs';
         this.constructorId = 0xa0f4cb4f;
         this.subclassOfId = 0xe1b52ee;
-        this.slots = [
+        this._slots = [
           'excludePinned',
           'folderId',
           'offsetDate',
@@ -66886,7 +68287,7 @@ export namespace Raw {
         this.className = 'messages.GetHistory';
         this.constructorId = 0x4423e6c5;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = [
+        this._slots = [
           'peer',
           'offsetId',
           'offsetDate',
@@ -67002,7 +68403,7 @@ export namespace Raw {
         this.className = 'messages.Search';
         this.constructorId = 0xa0fda762;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = [
+        this._slots = [
           'peer',
           'q',
           'fromId',
@@ -67135,7 +68536,7 @@ export namespace Raw {
         this.className = 'messages.ReadHistory';
         this.constructorId = 0xe306d3a;
         this.subclassOfId = 0xced3c06e;
-        this.slots = ['peer', 'maxId'];
+        this._slots = ['peer', 'maxId'];
         this.peer = params.peer;
         this.maxId = params.maxId;
       }
@@ -67189,7 +68590,7 @@ export namespace Raw {
         this.className = 'messages.DeleteHistory';
         this.constructorId = 0xb08f922a;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['justClear', 'revoke', 'peer', 'maxId', 'minDate', 'maxDate'];
+        this._slots = ['justClear', 'revoke', 'peer', 'maxId', 'minDate', 'maxDate'];
         this.justClear = params.justClear;
         this.revoke = params.revoke;
         this.peer = params.peer;
@@ -67262,7 +68663,7 @@ export namespace Raw {
         this.className = 'messages.DeleteMessages';
         this.constructorId = 0xe58e95d2;
         this.subclassOfId = 0xced3c06e;
-        this.slots = ['revoke', 'id'];
+        this._slots = ['revoke', 'id'];
         this.revoke = params.revoke;
         this.id = params.id;
       }
@@ -67307,7 +68708,7 @@ export namespace Raw {
         this.className = 'messages.ReceivedMessages';
         this.constructorId = 0x5a954c0;
         this.subclassOfId = 0x8565f897;
-        this.slots = ['maxId'];
+        this._slots = ['maxId'];
         this.maxId = params.maxId;
       }
       /**
@@ -67350,7 +68751,7 @@ export namespace Raw {
         this.className = 'messages.SetTyping';
         this.constructorId = 0x58943ee2;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'topMsgId', 'action'];
+        this._slots = ['peer', 'topMsgId', 'action'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
         this.action = params.action;
@@ -67401,6 +68802,7 @@ export namespace Raw {
       clearDraft?: boolean;
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
+      invertMedia?: boolean;
       peer!: Raw.TypeInputPeer;
       replyTo?: Raw.TypeInputReplyTo;
       message!: string;
@@ -67417,6 +68819,7 @@ export namespace Raw {
         clearDraft?: boolean;
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
+        invertMedia?: boolean;
         peer: Raw.TypeInputPeer;
         replyTo?: Raw.TypeInputReplyTo;
         message: string;
@@ -67431,13 +68834,14 @@ export namespace Raw {
         this.className = 'messages.SendMessage';
         this.constructorId = 0x280d096f;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'noWebpage',
           'silent',
           'background',
           'clearDraft',
           'noforwards',
           'updateStickersetsOrder',
+          'invertMedia',
           'peer',
           'replyTo',
           'message',
@@ -67453,6 +68857,7 @@ export namespace Raw {
         this.clearDraft = params.clearDraft;
         this.noforwards = params.noforwards;
         this.updateStickersetsOrder = params.updateStickersetsOrder;
+        this.invertMedia = params.invertMedia;
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.message = params.message;
@@ -67477,6 +68882,7 @@ export namespace Raw {
         let clearDraft = flags & (1 << 7) ? true : false;
         let noforwards = flags & (1 << 14) ? true : false;
         let updateStickersetsOrder = flags & (1 << 15) ? true : false;
+        let invertMedia = flags & (1 << 16) ? true : false;
         let peer = await TLObject.read(b);
         let replyTo = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         let message = await Primitive.String.read(b);
@@ -67492,6 +68898,7 @@ export namespace Raw {
           clearDraft: clearDraft,
           noforwards: noforwards,
           updateStickersetsOrder: updateStickersetsOrder,
+          invertMedia: invertMedia,
           peer: peer,
           replyTo: replyTo,
           message: message,
@@ -67517,6 +68924,7 @@ export namespace Raw {
         flags |= this.clearDraft ? 1 << 7 : 0;
         flags |= this.noforwards ? 1 << 14 : 0;
         flags |= this.updateStickersetsOrder ? 1 << 15 : 0;
+        flags |= this.invertMedia ? 1 << 16 : 0;
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
         flags |= this.entities ? 1 << 3 : 0;
@@ -67558,6 +68966,7 @@ export namespace Raw {
       clearDraft?: boolean;
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
+      invertMedia?: boolean;
       peer!: Raw.TypeInputPeer;
       replyTo?: Raw.TypeInputReplyTo;
       media!: Raw.TypeInputMedia;
@@ -67574,6 +68983,7 @@ export namespace Raw {
         clearDraft?: boolean;
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
+        invertMedia?: boolean;
         peer: Raw.TypeInputPeer;
         replyTo?: Raw.TypeInputReplyTo;
         media: Raw.TypeInputMedia;
@@ -67589,12 +68999,13 @@ export namespace Raw {
         this.className = 'messages.SendMedia';
         this.constructorId = 0x72ccc23d;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'silent',
           'background',
           'clearDraft',
           'noforwards',
           'updateStickersetsOrder',
+          'invertMedia',
           'peer',
           'replyTo',
           'media',
@@ -67610,6 +69021,7 @@ export namespace Raw {
         this.clearDraft = params.clearDraft;
         this.noforwards = params.noforwards;
         this.updateStickersetsOrder = params.updateStickersetsOrder;
+        this.invertMedia = params.invertMedia;
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.media = params.media;
@@ -67634,6 +69046,7 @@ export namespace Raw {
         let clearDraft = flags & (1 << 7) ? true : false;
         let noforwards = flags & (1 << 14) ? true : false;
         let updateStickersetsOrder = flags & (1 << 15) ? true : false;
+        let invertMedia = flags & (1 << 16) ? true : false;
         let peer = await TLObject.read(b);
         let replyTo = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         let media = await TLObject.read(b);
@@ -67649,6 +69062,7 @@ export namespace Raw {
           clearDraft: clearDraft,
           noforwards: noforwards,
           updateStickersetsOrder: updateStickersetsOrder,
+          invertMedia: invertMedia,
           peer: peer,
           replyTo: replyTo,
           media: media,
@@ -67674,6 +69088,7 @@ export namespace Raw {
         flags |= this.clearDraft ? 1 << 7 : 0;
         flags |= this.noforwards ? 1 << 14 : 0;
         flags |= this.updateStickersetsOrder ? 1 << 15 : 0;
+        flags |= this.invertMedia ? 1 << 16 : 0;
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
         flags |= this.entities ? 1 << 3 : 0;
@@ -67747,7 +69162,7 @@ export namespace Raw {
         this.className = 'messages.ForwardMessages';
         this.constructorId = 0xc661bbc4;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'silent',
           'background',
           'withMyScore',
@@ -67868,7 +69283,7 @@ export namespace Raw {
         this.className = 'messages.ReportSpam';
         this.constructorId = 0xcf1592db;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -67905,7 +69320,7 @@ export namespace Raw {
         this.className = 'messages.GetPeerSettings';
         this.constructorId = 0xefd9a6a2;
         this.subclassOfId = 0x65a2f7a1;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -67950,7 +69365,7 @@ export namespace Raw {
         this.className = 'messages.Report';
         this.constructorId = 0x8953ab4e;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'id', 'reason', 'message'];
+        this._slots = ['peer', 'id', 'reason', 'message'];
         this.peer = params.peer;
         this.id = params.id;
         this.reason = params.reason;
@@ -68002,7 +69417,7 @@ export namespace Raw {
         this.className = 'messages.GetChats';
         this.constructorId = 0x49e9528f;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -68039,7 +69454,7 @@ export namespace Raw {
         this.className = 'messages.GetFullChat';
         this.constructorId = 0xaeb00b34;
         this.subclassOfId = 0x225a5109;
-        this.slots = ['chatId'];
+        this._slots = ['chatId'];
         this.chatId = params.chatId;
       }
       /**
@@ -68077,7 +69492,7 @@ export namespace Raw {
         this.className = 'messages.EditChatTitle';
         this.constructorId = 0x73783ffd;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['chatId', 'title'];
+        this._slots = ['chatId', 'title'];
         this.chatId = params.chatId;
         this.title = params.title;
       }
@@ -68120,7 +69535,7 @@ export namespace Raw {
         this.className = 'messages.EditChatPhoto';
         this.constructorId = 0x35ddd674;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['chatId', 'photo'];
+        this._slots = ['chatId', 'photo'];
         this.chatId = params.chatId;
         this.photo = params.photo;
       }
@@ -68164,7 +69579,7 @@ export namespace Raw {
         this.className = 'messages.AddChatUser';
         this.constructorId = 0xf24753e3;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['chatId', 'userId', 'fwdLimit'];
+        this._slots = ['chatId', 'userId', 'fwdLimit'];
         this.chatId = params.chatId;
         this.userId = params.userId;
         this.fwdLimit = params.fwdLimit;
@@ -68213,7 +69628,7 @@ export namespace Raw {
         this.className = 'messages.DeleteChatUser';
         this.constructorId = 0xa2185cab;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['revokeHistory', 'chatId', 'userId'];
+        this._slots = ['revokeHistory', 'chatId', 'userId'];
         this.revokeHistory = params.revokeHistory;
         this.chatId = params.chatId;
         this.userId = params.userId;
@@ -68269,7 +69684,7 @@ export namespace Raw {
         this.className = 'messages.CreateChat';
         this.constructorId = 0x34a818;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['users', 'title', 'ttlPeriod'];
+        this._slots = ['users', 'title', 'ttlPeriod'];
         this.users = params.users;
         this.title = params.title;
         this.ttlPeriod = params.ttlPeriod;
@@ -68323,7 +69738,7 @@ export namespace Raw {
         this.className = 'messages.GetDhConfig';
         this.constructorId = 0x26cf8950;
         this.subclassOfId = 0xe488ed8b;
-        this.slots = ['version', 'randomLength'];
+        this._slots = ['version', 'randomLength'];
         this.version = params.version;
         this.randomLength = params.randomLength;
       }
@@ -68367,7 +69782,7 @@ export namespace Raw {
         this.className = 'messages.RequestEncryption';
         this.constructorId = 0xf64daf43;
         this.subclassOfId = 0x6d28a37a;
-        this.slots = ['userId', 'randomId', 'gA'];
+        this._slots = ['userId', 'randomId', 'gA'];
         this.userId = params.userId;
         this.randomId = params.randomId;
         this.gA = params.gA;
@@ -68416,7 +69831,7 @@ export namespace Raw {
         this.className = 'messages.AcceptEncryption';
         this.constructorId = 0x3dbc0415;
         this.subclassOfId = 0x6d28a37a;
-        this.slots = ['peer', 'gB', 'keyFingerprint'];
+        this._slots = ['peer', 'gB', 'keyFingerprint'];
         this.peer = params.peer;
         this.gB = params.gB;
         this.keyFingerprint = params.keyFingerprint;
@@ -68468,7 +69883,7 @@ export namespace Raw {
         this.className = 'messages.DiscardEncryption';
         this.constructorId = 0xf393aea0;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['deleteHistory', 'chatId'];
+        this._slots = ['deleteHistory', 'chatId'];
         this.deleteHistory = params.deleteHistory;
         this.chatId = params.chatId;
       }
@@ -68514,7 +69929,7 @@ export namespace Raw {
         this.className = 'messages.SetEncryptedTyping';
         this.constructorId = 0x791451ed;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'typing'];
+        this._slots = ['peer', 'typing'];
         this.peer = params.peer;
         this.typing = params.typing;
       }
@@ -68557,7 +69972,7 @@ export namespace Raw {
         this.className = 'messages.ReadEncryptedHistory';
         this.constructorId = 0x7f4b690a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'maxDate'];
+        this._slots = ['peer', 'maxDate'];
         this.peer = params.peer;
         this.maxDate = params.maxDate;
       }
@@ -68610,7 +70025,7 @@ export namespace Raw {
         this.className = 'messages.SendEncrypted';
         this.constructorId = 0x44fa7a15;
         this.subclassOfId = 0xc99e3e50;
-        this.slots = ['silent', 'peer', 'randomId', 'data'];
+        this._slots = ['silent', 'peer', 'randomId', 'data'];
         this.silent = params.silent;
         this.peer = params.peer;
         this.randomId = params.randomId;
@@ -68680,7 +70095,7 @@ export namespace Raw {
         this.className = 'messages.SendEncryptedFile';
         this.constructorId = 0x5559481d;
         this.subclassOfId = 0xc99e3e50;
-        this.slots = ['silent', 'peer', 'randomId', 'data', 'file'];
+        this._slots = ['silent', 'peer', 'randomId', 'data', 'file'];
         this.silent = params.silent;
         this.peer = params.peer;
         this.randomId = params.randomId;
@@ -68748,7 +70163,7 @@ export namespace Raw {
         this.className = 'messages.SendEncryptedService';
         this.constructorId = 0x32d439a4;
         this.subclassOfId = 0xc99e3e50;
-        this.slots = ['peer', 'randomId', 'data'];
+        this._slots = ['peer', 'randomId', 'data'];
         this.peer = params.peer;
         this.randomId = params.randomId;
         this.data = params.data;
@@ -68802,7 +70217,7 @@ export namespace Raw {
         this.className = 'messages.ReceivedQueue';
         this.constructorId = 0x55a5bb66;
         this.subclassOfId = 0x8918e168;
-        this.slots = ['maxQts'];
+        this._slots = ['maxQts'];
         this.maxQts = params.maxQts;
       }
       /**
@@ -68839,7 +70254,7 @@ export namespace Raw {
         this.className = 'messages.ReportEncryptedSpam';
         this.constructorId = 0x4b0c8c0f;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -68879,7 +70294,7 @@ export namespace Raw {
         this.className = 'messages.ReadMessageContents';
         this.constructorId = 0x36a73f77;
         this.subclassOfId = 0xced3c06e;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -68920,7 +70335,7 @@ export namespace Raw {
         this.className = 'messages.GetStickers';
         this.constructorId = 0xd5a5d3a1;
         this.subclassOfId = 0xd73bb9de;
-        this.slots = ['emoticon', 'hash'];
+        this._slots = ['emoticon', 'hash'];
         this.emoticon = params.emoticon;
         this.hash = params.hash;
       }
@@ -68962,7 +70377,7 @@ export namespace Raw {
         this.className = 'messages.GetAllStickers';
         this.constructorId = 0xb8a0a1a8;
         this.subclassOfId = 0x45834829;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -69000,7 +70415,7 @@ export namespace Raw {
         this.className = 'messages.GetWebPagePreview';
         this.constructorId = 0x8b68b0cc;
         this.subclassOfId = 0x476cbe32;
-        this.slots = ['message', 'entities'];
+        this._slots = ['message', 'entities'];
         this.message = params.message;
         this.entities = params.entities;
       }
@@ -69060,7 +70475,7 @@ export namespace Raw {
         this.className = 'messages.ExportChatInvite';
         this.constructorId = 0xa02ce5d5;
         this.subclassOfId = 0xb4748a58;
-        this.slots = [
+        this._slots = [
           'legacyRevokePermanent',
           'requestNeeded',
           'peer',
@@ -69140,7 +70555,7 @@ export namespace Raw {
         this.className = 'messages.CheckChatInvite';
         this.constructorId = 0x3eadb1bb;
         this.subclassOfId = 0x4561736;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -69177,7 +70592,7 @@ export namespace Raw {
         this.className = 'messages.ImportChatInvite';
         this.constructorId = 0x6c50051c;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -69215,7 +70630,7 @@ export namespace Raw {
         this.className = 'messages.GetStickerSet';
         this.constructorId = 0xc8a0ec74;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['stickerset', 'hash'];
+        this._slots = ['stickerset', 'hash'];
         this.stickerset = params.stickerset;
         this.hash = params.hash;
       }
@@ -69258,7 +70673,7 @@ export namespace Raw {
         this.className = 'messages.InstallStickerSet';
         this.constructorId = 0xc78fe460;
         this.subclassOfId = 0x67cb3fe8;
-        this.slots = ['stickerset', 'archived'];
+        this._slots = ['stickerset', 'archived'];
         this.stickerset = params.stickerset;
         this.archived = params.archived;
       }
@@ -69300,7 +70715,7 @@ export namespace Raw {
         this.className = 'messages.UninstallStickerSet';
         this.constructorId = 0xf96e55de;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['stickerset'];
+        this._slots = ['stickerset'];
         this.stickerset = params.stickerset;
       }
       /**
@@ -69348,7 +70763,7 @@ export namespace Raw {
         this.className = 'messages.StartBot';
         this.constructorId = 0xe6df7378;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['bot', 'peer', 'randomId', 'startParam'];
+        this._slots = ['bot', 'peer', 'randomId', 'startParam'];
         this.bot = params.bot;
         this.peer = params.peer;
         this.randomId = params.randomId;
@@ -69407,7 +70822,7 @@ export namespace Raw {
         this.className = 'messages.GetMessagesViews';
         this.constructorId = 0x5784d3e1;
         this.subclassOfId = 0xafb5eb9c;
-        this.slots = ['peer', 'id', 'increment'];
+        this._slots = ['peer', 'id', 'increment'];
         this.peer = params.peer;
         this.id = params.id;
         this.increment = params.increment;
@@ -69456,7 +70871,7 @@ export namespace Raw {
         this.className = 'messages.EditChatAdmin';
         this.constructorId = 0xa85bd1c2;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['chatId', 'userId', 'isAdmin'];
+        this._slots = ['chatId', 'userId', 'isAdmin'];
         this.chatId = params.chatId;
         this.userId = params.userId;
         this.isAdmin = params.isAdmin;
@@ -69503,7 +70918,7 @@ export namespace Raw {
         this.className = 'messages.MigrateChat';
         this.constructorId = 0xa2875319;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['chatId'];
+        this._slots = ['chatId'];
         this.chatId = params.chatId;
       }
       /**
@@ -69558,7 +70973,7 @@ export namespace Raw {
         this.className = 'messages.SearchGlobal';
         this.constructorId = 0x4bc6589a;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = [
+        this._slots = [
           'folderId',
           'q',
           'filter',
@@ -69663,7 +71078,7 @@ export namespace Raw {
         this.className = 'messages.ReorderStickerSets';
         this.constructorId = 0x78337739;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['masks', 'emojis', 'order'];
+        this._slots = ['masks', 'emojis', 'order'];
         this.masks = params.masks;
         this.emojis = params.emojis;
         this.order = params.order;
@@ -69713,7 +71128,7 @@ export namespace Raw {
         this.className = 'messages.GetDocumentByHash';
         this.constructorId = 0xb1f2061f;
         this.subclassOfId = 0x211fe820;
-        this.slots = ['sha256', 'size', 'mimeType'];
+        this._slots = ['sha256', 'size', 'mimeType'];
         this.sha256 = params.sha256;
         this.size = params.size;
         this.mimeType = params.mimeType;
@@ -69764,7 +71179,7 @@ export namespace Raw {
         this.className = 'messages.GetSavedGifs';
         this.constructorId = 0x5cf09635;
         this.subclassOfId = 0xa68b61f5;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -69802,7 +71217,7 @@ export namespace Raw {
         this.className = 'messages.SaveGif';
         this.constructorId = 0x327a30cb;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id', 'unsave'];
+        this._slots = ['id', 'unsave'];
         this.id = params.id;
         this.unsave = params.unsave;
       }
@@ -69854,7 +71269,7 @@ export namespace Raw {
         this.className = 'messages.GetInlineBotResults';
         this.constructorId = 0x514e999d;
         this.subclassOfId = 0x3ed4d9c9;
-        this.slots = ['bot', 'peer', 'geoPoint', 'query', 'offset'];
+        this._slots = ['bot', 'peer', 'geoPoint', 'query', 'offset'];
         this.bot = params.bot;
         this.peer = params.peer;
         this.geoPoint = params.geoPoint;
@@ -69942,7 +71357,7 @@ export namespace Raw {
         this.className = 'messages.SetInlineBotResults';
         this.constructorId = 0xbb12a419;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [
+        this._slots = [
           'gallery',
           'private',
           'queryId',
@@ -70061,7 +71476,7 @@ export namespace Raw {
         this.className = 'messages.SendInlineBotResult';
         this.constructorId = 0xf7bc68ba;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'silent',
           'background',
           'clearDraft',
@@ -70176,7 +71591,7 @@ export namespace Raw {
         this.className = 'messages.GetMessageEditData';
         this.constructorId = 0xfda68d36;
         this.subclassOfId = 0xfb47949d;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -70211,6 +71626,7 @@ export namespace Raw {
     export class EditMessage extends TLObject {
       __response__!: Raw.TypeUpdates;
       noWebpage?: boolean;
+      invertMedia?: boolean;
       peer!: Raw.TypeInputPeer;
       id!: int;
       message?: string;
@@ -70221,6 +71637,7 @@ export namespace Raw {
 
       constructor(params: {
         noWebpage?: boolean;
+        invertMedia?: boolean;
         peer: Raw.TypeInputPeer;
         id: int;
         message?: string;
@@ -70234,8 +71651,9 @@ export namespace Raw {
         this.className = 'messages.EditMessage';
         this.constructorId = 0x48f71778;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'noWebpage',
+          'invertMedia',
           'peer',
           'id',
           'message',
@@ -70245,6 +71663,7 @@ export namespace Raw {
           'scheduleDate',
         ];
         this.noWebpage = params.noWebpage;
+        this.invertMedia = params.invertMedia;
         this.peer = params.peer;
         this.id = params.id;
         this.message = params.message;
@@ -70263,6 +71682,7 @@ export namespace Raw {
         let flags = await Primitive.Int.read(b);
 
         let noWebpage = flags & (1 << 1) ? true : false;
+        let invertMedia = flags & (1 << 16) ? true : false;
         let peer = await TLObject.read(b);
         let id = await Primitive.Int.read(b);
         let message = flags & (1 << 11) ? await Primitive.String.read(b) : undefined;
@@ -70272,6 +71692,7 @@ export namespace Raw {
         let scheduleDate = flags & (1 << 15) ? await Primitive.Int.read(b) : undefined;
         return new Raw.messages.EditMessage({
           noWebpage: noWebpage,
+          invertMedia: invertMedia,
           peer: peer,
           id: id,
           message: message,
@@ -70291,6 +71712,7 @@ export namespace Raw {
 
         let flags = 0;
         flags |= this.noWebpage ? 1 << 1 : 0;
+        flags |= this.invertMedia ? 1 << 16 : 0;
         flags |= this.message !== undefined ? 1 << 11 : 0;
         flags |= this.media !== undefined ? 1 << 14 : 0;
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
@@ -70325,6 +71747,7 @@ export namespace Raw {
     export class EditInlineBotMessage extends TLObject {
       __response__!: Bool;
       noWebpage?: boolean;
+      invertMedia?: boolean;
       id!: Raw.TypeInputBotInlineMessageID;
       message?: string;
       media?: Raw.TypeInputMedia;
@@ -70333,6 +71756,7 @@ export namespace Raw {
 
       constructor(params: {
         noWebpage?: boolean;
+        invertMedia?: boolean;
         id: Raw.TypeInputBotInlineMessageID;
         message?: string;
         media?: Raw.TypeInputMedia;
@@ -70344,8 +71768,17 @@ export namespace Raw {
         this.className = 'messages.EditInlineBotMessage';
         this.constructorId = 0x83557dba;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['noWebpage', 'id', 'message', 'media', 'replyMarkup', 'entities'];
+        this._slots = [
+          'noWebpage',
+          'invertMedia',
+          'id',
+          'message',
+          'media',
+          'replyMarkup',
+          'entities',
+        ];
         this.noWebpage = params.noWebpage;
+        this.invertMedia = params.invertMedia;
         this.id = params.id;
         this.message = params.message;
         this.media = params.media;
@@ -70365,6 +71798,7 @@ export namespace Raw {
         let flags = await Primitive.Int.read(b);
 
         let noWebpage = flags & (1 << 1) ? true : false;
+        let invertMedia = flags & (1 << 16) ? true : false;
         let id = await TLObject.read(b);
         let message = flags & (1 << 11) ? await Primitive.String.read(b) : undefined;
         let media = flags & (1 << 14) ? await TLObject.read(b) : undefined;
@@ -70372,6 +71806,7 @@ export namespace Raw {
         let entities = flags & (1 << 3) ? await TLObject.read(b) : [];
         return new Raw.messages.EditInlineBotMessage({
           noWebpage: noWebpage,
+          invertMedia: invertMedia,
           id: id,
           message: message,
           media: media,
@@ -70389,6 +71824,7 @@ export namespace Raw {
 
         let flags = 0;
         flags |= this.noWebpage ? 1 << 1 : 0;
+        flags |= this.invertMedia ? 1 << 16 : 0;
         flags |= this.message !== undefined ? 1 << 11 : 0;
         flags |= this.media !== undefined ? 1 << 14 : 0;
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
@@ -70433,7 +71869,7 @@ export namespace Raw {
         this.className = 'messages.GetBotCallbackAnswer';
         this.constructorId = 0x9342ca07;
         this.subclassOfId = 0x6c4dd18c;
-        this.slots = ['game', 'peer', 'msgId', 'data', 'password'];
+        this._slots = ['game', 'peer', 'msgId', 'data', 'password'];
         this.game = params.game;
         this.peer = params.peer;
         this.msgId = params.msgId;
@@ -70514,7 +71950,7 @@ export namespace Raw {
         this.className = 'messages.SetBotCallbackAnswer';
         this.constructorId = 0xd58f130a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['alert', 'queryId', 'message', 'url', 'cacheTime'];
+        this._slots = ['alert', 'queryId', 'message', 'url', 'cacheTime'];
         this.alert = params.alert;
         this.queryId = params.queryId;
         this.message = params.message;
@@ -70585,7 +72021,7 @@ export namespace Raw {
         this.className = 'messages.GetPeerDialogs';
         this.constructorId = 0xe470bcfd;
         this.subclassOfId = 0x3ac70132;
-        this.slots = ['peers'];
+        this._slots = ['peers'];
         this.peers = params.peers;
       }
       /**
@@ -70615,32 +72051,43 @@ export namespace Raw {
     export class SaveDraft extends TLObject {
       __response__!: Bool;
       noWebpage?: boolean;
-      replyToMsgId?: int;
-      topMsgId?: int;
+      invertMedia?: boolean;
+      replyTo?: Raw.TypeInputReplyTo;
       peer!: Raw.TypeInputPeer;
       message!: string;
       entities?: Vector<Raw.TypeMessageEntity>;
+      media?: Raw.TypeInputMedia;
 
       constructor(params: {
         noWebpage?: boolean;
-        replyToMsgId?: int;
-        topMsgId?: int;
+        invertMedia?: boolean;
+        replyTo?: Raw.TypeInputReplyTo;
         peer: Raw.TypeInputPeer;
         message: string;
         entities?: Vector<Raw.TypeMessageEntity>;
+        media?: Raw.TypeInputMedia;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SaveDraft';
-        this.constructorId = 0xb4331e3f;
+        this.constructorId = 0x7ff3b806;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['noWebpage', 'replyToMsgId', 'topMsgId', 'peer', 'message', 'entities'];
+        this._slots = [
+          'noWebpage',
+          'invertMedia',
+          'replyTo',
+          'peer',
+          'message',
+          'entities',
+          'media',
+        ];
         this.noWebpage = params.noWebpage;
-        this.replyToMsgId = params.replyToMsgId;
-        this.topMsgId = params.topMsgId;
+        this.invertMedia = params.invertMedia;
+        this.replyTo = params.replyTo;
         this.peer = params.peer;
         this.message = params.message;
         this.entities = params.entities;
+        this.media = params.media;
       }
       /**
        * Generate the TLObject from buffer.
@@ -70652,18 +72099,20 @@ export namespace Raw {
         let flags = await Primitive.Int.read(b);
 
         let noWebpage = flags & (1 << 1) ? true : false;
-        let replyToMsgId = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
-        let topMsgId = flags & (1 << 2) ? await Primitive.Int.read(b) : undefined;
+        let invertMedia = flags & (1 << 6) ? true : false;
+        let replyTo = flags & (1 << 4) ? await TLObject.read(b) : undefined;
         let peer = await TLObject.read(b);
         let message = await Primitive.String.read(b);
         let entities = flags & (1 << 3) ? await TLObject.read(b) : [];
+        let media = flags & (1 << 5) ? await TLObject.read(b) : undefined;
         return new Raw.messages.SaveDraft({
           noWebpage: noWebpage,
-          replyToMsgId: replyToMsgId,
-          topMsgId: topMsgId,
+          invertMedia: invertMedia,
+          replyTo: replyTo,
           peer: peer,
           message: message,
           entities: entities,
+          media: media,
         });
       }
       /**
@@ -70676,16 +72125,14 @@ export namespace Raw {
 
         let flags = 0;
         flags |= this.noWebpage ? 1 << 1 : 0;
-        flags |= this.replyToMsgId !== undefined ? 1 << 0 : 0;
-        flags |= this.topMsgId !== undefined ? 1 << 2 : 0;
+        flags |= this.invertMedia ? 1 << 6 : 0;
+        flags |= this.replyTo !== undefined ? 1 << 4 : 0;
         flags |= this.entities ? 1 << 3 : 0;
+        flags |= this.media !== undefined ? 1 << 5 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
-        if (this.replyToMsgId !== undefined) {
-          b.write(Primitive.Int.write(this.replyToMsgId) as unknown as Buffer);
-        }
-        if (this.topMsgId !== undefined) {
-          b.write(Primitive.Int.write(this.topMsgId) as unknown as Buffer);
+        if (this.replyTo !== undefined) {
+          b.write(this.replyTo.write() as unknown as Buffer);
         }
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
@@ -70695,6 +72142,9 @@ export namespace Raw {
         }
         if (this.entities) {
           b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+        }
+        if (this.media !== undefined) {
+          b.write(this.media.write() as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -70708,7 +72158,7 @@ export namespace Raw {
         this.className = 'messages.GetAllDrafts';
         this.constructorId = 0x6a3f8d65;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -70740,7 +72190,7 @@ export namespace Raw {
         this.className = 'messages.GetFeaturedStickers';
         this.constructorId = 0x64780b14;
         this.subclassOfId = 0x2614b722;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -70780,7 +72230,7 @@ export namespace Raw {
         this.className = 'messages.ReadFeaturedStickers';
         this.constructorId = 0x5b118126;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -70821,7 +72271,7 @@ export namespace Raw {
         this.className = 'messages.GetRecentStickers';
         this.constructorId = 0x9da9403b;
         this.subclassOfId = 0xf76f8683;
-        this.slots = ['attached', 'hash'];
+        this._slots = ['attached', 'hash'];
         this.attached = params.attached;
         this.hash = params.hash;
       }
@@ -70868,7 +72318,7 @@ export namespace Raw {
         this.className = 'messages.SaveRecentSticker';
         this.constructorId = 0x392718f8;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['attached', 'id', 'unsave'];
+        this._slots = ['attached', 'id', 'unsave'];
         this.attached = params.attached;
         this.id = params.id;
         this.unsave = params.unsave;
@@ -70918,7 +72368,7 @@ export namespace Raw {
         this.className = 'messages.ClearRecentStickers';
         this.constructorId = 0x8999602d;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['attached'];
+        this._slots = ['attached'];
         this.attached = params.attached;
       }
       /**
@@ -70964,7 +72414,7 @@ export namespace Raw {
         this.className = 'messages.GetArchivedStickers';
         this.constructorId = 0x57f17692;
         this.subclassOfId = 0x7296d771;
-        this.slots = ['masks', 'emojis', 'offsetId', 'limit'];
+        this._slots = ['masks', 'emojis', 'offsetId', 'limit'];
         this.masks = params.masks;
         this.emojis = params.emojis;
         this.offsetId = params.offsetId;
@@ -71025,7 +72475,7 @@ export namespace Raw {
         this.className = 'messages.GetMaskStickers';
         this.constructorId = 0x640f82b8;
         this.subclassOfId = 0x45834829;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -71062,7 +72512,7 @@ export namespace Raw {
         this.className = 'messages.GetAttachedStickers';
         this.constructorId = 0xcc5b67cc;
         this.subclassOfId = 0xcc125f6b;
-        this.slots = ['media'];
+        this._slots = ['media'];
         this.media = params.media;
       }
       /**
@@ -71114,7 +72564,7 @@ export namespace Raw {
         this.className = 'messages.SetGameScore';
         this.constructorId = 0x8ef8ecc0;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['editMessage', 'force', 'peer', 'id', 'userId', 'score'];
+        this._slots = ['editMessage', 'force', 'peer', 'id', 'userId', 'score'];
         this.editMessage = params.editMessage;
         this.force = params.force;
         this.peer = params.peer;
@@ -71194,7 +72644,7 @@ export namespace Raw {
         this.className = 'messages.SetInlineGameScore';
         this.constructorId = 0x15ad9f64;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['editMessage', 'force', 'id', 'userId', 'score'];
+        this._slots = ['editMessage', 'force', 'id', 'userId', 'score'];
         this.editMessage = params.editMessage;
         this.force = params.force;
         this.id = params.id;
@@ -71260,7 +72710,7 @@ export namespace Raw {
         this.className = 'messages.GetGameHighScores';
         this.constructorId = 0xe822649d;
         this.subclassOfId = 0x6ccd95fd;
-        this.slots = ['peer', 'id', 'userId'];
+        this._slots = ['peer', 'id', 'userId'];
         this.peer = params.peer;
         this.id = params.id;
         this.userId = params.userId;
@@ -71308,7 +72758,7 @@ export namespace Raw {
         this.className = 'messages.GetInlineGameHighScores';
         this.constructorId = 0xf635e1b;
         this.subclassOfId = 0x6ccd95fd;
-        this.slots = ['id', 'userId'];
+        this._slots = ['id', 'userId'];
         this.id = params.id;
         this.userId = params.userId;
       }
@@ -71355,7 +72805,7 @@ export namespace Raw {
         this.className = 'messages.GetCommonChats';
         this.constructorId = 0xe40ca104;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['userId', 'maxId', 'limit'];
+        this._slots = ['userId', 'maxId', 'limit'];
         this.userId = params.userId;
         this.maxId = params.maxId;
         this.limit = params.limit;
@@ -71403,7 +72853,7 @@ export namespace Raw {
         this.className = 'messages.GetWebPage';
         this.constructorId = 0x8d9692a3;
         this.subclassOfId = 0x2cf8b154;
-        this.slots = ['url', 'hash'];
+        this._slots = ['url', 'hash'];
         this.url = params.url;
         this.hash = params.hash;
       }
@@ -71446,7 +72896,7 @@ export namespace Raw {
         this.className = 'messages.ToggleDialogPin';
         this.constructorId = 0xa731e257;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['pinned', 'peer'];
+        this._slots = ['pinned', 'peer'];
         this.pinned = params.pinned;
         this.peer = params.peer;
       }
@@ -71497,7 +72947,7 @@ export namespace Raw {
         this.className = 'messages.ReorderPinnedDialogs';
         this.constructorId = 0x3b1adf37;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['force', 'folderId', 'order'];
+        this._slots = ['force', 'folderId', 'order'];
         this.force = params.force;
         this.folderId = params.folderId;
         this.order = params.order;
@@ -71554,7 +73004,7 @@ export namespace Raw {
         this.className = 'messages.GetPinnedDialogs';
         this.constructorId = 0xd6b94df2;
         this.subclassOfId = 0x3ac70132;
-        this.slots = ['folderId'];
+        this._slots = ['folderId'];
         this.folderId = params.folderId;
       }
       /**
@@ -71597,7 +73047,7 @@ export namespace Raw {
         this.className = 'messages.SetBotShippingResults';
         this.constructorId = 0xe5f672fa;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['queryId', 'error', 'shippingOptions'];
+        this._slots = ['queryId', 'error', 'shippingOptions'];
         this.queryId = params.queryId;
         this.error = params.error;
         this.shippingOptions = params.shippingOptions;
@@ -71660,7 +73110,7 @@ export namespace Raw {
         this.className = 'messages.SetBotPrecheckoutResults';
         this.constructorId = 0x9c2dd95;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['success', 'queryId', 'error'];
+        this._slots = ['success', 'queryId', 'error'];
         this.success = params.success;
         this.queryId = params.queryId;
         this.error = params.error;
@@ -71719,7 +73169,7 @@ export namespace Raw {
         this.className = 'messages.UploadMedia';
         this.constructorId = 0x519bc2b1;
         this.subclassOfId = 0x476cbe32;
-        this.slots = ['peer', 'media'];
+        this._slots = ['peer', 'media'];
         this.peer = params.peer;
         this.media = params.media;
       }
@@ -71767,7 +73217,7 @@ export namespace Raw {
         this.className = 'messages.SendScreenshotNotification';
         this.constructorId = 0xa1405817;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'replyTo', 'randomId'];
+        this._slots = ['peer', 'replyTo', 'randomId'];
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.randomId = params.randomId;
@@ -71821,7 +73271,7 @@ export namespace Raw {
         this.className = 'messages.GetFavedStickers';
         this.constructorId = 0x4f1aaa9;
         this.subclassOfId = 0x8e736fb9;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -71859,7 +73309,7 @@ export namespace Raw {
         this.className = 'messages.FaveSticker';
         this.constructorId = 0xb9ffc55b;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id', 'unfave'];
+        this._slots = ['id', 'unfave'];
         this.id = params.id;
         this.unfave = params.unfave;
       }
@@ -71915,7 +73365,7 @@ export namespace Raw {
         this.className = 'messages.GetUnreadMentions';
         this.constructorId = 0xf107e790;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['peer', 'topMsgId', 'offsetId', 'addOffset', 'limit', 'maxId', 'minId'];
+        this._slots = ['peer', 'topMsgId', 'offsetId', 'addOffset', 'limit', 'maxId', 'minId'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
         this.offsetId = params.offsetId;
@@ -71997,7 +73447,7 @@ export namespace Raw {
         this.className = 'messages.ReadMentions';
         this.constructorId = 0x36e5bf4d;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['peer', 'topMsgId'];
+        this._slots = ['peer', 'topMsgId'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
       }
@@ -72047,7 +73497,7 @@ export namespace Raw {
         this.className = 'messages.GetRecentLocations';
         this.constructorId = 0x702a40e0;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['peer', 'limit', 'hash'];
+        this._slots = ['peer', 'limit', 'hash'];
         this.peer = params.peer;
         this.limit = params.limit;
         this.hash = params.hash;
@@ -72091,6 +73541,7 @@ export namespace Raw {
       clearDraft?: boolean;
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
+      invertMedia?: boolean;
       peer!: Raw.TypeInputPeer;
       replyTo?: Raw.TypeInputReplyTo;
       multiMedia!: Vector<Raw.TypeInputSingleMedia>;
@@ -72103,6 +73554,7 @@ export namespace Raw {
         clearDraft?: boolean;
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
+        invertMedia?: boolean;
         peer: Raw.TypeInputPeer;
         replyTo?: Raw.TypeInputReplyTo;
         multiMedia: Vector<Raw.TypeInputSingleMedia>;
@@ -72114,12 +73566,13 @@ export namespace Raw {
         this.className = 'messages.SendMultiMedia';
         this.constructorId = 0x456e8987;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'silent',
           'background',
           'clearDraft',
           'noforwards',
           'updateStickersetsOrder',
+          'invertMedia',
           'peer',
           'replyTo',
           'multiMedia',
@@ -72131,6 +73584,7 @@ export namespace Raw {
         this.clearDraft = params.clearDraft;
         this.noforwards = params.noforwards;
         this.updateStickersetsOrder = params.updateStickersetsOrder;
+        this.invertMedia = params.invertMedia;
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.multiMedia = params.multiMedia;
@@ -72151,6 +73605,7 @@ export namespace Raw {
         let clearDraft = flags & (1 << 7) ? true : false;
         let noforwards = flags & (1 << 14) ? true : false;
         let updateStickersetsOrder = flags & (1 << 15) ? true : false;
+        let invertMedia = flags & (1 << 16) ? true : false;
         let peer = await TLObject.read(b);
         let replyTo = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         let multiMedia = await TLObject.read(b);
@@ -72162,6 +73617,7 @@ export namespace Raw {
           clearDraft: clearDraft,
           noforwards: noforwards,
           updateStickersetsOrder: updateStickersetsOrder,
+          invertMedia: invertMedia,
           peer: peer,
           replyTo: replyTo,
           multiMedia: multiMedia,
@@ -72183,6 +73639,7 @@ export namespace Raw {
         flags |= this.clearDraft ? 1 << 7 : 0;
         flags |= this.noforwards ? 1 << 14 : 0;
         flags |= this.updateStickersetsOrder ? 1 << 15 : 0;
+        flags |= this.invertMedia ? 1 << 16 : 0;
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
@@ -72217,7 +73674,7 @@ export namespace Raw {
         this.className = 'messages.UploadEncryptedFile';
         this.constructorId = 0x5057c497;
         this.subclassOfId = 0x842a67c0;
-        this.slots = ['peer', 'file'];
+        this._slots = ['peer', 'file'];
         this.peer = params.peer;
         this.file = params.file;
       }
@@ -72264,7 +73721,7 @@ export namespace Raw {
         this.className = 'messages.SearchStickerSets';
         this.constructorId = 0x35705b8a;
         this.subclassOfId = 0x40df361;
-        this.slots = ['excludeFeatured', 'q', 'hash'];
+        this._slots = ['excludeFeatured', 'q', 'hash'];
         this.excludeFeatured = params.excludeFeatured;
         this.q = params.q;
         this.hash = params.hash;
@@ -72317,7 +73774,7 @@ export namespace Raw {
         this.className = 'messages.GetSplitRanges';
         this.constructorId = 0x1cff7e08;
         this.subclassOfId = 0x5ba52504;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -72350,7 +73807,7 @@ export namespace Raw {
         this.className = 'messages.MarkDialogUnread';
         this.constructorId = 0xc286d98f;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['unread', 'peer'];
+        this._slots = ['unread', 'peer'];
         this.unread = params.unread;
         this.peer = params.peer;
       }
@@ -72394,7 +73851,7 @@ export namespace Raw {
         this.className = 'messages.GetDialogUnreadMarks';
         this.constructorId = 0x22e24e22;
         this.subclassOfId = 0xbec64ad9;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -72428,7 +73885,7 @@ export namespace Raw {
         this.className = 'messages.ClearAllDrafts';
         this.constructorId = 0x7e58ee9c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -72470,7 +73927,7 @@ export namespace Raw {
         this.className = 'messages.UpdatePinnedMessage';
         this.constructorId = 0xd2aaf7ec;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['silent', 'unpin', 'pmOneside', 'peer', 'id'];
+        this._slots = ['silent', 'unpin', 'pmOneside', 'peer', 'id'];
         this.silent = params.silent;
         this.unpin = params.unpin;
         this.pmOneside = params.pmOneside;
@@ -72537,7 +73994,7 @@ export namespace Raw {
         this.className = 'messages.SendVote';
         this.constructorId = 0x10ea6184;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'msgId', 'options'];
+        this._slots = ['peer', 'msgId', 'options'];
         this.peer = params.peer;
         this.msgId = params.msgId;
         this.options = params.options;
@@ -72585,7 +74042,7 @@ export namespace Raw {
         this.className = 'messages.GetPollResults';
         this.constructorId = 0x73bb643b;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'msgId'];
+        this._slots = ['peer', 'msgId'];
         this.peer = params.peer;
         this.msgId = params.msgId;
       }
@@ -72627,7 +74084,7 @@ export namespace Raw {
         this.className = 'messages.GetOnlines';
         this.constructorId = 0x6e2be050;
         this.subclassOfId = 0x8c81903a;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -72665,7 +74122,7 @@ export namespace Raw {
         this.className = 'messages.EditChatAbout';
         this.constructorId = 0xdef60797;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'about'];
+        this._slots = ['peer', 'about'];
         this.peer = params.peer;
         this.about = params.about;
       }
@@ -72708,7 +74165,7 @@ export namespace Raw {
         this.className = 'messages.EditChatDefaultBannedRights';
         this.constructorId = 0xa5866b41;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'bannedRights'];
+        this._slots = ['peer', 'bannedRights'];
         this.peer = params.peer;
         this.bannedRights = params.bannedRights;
       }
@@ -72756,7 +74213,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiKeywords';
         this.constructorId = 0x35a0e062;
         this.subclassOfId = 0xd279c672;
-        this.slots = ['langCode'];
+        this._slots = ['langCode'];
         this.langCode = params.langCode;
       }
       /**
@@ -72794,7 +74251,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiKeywordsDifference';
         this.constructorId = 0x1508b6af;
         this.subclassOfId = 0xd279c672;
-        this.slots = ['langCode', 'fromVersion'];
+        this._slots = ['langCode', 'fromVersion'];
         this.langCode = params.langCode;
         this.fromVersion = params.fromVersion;
       }
@@ -72842,7 +74299,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiKeywordsLanguages';
         this.constructorId = 0x4e9963b2;
         this.subclassOfId = 0xe795d387;
-        this.slots = ['langCodes'];
+        this._slots = ['langCodes'];
         this.langCodes = params.langCodes;
       }
       /**
@@ -72882,7 +74339,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiURL';
         this.constructorId = 0xd5b10c26;
         this.subclassOfId = 0x1fa08a19;
-        this.slots = ['langCode'];
+        this._slots = ['langCode'];
         this.langCode = params.langCode;
       }
       /**
@@ -72925,7 +74382,7 @@ export namespace Raw {
         this.className = 'messages.GetSearchCounters';
         this.constructorId = 0xae7cc1;
         this.subclassOfId = 0x6bde3c6e;
-        this.slots = ['peer', 'topMsgId', 'filters'];
+        this._slots = ['peer', 'topMsgId', 'filters'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
         this.filters = params.filters;
@@ -72985,7 +74442,7 @@ export namespace Raw {
         this.className = 'messages.RequestUrlAuth';
         this.constructorId = 0x198fb446;
         this.subclassOfId = 0x7765cb1e;
-        this.slots = ['peer', 'msgId', 'buttonId', 'url'];
+        this._slots = ['peer', 'msgId', 'buttonId', 'url'];
         this.peer = params.peer;
         this.msgId = params.msgId;
         this.buttonId = params.buttonId;
@@ -73061,7 +74518,7 @@ export namespace Raw {
         this.className = 'messages.AcceptUrlAuth';
         this.constructorId = 0xb12c7125;
         this.subclassOfId = 0x7765cb1e;
-        this.slots = ['writeAllowed', 'peer', 'msgId', 'buttonId', 'url'];
+        this._slots = ['writeAllowed', 'peer', 'msgId', 'buttonId', 'url'];
         this.writeAllowed = params.writeAllowed;
         this.peer = params.peer;
         this.msgId = params.msgId;
@@ -73131,7 +74588,7 @@ export namespace Raw {
         this.className = 'messages.HidePeerSettingsBar';
         this.constructorId = 0x4facb138;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -73172,7 +74629,7 @@ export namespace Raw {
         this.className = 'messages.GetScheduledHistory';
         this.constructorId = 0xf516760b;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['peer', 'hash'];
+        this._slots = ['peer', 'hash'];
         this.peer = params.peer;
         this.hash = params.hash;
       }
@@ -73218,7 +74675,7 @@ export namespace Raw {
         this.className = 'messages.GetScheduledMessages';
         this.constructorId = 0xbdbb0464;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -73264,7 +74721,7 @@ export namespace Raw {
         this.className = 'messages.SendScheduledMessages';
         this.constructorId = 0xbd38850a;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -73310,7 +74767,7 @@ export namespace Raw {
         this.className = 'messages.DeleteScheduledMessages';
         this.constructorId = 0x59ae2b16;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -73365,7 +74822,7 @@ export namespace Raw {
         this.className = 'messages.GetPollVotes';
         this.constructorId = 0xb86e380e;
         this.subclassOfId = 0xc2199885;
-        this.slots = ['peer', 'id', 'option', 'offset', 'limit'];
+        this._slots = ['peer', 'id', 'option', 'offset', 'limit'];
         this.peer = params.peer;
         this.id = params.id;
         this.option = params.option;
@@ -73443,7 +74900,7 @@ export namespace Raw {
         this.className = 'messages.ToggleStickerSets';
         this.constructorId = 0xb5052fea;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['uninstall', 'archive', 'unarchive', 'stickersets'];
+        this._slots = ['uninstall', 'archive', 'unarchive', 'stickersets'];
         this.uninstall = params.uninstall;
         this.archive = params.archive;
         this.unarchive = params.unarchive;
@@ -73498,7 +74955,7 @@ export namespace Raw {
         this.className = 'messages.GetDialogFilters';
         this.constructorId = 0xf19ed96d;
         this.subclassOfId = 0x601ce94d;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -73529,7 +74986,7 @@ export namespace Raw {
         this.className = 'messages.GetSuggestedDialogFilters';
         this.constructorId = 0xa29cd42c;
         this.subclassOfId = 0x7b296c39;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -73565,7 +75022,7 @@ export namespace Raw {
         this.className = 'messages.UpdateDialogFilter';
         this.constructorId = 0x1ad4a04a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id', 'filter'];
+        this._slots = ['id', 'filter'];
         this.id = params.id;
         this.filter = params.filter;
       }
@@ -73613,7 +75070,7 @@ export namespace Raw {
         this.className = 'messages.UpdateDialogFiltersOrder';
         this.constructorId = 0xc563c1e4;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['order'];
+        this._slots = ['order'];
         this.order = params.order;
       }
       /**
@@ -73655,7 +75112,7 @@ export namespace Raw {
         this.className = 'messages.GetOldFeaturedStickers';
         this.constructorId = 0x7ed094a1;
         this.subclassOfId = 0x2614b722;
-        this.slots = ['offset', 'limit', 'hash'];
+        this._slots = ['offset', 'limit', 'hash'];
         this.offset = params.offset;
         this.limit = params.limit;
         this.hash = params.hash;
@@ -73727,7 +75184,7 @@ export namespace Raw {
         this.className = 'messages.GetReplies';
         this.constructorId = 0x22ddd30c;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = [
+        this._slots = [
           'peer',
           'msgId',
           'offsetId',
@@ -73825,7 +75282,7 @@ export namespace Raw {
         this.className = 'messages.GetDiscussionMessage';
         this.constructorId = 0x446972fd;
         this.subclassOfId = 0x53f8e3e8;
-        this.slots = ['peer', 'msgId'];
+        this._slots = ['peer', 'msgId'];
         this.peer = params.peer;
         this.msgId = params.msgId;
       }
@@ -73872,7 +75329,7 @@ export namespace Raw {
         this.className = 'messages.ReadDiscussion';
         this.constructorId = 0xf731a9f4;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'msgId', 'readMaxId'];
+        this._slots = ['peer', 'msgId', 'readMaxId'];
         this.peer = params.peer;
         this.msgId = params.msgId;
         this.readMaxId = params.readMaxId;
@@ -73920,7 +75377,7 @@ export namespace Raw {
         this.className = 'messages.UnpinAllMessages';
         this.constructorId = 0xee22b9a8;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['peer', 'topMsgId'];
+        this._slots = ['peer', 'topMsgId'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
       }
@@ -73968,7 +75425,7 @@ export namespace Raw {
         this.className = 'messages.DeleteChat';
         this.constructorId = 0x5bd0ee50;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['chatId'];
+        this._slots = ['chatId'];
         this.chatId = params.chatId;
       }
       /**
@@ -74005,7 +75462,7 @@ export namespace Raw {
         this.className = 'messages.DeletePhoneCallHistory';
         this.constructorId = 0xf9cbe409;
         this.subclassOfId = 0xf817652e;
-        this.slots = ['revoke'];
+        this._slots = ['revoke'];
         this.revoke = params.revoke;
       }
       /**
@@ -74048,7 +75505,7 @@ export namespace Raw {
         this.className = 'messages.CheckHistoryImport';
         this.constructorId = 0x43fe19f3;
         this.subclassOfId = 0x5bb2720b;
-        this.slots = ['importHead'];
+        this._slots = ['importHead'];
         this.importHead = params.importHead;
       }
       /**
@@ -74087,7 +75544,7 @@ export namespace Raw {
         this.className = 'messages.InitHistoryImport';
         this.constructorId = 0x34090c3b;
         this.subclassOfId = 0xb18bb50a;
-        this.slots = ['peer', 'file', 'mediaCount'];
+        this._slots = ['peer', 'file', 'mediaCount'];
         this.peer = params.peer;
         this.file = params.file;
         this.mediaCount = params.mediaCount;
@@ -74146,7 +75603,7 @@ export namespace Raw {
         this.className = 'messages.UploadImportedMedia';
         this.constructorId = 0x2a862092;
         this.subclassOfId = 0x476cbe32;
-        this.slots = ['peer', 'importId', 'fileName', 'media'];
+        this._slots = ['peer', 'importId', 'fileName', 'media'];
         this.peer = params.peer;
         this.importId = params.importId;
         this.fileName = params.fileName;
@@ -74207,7 +75664,7 @@ export namespace Raw {
         this.className = 'messages.StartHistoryImport';
         this.constructorId = 0xb43df344;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'importId'];
+        this._slots = ['peer', 'importId'];
         this.peer = params.peer;
         this.importId = params.importId;
       }
@@ -74261,7 +75718,7 @@ export namespace Raw {
         this.className = 'messages.GetExportedChatInvites';
         this.constructorId = 0xa2b5a3f6;
         this.subclassOfId = 0x603d3871;
-        this.slots = ['revoked', 'peer', 'adminId', 'offsetDate', 'offsetLink', 'limit'];
+        this._slots = ['revoked', 'peer', 'adminId', 'offsetDate', 'offsetLink', 'limit'];
         this.revoked = params.revoked;
         this.peer = params.peer;
         this.adminId = params.adminId;
@@ -74339,7 +75796,7 @@ export namespace Raw {
         this.className = 'messages.GetExportedChatInvite';
         this.constructorId = 0x73746f5c;
         this.subclassOfId = 0x82dcd4ca;
-        this.slots = ['peer', 'link'];
+        this._slots = ['peer', 'link'];
         this.peer = params.peer;
         this.link = params.link;
       }
@@ -74398,7 +75855,7 @@ export namespace Raw {
         this.className = 'messages.EditExportedChatInvite';
         this.constructorId = 0xbdca2f75;
         this.subclassOfId = 0x82dcd4ca;
-        this.slots = [
+        this._slots = [
           'revoked',
           'peer',
           'link',
@@ -74492,7 +75949,7 @@ export namespace Raw {
         this.className = 'messages.DeleteRevokedExportedChatInvites';
         this.constructorId = 0x56987bd5;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'adminId'];
+        this._slots = ['peer', 'adminId'];
         this.peer = params.peer;
         this.adminId = params.adminId;
       }
@@ -74538,7 +75995,7 @@ export namespace Raw {
         this.className = 'messages.DeleteExportedChatInvite';
         this.constructorId = 0xd464a42b;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'link'];
+        this._slots = ['peer', 'link'];
         this.peer = params.peer;
         this.link = params.link;
       }
@@ -74583,7 +76040,7 @@ export namespace Raw {
         this.className = 'messages.GetAdminsWithInvites';
         this.constructorId = 0x3920e6ef;
         this.subclassOfId = 0x8f5bad2b;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -74637,7 +76094,7 @@ export namespace Raw {
         this.className = 'messages.GetChatInviteImporters';
         this.constructorId = 0xdf04dd4e;
         this.subclassOfId = 0xd9bc8aa6;
-        this.slots = ['requested', 'peer', 'link', 'q', 'offsetDate', 'offsetUser', 'limit'];
+        this._slots = ['requested', 'peer', 'link', 'q', 'offsetDate', 'offsetUser', 'limit'];
         this.requested = params.requested;
         this.peer = params.peer;
         this.link = params.link;
@@ -74721,7 +76178,7 @@ export namespace Raw {
         this.className = 'messages.SetHistoryTTL';
         this.constructorId = 0xb80e5fe4;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'period'];
+        this._slots = ['peer', 'period'];
         this.peer = params.peer;
         this.period = params.period;
       }
@@ -74763,7 +76220,7 @@ export namespace Raw {
         this.className = 'messages.CheckHistoryImportPeer';
         this.constructorId = 0x5dc60f03;
         this.subclassOfId = 0xb84bb337;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -74804,7 +76261,7 @@ export namespace Raw {
         this.className = 'messages.SetChatTheme';
         this.constructorId = 0xe63be13f;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'emoticon'];
+        this._slots = ['peer', 'emoticon'];
         this.peer = params.peer;
         this.emoticon = params.emoticon;
       }
@@ -74847,7 +76304,7 @@ export namespace Raw {
         this.className = 'messages.GetMessageReadParticipants';
         this.constructorId = 0x31c1c44f;
         this.subclassOfId = 0x21ca455b;
-        this.slots = ['peer', 'msgId'];
+        this._slots = ['peer', 'msgId'];
         this.peer = params.peer;
         this.msgId = params.msgId;
       }
@@ -74900,7 +76357,7 @@ export namespace Raw {
         this.className = 'messages.GetSearchResultsCalendar';
         this.constructorId = 0x49f0bde9;
         this.subclassOfId = 0x92c5640f;
-        this.slots = ['peer', 'filter', 'offsetId', 'offsetDate'];
+        this._slots = ['peer', 'filter', 'offsetId', 'offsetDate'];
         this.peer = params.peer;
         this.filter = params.filter;
         this.offsetId = params.offsetId;
@@ -74968,7 +76425,7 @@ export namespace Raw {
         this.className = 'messages.GetSearchResultsPositions';
         this.constructorId = 0x6e9583a3;
         this.subclassOfId = 0xd963708d;
-        this.slots = ['peer', 'filter', 'offsetId', 'limit'];
+        this._slots = ['peer', 'filter', 'offsetId', 'limit'];
         this.peer = params.peer;
         this.filter = params.filter;
         this.offsetId = params.offsetId;
@@ -75034,7 +76491,7 @@ export namespace Raw {
         this.className = 'messages.HideChatJoinRequest';
         this.constructorId = 0x7fe7e815;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['approved', 'peer', 'userId'];
+        this._slots = ['approved', 'peer', 'userId'];
         this.approved = params.approved;
         this.peer = params.peer;
         this.userId = params.userId;
@@ -75093,7 +76550,7 @@ export namespace Raw {
         this.className = 'messages.HideAllChatJoinRequests';
         this.constructorId = 0xe085f4ea;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['approved', 'peer', 'link'];
+        this._slots = ['approved', 'peer', 'link'];
         this.approved = params.approved;
         this.peer = params.peer;
         this.link = params.link;
@@ -75152,7 +76609,7 @@ export namespace Raw {
         this.className = 'messages.ToggleNoForwards';
         this.constructorId = 0xb11eafa2;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'enabled'];
+        this._slots = ['peer', 'enabled'];
         this.peer = params.peer;
         this.enabled = params.enabled;
       }
@@ -75195,7 +76652,7 @@ export namespace Raw {
         this.className = 'messages.SaveDefaultSendAs';
         this.constructorId = 0xccfddf96;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'sendAs'];
+        this._slots = ['peer', 'sendAs'];
         this.peer = params.peer;
         this.sendAs = params.sendAs;
       }
@@ -75247,7 +76704,7 @@ export namespace Raw {
         this.className = 'messages.SendReaction';
         this.constructorId = 0xd30d78d4;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['big', 'addToRecent', 'peer', 'msgId', 'reaction'];
+        this._slots = ['big', 'addToRecent', 'peer', 'msgId', 'reaction'];
         this.big = params.big;
         this.addToRecent = params.addToRecent;
         this.peer = params.peer;
@@ -75313,7 +76770,7 @@ export namespace Raw {
         this.className = 'messages.GetMessagesReactions';
         this.constructorId = 0x8bba90e6;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -75368,7 +76825,7 @@ export namespace Raw {
         this.className = 'messages.GetMessageReactionsList';
         this.constructorId = 0x461b3f48;
         this.subclassOfId = 0x60fce5e6;
-        this.slots = ['peer', 'id', 'reaction', 'offset', 'limit'];
+        this._slots = ['peer', 'id', 'reaction', 'offset', 'limit'];
         this.peer = params.peer;
         this.id = params.id;
         this.reaction = params.reaction;
@@ -75442,7 +76899,7 @@ export namespace Raw {
         this.className = 'messages.SetChatAvailableReactions';
         this.constructorId = 0xfeb16771;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'availableReactions'];
+        this._slots = ['peer', 'availableReactions'];
         this.peer = params.peer;
         this.availableReactions = params.availableReactions;
       }
@@ -75490,7 +76947,7 @@ export namespace Raw {
         this.className = 'messages.GetAvailableReactions';
         this.constructorId = 0x18dea0ac;
         this.subclassOfId = 0xe426ad82;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -75530,7 +76987,7 @@ export namespace Raw {
         this.className = 'messages.SetDefaultReaction';
         this.constructorId = 0x4f47a016;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['reaction'];
+        this._slots = ['reaction'];
         this.reaction = params.reaction;
       }
       /**
@@ -75575,7 +77032,7 @@ export namespace Raw {
         this.className = 'messages.TranslateText';
         this.constructorId = 0x63183030;
         this.subclassOfId = 0x24243e8;
-        this.slots = ['peer', 'id', 'text', 'toLang'];
+        this._slots = ['peer', 'id', 'text', 'toLang'];
         this.peer = params.peer;
         this.id = params.id;
         this.text = params.text;
@@ -75649,7 +77106,7 @@ export namespace Raw {
         this.className = 'messages.GetUnreadReactions';
         this.constructorId = 0x3223495b;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['peer', 'topMsgId', 'offsetId', 'addOffset', 'limit', 'maxId', 'minId'];
+        this._slots = ['peer', 'topMsgId', 'offsetId', 'addOffset', 'limit', 'maxId', 'minId'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
         this.offsetId = params.offsetId;
@@ -75731,7 +77188,7 @@ export namespace Raw {
         this.className = 'messages.ReadReactions';
         this.constructorId = 0x54aa7f8e;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['peer', 'topMsgId'];
+        this._slots = ['peer', 'topMsgId'];
         this.peer = params.peer;
         this.topMsgId = params.topMsgId;
       }
@@ -75781,7 +77238,7 @@ export namespace Raw {
         this.className = 'messages.SearchSentMedia';
         this.constructorId = 0x107e31a0;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['q', 'filter', 'limit'];
+        this._slots = ['q', 'filter', 'limit'];
         this.q = params.q;
         this.filter = params.filter;
         this.limit = params.limit;
@@ -75828,7 +77285,7 @@ export namespace Raw {
         this.className = 'messages.GetAttachMenuBots';
         this.constructorId = 0x16fcc2cb;
         this.subclassOfId = 0x842e23da;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -75865,7 +77322,7 @@ export namespace Raw {
         this.className = 'messages.GetAttachMenuBot';
         this.constructorId = 0x77216192;
         this.subclassOfId = 0xdb33883d;
-        this.slots = ['bot'];
+        this._slots = ['bot'];
         this.bot = params.bot;
       }
       /**
@@ -75904,7 +77361,7 @@ export namespace Raw {
         this.className = 'messages.ToggleBotInAttachMenu';
         this.constructorId = 0x69f59d69;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['writeAllowed', 'bot', 'enabled'];
+        this._slots = ['writeAllowed', 'bot', 'enabled'];
         this.writeAllowed = params.writeAllowed;
         this.bot = params.bot;
         this.enabled = params.enabled;
@@ -75981,7 +77438,7 @@ export namespace Raw {
         this.className = 'messages.RequestWebView';
         this.constructorId = 0x269dc2c1;
         this.subclassOfId = 0x93cea746;
-        this.slots = [
+        this._slots = [
           'fromBotMenu',
           'silent',
           'peer',
@@ -76103,7 +77560,7 @@ export namespace Raw {
         this.className = 'messages.ProlongWebView';
         this.constructorId = 0xb0d81a83;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['silent', 'peer', 'bot', 'queryId', 'replyTo', 'sendAs'];
+        this._slots = ['silent', 'peer', 'bot', 'queryId', 'replyTo', 'sendAs'];
         this.silent = params.silent;
         this.peer = params.peer;
         this.bot = params.bot;
@@ -76191,7 +77648,7 @@ export namespace Raw {
         this.className = 'messages.RequestSimpleWebView';
         this.constructorId = 0x1a46500a;
         this.subclassOfId = 0x15eee3db;
-        this.slots = [
+        this._slots = [
           'fromSwitchWebview',
           'fromSideMenu',
           'bot',
@@ -76282,7 +77739,7 @@ export namespace Raw {
         this.className = 'messages.SendWebViewResultMessage';
         this.constructorId = 0xa4314f5;
         this.subclassOfId = 0x75e49312;
-        this.slots = ['botQueryId', 'result'];
+        this._slots = ['botQueryId', 'result'];
         this.botQueryId = params.botQueryId;
         this.result = params.result;
       }
@@ -76338,7 +77795,7 @@ export namespace Raw {
         this.className = 'messages.SendWebViewData';
         this.constructorId = 0xdc0242c8;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['bot', 'randomId', 'buttonText', 'data'];
+        this._slots = ['bot', 'randomId', 'buttonText', 'data'];
         this.bot = params.bot;
         this.randomId = params.randomId;
         this.buttonText = params.buttonText;
@@ -76396,7 +77853,7 @@ export namespace Raw {
         this.className = 'messages.TranscribeAudio';
         this.constructorId = 0x269e9a49;
         this.subclassOfId = 0x21b24936;
-        this.slots = ['peer', 'msgId'];
+        this._slots = ['peer', 'msgId'];
         this.peer = params.peer;
         this.msgId = params.msgId;
       }
@@ -76446,7 +77903,7 @@ export namespace Raw {
         this.className = 'messages.RateTranscribedAudio';
         this.constructorId = 0x7f1d072f;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'msgId', 'transcriptionId', 'good'];
+        this._slots = ['peer', 'msgId', 'transcriptionId', 'good'];
         this.peer = params.peer;
         this.msgId = params.msgId;
         this.transcriptionId = params.transcriptionId;
@@ -76506,7 +77963,7 @@ export namespace Raw {
         this.className = 'messages.GetCustomEmojiDocuments';
         this.constructorId = 0xd9ab0f54;
         this.subclassOfId = 0xcc590e08;
-        this.slots = ['documentId'];
+        this._slots = ['documentId'];
         this.documentId = params.documentId;
       }
       /**
@@ -76546,7 +78003,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiStickers';
         this.constructorId = 0xfbfca18f;
         this.subclassOfId = 0x45834829;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -76583,7 +78040,7 @@ export namespace Raw {
         this.className = 'messages.GetFeaturedEmojiStickers';
         this.constructorId = 0xecf6736;
         this.subclassOfId = 0x2614b722;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -76625,7 +78082,7 @@ export namespace Raw {
         this.className = 'messages.ReportReaction';
         this.constructorId = 0x3f64c076;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'id', 'reactionPeer'];
+        this._slots = ['peer', 'id', 'reactionPeer'];
         this.peer = params.peer;
         this.id = params.id;
         this.reactionPeer = params.reactionPeer;
@@ -76673,7 +78130,7 @@ export namespace Raw {
         this.className = 'messages.GetTopReactions';
         this.constructorId = 0xbb8125ba;
         this.subclassOfId = 0xadc38324;
-        this.slots = ['limit', 'hash'];
+        this._slots = ['limit', 'hash'];
         this.limit = params.limit;
         this.hash = params.hash;
       }
@@ -76716,7 +78173,7 @@ export namespace Raw {
         this.className = 'messages.GetRecentReactions';
         this.constructorId = 0x39461db2;
         this.subclassOfId = 0xadc38324;
-        this.slots = ['limit', 'hash'];
+        this._slots = ['limit', 'hash'];
         this.limit = params.limit;
         this.hash = params.hash;
       }
@@ -76757,7 +78214,7 @@ export namespace Raw {
         this.className = 'messages.ClearRecentReactions';
         this.constructorId = 0x9dfeefb4;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -76793,7 +78250,7 @@ export namespace Raw {
         this.className = 'messages.GetExtendedMedia';
         this.constructorId = 0x84f80814;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -76835,7 +78292,7 @@ export namespace Raw {
         this.className = 'messages.SetDefaultHistoryTTL';
         this.constructorId = 0x9eb51445;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['period'];
+        this._slots = ['period'];
         this.period = params.period;
       }
       /**
@@ -76874,7 +78331,7 @@ export namespace Raw {
         this.className = 'messages.GetDefaultHistoryTTL';
         this.constructorId = 0x658b7188;
         this.subclassOfId = 0xf00d3367;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -76917,7 +78374,7 @@ export namespace Raw {
         this.className = 'messages.SendBotRequestedPeer';
         this.constructorId = 0xfe38d01b;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'msgId', 'buttonId', 'requestedPeer'];
+        this._slots = ['peer', 'msgId', 'buttonId', 'requestedPeer'];
         this.peer = params.peer;
         this.msgId = params.msgId;
         this.buttonId = params.buttonId;
@@ -76977,7 +78434,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiGroups';
         this.constructorId = 0x7488ce5b;
         this.subclassOfId = 0x7eca55d9;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -77014,7 +78471,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiStatusGroups';
         this.constructorId = 0x2ecd56cd;
         this.subclassOfId = 0x7eca55d9;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -77054,7 +78511,7 @@ export namespace Raw {
         this.className = 'messages.GetEmojiProfilePhotoGroups';
         this.constructorId = 0x21a548f3;
         this.subclassOfId = 0x7eca55d9;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -77095,7 +78552,7 @@ export namespace Raw {
         this.className = 'messages.SearchCustomEmoji';
         this.constructorId = 0x2c11c0d7;
         this.subclassOfId = 0xbcef6aba;
-        this.slots = ['emoticon', 'hash'];
+        this._slots = ['emoticon', 'hash'];
         this.emoticon = params.emoticon;
         this.hash = params.hash;
       }
@@ -77138,7 +78595,7 @@ export namespace Raw {
         this.className = 'messages.TogglePeerTranslations';
         this.constructorId = 0xe47cb579;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['disabled', 'peer'];
+        this._slots = ['disabled', 'peer'];
         this.disabled = params.disabled;
         this.peer = params.peer;
       }
@@ -77187,7 +78644,7 @@ export namespace Raw {
         this.className = 'messages.GetBotApp';
         this.constructorId = 0x34fdc5c3;
         this.subclassOfId = 0x8f7243a7;
-        this.slots = ['app', 'hash'];
+        this._slots = ['app', 'hash'];
         this.app = params.app;
         this.hash = params.hash;
       }
@@ -77241,7 +78698,7 @@ export namespace Raw {
         this.className = 'messages.RequestAppWebView';
         this.constructorId = 0x8c5a3b3c;
         this.subclassOfId = 0x1c24a413;
-        this.slots = ['writeAllowed', 'peer', 'app', 'startParam', 'themeParams', 'platform'];
+        this._slots = ['writeAllowed', 'peer', 'app', 'startParam', 'themeParams', 'platform'];
         this.writeAllowed = params.writeAllowed;
         this.peer = params.peer;
         this.app = params.app;
@@ -77323,7 +78780,7 @@ export namespace Raw {
         this.className = 'messages.SetChatWallPaper';
         this.constructorId = 0x8ffacae1;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'wallpaper', 'settings', 'id'];
+        this._slots = ['peer', 'wallpaper', 'settings', 'id'];
         this.peer = params.peer;
         this.wallpaper = params.wallpaper;
         this.settings = params.settings;
@@ -77403,7 +78860,7 @@ export namespace Raw {
         this.className = 'updates.State';
         this.constructorId = 0xa56c2a3e;
         this.subclassOfId = 0x23df1a01;
-        this.slots = ['pts', 'qts', 'date', 'seq', 'unreadCount'];
+        this._slots = ['pts', 'qts', 'date', 'seq', 'unreadCount'];
         this.pts = params.pts;
         this.qts = params.qts;
         this.date = params.date;
@@ -77466,7 +78923,7 @@ export namespace Raw {
         this.className = 'updates.DifferenceEmpty';
         this.constructorId = 0x5d75a138;
         this.subclassOfId = 0x20482874;
-        this.slots = ['date', 'seq'];
+        this._slots = ['date', 'seq'];
         this.date = params.date;
         this.seq = params.seq;
       }
@@ -77519,7 +78976,7 @@ export namespace Raw {
         this.className = 'updates.Difference';
         this.constructorId = 0xf49ca0;
         this.subclassOfId = 0x20482874;
-        this.slots = [
+        this._slots = [
           'newMessages',
           'newEncryptedMessages',
           'otherUpdates',
@@ -77606,7 +79063,7 @@ export namespace Raw {
         this.className = 'updates.DifferenceSlice';
         this.constructorId = 0xa8fb1981;
         this.subclassOfId = 0x20482874;
-        this.slots = [
+        this._slots = [
           'newMessages',
           'newEncryptedMessages',
           'otherUpdates',
@@ -77681,7 +79138,7 @@ export namespace Raw {
         this.className = 'updates.DifferenceTooLong';
         this.constructorId = 0x4afe8f6d;
         this.subclassOfId = 0x20482874;
-        this.slots = ['pts'];
+        this._slots = ['pts'];
         this.pts = params.pts;
       }
       /**
@@ -77719,7 +79176,7 @@ export namespace Raw {
         this.className = 'updates.ChannelDifferenceEmpty';
         this.constructorId = 0x3e11affb;
         this.subclassOfId = 0x29896f5d;
-        this.slots = ['final', 'pts', 'timeout'];
+        this._slots = ['final', 'pts', 'timeout'];
         this.final = params.final;
         this.pts = params.pts;
         this.timeout = params.timeout;
@@ -77784,7 +79241,7 @@ export namespace Raw {
         this.className = 'updates.ChannelDifferenceTooLong';
         this.constructorId = 0xa4bcc6fe;
         this.subclassOfId = 0x29896f5d;
-        this.slots = ['final', 'timeout', 'dialog', 'messages', 'chats', 'users'];
+        this._slots = ['final', 'timeout', 'dialog', 'messages', 'chats', 'users'];
         this.final = params.final;
         this.timeout = params.timeout;
         this.dialog = params.dialog;
@@ -77873,7 +79330,7 @@ export namespace Raw {
         this.className = 'updates.ChannelDifference';
         this.constructorId = 0x2064674e;
         this.subclassOfId = 0x29896f5d;
-        this.slots = ['final', 'pts', 'timeout', 'newMessages', 'otherUpdates', 'chats', 'users'];
+        this._slots = ['final', 'pts', 'timeout', 'newMessages', 'otherUpdates', 'chats', 'users'];
         this.final = params.final;
         this.pts = params.pts;
         this.timeout = params.timeout;
@@ -77951,7 +79408,7 @@ export namespace Raw {
         this.className = 'updates.GetState';
         this.constructorId = 0xedd4882a;
         this.subclassOfId = 0x23df1a01;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -77995,7 +79452,7 @@ export namespace Raw {
         this.className = 'updates.GetDifference';
         this.constructorId = 0x19c2f763;
         this.subclassOfId = 0x20482874;
-        this.slots = ['pts', 'ptsLimit', 'ptsTotalLimit', 'date', 'qts', 'qtsLimit'];
+        this._slots = ['pts', 'ptsLimit', 'ptsTotalLimit', 'date', 'qts', 'qtsLimit'];
         this.pts = params.pts;
         this.ptsLimit = params.ptsLimit;
         this.ptsTotalLimit = params.ptsTotalLimit;
@@ -78082,7 +79539,7 @@ export namespace Raw {
         this.className = 'updates.GetChannelDifference';
         this.constructorId = 0x3173d78;
         this.subclassOfId = 0x29896f5d;
-        this.slots = ['force', 'channel', 'filter', 'pts', 'limit'];
+        this._slots = ['force', 'channel', 'filter', 'pts', 'limit'];
         this.force = params.force;
         this.channel = params.channel;
         this.filter = params.filter;
@@ -78155,7 +79612,7 @@ export namespace Raw {
         this.className = 'photos.Photos';
         this.constructorId = 0x8dca6aa5;
         this.subclassOfId = 0x27cfb967;
-        this.slots = ['photos', 'users'];
+        this._slots = ['photos', 'users'];
         this.photos = params.photos;
         this.users = params.users;
       }
@@ -78202,7 +79659,7 @@ export namespace Raw {
         this.className = 'photos.PhotosSlice';
         this.constructorId = 0x15051f54;
         this.subclassOfId = 0x27cfb967;
-        this.slots = ['count', 'photos', 'users'];
+        this._slots = ['count', 'photos', 'users'];
         this.count = params.count;
         this.photos = params.photos;
         this.users = params.users;
@@ -78249,7 +79706,7 @@ export namespace Raw {
         this.className = 'photos.Photo';
         this.constructorId = 0x20212ca8;
         this.subclassOfId = 0xc292bd24;
-        this.slots = ['photo', 'users'];
+        this._slots = ['photo', 'users'];
         this.photo = params.photo;
         this.users = params.users;
       }
@@ -78293,7 +79750,7 @@ export namespace Raw {
         this.className = 'photos.UpdateProfilePhoto';
         this.constructorId = 0x9e82039;
         this.subclassOfId = 0xc292bd24;
-        this.slots = ['fallback', 'bot', 'id'];
+        this._slots = ['fallback', 'bot', 'id'];
         this.fallback = params.fallback;
         this.bot = params.bot;
         this.id = params.id;
@@ -78356,7 +79813,7 @@ export namespace Raw {
         this.className = 'photos.UploadProfilePhoto';
         this.constructorId = 0x388a3b5;
         this.subclassOfId = 0xc292bd24;
-        this.slots = ['fallback', 'bot', 'file', 'video', 'videoStartTs', 'videoEmojiMarkup'];
+        this._slots = ['fallback', 'bot', 'file', 'video', 'videoStartTs', 'videoEmojiMarkup'];
         this.fallback = params.fallback;
         this.bot = params.bot;
         this.file = params.file;
@@ -78433,7 +79890,7 @@ export namespace Raw {
         this.className = 'photos.DeletePhotos';
         this.constructorId = 0x87cf7f2f;
         this.subclassOfId = 0x8918e168;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -78473,7 +79930,7 @@ export namespace Raw {
         this.className = 'photos.GetUserPhotos';
         this.constructorId = 0x91cd32a8;
         this.subclassOfId = 0x27cfb967;
-        this.slots = ['userId', 'offset', 'maxId', 'limit'];
+        this._slots = ['userId', 'offset', 'maxId', 'limit'];
         this.userId = params.userId;
         this.offset = params.offset;
         this.maxId = params.maxId;
@@ -78544,7 +80001,7 @@ export namespace Raw {
         this.className = 'photos.UploadContactProfilePhoto';
         this.constructorId = 0xe14c4a71;
         this.subclassOfId = 0xc292bd24;
-        this.slots = [
+        this._slots = [
           'suggest',
           'save',
           'userId',
@@ -78641,7 +80098,7 @@ export namespace Raw {
         this.className = 'upload.File';
         this.constructorId = 0x96a18d5;
         this.subclassOfId = 0x6c9bd728;
-        this.slots = ['type', 'mtime', 'bytes'];
+        this._slots = ['type', 'mtime', 'bytes'];
         this.type = params.type;
         this.mtime = params.mtime;
         this.bytes = params.bytes;
@@ -78697,7 +80154,7 @@ export namespace Raw {
         this.className = 'upload.FileCdnRedirect';
         this.constructorId = 0xf18cda44;
         this.subclassOfId = 0x6c9bd728;
-        this.slots = ['dcId', 'fileToken', 'encryptionKey', 'encryptionIv', 'fileHashes'];
+        this._slots = ['dcId', 'fileToken', 'encryptionKey', 'encryptionIv', 'fileHashes'];
         this.dcId = params.dcId;
         this.fileToken = params.fileToken;
         this.encryptionKey = params.encryptionKey;
@@ -78769,7 +80226,7 @@ export namespace Raw {
         this.className = 'upload.WebFile';
         this.constructorId = 0x21e753bc;
         this.subclassOfId = 0x68f17f51;
-        this.slots = ['size', 'mimeType', 'fileType', 'mtime', 'bytes'];
+        this._slots = ['size', 'mimeType', 'fileType', 'mtime', 'bytes'];
         this.size = params.size;
         this.mimeType = params.mimeType;
         this.fileType = params.fileType;
@@ -78831,7 +80288,7 @@ export namespace Raw {
         this.className = 'upload.CdnFileReuploadNeeded';
         this.constructorId = 0xeea8e46e;
         this.subclassOfId = 0xf5ccf928;
-        this.slots = ['requestToken'];
+        this._slots = ['requestToken'];
         this.requestToken = params.requestToken;
       }
       /**
@@ -78870,7 +80327,7 @@ export namespace Raw {
         this.className = 'upload.CdnFile';
         this.constructorId = 0xa99fca4f;
         this.subclassOfId = 0xf5ccf928;
-        this.slots = ['bytes'];
+        this._slots = ['bytes'];
         this.bytes = params.bytes;
       }
       /**
@@ -78909,7 +80366,7 @@ export namespace Raw {
         this.className = 'upload.SaveFilePart';
         this.constructorId = 0xb304a621;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['fileId', 'filePart', 'bytes'];
+        this._slots = ['fileId', 'filePart', 'bytes'];
         this.fileId = params.fileId;
         this.filePart = params.filePart;
         this.bytes = params.bytes;
@@ -78966,7 +80423,7 @@ export namespace Raw {
         this.className = 'upload.GetFile';
         this.constructorId = 0xbe5335be;
         this.subclassOfId = 0x6c9bd728;
-        this.slots = ['precise', 'cdnSupported', 'location', 'offset', 'limit'];
+        this._slots = ['precise', 'cdnSupported', 'location', 'offset', 'limit'];
         this.precise = params.precise;
         this.cdnSupported = params.cdnSupported;
         this.location = params.location;
@@ -79033,7 +80490,7 @@ export namespace Raw {
         this.className = 'upload.SaveBigFilePart';
         this.constructorId = 0xde7b673d;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['fileId', 'filePart', 'fileTotalParts', 'bytes'];
+        this._slots = ['fileId', 'filePart', 'fileTotalParts', 'bytes'];
         this.fileId = params.fileId;
         this.filePart = params.filePart;
         this.fileTotalParts = params.fileTotalParts;
@@ -79092,7 +80549,7 @@ export namespace Raw {
         this.className = 'upload.GetWebFile';
         this.constructorId = 0x24e6818d;
         this.subclassOfId = 0x68f17f51;
-        this.slots = ['location', 'offset', 'limit'];
+        this._slots = ['location', 'offset', 'limit'];
         this.location = params.location;
         this.offset = params.offset;
         this.limit = params.limit;
@@ -79141,7 +80598,7 @@ export namespace Raw {
         this.className = 'upload.GetCdnFile';
         this.constructorId = 0x395f69da;
         this.subclassOfId = 0xf5ccf928;
-        this.slots = ['fileToken', 'offset', 'limit'];
+        this._slots = ['fileToken', 'offset', 'limit'];
         this.fileToken = params.fileToken;
         this.offset = params.offset;
         this.limit = params.limit;
@@ -79189,7 +80646,7 @@ export namespace Raw {
         this.className = 'upload.ReuploadCdnFile';
         this.constructorId = 0x9b2754a8;
         this.subclassOfId = 0xa5940726;
-        this.slots = ['fileToken', 'requestToken'];
+        this._slots = ['fileToken', 'requestToken'];
         this.fileToken = params.fileToken;
         this.requestToken = params.requestToken;
       }
@@ -79232,7 +80689,7 @@ export namespace Raw {
         this.className = 'upload.GetCdnFileHashes';
         this.constructorId = 0x91dc3f31;
         this.subclassOfId = 0xa5940726;
-        this.slots = ['fileToken', 'offset'];
+        this._slots = ['fileToken', 'offset'];
         this.fileToken = params.fileToken;
         this.offset = params.offset;
       }
@@ -79275,7 +80732,7 @@ export namespace Raw {
         this.className = 'upload.GetFileHashes';
         this.constructorId = 0x9156982a;
         this.subclassOfId = 0xa5940726;
-        this.slots = ['location', 'offset'];
+        this._slots = ['location', 'offset'];
         this.location = params.location;
         this.offset = params.offset;
       }
@@ -79351,7 +80808,7 @@ export namespace Raw {
         this.className = 'account.PrivacyRules';
         this.constructorId = 0x50a04e45;
         this.subclassOfId = 0xb55aba82;
-        this.slots = ['rules', 'chats', 'users'];
+        this._slots = ['rules', 'chats', 'users'];
         this.rules = params.rules;
         this.chats = params.chats;
         this.users = params.users;
@@ -79401,7 +80858,7 @@ export namespace Raw {
         this.className = 'account.Authorizations';
         this.constructorId = 0x4bff8ea0;
         this.subclassOfId = 0xbf5e0ff;
-        this.slots = ['authorizationTtlDays', 'authorizations'];
+        this._slots = ['authorizationTtlDays', 'authorizations'];
         this.authorizationTtlDays = params.authorizationTtlDays;
         this.authorizations = params.authorizations;
       }
@@ -79471,7 +80928,7 @@ export namespace Raw {
         this.className = 'account.Password';
         this.constructorId = 0x957b50fb;
         this.subclassOfId = 0x53a211a3;
-        this.slots = [
+        this._slots = [
           'hasRecovery',
           'hasSecureValues',
           'hasPassword',
@@ -79602,7 +81059,7 @@ export namespace Raw {
         this.className = 'account.PasswordSettings';
         this.constructorId = 0x9a5c33e5;
         this.subclassOfId = 0xd23fb078;
-        this.slots = ['email', 'secureSettings'];
+        this._slots = ['email', 'secureSettings'];
         this.email = params.email;
         this.secureSettings = params.secureSettings;
       }
@@ -79660,7 +81117,7 @@ export namespace Raw {
         this.className = 'account.PasswordInputSettings';
         this.constructorId = 0xc23727c9;
         this.subclassOfId = 0xc426ca6;
-        this.slots = ['newAlgo', 'newPasswordHash', 'hint', 'email', 'newSecureSettings'];
+        this._slots = ['newAlgo', 'newPasswordHash', 'hint', 'email', 'newSecureSettings'];
         this.newAlgo = params.newAlgo;
         this.newPasswordHash = params.newPasswordHash;
         this.hint = params.hint;
@@ -79736,7 +81193,7 @@ export namespace Raw {
         this.className = 'account.TmpPassword';
         this.constructorId = 0xdb64fd34;
         this.subclassOfId = 0xb064992d;
-        this.slots = ['tmpPassword', 'validUntil'];
+        this._slots = ['tmpPassword', 'validUntil'];
         this.tmpPassword = params.tmpPassword;
         this.validUntil = params.validUntil;
       }
@@ -79781,7 +81238,7 @@ export namespace Raw {
         this.className = 'account.WebAuthorizations';
         this.constructorId = 0xed56c9fc;
         this.subclassOfId = 0x9a365b32;
-        this.slots = ['authorizations', 'users'];
+        this._slots = ['authorizations', 'users'];
         this.authorizations = params.authorizations;
         this.users = params.users;
       }
@@ -79832,7 +81289,7 @@ export namespace Raw {
         this.className = 'account.AuthorizationForm';
         this.constructorId = 0xad2e1cd8;
         this.subclassOfId = 0x78049a94;
-        this.slots = ['requiredTypes', 'values', 'errors', 'users', 'privacyPolicyUrl'];
+        this._slots = ['requiredTypes', 'values', 'errors', 'users', 'privacyPolicyUrl'];
         this.requiredTypes = params.requiredTypes;
         this.values = params.values;
         this.errors = params.errors;
@@ -79901,7 +81358,7 @@ export namespace Raw {
         this.className = 'account.SentEmailCode';
         this.constructorId = 0x811f854f;
         this.subclassOfId = 0x69f3c06e;
-        this.slots = ['emailPattern', 'length'];
+        this._slots = ['emailPattern', 'length'];
         this.emailPattern = params.emailPattern;
         this.length = params.length;
       }
@@ -79942,7 +81399,7 @@ export namespace Raw {
         this.className = 'account.Takeout';
         this.constructorId = 0x4dba4501;
         this.subclassOfId = 0x843ebe85;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -79976,7 +81433,7 @@ export namespace Raw {
         this.className = 'account.WallPapersNotModified';
         this.constructorId = 0x1c199183;
         this.subclassOfId = 0xa2c548fd;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80011,7 +81468,7 @@ export namespace Raw {
         this.className = 'account.WallPapers';
         this.constructorId = 0xcdc3858c;
         this.subclassOfId = 0xa2c548fd;
-        this.slots = ['hash', 'wallpapers'];
+        this._slots = ['hash', 'wallpapers'];
         this.hash = params.hash;
         this.wallpapers = params.wallpapers;
       }
@@ -80058,7 +81515,7 @@ export namespace Raw {
         this.className = 'account.AutoDownloadSettings';
         this.constructorId = 0x63cacf26;
         this.subclassOfId = 0x2fb85921;
-        this.slots = ['low', 'medium', 'high'];
+        this._slots = ['low', 'medium', 'high'];
         this.low = params.low;
         this.medium = params.medium;
         this.high = params.high;
@@ -80105,7 +81562,7 @@ export namespace Raw {
         this.className = 'account.ThemesNotModified';
         this.constructorId = 0xf41eb622;
         this.subclassOfId = 0x7fc52204;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80137,7 +81594,7 @@ export namespace Raw {
         this.className = 'account.Themes';
         this.constructorId = 0x9a3d8c6d;
         this.subclassOfId = 0x7fc52204;
-        this.slots = ['hash', 'themes'];
+        this._slots = ['hash', 'themes'];
         this.hash = params.hash;
         this.themes = params.themes;
       }
@@ -80179,7 +81636,7 @@ export namespace Raw {
         this.className = 'account.ContentSettings';
         this.constructorId = 0x57e28221;
         this.subclassOfId = 0xae3ff891;
-        this.slots = ['sensitiveEnabled', 'sensitiveCanChange'];
+        this._slots = ['sensitiveEnabled', 'sensitiveCanChange'];
         this.sensitiveEnabled = params.sensitiveEnabled;
         this.sensitiveCanChange = params.sensitiveCanChange;
       }
@@ -80224,7 +81681,7 @@ export namespace Raw {
         this.className = 'account.ResetPasswordFailedWait';
         this.constructorId = 0xe3779861;
         this.subclassOfId = 0x49507416;
-        this.slots = ['retryDate'];
+        this._slots = ['retryDate'];
         this.retryDate = params.retryDate;
       }
       /**
@@ -80263,7 +81720,7 @@ export namespace Raw {
         this.className = 'account.ResetPasswordRequestedWait';
         this.constructorId = 0xe9effc7d;
         this.subclassOfId = 0x49507416;
-        this.slots = ['untilDate'];
+        this._slots = ['untilDate'];
         this.untilDate = params.untilDate;
       }
       /**
@@ -80300,7 +81757,7 @@ export namespace Raw {
         this.className = 'account.ResetPasswordOk';
         this.constructorId = 0xe926d63e;
         this.subclassOfId = 0x49507416;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80329,7 +81786,7 @@ export namespace Raw {
         this.className = 'account.SavedRingtonesNotModified';
         this.constructorId = 0xfbf6e8b1;
         this.subclassOfId = 0x27bcc95e;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80364,7 +81821,7 @@ export namespace Raw {
         this.className = 'account.SavedRingtones';
         this.constructorId = 0xc1e92cc5;
         this.subclassOfId = 0x27bcc95e;
-        this.slots = ['hash', 'ringtones'];
+        this._slots = ['hash', 'ringtones'];
         this.hash = params.hash;
         this.ringtones = params.ringtones;
       }
@@ -80403,7 +81860,7 @@ export namespace Raw {
         this.className = 'account.SavedRingtone';
         this.constructorId = 0xb7263f6d;
         this.subclassOfId = 0xb1e28424;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80434,7 +81891,7 @@ export namespace Raw {
         this.className = 'account.SavedRingtoneConverted';
         this.constructorId = 0x1f307eb7;
         this.subclassOfId = 0xb1e28424;
-        this.slots = ['document'];
+        this._slots = ['document'];
         this.document = params.document;
       }
       /**
@@ -80471,7 +81928,7 @@ export namespace Raw {
         this.className = 'account.EmojiStatusesNotModified';
         this.constructorId = 0xd08ce645;
         this.subclassOfId = 0xd3e005ca;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80506,7 +81963,7 @@ export namespace Raw {
         this.className = 'account.EmojiStatuses';
         this.constructorId = 0x90c467d1;
         this.subclassOfId = 0xd3e005ca;
-        this.slots = ['hash', 'statuses'];
+        this._slots = ['hash', 'statuses'];
         this.hash = params.hash;
         this.statuses = params.statuses;
       }
@@ -80547,7 +82004,7 @@ export namespace Raw {
         this.className = 'account.EmailVerified';
         this.constructorId = 0x2b96cd1b;
         this.subclassOfId = 0x64833188;
-        this.slots = ['email'];
+        this._slots = ['email'];
         this.email = params.email;
       }
       /**
@@ -80584,7 +82041,7 @@ export namespace Raw {
         this.className = 'account.EmailVerifiedLogin';
         this.constructorId = 0xe1bb0d61;
         this.subclassOfId = 0x64833188;
-        this.slots = ['email', 'sentCode'];
+        this._slots = ['email', 'sentCode'];
         this.email = params.email;
         this.sentCode = params.sentCode;
       }
@@ -80637,7 +82094,7 @@ export namespace Raw {
         this.className = 'account.AutoSaveSettings';
         this.constructorId = 0x4c3e069d;
         this.subclassOfId = 0x48cf2f02;
-        this.slots = [
+        this._slots = [
           'usersSettings',
           'chatsSettings',
           'broadcastsSettings',
@@ -80725,7 +82182,7 @@ export namespace Raw {
         this.className = 'account.RegisterDevice';
         this.constructorId = 0xec86017a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['noMuted', 'tokenType', 'token', 'appSandbox', 'secret', 'otherUids'];
+        this._slots = ['noMuted', 'tokenType', 'token', 'appSandbox', 'secret', 'otherUids'];
         this.noMuted = params.noMuted;
         this.tokenType = params.tokenType;
         this.token = params.token;
@@ -80799,7 +82256,7 @@ export namespace Raw {
         this.className = 'account.UnregisterDevice';
         this.constructorId = 0x6a0d3206;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['tokenType', 'token', 'otherUids'];
+        this._slots = ['tokenType', 'token', 'otherUids'];
         this.tokenType = params.tokenType;
         this.token = params.token;
         this.otherUids = params.otherUids;
@@ -80854,7 +82311,7 @@ export namespace Raw {
         this.className = 'account.UpdateNotifySettings';
         this.constructorId = 0x84be5b93;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'settings'];
+        this._slots = ['peer', 'settings'];
         this.peer = params.peer;
         this.settings = params.settings;
       }
@@ -80899,7 +82356,7 @@ export namespace Raw {
         this.className = 'account.GetNotifySettings';
         this.constructorId = 0x12b3ad31;
         this.subclassOfId = 0xcf20c074;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -80935,7 +82392,7 @@ export namespace Raw {
         this.className = 'account.ResetNotifySettings';
         this.constructorId = 0xdb7e1747;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -80969,7 +82426,7 @@ export namespace Raw {
         this.className = 'account.UpdateProfile';
         this.constructorId = 0x78515775;
         this.subclassOfId = 0x2da17977;
-        this.slots = ['firstName', 'lastName', 'about'];
+        this._slots = ['firstName', 'lastName', 'about'];
         this.firstName = params.firstName;
         this.lastName = params.lastName;
         this.about = params.about;
@@ -81028,7 +82485,7 @@ export namespace Raw {
         this.className = 'account.UpdateStatus';
         this.constructorId = 0x6628562c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['offline'];
+        this._slots = ['offline'];
         this.offline = params.offline;
       }
       /**
@@ -81065,7 +82522,7 @@ export namespace Raw {
         this.className = 'account.GetWallPapers';
         this.constructorId = 0x7967d36;
         this.subclassOfId = 0xa2c548fd;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -81108,7 +82565,7 @@ export namespace Raw {
         this.className = 'account.ReportPeer';
         this.constructorId = 0xc5ba3d86;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'reason', 'message'];
+        this._slots = ['peer', 'reason', 'message'];
         this.peer = params.peer;
         this.reason = params.reason;
         this.message = params.message;
@@ -81155,7 +82612,7 @@ export namespace Raw {
         this.className = 'account.CheckUsername';
         this.constructorId = 0x2714d86c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['username'];
+        this._slots = ['username'];
         this.username = params.username;
       }
       /**
@@ -81192,7 +82649,7 @@ export namespace Raw {
         this.className = 'account.UpdateUsername';
         this.constructorId = 0x3e0bdd7c;
         this.subclassOfId = 0x2da17977;
-        this.slots = ['username'];
+        this._slots = ['username'];
         this.username = params.username;
       }
       /**
@@ -81229,7 +82686,7 @@ export namespace Raw {
         this.className = 'account.GetPrivacy';
         this.constructorId = 0xdadbc950;
         this.subclassOfId = 0xb55aba82;
-        this.slots = ['key'];
+        this._slots = ['key'];
         this.key = params.key;
       }
       /**
@@ -81270,7 +82727,7 @@ export namespace Raw {
         this.className = 'account.SetPrivacy';
         this.constructorId = 0xc9f81ce8;
         this.subclassOfId = 0xb55aba82;
-        this.slots = ['key', 'rules'];
+        this._slots = ['key', 'rules'];
         this.key = params.key;
         this.rules = params.rules;
       }
@@ -81313,7 +82770,7 @@ export namespace Raw {
         this.className = 'account.DeleteAccount';
         this.constructorId = 0xa2c0cf74;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['reason', 'password'];
+        this._slots = ['reason', 'password'];
         this.reason = params.reason;
         this.password = params.password;
       }
@@ -81360,7 +82817,7 @@ export namespace Raw {
         this.className = 'account.GetAccountTTL';
         this.constructorId = 0x8fc711d;
         this.subclassOfId = 0xbaa39d88;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -81392,7 +82849,7 @@ export namespace Raw {
         this.className = 'account.SetAccountTTL';
         this.constructorId = 0x2442485e;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['ttl'];
+        this._slots = ['ttl'];
         this.ttl = params.ttl;
       }
       /**
@@ -81430,7 +82887,7 @@ export namespace Raw {
         this.className = 'account.SendChangePhoneCode';
         this.constructorId = 0x82574ae5;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['phoneNumber', 'settings'];
+        this._slots = ['phoneNumber', 'settings'];
         this.phoneNumber = params.phoneNumber;
         this.settings = params.settings;
       }
@@ -81477,7 +82934,7 @@ export namespace Raw {
         this.className = 'account.ChangePhone';
         this.constructorId = 0x70c32edb;
         this.subclassOfId = 0x2da17977;
-        this.slots = ['phoneNumber', 'phoneCodeHash', 'phoneCode'];
+        this._slots = ['phoneNumber', 'phoneCodeHash', 'phoneCode'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
         this.phoneCode = params.phoneCode;
@@ -81528,7 +82985,7 @@ export namespace Raw {
         this.className = 'account.UpdateDeviceLocked';
         this.constructorId = 0x38df3532;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['period'];
+        this._slots = ['period'];
         this.period = params.period;
       }
       /**
@@ -81564,7 +83021,7 @@ export namespace Raw {
         this.className = 'account.GetAuthorizations';
         this.constructorId = 0xe320c158;
         this.subclassOfId = 0xbf5e0ff;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -81596,7 +83053,7 @@ export namespace Raw {
         this.className = 'account.ResetAuthorization';
         this.constructorId = 0xdf77f3bc;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -81632,7 +83089,7 @@ export namespace Raw {
         this.className = 'account.GetPassword';
         this.constructorId = 0x548a30f5;
         this.subclassOfId = 0x53a211a3;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -81664,7 +83121,7 @@ export namespace Raw {
         this.className = 'account.GetPasswordSettings';
         this.constructorId = 0x9cd4eaf9;
         this.subclassOfId = 0xd23fb078;
-        this.slots = ['password'];
+        this._slots = ['password'];
         this.password = params.password;
       }
       /**
@@ -81705,7 +83162,7 @@ export namespace Raw {
         this.className = 'account.UpdatePasswordSettings';
         this.constructorId = 0xa59b102f;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['password', 'newSettings'];
+        this._slots = ['password', 'newSettings'];
         this.password = params.password;
         this.newSettings = params.newSettings;
       }
@@ -81754,7 +83211,7 @@ export namespace Raw {
         this.className = 'account.SendConfirmPhoneCode';
         this.constructorId = 0x1b3faa88;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['hash', 'settings'];
+        this._slots = ['hash', 'settings'];
         this.hash = params.hash;
         this.settings = params.settings;
       }
@@ -81800,7 +83257,7 @@ export namespace Raw {
         this.className = 'account.ConfirmPhone';
         this.constructorId = 0x5f2178c3;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['phoneCodeHash', 'phoneCode'];
+        this._slots = ['phoneCodeHash', 'phoneCode'];
         this.phoneCodeHash = params.phoneCodeHash;
         this.phoneCode = params.phoneCode;
       }
@@ -81843,7 +83300,7 @@ export namespace Raw {
         this.className = 'account.GetTmpPassword';
         this.constructorId = 0x449e0b51;
         this.subclassOfId = 0xb064992d;
-        this.slots = ['password', 'period'];
+        this._slots = ['password', 'period'];
         this.password = params.password;
         this.period = params.period;
       }
@@ -81884,7 +83341,7 @@ export namespace Raw {
         this.className = 'account.GetWebAuthorizations';
         this.constructorId = 0x182e6d6f;
         this.subclassOfId = 0x9a365b32;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -81919,7 +83376,7 @@ export namespace Raw {
         this.className = 'account.ResetWebAuthorization';
         this.constructorId = 0x2d01b9ef;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -81958,7 +83415,7 @@ export namespace Raw {
         this.className = 'account.ResetWebAuthorizations';
         this.constructorId = 0x682d2594;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -81992,7 +83449,7 @@ export namespace Raw {
         this.className = 'account.GetAllSecureValues';
         this.constructorId = 0xb288bc7d;
         this.subclassOfId = 0xe82e4121;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -82024,7 +83481,7 @@ export namespace Raw {
         this.className = 'account.GetSecureValue';
         this.constructorId = 0x73665bc2;
         this.subclassOfId = 0xe82e4121;
-        this.slots = ['types'];
+        this._slots = ['types'];
         this.types = params.types;
       }
       /**
@@ -82062,7 +83519,7 @@ export namespace Raw {
         this.className = 'account.SaveSecureValue';
         this.constructorId = 0x899fe31d;
         this.subclassOfId = 0x51138ae;
-        this.slots = ['value', 'secureSecretId'];
+        this._slots = ['value', 'secureSecretId'];
         this.value = params.value;
         this.secureSecretId = params.secureSecretId;
       }
@@ -82104,7 +83561,7 @@ export namespace Raw {
         this.className = 'account.DeleteSecureValue';
         this.constructorId = 0xb880bc4b;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['types'];
+        this._slots = ['types'];
         this.types = params.types;
       }
       /**
@@ -82143,7 +83600,7 @@ export namespace Raw {
         this.className = 'account.GetAuthorizationForm';
         this.constructorId = 0xa929597a;
         this.subclassOfId = 0x78049a94;
-        this.slots = ['botId', 'scope', 'publicKey'];
+        this._slots = ['botId', 'scope', 'publicKey'];
         this.botId = params.botId;
         this.scope = params.scope;
         this.publicKey = params.publicKey;
@@ -82207,7 +83664,7 @@ export namespace Raw {
         this.className = 'account.AcceptAuthorization';
         this.constructorId = 0xf3ed4c73;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['botId', 'scope', 'publicKey', 'valueHashes', 'credentials'];
+        this._slots = ['botId', 'scope', 'publicKey', 'valueHashes', 'credentials'];
         this.botId = params.botId;
         this.scope = params.scope;
         this.publicKey = params.publicKey;
@@ -82271,7 +83728,7 @@ export namespace Raw {
         this.className = 'account.SendVerifyPhoneCode';
         this.constructorId = 0xa5a356f9;
         this.subclassOfId = 0x6ce87081;
-        this.slots = ['phoneNumber', 'settings'];
+        this._slots = ['phoneNumber', 'settings'];
         this.phoneNumber = params.phoneNumber;
         this.settings = params.settings;
       }
@@ -82318,7 +83775,7 @@ export namespace Raw {
         this.className = 'account.VerifyPhone';
         this.constructorId = 0x4dd3a7f6;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['phoneNumber', 'phoneCodeHash', 'phoneCode'];
+        this._slots = ['phoneNumber', 'phoneCodeHash', 'phoneCode'];
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
         this.phoneCode = params.phoneCode;
@@ -82370,7 +83827,7 @@ export namespace Raw {
         this.className = 'account.SendVerifyEmailCode';
         this.constructorId = 0x98e037bb;
         this.subclassOfId = 0x69f3c06e;
-        this.slots = ['purpose', 'email'];
+        this._slots = ['purpose', 'email'];
         this.purpose = params.purpose;
         this.email = params.email;
       }
@@ -82416,7 +83873,7 @@ export namespace Raw {
         this.className = 'account.VerifyEmail';
         this.constructorId = 0x32da4cf;
         this.subclassOfId = 0x64833188;
-        this.slots = ['purpose', 'verification'];
+        this._slots = ['purpose', 'verification'];
         this.purpose = params.purpose;
         this.verification = params.verification;
       }
@@ -82472,7 +83929,7 @@ export namespace Raw {
         this.className = 'account.InitTakeoutSession';
         this.constructorId = 0x8ef3eab0;
         this.subclassOfId = 0x843ebe85;
-        this.slots = [
+        this._slots = [
           'contacts',
           'messageUsers',
           'messageChats',
@@ -82549,7 +84006,7 @@ export namespace Raw {
         this.className = 'account.FinishTakeoutSession';
         this.constructorId = 0x1d2652ee;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['success'];
+        this._slots = ['success'];
         this.success = params.success;
       }
       /**
@@ -82592,7 +84049,7 @@ export namespace Raw {
         this.className = 'account.ConfirmPasswordEmail';
         this.constructorId = 0x8fdf1920;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['code'];
+        this._slots = ['code'];
         this.code = params.code;
       }
       /**
@@ -82631,7 +84088,7 @@ export namespace Raw {
         this.className = 'account.ResendPasswordEmail';
         this.constructorId = 0x7a7f2a15;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -82662,7 +84119,7 @@ export namespace Raw {
         this.className = 'account.CancelPasswordEmail';
         this.constructorId = 0xc1cbd5b6;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -82693,7 +84150,7 @@ export namespace Raw {
         this.className = 'account.GetContactSignUpNotification';
         this.constructorId = 0x9f07c728;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -82728,7 +84185,7 @@ export namespace Raw {
         this.className = 'account.SetContactSignUpNotification';
         this.constructorId = 0xcff43f61;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['silent'];
+        this._slots = ['silent'];
         this.silent = params.silent;
       }
       /**
@@ -82774,7 +84231,7 @@ export namespace Raw {
         this.className = 'account.GetNotifyExceptions';
         this.constructorId = 0x53577479;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['compareSound', 'compareStories', 'peer'];
+        this._slots = ['compareSound', 'compareStories', 'peer'];
         this.compareSound = params.compareSound;
         this.compareStories = params.compareStories;
         this.peer = params.peer;
@@ -82827,7 +84284,7 @@ export namespace Raw {
         this.className = 'account.GetWallPaper';
         this.constructorId = 0xfc8ddbea;
         this.subclassOfId = 0x96a2c98b;
-        this.slots = ['wallpaper'];
+        this._slots = ['wallpaper'];
         this.wallpaper = params.wallpaper;
       }
       /**
@@ -82872,7 +84329,7 @@ export namespace Raw {
         this.className = 'account.UploadWallPaper';
         this.constructorId = 0xe39a8f03;
         this.subclassOfId = 0x96a2c98b;
-        this.slots = ['forChat', 'file', 'mimeType', 'settings'];
+        this._slots = ['forChat', 'file', 'mimeType', 'settings'];
         this.forChat = params.forChat;
         this.file = params.file;
         this.mimeType = params.mimeType;
@@ -82938,7 +84395,7 @@ export namespace Raw {
         this.className = 'account.SaveWallPaper';
         this.constructorId = 0x6c5a5b37;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['wallpaper', 'unsave', 'settings'];
+        this._slots = ['wallpaper', 'unsave', 'settings'];
         this.wallpaper = params.wallpaper;
         this.unsave = params.unsave;
         this.settings = params.settings;
@@ -82993,7 +84450,7 @@ export namespace Raw {
         this.className = 'account.InstallWallPaper';
         this.constructorId = 0xfeed5769;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['wallpaper', 'settings'];
+        this._slots = ['wallpaper', 'settings'];
         this.wallpaper = params.wallpaper;
         this.settings = params.settings;
       }
@@ -83034,7 +84491,7 @@ export namespace Raw {
         this.className = 'account.ResetWallPapers';
         this.constructorId = 0xbb3b9804;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -83065,7 +84522,7 @@ export namespace Raw {
         this.className = 'account.GetAutoDownloadSettings';
         this.constructorId = 0x56da0b3f;
         this.subclassOfId = 0x2fb85921;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -83106,7 +84563,7 @@ export namespace Raw {
         this.className = 'account.SaveAutoDownloadSettings';
         this.constructorId = 0x76f36233;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['low', 'high', 'settings'];
+        this._slots = ['low', 'high', 'settings'];
         this.low = params.low;
         this.high = params.high;
         this.settings = params.settings;
@@ -83169,7 +84626,7 @@ export namespace Raw {
         this.className = 'account.UploadTheme';
         this.constructorId = 0x1c3db333;
         this.subclassOfId = 0x211fe820;
-        this.slots = ['file', 'thumb', 'fileName', 'mimeType'];
+        this._slots = ['file', 'thumb', 'fileName', 'mimeType'];
         this.file = params.file;
         this.thumb = params.thumb;
         this.fileName = params.fileName;
@@ -83240,7 +84697,7 @@ export namespace Raw {
         this.className = 'account.CreateTheme';
         this.constructorId = 0x652e4400;
         this.subclassOfId = 0x56b4c80c;
-        this.slots = ['slug', 'title', 'document', 'settings'];
+        this._slots = ['slug', 'title', 'document', 'settings'];
         this.slug = params.slug;
         this.title = params.title;
         this.document = params.document;
@@ -83316,7 +84773,7 @@ export namespace Raw {
         this.className = 'account.UpdateTheme';
         this.constructorId = 0x2bf40ccc;
         this.subclassOfId = 0x56b4c80c;
-        this.slots = ['format', 'theme', 'slug', 'title', 'document', 'settings'];
+        this._slots = ['format', 'theme', 'slug', 'title', 'document', 'settings'];
         this.format = params.format;
         this.theme = params.theme;
         this.slug = params.slug;
@@ -83395,7 +84852,7 @@ export namespace Raw {
         this.className = 'account.SaveTheme';
         this.constructorId = 0xf257106c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['theme', 'unsave'];
+        this._slots = ['theme', 'unsave'];
         this.theme = params.theme;
         this.unsave = params.unsave;
       }
@@ -83445,7 +84902,7 @@ export namespace Raw {
         this.className = 'account.InstallTheme';
         this.constructorId = 0xc727bb3b;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['dark', 'theme', 'format', 'baseTheme'];
+        this._slots = ['dark', 'theme', 'format', 'baseTheme'];
         this.dark = params.dark;
         this.theme = params.theme;
         this.format = params.format;
@@ -83509,7 +84966,7 @@ export namespace Raw {
         this.className = 'account.GetTheme';
         this.constructorId = 0x3a5869ec;
         this.subclassOfId = 0x56b4c80c;
-        this.slots = ['format', 'theme'];
+        this._slots = ['format', 'theme'];
         this.format = params.format;
         this.theme = params.theme;
       }
@@ -83552,7 +85009,7 @@ export namespace Raw {
         this.className = 'account.GetThemes';
         this.constructorId = 0x7206e458;
         this.subclassOfId = 0x7fc52204;
-        this.slots = ['format', 'hash'];
+        this._slots = ['format', 'hash'];
         this.format = params.format;
         this.hash = params.hash;
       }
@@ -83594,7 +85051,7 @@ export namespace Raw {
         this.className = 'account.SetContentSettings';
         this.constructorId = 0xb574b16b;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['sensitiveEnabled'];
+        this._slots = ['sensitiveEnabled'];
         this.sensitiveEnabled = params.sensitiveEnabled;
       }
       /**
@@ -83633,7 +85090,7 @@ export namespace Raw {
         this.className = 'account.GetContentSettings';
         this.constructorId = 0x8b9b4dae;
         this.subclassOfId = 0xae3ff891;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -83665,7 +85122,7 @@ export namespace Raw {
         this.className = 'account.GetMultiWallPapers';
         this.constructorId = 0x65ad71dc;
         this.subclassOfId = 0x8ec35283;
-        this.slots = ['wallpapers'];
+        this._slots = ['wallpapers'];
         this.wallpapers = params.wallpapers;
       }
       /**
@@ -83701,7 +85158,7 @@ export namespace Raw {
         this.className = 'account.GetGlobalPrivacySettings';
         this.constructorId = 0xeb2b4cf6;
         this.subclassOfId = 0xc90e5770;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -83736,7 +85193,7 @@ export namespace Raw {
         this.className = 'account.SetGlobalPrivacySettings';
         this.constructorId = 0x1edaaac2;
         this.subclassOfId = 0xc90e5770;
-        this.slots = ['settings'];
+        this._slots = ['settings'];
         this.settings = params.settings;
       }
       /**
@@ -83784,7 +85241,7 @@ export namespace Raw {
         this.className = 'account.ReportProfilePhoto';
         this.constructorId = 0xfa8cc6f5;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'photoId', 'reason', 'message'];
+        this._slots = ['peer', 'photoId', 'reason', 'message'];
         this.peer = params.peer;
         this.photoId = params.photoId;
         this.reason = params.reason;
@@ -83840,7 +85297,7 @@ export namespace Raw {
         this.className = 'account.ResetPassword';
         this.constructorId = 0x9308ce1b;
         this.subclassOfId = 0x49507416;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -83871,7 +85328,7 @@ export namespace Raw {
         this.className = 'account.DeclinePasswordReset';
         this.constructorId = 0x4c9409f6;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -83906,7 +85363,7 @@ export namespace Raw {
         this.className = 'account.GetChatThemes';
         this.constructorId = 0xd638de89;
         this.subclassOfId = 0x7fc52204;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -83943,7 +85400,7 @@ export namespace Raw {
         this.className = 'account.SetAuthorizationTTL';
         this.constructorId = 0xbf899aa0;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['authorizationTtlDays'];
+        this._slots = ['authorizationTtlDays'];
         this.authorizationTtlDays = params.authorizationTtlDays;
       }
       /**
@@ -83988,7 +85445,7 @@ export namespace Raw {
         this.className = 'account.ChangeAuthorizationSettings';
         this.constructorId = 0x40f48462;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['confirmed', 'hash', 'encryptedRequestsDisabled', 'callRequestsDisabled'];
+        this._slots = ['confirmed', 'hash', 'encryptedRequestsDisabled', 'callRequestsDisabled'];
         this.confirmed = params.confirmed;
         this.hash = params.hash;
         this.encryptedRequestsDisabled = params.encryptedRequestsDisabled;
@@ -84053,7 +85510,7 @@ export namespace Raw {
         this.className = 'account.GetSavedRingtones';
         this.constructorId = 0xe1902288;
         this.subclassOfId = 0x27bcc95e;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -84091,7 +85548,7 @@ export namespace Raw {
         this.className = 'account.SaveRingtone';
         this.constructorId = 0x3dea5b03;
         this.subclassOfId = 0xb1e28424;
-        this.slots = ['id', 'unsave'];
+        this._slots = ['id', 'unsave'];
         this.id = params.id;
         this.unsave = params.unsave;
       }
@@ -84135,7 +85592,7 @@ export namespace Raw {
         this.className = 'account.UploadRingtone';
         this.constructorId = 0x831a83a2;
         this.subclassOfId = 0x211fe820;
-        this.slots = ['file', 'fileName', 'mimeType'];
+        this._slots = ['file', 'fileName', 'mimeType'];
         this.file = params.file;
         this.fileName = params.fileName;
         this.mimeType = params.mimeType;
@@ -84186,7 +85643,7 @@ export namespace Raw {
         this.className = 'account.UpdateEmojiStatus';
         this.constructorId = 0xfbd3de6b;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['emojiStatus'];
+        this._slots = ['emojiStatus'];
         this.emojiStatus = params.emojiStatus;
       }
       /**
@@ -84223,7 +85680,7 @@ export namespace Raw {
         this.className = 'account.GetDefaultEmojiStatuses';
         this.constructorId = 0xd6753386;
         this.subclassOfId = 0xd3e005ca;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -84263,7 +85720,7 @@ export namespace Raw {
         this.className = 'account.GetRecentEmojiStatuses';
         this.constructorId = 0xf578105;
         this.subclassOfId = 0xd3e005ca;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -84302,7 +85759,7 @@ export namespace Raw {
         this.className = 'account.ClearRecentEmojiStatuses';
         this.constructorId = 0x18201aae;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -84337,7 +85794,7 @@ export namespace Raw {
         this.className = 'account.ReorderUsernames';
         this.constructorId = 0xef500eab;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['order'];
+        this._slots = ['order'];
         this.order = params.order;
       }
       /**
@@ -84375,7 +85832,7 @@ export namespace Raw {
         this.className = 'account.ToggleUsername';
         this.constructorId = 0x58d6b376;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['username', 'active'];
+        this._slots = ['username', 'active'];
         this.username = params.username;
         this.active = params.active;
       }
@@ -84417,7 +85874,7 @@ export namespace Raw {
         this.className = 'account.GetDefaultProfilePhotoEmojis';
         this.constructorId = 0xe2750328;
         this.subclassOfId = 0xbcef6aba;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -84457,7 +85914,7 @@ export namespace Raw {
         this.className = 'account.GetDefaultGroupPhotoEmojis';
         this.constructorId = 0x915860ae;
         this.subclassOfId = 0xbcef6aba;
-        this.slots = ['hash'];
+        this._slots = ['hash'];
         this.hash = params.hash;
       }
       /**
@@ -84496,7 +85953,7 @@ export namespace Raw {
         this.className = 'account.GetAutoSaveSettings';
         this.constructorId = 0xadcbbcda;
         this.subclassOfId = 0x48cf2f02;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -84538,7 +85995,7 @@ export namespace Raw {
         this.className = 'account.SaveAutoSaveSettings';
         this.constructorId = 0xd69b8361;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['users', 'chats', 'broadcasts', 'peer', 'settings'];
+        this._slots = ['users', 'chats', 'broadcasts', 'peer', 'settings'];
         this.users = params.users;
         this.chats = params.chats;
         this.broadcasts = params.broadcasts;
@@ -84603,7 +86060,7 @@ export namespace Raw {
         this.className = 'account.DeleteAutoSaveExceptions';
         this.constructorId = 0x53bc0020;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -84638,7 +86095,7 @@ export namespace Raw {
         this.className = 'account.InvalidateSignInCodes';
         this.constructorId = 0xca8ae8ba;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['codes'];
+        this._slots = ['codes'];
         this.codes = params.codes;
       }
       /**
@@ -84668,6 +86125,95 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class UpdateColor extends TLObject {
+      __response__!: Bool;
+      color!: int;
+      backgroundEmojiId?: long;
+
+      constructor(params: { color: int; backgroundEmojiId?: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.UpdateColor';
+        this.constructorId = 0xa001cc43;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['color', 'backgroundEmojiId'];
+        this.color = params.color;
+        this.backgroundEmojiId = params.backgroundEmojiId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.account.UpdateColor> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let color = await Primitive.Int.read(b);
+        let backgroundEmojiId = flags & (1 << 0) ? await Primitive.Long.read(b) : undefined;
+        return new Raw.account.UpdateColor({ color: color, backgroundEmojiId: backgroundEmojiId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.backgroundEmojiId !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.color !== undefined) {
+          b.write(Primitive.Int.write(this.color) as unknown as Buffer);
+        }
+        if (this.backgroundEmojiId !== undefined) {
+          b.write(Primitive.Long.write(this.backgroundEmojiId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetDefaultBackgroundEmojis extends TLObject {
+      __response__!: Raw.TypeEmojiList;
+      hash!: long;
+
+      constructor(params: { hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetDefaultBackgroundEmojis';
+        this.constructorId = 0xa60ab9ce;
+        this.subclassOfId = 0xbcef6aba;
+        this._slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.GetDefaultBackgroundEmojis> {
+        // no flags
+
+        let hash = await Primitive.Long.read(b);
+        return new Raw.account.GetDefaultBackgroundEmojis({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace channels {
     export type TypeSendAsPeers = Raw.channels.SendAsPeers;
@@ -84693,7 +86239,7 @@ export namespace Raw {
         this.className = 'channels.ChannelParticipants';
         this.constructorId = 0x9ab0feaf;
         this.subclassOfId = 0xe60a6e64;
-        this.slots = ['count', 'participants', 'chats', 'users'];
+        this._slots = ['count', 'participants', 'chats', 'users'];
         this.count = params.count;
         this.participants = params.participants;
         this.chats = params.chats;
@@ -84750,7 +86296,7 @@ export namespace Raw {
         this.className = 'channels.ChannelParticipantsNotModified';
         this.constructorId = 0xf0173fe9;
         this.subclassOfId = 0xe60a6e64;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -84790,7 +86336,7 @@ export namespace Raw {
         this.className = 'channels.ChannelParticipant';
         this.constructorId = 0xdfb80317;
         this.subclassOfId = 0x6658151a;
-        this.slots = ['participant', 'chats', 'users'];
+        this._slots = ['participant', 'chats', 'users'];
         this.participant = params.participant;
         this.chats = params.chats;
         this.users = params.users;
@@ -84846,7 +86392,7 @@ export namespace Raw {
         this.className = 'channels.AdminLogResults';
         this.constructorId = 0xed8af74d;
         this.subclassOfId = 0x51f076bc;
-        this.slots = ['events', 'chats', 'users'];
+        this._slots = ['events', 'chats', 'users'];
         this.events = params.events;
         this.chats = params.chats;
         this.users = params.users;
@@ -84898,7 +86444,7 @@ export namespace Raw {
         this.className = 'channels.SendAsPeers';
         this.constructorId = 0xf496b0c6;
         this.subclassOfId = 0x38cb8d21;
-        this.slots = ['peers', 'chats', 'users'];
+        this._slots = ['peers', 'chats', 'users'];
         this.peers = params.peers;
         this.chats = params.chats;
         this.users = params.users;
@@ -84946,7 +86492,7 @@ export namespace Raw {
         this.className = 'channels.ReadHistory';
         this.constructorId = 0xcc104937;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'maxId'];
+        this._slots = ['channel', 'maxId'];
         this.channel = params.channel;
         this.maxId = params.maxId;
       }
@@ -84989,7 +86535,7 @@ export namespace Raw {
         this.className = 'channels.DeleteMessages';
         this.constructorId = 0x84c1fd4e;
         this.subclassOfId = 0xced3c06e;
-        this.slots = ['channel', 'id'];
+        this._slots = ['channel', 'id'];
         this.channel = params.channel;
         this.id = params.id;
       }
@@ -85037,7 +86583,7 @@ export namespace Raw {
         this.className = 'channels.ReportSpam';
         this.constructorId = 0xf44a8315;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'participant', 'id'];
+        this._slots = ['channel', 'participant', 'id'];
         this.channel = params.channel;
         this.participant = params.participant;
         this.id = params.id;
@@ -85085,7 +86631,7 @@ export namespace Raw {
         this.className = 'channels.GetMessages';
         this.constructorId = 0xad8c9a23;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['channel', 'id'];
+        this._slots = ['channel', 'id'];
         this.channel = params.channel;
         this.id = params.id;
       }
@@ -85137,7 +86683,7 @@ export namespace Raw {
         this.className = 'channels.GetParticipants';
         this.constructorId = 0x77ced9d0;
         this.subclassOfId = 0xe60a6e64;
-        this.slots = ['channel', 'filter', 'offset', 'limit', 'hash'];
+        this._slots = ['channel', 'filter', 'offset', 'limit', 'hash'];
         this.channel = params.channel;
         this.filter = params.filter;
         this.offset = params.offset;
@@ -85201,7 +86747,7 @@ export namespace Raw {
         this.className = 'channels.GetParticipant';
         this.constructorId = 0xa0ab6cc6;
         this.subclassOfId = 0x6658151a;
-        this.slots = ['channel', 'participant'];
+        this._slots = ['channel', 'participant'];
         this.channel = params.channel;
         this.participant = params.participant;
       }
@@ -85243,7 +86789,7 @@ export namespace Raw {
         this.className = 'channels.GetChannels';
         this.constructorId = 0xa7f6bbb;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -85280,7 +86826,7 @@ export namespace Raw {
         this.className = 'channels.GetFullChannel';
         this.constructorId = 0x8736a09;
         this.subclassOfId = 0x225a5109;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -85335,7 +86881,7 @@ export namespace Raw {
         this.className = 'channels.CreateChannel';
         this.constructorId = 0x91006707;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'broadcast',
           'megagroup',
           'forImport',
@@ -85440,7 +86986,7 @@ export namespace Raw {
         this.className = 'channels.EditAdmin';
         this.constructorId = 0xd33c8902;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'userId', 'adminRights', 'rank'];
+        this._slots = ['channel', 'userId', 'adminRights', 'rank'];
         this.channel = params.channel;
         this.userId = params.userId;
         this.adminRights = params.adminRights;
@@ -85498,7 +87044,7 @@ export namespace Raw {
         this.className = 'channels.EditTitle';
         this.constructorId = 0x566decd0;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'title'];
+        this._slots = ['channel', 'title'];
         this.channel = params.channel;
         this.title = params.title;
       }
@@ -85541,7 +87087,7 @@ export namespace Raw {
         this.className = 'channels.EditPhoto';
         this.constructorId = 0xf12e57c9;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'photo'];
+        this._slots = ['channel', 'photo'];
         this.channel = params.channel;
         this.photo = params.photo;
       }
@@ -85584,7 +87130,7 @@ export namespace Raw {
         this.className = 'channels.CheckUsername';
         this.constructorId = 0x10e6bd2c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'username'];
+        this._slots = ['channel', 'username'];
         this.channel = params.channel;
         this.username = params.username;
       }
@@ -85627,7 +87173,7 @@ export namespace Raw {
         this.className = 'channels.UpdateUsername';
         this.constructorId = 0x3514b3de;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'username'];
+        this._slots = ['channel', 'username'];
         this.channel = params.channel;
         this.username = params.username;
       }
@@ -85669,7 +87215,7 @@ export namespace Raw {
         this.className = 'channels.JoinChannel';
         this.constructorId = 0x24b524c5;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -85706,7 +87252,7 @@ export namespace Raw {
         this.className = 'channels.LeaveChannel';
         this.constructorId = 0xf836aa95;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -85744,7 +87290,7 @@ export namespace Raw {
         this.className = 'channels.InviteToChannel';
         this.constructorId = 0x199f3a6c;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'users'];
+        this._slots = ['channel', 'users'];
         this.channel = params.channel;
         this.users = params.users;
       }
@@ -85786,7 +87332,7 @@ export namespace Raw {
         this.className = 'channels.DeleteChannel';
         this.constructorId = 0xc0111fe3;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -85831,7 +87377,7 @@ export namespace Raw {
         this.className = 'channels.ExportMessageLink';
         this.constructorId = 0xe63fadeb;
         this.subclassOfId = 0xdee644cc;
-        this.slots = ['grouped', 'thread', 'channel', 'id'];
+        this._slots = ['grouped', 'thread', 'channel', 'id'];
         this.grouped = params.grouped;
         this.thread = params.thread;
         this.channel = params.channel;
@@ -85890,7 +87436,7 @@ export namespace Raw {
         this.className = 'channels.ToggleSignatures';
         this.constructorId = 0x1f69b606;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -85933,7 +87479,7 @@ export namespace Raw {
         this.className = 'channels.GetAdminedPublicChannels';
         this.constructorId = 0xf8b036af;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['byLocation', 'checkLimit'];
+        this._slots = ['byLocation', 'checkLimit'];
         this.byLocation = params.byLocation;
         this.checkLimit = params.checkLimit;
       }
@@ -85988,7 +87534,7 @@ export namespace Raw {
         this.className = 'channels.EditBanned';
         this.constructorId = 0x96e6cd81;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'participant', 'bannedRights'];
+        this._slots = ['channel', 'participant', 'bannedRights'];
         this.channel = params.channel;
         this.participant = params.participant;
         this.bannedRights = params.bannedRights;
@@ -86053,7 +87599,7 @@ export namespace Raw {
         this.className = 'channels.GetAdminLog';
         this.constructorId = 0x33ddf480;
         this.subclassOfId = 0x51f076bc;
-        this.slots = ['channel', 'q', 'eventsFilter', 'admins', 'maxId', 'minId', 'limit'];
+        this._slots = ['channel', 'q', 'eventsFilter', 'admins', 'maxId', 'minId', 'limit'];
         this.channel = params.channel;
         this.q = params.q;
         this.eventsFilter = params.eventsFilter;
@@ -86136,7 +87682,7 @@ export namespace Raw {
         this.className = 'channels.SetStickers';
         this.constructorId = 0xea8ca4f9;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'stickerset'];
+        this._slots = ['channel', 'stickerset'];
         this.channel = params.channel;
         this.stickerset = params.stickerset;
       }
@@ -86179,7 +87725,7 @@ export namespace Raw {
         this.className = 'channels.ReadMessageContents';
         this.constructorId = 0xeab5dc38;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'id'];
+        this._slots = ['channel', 'id'];
         this.channel = params.channel;
         this.id = params.id;
       }
@@ -86226,7 +87772,7 @@ export namespace Raw {
         this.className = 'channels.DeleteHistory';
         this.constructorId = 0x9baa9647;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['forEveryone', 'channel', 'maxId'];
+        this._slots = ['forEveryone', 'channel', 'maxId'];
         this.forEveryone = params.forEveryone;
         this.channel = params.channel;
         this.maxId = params.maxId;
@@ -86281,7 +87827,7 @@ export namespace Raw {
         this.className = 'channels.TogglePreHistoryHidden';
         this.constructorId = 0xeabbb94c;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -86326,7 +87872,7 @@ export namespace Raw {
         this.className = 'channels.GetLeftChannels';
         this.constructorId = 0x8341ecc0;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = ['offset'];
+        this._slots = ['offset'];
         this.offset = params.offset;
       }
       /**
@@ -86362,7 +87908,7 @@ export namespace Raw {
         this.className = 'channels.GetGroupsForDiscussion';
         this.constructorId = 0xf5dad378;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -86398,7 +87944,7 @@ export namespace Raw {
         this.className = 'channels.SetDiscussionGroup';
         this.constructorId = 0x40582bb2;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['broadcast', 'group'];
+        this._slots = ['broadcast', 'group'];
         this.broadcast = params.broadcast;
         this.group = params.group;
       }
@@ -86446,7 +87992,7 @@ export namespace Raw {
         this.className = 'channels.EditCreator';
         this.constructorId = 0x8f38cd1f;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'userId', 'password'];
+        this._slots = ['channel', 'userId', 'password'];
         this.channel = params.channel;
         this.userId = params.userId;
         this.password = params.password;
@@ -86503,7 +88049,7 @@ export namespace Raw {
         this.className = 'channels.EditLocation';
         this.constructorId = 0x58e63f6d;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'geoPoint', 'address'];
+        this._slots = ['channel', 'geoPoint', 'address'];
         this.channel = params.channel;
         this.geoPoint = params.geoPoint;
         this.address = params.address;
@@ -86555,7 +88101,7 @@ export namespace Raw {
         this.className = 'channels.ToggleSlowMode';
         this.constructorId = 0xedd49ef0;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'seconds'];
+        this._slots = ['channel', 'seconds'];
         this.channel = params.channel;
         this.seconds = params.seconds;
       }
@@ -86596,7 +88142,7 @@ export namespace Raw {
         this.className = 'channels.GetInactiveChannels';
         this.constructorId = 0x11e831ee;
         this.subclassOfId = 0x8bf3d7d4;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -86631,7 +88177,7 @@ export namespace Raw {
         this.className = 'channels.ConvertToGigagroup';
         this.constructorId = 0xb290c69;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -86669,7 +88215,7 @@ export namespace Raw {
         this.className = 'channels.ViewSponsoredMessage';
         this.constructorId = 0xbeaedb94;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'randomId'];
+        this._slots = ['channel', 'randomId'];
         this.channel = params.channel;
         this.randomId = params.randomId;
       }
@@ -86714,7 +88260,7 @@ export namespace Raw {
         this.className = 'channels.GetSponsoredMessages';
         this.constructorId = 0xec210fbf;
         this.subclassOfId = 0x7f4169e0;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -86754,7 +88300,7 @@ export namespace Raw {
         this.className = 'channels.GetSendAs';
         this.constructorId = 0xdc770ee;
         this.subclassOfId = 0x38cb8d21;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -86792,7 +88338,7 @@ export namespace Raw {
         this.className = 'channels.DeleteParticipantHistory';
         this.constructorId = 0x367544db;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['channel', 'participant'];
+        this._slots = ['channel', 'participant'];
         this.channel = params.channel;
         this.participant = params.participant;
       }
@@ -86841,7 +88387,7 @@ export namespace Raw {
         this.className = 'channels.ToggleJoinToSend';
         this.constructorId = 0xe4cb9580;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -86884,7 +88430,7 @@ export namespace Raw {
         this.className = 'channels.ToggleJoinRequest';
         this.constructorId = 0x4c2985b6;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -86927,7 +88473,7 @@ export namespace Raw {
         this.className = 'channels.ReorderUsernames';
         this.constructorId = 0xb45ced1d;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'order'];
+        this._slots = ['channel', 'order'];
         this.channel = params.channel;
         this.order = params.order;
       }
@@ -86971,7 +88517,7 @@ export namespace Raw {
         this.className = 'channels.ToggleUsername';
         this.constructorId = 0x50f24105;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'username', 'active'];
+        this._slots = ['channel', 'username', 'active'];
         this.channel = params.channel;
         this.username = params.username;
         this.active = params.active;
@@ -87022,7 +88568,7 @@ export namespace Raw {
         this.className = 'channels.DeactivateAllUsernames';
         this.constructorId = 0xa245dd3;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel'];
+        this._slots = ['channel'];
         this.channel = params.channel;
       }
       /**
@@ -87063,7 +88609,7 @@ export namespace Raw {
         this.className = 'channels.ToggleForum';
         this.constructorId = 0xa4298b29;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -87117,7 +88663,7 @@ export namespace Raw {
         this.className = 'channels.CreateForumTopic';
         this.constructorId = 0xf40c0224;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'title', 'iconColor', 'iconEmojiId', 'randomId', 'sendAs'];
+        this._slots = ['channel', 'title', 'iconColor', 'iconEmojiId', 'randomId', 'sendAs'];
         this.channel = params.channel;
         this.title = params.title;
         this.iconColor = params.iconColor;
@@ -87206,7 +88752,7 @@ export namespace Raw {
         this.className = 'channels.GetForumTopics';
         this.constructorId = 0xde560d1;
         this.subclassOfId = 0x8e1d3e1e;
-        this.slots = ['channel', 'q', 'offsetDate', 'offsetId', 'offsetTopic', 'limit'];
+        this._slots = ['channel', 'q', 'offsetDate', 'offsetId', 'offsetTopic', 'limit'];
         this.channel = params.channel;
         this.q = params.q;
         this.offsetDate = params.offsetDate;
@@ -87282,7 +88828,7 @@ export namespace Raw {
         this.className = 'channels.GetForumTopicsByID';
         this.constructorId = 0xb0831eb9;
         this.subclassOfId = 0x8e1d3e1e;
-        this.slots = ['channel', 'topics'];
+        this._slots = ['channel', 'topics'];
         this.channel = params.channel;
         this.topics = params.topics;
       }
@@ -87336,7 +88882,7 @@ export namespace Raw {
         this.className = 'channels.EditForumTopic';
         this.constructorId = 0xf4dfa185;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'topicId', 'title', 'iconEmojiId', 'closed', 'hidden'];
+        this._slots = ['channel', 'topicId', 'title', 'iconEmojiId', 'closed', 'hidden'];
         this.channel = params.channel;
         this.topicId = params.topicId;
         this.title = params.title;
@@ -87416,7 +88962,7 @@ export namespace Raw {
         this.className = 'channels.UpdatePinnedForumTopic';
         this.constructorId = 0x6c2d9026;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'topicId', 'pinned'];
+        this._slots = ['channel', 'topicId', 'pinned'];
         this.channel = params.channel;
         this.topicId = params.topicId;
         this.pinned = params.pinned;
@@ -87471,7 +89017,7 @@ export namespace Raw {
         this.className = 'channels.DeleteTopicHistory';
         this.constructorId = 0x34435f2d;
         this.subclassOfId = 0x2c49c116;
-        this.slots = ['channel', 'topMsgId'];
+        this._slots = ['channel', 'topMsgId'];
         this.channel = params.channel;
         this.topMsgId = params.topMsgId;
       }
@@ -87515,7 +89061,7 @@ export namespace Raw {
         this.className = 'channels.ReorderPinnedForumTopics';
         this.constructorId = 0x2950a18f;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['force', 'channel', 'order'];
+        this._slots = ['force', 'channel', 'order'];
         this.force = params.force;
         this.channel = params.channel;
         this.order = params.order;
@@ -87573,7 +89119,7 @@ export namespace Raw {
         this.className = 'channels.ToggleAntiSpam';
         this.constructorId = 0x68f3e4eb;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -87616,7 +89162,7 @@ export namespace Raw {
         this.className = 'channels.ReportAntiSpamFalsePositive';
         this.constructorId = 0xa850a693;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'msgId'];
+        this._slots = ['channel', 'msgId'];
         this.channel = params.channel;
         this.msgId = params.msgId;
       }
@@ -87662,7 +89208,7 @@ export namespace Raw {
         this.className = 'channels.ToggleParticipantsHidden';
         this.constructorId = 0x6a6e7854;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['channel', 'enabled'];
+        this._slots = ['channel', 'enabled'];
         this.channel = params.channel;
         this.enabled = params.enabled;
       }
@@ -87708,7 +89254,7 @@ export namespace Raw {
         this.className = 'channels.ClickSponsoredMessage';
         this.constructorId = 0x18afbc93;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['channel', 'randomId'];
+        this._slots = ['channel', 'randomId'];
         this.channel = params.channel;
         this.randomId = params.randomId;
       }
@@ -87743,8 +89289,69 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class UpdateColor extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      channel!: Raw.TypeInputChannel;
+      color!: int;
+      backgroundEmojiId?: long;
+
+      constructor(params: { channel: Raw.TypeInputChannel; color: int; backgroundEmojiId?: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'channels.UpdateColor';
+        this.constructorId = 0x621a201f;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['channel', 'color', 'backgroundEmojiId'];
+        this.channel = params.channel;
+        this.color = params.color;
+        this.backgroundEmojiId = params.backgroundEmojiId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.channels.UpdateColor> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let channel = await TLObject.read(b);
+        let color = await Primitive.Int.read(b);
+        let backgroundEmojiId = flags & (1 << 0) ? await Primitive.Long.read(b) : undefined;
+        return new Raw.channels.UpdateColor({
+          channel: channel,
+          color: color,
+          backgroundEmojiId: backgroundEmojiId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.backgroundEmojiId !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.channel !== undefined) {
+          b.write(this.channel.write() as unknown as Buffer);
+        }
+        if (this.color !== undefined) {
+          b.write(Primitive.Int.write(this.color) as unknown as Buffer);
+        }
+        if (this.backgroundEmojiId !== undefined) {
+          b.write(Primitive.Long.write(this.backgroundEmojiId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace payments {
+    export type TypeGiveawayInfo = Raw.payments.GiveawayInfo | Raw.payments.GiveawayInfoResults;
+    export type TypeCheckedGiftCode = Raw.payments.CheckedGiftCode;
     export type TypeExportedInvoice = Raw.payments.ExportedInvoice;
     export type TypeBankCardData = Raw.payments.BankCardData;
     export type TypeSavedInfo = Raw.payments.SavedInfo;
@@ -87795,7 +89402,7 @@ export namespace Raw {
         this.className = 'payments.PaymentForm';
         this.constructorId = 0xa0058751;
         this.subclassOfId = 0xa0483f19;
-        this.slots = [
+        this._slots = [
           'canSaveCredentials',
           'passwordMissing',
           'formId',
@@ -87948,7 +89555,7 @@ export namespace Raw {
         this.className = 'payments.ValidatedRequestedInfo';
         this.constructorId = 0xd1451883;
         this.subclassOfId = 0x8f8044b7;
-        this.slots = ['id', 'shippingOptions'];
+        this._slots = ['id', 'shippingOptions'];
         this.id = params.id;
         this.shippingOptions = params.shippingOptions;
       }
@@ -88002,7 +89609,7 @@ export namespace Raw {
         this.className = 'payments.PaymentResult';
         this.constructorId = 0x4e5f810d;
         this.subclassOfId = 0x8ae16a9d;
-        this.slots = ['updates'];
+        this._slots = ['updates'];
         this.updates = params.updates;
       }
       /**
@@ -88038,7 +89645,7 @@ export namespace Raw {
         this.className = 'payments.PaymentVerificationNeeded';
         this.constructorId = 0xd8411139;
         this.subclassOfId = 0x8ae16a9d;
-        this.slots = ['url'];
+        this._slots = ['url'];
         this.url = params.url;
       }
       /**
@@ -88105,7 +89712,7 @@ export namespace Raw {
         this.className = 'payments.PaymentReceipt';
         this.constructorId = 0x70c4fe03;
         this.subclassOfId = 0x590093c9;
-        this.slots = [
+        this._slots = [
           'date',
           'botId',
           'providerId',
@@ -88249,7 +89856,7 @@ export namespace Raw {
         this.className = 'payments.SavedInfo';
         this.constructorId = 0xfb8fe43c;
         this.subclassOfId = 0xad3cf146;
-        this.slots = ['hasSavedCredentials', 'savedInfo'];
+        this._slots = ['hasSavedCredentials', 'savedInfo'];
         this.hasSavedCredentials = params.hasSavedCredentials;
         this.savedInfo = params.savedInfo;
       }
@@ -88298,7 +89905,7 @@ export namespace Raw {
         this.className = 'payments.BankCardData';
         this.constructorId = 0x3e24e573;
         this.subclassOfId = 0x8c6dd68b;
-        this.slots = ['title', 'openUrls'];
+        this._slots = ['title', 'openUrls'];
         this.title = params.title;
         this.openUrls = params.openUrls;
       }
@@ -88339,7 +89946,7 @@ export namespace Raw {
         this.className = 'payments.ExportedInvoice';
         this.constructorId = 0xaed0cbd9;
         this.subclassOfId = 0x36105432;
-        this.slots = ['url'];
+        this._slots = ['url'];
         this.url = params.url;
       }
       /**
@@ -88366,6 +89973,318 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class CheckedGiftCode extends TLObject {
+      viaGiveaway?: boolean;
+      fromId!: Raw.TypePeer;
+      giveawayMsgId?: int;
+      toId?: long;
+      date!: int;
+      months!: int;
+      usedDate?: int;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        viaGiveaway?: boolean;
+        fromId: Raw.TypePeer;
+        giveawayMsgId?: int;
+        toId?: long;
+        date: int;
+        months: int;
+        usedDate?: int;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'payments.CheckedGiftCode';
+        this.constructorId = 0xb722f158;
+        this.subclassOfId = 0x5b2997e8;
+        this._slots = [
+          'viaGiveaway',
+          'fromId',
+          'giveawayMsgId',
+          'toId',
+          'date',
+          'months',
+          'usedDate',
+          'chats',
+          'users',
+        ];
+        this.viaGiveaway = params.viaGiveaway;
+        this.fromId = params.fromId;
+        this.giveawayMsgId = params.giveawayMsgId;
+        this.toId = params.toId;
+        this.date = params.date;
+        this.months = params.months;
+        this.usedDate = params.usedDate;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.payments.CheckedGiftCode> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let viaGiveaway = flags & (1 << 2) ? true : false;
+        let fromId = await TLObject.read(b);
+        let giveawayMsgId = flags & (1 << 3) ? await Primitive.Int.read(b) : undefined;
+        let toId = flags & (1 << 0) ? await Primitive.Long.read(b) : undefined;
+        let date = await Primitive.Int.read(b);
+        let months = await Primitive.Int.read(b);
+        let usedDate = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
+        let chats = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.payments.CheckedGiftCode({
+          viaGiveaway: viaGiveaway,
+          fromId: fromId,
+          giveawayMsgId: giveawayMsgId,
+          toId: toId,
+          date: date,
+          months: months,
+          usedDate: usedDate,
+          chats: chats,
+          users: users,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.viaGiveaway ? 1 << 2 : 0;
+        flags |= this.giveawayMsgId !== undefined ? 1 << 3 : 0;
+        flags |= this.toId !== undefined ? 1 << 0 : 0;
+        flags |= this.usedDate !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.fromId !== undefined) {
+          b.write(this.fromId.write() as unknown as Buffer);
+        }
+        if (this.giveawayMsgId !== undefined) {
+          b.write(Primitive.Int.write(this.giveawayMsgId) as unknown as Buffer);
+        }
+        if (this.toId !== undefined) {
+          b.write(Primitive.Long.write(this.toId) as unknown as Buffer);
+        }
+        if (this.date !== undefined) {
+          b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+        }
+        if (this.months !== undefined) {
+          b.write(Primitive.Int.write(this.months) as unknown as Buffer);
+        }
+        if (this.usedDate !== undefined) {
+          b.write(Primitive.Int.write(this.usedDate) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GiveawayInfo extends TLObject {
+      participating?: boolean;
+      preparingResults?: boolean;
+      startDate!: int;
+      joinedTooEarlyDate?: int;
+      adminDisallowedChatId?: long;
+      disallowedCountry?: string;
+
+      constructor(params: {
+        participating?: boolean;
+        preparingResults?: boolean;
+        startDate: int;
+        joinedTooEarlyDate?: int;
+        adminDisallowedChatId?: long;
+        disallowedCountry?: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'payments.GiveawayInfo';
+        this.constructorId = 0x4367daa0;
+        this.subclassOfId = 0x96a377bd;
+        this._slots = [
+          'participating',
+          'preparingResults',
+          'startDate',
+          'joinedTooEarlyDate',
+          'adminDisallowedChatId',
+          'disallowedCountry',
+        ];
+        this.participating = params.participating;
+        this.preparingResults = params.preparingResults;
+        this.startDate = params.startDate;
+        this.joinedTooEarlyDate = params.joinedTooEarlyDate;
+        this.adminDisallowedChatId = params.adminDisallowedChatId;
+        this.disallowedCountry = params.disallowedCountry;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.payments.GiveawayInfo> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let participating = flags & (1 << 0) ? true : false;
+        let preparingResults = flags & (1 << 3) ? true : false;
+        let startDate = await Primitive.Int.read(b);
+        let joinedTooEarlyDate = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
+        let adminDisallowedChatId = flags & (1 << 2) ? await Primitive.Long.read(b) : undefined;
+        let disallowedCountry = flags & (1 << 4) ? await Primitive.String.read(b) : undefined;
+        return new Raw.payments.GiveawayInfo({
+          participating: participating,
+          preparingResults: preparingResults,
+          startDate: startDate,
+          joinedTooEarlyDate: joinedTooEarlyDate,
+          adminDisallowedChatId: adminDisallowedChatId,
+          disallowedCountry: disallowedCountry,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.participating ? 1 << 0 : 0;
+        flags |= this.preparingResults ? 1 << 3 : 0;
+        flags |= this.joinedTooEarlyDate !== undefined ? 1 << 1 : 0;
+        flags |= this.adminDisallowedChatId !== undefined ? 1 << 2 : 0;
+        flags |= this.disallowedCountry !== undefined ? 1 << 4 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.startDate !== undefined) {
+          b.write(Primitive.Int.write(this.startDate) as unknown as Buffer);
+        }
+        if (this.joinedTooEarlyDate !== undefined) {
+          b.write(Primitive.Int.write(this.joinedTooEarlyDate) as unknown as Buffer);
+        }
+        if (this.adminDisallowedChatId !== undefined) {
+          b.write(Primitive.Long.write(this.adminDisallowedChatId) as unknown as Buffer);
+        }
+        if (this.disallowedCountry !== undefined) {
+          b.write(Primitive.String.write(this.disallowedCountry) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GiveawayInfoResults extends TLObject {
+      winner?: boolean;
+      refunded?: boolean;
+      startDate!: int;
+      giftCodeSlug?: string;
+      finishDate!: int;
+      winnersCount!: int;
+      activatedCount!: int;
+
+      constructor(params: {
+        winner?: boolean;
+        refunded?: boolean;
+        startDate: int;
+        giftCodeSlug?: string;
+        finishDate: int;
+        winnersCount: int;
+        activatedCount: int;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'payments.GiveawayInfoResults';
+        this.constructorId = 0xcd5570;
+        this.subclassOfId = 0x96a377bd;
+        this._slots = [
+          'winner',
+          'refunded',
+          'startDate',
+          'giftCodeSlug',
+          'finishDate',
+          'winnersCount',
+          'activatedCount',
+        ];
+        this.winner = params.winner;
+        this.refunded = params.refunded;
+        this.startDate = params.startDate;
+        this.giftCodeSlug = params.giftCodeSlug;
+        this.finishDate = params.finishDate;
+        this.winnersCount = params.winnersCount;
+        this.activatedCount = params.activatedCount;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.payments.GiveawayInfoResults> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let winner = flags & (1 << 0) ? true : false;
+        let refunded = flags & (1 << 1) ? true : false;
+        let startDate = await Primitive.Int.read(b);
+        let giftCodeSlug = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        let finishDate = await Primitive.Int.read(b);
+        let winnersCount = await Primitive.Int.read(b);
+        let activatedCount = await Primitive.Int.read(b);
+        return new Raw.payments.GiveawayInfoResults({
+          winner: winner,
+          refunded: refunded,
+          startDate: startDate,
+          giftCodeSlug: giftCodeSlug,
+          finishDate: finishDate,
+          winnersCount: winnersCount,
+          activatedCount: activatedCount,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.winner ? 1 << 0 : 0;
+        flags |= this.refunded ? 1 << 1 : 0;
+        flags |= this.giftCodeSlug !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.startDate !== undefined) {
+          b.write(Primitive.Int.write(this.startDate) as unknown as Buffer);
+        }
+        if (this.giftCodeSlug !== undefined) {
+          b.write(Primitive.String.write(this.giftCodeSlug) as unknown as Buffer);
+        }
+        if (this.finishDate !== undefined) {
+          b.write(Primitive.Int.write(this.finishDate) as unknown as Buffer);
+        }
+        if (this.winnersCount !== undefined) {
+          b.write(Primitive.Int.write(this.winnersCount) as unknown as Buffer);
+        }
+        if (this.activatedCount !== undefined) {
+          b.write(Primitive.Int.write(this.activatedCount) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
     export class GetPaymentForm extends TLObject {
       __response__!: Raw.payments.TypePaymentForm;
       invoice!: Raw.TypeInputInvoice;
@@ -88377,7 +90296,7 @@ export namespace Raw {
         this.className = 'payments.GetPaymentForm';
         this.constructorId = 0x37148dbb;
         this.subclassOfId = 0xa0483f19;
-        this.slots = ['invoice', 'themeParams'];
+        this._slots = ['invoice', 'themeParams'];
         this.invoice = params.invoice;
         this.themeParams = params.themeParams;
       }
@@ -88426,7 +90345,7 @@ export namespace Raw {
         this.className = 'payments.GetPaymentReceipt';
         this.constructorId = 0x2478d1cc;
         this.subclassOfId = 0x590093c9;
-        this.slots = ['peer', 'msgId'];
+        this._slots = ['peer', 'msgId'];
         this.peer = params.peer;
         this.msgId = params.msgId;
       }
@@ -88474,7 +90393,7 @@ export namespace Raw {
         this.className = 'payments.ValidateRequestedInfo';
         this.constructorId = 0xb6c8f12b;
         this.subclassOfId = 0x8f8044b7;
-        this.slots = ['save', 'invoice', 'info'];
+        this._slots = ['save', 'invoice', 'info'];
         this.save = params.save;
         this.invoice = params.invoice;
         this.info = params.info;
@@ -88539,7 +90458,7 @@ export namespace Raw {
         this.className = 'payments.SendPaymentForm';
         this.constructorId = 0x2d03522f;
         this.subclassOfId = 0x8ae16a9d;
-        this.slots = [
+        this._slots = [
           'formId',
           'invoice',
           'requestedInfoId',
@@ -88622,7 +90541,7 @@ export namespace Raw {
         this.className = 'payments.GetSavedInfo';
         this.constructorId = 0x227d824b;
         this.subclassOfId = 0xad3cf146;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -88655,7 +90574,7 @@ export namespace Raw {
         this.className = 'payments.ClearSavedInfo';
         this.constructorId = 0xd83d70c1;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['credentials', 'info'];
+        this._slots = ['credentials', 'info'];
         this.credentials = params.credentials;
         this.info = params.info;
       }
@@ -88698,7 +90617,7 @@ export namespace Raw {
         this.className = 'payments.GetBankCardData';
         this.constructorId = 0x2e79d779;
         this.subclassOfId = 0x8c6dd68b;
-        this.slots = ['number'];
+        this._slots = ['number'];
         this.number = params.number;
       }
       /**
@@ -88735,7 +90654,7 @@ export namespace Raw {
         this.className = 'payments.ExportInvoice';
         this.constructorId = 0xf91b065;
         this.subclassOfId = 0x36105432;
-        this.slots = ['invoiceMedia'];
+        this._slots = ['invoiceMedia'];
         this.invoiceMedia = params.invoiceMedia;
       }
       /**
@@ -88773,7 +90692,7 @@ export namespace Raw {
         this.className = 'payments.AssignAppStoreTransaction';
         this.constructorId = 0x80ed747d;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['receipt', 'purpose'];
+        this._slots = ['receipt', 'purpose'];
         this.receipt = params.receipt;
         this.purpose = params.purpose;
       }
@@ -88822,7 +90741,7 @@ export namespace Raw {
         this.className = 'payments.AssignPlayMarketTransaction';
         this.constructorId = 0xdffd50d3;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['receipt', 'purpose'];
+        this._slots = ['receipt', 'purpose'];
         this.receipt = params.receipt;
         this.purpose = params.purpose;
       }
@@ -88867,7 +90786,7 @@ export namespace Raw {
         this.className = 'payments.CanPurchasePremium';
         this.constructorId = 0x9fc19eb6;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['purpose'];
+        this._slots = ['purpose'];
         this.purpose = params.purpose;
       }
       /**
@@ -88894,6 +90813,229 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class GetPremiumGiftCodeOptions extends TLObject {
+      __response__!: Vector<Raw.TypePremiumGiftCodeOption>;
+      boostPeer?: Raw.TypeInputPeer;
+
+      constructor(params: { boostPeer?: Raw.TypeInputPeer }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetPremiumGiftCodeOptions';
+        this.constructorId = 0x2757ba54;
+        this.subclassOfId = 0xaa92583;
+        this._slots = ['boostPeer'];
+        this.boostPeer = params.boostPeer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.payments.GetPremiumGiftCodeOptions> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let boostPeer = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+        return new Raw.payments.GetPremiumGiftCodeOptions({ boostPeer: boostPeer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.boostPeer !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.boostPeer !== undefined) {
+          b.write(this.boostPeer.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class CheckGiftCode extends TLObject {
+      __response__!: Raw.payments.TypeCheckedGiftCode;
+      slug!: string;
+
+      constructor(params: { slug: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.CheckGiftCode';
+        this.constructorId = 0x8e51b4c1;
+        this.subclassOfId = 0x5b2997e8;
+        this._slots = ['slug'];
+        this.slug = params.slug;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.payments.CheckGiftCode> {
+        // no flags
+
+        let slug = await Primitive.String.read(b);
+        return new Raw.payments.CheckGiftCode({ slug: slug });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.slug !== undefined) {
+          b.write(Primitive.String.write(this.slug) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class ApplyGiftCode extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      slug!: string;
+
+      constructor(params: { slug: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.ApplyGiftCode';
+        this.constructorId = 0xf6e26854;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['slug'];
+        this.slug = params.slug;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.payments.ApplyGiftCode> {
+        // no flags
+
+        let slug = await Primitive.String.read(b);
+        return new Raw.payments.ApplyGiftCode({ slug: slug });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.slug !== undefined) {
+          b.write(Primitive.String.write(this.slug) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetGiveawayInfo extends TLObject {
+      __response__!: Raw.payments.TypeGiveawayInfo;
+      peer!: Raw.TypeInputPeer;
+      msgId!: int;
+
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetGiveawayInfo';
+        this.constructorId = 0xf4239425;
+        this.subclassOfId = 0x96a377bd;
+        this._slots = ['peer', 'msgId'];
+        this.peer = params.peer;
+        this.msgId = params.msgId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.payments.GetGiveawayInfo> {
+        // no flags
+
+        let peer = await TLObject.read(b);
+        let msgId = await Primitive.Int.read(b);
+        return new Raw.payments.GetGiveawayInfo({ peer: peer, msgId: msgId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class LaunchPrepaidGiveaway extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      giveawayId!: long;
+      purpose!: Raw.TypeInputStorePaymentPurpose;
+
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        giveawayId: long;
+        purpose: Raw.TypeInputStorePaymentPurpose;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.LaunchPrepaidGiveaway';
+        this.constructorId = 0x5ff58f20;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['peer', 'giveawayId', 'purpose'];
+        this.peer = params.peer;
+        this.giveawayId = params.giveawayId;
+        this.purpose = params.purpose;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.payments.LaunchPrepaidGiveaway> {
+        // no flags
+
+        let peer = await TLObject.read(b);
+        let giveawayId = await Primitive.Long.read(b);
+        let purpose = await TLObject.read(b);
+        return new Raw.payments.LaunchPrepaidGiveaway({
+          peer: peer,
+          giveawayId: giveawayId,
+          purpose: purpose,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.giveawayId !== undefined) {
+          b.write(Primitive.Long.write(this.giveawayId) as unknown as Buffer);
+        }
+        if (this.purpose !== undefined) {
+          b.write(this.purpose.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace phone {
     export type TypeGroupCallStreamRtmpUrl = Raw.phone.GroupCallStreamRtmpUrl;
@@ -88913,7 +91055,7 @@ export namespace Raw {
         this.className = 'phone.PhoneCall';
         this.constructorId = 0xec82e140;
         this.subclassOfId = 0xd48afe4f;
-        this.slots = ['phoneCall', 'users'];
+        this._slots = ['phoneCall', 'users'];
         this.phoneCall = params.phoneCall;
         this.users = params.users;
       }
@@ -88964,7 +91106,7 @@ export namespace Raw {
         this.className = 'phone.GroupCall';
         this.constructorId = 0x9e727aad;
         this.subclassOfId = 0x304116be;
-        this.slots = ['call', 'participants', 'participantsNextOffset', 'chats', 'users'];
+        this._slots = ['call', 'participants', 'participantsNextOffset', 'chats', 'users'];
         this.call = params.call;
         this.participants = params.participants;
         this.participantsNextOffset = params.participantsNextOffset;
@@ -89038,7 +91180,7 @@ export namespace Raw {
         this.className = 'phone.GroupParticipants';
         this.constructorId = 0xf47751b6;
         this.subclassOfId = 0x72d304f4;
-        this.slots = ['count', 'participants', 'nextOffset', 'chats', 'users', 'version'];
+        this._slots = ['count', 'participants', 'nextOffset', 'chats', 'users', 'version'];
         this.count = params.count;
         this.participants = params.participants;
         this.nextOffset = params.nextOffset;
@@ -89112,7 +91254,7 @@ export namespace Raw {
         this.className = 'phone.JoinAsPeers';
         this.constructorId = 0xafe5623f;
         this.subclassOfId = 0xb4b770fb;
-        this.slots = ['peers', 'chats', 'users'];
+        this._slots = ['peers', 'chats', 'users'];
         this.peers = params.peers;
         this.chats = params.chats;
         this.users = params.users;
@@ -89158,7 +91300,7 @@ export namespace Raw {
         this.className = 'phone.ExportedGroupCallInvite';
         this.constructorId = 0x204bd158;
         this.subclassOfId = 0x3b3bfe8f;
-        this.slots = ['link'];
+        this._slots = ['link'];
         this.link = params.link;
       }
       /**
@@ -89197,7 +91339,7 @@ export namespace Raw {
         this.className = 'phone.GroupCallStreamChannels';
         this.constructorId = 0xd0e482b2;
         this.subclassOfId = 0x9157c5e4;
-        this.slots = ['channels'];
+        this._slots = ['channels'];
         this.channels = params.channels;
       }
       /**
@@ -89237,7 +91379,7 @@ export namespace Raw {
         this.className = 'phone.GroupCallStreamRtmpUrl';
         this.constructorId = 0x2dbf3432;
         this.subclassOfId = 0xd1f515cb;
-        this.slots = ['url', 'key'];
+        this._slots = ['url', 'key'];
         this.url = params.url;
         this.key = params.key;
       }
@@ -89281,7 +91423,7 @@ export namespace Raw {
         this.className = 'phone.GetCallConfig';
         this.constructorId = 0x55451fa9;
         this.subclassOfId = 0xad0352e8;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -89323,7 +91465,7 @@ export namespace Raw {
         this.className = 'phone.RequestCall';
         this.constructorId = 0x42ff96ed;
         this.subclassOfId = 0xd48afe4f;
-        this.slots = ['video', 'userId', 'randomId', 'gAHash', 'protocol'];
+        this._slots = ['video', 'userId', 'randomId', 'gAHash', 'protocol'];
         this.video = params.video;
         this.userId = params.userId;
         this.randomId = params.randomId;
@@ -89395,7 +91537,7 @@ export namespace Raw {
         this.className = 'phone.AcceptCall';
         this.constructorId = 0x3bd2b4a0;
         this.subclassOfId = 0xd48afe4f;
-        this.slots = ['peer', 'gB', 'protocol'];
+        this._slots = ['peer', 'gB', 'protocol'];
         this.peer = params.peer;
         this.gB = params.gB;
         this.protocol = params.protocol;
@@ -89450,7 +91592,7 @@ export namespace Raw {
         this.className = 'phone.ConfirmCall';
         this.constructorId = 0x2efe1722;
         this.subclassOfId = 0xd48afe4f;
-        this.slots = ['peer', 'gA', 'keyFingerprint', 'protocol'];
+        this._slots = ['peer', 'gA', 'keyFingerprint', 'protocol'];
         this.peer = params.peer;
         this.gA = params.gA;
         this.keyFingerprint = params.keyFingerprint;
@@ -89507,7 +91649,7 @@ export namespace Raw {
         this.className = 'phone.ReceivedCall';
         this.constructorId = 0x17d54f61;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -89554,7 +91696,7 @@ export namespace Raw {
         this.className = 'phone.DiscardCall';
         this.constructorId = 0xb2cbc1c0;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['video', 'peer', 'duration', 'reason', 'connectionId'];
+        this._slots = ['video', 'peer', 'duration', 'reason', 'connectionId'];
         this.video = params.video;
         this.peer = params.peer;
         this.duration = params.duration;
@@ -89628,7 +91770,7 @@ export namespace Raw {
         this.className = 'phone.SetCallRating';
         this.constructorId = 0x59ead627;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['userInitiative', 'peer', 'rating', 'comment'];
+        this._slots = ['userInitiative', 'peer', 'rating', 'comment'];
         this.userInitiative = params.userInitiative;
         this.peer = params.peer;
         this.rating = params.rating;
@@ -89689,7 +91831,7 @@ export namespace Raw {
         this.className = 'phone.SaveCallDebug';
         this.constructorId = 0x277add7e;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'debug'];
+        this._slots = ['peer', 'debug'];
         this.peer = params.peer;
         this.debug = params.debug;
       }
@@ -89732,7 +91874,7 @@ export namespace Raw {
         this.className = 'phone.SendSignalingData';
         this.constructorId = 0xff7a9383;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'data'];
+        this._slots = ['peer', 'data'];
         this.peer = params.peer;
         this.data = params.data;
       }
@@ -89784,7 +91926,7 @@ export namespace Raw {
         this.className = 'phone.CreateGroupCall';
         this.constructorId = 0x48cdc6d8;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['rtmpStream', 'peer', 'randomId', 'title', 'scheduleDate'];
+        this._slots = ['rtmpStream', 'peer', 'randomId', 'title', 'scheduleDate'];
         this.rtmpStream = params.rtmpStream;
         this.peer = params.peer;
         this.randomId = params.randomId;
@@ -89864,7 +92006,7 @@ export namespace Raw {
         this.className = 'phone.JoinGroupCall';
         this.constructorId = 0xb132ff7b;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['muted', 'videoStopped', 'call', 'joinAs', 'inviteHash', 'params'];
+        this._slots = ['muted', 'videoStopped', 'call', 'joinAs', 'inviteHash', 'params'];
         this.muted = params.muted;
         this.videoStopped = params.videoStopped;
         this.call = params.call;
@@ -89936,7 +92078,7 @@ export namespace Raw {
         this.className = 'phone.LeaveGroupCall';
         this.constructorId = 0x500377f9;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call', 'source'];
+        this._slots = ['call', 'source'];
         this.call = params.call;
         this.source = params.source;
       }
@@ -89979,7 +92121,7 @@ export namespace Raw {
         this.className = 'phone.InviteToGroupCall';
         this.constructorId = 0x7b393160;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call', 'users'];
+        this._slots = ['call', 'users'];
         this.call = params.call;
         this.users = params.users;
       }
@@ -90021,7 +92163,7 @@ export namespace Raw {
         this.className = 'phone.DiscardGroupCall';
         this.constructorId = 0x7a777135;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call'];
+        this._slots = ['call'];
         this.call = params.call;
       }
       /**
@@ -90064,7 +92206,7 @@ export namespace Raw {
         this.className = 'phone.ToggleGroupCallSettings';
         this.constructorId = 0x74bbb43d;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['resetInviteHash', 'call', 'joinMuted'];
+        this._slots = ['resetInviteHash', 'call', 'joinMuted'];
         this.resetInviteHash = params.resetInviteHash;
         this.call = params.call;
         this.joinMuted = params.joinMuted;
@@ -90123,7 +92265,7 @@ export namespace Raw {
         this.className = 'phone.GetGroupCall';
         this.constructorId = 0x41845db;
         this.subclassOfId = 0x304116be;
-        this.slots = ['call', 'limit'];
+        this._slots = ['call', 'limit'];
         this.call = params.call;
         this.limit = params.limit;
       }
@@ -90175,7 +92317,7 @@ export namespace Raw {
         this.className = 'phone.GetGroupParticipants';
         this.constructorId = 0xc558d8ab;
         this.subclassOfId = 0x72d304f4;
-        this.slots = ['call', 'ids', 'sources', 'offset', 'limit'];
+        this._slots = ['call', 'ids', 'sources', 'offset', 'limit'];
         this.call = params.call;
         this.ids = params.ids;
         this.sources = params.sources;
@@ -90239,7 +92381,7 @@ export namespace Raw {
         this.className = 'phone.CheckGroupCall';
         this.constructorId = 0xb59cf977;
         this.subclassOfId = 0x5026710f;
-        this.slots = ['call', 'sources'];
+        this._slots = ['call', 'sources'];
         this.call = params.call;
         this.sources = params.sources;
       }
@@ -90291,7 +92433,7 @@ export namespace Raw {
         this.className = 'phone.ToggleGroupCallRecord';
         this.constructorId = 0xf128c708;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['start', 'video', 'call', 'title', 'videoPortrait'];
+        this._slots = ['start', 'video', 'call', 'title', 'videoPortrait'];
         this.start = params.start;
         this.video = params.video;
         this.call = params.call;
@@ -90373,7 +92515,7 @@ export namespace Raw {
         this.className = 'phone.EditGroupCallParticipant';
         this.constructorId = 0xa5273abf;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'call',
           'participant',
           'muted',
@@ -90478,7 +92620,7 @@ export namespace Raw {
         this.className = 'phone.EditGroupCallTitle';
         this.constructorId = 0x1ca6ac0a;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call', 'title'];
+        this._slots = ['call', 'title'];
         this.call = params.call;
         this.title = params.title;
       }
@@ -90520,7 +92662,7 @@ export namespace Raw {
         this.className = 'phone.GetGroupCallJoinAs';
         this.constructorId = 0xef7c213a;
         this.subclassOfId = 0xb4b770fb;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -90558,7 +92700,7 @@ export namespace Raw {
         this.className = 'phone.ExportGroupCallInvite';
         this.constructorId = 0xe6aa647f;
         this.subclassOfId = 0x3b3bfe8f;
-        this.slots = ['canSelfUnmute', 'call'];
+        this._slots = ['canSelfUnmute', 'call'];
         this.canSelfUnmute = params.canSelfUnmute;
         this.call = params.call;
       }
@@ -90604,7 +92746,7 @@ export namespace Raw {
         this.className = 'phone.ToggleGroupCallStartSubscription';
         this.constructorId = 0x219c34e6;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call', 'subscribed'];
+        this._slots = ['call', 'subscribed'];
         this.call = params.call;
         this.subscribed = params.subscribed;
       }
@@ -90652,7 +92794,7 @@ export namespace Raw {
         this.className = 'phone.StartScheduledGroupCall';
         this.constructorId = 0x5680e342;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call'];
+        this._slots = ['call'];
         this.call = params.call;
       }
       /**
@@ -90693,7 +92835,7 @@ export namespace Raw {
         this.className = 'phone.SaveDefaultGroupCallJoinAs';
         this.constructorId = 0x575e1f8c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'joinAs'];
+        this._slots = ['peer', 'joinAs'];
         this.peer = params.peer;
         this.joinAs = params.joinAs;
       }
@@ -90739,7 +92881,7 @@ export namespace Raw {
         this.className = 'phone.JoinGroupCallPresentation';
         this.constructorId = 0xcbea6bc4;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call', 'params'];
+        this._slots = ['call', 'params'];
         this.call = params.call;
         this.params = params.params;
       }
@@ -90784,7 +92926,7 @@ export namespace Raw {
         this.className = 'phone.LeaveGroupCallPresentation';
         this.constructorId = 0x1c50d144;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['call'];
+        this._slots = ['call'];
         this.call = params.call;
       }
       /**
@@ -90824,7 +92966,7 @@ export namespace Raw {
         this.className = 'phone.GetGroupCallStreamChannels';
         this.constructorId = 0x1ab21940;
         this.subclassOfId = 0x9157c5e4;
-        this.slots = ['call'];
+        this._slots = ['call'];
         this.call = params.call;
       }
       /**
@@ -90865,7 +93007,7 @@ export namespace Raw {
         this.className = 'phone.GetGroupCallStreamRtmpUrl';
         this.constructorId = 0xdeb3abbf;
         this.subclassOfId = 0xd1f515cb;
-        this.slots = ['peer', 'revoke'];
+        this._slots = ['peer', 'revoke'];
         this.peer = params.peer;
         this.revoke = params.revoke;
       }
@@ -90911,7 +93053,7 @@ export namespace Raw {
         this.className = 'phone.SaveCallLog';
         this.constructorId = 0x41248786;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'file'];
+        this._slots = ['peer', 'file'];
         this.peer = params.peer;
         this.file = params.file;
       }
@@ -90987,7 +93129,7 @@ export namespace Raw {
         this.className = 'stats.BroadcastStats';
         this.constructorId = 0xbdf78394;
         this.subclassOfId = 0x7ff25428;
-        this.slots = [
+        this._slots = [
           'period',
           'followers',
           'viewsPerPost',
@@ -91159,7 +93301,7 @@ export namespace Raw {
         this.className = 'stats.MegagroupStats';
         this.constructorId = 0xef7ff916;
         this.subclassOfId = 0x5b59be8d;
-        this.slots = [
+        this._slots = [
           'period',
           'members',
           'messages',
@@ -91311,7 +93453,7 @@ export namespace Raw {
         this.className = 'stats.MessageStats';
         this.constructorId = 0x8999f295;
         this.subclassOfId = 0x9604a322;
-        this.slots = ['viewsGraph'];
+        this._slots = ['viewsGraph'];
         this.viewsGraph = params.viewsGraph;
       }
       /**
@@ -91349,7 +93491,7 @@ export namespace Raw {
         this.className = 'stats.GetBroadcastStats';
         this.constructorId = 0xab42441a;
         this.subclassOfId = 0x7ff25428;
-        this.slots = ['dark', 'channel'];
+        this._slots = ['dark', 'channel'];
         this.dark = params.dark;
         this.channel = params.channel;
       }
@@ -91395,7 +93537,7 @@ export namespace Raw {
         this.className = 'stats.LoadAsyncGraph';
         this.constructorId = 0x621d5fa0;
         this.subclassOfId = 0x9b903153;
-        this.slots = ['token', 'x'];
+        this._slots = ['token', 'x'];
         this.token = params.token;
         this.x = params.x;
       }
@@ -91444,7 +93586,7 @@ export namespace Raw {
         this.className = 'stats.GetMegagroupStats';
         this.constructorId = 0xdcdf8607;
         this.subclassOfId = 0x5b59be8d;
-        this.slots = ['dark', 'channel'];
+        this._slots = ['dark', 'channel'];
         this.dark = params.dark;
         this.channel = params.channel;
       }
@@ -91501,7 +93643,7 @@ export namespace Raw {
         this.className = 'stats.GetMessagePublicForwards';
         this.constructorId = 0x5630281b;
         this.subclassOfId = 0xd4b40b5e;
-        this.slots = ['channel', 'msgId', 'offsetRate', 'offsetPeer', 'offsetId', 'limit'];
+        this._slots = ['channel', 'msgId', 'offsetRate', 'offsetPeer', 'offsetId', 'limit'];
         this.channel = params.channel;
         this.msgId = params.msgId;
         this.offsetRate = params.offsetRate;
@@ -91575,7 +93717,7 @@ export namespace Raw {
         this.className = 'stats.GetMessageStats';
         this.constructorId = 0xb6e0a3f5;
         this.subclassOfId = 0x9604a322;
-        this.slots = ['dark', 'channel', 'msgId'];
+        this._slots = ['dark', 'channel', 'msgId'];
         this.dark = params.dark;
         this.channel = params.channel;
         this.msgId = params.msgId;
@@ -91627,7 +93769,7 @@ export namespace Raw {
         this.className = 'stickers.SuggestedShortName';
         this.constructorId = 0x85fea03f;
         this.subclassOfId = 0xc44a4b21;
-        this.slots = ['shortName'];
+        this._slots = ['shortName'];
         this.shortName = params.shortName;
       }
       /**
@@ -91686,7 +93828,7 @@ export namespace Raw {
         this.className = 'stickers.CreateStickerSet';
         this.constructorId = 0x9021ab67;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = [
+        this._slots = [
           'masks',
           'animated',
           'videos',
@@ -91794,7 +93936,7 @@ export namespace Raw {
         this.className = 'stickers.RemoveStickerFromSet';
         this.constructorId = 0xf7760f51;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['sticker'];
+        this._slots = ['sticker'];
         this.sticker = params.sticker;
       }
       /**
@@ -91835,7 +93977,7 @@ export namespace Raw {
         this.className = 'stickers.ChangeStickerPosition';
         this.constructorId = 0xffb6d4ca;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['sticker', 'position'];
+        this._slots = ['sticker', 'position'];
         this.sticker = params.sticker;
         this.position = params.position;
       }
@@ -91884,7 +94026,7 @@ export namespace Raw {
         this.className = 'stickers.AddStickerToSet';
         this.constructorId = 0x8653febe;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['stickerset', 'sticker'];
+        this._slots = ['stickerset', 'sticker'];
         this.stickerset = params.stickerset;
         this.sticker = params.sticker;
       }
@@ -91932,7 +94074,7 @@ export namespace Raw {
         this.className = 'stickers.SetStickerSetThumb';
         this.constructorId = 0xa76a5392;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['stickerset', 'thumb', 'thumbDocumentId'];
+        this._slots = ['stickerset', 'thumb', 'thumbDocumentId'];
         this.stickerset = params.stickerset;
         this.thumb = params.thumb;
         this.thumbDocumentId = params.thumbDocumentId;
@@ -91990,7 +94132,7 @@ export namespace Raw {
         this.className = 'stickers.CheckShortName';
         this.constructorId = 0x284b3639;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['shortName'];
+        this._slots = ['shortName'];
         this.shortName = params.shortName;
       }
       /**
@@ -92027,7 +94169,7 @@ export namespace Raw {
         this.className = 'stickers.SuggestShortName';
         this.constructorId = 0x4dafc503;
         this.subclassOfId = 0xc44a4b21;
-        this.slots = ['title'];
+        this._slots = ['title'];
         this.title = params.title;
       }
       /**
@@ -92072,7 +94214,7 @@ export namespace Raw {
         this.className = 'stickers.ChangeSticker';
         this.constructorId = 0xf5537ebc;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['sticker', 'emoji', 'maskCoords', 'keywords'];
+        this._slots = ['sticker', 'emoji', 'maskCoords', 'keywords'];
         this.sticker = params.sticker;
         this.emoji = params.emoji;
         this.maskCoords = params.maskCoords;
@@ -92138,7 +94280,7 @@ export namespace Raw {
         this.className = 'stickers.RenameStickerSet';
         this.constructorId = 0x124b1c00;
         this.subclassOfId = 0x9b704a5a;
-        this.slots = ['stickerset', 'title'];
+        this._slots = ['stickerset', 'title'];
         this.stickerset = params.stickerset;
         this.title = params.title;
       }
@@ -92180,7 +94322,7 @@ export namespace Raw {
         this.className = 'stickers.DeleteStickerSet';
         this.constructorId = 0x87704394;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['stickerset'];
+        this._slots = ['stickerset'];
         this.stickerset = params.stickerset;
       }
       /**
@@ -92225,7 +94367,7 @@ export namespace Raw {
         this.className = 'users.UserFull';
         this.constructorId = 0x3b6d152e;
         this.subclassOfId = 0x83df9df5;
-        this.slots = ['fullUser', 'chats', 'users'];
+        this._slots = ['fullUser', 'chats', 'users'];
         this.fullUser = params.fullUser;
         this.chats = params.chats;
         this.users = params.users;
@@ -92272,7 +94414,7 @@ export namespace Raw {
         this.className = 'users.GetUsers';
         this.constructorId = 0xd91a548;
         this.subclassOfId = 0x406da4d;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -92309,7 +94451,7 @@ export namespace Raw {
         this.className = 'users.GetFullUser';
         this.constructorId = 0xb60f5918;
         this.subclassOfId = 0x83df9df5;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -92347,7 +94489,7 @@ export namespace Raw {
         this.className = 'users.SetSecureValueErrors';
         this.constructorId = 0x90c894b5;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['id', 'errors'];
+        this._slots = ['id', 'errors'];
         this.id = params.id;
         this.errors = params.errors;
       }
@@ -92400,7 +94542,7 @@ export namespace Raw {
         this.className = 'chatlists.ExportedChatlistInvite';
         this.constructorId = 0x10e6e3a6;
         this.subclassOfId = 0xc2694ee9;
-        this.slots = ['filter', 'invite'];
+        this._slots = ['filter', 'invite'];
         this.filter = params.filter;
         this.invite = params.invite;
       }
@@ -92450,7 +94592,7 @@ export namespace Raw {
         this.className = 'chatlists.ExportedInvites';
         this.constructorId = 0x10ab6dc7;
         this.subclassOfId = 0xe6c209c0;
-        this.slots = ['invites', 'chats', 'users'];
+        this._slots = ['invites', 'chats', 'users'];
         this.invites = params.invites;
         this.chats = params.chats;
         this.users = params.users;
@@ -92506,7 +94648,7 @@ export namespace Raw {
         this.className = 'chatlists.ChatlistInviteAlready';
         this.constructorId = 0xfa87f659;
         this.subclassOfId = 0x41720e75;
-        this.slots = ['filterId', 'missingPeers', 'alreadyPeers', 'chats', 'users'];
+        this._slots = ['filterId', 'missingPeers', 'alreadyPeers', 'chats', 'users'];
         this.filterId = params.filterId;
         this.missingPeers = params.missingPeers;
         this.alreadyPeers = params.alreadyPeers;
@@ -92581,7 +94723,7 @@ export namespace Raw {
         this.className = 'chatlists.ChatlistInvite';
         this.constructorId = 0x1dcd839d;
         this.subclassOfId = 0x41720e75;
-        this.slots = ['title', 'emoticon', 'peers', 'chats', 'users'];
+        this._slots = ['title', 'emoticon', 'peers', 'chats', 'users'];
         this.title = params.title;
         this.emoticon = params.emoticon;
         this.peers = params.peers;
@@ -92655,7 +94797,7 @@ export namespace Raw {
         this.className = 'chatlists.ChatlistUpdates';
         this.constructorId = 0x93bd878d;
         this.subclassOfId = 0x7d1641ea;
-        this.slots = ['missingPeers', 'chats', 'users'];
+        this._slots = ['missingPeers', 'chats', 'users'];
         this.missingPeers = params.missingPeers;
         this.chats = params.chats;
         this.users = params.users;
@@ -92712,7 +94854,7 @@ export namespace Raw {
         this.className = 'chatlists.ExportChatlistInvite';
         this.constructorId = 0x8472478e;
         this.subclassOfId = 0xc2694ee9;
-        this.slots = ['chatlist', 'title', 'peers'];
+        this._slots = ['chatlist', 'title', 'peers'];
         this.chatlist = params.chatlist;
         this.title = params.title;
         this.peers = params.peers;
@@ -92767,7 +94909,7 @@ export namespace Raw {
         this.className = 'chatlists.DeleteExportedInvite';
         this.constructorId = 0x719c5c5e;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['chatlist', 'slug'];
+        this._slots = ['chatlist', 'slug'];
         this.chatlist = params.chatlist;
         this.slug = params.slug;
       }
@@ -92820,7 +94962,7 @@ export namespace Raw {
         this.className = 'chatlists.EditExportedInvite';
         this.constructorId = 0x653db63d;
         this.subclassOfId = 0x7711f8ff;
-        this.slots = ['chatlist', 'slug', 'title', 'peers'];
+        this._slots = ['chatlist', 'slug', 'title', 'peers'];
         this.chatlist = params.chatlist;
         this.slug = params.slug;
         this.title = params.title;
@@ -92887,7 +95029,7 @@ export namespace Raw {
         this.className = 'chatlists.GetExportedInvites';
         this.constructorId = 0xce03da83;
         this.subclassOfId = 0xe6c209c0;
-        this.slots = ['chatlist'];
+        this._slots = ['chatlist'];
         this.chatlist = params.chatlist;
       }
       /**
@@ -92927,7 +95069,7 @@ export namespace Raw {
         this.className = 'chatlists.CheckChatlistInvite';
         this.constructorId = 0x41c10fff;
         this.subclassOfId = 0x41720e75;
-        this.slots = ['slug'];
+        this._slots = ['slug'];
         this.slug = params.slug;
       }
       /**
@@ -92968,7 +95110,7 @@ export namespace Raw {
         this.className = 'chatlists.JoinChatlistInvite';
         this.constructorId = 0xa6b1e39a;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['slug', 'peers'];
+        this._slots = ['slug', 'peers'];
         this.slug = params.slug;
         this.peers = params.peers;
       }
@@ -93013,7 +95155,7 @@ export namespace Raw {
         this.className = 'chatlists.GetChatlistUpdates';
         this.constructorId = 0x89419521;
         this.subclassOfId = 0x7d1641ea;
-        this.slots = ['chatlist'];
+        this._slots = ['chatlist'];
         this.chatlist = params.chatlist;
       }
       /**
@@ -93054,7 +95196,7 @@ export namespace Raw {
         this.className = 'chatlists.JoinChatlistUpdates';
         this.constructorId = 0xe089f8f5;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['chatlist', 'peers'];
+        this._slots = ['chatlist', 'peers'];
         this.chatlist = params.chatlist;
         this.peers = params.peers;
       }
@@ -93099,7 +95241,7 @@ export namespace Raw {
         this.className = 'chatlists.HideChatlistUpdates';
         this.constructorId = 0x66e486fb;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['chatlist'];
+        this._slots = ['chatlist'];
         this.chatlist = params.chatlist;
       }
       /**
@@ -93139,7 +95281,7 @@ export namespace Raw {
         this.className = 'chatlists.GetLeaveChatlistSuggestions';
         this.constructorId = 0xfdbcd714;
         this.subclassOfId = 0xb9945d7e;
-        this.slots = ['chatlist'];
+        this._slots = ['chatlist'];
         this.chatlist = params.chatlist;
       }
       /**
@@ -93180,7 +95322,7 @@ export namespace Raw {
         this.className = 'chatlists.LeaveChatlist';
         this.constructorId = 0x74fae13a;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['chatlist', 'peers'];
+        this._slots = ['chatlist', 'peers'];
         this.chatlist = params.chatlist;
         this.peers = params.peers;
       }
@@ -93226,7 +95368,7 @@ export namespace Raw {
         this.className = 'bots.BotInfo';
         this.constructorId = 0xe8a775b0;
         this.subclassOfId = 0xca7b2235;
-        this.slots = ['name', 'about', 'description'];
+        this._slots = ['name', 'about', 'description'];
         this.name = params.name;
         this.about = params.about;
         this.description = params.description;
@@ -93274,7 +95416,7 @@ export namespace Raw {
         this.className = 'bots.SendCustomRequest';
         this.constructorId = 0xaa2769ed;
         this.subclassOfId = 0xad0352e8;
-        this.slots = ['customMethod', 'params'];
+        this._slots = ['customMethod', 'params'];
         this.customMethod = params.customMethod;
         this.params = params.params;
       }
@@ -93317,7 +95459,7 @@ export namespace Raw {
         this.className = 'bots.AnswerWebhookJSONQuery';
         this.constructorId = 0xe6213f4d;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['queryId', 'data'];
+        this._slots = ['queryId', 'data'];
         this.queryId = params.queryId;
         this.data = params.data;
       }
@@ -93365,7 +95507,7 @@ export namespace Raw {
         this.className = 'bots.SetBotCommands';
         this.constructorId = 0x517165a;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['scope', 'langCode', 'commands'];
+        this._slots = ['scope', 'langCode', 'commands'];
         this.scope = params.scope;
         this.langCode = params.langCode;
         this.commands = params.commands;
@@ -93417,7 +95559,7 @@ export namespace Raw {
         this.className = 'bots.ResetBotCommands';
         this.constructorId = 0x3d8de0f9;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['scope', 'langCode'];
+        this._slots = ['scope', 'langCode'];
         this.scope = params.scope;
         this.langCode = params.langCode;
       }
@@ -93460,7 +95602,7 @@ export namespace Raw {
         this.className = 'bots.GetBotCommands';
         this.constructorId = 0xe34c0dd6;
         this.subclassOfId = 0xfae91529;
-        this.slots = ['scope', 'langCode'];
+        this._slots = ['scope', 'langCode'];
         this.scope = params.scope;
         this.langCode = params.langCode;
       }
@@ -93503,7 +95645,7 @@ export namespace Raw {
         this.className = 'bots.SetBotMenuButton';
         this.constructorId = 0x4504d54f;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['userId', 'button'];
+        this._slots = ['userId', 'button'];
         this.userId = params.userId;
         this.button = params.button;
       }
@@ -93545,7 +95687,7 @@ export namespace Raw {
         this.className = 'bots.GetBotMenuButton';
         this.constructorId = 0x9c60eb28;
         this.subclassOfId = 0x4c71bd3c;
-        this.slots = ['userId'];
+        this._slots = ['userId'];
         this.userId = params.userId;
       }
       /**
@@ -93582,7 +95724,7 @@ export namespace Raw {
         this.className = 'bots.SetBotBroadcastDefaultAdminRights';
         this.constructorId = 0x788464e1;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['adminRights'];
+        this._slots = ['adminRights'];
         this.adminRights = params.adminRights;
       }
       /**
@@ -93622,7 +95764,7 @@ export namespace Raw {
         this.className = 'bots.SetBotGroupDefaultAdminRights';
         this.constructorId = 0x925ec9ea;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['adminRights'];
+        this._slots = ['adminRights'];
         this.adminRights = params.adminRights;
       }
       /**
@@ -93672,7 +95814,7 @@ export namespace Raw {
         this.className = 'bots.SetBotInfo';
         this.constructorId = 0x10cf3123;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['bot', 'langCode', 'name', 'about', 'description'];
+        this._slots = ['bot', 'langCode', 'name', 'about', 'description'];
         this.bot = params.bot;
         this.langCode = params.langCode;
         this.name = params.name;
@@ -93745,7 +95887,7 @@ export namespace Raw {
         this.className = 'bots.GetBotInfo';
         this.constructorId = 0xdcd914fd;
         this.subclassOfId = 0xca7b2235;
-        this.slots = ['bot', 'langCode'];
+        this._slots = ['bot', 'langCode'];
         this.bot = params.bot;
         this.langCode = params.langCode;
       }
@@ -93794,7 +95936,7 @@ export namespace Raw {
         this.className = 'bots.ReorderUsernames';
         this.constructorId = 0x9709b1c2;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['bot', 'order'];
+        this._slots = ['bot', 'order'];
         this.bot = params.bot;
         this.order = params.order;
       }
@@ -93838,7 +95980,7 @@ export namespace Raw {
         this.className = 'bots.ToggleUsername';
         this.constructorId = 0x53ca973;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['bot', 'username', 'active'];
+        this._slots = ['bot', 'username', 'active'];
         this.bot = params.bot;
         this.username = params.username;
         this.active = params.active;
@@ -93885,7 +96027,7 @@ export namespace Raw {
         this.className = 'bots.CanSendMessage';
         this.constructorId = 0x1359f4e6;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['bot'];
+        this._slots = ['bot'];
         this.bot = params.bot;
       }
       /**
@@ -93922,7 +96064,7 @@ export namespace Raw {
         this.className = 'bots.AllowSendMessage';
         this.constructorId = 0xf132e3ef;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['bot'];
+        this._slots = ['bot'];
         this.bot = params.bot;
       }
       /**
@@ -93965,7 +96107,7 @@ export namespace Raw {
         this.className = 'bots.InvokeWebViewCustomMethod';
         this.constructorId = 0x87fc5e7;
         this.subclassOfId = 0xad0352e8;
-        this.slots = ['bot', 'customMethod', 'params'];
+        this._slots = ['bot', 'customMethod', 'params'];
         this.bot = params.bot;
         this.customMethod = params.customMethod;
         this.params = params.params;
@@ -94011,11 +96153,6 @@ export namespace Raw {
     }
   }
   export namespace stories {
-    export type TypeCanApplyBoostResult =
-      | Raw.stories.CanApplyBoostOk
-      | Raw.stories.CanApplyBoostReplace;
-    export type TypeBoostersList = Raw.stories.BoostersList;
-    export type TypeBoostsStatus = Raw.stories.BoostsStatus;
     export type TypePeerStories = Raw.stories.PeerStories;
     export type TypeStoryViews = Raw.stories.StoryViews;
     export type TypeStoryViewsList = Raw.stories.StoryViewsList;
@@ -94031,7 +96168,7 @@ export namespace Raw {
         this.className = 'stories.AllStoriesNotModified';
         this.constructorId = 0x1158fe3e;
         this.subclassOfId = 0x7e60d0cd;
-        this.slots = ['state', 'stealthMode'];
+        this._slots = ['state', 'stealthMode'];
         this.state = params.state;
         this.stealthMode = params.stealthMode;
       }
@@ -94095,7 +96232,7 @@ export namespace Raw {
         this.className = 'stories.AllStories';
         this.constructorId = 0x6efc5e81;
         this.subclassOfId = 0x7e60d0cd;
-        this.slots = ['hasMore', 'count', 'state', 'peerStories', 'chats', 'users', 'stealthMode'];
+        this._slots = ['hasMore', 'count', 'state', 'peerStories', 'chats', 'users', 'stealthMode'];
         this.hasMore = params.hasMore;
         this.count = params.count;
         this.state = params.state;
@@ -94180,7 +96317,7 @@ export namespace Raw {
         this.className = 'stories.Stories';
         this.constructorId = 0x5dd8c3c8;
         this.subclassOfId = 0x251c0c2c;
-        this.slots = ['count', 'stories', 'chats', 'users'];
+        this._slots = ['count', 'stories', 'chats', 'users'];
         this.count = params.count;
         this.stories = params.stories;
         this.chats = params.chats;
@@ -94246,7 +96383,7 @@ export namespace Raw {
         this.className = 'stories.StoryViewsList';
         this.constructorId = 0x46e9b9ec;
         this.subclassOfId = 0xb9437560;
-        this.slots = ['count', 'reactionsCount', 'views', 'users', 'nextOffset'];
+        this._slots = ['count', 'reactionsCount', 'views', 'users', 'nextOffset'];
         this.count = params.count;
         this.reactionsCount = params.reactionsCount;
         this.views = params.views;
@@ -94315,7 +96452,7 @@ export namespace Raw {
         this.className = 'stories.StoryViews';
         this.constructorId = 0xde9eed1d;
         this.subclassOfId = 0x4b3fc4ba;
-        this.slots = ['views', 'users'];
+        this._slots = ['views', 'users'];
         this.views = params.views;
         this.users = params.users;
       }
@@ -94362,7 +96499,7 @@ export namespace Raw {
         this.className = 'stories.PeerStories';
         this.constructorId = 0xcae68768;
         this.subclassOfId = 0x9d56cfd0;
-        this.slots = ['stories', 'chats', 'users'];
+        this._slots = ['stories', 'chats', 'users'];
         this.stories = params.stories;
         this.chats = params.chats;
         this.users = params.users;
@@ -94399,251 +96536,6 @@ export namespace Raw {
         return b.buffer;
       }
     }
-    export class BoostsStatus extends TLObject {
-      myBoost?: boolean;
-      level!: int;
-      currentLevelBoosts!: int;
-      boosts!: int;
-      nextLevelBoosts?: int;
-      premiumAudience?: Raw.TypeStatsPercentValue;
-      boostUrl!: string;
-
-      constructor(params: {
-        myBoost?: boolean;
-        level: int;
-        currentLevelBoosts: int;
-        boosts: int;
-        nextLevelBoosts?: int;
-        premiumAudience?: Raw.TypeStatsPercentValue;
-        boostUrl: string;
-      }) {
-        super();
-        this.classType = 'types';
-        this.className = 'stories.BoostsStatus';
-        this.constructorId = 0xe5c1aa5c;
-        this.subclassOfId = 0xdb73c5e4;
-        this.slots = [
-          'myBoost',
-          'level',
-          'currentLevelBoosts',
-          'boosts',
-          'nextLevelBoosts',
-          'premiumAudience',
-          'boostUrl',
-        ];
-        this.myBoost = params.myBoost;
-        this.level = params.level;
-        this.currentLevelBoosts = params.currentLevelBoosts;
-        this.boosts = params.boosts;
-        this.nextLevelBoosts = params.nextLevelBoosts;
-        this.premiumAudience = params.premiumAudience;
-        this.boostUrl = params.boostUrl;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.BoostsStatus> {
-        // no flags
-
-        let flags = await Primitive.Int.read(b);
-
-        let myBoost = flags & (1 << 2) ? true : false;
-        let level = await Primitive.Int.read(b);
-        let currentLevelBoosts = await Primitive.Int.read(b);
-        let boosts = await Primitive.Int.read(b);
-        let nextLevelBoosts = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
-        let premiumAudience = flags & (1 << 1) ? await TLObject.read(b) : undefined;
-        let boostUrl = await Primitive.String.read(b);
-        return new Raw.stories.BoostsStatus({
-          myBoost: myBoost,
-          level: level,
-          currentLevelBoosts: currentLevelBoosts,
-          boosts: boosts,
-          nextLevelBoosts: nextLevelBoosts,
-          premiumAudience: premiumAudience,
-          boostUrl: boostUrl,
-        });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-
-        let flags = 0;
-        flags |= this.myBoost ? 1 << 2 : 0;
-        flags |= this.nextLevelBoosts !== undefined ? 1 << 0 : 0;
-        flags |= this.premiumAudience !== undefined ? 1 << 1 : 0;
-        b.write(Primitive.Int.write(flags) as unknown as Buffer);
-
-        if (this.level !== undefined) {
-          b.write(Primitive.Int.write(this.level) as unknown as Buffer);
-        }
-        if (this.currentLevelBoosts !== undefined) {
-          b.write(Primitive.Int.write(this.currentLevelBoosts) as unknown as Buffer);
-        }
-        if (this.boosts !== undefined) {
-          b.write(Primitive.Int.write(this.boosts) as unknown as Buffer);
-        }
-        if (this.nextLevelBoosts !== undefined) {
-          b.write(Primitive.Int.write(this.nextLevelBoosts) as unknown as Buffer);
-        }
-        if (this.premiumAudience !== undefined) {
-          b.write(this.premiumAudience.write() as unknown as Buffer);
-        }
-        if (this.boostUrl !== undefined) {
-          b.write(Primitive.String.write(this.boostUrl) as unknown as Buffer);
-        }
-        return b.buffer;
-      }
-    }
-    export class CanApplyBoostOk extends TLObject {
-      constructor() {
-        super();
-        this.classType = 'types';
-        this.className = 'stories.CanApplyBoostOk';
-        this.constructorId = 0xc3173587;
-        this.subclassOfId = 0x5716fc3c;
-        this.slots = [];
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.CanApplyBoostOk> {
-        // no flags
-
-        return new Raw.stories.CanApplyBoostOk();
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-
-        return b.buffer;
-      }
-    }
-    export class CanApplyBoostReplace extends TLObject {
-      currentBoost!: Raw.TypePeer;
-      chats!: Vector<Raw.TypeChat>;
-
-      constructor(params: { currentBoost: Raw.TypePeer; chats: Vector<Raw.TypeChat> }) {
-        super();
-        this.classType = 'types';
-        this.className = 'stories.CanApplyBoostReplace';
-        this.constructorId = 0x712c4655;
-        this.subclassOfId = 0x5716fc3c;
-        this.slots = ['currentBoost', 'chats'];
-        this.currentBoost = params.currentBoost;
-        this.chats = params.chats;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(
-        b: BytesIO,
-        ...args: Array<any>
-      ): Promise<Raw.stories.CanApplyBoostReplace> {
-        // no flags
-
-        let currentBoost = await TLObject.read(b);
-        let chats = await TLObject.read(b);
-        return new Raw.stories.CanApplyBoostReplace({ currentBoost: currentBoost, chats: chats });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-
-        if (this.currentBoost !== undefined) {
-          b.write(this.currentBoost.write() as unknown as Buffer);
-        }
-        if (this.chats) {
-          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
-        }
-        return b.buffer;
-      }
-    }
-    export class BoostersList extends TLObject {
-      count!: int;
-      boosters!: Vector<Raw.TypeBooster>;
-      nextOffset?: string;
-      users!: Vector<Raw.TypeUser>;
-
-      constructor(params: {
-        count: int;
-        boosters: Vector<Raw.TypeBooster>;
-        nextOffset?: string;
-        users: Vector<Raw.TypeUser>;
-      }) {
-        super();
-        this.classType = 'types';
-        this.className = 'stories.BoostersList';
-        this.constructorId = 0xf3dd3d1d;
-        this.subclassOfId = 0x2f351376;
-        this.slots = ['count', 'boosters', 'nextOffset', 'users'];
-        this.count = params.count;
-        this.boosters = params.boosters;
-        this.nextOffset = params.nextOffset;
-        this.users = params.users;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.BoostersList> {
-        // no flags
-
-        let flags = await Primitive.Int.read(b);
-
-        let count = await Primitive.Int.read(b);
-        let boosters = await TLObject.read(b);
-        let nextOffset = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
-        let users = await TLObject.read(b);
-        return new Raw.stories.BoostersList({
-          count: count,
-          boosters: boosters,
-          nextOffset: nextOffset,
-          users: users,
-        });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-
-        let flags = 0;
-        flags |= this.nextOffset !== undefined ? 1 << 0 : 0;
-        b.write(Primitive.Int.write(flags) as unknown as Buffer);
-
-        if (this.count !== undefined) {
-          b.write(Primitive.Int.write(this.count) as unknown as Buffer);
-        }
-        if (this.boosters) {
-          b.write(Primitive.Vector.write(this.boosters) as unknown as Buffer);
-        }
-        if (this.nextOffset !== undefined) {
-          b.write(Primitive.String.write(this.nextOffset) as unknown as Buffer);
-        }
-        if (this.users) {
-          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
-        }
-        return b.buffer;
-      }
-    }
     export class CanSendStory extends TLObject {
       __response__!: Bool;
       peer!: Raw.TypeInputPeer;
@@ -94654,7 +96546,7 @@ export namespace Raw {
         this.className = 'stories.CanSendStory';
         this.constructorId = 0xc7dfdfdd;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -94711,7 +96603,7 @@ export namespace Raw {
         this.className = 'stories.SendStory';
         this.constructorId = 0xbcb73644;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [
+        this._slots = [
           'pinned',
           'noforwards',
           'peer',
@@ -94834,7 +96726,7 @@ export namespace Raw {
         this.className = 'stories.EditStory';
         this.constructorId = 0xb583ba46;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['peer', 'id', 'media', 'mediaAreas', 'caption', 'entities', 'privacyRules'];
+        this._slots = ['peer', 'id', 'media', 'mediaAreas', 'caption', 'entities', 'privacyRules'];
         this.peer = params.peer;
         this.id = params.id;
         this.media = params.media;
@@ -94920,7 +96812,7 @@ export namespace Raw {
         this.className = 'stories.DeleteStories';
         this.constructorId = 0xae59db5f;
         this.subclassOfId = 0x5026710f;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -94964,7 +96856,7 @@ export namespace Raw {
         this.className = 'stories.TogglePinned';
         this.constructorId = 0x9a75a1ef;
         this.subclassOfId = 0x5026710f;
-        this.slots = ['peer', 'id', 'pinned'];
+        this._slots = ['peer', 'id', 'pinned'];
         this.peer = params.peer;
         this.id = params.id;
         this.pinned = params.pinned;
@@ -95013,7 +96905,7 @@ export namespace Raw {
         this.className = 'stories.GetAllStories';
         this.constructorId = 0xeeb0d625;
         this.subclassOfId = 0x7e60d0cd;
-        this.slots = ['next', 'hidden', 'state'];
+        this._slots = ['next', 'hidden', 'state'];
         this.next = params.next;
         this.hidden = params.hidden;
         this.state = params.state;
@@ -95064,7 +96956,7 @@ export namespace Raw {
         this.className = 'stories.GetPinnedStories';
         this.constructorId = 0x5821a5dc;
         this.subclassOfId = 0x251c0c2c;
-        this.slots = ['peer', 'offsetId', 'limit'];
+        this._slots = ['peer', 'offsetId', 'limit'];
         this.peer = params.peer;
         this.offsetId = params.offsetId;
         this.limit = params.limit;
@@ -95113,7 +97005,7 @@ export namespace Raw {
         this.className = 'stories.GetStoriesArchive';
         this.constructorId = 0xb4352016;
         this.subclassOfId = 0x251c0c2c;
-        this.slots = ['peer', 'offsetId', 'limit'];
+        this._slots = ['peer', 'offsetId', 'limit'];
         this.peer = params.peer;
         this.offsetId = params.offsetId;
         this.limit = params.limit;
@@ -95161,7 +97053,7 @@ export namespace Raw {
         this.className = 'stories.GetStoriesByID';
         this.constructorId = 0x5774ca74;
         this.subclassOfId = 0x251c0c2c;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -95203,7 +97095,7 @@ export namespace Raw {
         this.className = 'stories.ToggleAllStoriesHidden';
         this.constructorId = 0x7c2557c4;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['hidden'];
+        this._slots = ['hidden'];
         this.hidden = params.hidden;
       }
       /**
@@ -95244,7 +97136,7 @@ export namespace Raw {
         this.className = 'stories.ReadStories';
         this.constructorId = 0xa556dac8;
         this.subclassOfId = 0x5026710f;
-        this.slots = ['peer', 'maxId'];
+        this._slots = ['peer', 'maxId'];
         this.peer = params.peer;
         this.maxId = params.maxId;
       }
@@ -95287,7 +97179,7 @@ export namespace Raw {
         this.className = 'stories.IncrementStoryViews';
         this.constructorId = 0xb2028afb;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -95343,7 +97235,7 @@ export namespace Raw {
         this.className = 'stories.GetStoryViewsList';
         this.constructorId = 0x7ed23c57;
         this.subclassOfId = 0xb9437560;
-        this.slots = ['justContacts', 'reactionsFirst', 'peer', 'q', 'id', 'offset', 'limit'];
+        this._slots = ['justContacts', 'reactionsFirst', 'peer', 'q', 'id', 'offset', 'limit'];
         this.justContacts = params.justContacts;
         this.reactionsFirst = params.reactionsFirst;
         this.peer = params.peer;
@@ -95421,7 +97313,7 @@ export namespace Raw {
         this.className = 'stories.GetStoriesViews';
         this.constructorId = 0x28e16cc8;
         this.subclassOfId = 0x4b3fc4ba;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -95464,7 +97356,7 @@ export namespace Raw {
         this.className = 'stories.ExportStoryLink';
         this.constructorId = 0x7b8def20;
         this.subclassOfId = 0xfc541a6;
-        this.slots = ['peer', 'id'];
+        this._slots = ['peer', 'id'];
         this.peer = params.peer;
         this.id = params.id;
       }
@@ -95514,7 +97406,7 @@ export namespace Raw {
         this.className = 'stories.Report';
         this.constructorId = 0x1923fa8c;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'id', 'reason', 'message'];
+        this._slots = ['peer', 'id', 'reason', 'message'];
         this.peer = params.peer;
         this.id = params.id;
         this.reason = params.reason;
@@ -95567,7 +97459,7 @@ export namespace Raw {
         this.className = 'stories.ActivateStealthMode';
         this.constructorId = 0x57bbd166;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['past', 'future'];
+        this._slots = ['past', 'future'];
         this.past = params.past;
         this.future = params.future;
       }
@@ -95618,7 +97510,7 @@ export namespace Raw {
         this.className = 'stories.SendReaction';
         this.constructorId = 0x7fd736b2;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['addToRecent', 'peer', 'storyId', 'reaction'];
+        this._slots = ['addToRecent', 'peer', 'storyId', 'reaction'];
         this.addToRecent = params.addToRecent;
         this.peer = params.peer;
         this.storyId = params.storyId;
@@ -95678,7 +97570,7 @@ export namespace Raw {
         this.className = 'stories.GetPeerStories';
         this.constructorId = 0x2c4ada50;
         this.subclassOfId = 0x9d56cfd0;
-        this.slots = ['peer'];
+        this._slots = ['peer'];
         this.peer = params.peer;
       }
       /**
@@ -95714,7 +97606,7 @@ export namespace Raw {
         this.className = 'stories.GetAllReadPeerStories';
         this.constructorId = 0x9b5ae7f9;
         this.subclassOfId = 0x8af52aac;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -95749,7 +97641,7 @@ export namespace Raw {
         this.className = 'stories.GetPeerMaxIDs';
         this.constructorId = 0x535983c3;
         this.subclassOfId = 0x5026710f;
-        this.slots = ['id'];
+        this._slots = ['id'];
         this.id = params.id;
       }
       /**
@@ -95785,7 +97677,7 @@ export namespace Raw {
         this.className = 'stories.GetChatsToSend';
         this.constructorId = 0xa56a8b60;
         this.subclassOfId = 0x99d5cb14;
-        this.slots = [];
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
@@ -95818,7 +97710,7 @@ export namespace Raw {
         this.className = 'stories.TogglePeerStoriesHidden';
         this.constructorId = 0xbd0415c4;
         this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer', 'hidden'];
+        this._slots = ['peer', 'hidden'];
         this.peer = params.peer;
         this.hidden = params.hidden;
       }
@@ -95853,28 +97745,53 @@ export namespace Raw {
         return b.buffer;
       }
     }
-    export class GetBoostsStatus extends TLObject {
-      __response__!: Raw.stories.TypeBoostsStatus;
-      peer!: Raw.TypeInputPeer;
+  }
+  export namespace premium {
+    export type TypeBoostsStatus = Raw.premium.BoostsStatus;
+    export type TypeMyBoosts = Raw.premium.MyBoosts;
+    export type TypeBoostsList = Raw.premium.BoostsList;
+    export class BoostsList extends TLObject {
+      count!: int;
+      boosts!: Vector<Raw.TypeBoost>;
+      nextOffset?: string;
+      users!: Vector<Raw.TypeUser>;
 
-      constructor(params: { peer: Raw.TypeInputPeer }) {
+      constructor(params: {
+        count: int;
+        boosts: Vector<Raw.TypeBoost>;
+        nextOffset?: string;
+        users: Vector<Raw.TypeUser>;
+      }) {
         super();
-        this.classType = 'functions';
-        this.className = 'stories.GetBoostsStatus';
-        this.constructorId = 0x4c449472;
-        this.subclassOfId = 0xdb73c5e4;
-        this.slots = ['peer'];
-        this.peer = params.peer;
+        this.classType = 'types';
+        this.className = 'premium.BoostsList';
+        this.constructorId = 0x86f8613c;
+        this.subclassOfId = 0x2235a8bd;
+        this._slots = ['count', 'boosts', 'nextOffset', 'users'];
+        this.count = params.count;
+        this.boosts = params.boosts;
+        this.nextOffset = params.nextOffset;
+        this.users = params.users;
       }
       /**
        * Generate the TLObject from buffer.
        * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
        */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.GetBoostsStatus> {
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.BoostsList> {
         // no flags
 
-        let peer = await TLObject.read(b);
-        return new Raw.stories.GetBoostsStatus({ peer: peer });
+        let flags = await Primitive.Int.read(b);
+
+        let count = await Primitive.Int.read(b);
+        let boosts = await TLObject.read(b);
+        let nextOffset = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        let users = await TLObject.read(b);
+        return new Raw.premium.BoostsList({
+          count: count,
+          boosts: boosts,
+          nextOffset: nextOffset,
+          users: users,
+        });
       }
       /**
        * Generate buffer from TLObject.
@@ -95884,25 +97801,228 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
-        if (this.peer !== undefined) {
-          b.write(this.peer.write() as unknown as Buffer);
+        let flags = 0;
+        flags |= this.nextOffset !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.count !== undefined) {
+          b.write(Primitive.Int.write(this.count) as unknown as Buffer);
+        }
+        if (this.boosts) {
+          b.write(Primitive.Vector.write(this.boosts) as unknown as Buffer);
+        }
+        if (this.nextOffset !== undefined) {
+          b.write(Primitive.String.write(this.nextOffset) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
         }
         return b.buffer;
       }
     }
-    export class GetBoostersList extends TLObject {
-      __response__!: Raw.stories.TypeBoostersList;
+    export class MyBoosts extends TLObject {
+      myBoosts!: Vector<Raw.TypeMyBoost>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        myBoosts: Vector<Raw.TypeMyBoost>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'premium.MyBoosts';
+        this.constructorId = 0x9ae228e2;
+        this.subclassOfId = 0xad3512db;
+        this._slots = ['myBoosts', 'chats', 'users'];
+        this.myBoosts = params.myBoosts;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.MyBoosts> {
+        // no flags
+
+        let myBoosts = await TLObject.read(b);
+        let chats = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.premium.MyBoosts({ myBoosts: myBoosts, chats: chats, users: users });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.myBoosts) {
+          b.write(Primitive.Vector.write(this.myBoosts) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class BoostsStatus extends TLObject {
+      myBoost?: boolean;
+      level!: int;
+      currentLevelBoosts!: int;
+      boosts!: int;
+      giftBoosts?: int;
+      nextLevelBoosts?: int;
+      premiumAudience?: Raw.TypeStatsPercentValue;
+      boostUrl!: string;
+      prepaidGiveaways?: Vector<Raw.TypePrepaidGiveaway>;
+      myBoostSlots?: Vector<int>;
+
+      constructor(params: {
+        myBoost?: boolean;
+        level: int;
+        currentLevelBoosts: int;
+        boosts: int;
+        giftBoosts?: int;
+        nextLevelBoosts?: int;
+        premiumAudience?: Raw.TypeStatsPercentValue;
+        boostUrl: string;
+        prepaidGiveaways?: Vector<Raw.TypePrepaidGiveaway>;
+        myBoostSlots?: Vector<int>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'premium.BoostsStatus';
+        this.constructorId = 0x4959427a;
+        this.subclassOfId = 0xc31b1ab9;
+        this._slots = [
+          'myBoost',
+          'level',
+          'currentLevelBoosts',
+          'boosts',
+          'giftBoosts',
+          'nextLevelBoosts',
+          'premiumAudience',
+          'boostUrl',
+          'prepaidGiveaways',
+          'myBoostSlots',
+        ];
+        this.myBoost = params.myBoost;
+        this.level = params.level;
+        this.currentLevelBoosts = params.currentLevelBoosts;
+        this.boosts = params.boosts;
+        this.giftBoosts = params.giftBoosts;
+        this.nextLevelBoosts = params.nextLevelBoosts;
+        this.premiumAudience = params.premiumAudience;
+        this.boostUrl = params.boostUrl;
+        this.prepaidGiveaways = params.prepaidGiveaways;
+        this.myBoostSlots = params.myBoostSlots;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.BoostsStatus> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let myBoost = flags & (1 << 2) ? true : false;
+        let level = await Primitive.Int.read(b);
+        let currentLevelBoosts = await Primitive.Int.read(b);
+        let boosts = await Primitive.Int.read(b);
+        let giftBoosts = flags & (1 << 4) ? await Primitive.Int.read(b) : undefined;
+        let nextLevelBoosts = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
+        let premiumAudience = flags & (1 << 1) ? await TLObject.read(b) : undefined;
+        let boostUrl = await Primitive.String.read(b);
+        let prepaidGiveaways = flags & (1 << 3) ? await TLObject.read(b) : [];
+        let myBoostSlots = flags & (1 << 2) ? await TLObject.read(b, Primitive.Int) : [];
+        return new Raw.premium.BoostsStatus({
+          myBoost: myBoost,
+          level: level,
+          currentLevelBoosts: currentLevelBoosts,
+          boosts: boosts,
+          giftBoosts: giftBoosts,
+          nextLevelBoosts: nextLevelBoosts,
+          premiumAudience: premiumAudience,
+          boostUrl: boostUrl,
+          prepaidGiveaways: prepaidGiveaways,
+          myBoostSlots: myBoostSlots,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.myBoost ? 1 << 2 : 0;
+        flags |= this.giftBoosts !== undefined ? 1 << 4 : 0;
+        flags |= this.nextLevelBoosts !== undefined ? 1 << 0 : 0;
+        flags |= this.premiumAudience !== undefined ? 1 << 1 : 0;
+        flags |= this.prepaidGiveaways ? 1 << 3 : 0;
+        flags |= this.myBoostSlots ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.level !== undefined) {
+          b.write(Primitive.Int.write(this.level) as unknown as Buffer);
+        }
+        if (this.currentLevelBoosts !== undefined) {
+          b.write(Primitive.Int.write(this.currentLevelBoosts) as unknown as Buffer);
+        }
+        if (this.boosts !== undefined) {
+          b.write(Primitive.Int.write(this.boosts) as unknown as Buffer);
+        }
+        if (this.giftBoosts !== undefined) {
+          b.write(Primitive.Int.write(this.giftBoosts) as unknown as Buffer);
+        }
+        if (this.nextLevelBoosts !== undefined) {
+          b.write(Primitive.Int.write(this.nextLevelBoosts) as unknown as Buffer);
+        }
+        if (this.premiumAudience !== undefined) {
+          b.write(this.premiumAudience.write() as unknown as Buffer);
+        }
+        if (this.boostUrl !== undefined) {
+          b.write(Primitive.String.write(this.boostUrl) as unknown as Buffer);
+        }
+        if (this.prepaidGiveaways) {
+          b.write(Primitive.Vector.write(this.prepaidGiveaways) as unknown as Buffer);
+        }
+        if (this.myBoostSlots) {
+          b.write(Primitive.Vector.write(this.myBoostSlots, Primitive.Int) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetBoostsList extends TLObject {
+      __response__!: Raw.premium.TypeBoostsList;
+      gifts?: boolean;
       peer!: Raw.TypeInputPeer;
       offset!: string;
       limit!: int;
 
-      constructor(params: { peer: Raw.TypeInputPeer; offset: string; limit: int }) {
+      constructor(params: {
+        gifts?: boolean;
+        peer: Raw.TypeInputPeer;
+        offset: string;
+        limit: int;
+      }) {
         super();
         this.classType = 'functions';
-        this.className = 'stories.GetBoostersList';
-        this.constructorId = 0x337ef980;
-        this.subclassOfId = 0x2f351376;
-        this.slots = ['peer', 'offset', 'limit'];
+        this.className = 'premium.GetBoostsList';
+        this.constructorId = 0x60f67660;
+        this.subclassOfId = 0x2235a8bd;
+        this._slots = ['gifts', 'peer', 'offset', 'limit'];
+        this.gifts = params.gifts;
         this.peer = params.peer;
         this.offset = params.offset;
         this.limit = params.limit;
@@ -95911,13 +98031,21 @@ export namespace Raw {
        * Generate the TLObject from buffer.
        * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
        */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.GetBoostersList> {
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.GetBoostsList> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
+        let gifts = flags & (1 << 0) ? true : false;
         let peer = await TLObject.read(b);
         let offset = await Primitive.String.read(b);
         let limit = await Primitive.Int.read(b);
-        return new Raw.stories.GetBoostersList({ peer: peer, offset: offset, limit: limit });
+        return new Raw.premium.GetBoostsList({
+          gifts: gifts,
+          peer: peer,
+          offset: offset,
+          limit: limit,
+        });
       }
       /**
        * Generate buffer from TLObject.
@@ -95926,6 +98054,10 @@ export namespace Raw {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
+
+        let flags = 0;
+        flags |= this.gifts ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
@@ -95939,28 +98071,25 @@ export namespace Raw {
         return b.buffer;
       }
     }
-    export class CanApplyBoost extends TLObject {
-      __response__!: Raw.stories.TypeCanApplyBoostResult;
-      peer!: Raw.TypeInputPeer;
+    export class GetMyBoosts extends TLObject {
+      __response__!: Raw.premium.TypeMyBoosts;
 
-      constructor(params: { peer: Raw.TypeInputPeer }) {
+      constructor() {
         super();
         this.classType = 'functions';
-        this.className = 'stories.CanApplyBoost';
-        this.constructorId = 0xdb05c1bd;
-        this.subclassOfId = 0x5716fc3c;
-        this.slots = ['peer'];
-        this.peer = params.peer;
+        this.className = 'premium.GetMyBoosts';
+        this.constructorId = 0xbe77b4a;
+        this.subclassOfId = 0xad3512db;
+        this._slots = [];
       }
       /**
        * Generate the TLObject from buffer.
        * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
        */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.CanApplyBoost> {
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.GetMyBoosts> {
         // no flags
 
-        let peer = await TLObject.read(b);
-        return new Raw.stories.CanApplyBoost({ peer: peer });
+        return new Raw.premium.GetMyBoosts();
       }
       /**
        * Generate buffer from TLObject.
@@ -95970,34 +98099,80 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
-        if (this.peer !== undefined) {
-          b.write(this.peer.write() as unknown as Buffer);
-        }
         return b.buffer;
       }
     }
     export class ApplyBoost extends TLObject {
-      __response__!: Bool;
+      __response__!: Raw.premium.TypeMyBoosts;
+      slots?: Vector<int>;
       peer!: Raw.TypeInputPeer;
 
-      constructor(params: { peer: Raw.TypeInputPeer }) {
+      constructor(params: { slots?: Vector<int>; peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
-        this.className = 'stories.ApplyBoost';
-        this.constructorId = 0xf29d7c2b;
-        this.subclassOfId = 0xf5b399ac;
-        this.slots = ['peer'];
+        this.className = 'premium.ApplyBoost';
+        this.constructorId = 0x6b7da746;
+        this.subclassOfId = 0xad3512db;
+        this._slots = ['slots', 'peer'];
+        this.slots = params.slots;
         this.peer = params.peer;
       }
       /**
        * Generate the TLObject from buffer.
        * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
        */
-      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.ApplyBoost> {
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.ApplyBoost> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let slots = flags & (1 << 0) ? await TLObject.read(b, Primitive.Int) : [];
+        let peer = await TLObject.read(b);
+        return new Raw.premium.ApplyBoost({ slots: slots, peer: peer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.slots ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.slots) {
+          b.write(Primitive.Vector.write(this.slots, Primitive.Int) as unknown as Buffer);
+        }
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetBoostsStatus extends TLObject {
+      __response__!: Raw.premium.TypeBoostsStatus;
+      peer!: Raw.TypeInputPeer;
+
+      constructor(params: { peer: Raw.TypeInputPeer }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'premium.GetBoostsStatus';
+        this.constructorId = 0x42f1f61;
+        this.subclassOfId = 0xc31b1ab9;
+        this._slots = ['peer'];
+        this.peer = params.peer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.premium.GetBoostsStatus> {
         // no flags
 
         let peer = await TLObject.read(b);
-        return new Raw.stories.ApplyBoost({ peer: peer });
+        return new Raw.premium.GetBoostsStatus({ peer: peer });
       }
       /**
        * Generate buffer from TLObject.
@@ -96026,7 +98201,7 @@ export namespace Raw {
         this.className = 'langpack.GetLangPack';
         this.constructorId = 0xf2f2330a;
         this.subclassOfId = 0x52662d55;
-        this.slots = ['langPack', 'langCode'];
+        this._slots = ['langPack', 'langCode'];
         this.langPack = params.langPack;
         this.langCode = params.langCode;
       }
@@ -96070,7 +98245,7 @@ export namespace Raw {
         this.className = 'langpack.GetStrings';
         this.constructorId = 0xefea3803;
         this.subclassOfId = 0xc7b7353d;
-        this.slots = ['langPack', 'langCode', 'keys'];
+        this._slots = ['langPack', 'langCode', 'keys'];
         this.langPack = params.langPack;
         this.langCode = params.langCode;
         this.keys = params.keys;
@@ -96119,7 +98294,7 @@ export namespace Raw {
         this.className = 'langpack.GetDifference';
         this.constructorId = 0xcd984aa5;
         this.subclassOfId = 0x52662d55;
-        this.slots = ['langPack', 'langCode', 'fromVersion'];
+        this._slots = ['langPack', 'langCode', 'fromVersion'];
         this.langPack = params.langPack;
         this.langCode = params.langCode;
         this.fromVersion = params.fromVersion;
@@ -96170,7 +98345,7 @@ export namespace Raw {
         this.className = 'langpack.GetLanguages';
         this.constructorId = 0x42c6978f;
         this.subclassOfId = 0x280912c9;
-        this.slots = ['langPack'];
+        this._slots = ['langPack'];
         this.langPack = params.langPack;
       }
       /**
@@ -96208,7 +98383,7 @@ export namespace Raw {
         this.className = 'langpack.GetLanguage';
         this.constructorId = 0x6a596502;
         this.subclassOfId = 0xabac89b7;
-        this.slots = ['langPack', 'langCode'];
+        this._slots = ['langPack', 'langCode'];
         this.langPack = params.langPack;
         this.langCode = params.langCode;
       }
@@ -96252,7 +98427,7 @@ export namespace Raw {
         this.className = 'folders.EditPeerFolders';
         this.constructorId = 0x6847d0ab;
         this.subclassOfId = 0x8af52aac;
-        this.slots = ['folderPeers'];
+        this._slots = ['folderPeers'];
         this.folderPeers = params.folderPeers;
       }
       /**

@@ -44,7 +44,7 @@ async function getModule(name: string): Promise<TLObject> {
   }
 }
 export class TLObject {
-  slots!: Array<string>;
+  _slots!: Array<string>;
   // reference python cls -> typescript cls https://stackoverflow.com/questions/38138428/late-static-binding-and-instance-methods-in-typescript
   cls: any = <typeof TLObject>this.constructor;
   constructorId!: number;
@@ -52,7 +52,7 @@ export class TLObject {
   className!: string;
   classType!: string;
   constructor() {
-    this.slots = new Array();
+    this._slots = new Array();
     this.constructorId = this.cls.ID ?? 0;
     this.className = 'TLObject';
   }

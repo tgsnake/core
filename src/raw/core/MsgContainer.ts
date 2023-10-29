@@ -18,7 +18,7 @@ export class MsgContainer extends TLObject {
   messages!: Array<Message>;
   constructor(messages: Array<Message>) {
     super();
-    this.slots = ['messages'];
+    this._slots = ['messages'];
     this.className = 'MsgContainer';
     this.messages = messages;
   }

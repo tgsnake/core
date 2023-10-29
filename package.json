@@ -1,10 +1,10 @@
 {
   "name": "@tgsnake/core",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "Pure Telegram MTProto framework for nodejs",
   "main": "./lib/src/index.js",
   "devDependencies": {
-    "@types/node": "20.8.2",
+    "@types/node": "20.8.9",
     "deno2node": "1.10.1",
     "fast-csv": "4.3.6",
     "prettier": "3.0.3"

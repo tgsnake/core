@@ -390,7 +390,7 @@ function start(source, template) {
             namespace ?? ''
           }${name}"\n    this.constructorId = 0x${id}\n    this.subclassOfId = 0x${crc32(
             results,
-          ).toString(16)}\n    this.slots = ${JSON.stringify(slots)}\n${constructorString}`,
+          ).toString(16)}\n    this._slots = ${JSON.stringify(slots)}\n${constructorString}`,
         });
         if (constructorMap.has(namespace ? namespace.replace(/\.$/, '') : '')) {
           let ccontent = constructorMap.get(namespace ? namespace.replace(/\.$/, '') : '');

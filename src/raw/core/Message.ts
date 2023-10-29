@@ -29,7 +29,7 @@ export class Message extends TLObject {
   constructor(body: TLObject, msgId: bigint, seqNo: number, length: number) {
     super();
     this.className = 'Message';
-    this.slots = ['body', 'msgId', 'seqNo', 'length'];
+    this._slots = ['body', 'msgId', 'seqNo', 'length'];
     this.msgId = msgId;
     this.seqNo = seqNo;
     this.length = length;
