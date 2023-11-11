@@ -1,0 +1,31 @@
+name: Building Docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  builddocs:
+    name: Setup Deno
+    runs-on: ubuntu-latest
+    env:
+      PAT: ${{ secrets.GH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: 'v1.x'
+      - name: Building Docs
+        run: |
+          deno doc --html --output=../docs --name='tgsnake core' ./src/index.ts
+      - name: Completed Building
+        working-directory: '../docs'
+        run: |
+          git init -b gh-pages
+          git remote add origin https://$PAT@github.com/tgsnake/core.git -m gh-pages
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git config user.name github-actions[bot]
+          git add .
+          git commit -am "Update docs" -am "Sync dics with latest version using workflows"  -am "Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>" || echo "Tree is clean"
+          git push origin gh-pages -f
