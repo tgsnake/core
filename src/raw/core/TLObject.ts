@@ -103,7 +103,13 @@ export class TLObject {
         const value = this[key];
         if (ignore.includes(key)) continue;
         if (!key.startsWith('_') && value !== undefined && value !== null) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
+          if(typeof value === 'bigint'){
+            toPrint[key] = String(value)
+          } else if(Array.isArray(value)){
+            toPrint[key] = value.map((v) => typeof v === 'bigint' ? String(v) : v)
+          } else {
+            toPrint[key] = value
+          }
         }
       }
     }
