@@ -490,12 +490,12 @@ export class Session {
       if (this.hasOwnProperty(key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
-          if(typeof value === 'bigint'){
-            toPrint[key] = String(value)
-          } else if(Array.isArray(value)){
-            toPrint[key] = value.map((v) => typeof v === 'bigint' ? String(v) : v)
+          if (typeof value === 'bigint') {
+            toPrint[key] = String(value);
+          } else if (Array.isArray(value)) {
+            toPrint[key] = value.map((v) => (typeof v === 'bigint' ? String(v) : v));
           } else {
-            toPrint[key] = value
+            toPrint[key] = value;
           }
         }
       }

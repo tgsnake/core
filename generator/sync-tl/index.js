@@ -15,7 +15,7 @@ const path = require('path');
 async function getTl() {
   const readme = fs.readFileSync(path.join(__dirname, '../../README.md'), 'utf8');
   const prev = fs.readFileSync(path.join(__dirname, '../api/source/api.tl'), 'utf8');
-  const layer = await (
+  /*const layer = await (
     await fetch(
       'https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/layer.tl',
       {
@@ -23,22 +23,21 @@ async function getTl() {
         mode: 'cors',
       },
     )
-  ).text();
-  const tl =
-    (await (
-      await fetch(
-        'https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/api.tl',
-        {
-          method: 'GET',
-          mode: 'cors',
-        },
-      )
-    ).text()) +
+  ).text();*/
+  const tl = await (
+    await fetch(
+      'https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/api.tl',
+      {
+        method: 'GET',
+        mode: 'cors',
+      },
+    )
+  ).text(); /*+
     '\n\n' +
-    layer;
+    layer;*/
   const re = /\/\/\s+LAYER\s+(\d+)/i;
   const reMd = /<b>Layer\s+(\d+)<\/b>/i;
-  const [fullTL, intTL] = layer.match(re);
+  const [fullTL, intTL] = tl.match(re); // layer.match(re);
   const [fullPr, intPr] = prev.match(re);
   const [fullMd, intMd] = readme.match(reMd);
   if (+intTL !== +intPr) {
