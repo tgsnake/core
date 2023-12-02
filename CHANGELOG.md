@@ -1,4 +1,16 @@
- <a name="1.10.3"></a>
+ <a name="1.10.4"></a>
+
+## [1.10.4](https://github.com/tgsnake/core/compare/1.10.3...1.10.4)
+
+> 2023-12-02
+
+### Add
+
+- gh-pages builder  ### Change
+
+- Update TLSchema - Update CHANGELOG.md  ### Fix
+
+- sync-schema   <a name="1.10.3"></a>
 
 ## [1.10.3](https://github.com/tgsnake/core/compare/1.10.2...1.10.3)
 
