@@ -356,8 +356,8 @@ export class Client {
           peer.username
             ? peer.username.toLowerCase()
             : peer.usernames && peer.usernames[0]
-            ? (peer.usernames[0] as Raw.Username).username.toLowerCase()
-            : undefined,
+              ? (peer.usernames[0] as Raw.Username).username.toLowerCase()
+              : undefined,
           peer.phone ? peer.phone : undefined,
         ]);
       } else if (peer instanceof Raw.Chat || peer instanceof Raw.ChatForbidden) {
