@@ -172,7 +172,7 @@ code	id	message
 400	FROM_MESSAGE_BOT_DISABLED	Bots can't use fromMessage min constructors
 400	FROM_PEER_INVALID	The from peer value is invalid
 400	GAME_BOT_INVALID	You cannot send that game with the current bot
-400	GENERAL_MODIFY_ICON_FORBIDDEN	You can't modify the icon of the ""General"" topic.
+400	GENERAL_MODIFY_ICON_FORBIDDEN	You can't modify the icon of the """General""" topic.
 400	GEO_POINT_INVALID	Invalid geo point provided
 400	GIFT_SLUG_INVALID	
 400	GIF_CONTENT_TYPE_INVALID	GIF content-type invalid

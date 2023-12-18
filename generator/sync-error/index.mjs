@@ -108,7 +108,7 @@ async function build() {
     });
   let csv = `code\tid\tmessage`;
   for (let error of results) {
-    csv += `\n${error.code}\t${error.msg}\t${error.desc.replace(/\"/g, '""')}`;
+    csv += `\n${error.code}\t${error.msg}\t${error.desc.replace(/\"/g, '"""')}`;
   }
   fs.writeFileSync(path.join(__dirname, '../error/source/errors.json'), JSON.stringify(results));
   fs.writeFileSync(path.join(__dirname, '../error/source/errors.tsv'), csv);
