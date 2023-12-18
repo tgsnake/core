@@ -82,12 +82,17 @@ export class RPCError extends Error {
     }
     let id = message.replace(/\_\d+/gm, '_X');
     if (!(id in Exceptions[code])) {
-      let modules = await getModule(Exceptions[code]['_']);
-      // @ts-ignore
-      let _module = new modules(`[${code} ${message}]`, name, true, isSigned);
-      // @ts-ignore
-      _module._format();
-      throw _module;
+      // try to replace the last word with asterisk (*)
+      // example: FILE_REFERENCE_*
+      id = id.split('_').splice(-1, 1, '*').join('_');
+      if (!(id in Exceptions[code])) {
+        let modules = await getModule(Exceptions[code]['_']);
+        // @ts-ignore
+        let _module = new modules(`[${code} ${message}]`, name, true, isSigned);
+        // @ts-ignore
+        _module._format();
+        throw _module;
+      }
     }
     let value = message.match(/\_(\d+)/gm);
     if (value) {
