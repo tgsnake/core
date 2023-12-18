@@ -16,16 +16,7 @@ import * as denoPath from 'https://deno.land/std@0.209.0/path/mod.ts';
 
 const __dirname = denoPath.dirname(denoPath.fromFileUrl(import.meta.url));
 const reHref = /\<td\>\<a href=\"(.*)\"\>.*\<\/a\>\<\/td\>/gm;
-const file = {
-  303: '300_SEE_OTHER.tsv',
-  400: '400_BAD_REQUEST.tsv',
-  401: '401_UNAUTHORIZED.tsv',
-  403: '403_FORBIDDEN.tsv',
-  406: '406_NOT_ACCEPTABLE.tsv',
-  420: '420_FLOOD.tsv',
-  500: '500_INTERNAL_SERVER_ERROR.tsv',
-  503: '503_SERVICE_UNAVAILABLE.tsv',
-};
+
 async function getAllMethodRoutes() {
   const base = 'https://corefork.telegram.org';
   const html = await (

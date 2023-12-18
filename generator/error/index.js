@@ -10,8 +10,17 @@
 
 const fs = require('fs');
 const path = require('path');
-const { parse } = require('fast-csv');
 
+const name = {
+  303: 'SEE_OTHER',
+  400: 'BAD_REQUEST',
+  401: 'UNAUTHORIZED',
+  403: 'FORBIDDEN',
+  406: 'NOT_ACCEPTABLE',
+  420: 'FLOOD',
+  500: 'INTERNAL_SERVER_ERROR',
+  503: 'SERVICE_UNAVAILABLE',
+};
 function Uppercase(text) {
   return text.replace(text[0], text[0].toUpperCase());
 }
@@ -33,17 +42,6 @@ const snakeCaseToCamelCase = (input) =>
           : `${res}${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`,
       '',
     );
-function PromisedParse(route) {
-  let results = [];
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(path.join(__dirname, route))
-      .pipe(parse({ headers: true, delimiter: '\t' }))
-      .on('error', (error) => reject(error))
-      .on('data', (row) => results.push(row))
-      .on('end', (rowCount) => resolve(results));
-  });
-}
-
 async function read() {
   const templateParent = fs.readFileSync(
     path.join(__dirname, './template/constructor.txt'),
@@ -52,47 +50,63 @@ async function read() {
   const templateExtends = fs.readFileSync(path.join(__dirname, './template/extends.txt'), 'utf8');
   const templateAll = fs.readFileSync(path.join(__dirname, './template/all.txt'), 'utf8');
   const templateIndex = fs.readFileSync(path.join(__dirname, './template/index.txt'), 'utf8');
-  const dir = fs.readdirSync(path.join(__dirname, './source'));
+  const source = JSON.parse(fs.readFileSync(path.join(__dirname, './source/errors.json')));
   const imported = [];
   const exported = [];
   const exceptions = new Map();
+  const groupedSource = new Map();
+  for (let err of source) {
+    if (groupedSource.has(err.code)) {
+      let setter = groupedSource.get(err.code);
+      setter.set(err.msg, err.desc);
+      groupedSource.set(err.code, setter);
+    } else {
+      let setter = new Map();
+      setter.set(err.msg, err.desc);
+      groupedSource.set(err.code, setter);
+    }
+  }
   let count = 0;
-  for (const route of dir) {
+  for (const [code, source] of groupedSource) {
     const already = new Set();
-    const [input, file, code, name] = route.match(/((\d+)_([\w_]+)).tsv$/);
-    const PromisedReaded = await PromisedParse(path.join('source', route));
-    const prnt = name.includes('_')
-      ? Uppercase(snakeCaseToCamelCase(name.toLowerCase()))
-      : Uppercase(name.toLowerCase());
+    const prnt = name[code].includes('_')
+      ? Uppercase(snakeCaseToCamelCase(name[code].toLowerCase()))
+      : Uppercase(name[code].toLowerCase());
     const filename = `${prnt}${code}`;
     let parents = replacer(templateParent, {
       'CONSTRUCTOR-NAME': prnt,
       CODE: code,
-      NAME: `"${name}"`,
+      NAME: `"${name[code]}"`,
       'Copyright-Date': new Date().getFullYear(),
     });
     let exId = new Map();
-    for (let content of PromisedReaded) {
+    for (let [msg, desc] of source) {
       count++;
-      content.id = content.id.replace(/\s+/g, '_');
-      let crte = content.id.includes('_')
+      msg = msg.replace(/\s+/g, '_');
+      let crte = msg.includes('_')
         ? Uppercase(
-            snakeCaseToCamelCase(content.id.toLowerCase().replace('2', 'Two_').replace(/_X/i, '')),
+            snakeCaseToCamelCase(
+              msg.toLowerCase().replace(/^2/, 'two_').replace(/_X/i, '').replace(/\_\*$/, '_any'),
+            ),
           )
-        : Uppercase(content.id);
+        : Uppercase(msg.replace(/\_\*$/, 'Any'));
       if (already.has(crte)) {
-        crte = content.id.includes('_')
-          ? Uppercase(snakeCaseToCamelCase(content.id.toLowerCase().replace('2', 'Two_')))
-          : Uppercase(content.id);
+        crte = msg.includes('_')
+          ? Uppercase(
+              snakeCaseToCamelCase(
+                msg.toLowerCase().replace(/^2/, 'two_').replace(/\_\*$/, '_any'),
+              ),
+            )
+          : Uppercase(msg.replace(/\_\*$/, 'Any'));
       }
       const extnd = replacer(templateExtends, {
         'CONSTRUCTOR-NAME': crte,
         'PARENT-NAME': prnt,
-        ID: `"${content.id}"`,
-        MESSAGE: `"${content.message}"`,
+        ID: `"${msg}"`,
+        MESSAGE: `"${desc.replace(/\"/g, '\\"')}"`,
       });
       parents += `\n${extnd}`;
-      exId.set(content.id, crte);
+      exId.set(msg, crte);
       already.add(crte);
     }
     if (!fs.existsSync(path.join(__dirname, '../../src/errors/exceptions'))) {
