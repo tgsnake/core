@@ -32,10 +32,18 @@ export class CallOccupyFailed extends InternalServerError {
   id: string = 'CALL_OCCUPY_FAILED';
   message: string = 'The call failed because the user is already making another call';
 }
+export class CdnUploadTimeout extends InternalServerError {
+  id: string = 'CDN_UPLOAD_TIMEOUT';
+  message: string = 'A server-side timeout occurred while reuploading the file to the CDN DC.';
+}
 export class ChatIdGenerateFailed extends InternalServerError {
   id: string = 'CHAT_ID_GENERATE_FAILED';
   message: string =
     'Failure while generating the chat ID due to Telegram having internal problems. Please try again later';
+}
+export class ChatInvalid extends InternalServerError {
+  id: string = 'CHAT_INVALID';
+  message: string = 'Invalid chat.';
 }
 export class ChatOccupyLocFailed extends InternalServerError {
   id: string = 'CHAT_OCCUPY_LOC_FAILED';
@@ -92,9 +100,17 @@ export class InterdcCallRichError extends InternalServerError {
   message: string =
     'A rich error occurred while Telegram was intercommunicating with DC{value}. Please try again later';
 }
+export class MemberChatAddFailed extends InternalServerError {
+  id: string = 'MEMBER_CHAT_ADD_FAILED';
+  message: string = '';
+}
 export class MemberFetchFailed extends InternalServerError {
   id: string = 'MEMBER_FETCH_FAILED';
   message: string = 'Telegram is having internal problems. Please try again later';
+}
+export class MemberNotFound extends InternalServerError {
+  id: string = 'MEMBER_NOT_FOUND';
+  message: string = '';
 }
 export class MemberNoLocation extends InternalServerError {
   id: string = 'MEMBER_NO_LOCATION';
@@ -118,6 +134,10 @@ export class MsgRangeUnsync extends InternalServerError {
   id: string = 'MSG_RANGE_UNSYNC';
   message: string =
     'Message range unsynchronized due to Telegram having internal problems. Please try again later';
+}
+export class MsgWaitFailed extends InternalServerError {
+  id: string = 'MSG_WAIT_FAILED';
+  message: string = 'A waiting call returned an error.';
 }
 export class MtSendQueueTooLong extends InternalServerError {
   id: string = 'MT_SEND_QUEUE_TOO_LONG';
@@ -179,6 +199,10 @@ export class RpcConnectFailed extends InternalServerError {
 export class RpcMcgetFail extends InternalServerError {
   id: string = 'RPC_MCGET_FAIL';
   message: string = 'Telegram is having internal problems. Please try again later';
+}
+export class SendMediaInvalid extends InternalServerError {
+  id: string = 'SEND_MEDIA_INVALID';
+  message: string = '';
 }
 export class SignInFailed extends InternalServerError {
   id: string = 'SIGN_IN_FAILED';

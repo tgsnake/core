@@ -31,9 +31,17 @@ export class AccessTokenInvalid extends BadRequest {
   id: string = 'ACCESS_TOKEN_INVALID';
   message: string = 'The bot access token is invalid';
 }
+export class AddressInvalid extends BadRequest {
+  id: string = 'ADDRESS_INVALID';
+  message: string = 'The specified geopoint address is invalid.';
+}
 export class AdminsTooMuch extends BadRequest {
   id: string = 'ADMINS_TOO_MUCH';
   message: string = 'The chat has too many administrators';
+}
+export class AdminIdInvalid extends BadRequest {
+  id: string = 'ADMIN_ID_INVALID';
+  message: string = 'The specified admin ID is invalid.';
 }
 export class AdminRankEmojiNotAllowed extends BadRequest {
   id: string = 'ADMIN_RANK_EMOJI_NOT_ALLOWED';
@@ -42,6 +50,10 @@ export class AdminRankEmojiNotAllowed extends BadRequest {
 export class AdminRankInvalid extends BadRequest {
   id: string = 'ADMIN_RANK_INVALID';
   message: string = 'The custom administrator title is invalid or too long';
+}
+export class AdminRightsEmpty extends BadRequest {
+  id: string = 'ADMIN_RIGHTS_EMPTY';
+  message: string = '';
 }
 export class AlbumPhotosTooMany extends BadRequest {
   id: string = 'ALBUM_PHOTOS_TOO_MANY';
@@ -60,6 +72,10 @@ export class ArticleTitleEmpty extends BadRequest {
   id: string = 'ARTICLE_TITLE_EMPTY';
   message: string = 'The article title is empty';
 }
+export class AudioContentUrlEmpty extends BadRequest {
+  id: string = 'AUDIO_CONTENT_URL_EMPTY';
+  message: string = 'The remote URL specified in the content field is empty.';
+}
 export class AudioTitleEmpty extends BadRequest {
   id: string = 'AUDIO_TITLE_EMPTY';
   message: string = 'The title attribute of the audio is empty';
@@ -72,6 +88,10 @@ export class AuthTokenAlreadyAccepted extends BadRequest {
   id: string = 'AUTH_TOKEN_ALREADY_ACCEPTED';
   message: string = 'The authorization token was already used';
 }
+export class AuthTokenException extends BadRequest {
+  id: string = 'AUTH_TOKEN_EXCEPTION';
+  message: string = 'An error occurred while importing the auth token.';
+}
 export class AuthTokenExpired extends BadRequest {
   id: string = 'AUTH_TOKEN_EXPIRED';
   message: string =
@@ -80,6 +100,10 @@ export class AuthTokenExpired extends BadRequest {
 export class AuthTokenInvalid extends BadRequest {
   id: string = 'AUTH_TOKEN_INVALID';
   message: string = 'An invalid authorization token was provided';
+}
+export class AuthTokenInvalidx extends BadRequest {
+  id: string = 'AUTH_TOKEN_INVALIDX';
+  message: string = 'The specified auth token is invalid.';
 }
 export class AutoarchiveNotAvailable extends BadRequest {
   id: string = 'AUTOARCHIVE_NOT_AVAILABLE';
@@ -98,9 +122,18 @@ export class BasePortLocInvalid extends BadRequest {
   id: string = 'BASE_PORT_LOC_INVALID';
   message: string = 'The base port location is invalid';
 }
+export class BoostsRequired extends BadRequest {
+  id: string = 'BOOSTS_REQUIRED';
+  message: string =
+    'The specified channel must first be boosted by its users in order to perform this action.';
+}
 export class BotsTooMuch extends BadRequest {
   id: string = 'BOTS_TOO_MUCH';
   message: string = 'The chat has too many bots';
+}
+export class BotAppInvalid extends BadRequest {
+  id: string = 'BOT_APP_INVALID';
+  message: string = 'The specified bot app is invalid.';
 }
 export class BotChannelsNa extends BadRequest {
   id: string = 'BOT_CHANNELS_NA';
@@ -109,6 +142,10 @@ export class BotChannelsNa extends BadRequest {
 export class BotCommandDescriptionInvalid extends BadRequest {
   id: string = 'BOT_COMMAND_DESCRIPTION_INVALID';
   message: string = 'The command description was empty, too long or had invalid characters';
+}
+export class BotCommandInvalid extends BadRequest {
+  id: string = 'BOT_COMMAND_INVALID';
+  message: string = 'The specified command is invalid.';
 }
 export class BotDomainInvalid extends BadRequest {
   id: string = 'BOT_DOMAIN_INVALID';
@@ -138,6 +175,10 @@ export class BotMethodInvalid extends BadRequest {
 export class BotMissing extends BadRequest {
   id: string = 'BOT_MISSING';
   message: string = 'This method can only be run by a bot';
+}
+export class BotOnesideNotAvail extends BadRequest {
+  id: string = 'BOT_ONESIDE_NOT_AVAIL';
+  message: string = "Bots can't pin messages in PM just for themselves.";
 }
 export class BotPaymentsDisabled extends BadRequest {
   id: string = 'BOT_PAYMENTS_DISABLED';
@@ -171,6 +212,10 @@ export class ButtonDataInvalid extends BadRequest {
   id: string = 'BUTTON_DATA_INVALID';
   message: string = 'The button callback data is invalid or too large';
 }
+export class ButtonTextInvalid extends BadRequest {
+  id: string = 'BUTTON_TEXT_INVALID';
+  message: string = 'The specified button text is invalid.';
+}
 export class ButtonTypeInvalid extends BadRequest {
   id: string = 'BUTTON_TYPE_INVALID';
   message: string = 'The type of one of the buttons you provided is invalid';
@@ -178,6 +223,11 @@ export class ButtonTypeInvalid extends BadRequest {
 export class ButtonUrlInvalid extends BadRequest {
   id: string = 'BUTTON_URL_INVALID';
   message: string = 'The button url is invalid';
+}
+export class ButtonUserPrivacyRestricted extends BadRequest {
+  id: string = 'BUTTON_USER_PRIVACY_RESTRICTED';
+  message: string =
+    'The privacy setting of the user specified in a inputKeyboardButtonUserProfile button do not allow creating such a button.';
 }
 export class CallAlreadyAccepted extends BadRequest {
   id: string = 'CALL_ALREADY_ACCEPTED';
@@ -199,6 +249,10 @@ export class CdnMethodInvalid extends BadRequest {
   id: string = 'CDN_METHOD_INVALID';
   message: string = "The method can't be used on CDN DCs";
 }
+export class ChannelsAdminLocatedTooMuch extends BadRequest {
+  id: string = 'CHANNELS_ADMIN_LOCATED_TOO_MUCH';
+  message: string = 'The user has reached the limit of public geogroups.';
+}
 export class ChannelsAdminPublicTooMuch extends BadRequest {
   id: string = 'CHANNELS_ADMIN_PUBLIC_TOO_MUCH';
   message: string = 'You are an administrator of too many public channels';
@@ -215,17 +269,37 @@ export class ChannelBanned extends BadRequest {
   id: string = 'CHANNEL_BANNED';
   message: string = 'The channel is banned';
 }
+export class ChannelForumMissing extends BadRequest {
+  id: string = 'CHANNEL_FORUM_MISSING';
+  message: string = 'This supergroup is not a forum.';
+}
+export class ChannelIdInvalid extends BadRequest {
+  id: string = 'CHANNEL_ID_INVALID';
+  message: string = 'The specified supergroup ID is invalid.';
+}
 export class ChannelInvalid extends BadRequest {
   id: string = 'CHANNEL_INVALID';
   message: string = 'The channel parameter is invalid';
+}
+export class ChannelParicipantMissing extends BadRequest {
+  id: string = 'CHANNEL_PARICIPANT_MISSING';
+  message: string = 'The current user is not in the channel.';
 }
 export class ChannelPrivate extends BadRequest {
   id: string = 'CHANNEL_PRIVATE';
   message: string = 'The channel/supergroup is not accessible';
 }
+export class ChannelTooBig extends BadRequest {
+  id: string = 'CHANNEL_TOO_BIG';
+  message: string = 'This channel has too many participants (>1000) to be deleted.';
+}
 export class ChannelTooLarge extends BadRequest {
   id: string = 'CHANNEL_TOO_LARGE';
   message: string = 'The channel is too large';
+}
+export class ChatlistExcludeInvalid extends BadRequest {
+  id: string = 'CHATLIST_EXCLUDE_INVALID';
+  message: string = '';
 }
 export class ChatAboutNotModified extends BadRequest {
   id: string = 'CHAT_ABOUT_NOT_MODIFIED';
@@ -239,6 +313,10 @@ export class ChatAboutTooLong extends BadRequest {
 export class ChatAdminRequired extends BadRequest {
   id: string = 'CHAT_ADMIN_REQUIRED';
   message: string = 'The method requires chat admin privileges';
+}
+export class ChatDiscussionUnallowed extends BadRequest {
+  id: string = 'CHAT_DISCUSSION_UNALLOWED';
+  message: string = "You can't enable forum topics in a discussion group linked to a channel.";
 }
 export class ChatForwardsRestricted extends BadRequest {
   id: string = 'CHAT_FORWARDS_RESTRICTED';
@@ -270,9 +348,17 @@ export class ChatNotModified extends BadRequest {
   message: string =
     'The chat settings (title, permissions, photo, etc..) were not modified because you tried to edit them using the same content';
 }
+export class ChatPublicRequired extends BadRequest {
+  id: string = 'CHAT_PUBLIC_REQUIRED';
+  message: string = 'You can only enable join requests in public groups.';
+}
 export class ChatRestricted extends BadRequest {
   id: string = 'CHAT_RESTRICTED';
   message: string = 'The chat is restricted and cannot be used';
+}
+export class ChatRevokeDateUnsupported extends BadRequest {
+  id: string = 'CHAT_REVOKE_DATE_UNSUPPORTED';
+  message: string = 'min_date and max_date are not available for using with non-user peers.';
 }
 export class ChatSendInlineForbidden extends BadRequest {
   id: string = 'CHAT_SEND_INLINE_FORBIDDEN';
@@ -297,6 +383,10 @@ export class CodeHashInvalid extends BadRequest {
 export class CodeInvalid extends BadRequest {
   id: string = 'CODE_INVALID';
   message: string = 'The provided code is invalid (i.e. from email)';
+}
+export class ColorInvalid extends BadRequest {
+  id: string = 'COLOR_INVALID';
+  message: string = '';
 }
 export class ConnectionApiIdInvalid extends BadRequest {
   id: string = 'CONNECTION_API_ID_INVALID';
@@ -346,6 +436,18 @@ export class ContactReqMissing extends BadRequest {
   id: string = 'CONTACT_REQ_MISSING';
   message: string = 'Missing contact request';
 }
+export class CreateCallFailed extends BadRequest {
+  id: string = 'CREATE_CALL_FAILED';
+  message: string = 'An error occurred while creating the call.';
+}
+export class CurrencyTotalAmountInvalid extends BadRequest {
+  id: string = 'CURRENCY_TOTAL_AMOUNT_INVALID';
+  message: string = 'The total amount of all prices is invalid.';
+}
+export class CustomReactionsTooMany extends BadRequest {
+  id: string = 'CUSTOM_REACTIONS_TOO_MANY';
+  message: string = '';
+}
 export class DataInvalid extends BadRequest {
   id: string = 'DATA_INVALID';
   message: string = 'The encrypted data is invalid';
@@ -382,6 +484,11 @@ export class EmailInvalid extends BadRequest {
   id: string = 'EMAIL_INVALID';
   message: string = 'The email provided is invalid';
 }
+export class EmailNotSetup extends BadRequest {
+  id: string = 'EMAIL_NOT_SETUP';
+  message: string =
+    'In order to change the login email with emailVerifyPurposeLoginChange, an existing login email must already be set using emailVerifyPurposeLoginSetup.';
+}
 export class EmailUnconfirmed extends BadRequest {
   id: string = 'EMAIL_UNCONFIRMED';
   message: string = 'Email unconfirmed';
@@ -394,6 +501,18 @@ export class EmailUnconfirmedX extends BadRequest {
 export class EmailVerifyExpired extends BadRequest {
   id: string = 'EMAIL_VERIFY_EXPIRED';
   message: string = 'The verification email has expired';
+}
+export class EmojiInvalid extends BadRequest {
+  id: string = 'EMOJI_INVALID';
+  message: string = 'The specified theme emoji is valid.';
+}
+export class EmojiMarkupInvalid extends BadRequest {
+  id: string = 'EMOJI_MARKUP_INVALID';
+  message: string = 'The specified video_emoji_markup was invalid.';
+}
+export class EmojiNotModified extends BadRequest {
+  id: string = 'EMOJI_NOT_MODIFIED';
+  message: string = "The theme wasn't changed.";
 }
 export class EmoticonEmpty extends BadRequest {
   id: string = 'EMOTICON_EMPTY';
@@ -432,6 +551,11 @@ export class EntitiesTooLong extends BadRequest {
   message: string =
     'The entity provided contains data that is too long, or you passed too many entities to this message';
 }
+export class EntityBoundsInvalid extends BadRequest {
+  id: string = 'ENTITY_BOUNDS_INVALID';
+  message: string =
+    'A specified entity offset or length is invalid, see here » for info on how to properly compute the entity offset/length.';
+}
 export class EntityMentionUserInvalid extends BadRequest {
   id: string = 'ENTITY_MENTION_USER_INVALID';
   message: string = 'The mentioned entity is not an user';
@@ -459,6 +583,14 @@ export class FieldNameEmpty extends BadRequest {
 export class FieldNameInvalid extends BadRequest {
   id: string = 'FIELD_NAME_INVALID';
   message: string = 'The field with the name FIELD_NAME is invalid';
+}
+export class FileContentTypeInvalid extends BadRequest {
+  id: string = 'FILE_CONTENT_TYPE_INVALID';
+  message: string = 'File content-type is invalid.';
+}
+export class FileEmtpy extends BadRequest {
+  id: string = 'FILE_EMTPY';
+  message: string = 'An empty file was provided.';
 }
 export class FileIdInvalid extends BadRequest {
   id: string = 'FILE_ID_INVALID';
@@ -501,6 +633,10 @@ export class FilePartMissing extends BadRequest {
   id: string = 'FILE_PART_X_MISSING';
   message: string = 'Part {value} of the file is missing from storage';
 }
+export class FileReferenceAny extends BadRequest {
+  id: string = 'FILE_REFERENCE_*';
+  message: string = 'The file reference expired, it must be refreshed.';
+}
 export class FileReferenceEmpty extends BadRequest {
   id: string = 'FILE_REFERENCE_EMPTY';
   message: string =
@@ -516,9 +652,29 @@ export class FileReferenceInvalid extends BadRequest {
   message: string =
     'The file id contains an invalid file reference, you must obtain a valid one by fetching the message from the origin context';
 }
+export class FileTitleEmpty extends BadRequest {
+  id: string = 'FILE_TITLE_EMPTY';
+  message: string = 'An empty file title was specified.';
+}
+export class FileTokenInvalid extends BadRequest {
+  id: string = 'FILE_TOKEN_INVALID';
+  message: string = 'The specified file token is invalid.';
+}
 export class FilterIdInvalid extends BadRequest {
   id: string = 'FILTER_ID_INVALID';
   message: string = 'The specified filter ID is invalid';
+}
+export class FilterIncludeEmpty extends BadRequest {
+  id: string = 'FILTER_INCLUDE_EMPTY';
+  message: string = 'The include_peers vector of the filter is empty.';
+}
+export class FilterNotSupported extends BadRequest {
+  id: string = 'FILTER_NOT_SUPPORTED';
+  message: string = 'The specified filter cannot be used in this context.';
+}
+export class FilterTitleEmpty extends BadRequest {
+  id: string = 'FILTER_TITLE_EMPTY';
+  message: string = 'The title field of the filter is empty.';
 }
 export class FirstnameInvalid extends BadRequest {
   id: string = 'FIRSTNAME_INVALID';
@@ -531,6 +687,11 @@ export class FolderIdEmpty extends BadRequest {
 export class FolderIdInvalid extends BadRequest {
   id: string = 'FOLDER_ID_INVALID';
   message: string = 'The folder id is invalid';
+}
+export class ForumEnabled extends BadRequest {
+  id: string = 'FORUM_ENABLED';
+  message: string =
+    "You can't execute the specified action because the group is a forum, disable forum functionality to continue.";
 }
 export class FreshChangeAdminsForbidden extends BadRequest {
   id: string = 'FRESH_CHANGE_ADMINS_FORBIDDEN';
@@ -549,9 +710,17 @@ export class GameBotInvalid extends BadRequest {
   id: string = 'GAME_BOT_INVALID';
   message: string = 'You cannot send that game with the current bot';
 }
+export class GeneralModifyIconForbidden extends BadRequest {
+  id: string = 'GENERAL_MODIFY_ICON_FORBIDDEN';
+  message: string = 'You can\'t modify the icon of the "General" topic.';
+}
 export class GeoPointInvalid extends BadRequest {
   id: string = 'GEO_POINT_INVALID';
   message: string = 'Invalid geo point provided';
+}
+export class GiftSlugInvalid extends BadRequest {
+  id: string = 'GIFT_SLUG_INVALID';
+  message: string = '';
 }
 export class GifContentTypeInvalid extends BadRequest {
   id: string = 'GIF_CONTENT_TYPE_INVALID';
@@ -561,6 +730,10 @@ export class GifIdInvalid extends BadRequest {
   id: string = 'GIF_ID_INVALID';
   message: string = 'The provided gif/animation id is invalid';
 }
+export class GraphExpiredReload extends BadRequest {
+  id: string = 'GRAPH_EXPIRED_RELOAD';
+  message: string = 'This graph has expired, please obtain a new graph token.';
+}
 export class GraphInvalidReload extends BadRequest {
   id: string = 'GRAPH_INVALID_RELOAD';
   message: string =
@@ -569,6 +742,22 @@ export class GraphInvalidReload extends BadRequest {
 export class GraphOutdatedReload extends BadRequest {
   id: string = 'GRAPH_OUTDATED_RELOAD';
   message: string = 'The graph data is outdated';
+}
+export class GroupcallAlreadyDiscarded extends BadRequest {
+  id: string = 'GROUPCALL_ALREADY_DISCARDED';
+  message: string = 'The group call was already discarded.';
+}
+export class GroupcallInvalid extends BadRequest {
+  id: string = 'GROUPCALL_INVALID';
+  message: string = 'The specified group call is invalid.';
+}
+export class GroupcallJoinMissing extends BadRequest {
+  id: string = 'GROUPCALL_JOIN_MISSING';
+  message: string = "You haven't joined this group call.";
+}
+export class GroupcallNotModified extends BadRequest {
+  id: string = 'GROUPCALL_NOT_MODIFIED';
+  message: string = "Group call settings weren't modified.";
 }
 export class GroupcallSsrcDuplicateMuch extends BadRequest {
   id: string = 'GROUPCALL_SSRC_DUPLICATE_MUCH';
@@ -586,6 +775,10 @@ export class HashInvalid extends BadRequest {
   id: string = 'HASH_INVALID';
   message: string = 'The provided hash is invalid';
 }
+export class HideRequesterMissing extends BadRequest {
+  id: string = 'HIDE_REQUESTER_MISSING';
+  message: string = 'The join request was missing or was already handled.';
+}
 export class ImageProcessFailed extends BadRequest {
   id: string = 'IMAGE_PROCESS_FAILED';
   message: string = 'The server failed to process your image';
@@ -602,9 +795,17 @@ export class ImportIdInvalid extends BadRequest {
   id: string = 'IMPORT_ID_INVALID';
   message: string = 'The import id is invalid';
 }
+export class ImportTokenInvalid extends BadRequest {
+  id: string = 'IMPORT_TOKEN_INVALID';
+  message: string = 'The specified token is invalid.';
+}
 export class InlineResultExpired extends BadRequest {
   id: string = 'INLINE_RESULT_EXPIRED';
   message: string = 'The inline bot query expired';
+}
+export class InputChatlistInvalid extends BadRequest {
+  id: string = 'INPUT_CHATLIST_INVALID';
+  message: string = 'The specified folder is invalid.';
 }
 export class InputConstructorInvalid extends BadRequest {
   id: string = 'INPUT_CONSTRUCTOR_INVALID';
@@ -634,9 +835,23 @@ export class InputRequestTooLong extends BadRequest {
   id: string = 'INPUT_REQUEST_TOO_LONG';
   message: string = 'The input request is too long';
 }
+export class InputTextEmpty extends BadRequest {
+  id: string = 'INPUT_TEXT_EMPTY';
+  message: string = 'The specified text is empty.';
+}
 export class InputUserDeactivated extends BadRequest {
   id: string = 'INPUT_USER_DEACTIVATED';
   message: string = 'The target user has been deleted/deactivated';
+}
+export class InvitesTooMuch extends BadRequest {
+  id: string = 'INVITES_TOO_MUCH';
+  message: string =
+    'The maximum number of per-folder invites specified by the chatlist_invites_limit_default/chatlist_invites_limit_premium client configuration parameters » was reached.';
+}
+export class InviteForbiddenWithJoinas extends BadRequest {
+  id: string = 'INVITE_FORBIDDEN_WITH_JOINAS';
+  message: string =
+    "If the user has anonymously joined a group call as a channel, they can't invite other users to the group call because that would cause deanonymization, because the invite would be sent using the original user ID, not the anonymized channel ID.";
 }
 export class InviteHashEmpty extends BadRequest {
   id: string = 'INVITE_HASH_EMPTY';
@@ -650,9 +865,37 @@ export class InviteHashInvalid extends BadRequest {
   id: string = 'INVITE_HASH_INVALID';
   message: string = 'The invite link hash is invalid';
 }
+export class InviteRequestSent extends BadRequest {
+  id: string = 'INVITE_REQUEST_SENT';
+  message: string = 'You have successfully requested to join this chat or channel.';
+}
 export class InviteRevokedMissing extends BadRequest {
   id: string = 'INVITE_REVOKED_MISSING';
   message: string = 'The action required a chat invite link to be revoked first';
+}
+export class InviteSlugEmpty extends BadRequest {
+  id: string = 'INVITE_SLUG_EMPTY';
+  message: string = 'The specified invite slug is empty.';
+}
+export class InviteSlugExpired extends BadRequest {
+  id: string = 'INVITE_SLUG_EXPIRED';
+  message: string = 'The specified chat folder link has expired.';
+}
+export class InvoicePayloadInvalid extends BadRequest {
+  id: string = 'INVOICE_PAYLOAD_INVALID';
+  message: string = 'The specified invoice payload is invalid.';
+}
+export class JoinAsPeerInvalid extends BadRequest {
+  id: string = 'JOIN_AS_PEER_INVALID';
+  message: string = 'The specified peer cannot be used to join a group call.';
+}
+export class LangCodeInvalid extends BadRequest {
+  id: string = 'LANG_CODE_INVALID';
+  message: string = 'The specified language code is invalid.';
+}
+export class LangCodeNotSupported extends BadRequest {
+  id: string = 'LANG_CODE_NOT_SUPPORTED';
+  message: string = 'The specified language code is not supported.';
 }
 export class LangPackInvalid extends BadRequest {
   id: string = 'LANG_PACK_INVALID';
@@ -674,6 +917,10 @@ export class LocationInvalid extends BadRequest {
   id: string = 'LOCATION_INVALID';
   message: string = 'The file location is invalid';
 }
+export class MaxDateInvalid extends BadRequest {
+  id: string = 'MAX_DATE_INVALID';
+  message: string = 'The specified maximum date is invalid.';
+}
 export class MaxIdInvalid extends BadRequest {
   id: string = 'MAX_ID_INVALID';
   message: string = 'The max_id parameter is invalid';
@@ -694,6 +941,14 @@ export class MediaEmpty extends BadRequest {
   id: string = 'MEDIA_EMPTY';
   message: string = 'The media you tried to send is invalid';
 }
+export class MediaFileInvalid extends BadRequest {
+  id: string = 'MEDIA_FILE_INVALID';
+  message: string = 'The specified media file is invalid.';
+}
+export class MediaGroupedInvalid extends BadRequest {
+  id: string = 'MEDIA_GROUPED_INVALID';
+  message: string = 'You tried to send media of different types in an album.';
+}
 export class MediaInvalid extends BadRequest {
   id: string = 'MEDIA_INVALID';
   message: string = 'The media is invalid';
@@ -705,6 +960,22 @@ export class MediaNewInvalid extends BadRequest {
 export class MediaPrevInvalid extends BadRequest {
   id: string = 'MEDIA_PREV_INVALID';
   message: string = 'The previous media cannot be edited with anything else';
+}
+export class MediaTtlInvalid extends BadRequest {
+  id: string = 'MEDIA_TTL_INVALID';
+  message: string = 'The specified media TTL is invalid.';
+}
+export class MediaTypeInvalid extends BadRequest {
+  id: string = 'MEDIA_TYPE_INVALID';
+  message: string = 'The specified media type cannot be used in stories.';
+}
+export class MediaVideoStoryMissing extends BadRequest {
+  id: string = 'MEDIA_VIDEO_STORY_MISSING';
+  message: string = '';
+}
+export class MegagroupGeoRequired extends BadRequest {
+  id: string = 'MEGAGROUP_GEO_REQUIRED';
+  message: string = '';
 }
 export class MegagroupIdInvalid extends BadRequest {
   id: string = 'MEGAGROUP_ID_INVALID';
@@ -751,9 +1022,18 @@ export class MethodInvalid extends BadRequest {
   id: string = 'METHOD_INVALID';
   message: string = 'The API method is invalid and cannot be used';
 }
+export class MinDateInvalid extends BadRequest {
+  id: string = 'MIN_DATE_INVALID';
+  message: string = 'The specified minimum date is invalid.';
+}
 export class MsgIdInvalid extends BadRequest {
   id: string = 'MSG_ID_INVALID';
   message: string = 'The message ID used in the peer was invalid';
+}
+export class MsgTooOld extends BadRequest {
+  id: string = 'MSG_TOO_OLD';
+  message: string =
+    'chat_read_mark_expire_period seconds have passed since the message was sent, read receipts were deleted.';
 }
 export class MsgWaitFailed extends BadRequest {
   id: string = 'MSG_WAIT_FAILED';
@@ -766,6 +1046,11 @@ export class MultiMediaTooLong extends BadRequest {
 export class NewSaltInvalid extends BadRequest {
   id: string = 'NEW_SALT_INVALID';
   message: string = 'The new salt is invalid';
+}
+export class NewSettingsEmpty extends BadRequest {
+  id: string = 'NEW_SETTINGS_EMPTY';
+  message: string =
+    'No password is set on the current account, and no new password was specified in new_settings.';
 }
 export class NewSettingsInvalid extends BadRequest {
   id: string = 'NEW_SETTINGS_INVALID';
@@ -791,6 +1076,10 @@ export class OptionInvalid extends BadRequest {
   id: string = 'OPTION_INVALID';
   message: string = 'The option specified is invalid and does not exist in the target poll';
 }
+export class OrderInvalid extends BadRequest {
+  id: string = 'ORDER_INVALID';
+  message: string = 'The specified username order is invalid.';
+}
 export class PackShortNameInvalid extends BadRequest {
   id: string = 'PACK_SHORT_NAME_INVALID';
   message: string =
@@ -808,6 +1097,15 @@ export class ParticipantsTooFew extends BadRequest {
   id: string = 'PARTICIPANTS_TOO_FEW';
   message: string = "The chat doesn't have enough participants";
 }
+export class ParticipantIdInvalid extends BadRequest {
+  id: string = 'PARTICIPANT_ID_INVALID';
+  message: string = 'The specified participant ID is invalid.';
+}
+export class ParticipantJoinMissing extends BadRequest {
+  id: string = 'PARTICIPANT_JOIN_MISSING';
+  message: string =
+    "Trying to enable a presentation, when the user hasn't joined the Video Chat with phone.joinGroupCall.";
+}
 export class ParticipantVersionOutdated extends BadRequest {
   id: string = 'PARTICIPANT_VERSION_OUTDATED';
   message: string = 'The other participant is using an outdated Telegram app version';
@@ -823,6 +1121,10 @@ export class PasswordHashInvalid extends BadRequest {
 export class PasswordMissing extends BadRequest {
   id: string = 'PASSWORD_MISSING';
   message: string = 'The account is missing the two-step verification password';
+}
+export class PasswordRecoveryExpired extends BadRequest {
+  id: string = 'PASSWORD_RECOVERY_EXPIRED';
+  message: string = 'The recovery code has expired.';
 }
 export class PasswordRecoveryNa extends BadRequest {
   id: string = 'PASSWORD_RECOVERY_NA';
@@ -841,9 +1143,17 @@ export class PaymentProviderInvalid extends BadRequest {
   id: string = 'PAYMENT_PROVIDER_INVALID';
   message: string = 'The payment provider was not recognised or its token was invalid';
 }
+export class PeersListEmpty extends BadRequest {
+  id: string = 'PEERS_LIST_EMPTY';
+  message: string = 'The specified list of peers is empty.';
+}
 export class PeerFlood extends BadRequest {
   id: string = 'PEER_FLOOD';
   message: string = "The method can't be used because your account is currently limited";
+}
+export class PeerHistoryEmpty extends BadRequest {
+  id: string = 'PEER_HISTORY_EMPTY';
+  message: string = "You can't pin an empty chat with a user.";
 }
 export class PeerIdInvalid extends BadRequest {
   id: string = 'PEER_ID_INVALID';
@@ -877,6 +1187,14 @@ export class PhoneCodeHashEmpty extends BadRequest {
 export class PhoneCodeInvalid extends BadRequest {
   id: string = 'PHONE_CODE_INVALID';
   message: string = 'The confirmation code is invalid';
+}
+export class PhoneHashExpired extends BadRequest {
+  id: string = 'PHONE_HASH_EXPIRED';
+  message: string = 'An invalid or expired phone_code_hash was provided.';
+}
+export class PhoneNotOccupied extends BadRequest {
+  id: string = 'PHONE_NOT_OCCUPIED';
+  message: string = 'No user is associated to the specified phone number.';
 }
 export class PhoneNumberAppSignupForbidden extends BadRequest {
   id: string = 'PHONE_NUMBER_APP_SIGNUP_FORBIDDEN';
@@ -966,6 +1284,10 @@ export class PollAnswersInvalid extends BadRequest {
   id: string = 'POLL_ANSWERS_INVALID';
   message: string = 'The poll answers are invalid';
 }
+export class PollAnswerInvalid extends BadRequest {
+  id: string = 'POLL_ANSWER_INVALID';
+  message: string = 'One of the poll answers is not acceptable.';
+}
 export class PollOptionDuplicate extends BadRequest {
   id: string = 'POLL_OPTION_DUPLICATE';
   message: string = 'A duplicate option was sent in the same poll';
@@ -986,6 +1308,10 @@ export class PollVoteRequired extends BadRequest {
   id: string = 'POLL_VOTE_REQUIRED';
   message: string = 'Cast a vote in the poll before calling this method';
 }
+export class PremiumAccountRequired extends BadRequest {
+  id: string = 'PREMIUM_ACCOUNT_REQUIRED';
+  message: string = 'A premium account is required to execute this action.';
+}
 export class PrivacyKeyInvalid extends BadRequest {
   id: string = 'PRIVACY_KEY_INVALID';
   message: string = 'The privacy key is invalid';
@@ -998,6 +1324,10 @@ export class PrivacyValueInvalid extends BadRequest {
   id: string = 'PRIVACY_VALUE_INVALID';
   message: string = 'The privacy value is invalid';
 }
+export class PublicKeyRequired extends BadRequest {
+  id: string = 'PUBLIC_KEY_REQUIRED';
+  message: string = 'A public key is required.';
+}
 export class QueryIdEmpty extends BadRequest {
   id: string = 'QUERY_ID_EMPTY';
   message: string = 'The query ID is empty';
@@ -1009,6 +1339,11 @@ export class QueryIdInvalid extends BadRequest {
 export class QueryTooShort extends BadRequest {
   id: string = 'QUERY_TOO_SHORT';
   message: string = 'The query is too short';
+}
+export class QuizAnswerMissing extends BadRequest {
+  id: string = 'QUIZ_ANSWER_MISSING';
+  message: string =
+    'You can forward a quiz while hiding the original author only after choosing an option in the quiz.';
 }
 export class QuizCorrectAnswersEmpty extends BadRequest {
   id: string = 'QUIZ_CORRECT_ANSWERS_EMPTY';
@@ -1042,6 +1377,11 @@ export class RangesInvalid extends BadRequest {
   id: string = 'RANGES_INVALID';
   message: string = 'Invalid range provided';
 }
+export class ReactionsTooMany extends BadRequest {
+  id: string = 'REACTIONS_TOO_MANY';
+  message: string =
+    "The message already has exactly reactions_uniq_max reaction emojis, you can't react with a new emoji, see the docs for more info ».";
+}
 export class ReactionEmpty extends BadRequest {
   id: string = 'REACTION_EMPTY';
   message: string = 'The reaction provided is empty';
@@ -1070,6 +1410,18 @@ export class ReplyMarkupTooLong extends BadRequest {
   id: string = 'REPLY_MARKUP_TOO_LONG';
   message: string = 'The reply markup is too long';
 }
+export class ReplyToInvalid extends BadRequest {
+  id: string = 'REPLY_TO_INVALID';
+  message: string = 'The specified replyTo field is invalid';
+}
+export class ReplyToUserInvalid extends BadRequest {
+  id: string = 'REPLY_TO_USER_INVALID';
+  message: string = 'The specified replyTo user field is invalid';
+}
+export class ResetRequestMissing extends BadRequest {
+  id: string = 'RESET_REQUEST_MISSING';
+  message: string = 'No password reset is in progress.';
+}
 export class ResultsTooMuch extends BadRequest {
   id: string = 'RESULTS_TOO_MUCH';
   message: string = 'The result contains too many items';
@@ -1094,9 +1446,9 @@ export class RevoteNotAllowed extends BadRequest {
   id: string = 'REVOTE_NOT_ALLOWED';
   message: string = 'You cannot change your vote';
 }
-export class ReplyToInvalidTheSpecifiedReplytoFieldIsInvalid extends BadRequest {
-  id: string = 'REPLY_TO_INVALID_The_specified_replyTo_field_is_invalid';
-  message: string = '';
+export class RightsNotModified extends BadRequest {
+  id: string = 'RIGHTS_NOT_MODIFIED';
+  message: string = 'The new admin rights are equal to the old rights, no change was made.';
 }
 export class RsaDecryptFailed extends BadRequest {
   id: string = 'RSA_DECRYPT_FAILED';
@@ -1123,13 +1475,25 @@ export class ScheduleTooMuch extends BadRequest {
   id: string = 'SCHEDULE_TOO_MUCH';
   message: string = 'You tried to schedule too many messages in this chat';
 }
+export class ScoreInvalid extends BadRequest {
+  id: string = 'SCORE_INVALID';
+  message: string = 'The specified game score is invalid.';
+}
 export class SearchQueryEmpty extends BadRequest {
   id: string = 'SEARCH_QUERY_EMPTY';
   message: string = 'The search query is empty';
 }
+export class SearchWithLinkNotSupported extends BadRequest {
+  id: string = 'SEARCH_WITH_LINK_NOT_SUPPORTED';
+  message: string = 'You cannot provide a search query and an invite link at the same time.';
+}
 export class SecondsInvalid extends BadRequest {
   id: string = 'SECONDS_INVALID';
   message: string = 'The seconds interval is invalid';
+}
+export class SendAsPeerInvalid extends BadRequest {
+  id: string = 'SEND_AS_PEER_INVALID';
+  message: string = "You can't send messages as the specified peer.";
 }
 export class SendMessageMediaInvalid extends BadRequest {
   id: string = 'SEND_MESSAGE_MEDIA_INVALID';
@@ -1147,7 +1511,7 @@ export class SettingsInvalid extends BadRequest {
   id: string = 'SETTINGS_INVALID';
   message: string = 'Invalid settings were provided';
 }
-export class Shatwo56HashInvalid extends BadRequest {
+export class Sha256HashInvalid extends BadRequest {
   id: string = 'SHA256_HASH_INVALID';
   message: string = 'The provided SHA256 hash is invalid';
 }
@@ -1155,6 +1519,14 @@ export class ShortnameOccupyFailed extends BadRequest {
   id: string = 'SHORTNAME_OCCUPY_FAILED';
   message: string =
     'An error occurred when trying to register the short-name used for the sticker pack. Try a different name';
+}
+export class ShortNameInvalid extends BadRequest {
+  id: string = 'SHORT_NAME_INVALID';
+  message: string = 'The specified short name is invalid.';
+}
+export class ShortNameOccupied extends BadRequest {
+  id: string = 'SHORT_NAME_OCCUPIED';
+  message: string = 'The specified short name is already in use.';
 }
 export class SlowmodeMultiMsgsDisabled extends BadRequest {
   id: string = 'SLOWMODE_MULTI_MSGS_DISABLED';
@@ -1184,6 +1556,10 @@ export class StartParamTooLong extends BadRequest {
   id: string = 'START_PARAM_TOO_LONG';
   message: string = 'The start parameter is too long';
 }
+export class StickerpackStickersTooMuch extends BadRequest {
+  id: string = 'STICKERPACK_STICKERS_TOO_MUCH';
+  message: string = "There are too many stickers in this stickerpack, you can't add any more.";
+}
 export class StickersetInvalid extends BadRequest {
   id: string = 'STICKERSET_INVALID';
   message: string = 'The requested sticker set is invalid';
@@ -1191,6 +1567,10 @@ export class StickersetInvalid extends BadRequest {
 export class StickersEmpty extends BadRequest {
   id: string = 'STICKERS_EMPTY';
   message: string = 'The sticker provided is empty';
+}
+export class StickersTooMuch extends BadRequest {
+  id: string = 'STICKERS_TOO_MUCH';
+  message: string = "There are too many stickers in this stickerpack, you can't add any more.";
 }
 export class StickerDocumentInvalid extends BadRequest {
   id: string = 'STICKER_DOCUMENT_INVALID';
@@ -1204,6 +1584,10 @@ export class StickerFileInvalid extends BadRequest {
   id: string = 'STICKER_FILE_INVALID';
   message: string = 'The sticker file is invalid';
 }
+export class StickerGifDimensions extends BadRequest {
+  id: string = 'STICKER_GIF_DIMENSIONS';
+  message: string = 'The specified video sticker has invalid dimensions.';
+}
 export class StickerIdInvalid extends BadRequest {
   id: string = 'STICKER_ID_INVALID';
   message: string = 'The provided sticker id is invalid';
@@ -1211,6 +1595,10 @@ export class StickerIdInvalid extends BadRequest {
 export class StickerInvalid extends BadRequest {
   id: string = 'STICKER_INVALID';
   message: string = 'The provided sticker is invalid';
+}
+export class StickerMimeInvalid extends BadRequest {
+  id: string = 'STICKER_MIME_INVALID';
+  message: string = 'The specified sticker MIME type is invalid.';
 }
 export class StickerPngDimensions extends BadRequest {
   id: string = 'STICKER_PNG_DIMENSIONS';
@@ -1220,6 +1608,10 @@ export class StickerPngNopng extends BadRequest {
   id: string = 'STICKER_PNG_NOPNG';
   message: string = 'Stickers must be png files but the provided image was not a png';
 }
+export class StickerTgsNodoc extends BadRequest {
+  id: string = 'STICKER_TGS_NODOC';
+  message: string = 'You must send the animated sticker as a document.';
+}
 export class StickerTgsNotgs extends BadRequest {
   id: string = 'STICKER_TGS_NOTGS';
   message: string = 'A tgs sticker file was expected, but something else was provided';
@@ -1228,6 +1620,62 @@ export class StickerThumbPngNopng extends BadRequest {
   id: string = 'STICKER_THUMB_PNG_NOPNG';
   message: string = 'A png sticker thumbnail file was expected, but something else was provided';
 }
+export class StickerThumbTgsNotgs extends BadRequest {
+  id: string = 'STICKER_THUMB_TGS_NOTGS';
+  message: string = 'Incorrect stickerset TGS thumb file provided.';
+}
+export class StickerVideoBig extends BadRequest {
+  id: string = 'STICKER_VIDEO_BIG';
+  message: string = 'The specified video sticker is too big.';
+}
+export class StickerVideoNodoc extends BadRequest {
+  id: string = 'STICKER_VIDEO_NODOC';
+  message: string = 'You must send the video sticker as a document.';
+}
+export class StickerVideoNowebm extends BadRequest {
+  id: string = 'STICKER_VIDEO_NOWEBM';
+  message: string = 'The specified video sticker is not in webm format.';
+}
+export class StoriesNeverCreated extends BadRequest {
+  id: string = 'STORIES_NEVER_CREATED';
+  message: string = '';
+}
+export class StoriesTooMuch extends BadRequest {
+  id: string = 'STORIES_TOO_MUCH';
+  message: string =
+    'You have hit the maximum active stories limit as specified by the story_expiring_limit_* client configuration parameters: you should buy a Premium subscription, delete an active story, or wait for the oldest story to expire.';
+}
+export class StoryIdEmpty extends BadRequest {
+  id: string = 'STORY_ID_EMPTY';
+  message: string = 'You specified no story IDs.';
+}
+export class StoryIdInvalid extends BadRequest {
+  id: string = 'STORY_ID_INVALID';
+  message: string = '';
+}
+export class StoryNotModified extends BadRequest {
+  id: string = 'STORY_NOT_MODIFIED';
+  message: string =
+    "The new story information you passed is equal to the previous story information, thus it wasn't modified.";
+}
+export class StoryPeriodInvalid extends BadRequest {
+  id: string = 'STORY_PERIOD_INVALID';
+  message: string = 'The specified story period is invalid for this account.';
+}
+export class StorySendFloodMonthly extends BadRequest {
+  id: string = 'STORY_SEND_FLOOD_MONTHLY_X';
+  message: string =
+    "You've hit the monthly story limit as specified by the stories_sent_monthly_limit_* client configuration parameters: wait for the specified number of seconds before posting a new story.";
+}
+export class StorySendFloodWeekly extends BadRequest {
+  id: string = 'STORY_SEND_FLOOD_WEEKLY_X';
+  message: string =
+    "You've hit the weekly story limit as specified by the stories_sent_weekly_limit_* client configuration parameters: wait for the specified number of seconds before posting a new story.";
+}
+export class SwitchPmTextEmpty extends BadRequest {
+  id: string = 'SWITCH_PM_TEXT_EMPTY';
+  message: string = 'The switch_pm.text field was empty.';
+}
 export class TakeoutInvalid extends BadRequest {
   id: string = 'TAKEOUT_INVALID';
   message: string = 'The takeout id is invalid';
@@ -1235,6 +1683,14 @@ export class TakeoutInvalid extends BadRequest {
 export class TakeoutRequired extends BadRequest {
   id: string = 'TAKEOUT_REQUIRED';
   message: string = 'The method must be invoked inside a takeout session';
+}
+export class TaskAlreadyExists extends BadRequest {
+  id: string = 'TASK_ALREADY_EXISTS';
+  message: string = 'An email reset was already requested.';
+}
+export class TempAuthKeyAlreadyBound extends BadRequest {
+  id: string = 'TEMP_AUTH_KEY_ALREADY_BOUND';
+  message: string = 'The passed temporary key is already bound to another perm_auth_key_id.';
 }
 export class TempAuthKeyEmpty extends BadRequest {
   id: string = 'TEMP_AUTH_KEY_EMPTY';
@@ -1256,6 +1712,14 @@ export class ThemeMimeInvalid extends BadRequest {
   id: string = 'THEME_MIME_INVALID';
   message: string = 'You cannot create this theme because the mime-type is invalid';
 }
+export class ThemeTitleInvalid extends BadRequest {
+  id: string = 'THEME_TITLE_INVALID';
+  message: string = 'The specified theme title is invalid.';
+}
+export class TitleInvalid extends BadRequest {
+  id: string = 'TITLE_INVALID';
+  message: string = 'The specified stickerpack title is invalid.';
+}
 export class TmpPasswordDisabled extends BadRequest {
   id: string = 'TMP_PASSWORD_DISABLED';
   message: string = 'The temporary password is disabled';
@@ -1264,9 +1728,58 @@ export class TmpPasswordInvalid extends BadRequest {
   id: string = 'TMP_PASSWORD_INVALID';
   message: string = 'The temporary password is invalid';
 }
+export class TokenEmpty extends BadRequest {
+  id: string = 'TOKEN_EMPTY';
+  message: string = 'The specified token is empty.';
+}
 export class TokenInvalid extends BadRequest {
   id: string = 'TOKEN_INVALID';
   message: string = 'The provided token is invalid';
+}
+export class TokenTypeInvalid extends BadRequest {
+  id: string = 'TOKEN_TYPE_INVALID';
+  message: string = 'The specified token type is invalid.';
+}
+export class TopicsEmpty extends BadRequest {
+  id: string = 'TOPICS_EMPTY';
+  message: string = 'You specified no topic IDs.';
+}
+export class TopicClosed extends BadRequest {
+  id: string = 'TOPIC_CLOSED';
+  message: string = "This topic was closed, you can't send messages to it anymore.";
+}
+export class TopicCloseSeparately extends BadRequest {
+  id: string = 'TOPIC_CLOSE_SEPARATELY';
+  message: string = 'The close flag cannot be provided together with any of the other flags.';
+}
+export class TopicDeleted extends BadRequest {
+  id: string = 'TOPIC_DELETED';
+  message: string = 'The specified topic was deleted.';
+}
+export class TopicHideSeparately extends BadRequest {
+  id: string = 'TOPIC_HIDE_SEPARATELY';
+  message: string = 'The hide flag cannot be provided together with any of the other flags.';
+}
+export class TopicIdInvalid extends BadRequest {
+  id: string = 'TOPIC_ID_INVALID';
+  message: string = 'The specified topic ID is invalid.';
+}
+export class TopicNotModified extends BadRequest {
+  id: string = 'TOPIC_NOT_MODIFIED';
+  message: string =
+    'The updated topic info is equal to the current topic info, nothing was changed.';
+}
+export class TopicTitleEmpty extends BadRequest {
+  id: string = 'TOPIC_TITLE_EMPTY';
+  message: string = 'The specified topic title is empty.';
+}
+export class ToLangInvalid extends BadRequest {
+  id: string = 'TO_LANG_INVALID';
+  message: string = 'The specified destination language is invalid.';
+}
+export class TranscriptionFailed extends BadRequest {
+  id: string = 'TRANSCRIPTION_FAILED';
+  message: string = 'Audio transcription failed.';
 }
 export class TtlDaysInvalid extends BadRequest {
   id: string = 'TTL_DAYS_INVALID';
@@ -1275,6 +1788,10 @@ export class TtlDaysInvalid extends BadRequest {
 export class TtlMediaInvalid extends BadRequest {
   id: string = 'TTL_MEDIA_INVALID';
   message: string = 'The media does not support self-destruction';
+}
+export class TtlPeriodInvalid extends BadRequest {
+  id: string = 'TTL_PERIOD_INVALID';
+  message: string = 'The specified TTL period is invalid.';
 }
 export class TypesEmpty extends BadRequest {
   id: string = 'TYPES_EMPTY';
@@ -1296,6 +1813,10 @@ export class UsageLimitInvalid extends BadRequest {
   id: string = 'USAGE_LIMIT_INVALID';
   message: string = 'The usage limit is invalid';
 }
+export class UsernamesActiveTooMuch extends BadRequest {
+  id: string = 'USERNAMES_ACTIVE_TOO_MUCH';
+  message: string = 'The maximum number of active usernames was reached.';
+}
 export class UsernameInvalid extends BadRequest {
   id: string = 'USERNAME_INVALID';
   message: string = 'The username is invalid';
@@ -1311,6 +1832,10 @@ export class UsernameNotOccupied extends BadRequest {
 export class UsernameOccupied extends BadRequest {
   id: string = 'USERNAME_OCCUPIED';
   message: string = 'The username is already in use by someone else';
+}
+export class UsernamePurchaseAvailable extends BadRequest {
+  id: string = 'USERNAME_PURCHASE_AVAILABLE';
+  message: string = 'The specified username can be purchased on https://fragment.com.';
 }
 export class UserpicUploadRequired extends BadRequest {
   id: string = 'USERPIC_UPLOAD_REQUIRED';
@@ -1328,6 +1853,10 @@ export class UserAdminInvalid extends BadRequest {
   id: string = 'USER_ADMIN_INVALID';
   message: string =
     "The action requires admin privileges. Probably you tried to edit admin privileges on someone you don't have rights to";
+}
+export class UserAlreadyInvited extends BadRequest {
+  id: string = 'USER_ALREADY_INVITED';
+  message: string = 'You have already invited this user.';
 }
 export class UserAlreadyParticipant extends BadRequest {
   id: string = 'USER_ALREADY_PARTICIPANT';
@@ -1391,6 +1920,18 @@ export class UserNotParticipant extends BadRequest {
   id: string = 'USER_NOT_PARTICIPANT';
   message: string = 'The user is not a member of this chat';
 }
+export class UserPublicMissing extends BadRequest {
+  id: string = 'USER_PUBLIC_MISSING';
+  message: string = '';
+}
+export class UserVolumeInvalid extends BadRequest {
+  id: string = 'USER_VOLUME_INVALID';
+  message: string = 'The specified user volume is invalid.';
+}
+export class VenueIdInvalid extends BadRequest {
+  id: string = 'VENUE_ID_INVALID';
+  message: string = '';
+}
 export class VideoContentTypeInvalid extends BadRequest {
   id: string = 'VIDEO_CONTENT_TYPE_INVALID';
   message: string = 'The video content type is invalid (i.e.: not streamable)';
@@ -1398,6 +1939,14 @@ export class VideoContentTypeInvalid extends BadRequest {
 export class VideoFileInvalid extends BadRequest {
   id: string = 'VIDEO_FILE_INVALID';
   message: string = 'The video file is invalid';
+}
+export class VideoTitleEmpty extends BadRequest {
+  id: string = 'VIDEO_TITLE_EMPTY';
+  message: string = 'The specified video title is empty.';
+}
+export class VoiceMessagesForbidden extends BadRequest {
+  id: string = 'VOICE_MESSAGES_FORBIDDEN';
+  message: string = "This user's privacy settings forbid you from sending voice messages.";
 }
 export class VolumeLocNotFound extends BadRequest {
   id: string = 'VOLUME_LOC_NOT_FOUND';
@@ -1414,6 +1963,10 @@ export class WallpaperInvalid extends BadRequest {
 export class WallpaperMimeInvalid extends BadRequest {
   id: string = 'WALLPAPER_MIME_INVALID';
   message: string = 'The wallpaper mime type is invalid';
+}
+export class WallpaperNotFound extends BadRequest {
+  id: string = 'WALLPAPER_NOT_FOUND';
+  message: string = '';
 }
 export class WcConvertUrlInvalid extends BadRequest {
   id: string = 'WC_CONVERT_URL_INVALID';
@@ -1446,6 +1999,18 @@ export class WebpageCurlFailed extends BadRequest {
 export class WebpageMediaEmpty extends BadRequest {
   id: string = 'WEBPAGE_MEDIA_EMPTY';
   message: string = "The URL doesn't contain any valid media";
+}
+export class WebpushAuthInvalid extends BadRequest {
+  id: string = 'WEBPUSH_AUTH_INVALID';
+  message: string = 'The specified web push authentication secret is invalid.';
+}
+export class WebpushKeyInvalid extends BadRequest {
+  id: string = 'WEBPUSH_KEY_INVALID';
+  message: string = 'The specified web push elliptic curve Diffie-Hellman public key is invalid.';
+}
+export class WebpushTokenInvalid extends BadRequest {
+  id: string = 'WEBPUSH_TOKEN_INVALID';
+  message: string = 'The specified web push token is invalid.';
 }
 export class YouBlockedUser extends BadRequest {
   id: string = 'YOU_BLOCKED_USER';

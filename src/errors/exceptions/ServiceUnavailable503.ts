@@ -25,5 +25,5 @@ export class ApiCallError extends ServiceUnavailable {
 }
 export class Timeout extends ServiceUnavailable {
   id: string = 'Timeout';
-  message: string = 'Telegram is having internal problems. Please try again later.';
+  message: string = 'Timeout while fetching data.';
 }
