@@ -1,4 +1,16 @@
- <a name="1.10.4"></a>
+ <a name="1.10.5"></a>
+
+## [1.10.5](https://github.com/tgsnake/core/compare/1.10.4...1.10.5)
+
+> 2023-12-18
+
+### Add
+
+- workflow for automatic fetch error refference - all possible error - generator for sync possible error  ### Change
+
+- trying to escape double quote - escaping double quote in tsv - improve rpc raise - sync with latest source - compatibility with json file - Update CHANGELOG.md  ### Remove
+
+- all double quote in tsv - replace possible error with single file   <a name="1.10.4"></a>
 
 ## [1.10.4](https://github.com/tgsnake/core/compare/1.10.3...1.10.4)
 
