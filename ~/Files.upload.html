@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Files.upload - tgsnake core  documentation</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="doc-current-file" content="">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../page.css">
+</head>
+<body>
+
+
+<nav id="sidepanel">
+    
+      <h2><a href="index.html"><span>tgsnake core</span></a></h2>
+    
+    
+        <h3>Class</h3>
+        <ul>
+          
+            <li>
+              <a href="../.././/~/Client.html">
+                <div class="symbol_kind kind_Class_text kind_Class_bg" title="Class">
+  c
+</div>
+
+                <span>Client</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Queue.html">
+                <div class="symbol_kind kind_Class_text kind_Class_bg" title="Class">
+  c
+</div>
+
+                <span>Queue</span>
+              </a>
+            </li>
+        
+        </ul>
+    
+        <h3>Namespace</h3>
+        <ul>
+          
+            <li>
+              <a href="../.././/~/Clients.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Clients</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Connections.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Connections</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Cryptos.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Cryptos</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Errors.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Errors</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Files.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Files</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Helpers.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Helpers</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Raw.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Raw</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Raws.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Raws</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Sessions.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Sessions</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Storages.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Storages</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Timeouts.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Timeouts</span>
+              </a>
+            </li>
+        
+            <li>
+              <a href="../.././/~/Versions.html">
+                <div class="symbol_kind kind_Namespace_text kind_Namespace_bg" title="Namespace">
+  N
+</div>
+
+                <span>Versions</span>
+              </a>
+            </li>
+        
+        </ul>
+    
+</nav>
+
+
+<div id="content" class="with_sidepanel">
+  <a href="./index.html">&#8592; Back to index</a>
+  <input type="text" id="searchbar" style="display: none;" />
+
+  <main class="symbol_group" id="symbol_Files.upload">
+  
+    <article class="symbol">
+      <div class="symbol_header">
+        <div class="doc_block_title">
+          <div>
+            <span class="kind_Function_text">function</span>&nbsp;<span style="font-weight: 700;">Files.upload</span>
+          </div>
+          
+        </div>
+      </div>
+      <div>
+        
+  <style scoped>
+    
+#function_upload_0 {
+  display: none;
+}
+#function_upload_0:checked ~ *:last-child > :not(#function_upload_0_div) {
+  display: none;
+}
+#function_upload_0:checked ~ div:first-of-type > label[for='function_upload_0'] {
+ background-color: #056CF00C;
+ border: solid 2px rgb(37 99 235);
+ cursor: unset;
+}
+#function_upload_0:checked ~ div:first-of-type > label[for='function_upload_0'] > code {
+  margin: -1px;
+}
+
+  </style>
+  <input type="radio" name="function_upload" id="function_upload_0" checked />
+
+<div class="function_overload_selectors">
+  
+    <label for="function_upload_0" class="function_overload_label">
+      <code>
+        <span style="font-weight: 700;">upload</span><span style="font-weight: 500;">(<div style="margin-left: 1rem;"><div><span>client<span>: <a href="../.././/~/Client.html" class="link">Client</a></span></span></div><div><span>source<span>: <span>Buffer</span></span></span></div><div><span>fileName?<span>: <span>string</span></span></span></div><div><span>fileId?<span>: <span>bigint</span></span></span></div><div><span>filePart?<span>: <span>number</span></span></span></div><div><span>progress?<span>: <a href="../.././/~/Files.Progress.html" class="link">Progress</a></span></span></div></div>): <span>Promise</span>&lt;<span><a href="../.././/~/Raw.InputFile.html" class="link">Raw.InputFile</a><span> | </span><a href="../.././/~/Raw.InputFileBig.html" class="link">Raw.InputFileBig</a><span> | </span><span>undefined</span></span>&gt;</span>
+      </code>
+      
+    </label>
+  
+</div>
+<div style="margin-top: 12px;">
+  <div class="doc_block_items" id="function_upload_0_div"><div class="markdown"><p>save file to telegram without actually sending.</p>
+</div><div>
+  Parameters
+  <div class="section">
+    <div class="doc_item" id="function_upload_0_parameters_client">
+  
+<a
+    href="#function_upload_0_parameters_client"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;">client</span><span style="font-weight: 500;">: <a href="../.././/~/Client.html" class="link">Client</a></span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+<div class="doc_item" id="function_upload_0_parameters_source">
+  
+<a
+    href="#function_upload_0_parameters_source"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;">source</span><span style="font-weight: 500;">: <span>Buffer</span></span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+<div class="doc_item" id="function_upload_0_parameters_fileName">
+  
+<a
+    href="#function_upload_0_parameters_fileName"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;">fileName</span><span style="font-weight: 500;">: <span>string</span></span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+<div class="doc_item" id="function_upload_0_parameters_fileId">
+  
+<a
+    href="#function_upload_0_parameters_fileId"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;">fileId</span><span style="font-weight: 500;">: <span>bigint</span></span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+<div class="doc_item" id="function_upload_0_parameters_filePart">
+  
+<a
+    href="#function_upload_0_parameters_filePart"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;">filePart</span><span style="font-weight: 500;">: <span>number</span></span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+<div class="doc_item" id="function_upload_0_parameters_progress">
+  
+<a
+    href="#function_upload_0_parameters_progress"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;">progress</span><span style="font-weight: 500;">: <a href="../.././/~/Files.Progress.html" class="link">Progress</a></span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+
+  </div>
+</div><div>
+  Return Type
+  <div class="section">
+    <div class="doc_item" id="function_upload_0_return">
+  
+<a
+    href="#function_upload_0_return"
+    class="anchor"
+    aria-label="Anchor"
+    tabIndex=-1
+>
+    <div style="width: 14px; height: 14px; display: inline-block;">&#128279;</div>
+</a>
+
+  <div class="doc_entry">
+    <span class="doc_entry_children">
+    <code>
+      <span style="font-weight: 700;"></span><span style="font-weight: 500;"><span>Promise</span>&lt;<span><a href="../.././/~/Raw.InputFile.html" class="link">Raw.InputFile</a><span> | </span><a href="../.././/~/Raw.InputFileBig.html" class="link">Raw.InputFileBig</a><span> | </span><span>undefined</span></span>&gt;</span>
+    </code>
+    </span>
+  </div>
+  
+</div>
+
+  </div>
+</div></div>
+</div>
+
+      </div>
+    </article>
+  
+</main>
+
+
+  <div id="searchResults"></div>
+</div>
+
+</body>
+<script src="../../search_index.js" defer></script>
+<script src="../../fuse.js" defer></script>
+<script src="../../search.js" defer></script>
+</html>
