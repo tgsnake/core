@@ -1,4 +1,12 @@
- <a name="1.10.5"></a>
+ <a name="1.10.6"></a>
+
+## [1.10.6](https://github.com/tgsnake/core/compare/1.10.5...1.10.6)
+
+> 2023-12-24
+
+### Change
+
+- Update TLSchema - export as type - Update CHANGELOG.md - export type Progress   <a name="1.10.5"></a>
 
 ## [1.10.5](https://github.com/tgsnake/core/compare/1.10.4...1.10.5)
 
