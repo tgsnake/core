@@ -47,11 +47,11 @@ __metadata:
   linkType: soft
 
 "@tgsnake/log@npm:latest":
-  version: 1.6.1
-  resolution: "@tgsnake/log@npm:1.6.1"
+  version: 1.6.2
+  resolution: "@tgsnake/log@npm:1.6.2"
   dependencies:
     chalk: "npm:4.1.2"
-  checksum: 6fcd3791f3f7fbd1c703557df0118f69ea7bb24f84224bf90a2bfb8ab4064525f22cfdb63da3b108a694a9634a7d060eb7f732be8c92e17a9ba434b9000f9387
+  checksum: ec238f8eb82e57f99467beb933acaeb2b8676a06dfce12c1b047ef8e0303461b38f4db261f24a2fe7078a89acd0820f23496593554238c08418591f9166b582b
   languageName: node
   linkType: hard
 
