@@ -34,7 +34,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 169;
+  export const Layer: number = 170;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -389,6 +389,12 @@ export namespace Raw {
     | Raw.messages.RequestAppWebView
     | Raw.messages.SetChatWallPaper
     | Raw.messages.SearchEmojiStickerSets
+    | Raw.messages.GetSavedDialogs
+    | Raw.messages.GetSavedHistory
+    | Raw.messages.DeleteSavedHistory
+    | Raw.messages.GetPinnedSavedDialogs
+    | Raw.messages.ToggleSavedDialogPin
+    | Raw.messages.ReorderPinnedSavedDialogs
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -815,6 +821,7 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeSavedDialog = Raw.SavedDialog;
   export type TypeStoryReaction =
     | Raw.StoryReaction
     | Raw.StoryReactionPublicForward
@@ -1276,6 +1283,8 @@ export namespace Raw {
     | Raw.UpdatePeerWallpaper
     | Raw.UpdateBotMessageReaction
     | Raw.UpdateBotMessageReactions
+    | Raw.UpdateSavedDialogPinned
+    | Raw.UpdatePinnedSavedDialogs
     | UpdateSecretChatMessage;
   export type TypeReactionCount = Raw.ReactionCount;
   export type TypeBoost = Raw.Boost;
@@ -9218,6 +9227,7 @@ export namespace Raw {
     id!: int;
     fromId?: Raw.TypePeer;
     peerId!: Raw.TypePeer;
+    savedPeerId?: Raw.TypePeer;
     fwdFrom?: Raw.TypeMessageFwdHeader;
     viaBotId?: long;
     replyTo?: Raw.TypeMessageReplyHeader;
@@ -9251,6 +9261,7 @@ export namespace Raw {
       id: int;
       fromId?: Raw.TypePeer;
       peerId: Raw.TypePeer;
+      savedPeerId?: Raw.TypePeer;
       fwdFrom?: Raw.TypeMessageFwdHeader;
       viaBotId?: long;
       replyTo?: Raw.TypeMessageReplyHeader;
@@ -9272,7 +9283,7 @@ export namespace Raw {
       super();
       this.classType = 'types';
       this.className = 'Message';
-      this.constructorId = 0x38116ee0;
+      this.constructorId = 0x76bec211;
       this.subclassOfId = 0x790009e3;
       this._slots = [
         'out',
@@ -9289,6 +9300,7 @@ export namespace Raw {
         'id',
         'fromId',
         'peerId',
+        'savedPeerId',
         'fwdFrom',
         'viaBotId',
         'replyTo',
@@ -9321,6 +9333,7 @@ export namespace Raw {
       this.id = params.id;
       this.fromId = params.fromId;
       this.peerId = params.peerId;
+      this.savedPeerId = params.savedPeerId;
       this.fwdFrom = params.fwdFrom;
       this.viaBotId = params.viaBotId;
       this.replyTo = params.replyTo;
@@ -9362,6 +9375,7 @@ export namespace Raw {
       let id = await Primitive.Int.read(b);
       let fromId = flags & (1 << 8) ? await TLObject.read(b) : undefined;
       let peerId = await TLObject.read(b);
+      let savedPeerId = flags & (1 << 28) ? await TLObject.read(b) : undefined;
       let fwdFrom = flags & (1 << 2) ? await TLObject.read(b) : undefined;
       let viaBotId = flags & (1 << 11) ? await Primitive.Long.read(b) : undefined;
       let replyTo = flags & (1 << 3) ? await TLObject.read(b) : undefined;
@@ -9394,6 +9408,7 @@ export namespace Raw {
         id: id,
         fromId: fromId,
         peerId: peerId,
+        savedPeerId: savedPeerId,
         fwdFrom: fwdFrom,
         viaBotId: viaBotId,
         replyTo: replyTo,
@@ -9434,6 +9449,7 @@ export namespace Raw {
       flags |= this.noforwards ? 1 << 26 : 0;
       flags |= this.invertMedia ? 1 << 27 : 0;
       flags |= this.fromId !== undefined ? 1 << 8 : 0;
+      flags |= this.savedPeerId !== undefined ? 1 << 28 : 0;
       flags |= this.fwdFrom !== undefined ? 1 << 2 : 0;
       flags |= this.viaBotId !== undefined ? 1 << 11 : 0;
       flags |= this.replyTo !== undefined ? 1 << 3 : 0;
@@ -9459,6 +9475,9 @@ export namespace Raw {
       }
       if (this.peerId !== undefined) {
         b.write(this.peerId.write() as unknown as Buffer);
+      }
+      if (this.savedPeerId !== undefined) {
+        b.write(this.savedPeerId.write() as unknown as Buffer);
       }
       if (this.fwdFrom !== undefined) {
         b.write(this.fwdFrom.write() as unknown as Buffer);
@@ -9882,6 +9901,9 @@ export namespace Raw {
   export class MessageMediaDocument extends TLObject {
     nopremium?: boolean;
     spoiler?: boolean;
+    video?: boolean;
+    round?: boolean;
+    voice?: boolean;
     document?: Raw.TypeDocument;
     altDocument?: Raw.TypeDocument;
     ttlSeconds?: int;
@@ -9889,6 +9911,9 @@ export namespace Raw {
     constructor(params: {
       nopremium?: boolean;
       spoiler?: boolean;
+      video?: boolean;
+      round?: boolean;
+      voice?: boolean;
       document?: Raw.TypeDocument;
       altDocument?: Raw.TypeDocument;
       ttlSeconds?: int;
@@ -9898,9 +9923,21 @@ export namespace Raw {
       this.className = 'MessageMediaDocument';
       this.constructorId = 0x4cf4d72d;
       this.subclassOfId = 0x476cbe32;
-      this._slots = ['nopremium', 'spoiler', 'document', 'altDocument', 'ttlSeconds'];
+      this._slots = [
+        'nopremium',
+        'spoiler',
+        'video',
+        'round',
+        'voice',
+        'document',
+        'altDocument',
+        'ttlSeconds',
+      ];
       this.nopremium = params.nopremium;
       this.spoiler = params.spoiler;
+      this.video = params.video;
+      this.round = params.round;
+      this.voice = params.voice;
       this.document = params.document;
       this.altDocument = params.altDocument;
       this.ttlSeconds = params.ttlSeconds;
@@ -9916,12 +9953,18 @@ export namespace Raw {
 
       let nopremium = flags & (1 << 3) ? true : false;
       let spoiler = flags & (1 << 4) ? true : false;
+      let video = flags & (1 << 6) ? true : false;
+      let round = flags & (1 << 7) ? true : false;
+      let voice = flags & (1 << 8) ? true : false;
       let document = flags & (1 << 0) ? await TLObject.read(b) : undefined;
       let altDocument = flags & (1 << 5) ? await TLObject.read(b) : undefined;
       let ttlSeconds = flags & (1 << 2) ? await Primitive.Int.read(b) : undefined;
       return new Raw.MessageMediaDocument({
         nopremium: nopremium,
         spoiler: spoiler,
+        video: video,
+        round: round,
+        voice: voice,
         document: document,
         altDocument: altDocument,
         ttlSeconds: ttlSeconds,
@@ -9938,6 +9981,9 @@ export namespace Raw {
       let flags = 0;
       flags |= this.nopremium ? 1 << 3 : 0;
       flags |= this.spoiler ? 1 << 4 : 0;
+      flags |= this.video ? 1 << 6 : 0;
+      flags |= this.round ? 1 << 7 : 0;
+      flags |= this.voice ? 1 << 8 : 0;
       flags |= this.document !== undefined ? 1 << 0 : 0;
       flags |= this.altDocument !== undefined ? 1 << 5 : 0;
       flags |= this.ttlSeconds !== undefined ? 1 << 2 : 0;
@@ -21618,6 +21664,93 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class UpdateSavedDialogPinned extends TLObject {
+    pinned?: boolean;
+    peer!: Raw.TypeDialogPeer;
+
+    constructor(params: { pinned?: boolean; peer: Raw.TypeDialogPeer }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateSavedDialogPinned';
+      this.constructorId = 0xaeaf9e74;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['pinned', 'peer'];
+      this.pinned = params.pinned;
+      this.peer = params.peer;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateSavedDialogPinned> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let pinned = flags & (1 << 0) ? true : false;
+      let peer = await TLObject.read(b);
+      return new Raw.UpdateSavedDialogPinned({ pinned: pinned, peer: peer });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.pinned ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdatePinnedSavedDialogs extends TLObject {
+    order?: Vector<Raw.TypeDialogPeer>;
+
+    constructor(params: { order?: Vector<Raw.TypeDialogPeer> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdatePinnedSavedDialogs';
+      this.constructorId = 0x686c85a6;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['order'];
+      this.order = params.order;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdatePinnedSavedDialogs> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let order = flags & (1 << 0) ? await TLObject.read(b) : [];
+      return new Raw.UpdatePinnedSavedDialogs({ order: order });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.order ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.order) {
+        b.write(Primitive.Vector.write(this.order) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class UpdatesTooLong extends TLObject {
     constructor() {
       super();
@@ -32848,6 +32981,7 @@ export namespace Raw {
   }
   export class MessageFwdHeader extends TLObject {
     imported?: boolean;
+    savedOut?: boolean;
     fromId?: Raw.TypePeer;
     fromName?: string;
     date!: int;
@@ -32855,10 +32989,14 @@ export namespace Raw {
     postAuthor?: string;
     savedFromPeer?: Raw.TypePeer;
     savedFromMsgId?: int;
+    savedFromId?: Raw.TypePeer;
+    savedFromName?: string;
+    savedDate?: int;
     psaType?: string;
 
     constructor(params: {
       imported?: boolean;
+      savedOut?: boolean;
       fromId?: Raw.TypePeer;
       fromName?: string;
       date: int;
@@ -32866,15 +33004,19 @@ export namespace Raw {
       postAuthor?: string;
       savedFromPeer?: Raw.TypePeer;
       savedFromMsgId?: int;
+      savedFromId?: Raw.TypePeer;
+      savedFromName?: string;
+      savedDate?: int;
       psaType?: string;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessageFwdHeader';
-      this.constructorId = 0x5f777dce;
+      this.constructorId = 0x4e4df4bb;
       this.subclassOfId = 0x7a286804;
       this._slots = [
         'imported',
+        'savedOut',
         'fromId',
         'fromName',
         'date',
@@ -32882,9 +33024,13 @@ export namespace Raw {
         'postAuthor',
         'savedFromPeer',
         'savedFromMsgId',
+        'savedFromId',
+        'savedFromName',
+        'savedDate',
         'psaType',
       ];
       this.imported = params.imported;
+      this.savedOut = params.savedOut;
       this.fromId = params.fromId;
       this.fromName = params.fromName;
       this.date = params.date;
@@ -32892,6 +33038,9 @@ export namespace Raw {
       this.postAuthor = params.postAuthor;
       this.savedFromPeer = params.savedFromPeer;
       this.savedFromMsgId = params.savedFromMsgId;
+      this.savedFromId = params.savedFromId;
+      this.savedFromName = params.savedFromName;
+      this.savedDate = params.savedDate;
       this.psaType = params.psaType;
     }
     /**
@@ -32904,6 +33053,7 @@ export namespace Raw {
       let flags = await Primitive.Int.read(b);
 
       let imported = flags & (1 << 7) ? true : false;
+      let savedOut = flags & (1 << 11) ? true : false;
       let fromId = flags & (1 << 0) ? await TLObject.read(b) : undefined;
       let fromName = flags & (1 << 5) ? await Primitive.String.read(b) : undefined;
       let date = await Primitive.Int.read(b);
@@ -32911,9 +33061,13 @@ export namespace Raw {
       let postAuthor = flags & (1 << 3) ? await Primitive.String.read(b) : undefined;
       let savedFromPeer = flags & (1 << 4) ? await TLObject.read(b) : undefined;
       let savedFromMsgId = flags & (1 << 4) ? await Primitive.Int.read(b) : undefined;
+      let savedFromId = flags & (1 << 8) ? await TLObject.read(b) : undefined;
+      let savedFromName = flags & (1 << 9) ? await Primitive.String.read(b) : undefined;
+      let savedDate = flags & (1 << 10) ? await Primitive.Int.read(b) : undefined;
       let psaType = flags & (1 << 6) ? await Primitive.String.read(b) : undefined;
       return new Raw.MessageFwdHeader({
         imported: imported,
+        savedOut: savedOut,
         fromId: fromId,
         fromName: fromName,
         date: date,
@@ -32921,6 +33075,9 @@ export namespace Raw {
         postAuthor: postAuthor,
         savedFromPeer: savedFromPeer,
         savedFromMsgId: savedFromMsgId,
+        savedFromId: savedFromId,
+        savedFromName: savedFromName,
+        savedDate: savedDate,
         psaType: psaType,
       });
     }
@@ -32934,12 +33091,16 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.imported ? 1 << 7 : 0;
+      flags |= this.savedOut ? 1 << 11 : 0;
       flags |= this.fromId !== undefined ? 1 << 0 : 0;
       flags |= this.fromName !== undefined ? 1 << 5 : 0;
       flags |= this.channelPost !== undefined ? 1 << 2 : 0;
       flags |= this.postAuthor !== undefined ? 1 << 3 : 0;
       flags |= this.savedFromPeer !== undefined ? 1 << 4 : 0;
       flags |= this.savedFromMsgId !== undefined ? 1 << 4 : 0;
+      flags |= this.savedFromId !== undefined ? 1 << 8 : 0;
+      flags |= this.savedFromName !== undefined ? 1 << 9 : 0;
+      flags |= this.savedDate !== undefined ? 1 << 10 : 0;
       flags |= this.psaType !== undefined ? 1 << 6 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -32963,6 +33124,15 @@ export namespace Raw {
       }
       if (this.savedFromMsgId !== undefined) {
         b.write(Primitive.Int.write(this.savedFromMsgId) as unknown as Buffer);
+      }
+      if (this.savedFromId !== undefined) {
+        b.write(this.savedFromId.write() as unknown as Buffer);
+      }
+      if (this.savedFromName !== undefined) {
+        b.write(Primitive.String.write(this.savedFromName) as unknown as Buffer);
+      }
+      if (this.savedDate !== undefined) {
+        b.write(Primitive.Int.write(this.savedDate) as unknown as Buffer);
       }
       if (this.psaType !== undefined) {
         b.write(Primitive.String.write(this.psaType) as unknown as Buffer);
@@ -56096,6 +56266,57 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class SavedDialog extends TLObject {
+    pinned?: boolean;
+    peer!: Raw.TypePeer;
+    topMessage!: int;
+
+    constructor(params: { pinned?: boolean; peer: Raw.TypePeer; topMessage: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'SavedDialog';
+      this.constructorId = 0xbd87cb6c;
+      this.subclassOfId = 0x23ba6506;
+      this._slots = ['pinned', 'peer', 'topMessage'];
+      this.pinned = params.pinned;
+      this.peer = params.peer;
+      this.topMessage = params.topMessage;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.SavedDialog> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let pinned = flags & (1 << 2) ? true : false;
+      let peer = await TLObject.read(b);
+      let topMessage = await Primitive.Int.read(b);
+      return new Raw.SavedDialog({ pinned: pinned, peer: peer, topMessage: topMessage });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.pinned ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.topMessage !== undefined) {
+        b.write(Primitive.Int.write(this.topMessage) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class InvokeAfterMsg extends TLObject {
     __response__!: X;
     msgId!: long;
@@ -66089,6 +66310,10 @@ export namespace Raw {
       | Raw.messages.SponsoredMessages
       | Raw.messages.SponsoredMessagesEmpty;
     export type TypeInactiveChats = Raw.messages.InactiveChats;
+    export type TypeSavedDialogs =
+      | Raw.messages.SavedDialogs
+      | Raw.messages.SavedDialogsSlice
+      | Raw.messages.SavedDialogsNotModified;
     export type TypeBotApp = Raw.messages.BotApp;
     export type TypeEmojiGroups = Raw.messages.EmojiGroupsNotModified | Raw.messages.EmojiGroups;
     export type TypeReactions = Raw.messages.ReactionsNotModified | Raw.messages.Reactions;
@@ -69911,6 +70136,181 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class SavedDialogs extends TLObject {
+      dialogs!: Vector<Raw.TypeSavedDialog>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        dialogs: Vector<Raw.TypeSavedDialog>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.SavedDialogs';
+        this.constructorId = 0xf83ae221;
+        this.subclassOfId = 0x614bb87e;
+        this._slots = ['dialogs', 'messages', 'chats', 'users'];
+        this.dialogs = params.dialogs;
+        this.messages = params.messages;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.SavedDialogs> {
+        // no flags
+
+        let dialogs = await TLObject.read(b);
+        let messages = await TLObject.read(b);
+        let chats = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.messages.SavedDialogs({
+          dialogs: dialogs,
+          messages: messages,
+          chats: chats,
+          users: users,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.dialogs) {
+          b.write(Primitive.Vector.write(this.dialogs) as unknown as Buffer);
+        }
+        if (this.messages) {
+          b.write(Primitive.Vector.write(this.messages) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SavedDialogsSlice extends TLObject {
+      count!: int;
+      dialogs!: Vector<Raw.TypeSavedDialog>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        count: int;
+        dialogs: Vector<Raw.TypeSavedDialog>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.SavedDialogsSlice';
+        this.constructorId = 0x44ba9dd9;
+        this.subclassOfId = 0x614bb87e;
+        this._slots = ['count', 'dialogs', 'messages', 'chats', 'users'];
+        this.count = params.count;
+        this.dialogs = params.dialogs;
+        this.messages = params.messages;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.SavedDialogsSlice> {
+        // no flags
+
+        let count = await Primitive.Int.read(b);
+        let dialogs = await TLObject.read(b);
+        let messages = await TLObject.read(b);
+        let chats = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.messages.SavedDialogsSlice({
+          count: count,
+          dialogs: dialogs,
+          messages: messages,
+          chats: chats,
+          users: users,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.count !== undefined) {
+          b.write(Primitive.Int.write(this.count) as unknown as Buffer);
+        }
+        if (this.dialogs) {
+          b.write(Primitive.Vector.write(this.dialogs) as unknown as Buffer);
+        }
+        if (this.messages) {
+          b.write(Primitive.Vector.write(this.messages) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SavedDialogsNotModified extends TLObject {
+      count!: int;
+
+      constructor(params: { count: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.SavedDialogsNotModified';
+        this.constructorId = 0xc01f6fe8;
+        this.subclassOfId = 0x614bb87e;
+        this._slots = ['count'];
+        this.count = params.count;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.SavedDialogsNotModified> {
+        // no flags
+
+        let count = await Primitive.Int.read(b);
+        return new Raw.messages.SavedDialogsNotModified({ count: count });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.count !== undefined) {
+          b.write(Primitive.Int.write(this.count) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
     export class GetMessages extends TLObject {
       __response__!: Raw.messages.TypeMessages;
       id!: Vector<Raw.TypeInputMessage>;
@@ -70160,6 +70560,7 @@ export namespace Raw {
       peer!: Raw.TypeInputPeer;
       q!: string;
       fromId?: Raw.TypeInputPeer;
+      savedPeerId?: Raw.TypeInputPeer;
       topMsgId?: int;
       filter!: Raw.TypeMessagesFilter;
       minDate!: int;
@@ -70175,6 +70576,7 @@ export namespace Raw {
         peer: Raw.TypeInputPeer;
         q: string;
         fromId?: Raw.TypeInputPeer;
+        savedPeerId?: Raw.TypeInputPeer;
         topMsgId?: int;
         filter: Raw.TypeMessagesFilter;
         minDate: int;
@@ -70189,12 +70591,13 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'messages.Search';
-        this.constructorId = 0xa0fda762;
+        this.constructorId = 0xa7b4e929;
         this.subclassOfId = 0xd4b40b5e;
         this._slots = [
           'peer',
           'q',
           'fromId',
+          'savedPeerId',
           'topMsgId',
           'filter',
           'minDate',
@@ -70209,6 +70612,7 @@ export namespace Raw {
         this.peer = params.peer;
         this.q = params.q;
         this.fromId = params.fromId;
+        this.savedPeerId = params.savedPeerId;
         this.topMsgId = params.topMsgId;
         this.filter = params.filter;
         this.minDate = params.minDate;
@@ -70232,6 +70636,7 @@ export namespace Raw {
         let peer = await TLObject.read(b);
         let q = await Primitive.String.read(b);
         let fromId = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+        let savedPeerId = flags & (1 << 2) ? await TLObject.read(b) : undefined;
         let topMsgId = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
         let filter = await TLObject.read(b);
         let minDate = await Primitive.Int.read(b);
@@ -70246,6 +70651,7 @@ export namespace Raw {
           peer: peer,
           q: q,
           fromId: fromId,
+          savedPeerId: savedPeerId,
           topMsgId: topMsgId,
           filter: filter,
           minDate: minDate,
@@ -70268,6 +70674,7 @@ export namespace Raw {
 
         let flags = 0;
         flags |= this.fromId !== undefined ? 1 << 0 : 0;
+        flags |= this.savedPeerId !== undefined ? 1 << 2 : 0;
         flags |= this.topMsgId !== undefined ? 1 << 1 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -70279,6 +70686,9 @@ export namespace Raw {
         }
         if (this.fromId !== undefined) {
           b.write(this.fromId.write() as unknown as Buffer);
+        }
+        if (this.savedPeerId !== undefined) {
+          b.write(this.savedPeerId.write() as unknown as Buffer);
         }
         if (this.topMsgId !== undefined) {
           b.write(Primitive.Int.write(this.topMsgId) as unknown as Buffer);
@@ -76157,21 +76567,24 @@ export namespace Raw {
     export class GetSearchCounters extends TLObject {
       __response__!: Vector<Raw.messages.TypeSearchCounter>;
       peer!: Raw.TypeInputPeer;
+      savedPeerId?: Raw.TypeInputPeer;
       topMsgId?: int;
       filters!: Vector<Raw.TypeMessagesFilter>;
 
       constructor(params: {
         peer: Raw.TypeInputPeer;
+        savedPeerId?: Raw.TypeInputPeer;
         topMsgId?: int;
         filters: Vector<Raw.TypeMessagesFilter>;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetSearchCounters';
-        this.constructorId = 0xae7cc1;
+        this.constructorId = 0x1bbcf300;
         this.subclassOfId = 0x6bde3c6e;
-        this._slots = ['peer', 'topMsgId', 'filters'];
+        this._slots = ['peer', 'savedPeerId', 'topMsgId', 'filters'];
         this.peer = params.peer;
+        this.savedPeerId = params.savedPeerId;
         this.topMsgId = params.topMsgId;
         this.filters = params.filters;
       }
@@ -76185,10 +76598,12 @@ export namespace Raw {
         let flags = await Primitive.Int.read(b);
 
         let peer = await TLObject.read(b);
+        let savedPeerId = flags & (1 << 2) ? await TLObject.read(b) : undefined;
         let topMsgId = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
         let filters = await TLObject.read(b);
         return new Raw.messages.GetSearchCounters({
           peer: peer,
+          savedPeerId: savedPeerId,
           topMsgId: topMsgId,
           filters: filters,
         });
@@ -76202,11 +76617,15 @@ export namespace Raw {
         // no flags
 
         let flags = 0;
+        flags |= this.savedPeerId !== undefined ? 1 << 2 : 0;
         flags |= this.topMsgId !== undefined ? 1 << 0 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.savedPeerId !== undefined) {
+          b.write(this.savedPeerId.write() as unknown as Buffer);
         }
         if (this.topMsgId !== undefined) {
           b.write(Primitive.Int.write(this.topMsgId) as unknown as Buffer);
@@ -78130,12 +78549,14 @@ export namespace Raw {
     export class GetSearchResultsCalendar extends TLObject {
       __response__!: Raw.messages.TypeSearchResultsCalendar;
       peer!: Raw.TypeInputPeer;
+      savedPeerId?: Raw.TypeInputPeer;
       filter!: Raw.TypeMessagesFilter;
       offsetId!: int;
       offsetDate!: int;
 
       constructor(params: {
         peer: Raw.TypeInputPeer;
+        savedPeerId?: Raw.TypeInputPeer;
         filter: Raw.TypeMessagesFilter;
         offsetId: int;
         offsetDate: int;
@@ -78143,10 +78564,11 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetSearchResultsCalendar';
-        this.constructorId = 0x49f0bde9;
+        this.constructorId = 0x6aa3f6bd;
         this.subclassOfId = 0x92c5640f;
-        this._slots = ['peer', 'filter', 'offsetId', 'offsetDate'];
+        this._slots = ['peer', 'savedPeerId', 'filter', 'offsetId', 'offsetDate'];
         this.peer = params.peer;
+        this.savedPeerId = params.savedPeerId;
         this.filter = params.filter;
         this.offsetId = params.offsetId;
         this.offsetDate = params.offsetDate;
@@ -78161,12 +78583,16 @@ export namespace Raw {
       ): Promise<Raw.messages.GetSearchResultsCalendar> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
         let peer = await TLObject.read(b);
+        let savedPeerId = flags & (1 << 2) ? await TLObject.read(b) : undefined;
         let filter = await TLObject.read(b);
         let offsetId = await Primitive.Int.read(b);
         let offsetDate = await Primitive.Int.read(b);
         return new Raw.messages.GetSearchResultsCalendar({
           peer: peer,
+          savedPeerId: savedPeerId,
           filter: filter,
           offsetId: offsetId,
           offsetDate: offsetDate,
@@ -78180,8 +78606,15 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
+        let flags = 0;
+        flags |= this.savedPeerId !== undefined ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.savedPeerId !== undefined) {
+          b.write(this.savedPeerId.write() as unknown as Buffer);
         }
         if (this.filter !== undefined) {
           b.write(this.filter.write() as unknown as Buffer);
@@ -78198,12 +78631,14 @@ export namespace Raw {
     export class GetSearchResultsPositions extends TLObject {
       __response__!: Raw.messages.TypeSearchResultsPositions;
       peer!: Raw.TypeInputPeer;
+      savedPeerId?: Raw.TypeInputPeer;
       filter!: Raw.TypeMessagesFilter;
       offsetId!: int;
       limit!: int;
 
       constructor(params: {
         peer: Raw.TypeInputPeer;
+        savedPeerId?: Raw.TypeInputPeer;
         filter: Raw.TypeMessagesFilter;
         offsetId: int;
         limit: int;
@@ -78211,10 +78646,11 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetSearchResultsPositions';
-        this.constructorId = 0x6e9583a3;
+        this.constructorId = 0x9c7f2f10;
         this.subclassOfId = 0xd963708d;
-        this._slots = ['peer', 'filter', 'offsetId', 'limit'];
+        this._slots = ['peer', 'savedPeerId', 'filter', 'offsetId', 'limit'];
         this.peer = params.peer;
+        this.savedPeerId = params.savedPeerId;
         this.filter = params.filter;
         this.offsetId = params.offsetId;
         this.limit = params.limit;
@@ -78229,12 +78665,16 @@ export namespace Raw {
       ): Promise<Raw.messages.GetSearchResultsPositions> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
         let peer = await TLObject.read(b);
+        let savedPeerId = flags & (1 << 2) ? await TLObject.read(b) : undefined;
         let filter = await TLObject.read(b);
         let offsetId = await Primitive.Int.read(b);
         let limit = await Primitive.Int.read(b);
         return new Raw.messages.GetSearchResultsPositions({
           peer: peer,
+          savedPeerId: savedPeerId,
           filter: filter,
           offsetId: offsetId,
           limit: limit,
@@ -78248,8 +78688,15 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
+        let flags = 0;
+        flags |= this.savedPeerId !== undefined ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.savedPeerId !== undefined) {
+          b.write(this.savedPeerId.write() as unknown as Buffer);
         }
         if (this.filter !== undefined) {
           b.write(this.filter.write() as unknown as Buffer);
@@ -80690,6 +81137,395 @@ export namespace Raw {
         }
         if (this.hash !== undefined) {
           b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetSavedDialogs extends TLObject {
+      __response__!: Raw.messages.TypeSavedDialogs;
+      excludePinned?: boolean;
+      offsetDate!: int;
+      offsetId!: int;
+      offsetPeer!: Raw.TypeInputPeer;
+      limit!: int;
+      hash!: long;
+
+      constructor(params: {
+        excludePinned?: boolean;
+        offsetDate: int;
+        offsetId: int;
+        offsetPeer: Raw.TypeInputPeer;
+        limit: int;
+        hash: long;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetSavedDialogs';
+        this.constructorId = 0x5381d21a;
+        this.subclassOfId = 0x614bb87e;
+        this._slots = ['excludePinned', 'offsetDate', 'offsetId', 'offsetPeer', 'limit', 'hash'];
+        this.excludePinned = params.excludePinned;
+        this.offsetDate = params.offsetDate;
+        this.offsetId = params.offsetId;
+        this.offsetPeer = params.offsetPeer;
+        this.limit = params.limit;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.GetSavedDialogs> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let excludePinned = flags & (1 << 0) ? true : false;
+        let offsetDate = await Primitive.Int.read(b);
+        let offsetId = await Primitive.Int.read(b);
+        let offsetPeer = await TLObject.read(b);
+        let limit = await Primitive.Int.read(b);
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.GetSavedDialogs({
+          excludePinned: excludePinned,
+          offsetDate: offsetDate,
+          offsetId: offsetId,
+          offsetPeer: offsetPeer,
+          limit: limit,
+          hash: hash,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.excludePinned ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.offsetDate !== undefined) {
+          b.write(Primitive.Int.write(this.offsetDate) as unknown as Buffer);
+        }
+        if (this.offsetId !== undefined) {
+          b.write(Primitive.Int.write(this.offsetId) as unknown as Buffer);
+        }
+        if (this.offsetPeer !== undefined) {
+          b.write(this.offsetPeer.write() as unknown as Buffer);
+        }
+        if (this.limit !== undefined) {
+          b.write(Primitive.Int.write(this.limit) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetSavedHistory extends TLObject {
+      __response__!: Raw.messages.TypeMessages;
+      peer!: Raw.TypeInputPeer;
+      offsetId!: int;
+      offsetDate!: int;
+      addOffset!: int;
+      limit!: int;
+      maxId!: int;
+      minId!: int;
+      hash!: long;
+
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        offsetId: int;
+        offsetDate: int;
+        addOffset: int;
+        limit: int;
+        maxId: int;
+        minId: int;
+        hash: long;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetSavedHistory';
+        this.constructorId = 0x3d9a414d;
+        this.subclassOfId = 0xd4b40b5e;
+        this._slots = [
+          'peer',
+          'offsetId',
+          'offsetDate',
+          'addOffset',
+          'limit',
+          'maxId',
+          'minId',
+          'hash',
+        ];
+        this.peer = params.peer;
+        this.offsetId = params.offsetId;
+        this.offsetDate = params.offsetDate;
+        this.addOffset = params.addOffset;
+        this.limit = params.limit;
+        this.maxId = params.maxId;
+        this.minId = params.minId;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.GetSavedHistory> {
+        // no flags
+
+        let peer = await TLObject.read(b);
+        let offsetId = await Primitive.Int.read(b);
+        let offsetDate = await Primitive.Int.read(b);
+        let addOffset = await Primitive.Int.read(b);
+        let limit = await Primitive.Int.read(b);
+        let maxId = await Primitive.Int.read(b);
+        let minId = await Primitive.Int.read(b);
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.GetSavedHistory({
+          peer: peer,
+          offsetId: offsetId,
+          offsetDate: offsetDate,
+          addOffset: addOffset,
+          limit: limit,
+          maxId: maxId,
+          minId: minId,
+          hash: hash,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.offsetId !== undefined) {
+          b.write(Primitive.Int.write(this.offsetId) as unknown as Buffer);
+        }
+        if (this.offsetDate !== undefined) {
+          b.write(Primitive.Int.write(this.offsetDate) as unknown as Buffer);
+        }
+        if (this.addOffset !== undefined) {
+          b.write(Primitive.Int.write(this.addOffset) as unknown as Buffer);
+        }
+        if (this.limit !== undefined) {
+          b.write(Primitive.Int.write(this.limit) as unknown as Buffer);
+        }
+        if (this.maxId !== undefined) {
+          b.write(Primitive.Int.write(this.maxId) as unknown as Buffer);
+        }
+        if (this.minId !== undefined) {
+          b.write(Primitive.Int.write(this.minId) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DeleteSavedHistory extends TLObject {
+      __response__!: Raw.messages.TypeAffectedHistory;
+      peer!: Raw.TypeInputPeer;
+      maxId!: int;
+      minDate?: int;
+      maxDate?: int;
+
+      constructor(params: { peer: Raw.TypeInputPeer; maxId: int; minDate?: int; maxDate?: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.DeleteSavedHistory';
+        this.constructorId = 0x6e98102b;
+        this.subclassOfId = 0x2c49c116;
+        this._slots = ['peer', 'maxId', 'minDate', 'maxDate'];
+        this.peer = params.peer;
+        this.maxId = params.maxId;
+        this.minDate = params.minDate;
+        this.maxDate = params.maxDate;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.DeleteSavedHistory> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let peer = await TLObject.read(b);
+        let maxId = await Primitive.Int.read(b);
+        let minDate = flags & (1 << 2) ? await Primitive.Int.read(b) : undefined;
+        let maxDate = flags & (1 << 3) ? await Primitive.Int.read(b) : undefined;
+        return new Raw.messages.DeleteSavedHistory({
+          peer: peer,
+          maxId: maxId,
+          minDate: minDate,
+          maxDate: maxDate,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.minDate !== undefined ? 1 << 2 : 0;
+        flags |= this.maxDate !== undefined ? 1 << 3 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.maxId !== undefined) {
+          b.write(Primitive.Int.write(this.maxId) as unknown as Buffer);
+        }
+        if (this.minDate !== undefined) {
+          b.write(Primitive.Int.write(this.minDate) as unknown as Buffer);
+        }
+        if (this.maxDate !== undefined) {
+          b.write(Primitive.Int.write(this.maxDate) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetPinnedSavedDialogs extends TLObject {
+      __response__!: Raw.messages.TypeSavedDialogs;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetPinnedSavedDialogs';
+        this.constructorId = 0xd63d94e0;
+        this.subclassOfId = 0x614bb87e;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.GetPinnedSavedDialogs> {
+        // no flags
+
+        return new Raw.messages.GetPinnedSavedDialogs();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class ToggleSavedDialogPin extends TLObject {
+      __response__!: Bool;
+      pinned?: boolean;
+      peer!: Raw.TypeInputDialogPeer;
+
+      constructor(params: { pinned?: boolean; peer: Raw.TypeInputDialogPeer }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ToggleSavedDialogPin';
+        this.constructorId = 0xac81bbde;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['pinned', 'peer'];
+        this.pinned = params.pinned;
+        this.peer = params.peer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.ToggleSavedDialogPin> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let pinned = flags & (1 << 0) ? true : false;
+        let peer = await TLObject.read(b);
+        return new Raw.messages.ToggleSavedDialogPin({ pinned: pinned, peer: peer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.pinned ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class ReorderPinnedSavedDialogs extends TLObject {
+      __response__!: Bool;
+      force?: boolean;
+      order!: Vector<Raw.TypeInputDialogPeer>;
+
+      constructor(params: { force?: boolean; order: Vector<Raw.TypeInputDialogPeer> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ReorderPinnedSavedDialogs';
+        this.constructorId = 0x8b716587;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['force', 'order'];
+        this.force = params.force;
+        this.order = params.order;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.ReorderPinnedSavedDialogs> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let force = flags & (1 << 0) ? true : false;
+        let order = await TLObject.read(b);
+        return new Raw.messages.ReorderPinnedSavedDialogs({ force: force, order: order });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.force ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.order) {
+          b.write(Primitive.Vector.write(this.order) as unknown as Buffer);
         }
         return b.buffer;
       }
