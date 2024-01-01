@@ -93,11 +93,13 @@
     "desc": "You provided a set of restrictions that is invalid"
   },
   { "code": 400, "msg": "BASE_PORT_LOC_INVALID", "desc": "The base port location is invalid" },
+  { "code": 400, "msg": "BOOSTS_EMPTY", "desc": "No boost slots were specified." },
   {
     "code": 400,
     "msg": "BOOSTS_REQUIRED",
     "desc": "The specified channel must first be boosted by its users in order to perform this action."
   },
+  { "code": 400, "msg": "BOOST_PEER_INVALID", "desc": "The specified boost_peer is invalid." },
   { "code": 400, "msg": "BOTS_TOO_MUCH", "desc": "The chat has too many bots" },
   { "code": 400, "msg": "BOT_APP_INVALID", "desc": "The specified bot app is invalid." },
   { "code": 400, "msg": "BOT_CHANNELS_NA", "desc": "Bots can't edit admin privileges" },
@@ -1021,11 +1023,13 @@
     "msg": "SHORT_NAME_OCCUPIED",
     "desc": "The specified short name is already in use."
   },
+  { "code": 400, "msg": "SLOTS_EMPTY", "desc": "The specified slot list is empty." },
   {
     "code": 400,
     "msg": "SLOWMODE_MULTI_MSGS_DISABLED",
     "desc": "Slowmode is enabled, you cannot forward multiple messages to this group"
   },
+  { "code": 400, "msg": "SLUG_INVALID", "desc": "The specified invoice slug is invalid." },
   {
     "code": 400,
     "msg": "SMS_CODE_CREATE_FAILED",
@@ -1329,6 +1333,12 @@
     "desc": "Telegram server could not fetch the provided URL"
   },
   { "code": 400, "msg": "WEBPAGE_MEDIA_EMPTY", "desc": "The URL doesn't contain any valid media" },
+  {
+    "code": 400,
+    "msg": "WEBPAGE_NOT_FOUND",
+    "desc": "A preview for the specified webpage url could not be generated."
+  },
+  { "code": 400, "msg": "WEBPAGE_URL_INVALID", "desc": "The specified webpage url is invalid." },
   {
     "code": 400,
     "msg": "WEBPUSH_AUTH_INVALID",

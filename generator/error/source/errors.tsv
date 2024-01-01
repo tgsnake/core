@@ -29,7 +29,9 @@ code	id	message
 400	BANK_CARD_NUMBER_INVALID	The credit card number is invalid
 400	BANNED_RIGHTS_INVALID	You provided a set of restrictions that is invalid
 400	BASE_PORT_LOC_INVALID	The base port location is invalid
+400	BOOSTS_EMPTY	No boost slots were specified.
 400	BOOSTS_REQUIRED	The specified channel must first be boosted by its users in order to perform this action.
+400	BOOST_PEER_INVALID	The specified boost_peer is invalid.
 400	BOTS_TOO_MUCH	The chat has too many bots
 400	BOT_APP_INVALID	The specified bot app is invalid.
 400	BOT_CHANNELS_NA	Bots can't edit admin privileges
@@ -373,7 +375,9 @@ code	id	message
 400	SHORTNAME_OCCUPY_FAILED	An error occurred when trying to register the short-name used for the sticker pack. Try a different name
 400	SHORT_NAME_INVALID	The specified short name is invalid.
 400	SHORT_NAME_OCCUPIED	The specified short name is already in use.
+400	SLOTS_EMPTY	The specified slot list is empty.
 400	SLOWMODE_MULTI_MSGS_DISABLED	Slowmode is enabled, you cannot forward multiple messages to this group
+400	SLUG_INVALID	The specified invoice slug is invalid.
 400	SMS_CODE_CREATE_FAILED	An error occurred while creating the SMS code
 400	SRP_ID_INVALID	Invalid SRP ID provided
 400	SRP_PASSWORD_CHANGED	The password has changed
@@ -489,6 +493,8 @@ code	id	message
 400	WEBDOCUMENT_URL_INVALID	The web document URL is invalid
 400	WEBPAGE_CURL_FAILED	Telegram server could not fetch the provided URL
 400	WEBPAGE_MEDIA_EMPTY	The URL doesn't contain any valid media
+400	WEBPAGE_NOT_FOUND	A preview for the specified webpage url could not be generated.
+400	WEBPAGE_URL_INVALID	The specified webpage url is invalid.
 400	WEBPUSH_AUTH_INVALID	The specified web push authentication secret is invalid.
 400	WEBPUSH_KEY_INVALID	The specified web push elliptic curve Diffie-Hellman public key is invalid.
 400	WEBPUSH_TOKEN_INVALID	The specified web push token is invalid.

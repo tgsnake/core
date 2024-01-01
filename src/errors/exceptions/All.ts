@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 626;
+const count = 632;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -51,7 +51,9 @@ const Exceptions = {
     BANK_CARD_NUMBER_INVALID: 'BadRequest.BankCardNumberInvalid',
     BANNED_RIGHTS_INVALID: 'BadRequest.BannedRightsInvalid',
     BASE_PORT_LOC_INVALID: 'BadRequest.BasePortLocInvalid',
+    BOOSTS_EMPTY: 'BadRequest.BoostsEmpty',
     BOOSTS_REQUIRED: 'BadRequest.BoostsRequired',
+    BOOST_PEER_INVALID: 'BadRequest.BoostPeerInvalid',
     BOTS_TOO_MUCH: 'BadRequest.BotsTooMuch',
     BOT_APP_INVALID: 'BadRequest.BotAppInvalid',
     BOT_CHANNELS_NA: 'BadRequest.BotChannelsNa',
@@ -395,7 +397,9 @@ const Exceptions = {
     SHORTNAME_OCCUPY_FAILED: 'BadRequest.ShortnameOccupyFailed',
     SHORT_NAME_INVALID: 'BadRequest.ShortNameInvalid',
     SHORT_NAME_OCCUPIED: 'BadRequest.ShortNameOccupied',
+    SLOTS_EMPTY: 'BadRequest.SlotsEmpty',
     SLOWMODE_MULTI_MSGS_DISABLED: 'BadRequest.SlowmodeMultiMsgsDisabled',
+    SLUG_INVALID: 'BadRequest.SlugInvalid',
     SMS_CODE_CREATE_FAILED: 'BadRequest.SmsCodeCreateFailed',
     SRP_ID_INVALID: 'BadRequest.SrpIdInvalid',
     SRP_PASSWORD_CHANGED: 'BadRequest.SrpPasswordChanged',
@@ -511,6 +515,8 @@ const Exceptions = {
     WEBDOCUMENT_URL_INVALID: 'BadRequest.WebdocumentUrlInvalid',
     WEBPAGE_CURL_FAILED: 'BadRequest.WebpageCurlFailed',
     WEBPAGE_MEDIA_EMPTY: 'BadRequest.WebpageMediaEmpty',
+    WEBPAGE_NOT_FOUND: 'BadRequest.WebpageNotFound',
+    WEBPAGE_URL_INVALID: 'BadRequest.WebpageUrlInvalid',
     WEBPUSH_AUTH_INVALID: 'BadRequest.WebpushAuthInvalid',
     WEBPUSH_KEY_INVALID: 'BadRequest.WebpushKeyInvalid',
     WEBPUSH_TOKEN_INVALID: 'BadRequest.WebpushTokenInvalid',

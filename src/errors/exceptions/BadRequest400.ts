@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -122,10 +122,18 @@ export class BasePortLocInvalid extends BadRequest {
   id: string = 'BASE_PORT_LOC_INVALID';
   message: string = 'The base port location is invalid';
 }
+export class BoostsEmpty extends BadRequest {
+  id: string = 'BOOSTS_EMPTY';
+  message: string = 'No boost slots were specified.';
+}
 export class BoostsRequired extends BadRequest {
   id: string = 'BOOSTS_REQUIRED';
   message: string =
     'The specified channel must first be boosted by its users in order to perform this action.';
+}
+export class BoostPeerInvalid extends BadRequest {
+  id: string = 'BOOST_PEER_INVALID';
+  message: string = 'The specified boost_peer is invalid.';
 }
 export class BotsTooMuch extends BadRequest {
   id: string = 'BOTS_TOO_MUCH';
@@ -1528,9 +1536,17 @@ export class ShortNameOccupied extends BadRequest {
   id: string = 'SHORT_NAME_OCCUPIED';
   message: string = 'The specified short name is already in use.';
 }
+export class SlotsEmpty extends BadRequest {
+  id: string = 'SLOTS_EMPTY';
+  message: string = 'The specified slot list is empty.';
+}
 export class SlowmodeMultiMsgsDisabled extends BadRequest {
   id: string = 'SLOWMODE_MULTI_MSGS_DISABLED';
   message: string = 'Slowmode is enabled, you cannot forward multiple messages to this group';
+}
+export class SlugInvalid extends BadRequest {
+  id: string = 'SLUG_INVALID';
+  message: string = 'The specified invoice slug is invalid.';
 }
 export class SmsCodeCreateFailed extends BadRequest {
   id: string = 'SMS_CODE_CREATE_FAILED';
@@ -1999,6 +2015,14 @@ export class WebpageCurlFailed extends BadRequest {
 export class WebpageMediaEmpty extends BadRequest {
   id: string = 'WEBPAGE_MEDIA_EMPTY';
   message: string = "The URL doesn't contain any valid media";
+}
+export class WebpageNotFound extends BadRequest {
+  id: string = 'WEBPAGE_NOT_FOUND';
+  message: string = 'A preview for the specified webpage url could not be generated.';
+}
+export class WebpageUrlInvalid extends BadRequest {
+  id: string = 'WEBPAGE_URL_INVALID';
+  message: string = 'The specified webpage url is invalid.';
 }
 export class WebpushAuthInvalid extends BadRequest {
   id: string = 'WEBPUSH_AUTH_INVALID';
