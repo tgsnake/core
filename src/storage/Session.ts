@@ -114,10 +114,11 @@ export class BaseSession extends AbstractSession {
   get secretChats() {
     return this._secretChats;
   }
-
   async load() {}
   async delete() {}
   async save() {}
+  async updatePts() {}
+  async getPts() {}
   async move(session: AbstractSession) {
     Logger.info(
       `[73] Moving session from ${this.constructor.name} to ${session.constructor.name}.`,

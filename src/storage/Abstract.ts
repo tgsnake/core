@@ -150,7 +150,7 @@ export abstract class AbstractSession {
   abstract save(): Promise<void>;
   /**
    * Move session from instance to another instance.
-   * @param {Object} session - Another instance which will be migrated there.
+   * @param {object} session - Another instance which will be migrated there.
    */
   abstract move(session: AbstractSession): Promise<void>;
   /**
@@ -164,7 +164,7 @@ export abstract class AbstractSession {
   ): Promise<void>;
   /**
    * Save secret chat into cache.
-   * @param {Array} chats - Collection of secret chats will be saved to cache.
+   * @param {array} chats - Collection of secret chats will be saved to cache.
    */
   abstract updateSecretChats(chats: Array<SecretChat>);
   /**
@@ -174,30 +174,39 @@ export abstract class AbstractSession {
   abstract getSecretChatById(id: number): Promise<SecretChat | undefined>;
   /**
    * Get peer by their given id from cache.
-   * @param {BigInt} id - User id will be search on cache.
+   * @param {bigint} id - User id will be search on cache.
    */
   abstract getPeerById(
     id: bigint,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Get peer by their given username from cache.
-   * @param {String} username - Username will be search on cache.
+   * @param {string} username - Username will be search on cache.
    */
   abstract getPeerByUsername(
     username: string,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Get peer by their given phone number from cache.
-   * @param {String} phoneNumber - Phone number will be search on cache.
+   * @param {string} phoneNumber - Phone number will be search on cache.
    */
   abstract getPeerByPhoneNumber(
     phoneNumber: string,
   ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
   /**
    * Remove secret chat by id.
-   * @param {Number} id - secret chat id which will removed.
+   * @param {number} id - secret chat id which will removed.
    */
   abstract removeSecretChatById(id: number): Promise<boolean>;
+  /**
+   * Update the pts state.
+   * @param {number} pts - pts state.
+   */
+  abstract updatePts(pts: number);
+  /**
+   * Get saved pts state
+   */
+  abstract getPts(): Promise<number>;
   /**
    * Export session to valid string.
    */
