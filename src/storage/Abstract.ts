@@ -203,7 +203,7 @@ export abstract class AbstractSession {
    * @param {number} pts - pts state.
    * @param {number} date - pts date.
    */
-  abstract updatePts(pts: number, date: number);
+  abstract updatePts(pts: number, date: number): Promise<void>;
   /**
    * Get saved pts state
    */

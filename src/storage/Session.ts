@@ -118,7 +118,10 @@ export class BaseSession extends AbstractSession {
   async delete() {}
   async save() {}
   async updatePts(pts, date) {}
-  async getPts() {}
+  async getPts() {
+    const res: [pts: number, date: number] = [0, 0];
+    return res;
+  }
   async move(session: AbstractSession) {
     Logger.info(
       `[73] Moving session from ${this.constructor.name} to ${session.constructor.name}.`,
