@@ -117,7 +117,7 @@ export class BaseSession extends AbstractSession {
   async load() {}
   async delete() {}
   async save() {}
-  async updatePts() {}
+  async updatePts(pts, date) {}
   async getPts() {}
   async move(session: AbstractSession) {
     Logger.info(

@@ -201,12 +201,13 @@ export abstract class AbstractSession {
   /**
    * Update the pts state.
    * @param {number} pts - pts state.
+   * @param {number} date - pts date.
    */
-  abstract updatePts(pts: number);
+  abstract updatePts(pts: number, date: number);
   /**
    * Get saved pts state
    */
-  abstract getPts(): Promise<number>;
+  abstract getPts(): Promise<[pts: number, date: number]>;
   /**
    * Export session to valid string.
    */
