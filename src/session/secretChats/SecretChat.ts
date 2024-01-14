@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -10,7 +10,7 @@
 
 import { Raw } from '../../raw/index.ts';
 import { type AbstractSession, SecretChat as TempChat } from '../../storage/index.ts';
-import { Mutex, inspect, crypto } from '../../platform.deno.ts';
+import { Mutex, inspect, crypto, Buffer } from '../../platform.deno.ts';
 import { Logger } from '../../Logger.ts';
 import { SecurityCheckMismatch, SecretChatError } from '../../errors/index.ts';
 import { SecretChats } from '../../crypto/index.ts';

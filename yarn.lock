@@ -37,11 +37,11 @@ __metadata:
   resolution: "@tgsnake/core@workspace:."
   dependencies:
     "@tgsnake/log": "npm:latest"
-    "@types/node": "npm:20.10.5"
+    "@types/node": "npm:20.11.0"
     async-mutex: "npm:0.4.0"
     big-integer: "npm:1.6.52"
     deno2node: "npm:1.11.0"
-    prettier: "npm:3.1.1"
+    prettier: "npm:3.2.1"
     socks: "npm:2.7.1"
   languageName: unknown
   linkType: soft
@@ -67,12 +67,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.10.5":
-  version: 20.10.5
-  resolution: "@types/node@npm:20.10.5"
+"@types/node@npm:20.11.0":
+  version: 20.11.0
+  resolution: "@types/node@npm:20.11.0"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: be30609aae0bfe492097815f166ccc07f465220cb604647fa4e5ec05a1d16c012a41b82b5f11ecfe2485cbb479d4d20384b95b809ca0bcff6d94d5bbafa645bb
+  checksum: 560aa850dfccb83326f9cba125459f6c3fb0c71ec78f22c61e4d248f1df78bd25fd6792cef573dfbdc49c882f8e38bb1a82ca87e0e28ff2513629c704c2b02af
   languageName: node
   linkType: hard
 
@@ -296,12 +296,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.1.1":
-  version: 3.1.1
-  resolution: "prettier@npm:3.1.1"
+"prettier@npm:3.2.1":
+  version: 3.2.1
+  resolution: "prettier@npm:3.2.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: facc944ba20e194ff4db765e830ffbcb642803381f0d2033ed397e79904fa4ccc877dc25ad68f42d36985c01d051c990ca1b905fb83d2d7d65fe69e4386fa1a3
+  checksum: e01284f25c1e9a96dfaf4f7d0bfdf0726b26afc732b0e645a2653174d4ad5a1e85ae21ec4d327c71536f1acf8fee1dff5ea35c5b4b8e5b83ff00fe1dd6fef146
   languageName: node
   linkType: hard
 

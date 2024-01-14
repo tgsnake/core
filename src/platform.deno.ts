@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -22,11 +22,5 @@ export { SocksClient } from 'https://deno.land/x/deno_socks@v2.6.1/mod.ts';
 export { Mutex, Semaphore } from 'https://deno.land/x/semaphore@v1.1.2/mod.ts';
 export { crypto, net, os, path, aesjs };
 
-declare var Buffer: buffer.Buffer; // node compatibility
+export const { Buffer } = buffer; // node compatibility
 export const isBrowser = false; // browser compatibility
-Object.defineProperty(globalThis, 'Buffer', {
-  enumerable: false,
-  configurable: false,
-  writable: true,
-  value: buffer.Buffer,
-});

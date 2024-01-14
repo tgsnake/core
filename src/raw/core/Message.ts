@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -11,6 +11,8 @@
 import { BytesIO } from './BytesIO.ts';
 import { TLObject } from './TLObject.ts';
 import * as Primitive from './primitive/index.ts';
+import { Buffer } from '../../platform.deno.ts';
+
 function toBytes(value: bigint) {
   const bytesArray: Array<number> = [];
   for (let i = 0; i < 8; i++) {

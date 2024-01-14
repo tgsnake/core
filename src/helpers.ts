@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { bigInt } from './platform.deno.ts';
+import { bigInt, Buffer } from './platform.deno.ts';
 // https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
 export function bigintToBuffer(
   int: bigint,

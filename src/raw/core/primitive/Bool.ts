@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -10,6 +10,7 @@
 
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
+import { Buffer } from '../../../platform.deno.ts';
 export class BoolFalse extends TLObject {
   static ID: number = 0xbc799737;
   static value: boolean = false;

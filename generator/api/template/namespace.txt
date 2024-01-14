@@ -14,6 +14,7 @@
 *         All change made in this file will be lost!       *
 ***********************************************************/
 import { TLObject, BytesIO, Primitive, type UpdateSecretChatMessage } from "./core/index.ts";
+import { Buffer } from '../platform.deno.ts'
 
 /**
   * This is a telegram schema, so you can see the documentation in https://core.telegram.org/schema.

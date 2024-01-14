@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -13,7 +13,7 @@ import { Session, Auth } from '../session/index.ts';
 import { bigMath, bigintToBuffer } from '../helpers.ts';
 import { Exceptions, CDNFileHashMismatch } from '../errors/index.ts';
 import { AES } from '../crypto/index.ts';
-import { crypto } from '../platform.deno.ts';
+import { crypto, Buffer } from '../platform.deno.ts';
 import { type Client } from '../client/Client.ts';
 
 export async function handleDownload(

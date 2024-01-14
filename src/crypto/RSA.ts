@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -14,6 +14,7 @@ import {
   bigintToBuffer as toBuffer,
   bufferToBigint as toBigint,
 } from '../helpers.ts';
+import { Buffer } from '../platform.deno.ts';
 
 const PublicKey = new Map<
   bigint,

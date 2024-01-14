@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 import { Raw } from '../raw/index.ts';
-import { crypto } from '../platform.deno.ts';
+import { crypto, Buffer } from '../platform.deno.ts';
 import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers.ts';
 
 /**

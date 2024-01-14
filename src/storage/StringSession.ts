@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -12,6 +12,7 @@ import { Logger } from '../Logger.ts';
 import { BaseSession } from './Session.ts';
 import { BytesIO } from '../raw/index.ts';
 import { base64urlTobase64 } from '../helpers.ts';
+import { Buffer } from '../platform.deno.ts';
 
 /**
  * @class StringSession

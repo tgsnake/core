@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -11,7 +11,7 @@
 import { Object } from '../All.ts';
 import { BytesIO } from './BytesIO.ts';
 import { Logger } from '../../Logger.ts';
-import { inspect } from '../../platform.deno.ts';
+import { inspect, Buffer } from '../../platform.deno.ts';
 async function req(paths: string): Promise<{ [key: string]: any }> {
   let res = {};
   if ('Deno' in globalThis) {

@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2023 butthx <https://github.com/butthx>
+ * Copyright (C) 2024 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -9,7 +9,7 @@
  */
 
 import { Socket } from '../WebSocket.ts';
-import { Mutex, inspect } from '../../platform.deno.ts';
+import { Mutex, inspect, Buffer } from '../../platform.deno.ts';
 import { Timeout } from '../../Timeout.ts';
 import { Logger } from '../../Logger.ts';
 import { sleep } from '../../helpers.ts';
