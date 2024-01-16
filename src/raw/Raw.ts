@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 170;
+  export const Layer: number = 171;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -396,6 +396,9 @@ export namespace Raw {
     | Raw.messages.GetPinnedSavedDialogs
     | Raw.messages.ToggleSavedDialogPin
     | Raw.messages.ReorderPinnedSavedDialogs
+    | Raw.messages.GetSavedReactionTags
+    | Raw.messages.UpdateSavedReactionTag
+    | Raw.messages.GetDefaultTagReactions
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -822,6 +825,7 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeSavedReactionTag = Raw.SavedReactionTag;
   export type TypeSavedDialog = Raw.SavedDialog;
   export type TypeStoryReaction =
     | Raw.StoryReaction
@@ -1286,6 +1290,7 @@ export namespace Raw {
     | Raw.UpdateBotMessageReactions
     | Raw.UpdateSavedDialogPinned
     | Raw.UpdatePinnedSavedDialogs
+    | Raw.UpdateSavedReactionTags
     | UpdateSecretChatMessage;
   export type TypeReactionCount = Raw.ReactionCount;
   export type TypeBoost = Raw.Boost;
@@ -21749,6 +21754,35 @@ export namespace Raw {
       if (this.order) {
         b.write(Primitive.Vector.write(this.order) as unknown as Buffer);
       }
+      return b.buffer;
+    }
+  }
+  export class UpdateSavedReactionTags extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateSavedReactionTags';
+      this.constructorId = 0x39c67432;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateSavedReactionTags> {
+      // no flags
+
+      return new Raw.UpdateSavedReactionTags();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
       return b.buffer;
     }
   }
@@ -50180,12 +50214,14 @@ export namespace Raw {
   export class MessageReactions extends TLObject {
     min?: boolean;
     canSeeList?: boolean;
+    reactionsAsTags?: boolean;
     results!: Vector<Raw.TypeReactionCount>;
     recentReactions?: Vector<Raw.TypeMessagePeerReaction>;
 
     constructor(params: {
       min?: boolean;
       canSeeList?: boolean;
+      reactionsAsTags?: boolean;
       results: Vector<Raw.TypeReactionCount>;
       recentReactions?: Vector<Raw.TypeMessagePeerReaction>;
     }) {
@@ -50194,9 +50230,10 @@ export namespace Raw {
       this.className = 'MessageReactions';
       this.constructorId = 0x4f2b9479;
       this.subclassOfId = 0x8a5b071c;
-      this._slots = ['min', 'canSeeList', 'results', 'recentReactions'];
+      this._slots = ['min', 'canSeeList', 'reactionsAsTags', 'results', 'recentReactions'];
       this.min = params.min;
       this.canSeeList = params.canSeeList;
+      this.reactionsAsTags = params.reactionsAsTags;
       this.results = params.results;
       this.recentReactions = params.recentReactions;
     }
@@ -50211,11 +50248,13 @@ export namespace Raw {
 
       let min = flags & (1 << 0) ? true : false;
       let canSeeList = flags & (1 << 2) ? true : false;
+      let reactionsAsTags = flags & (1 << 3) ? true : false;
       let results = await TLObject.read(b);
       let recentReactions = flags & (1 << 1) ? await TLObject.read(b) : [];
       return new Raw.MessageReactions({
         min: min,
         canSeeList: canSeeList,
+        reactionsAsTags: reactionsAsTags,
         results: results,
         recentReactions: recentReactions,
       });
@@ -50231,6 +50270,7 @@ export namespace Raw {
       let flags = 0;
       flags |= this.min ? 1 << 0 : 0;
       flags |= this.canSeeList ? 1 << 2 : 0;
+      flags |= this.reactionsAsTags ? 1 << 3 : 0;
       flags |= this.recentReactions ? 1 << 1 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -56314,6 +56354,60 @@ export namespace Raw {
       }
       if (this.topMessage !== undefined) {
         b.write(Primitive.Int.write(this.topMessage) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class SavedReactionTag extends TLObject {
+    reaction!: Raw.TypeReaction;
+    title?: string;
+    count!: int;
+
+    constructor(params: { reaction: Raw.TypeReaction; title?: string; count: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'SavedReactionTag';
+      this.constructorId = 0xcb6ff828;
+      this.subclassOfId = 0xed681418;
+      this._slots = ['reaction', 'title', 'count'];
+      this.reaction = params.reaction;
+      this.title = params.title;
+      this.count = params.count;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.SavedReactionTag> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let reaction = await TLObject.read(b);
+      let title = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+      let count = await Primitive.Int.read(b);
+      return new Raw.SavedReactionTag({ reaction: reaction, title: title, count: count });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.title !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.reaction !== undefined) {
+        b.write(this.reaction.write() as unknown as Buffer);
+      }
+      if (this.title !== undefined) {
+        b.write(Primitive.String.write(this.title) as unknown as Buffer);
+      }
+      if (this.count !== undefined) {
+        b.write(Primitive.Int.write(this.count) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -66311,6 +66405,9 @@ export namespace Raw {
       | Raw.messages.SponsoredMessages
       | Raw.messages.SponsoredMessagesEmpty;
     export type TypeInactiveChats = Raw.messages.InactiveChats;
+    export type TypeSavedReactionTags =
+      | Raw.messages.SavedReactionTagsNotModified
+      | Raw.messages.SavedReactionTags;
     export type TypeSavedDialogs =
       | Raw.messages.SavedDialogs
       | Raw.messages.SavedDialogsSlice
@@ -70312,6 +70409,80 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class SavedReactionTagsNotModified extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.SavedReactionTagsNotModified';
+        this.constructorId = 0x889b59ef;
+        this.subclassOfId = 0xa39b5be3;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.SavedReactionTagsNotModified> {
+        // no flags
+
+        return new Raw.messages.SavedReactionTagsNotModified();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class SavedReactionTags extends TLObject {
+      tags!: Vector<Raw.TypeSavedReactionTag>;
+      hash!: long;
+
+      constructor(params: { tags: Vector<Raw.TypeSavedReactionTag>; hash: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.SavedReactionTags';
+        this.constructorId = 0x3259950a;
+        this.subclassOfId = 0xa39b5be3;
+        this._slots = ['tags', 'hash'];
+        this.tags = params.tags;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.SavedReactionTags> {
+        // no flags
+
+        let tags = await TLObject.read(b);
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.SavedReactionTags({ tags: tags, hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.tags) {
+          b.write(Primitive.Vector.write(this.tags) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
     export class GetMessages extends TLObject {
       __response__!: Raw.messages.TypeMessages;
       id!: Vector<Raw.TypeInputMessage>;
@@ -70562,6 +70733,7 @@ export namespace Raw {
       q!: string;
       fromId?: Raw.TypeInputPeer;
       savedPeerId?: Raw.TypeInputPeer;
+      savedReaction?: Vector<Raw.TypeReaction>;
       topMsgId?: int;
       filter!: Raw.TypeMessagesFilter;
       minDate!: int;
@@ -70578,6 +70750,7 @@ export namespace Raw {
         q: string;
         fromId?: Raw.TypeInputPeer;
         savedPeerId?: Raw.TypeInputPeer;
+        savedReaction?: Vector<Raw.TypeReaction>;
         topMsgId?: int;
         filter: Raw.TypeMessagesFilter;
         minDate: int;
@@ -70592,13 +70765,14 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'messages.Search';
-        this.constructorId = 0xa7b4e929;
+        this.constructorId = 0x29ee847a;
         this.subclassOfId = 0xd4b40b5e;
         this._slots = [
           'peer',
           'q',
           'fromId',
           'savedPeerId',
+          'savedReaction',
           'topMsgId',
           'filter',
           'minDate',
@@ -70614,6 +70788,7 @@ export namespace Raw {
         this.q = params.q;
         this.fromId = params.fromId;
         this.savedPeerId = params.savedPeerId;
+        this.savedReaction = params.savedReaction;
         this.topMsgId = params.topMsgId;
         this.filter = params.filter;
         this.minDate = params.minDate;
@@ -70638,6 +70813,7 @@ export namespace Raw {
         let q = await Primitive.String.read(b);
         let fromId = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         let savedPeerId = flags & (1 << 2) ? await TLObject.read(b) : undefined;
+        let savedReaction = flags & (1 << 3) ? await TLObject.read(b) : [];
         let topMsgId = flags & (1 << 1) ? await Primitive.Int.read(b) : undefined;
         let filter = await TLObject.read(b);
         let minDate = await Primitive.Int.read(b);
@@ -70653,6 +70829,7 @@ export namespace Raw {
           q: q,
           fromId: fromId,
           savedPeerId: savedPeerId,
+          savedReaction: savedReaction,
           topMsgId: topMsgId,
           filter: filter,
           minDate: minDate,
@@ -70676,6 +70853,7 @@ export namespace Raw {
         let flags = 0;
         flags |= this.fromId !== undefined ? 1 << 0 : 0;
         flags |= this.savedPeerId !== undefined ? 1 << 2 : 0;
+        flags |= this.savedReaction ? 1 << 3 : 0;
         flags |= this.topMsgId !== undefined ? 1 << 1 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -70690,6 +70868,9 @@ export namespace Raw {
         }
         if (this.savedPeerId !== undefined) {
           b.write(this.savedPeerId.write() as unknown as Buffer);
+        }
+        if (this.savedReaction) {
+          b.write(Primitive.Vector.write(this.savedReaction) as unknown as Buffer);
         }
         if (this.topMsgId !== undefined) {
           b.write(Primitive.Int.write(this.topMsgId) as unknown as Buffer);
@@ -81527,6 +81708,138 @@ export namespace Raw {
 
         if (this.order) {
           b.write(Primitive.Vector.write(this.order) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetSavedReactionTags extends TLObject {
+      __response__!: Raw.messages.TypeSavedReactionTags;
+      hash!: long;
+
+      constructor(params: { hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetSavedReactionTags';
+        this.constructorId = 0x761ddacf;
+        this.subclassOfId = 0xa39b5be3;
+        this._slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.GetSavedReactionTags> {
+        // no flags
+
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.GetSavedReactionTags({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class UpdateSavedReactionTag extends TLObject {
+      __response__!: Bool;
+      reaction!: Raw.TypeReaction;
+      title?: string;
+
+      constructor(params: { reaction: Raw.TypeReaction; title?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.UpdateSavedReactionTag';
+        this.constructorId = 0x60297dec;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['reaction', 'title'];
+        this.reaction = params.reaction;
+        this.title = params.title;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.UpdateSavedReactionTag> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let reaction = await TLObject.read(b);
+        let title = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        return new Raw.messages.UpdateSavedReactionTag({ reaction: reaction, title: title });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.title !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.reaction !== undefined) {
+          b.write(this.reaction.write() as unknown as Buffer);
+        }
+        if (this.title !== undefined) {
+          b.write(Primitive.String.write(this.title) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetDefaultTagReactions extends TLObject {
+      __response__!: Raw.messages.TypeReactions;
+      hash!: long;
+
+      constructor(params: { hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetDefaultTagReactions';
+        this.constructorId = 0xbdf93428;
+        this.subclassOfId = 0xadc38324;
+        this._slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.GetDefaultTagReactions> {
+        // no flags
+
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.GetDefaultTagReactions({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
         }
         return b.buffer;
       }
