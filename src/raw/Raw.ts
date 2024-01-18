@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 171;
+  export const Layer: number = 172;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -177,6 +177,7 @@ export namespace Raw {
     | Raw.users.GetUsers
     | Raw.users.GetFullUser
     | Raw.users.SetSecureValueErrors
+    | Raw.users.GetIsPremiumRequiredToContact
     | Raw.contacts.GetContactIDs
     | Raw.contacts.GetStatuses
     | Raw.contacts.GetContacts
@@ -399,6 +400,7 @@ export namespace Raw {
     | Raw.messages.GetSavedReactionTags
     | Raw.messages.UpdateSavedReactionTag
     | Raw.messages.GetDefaultTagReactions
+    | Raw.messages.GetOutboxReadDate
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -720,6 +722,7 @@ export namespace Raw {
   export type TypeChannelMessagesFilter =
     | Raw.ChannelMessagesFilterEmpty
     | Raw.ChannelMessagesFilter;
+  export type TypeOutboxReadDate = Raw.OutboxReadDate;
   export type TypeAppWebViewResult = Raw.AppWebViewResultUrl;
   export type TypeInputBotApp = Raw.InputBotAppID | Raw.InputBotAppShortName;
   export type TypeDefaultHistoryTTL = Raw.DefaultHistoryTTL;
@@ -6801,6 +6804,7 @@ export namespace Raw {
     closeFriend?: boolean;
     storiesHidden?: boolean;
     storiesUnavailable?: boolean;
+    contactRequirePremium?: boolean;
     id!: long;
     accessHash?: long;
     firstName?: string;
@@ -6842,6 +6846,7 @@ export namespace Raw {
       closeFriend?: boolean;
       storiesHidden?: boolean;
       storiesUnavailable?: boolean;
+      contactRequirePremium?: boolean;
       id: long;
       accessHash?: long;
       firstName?: string;
@@ -6888,6 +6893,7 @@ export namespace Raw {
         'closeFriend',
         'storiesHidden',
         'storiesUnavailable',
+        'contactRequirePremium',
         'id',
         'accessHash',
         'firstName',
@@ -6928,6 +6934,7 @@ export namespace Raw {
       this.closeFriend = params.closeFriend;
       this.storiesHidden = params.storiesHidden;
       this.storiesUnavailable = params.storiesUnavailable;
+      this.contactRequirePremium = params.contactRequirePremium;
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.firstName = params.firstName;
@@ -6977,6 +6984,7 @@ export namespace Raw {
       let closeFriend = flags2 & (1 << 2) ? true : false;
       let storiesHidden = flags2 & (1 << 3) ? true : false;
       let storiesUnavailable = flags2 & (1 << 4) ? true : false;
+      let contactRequirePremium = flags2 & (1 << 10) ? true : false;
       let id = await Primitive.Long.read(b);
       let accessHash = flags & (1 << 0) ? await Primitive.Long.read(b) : undefined;
       let firstName = flags & (1 << 1) ? await Primitive.String.read(b) : undefined;
@@ -7017,6 +7025,7 @@ export namespace Raw {
         closeFriend: closeFriend,
         storiesHidden: storiesHidden,
         storiesUnavailable: storiesUnavailable,
+        contactRequirePremium: contactRequirePremium,
         id: id,
         accessHash: accessHash,
         firstName: firstName,
@@ -7081,6 +7090,7 @@ export namespace Raw {
       flags2 |= this.closeFriend ? 1 << 2 : 0;
       flags2 |= this.storiesHidden ? 1 << 3 : 0;
       flags2 |= this.storiesUnavailable ? 1 << 4 : 0;
+      flags2 |= this.contactRequirePremium ? 1 << 10 : 0;
       flags2 |= this.usernames ? 1 << 0 : 0;
       flags2 |= this.storiesMaxId !== undefined ? 1 << 5 : 0;
       flags2 |= this.color !== undefined ? 1 << 8 : 0;
@@ -7346,13 +7356,16 @@ export namespace Raw {
     }
   }
   export class UserStatusRecently extends TLObject {
-    constructor() {
+    byMe?: boolean;
+
+    constructor(params: { byMe?: boolean }) {
       super();
       this.classType = 'types';
       this.className = 'UserStatusRecently';
-      this.constructorId = 0xe26f42f1;
+      this.constructorId = 0x7b197dc8;
       this.subclassOfId = 0x5b0b743e;
-      this._slots = [];
+      this._slots = ['byMe'];
+      this.byMe = params.byMe;
     }
     /**
      * Generate the TLObject from buffer.
@@ -7361,7 +7374,10 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UserStatusRecently> {
       // no flags
 
-      return new Raw.UserStatusRecently();
+      let flags = await Primitive.Int.read(b);
+
+      let byMe = flags & (1 << 0) ? true : false;
+      return new Raw.UserStatusRecently({ byMe: byMe });
     }
     /**
      * Generate buffer from TLObject.
@@ -7371,17 +7387,24 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      let flags = 0;
+      flags |= this.byMe ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       return b.buffer;
     }
   }
   export class UserStatusLastWeek extends TLObject {
-    constructor() {
+    byMe?: boolean;
+
+    constructor(params: { byMe?: boolean }) {
       super();
       this.classType = 'types';
       this.className = 'UserStatusLastWeek';
-      this.constructorId = 0x7bf09fc;
+      this.constructorId = 0x541a1d1a;
       this.subclassOfId = 0x5b0b743e;
-      this._slots = [];
+      this._slots = ['byMe'];
+      this.byMe = params.byMe;
     }
     /**
      * Generate the TLObject from buffer.
@@ -7390,7 +7413,10 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UserStatusLastWeek> {
       // no flags
 
-      return new Raw.UserStatusLastWeek();
+      let flags = await Primitive.Int.read(b);
+
+      let byMe = flags & (1 << 0) ? true : false;
+      return new Raw.UserStatusLastWeek({ byMe: byMe });
     }
     /**
      * Generate buffer from TLObject.
@@ -7400,17 +7426,24 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      let flags = 0;
+      flags |= this.byMe ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       return b.buffer;
     }
   }
   export class UserStatusLastMonth extends TLObject {
-    constructor() {
+    byMe?: boolean;
+
+    constructor(params: { byMe?: boolean }) {
       super();
       this.classType = 'types';
       this.className = 'UserStatusLastMonth';
-      this.constructorId = 0x77ebc742;
+      this.constructorId = 0x65899777;
       this.subclassOfId = 0x5b0b743e;
-      this._slots = [];
+      this._slots = ['byMe'];
+      this.byMe = params.byMe;
     }
     /**
      * Generate the TLObject from buffer.
@@ -7419,7 +7452,10 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UserStatusLastMonth> {
       // no flags
 
-      return new Raw.UserStatusLastMonth();
+      let flags = await Primitive.Int.read(b);
+
+      let byMe = flags & (1 << 0) ? true : false;
+      return new Raw.UserStatusLastMonth({ byMe: byMe });
     }
     /**
      * Generate buffer from TLObject.
@@ -7428,6 +7464,10 @@ export namespace Raw {
       let b: BytesIO = new BytesIO();
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
+
+      let flags = 0;
+      flags |= this.byMe ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       return b.buffer;
     }
@@ -14537,6 +14577,8 @@ export namespace Raw {
     storiesPinnedAvailable?: boolean;
     blockedMyStoriesFrom?: boolean;
     wallpaperOverridden?: boolean;
+    contactRequirePremium?: boolean;
+    readDatesPrivate?: boolean;
     id!: long;
     about?: string;
     settings!: Raw.TypePeerSettings;
@@ -14569,6 +14611,8 @@ export namespace Raw {
       storiesPinnedAvailable?: boolean;
       blockedMyStoriesFrom?: boolean;
       wallpaperOverridden?: boolean;
+      contactRequirePremium?: boolean;
+      readDatesPrivate?: boolean;
       id: long;
       about?: string;
       settings: Raw.TypePeerSettings;
@@ -14606,6 +14650,8 @@ export namespace Raw {
         'storiesPinnedAvailable',
         'blockedMyStoriesFrom',
         'wallpaperOverridden',
+        'contactRequirePremium',
+        'readDatesPrivate',
         'id',
         'about',
         'settings',
@@ -14637,6 +14683,8 @@ export namespace Raw {
       this.storiesPinnedAvailable = params.storiesPinnedAvailable;
       this.blockedMyStoriesFrom = params.blockedMyStoriesFrom;
       this.wallpaperOverridden = params.wallpaperOverridden;
+      this.contactRequirePremium = params.contactRequirePremium;
+      this.readDatesPrivate = params.readDatesPrivate;
       this.id = params.id;
       this.about = params.about;
       this.settings = params.settings;
@@ -14677,6 +14725,8 @@ export namespace Raw {
       let storiesPinnedAvailable = flags & (1 << 26) ? true : false;
       let blockedMyStoriesFrom = flags & (1 << 27) ? true : false;
       let wallpaperOverridden = flags & (1 << 28) ? true : false;
+      let contactRequirePremium = flags & (1 << 29) ? true : false;
+      let readDatesPrivate = flags & (1 << 30) ? true : false;
       let id = await Primitive.Long.read(b);
       let about = flags & (1 << 1) ? await Primitive.String.read(b) : undefined;
       let settings = await TLObject.read(b);
@@ -14708,6 +14758,8 @@ export namespace Raw {
         storiesPinnedAvailable: storiesPinnedAvailable,
         blockedMyStoriesFrom: blockedMyStoriesFrom,
         wallpaperOverridden: wallpaperOverridden,
+        contactRequirePremium: contactRequirePremium,
+        readDatesPrivate: readDatesPrivate,
         id: id,
         about: about,
         settings: settings,
@@ -14749,6 +14801,8 @@ export namespace Raw {
       flags |= this.storiesPinnedAvailable ? 1 << 26 : 0;
       flags |= this.blockedMyStoriesFrom ? 1 << 27 : 0;
       flags |= this.wallpaperOverridden ? 1 << 28 : 0;
+      flags |= this.contactRequirePremium ? 1 << 29 : 0;
+      flags |= this.readDatesPrivate ? 1 << 30 : 0;
       flags |= this.about !== undefined ? 1 << 1 : 0;
       flags |= this.personalPhoto !== undefined ? 1 << 21 : 0;
       flags |= this.profilePhoto !== undefined ? 1 << 2 : 0;
@@ -48304,11 +48358,15 @@ export namespace Raw {
     archiveAndMuteNewNoncontactPeers?: boolean;
     keepArchivedUnmuted?: boolean;
     keepArchivedFolders?: boolean;
+    hideReadMarks?: boolean;
+    newNoncontactPeersRequirePremium?: boolean;
 
     constructor(params: {
       archiveAndMuteNewNoncontactPeers?: boolean;
       keepArchivedUnmuted?: boolean;
       keepArchivedFolders?: boolean;
+      hideReadMarks?: boolean;
+      newNoncontactPeersRequirePremium?: boolean;
     }) {
       super();
       this.classType = 'types';
@@ -48319,10 +48377,14 @@ export namespace Raw {
         'archiveAndMuteNewNoncontactPeers',
         'keepArchivedUnmuted',
         'keepArchivedFolders',
+        'hideReadMarks',
+        'newNoncontactPeersRequirePremium',
       ];
       this.archiveAndMuteNewNoncontactPeers = params.archiveAndMuteNewNoncontactPeers;
       this.keepArchivedUnmuted = params.keepArchivedUnmuted;
       this.keepArchivedFolders = params.keepArchivedFolders;
+      this.hideReadMarks = params.hideReadMarks;
+      this.newNoncontactPeersRequirePremium = params.newNoncontactPeersRequirePremium;
     }
     /**
      * Generate the TLObject from buffer.
@@ -48336,10 +48398,14 @@ export namespace Raw {
       let archiveAndMuteNewNoncontactPeers = flags & (1 << 0) ? true : false;
       let keepArchivedUnmuted = flags & (1 << 1) ? true : false;
       let keepArchivedFolders = flags & (1 << 2) ? true : false;
+      let hideReadMarks = flags & (1 << 3) ? true : false;
+      let newNoncontactPeersRequirePremium = flags & (1 << 4) ? true : false;
       return new Raw.GlobalPrivacySettings({
         archiveAndMuteNewNoncontactPeers: archiveAndMuteNewNoncontactPeers,
         keepArchivedUnmuted: keepArchivedUnmuted,
         keepArchivedFolders: keepArchivedFolders,
+        hideReadMarks: hideReadMarks,
+        newNoncontactPeersRequirePremium: newNoncontactPeersRequirePremium,
       });
     }
     /**
@@ -48354,6 +48420,8 @@ export namespace Raw {
       flags |= this.archiveAndMuteNewNoncontactPeers ? 1 << 0 : 0;
       flags |= this.keepArchivedUnmuted ? 1 << 1 : 0;
       flags |= this.keepArchivedFolders ? 1 << 2 : 0;
+      flags |= this.hideReadMarks ? 1 << 3 : 0;
+      flags |= this.newNoncontactPeersRequirePremium ? 1 << 4 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       return b.buffer;
@@ -56408,6 +56476,42 @@ export namespace Raw {
       }
       if (this.count !== undefined) {
         b.write(Primitive.Int.write(this.count) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class OutboxReadDate extends TLObject {
+    date!: int;
+
+    constructor(params: { date: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OutboxReadDate';
+      this.constructorId = 0x3bb842ac;
+      this.subclassOfId = 0x6f5183c6;
+      this._slots = ['date'];
+      this.date = params.date;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.OutboxReadDate> {
+      // no flags
+
+      let date = await Primitive.Int.read(b);
+      return new Raw.OutboxReadDate({ date: date });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -81844,6 +81948,49 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class GetOutboxReadDate extends TLObject {
+      __response__!: Raw.TypeOutboxReadDate;
+      peer!: Raw.TypeInputPeer;
+      msgId!: int;
+
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetOutboxReadDate';
+        this.constructorId = 0x8c4bfe5d;
+        this.subclassOfId = 0x6f5183c6;
+        this._slots = ['peer', 'msgId'];
+        this.peer = params.peer;
+        this.msgId = params.msgId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.GetOutboxReadDate> {
+        // no flags
+
+        let peer = await TLObject.read(b);
+        let msgId = await Primitive.Int.read(b);
+        return new Raw.messages.GetOutboxReadDate({ peer: peer, msgId: msgId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace updates {
     export type TypeChannelDifference =
@@ -98058,6 +98205,46 @@ export namespace Raw {
         }
         if (this.errors) {
           b.write(Primitive.Vector.write(this.errors) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetIsPremiumRequiredToContact extends TLObject {
+      __response__!: Vector<Bool>;
+      id!: Vector<Raw.TypeInputUser>;
+
+      constructor(params: { id: Vector<Raw.TypeInputUser> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'users.GetIsPremiumRequiredToContact';
+        this.constructorId = 0xa622aa10;
+        this.subclassOfId = 0x15dfc3f1;
+        this._slots = ['id'];
+        this.id = params.id;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.users.GetIsPremiumRequiredToContact> {
+        // no flags
+
+        let id = await TLObject.read(b);
+        return new Raw.users.GetIsPremiumRequiredToContact({ id: id });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id) as unknown as Buffer);
         }
         return b.buffer;
       }
