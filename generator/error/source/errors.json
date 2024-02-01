@@ -102,6 +102,11 @@
   { "code": 400, "msg": "BOOST_PEER_INVALID", "desc": "The specified boost_peer is invalid." },
   { "code": 400, "msg": "BOTS_TOO_MUCH", "desc": "The chat has too many bots" },
   { "code": 400, "msg": "BOT_APP_INVALID", "desc": "The specified bot app is invalid." },
+  {
+    "code": 400,
+    "msg": "BOT_APP_SHORTNAME_INVALID",
+    "desc": "The specified bot app short name is invalid."
+  },
   { "code": 400, "msg": "BOT_CHANNELS_NA", "desc": "Bots can't edit admin privileges" },
   {
     "code": 400,
@@ -141,6 +146,7 @@
     "desc": "The bot did not answer to the callback query in time"
   },
   { "code": 400, "msg": "BOT_SCORE_NOT_MODIFIED", "desc": "The bot score was not modified" },
+  { "code": 400, "msg": "BOT_WEBVIEW_DISABLED", "desc": "" },
   { "code": 400, "msg": "BROADCAST_ID_INVALID", "desc": "The channel is invalid" },
   {
     "code": 400,
@@ -488,6 +494,7 @@
     "desc": "You can't modify the icon of the \"General\" topic."
   },
   { "code": 400, "msg": "GEO_POINT_INVALID", "desc": "Invalid geo point provided" },
+  { "code": 400, "msg": "GIFT_SLUG_EXPIRED", "desc": "The specified gift slug has expired." },
   { "code": 400, "msg": "GIFT_SLUG_INVALID", "desc": "" },
   { "code": 400, "msg": "GIF_CONTENT_TYPE_INVALID", "desc": "GIF content-type invalid" },
   { "code": 400, "msg": "GIF_ID_INVALID", "desc": "The provided gif/animation id is invalid" },
@@ -554,6 +561,7 @@
   },
   { "code": 400, "msg": "INPUT_REQUEST_TOO_LONG", "desc": "The input request is too long" },
   { "code": 400, "msg": "INPUT_TEXT_EMPTY", "desc": "The specified text is empty." },
+  { "code": 400, "msg": "INPUT_TEXT_TOO_LONG", "desc": "The specified text is too long." },
   {
     "code": 400,
     "msg": "INPUT_USER_DEACTIVATED",
@@ -942,6 +950,11 @@
   },
   { "code": 400, "msg": "REPLY_MARKUP_INVALID", "desc": "The provided reply markup is invalid" },
   { "code": 400, "msg": "REPLY_MARKUP_TOO_LONG", "desc": "The reply markup is too long" },
+  {
+    "code": 400,
+    "msg": "REPLY_MESSAGE_ID_INVALID",
+    "desc": "The specified reply-to message ID is invalid."
+  },
   { "code": 400, "msg": "REPLY_TO_INVALID", "desc": "The specified replyTo field is invalid" },
   {
     "code": 400,
@@ -1620,6 +1633,11 @@
   },
   {
     "code": 406,
+    "msg": "PRIVACY_PREMIUM_REQUIRED",
+    "desc": "You need a Telegram Premium subscription to send a message to this user."
+  },
+  {
+    "code": 406,
     "msg": "SEND_CODE_UNAVAILABLE",
     "desc": "Returned when all available options for this type of number were already used (e.g. flash-call, then SMS, then this error might be returned to trigger a second resend)."
   },
@@ -1661,6 +1679,11 @@
     "desc": "A wait of {value} seconds is required in the test servers"
   },
   { "code": 420, "msg": "FLOOD_WAIT_X", "desc": "A wait of {value} seconds is required" },
+  {
+    "code": 420,
+    "msg": "PREMIUM_SUB_ACTIVE_UNTIL_X",
+    "desc": "You already have a premium subscription active until unixtime {value} ."
+  },
   {
     "code": 420,
     "msg": "SLOWMODE_WAIT_X",

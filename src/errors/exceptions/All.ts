@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 632;
+const count = 639;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -56,6 +56,7 @@ const Exceptions = {
     BOOST_PEER_INVALID: 'BadRequest.BoostPeerInvalid',
     BOTS_TOO_MUCH: 'BadRequest.BotsTooMuch',
     BOT_APP_INVALID: 'BadRequest.BotAppInvalid',
+    BOT_APP_SHORTNAME_INVALID: 'BadRequest.BotAppShortnameInvalid',
     BOT_CHANNELS_NA: 'BadRequest.BotChannelsNa',
     BOT_COMMAND_DESCRIPTION_INVALID: 'BadRequest.BotCommandDescriptionInvalid',
     BOT_COMMAND_INVALID: 'BadRequest.BotCommandInvalid',
@@ -71,6 +72,7 @@ const Exceptions = {
     BOT_POLLS_DISABLED: 'BadRequest.BotPollsDisabled',
     BOT_RESPONSE_TIMEOUT: 'BadRequest.BotResponseTimeout',
     BOT_SCORE_NOT_MODIFIED: 'BadRequest.BotScoreNotModified',
+    BOT_WEBVIEW_DISABLED: 'BadRequest.BotWebviewDisabled',
     BROADCAST_ID_INVALID: 'BadRequest.BroadcastIdInvalid',
     BROADCAST_PUBLIC_VOTERS_FORBIDDEN: 'BadRequest.BroadcastPublicVotersForbidden',
     BROADCAST_REQUIRED: 'BadRequest.BroadcastRequired',
@@ -198,6 +200,7 @@ const Exceptions = {
     GAME_BOT_INVALID: 'BadRequest.GameBotInvalid',
     GENERAL_MODIFY_ICON_FORBIDDEN: 'BadRequest.GeneralModifyIconForbidden',
     GEO_POINT_INVALID: 'BadRequest.GeoPointInvalid',
+    GIFT_SLUG_EXPIRED: 'BadRequest.GiftSlugExpired',
     GIFT_SLUG_INVALID: 'BadRequest.GiftSlugInvalid',
     GIF_CONTENT_TYPE_INVALID: 'BadRequest.GifContentTypeInvalid',
     GIF_ID_INVALID: 'BadRequest.GifIdInvalid',
@@ -228,6 +231,7 @@ const Exceptions = {
     INPUT_METHOD_INVALID: 'BadRequest.InputMethodInvalid',
     INPUT_REQUEST_TOO_LONG: 'BadRequest.InputRequestTooLong',
     INPUT_TEXT_EMPTY: 'BadRequest.InputTextEmpty',
+    INPUT_TEXT_TOO_LONG: 'BadRequest.InputTextTooLong',
     INPUT_USER_DEACTIVATED: 'BadRequest.InputUserDeactivated',
     INVITES_TOO_MUCH: 'BadRequest.InvitesTooMuch',
     INVITE_FORBIDDEN_WITH_JOINAS: 'BadRequest.InviteForbiddenWithJoinas',
@@ -368,6 +372,7 @@ const Exceptions = {
     REPLY_MARKUP_GAME_EMPTY: 'BadRequest.ReplyMarkupGameEmpty',
     REPLY_MARKUP_INVALID: 'BadRequest.ReplyMarkupInvalid',
     REPLY_MARKUP_TOO_LONG: 'BadRequest.ReplyMarkupTooLong',
+    REPLY_MESSAGE_ID_INVALID: 'BadRequest.ReplyMessageIdInvalid',
     REPLY_TO_INVALID: 'BadRequest.ReplyToInvalid',
     REPLY_TO_USER_INVALID: 'BadRequest.ReplyToUserInvalid',
     RESET_REQUEST_MISSING: 'BadRequest.ResetRequestMissing',
@@ -597,6 +602,7 @@ const Exceptions = {
     PHONE_NUMBER_INVALID: 'NotAcceptable.PhoneNumberInvalid',
     PHONE_PASSWORD_FLOOD: 'NotAcceptable.PhonePasswordFlood',
     PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN: 'NotAcceptable.PreviousChatImportActiveWaitmin',
+    PRIVACY_PREMIUM_REQUIRED: 'NotAcceptable.PrivacyPremiumRequired',
     SEND_CODE_UNAVAILABLE: 'NotAcceptable.SendCodeUnavailable',
     STICKERSET_INVALID: 'NotAcceptable.StickersetInvalid',
     STICKERSET_OWNER_ANONYMOUS: 'NotAcceptable.StickersetOwnerAnonymous',
@@ -611,6 +617,7 @@ const Exceptions = {
     '2FA_CONFIRM_WAIT_X': 'Flood.TwoFaConfirmWait',
     FLOOD_TEST_PHONE_WAIT_X: 'Flood.FloodTestPhoneWait',
     FLOOD_WAIT_X: 'Flood.FloodWait',
+    PREMIUM_SUB_ACTIVE_UNTIL_X: 'Flood.PremiumSubActiveUntil',
     SLOWMODE_WAIT_X: 'Flood.SlowmodeWait',
     TAKEOUT_INIT_DELAY_X: 'Flood.TakeoutInitDelay',
   },

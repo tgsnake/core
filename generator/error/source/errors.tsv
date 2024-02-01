@@ -34,6 +34,7 @@ code	id	message
 400	BOOST_PEER_INVALID	The specified boost_peer is invalid.
 400	BOTS_TOO_MUCH	The chat has too many bots
 400	BOT_APP_INVALID	The specified bot app is invalid.
+400	BOT_APP_SHORTNAME_INVALID	The specified bot app short name is invalid.
 400	BOT_CHANNELS_NA	Bots can't edit admin privileges
 400	BOT_COMMAND_DESCRIPTION_INVALID	The command description was empty, too long or had invalid characters
 400	BOT_COMMAND_INVALID	The specified command is invalid.
@@ -49,6 +50,7 @@ code	id	message
 400	BOT_POLLS_DISABLED	Sending polls by bots has been disabled
 400	BOT_RESPONSE_TIMEOUT	The bot did not answer to the callback query in time
 400	BOT_SCORE_NOT_MODIFIED	The bot score was not modified
+400	BOT_WEBVIEW_DISABLED	
 400	BROADCAST_ID_INVALID	The channel is invalid
 400	BROADCAST_PUBLIC_VOTERS_FORBIDDEN	Polls with public voters cannot be sent in channels
 400	BROADCAST_REQUIRED	The request can only be used with a channel
@@ -176,6 +178,7 @@ code	id	message
 400	GAME_BOT_INVALID	You cannot send that game with the current bot
 400	GENERAL_MODIFY_ICON_FORBIDDEN	You can't modify the icon of the General topic.
 400	GEO_POINT_INVALID	Invalid geo point provided
+400	GIFT_SLUG_EXPIRED	The specified gift slug has expired.
 400	GIFT_SLUG_INVALID	
 400	GIF_CONTENT_TYPE_INVALID	GIF content-type invalid
 400	GIF_ID_INVALID	The provided gif/animation id is invalid
@@ -206,6 +209,7 @@ code	id	message
 400	INPUT_METHOD_INVALID	The method invoked is invalid in the current schema
 400	INPUT_REQUEST_TOO_LONG	The input request is too long
 400	INPUT_TEXT_EMPTY	The specified text is empty.
+400	INPUT_TEXT_TOO_LONG	The specified text is too long.
 400	INPUT_USER_DEACTIVATED	The target user has been deleted/deactivated
 400	INVITES_TOO_MUCH	The maximum number of per-folder invites specified by the chatlist_invites_limit_default/chatlist_invites_limit_premium client configuration parameters » was reached.
 400	INVITE_FORBIDDEN_WITH_JOINAS	If the user has anonymously joined a group call as a channel, they can't invite other users to the group call because that would cause deanonymization, because the invite would be sent using the original user ID, not the anonymized channel ID.
@@ -346,6 +350,7 @@ code	id	message
 400	REPLY_MARKUP_GAME_EMPTY	The provided reply markup for the game is empty
 400	REPLY_MARKUP_INVALID	The provided reply markup is invalid
 400	REPLY_MARKUP_TOO_LONG	The reply markup is too long
+400	REPLY_MESSAGE_ID_INVALID	The specified reply-to message ID is invalid.
 400	REPLY_TO_INVALID	The specified replyTo field is invalid
 400	REPLY_TO_USER_INVALID	The specified replyTo user field is invalid
 400	RESET_REQUEST_MISSING	No password reset is in progress.
@@ -566,6 +571,7 @@ code	id	message
 406	PHONE_NUMBER_INVALID	The phone number is invalid
 406	PHONE_PASSWORD_FLOOD	You have tried to log-in too many times
 406	PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN	Import for this chat is already in progress, wait {value} minutes before starting a new one.
+406	PRIVACY_PREMIUM_REQUIRED	You need a Telegram Premium subscription to send a message to this user.
 406	SEND_CODE_UNAVAILABLE	Returned when all available options for this type of number were already used (e.g. flash-call, then SMS, then this error might be returned to trigger a second resend).
 406	STICKERSET_INVALID	The sticker set is invalid
 406	STICKERSET_OWNER_ANONYMOUS	This sticker set can't be used as the group's sticker set because it was created by one of its anonymous admins
@@ -577,6 +583,7 @@ code	id	message
 420	2FA_CONFIRM_WAIT_X	A wait of {value} seconds is required because this account is active and protected by a 2FA password
 420	FLOOD_TEST_PHONE_WAIT_X	A wait of {value} seconds is required in the test servers
 420	FLOOD_WAIT_X	A wait of {value} seconds is required
+420	PREMIUM_SUB_ACTIVE_UNTIL_X	You already have a premium subscription active until unixtime {value} .
 420	SLOWMODE_WAIT_X	A wait of {value} seconds is required to send messages in this chat.
 420	TAKEOUT_INIT_DELAY_X	You have to confirm the data export request using one of your mobile devices or wait {value} seconds
 500	API_CALL_ERROR	API call error due to Telegram having internal problems. Please try again later

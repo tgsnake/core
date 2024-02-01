@@ -91,6 +91,10 @@ export class PreviousChatImportActiveWaitmin extends NotAcceptable {
   message: string =
     'Import for this chat is already in progress, wait {value} minutes before starting a new one.';
 }
+export class PrivacyPremiumRequired extends NotAcceptable {
+  id: string = 'PRIVACY_PREMIUM_REQUIRED';
+  message: string = 'You need a Telegram Premium subscription to send a message to this user.';
+}
 export class SendCodeUnavailable extends NotAcceptable {
   id: string = 'SEND_CODE_UNAVAILABLE';
   message: string =

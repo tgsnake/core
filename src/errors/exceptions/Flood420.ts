@@ -32,6 +32,10 @@ export class FloodWait extends Flood {
   id: string = 'FLOOD_WAIT_X';
   message: string = 'A wait of {value} seconds is required';
 }
+export class PremiumSubActiveUntil extends Flood {
+  id: string = 'PREMIUM_SUB_ACTIVE_UNTIL_X';
+  message: string = 'You already have a premium subscription active until unixtime {value} .';
+}
 export class SlowmodeWait extends Flood {
   id: string = 'SLOWMODE_WAIT_X';
   message: string = 'A wait of {value} seconds is required to send messages in this chat.';

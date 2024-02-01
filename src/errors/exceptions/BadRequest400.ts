@@ -143,6 +143,10 @@ export class BotAppInvalid extends BadRequest {
   id: string = 'BOT_APP_INVALID';
   message: string = 'The specified bot app is invalid.';
 }
+export class BotAppShortnameInvalid extends BadRequest {
+  id: string = 'BOT_APP_SHORTNAME_INVALID';
+  message: string = 'The specified bot app short name is invalid.';
+}
 export class BotChannelsNa extends BadRequest {
   id: string = 'BOT_CHANNELS_NA';
   message: string = "Bots can't edit admin privileges";
@@ -203,6 +207,10 @@ export class BotResponseTimeout extends BadRequest {
 export class BotScoreNotModified extends BadRequest {
   id: string = 'BOT_SCORE_NOT_MODIFIED';
   message: string = 'The bot score was not modified';
+}
+export class BotWebviewDisabled extends BadRequest {
+  id: string = 'BOT_WEBVIEW_DISABLED';
+  message: string = '';
 }
 export class BroadcastIdInvalid extends BadRequest {
   id: string = 'BROADCAST_ID_INVALID';
@@ -726,6 +734,10 @@ export class GeoPointInvalid extends BadRequest {
   id: string = 'GEO_POINT_INVALID';
   message: string = 'Invalid geo point provided';
 }
+export class GiftSlugExpired extends BadRequest {
+  id: string = 'GIFT_SLUG_EXPIRED';
+  message: string = 'The specified gift slug has expired.';
+}
 export class GiftSlugInvalid extends BadRequest {
   id: string = 'GIFT_SLUG_INVALID';
   message: string = '';
@@ -846,6 +858,10 @@ export class InputRequestTooLong extends BadRequest {
 export class InputTextEmpty extends BadRequest {
   id: string = 'INPUT_TEXT_EMPTY';
   message: string = 'The specified text is empty.';
+}
+export class InputTextTooLong extends BadRequest {
+  id: string = 'INPUT_TEXT_TOO_LONG';
+  message: string = 'The specified text is too long.';
 }
 export class InputUserDeactivated extends BadRequest {
   id: string = 'INPUT_USER_DEACTIVATED';
@@ -1417,6 +1433,10 @@ export class ReplyMarkupInvalid extends BadRequest {
 export class ReplyMarkupTooLong extends BadRequest {
   id: string = 'REPLY_MARKUP_TOO_LONG';
   message: string = 'The reply markup is too long';
+}
+export class ReplyMessageIdInvalid extends BadRequest {
+  id: string = 'REPLY_MESSAGE_ID_INVALID';
+  message: string = 'The specified reply-to message ID is invalid.';
 }
 export class ReplyToInvalid extends BadRequest {
   id: string = 'REPLY_TO_INVALID';
