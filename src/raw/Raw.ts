@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 172;
+  export const Layer: number = 173;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -63871,12 +63871,14 @@ export namespace Raw {
     }
     export class SignUp extends TLObject {
       __response__!: Raw.auth.TypeAuthorization;
+      noJoinedNotifications?: boolean;
       phoneNumber!: string;
       phoneCodeHash!: string;
       firstName!: string;
       lastName!: string;
 
       constructor(params: {
+        noJoinedNotifications?: boolean;
         phoneNumber: string;
         phoneCodeHash: string;
         firstName: string;
@@ -63885,9 +63887,16 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'auth.SignUp';
-        this.constructorId = 0x80eee427;
+        this.constructorId = 0xaac7b717;
         this.subclassOfId = 0xb9e04e39;
-        this._slots = ['phoneNumber', 'phoneCodeHash', 'firstName', 'lastName'];
+        this._slots = [
+          'noJoinedNotifications',
+          'phoneNumber',
+          'phoneCodeHash',
+          'firstName',
+          'lastName',
+        ];
+        this.noJoinedNotifications = params.noJoinedNotifications;
         this.phoneNumber = params.phoneNumber;
         this.phoneCodeHash = params.phoneCodeHash;
         this.firstName = params.firstName;
@@ -63900,11 +63909,15 @@ export namespace Raw {
       static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.auth.SignUp> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
+        let noJoinedNotifications = flags & (1 << 0) ? true : false;
         let phoneNumber = await Primitive.String.read(b);
         let phoneCodeHash = await Primitive.String.read(b);
         let firstName = await Primitive.String.read(b);
         let lastName = await Primitive.String.read(b);
         return new Raw.auth.SignUp({
+          noJoinedNotifications: noJoinedNotifications,
           phoneNumber: phoneNumber,
           phoneCodeHash: phoneCodeHash,
           firstName: firstName,
@@ -63918,6 +63931,10 @@ export namespace Raw {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
+
+        let flags = 0;
+        flags |= this.noJoinedNotifications ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.phoneNumber !== undefined) {
           b.write(Primitive.String.write(this.phoneNumber) as unknown as Buffer);
@@ -81818,15 +81835,17 @@ export namespace Raw {
     }
     export class GetSavedReactionTags extends TLObject {
       __response__!: Raw.messages.TypeSavedReactionTags;
+      peer?: Raw.TypeInputPeer;
       hash!: long;
 
-      constructor(params: { hash: long }) {
+      constructor(params: { peer?: Raw.TypeInputPeer; hash: long }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetSavedReactionTags';
-        this.constructorId = 0x761ddacf;
+        this.constructorId = 0x3637e05b;
         this.subclassOfId = 0xa39b5be3;
-        this._slots = ['hash'];
+        this._slots = ['peer', 'hash'];
+        this.peer = params.peer;
         this.hash = params.hash;
       }
       /**
@@ -81839,8 +81858,11 @@ export namespace Raw {
       ): Promise<Raw.messages.GetSavedReactionTags> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
+        let peer = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         let hash = await Primitive.Long.read(b);
-        return new Raw.messages.GetSavedReactionTags({ hash: hash });
+        return new Raw.messages.GetSavedReactionTags({ peer: peer, hash: hash });
       }
       /**
        * Generate buffer from TLObject.
@@ -81850,6 +81872,13 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
+        let flags = 0;
+        flags |= this.peer !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
         if (this.hash !== undefined) {
           b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
         }
