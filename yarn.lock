@@ -37,11 +37,11 @@ __metadata:
   resolution: "@tgsnake/core@workspace:."
   dependencies:
     "@tgsnake/log": "npm:latest"
-    "@types/node": "npm:20.11.0"
-    async-mutex: "npm:0.4.0"
+    "@types/node": "npm:20.11.16"
+    async-mutex: "npm:0.4.1"
     big-integer: "npm:1.6.52"
     deno2node: "npm:1.11.0"
-    prettier: "npm:3.2.1"
+    prettier: "npm:3.2.4"
     socks: "npm:2.7.1"
   languageName: unknown
   linkType: soft
@@ -67,12 +67,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.11.0":
-  version: 20.11.0
-  resolution: "@types/node@npm:20.11.0"
+"@types/node@npm:20.11.16":
+  version: 20.11.16
+  resolution: "@types/node@npm:20.11.16"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 560aa850dfccb83326f9cba125459f6c3fb0c71ec78f22c61e4d248f1df78bd25fd6792cef573dfbdc49c882f8e38bb1a82ca87e0e28ff2513629c704c2b02af
+  checksum: 4886b90278e9c877a84efd3edd4667cd990e032d77268d2a798b99ebc1901ea336fa7dfbe9eaf4ad6ad1da9ce2ec31baf300038a3905838692362eb19904ebde
   languageName: node
   linkType: hard
 
@@ -85,12 +85,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-mutex@npm:0.4.0":
-  version: 0.4.0
-  resolution: "async-mutex@npm:0.4.0"
+"async-mutex@npm:0.4.1":
+  version: 0.4.1
+  resolution: "async-mutex@npm:0.4.1"
   dependencies:
     tslib: "npm:^2.4.0"
-  checksum: 6541695f80c1d6c5acbf3f7f04e8ff0733b3e029312c48d77bb95243fbe21fc5319f45ac3d72ce08551e6df83dc32440285ce9a3ac17bfc5d385ff0cc8ccd62a
+  checksum: 3c412736c0bc4a9a2cfd948276a8caab8686aa615866a5bd20986e616f8945320acb310058a17afa1b31b8de6f634a78b7ec2217a33d7559b38f68bb85a95854
   languageName: node
   linkType: hard
 
@@ -296,12 +296,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.2.1":
-  version: 3.2.1
-  resolution: "prettier@npm:3.2.1"
+"prettier@npm:3.2.4":
+  version: 3.2.4
+  resolution: "prettier@npm:3.2.4"
   bin:
     prettier: bin/prettier.cjs
-  checksum: e01284f25c1e9a96dfaf4f7d0bfdf0726b26afc732b0e645a2653174d4ad5a1e85ae21ec4d327c71536f1acf8fee1dff5ea35c5b4b8e5b83ff00fe1dd6fef146
+  checksum: 88dfeb78ac6096522c9a5b81f1413d875f568420d9bb6a5e5103527912519b993f2bcdcac311fcff5718d5869671d44e4f85827d3626f3a6ce32b9abc65d88e0
   languageName: node
   linkType: hard
 
