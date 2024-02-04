@@ -1,4 +1,14 @@
- <a name="1.10.6"></a>
+ <a name="1.1.0.7"></a>
+
+## [1.1.0.7](https://github.com/tgsnake/core/compare/1.10.6...1.1.0.7)
+
+> 2024-01-14
+
+### Add
+
+- default getPts - date on qts - way to save pts  ### Change
+
+- Update Error Reference - Update TLSchema - Update TLSchema - Update CHANGELOG.md   <a name="1.10.6"></a>
 
 ## [1.10.6](https://github.com/tgsnake/core/compare/1.10.5...1.10.6)
 
