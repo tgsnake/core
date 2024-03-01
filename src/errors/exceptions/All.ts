@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 639;
+const count = 641;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -80,6 +80,7 @@ const Exceptions = {
     BUTTON_TEXT_INVALID: 'BadRequest.ButtonTextInvalid',
     BUTTON_TYPE_INVALID: 'BadRequest.ButtonTypeInvalid',
     BUTTON_URL_INVALID: 'BadRequest.ButtonUrlInvalid',
+    BUTTON_USER_INVALID: 'BadRequest.ButtonUserInvalid',
     BUTTON_USER_PRIVACY_RESTRICTED: 'BadRequest.ButtonUserPrivacyRestricted',
     CALL_ALREADY_ACCEPTED: 'BadRequest.CallAlreadyAccepted',
     CALL_ALREADY_DECLINED: 'BadRequest.CallAlreadyDeclined',
@@ -130,6 +131,7 @@ const Exceptions = {
     CONNECTION_SYSTEM_LANG_CODE_EMPTY: 'BadRequest.ConnectionSystemLangCodeEmpty',
     CONTACT_ADD_MISSING: 'BadRequest.ContactAddMissing',
     CONTACT_ID_INVALID: 'BadRequest.ContactIdInvalid',
+    CONTACT_MISSING: 'BadRequest.ContactMissing',
     CONTACT_NAME_EMPTY: 'BadRequest.ContactNameEmpty',
     CONTACT_REQ_MISSING: 'BadRequest.ContactReqMissing',
     CREATE_CALL_FAILED: 'BadRequest.CreateCallFailed',

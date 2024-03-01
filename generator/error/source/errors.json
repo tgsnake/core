@@ -172,6 +172,11 @@
   { "code": 400, "msg": "BUTTON_URL_INVALID", "desc": "The button url is invalid" },
   {
     "code": 400,
+    "msg": "BUTTON_USER_INVALID",
+    "desc": "The user_id passed to inputKeyboardButtonUserProfile is invalid!"
+  },
+  {
+    "code": 400,
     "msg": "BUTTON_USER_PRIVACY_RESTRICTED",
     "desc": "The privacy setting of the user specified in a inputKeyboardButtonUserProfile button do not allow creating such a button."
   },
@@ -300,6 +305,7 @@
   },
   { "code": 400, "msg": "CONTACT_ADD_MISSING", "desc": "Contact to add is missing" },
   { "code": 400, "msg": "CONTACT_ID_INVALID", "desc": "The provided contact id is invalid" },
+  { "code": 400, "msg": "CONTACT_MISSING", "desc": "The specified user is not a contact." },
   { "code": 400, "msg": "CONTACT_NAME_EMPTY", "desc": "The provided contact name is empty" },
   { "code": 400, "msg": "CONTACT_REQ_MISSING", "desc": "Missing contact request" },
   {

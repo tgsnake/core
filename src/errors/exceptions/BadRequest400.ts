@@ -240,6 +240,10 @@ export class ButtonUrlInvalid extends BadRequest {
   id: string = 'BUTTON_URL_INVALID';
   message: string = 'The button url is invalid';
 }
+export class ButtonUserInvalid extends BadRequest {
+  id: string = 'BUTTON_USER_INVALID';
+  message: string = 'The user_id passed to inputKeyboardButtonUserProfile is invalid!';
+}
 export class ButtonUserPrivacyRestricted extends BadRequest {
   id: string = 'BUTTON_USER_PRIVACY_RESTRICTED';
   message: string =
@@ -443,6 +447,10 @@ export class ContactAddMissing extends BadRequest {
 export class ContactIdInvalid extends BadRequest {
   id: string = 'CONTACT_ID_INVALID';
   message: string = 'The provided contact id is invalid';
+}
+export class ContactMissing extends BadRequest {
+  id: string = 'CONTACT_MISSING';
+  message: string = 'The specified user is not a contact.';
 }
 export class ContactNameEmpty extends BadRequest {
   id: string = 'CONTACT_NAME_EMPTY';
