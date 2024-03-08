@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 174;
+  export const Layer: number = 176;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -174,6 +174,12 @@ export namespace Raw {
     | Raw.account.GetDefaultBackgroundEmojis
     | Raw.account.GetChannelDefaultEmojiStatuses
     | Raw.account.GetChannelRestrictedStatusEmojis
+    | Raw.account.UpdateBusinessWorkHours
+    | Raw.account.UpdateBusinessLocation
+    | Raw.account.UpdateBusinessGreetingMessage
+    | Raw.account.UpdateBusinessAwayMessage
+    | Raw.account.UpdateConnectedBot
+    | Raw.account.GetConnectedBots
     | Raw.users.GetUsers
     | Raw.users.GetFullUser
     | Raw.users.SetSecureValueErrors
@@ -401,6 +407,15 @@ export namespace Raw {
     | Raw.messages.UpdateSavedReactionTag
     | Raw.messages.GetDefaultTagReactions
     | Raw.messages.GetOutboxReadDate
+    | Raw.messages.GetQuickReplies
+    | Raw.messages.ReorderQuickReplies
+    | Raw.messages.CheckQuickReplyShortcut
+    | Raw.messages.EditQuickReplyShortcut
+    | Raw.messages.DeleteQuickReplyShortcut
+    | Raw.messages.GetQuickReplyMessages
+    | Raw.messages.SendQuickReplyMessages
+    | Raw.messages.DeleteQuickReplyMessages
+    | Raw.messages.ToggleDialogFilterTags
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -441,6 +456,7 @@ export namespace Raw {
     | Raw.help.GetPremiumPromo
     | Raw.help.GetPeerColors
     | Raw.help.GetPeerProfileColors
+    | Raw.help.GetTimezonesList
     | Raw.channels.ReadHistory
     | Raw.channels.DeleteMessages
     | Raw.channels.ReportSpam
@@ -628,7 +644,14 @@ export namespace Raw {
     | Raw.premium.GetMyBoosts
     | Raw.premium.ApplyBoost
     | Raw.premium.GetBoostsStatus
-    | Raw.premium.GetUserBoosts;
+    | Raw.premium.GetUserBoosts
+    | Raw.smsjobs.IsEligibleToJoin
+    | Raw.smsjobs.Join
+    | Raw.smsjobs.Leave
+    | Raw.smsjobs.UpdateSettings
+    | Raw.smsjobs.GetStatus
+    | Raw.smsjobs.GetSmsJob
+    | Raw.smsjobs.FinishJob;
   export type TypeFileLocation = Raw.FileLocationUnavailable23 | Raw.FileLocation23;
   export type TypeDecryptedMessage =
     | Raw.DecryptedMessage8
@@ -668,6 +691,7 @@ export namespace Raw {
     | Raw.DecryptedMessageMediaVenue45
     | Raw.DecryptedMessageMediaWebPage45
     | Raw.DecryptedMessageMediaDocument143;
+  export type TypeSmsJob = Raw.SmsJob;
   export type TypeExportedStoryLink = Raw.ExportedStoryLink;
   export type TypeInputChatlist = Raw.InputChatlistDialogFilter;
   export type TypeInputFolderPeer = Raw.InputFolderPeer;
@@ -763,6 +787,9 @@ export namespace Raw {
     | Raw.InputChatPhotoEmpty
     | Raw.InputChatUploadedPhoto
     | Raw.InputChatPhoto;
+  export type TypeInputQuickReplyShortcut =
+    | Raw.InputQuickReplyShortcut
+    | Raw.InputQuickReplyShortcutId;
   export type TypeReceivedNotifyMessage = Raw.ReceivedNotifyMessage;
   export type TypeInputMessage =
     | Raw.InputMessageID
@@ -773,6 +800,8 @@ export namespace Raw {
   export type TypeSavedContact = Raw.SavedPhoneContact;
   export type TypeInputContact = Raw.InputPhoneContact;
   export type TypeContactStatus = Raw.ContactStatus;
+  export type TypeInputBusinessAwayMessage = Raw.InputBusinessAwayMessage;
+  export type TypeInputBusinessGreetingMessage = Raw.InputBusinessGreetingMessage;
   export type TypeEmojiList = Raw.EmojiListNotModified | Raw.EmojiList;
   export type TypeGlobalPrivacySettings = Raw.GlobalPrivacySettings;
   export type TypeInputTheme = Raw.InputTheme | Raw.InputThemeSlug;
@@ -830,6 +859,15 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeConnectedBot = Raw.ConnectedBot;
+  export type TypeTimezone = Raw.Timezone;
+  export type TypeBusinessAwayMessageSchedule =
+    | Raw.BusinessAwayMessageScheduleAlways
+    | Raw.BusinessAwayMessageScheduleOutsideWorkHours
+    | Raw.BusinessAwayMessageScheduleCustom;
+  export type TypeBusinessRecipients = Raw.BusinessRecipients;
+  export type TypeInputBusinessRecipients = Raw.InputBusinessRecipients;
+  export type TypeBusinessWeeklyOpen = Raw.BusinessWeeklyOpen;
   export type TypeSavedReactionTag = Raw.SavedReactionTag;
   export type TypeSavedDialog = Raw.SavedDialog;
   export type TypeStoryReaction =
@@ -1297,7 +1335,14 @@ export namespace Raw {
     | Raw.UpdateSavedDialogPinned
     | Raw.UpdatePinnedSavedDialogs
     | Raw.UpdateSavedReactionTags
+    | Raw.UpdateSmsJob
+    | Raw.UpdateQuickReplies
+    | Raw.UpdateNewQuickReply
+    | Raw.UpdateDeleteQuickReply
+    | Raw.UpdateQuickReplyMessage
+    | Raw.UpdateDeleteQuickReplyMessages
     | UpdateSecretChatMessage;
+  export type TypeQuickReply = Raw.QuickReply;
   export type TypeReactionCount = Raw.ReactionCount;
   export type TypeBoost = Raw.Boost;
   export type TypeReaction = Raw.ReactionEmpty | Raw.ReactionEmoji | Raw.ReactionCustomEmoji;
@@ -1416,6 +1461,10 @@ export namespace Raw {
   export type TypePopularContact = Raw.PopularContact;
   export type TypeImportedContact = Raw.ImportedContact;
   export type TypeContact = Raw.Contact;
+  export type TypeBusinessAwayMessage = Raw.BusinessAwayMessage;
+  export type TypeBusinessGreetingMessage = Raw.BusinessGreetingMessage;
+  export type TypeBusinessLocation = Raw.BusinessLocation;
+  export type TypeBusinessWorkHours = Raw.BusinessWorkHours;
   export type TypePremiumGiftOption = Raw.PremiumGiftOption;
   export type TypePeerSettings = Raw.PeerSettings;
   export type TypeWallPaperSettings = Raw.WallPaperSettings;
@@ -9326,6 +9375,7 @@ export namespace Raw {
     reactions?: Raw.TypeMessageReactions;
     restrictionReason?: Vector<Raw.TypeRestrictionReason>;
     ttlPeriod?: int;
+    quickReplyShortcutId?: int;
 
     constructor(params: {
       out?: boolean;
@@ -9361,11 +9411,12 @@ export namespace Raw {
       reactions?: Raw.TypeMessageReactions;
       restrictionReason?: Vector<Raw.TypeRestrictionReason>;
       ttlPeriod?: int;
+      quickReplyShortcutId?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'Message';
-      this.constructorId = 0x1e4c8a69;
+      this.constructorId = 0xa66c7efc;
       this.subclassOfId = 0x790009e3;
       this._slots = [
         'out',
@@ -9401,6 +9452,7 @@ export namespace Raw {
         'reactions',
         'restrictionReason',
         'ttlPeriod',
+        'quickReplyShortcutId',
       ];
       this.out = params.out;
       this.mentioned = params.mentioned;
@@ -9435,6 +9487,7 @@ export namespace Raw {
       this.reactions = params.reactions;
       this.restrictionReason = params.restrictionReason;
       this.ttlPeriod = params.ttlPeriod;
+      this.quickReplyShortcutId = params.quickReplyShortcutId;
     }
     /**
      * Generate the TLObject from buffer.
@@ -9478,6 +9531,7 @@ export namespace Raw {
       let reactions = flags & (1 << 20) ? await TLObject.read(b) : undefined;
       let restrictionReason = flags & (1 << 22) ? await TLObject.read(b) : [];
       let ttlPeriod = flags & (1 << 25) ? await Primitive.Int.read(b) : undefined;
+      let quickReplyShortcutId = flags & (1 << 30) ? await Primitive.Int.read(b) : undefined;
       return new Raw.Message({
         out: out,
         mentioned: mentioned,
@@ -9512,6 +9566,7 @@ export namespace Raw {
         reactions: reactions,
         restrictionReason: restrictionReason,
         ttlPeriod: ttlPeriod,
+        quickReplyShortcutId: quickReplyShortcutId,
       });
     }
     /**
@@ -9552,6 +9607,7 @@ export namespace Raw {
       flags |= this.reactions !== undefined ? 1 << 20 : 0;
       flags |= this.restrictionReason ? 1 << 22 : 0;
       flags |= this.ttlPeriod !== undefined ? 1 << 25 : 0;
+      flags |= this.quickReplyShortcutId !== undefined ? 1 << 30 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -9619,6 +9675,9 @@ export namespace Raw {
       }
       if (this.ttlPeriod !== undefined) {
         b.write(Primitive.Int.write(this.ttlPeriod) as unknown as Buffer);
+      }
+      if (this.quickReplyShortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.quickReplyShortcutId) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -14678,6 +14737,10 @@ export namespace Raw {
     premiumGifts?: Vector<Raw.TypePremiumGiftOption>;
     wallpaper?: Raw.TypeWallPaper;
     stories?: Raw.TypePeerStories;
+    businessWorkHours?: Raw.TypeBusinessWorkHours;
+    businessLocation?: Raw.TypeBusinessLocation;
+    businessGreetingMessage?: Raw.TypeBusinessGreetingMessage;
+    businessAwayMessage?: Raw.TypeBusinessAwayMessage;
 
     constructor(params: {
       blocked?: boolean;
@@ -14712,11 +14775,15 @@ export namespace Raw {
       premiumGifts?: Vector<Raw.TypePremiumGiftOption>;
       wallpaper?: Raw.TypeWallPaper;
       stories?: Raw.TypePeerStories;
+      businessWorkHours?: Raw.TypeBusinessWorkHours;
+      businessLocation?: Raw.TypeBusinessLocation;
+      businessGreetingMessage?: Raw.TypeBusinessGreetingMessage;
+      businessAwayMessage?: Raw.TypeBusinessAwayMessage;
     }) {
       super();
       this.classType = 'types';
       this.className = 'UserFull';
-      this.constructorId = 0xb9b12c6c;
+      this.constructorId = 0x22ff3e85;
       this.subclassOfId = 0x1f4661b9;
       this._slots = [
         'blocked',
@@ -14751,6 +14818,10 @@ export namespace Raw {
         'premiumGifts',
         'wallpaper',
         'stories',
+        'businessWorkHours',
+        'businessLocation',
+        'businessGreetingMessage',
+        'businessAwayMessage',
       ];
       this.blocked = params.blocked;
       this.phoneCallsAvailable = params.phoneCallsAvailable;
@@ -14784,14 +14855,16 @@ export namespace Raw {
       this.premiumGifts = params.premiumGifts;
       this.wallpaper = params.wallpaper;
       this.stories = params.stories;
+      this.businessWorkHours = params.businessWorkHours;
+      this.businessLocation = params.businessLocation;
+      this.businessGreetingMessage = params.businessGreetingMessage;
+      this.businessAwayMessage = params.businessAwayMessage;
     }
     /**
      * Generate the TLObject from buffer.
      * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
      */
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UserFull> {
-      // no flags
-
       let flags = await Primitive.Int.read(b);
 
       let blocked = flags & (1 << 0) ? true : false;
@@ -14807,6 +14880,8 @@ export namespace Raw {
       let wallpaperOverridden = flags & (1 << 28) ? true : false;
       let contactRequirePremium = flags & (1 << 29) ? true : false;
       let readDatesPrivate = flags & (1 << 30) ? true : false;
+      let flags2 = await Primitive.Int.read(b);
+
       let id = await Primitive.Long.read(b);
       let about = flags & (1 << 1) ? await Primitive.String.read(b) : undefined;
       let settings = await TLObject.read(b);
@@ -14826,6 +14901,10 @@ export namespace Raw {
       let premiumGifts = flags & (1 << 19) ? await TLObject.read(b) : [];
       let wallpaper = flags & (1 << 24) ? await TLObject.read(b) : undefined;
       let stories = flags & (1 << 25) ? await TLObject.read(b) : undefined;
+      let businessWorkHours = flags2 & (1 << 0) ? await TLObject.read(b) : undefined;
+      let businessLocation = flags2 & (1 << 1) ? await TLObject.read(b) : undefined;
+      let businessGreetingMessage = flags2 & (1 << 2) ? await TLObject.read(b) : undefined;
+      let businessAwayMessage = flags2 & (1 << 3) ? await TLObject.read(b) : undefined;
       return new Raw.UserFull({
         blocked: blocked,
         phoneCallsAvailable: phoneCallsAvailable,
@@ -14859,6 +14938,10 @@ export namespace Raw {
         premiumGifts: premiumGifts,
         wallpaper: wallpaper,
         stories: stories,
+        businessWorkHours: businessWorkHours,
+        businessLocation: businessLocation,
+        businessGreetingMessage: businessGreetingMessage,
+        businessAwayMessage: businessAwayMessage,
       });
     }
     /**
@@ -14867,7 +14950,6 @@ export namespace Raw {
     write(): Buffer {
       let b: BytesIO = new BytesIO();
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-      // no flags
 
       let flags = 0;
       flags |= this.blocked ? 1 << 0 : 0;
@@ -14899,6 +14981,13 @@ export namespace Raw {
       flags |= this.wallpaper !== undefined ? 1 << 24 : 0;
       flags |= this.stories !== undefined ? 1 << 25 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      let flags2 = 0;
+      flags2 |= this.businessWorkHours !== undefined ? 1 << 0 : 0;
+      flags2 |= this.businessLocation !== undefined ? 1 << 1 : 0;
+      flags2 |= this.businessGreetingMessage !== undefined ? 1 << 2 : 0;
+      flags2 |= this.businessAwayMessage !== undefined ? 1 << 3 : 0;
+      b.write(Primitive.Int.write(flags2) as unknown as Buffer);
 
       if (this.id !== undefined) {
         b.write(Primitive.Long.write(this.id) as unknown as Buffer);
@@ -14956,6 +15045,18 @@ export namespace Raw {
       }
       if (this.stories !== undefined) {
         b.write(this.stories.write() as unknown as Buffer);
+      }
+      if (this.businessWorkHours !== undefined) {
+        b.write(this.businessWorkHours.write() as unknown as Buffer);
+      }
+      if (this.businessLocation !== undefined) {
+        b.write(this.businessLocation.write() as unknown as Buffer);
+      }
+      if (this.businessGreetingMessage !== undefined) {
+        b.write(this.businessGreetingMessage.write() as unknown as Buffer);
+      }
+      if (this.businessAwayMessage !== undefined) {
+        b.write(this.businessAwayMessage.write() as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -21917,6 +22018,231 @@ export namespace Raw {
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
       // no flags
 
+      return b.buffer;
+    }
+  }
+  export class UpdateSmsJob extends TLObject {
+    jobId!: string;
+
+    constructor(params: { jobId: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateSmsJob';
+      this.constructorId = 0xf16269d4;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['jobId'];
+      this.jobId = params.jobId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateSmsJob> {
+      // no flags
+
+      let jobId = await Primitive.String.read(b);
+      return new Raw.UpdateSmsJob({ jobId: jobId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.jobId !== undefined) {
+        b.write(Primitive.String.write(this.jobId) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdateQuickReplies extends TLObject {
+    quickReplies!: Vector<Raw.TypeQuickReply>;
+
+    constructor(params: { quickReplies: Vector<Raw.TypeQuickReply> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateQuickReplies';
+      this.constructorId = 0xf9470ab2;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['quickReplies'];
+      this.quickReplies = params.quickReplies;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateQuickReplies> {
+      // no flags
+
+      let quickReplies = await TLObject.read(b);
+      return new Raw.UpdateQuickReplies({ quickReplies: quickReplies });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.quickReplies) {
+        b.write(Primitive.Vector.write(this.quickReplies) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdateNewQuickReply extends TLObject {
+    quickReply!: Raw.TypeQuickReply;
+
+    constructor(params: { quickReply: Raw.TypeQuickReply }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateNewQuickReply';
+      this.constructorId = 0xf53da717;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['quickReply'];
+      this.quickReply = params.quickReply;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateNewQuickReply> {
+      // no flags
+
+      let quickReply = await TLObject.read(b);
+      return new Raw.UpdateNewQuickReply({ quickReply: quickReply });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.quickReply !== undefined) {
+        b.write(this.quickReply.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdateDeleteQuickReply extends TLObject {
+    shortcutId!: int;
+
+    constructor(params: { shortcutId: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateDeleteQuickReply';
+      this.constructorId = 0x53e6f1ec;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['shortcutId'];
+      this.shortcutId = params.shortcutId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateDeleteQuickReply> {
+      // no flags
+
+      let shortcutId = await Primitive.Int.read(b);
+      return new Raw.UpdateDeleteQuickReply({ shortcutId: shortcutId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdateQuickReplyMessage extends TLObject {
+    message!: Raw.TypeMessage;
+
+    constructor(params: { message: Raw.TypeMessage }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateQuickReplyMessage';
+      this.constructorId = 0x3e050d0f;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['message'];
+      this.message = params.message;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateQuickReplyMessage> {
+      // no flags
+
+      let message = await TLObject.read(b);
+      return new Raw.UpdateQuickReplyMessage({ message: message });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.message !== undefined) {
+        b.write(this.message.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdateDeleteQuickReplyMessages extends TLObject {
+    shortcutId!: int;
+    messages!: Vector<int>;
+
+    constructor(params: { shortcutId: int; messages: Vector<int> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateDeleteQuickReplyMessages';
+      this.constructorId = 0x566fe7cd;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['shortcutId', 'messages'];
+      this.shortcutId = params.shortcutId;
+      this.messages = params.messages;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.UpdateDeleteQuickReplyMessages> {
+      // no flags
+
+      let shortcutId = await Primitive.Int.read(b);
+      let messages = await TLObject.read(b, Primitive.Int);
+      return new Raw.UpdateDeleteQuickReplyMessages({ shortcutId: shortcutId, messages: messages });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      if (this.messages) {
+        b.write(Primitive.Vector.write(this.messages, Primitive.Int) as unknown as Buffer);
+      }
       return b.buffer;
     }
   }
@@ -47630,6 +47956,7 @@ export namespace Raw {
     id!: int;
     title!: string;
     emoticon?: string;
+    color?: int;
     pinnedPeers!: Vector<Raw.TypeInputPeer>;
     includePeers!: Vector<Raw.TypeInputPeer>;
     excludePeers!: Vector<Raw.TypeInputPeer>;
@@ -47646,6 +47973,7 @@ export namespace Raw {
       id: int;
       title: string;
       emoticon?: string;
+      color?: int;
       pinnedPeers: Vector<Raw.TypeInputPeer>;
       includePeers: Vector<Raw.TypeInputPeer>;
       excludePeers: Vector<Raw.TypeInputPeer>;
@@ -47653,7 +47981,7 @@ export namespace Raw {
       super();
       this.classType = 'types';
       this.className = 'DialogFilter';
-      this.constructorId = 0x7438f7e8;
+      this.constructorId = 0x5fb5523b;
       this.subclassOfId = 0x692bc457;
       this._slots = [
         'contacts',
@@ -47667,6 +47995,7 @@ export namespace Raw {
         'id',
         'title',
         'emoticon',
+        'color',
         'pinnedPeers',
         'includePeers',
         'excludePeers',
@@ -47682,6 +48011,7 @@ export namespace Raw {
       this.id = params.id;
       this.title = params.title;
       this.emoticon = params.emoticon;
+      this.color = params.color;
       this.pinnedPeers = params.pinnedPeers;
       this.includePeers = params.includePeers;
       this.excludePeers = params.excludePeers;
@@ -47706,6 +48036,7 @@ export namespace Raw {
       let id = await Primitive.Int.read(b);
       let title = await Primitive.String.read(b);
       let emoticon = flags & (1 << 25) ? await Primitive.String.read(b) : undefined;
+      let color = flags & (1 << 27) ? await Primitive.Int.read(b) : undefined;
       let pinnedPeers = await TLObject.read(b);
       let includePeers = await TLObject.read(b);
       let excludePeers = await TLObject.read(b);
@@ -47721,6 +48052,7 @@ export namespace Raw {
         id: id,
         title: title,
         emoticon: emoticon,
+        color: color,
         pinnedPeers: pinnedPeers,
         includePeers: includePeers,
         excludePeers: excludePeers,
@@ -47744,6 +48076,7 @@ export namespace Raw {
       flags |= this.excludeRead ? 1 << 12 : 0;
       flags |= this.excludeArchived ? 1 << 13 : 0;
       flags |= this.emoticon !== undefined ? 1 << 25 : 0;
+      flags |= this.color !== undefined ? 1 << 27 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -47754,6 +48087,9 @@ export namespace Raw {
       }
       if (this.emoticon !== undefined) {
         b.write(Primitive.String.write(this.emoticon) as unknown as Buffer);
+      }
+      if (this.color !== undefined) {
+        b.write(Primitive.Int.write(this.color) as unknown as Buffer);
       }
       if (this.pinnedPeers) {
         b.write(Primitive.Vector.write(this.pinnedPeers) as unknown as Buffer);
@@ -47801,6 +48137,7 @@ export namespace Raw {
     id!: int;
     title!: string;
     emoticon?: string;
+    color?: int;
     pinnedPeers!: Vector<Raw.TypeInputPeer>;
     includePeers!: Vector<Raw.TypeInputPeer>;
 
@@ -47809,19 +48146,29 @@ export namespace Raw {
       id: int;
       title: string;
       emoticon?: string;
+      color?: int;
       pinnedPeers: Vector<Raw.TypeInputPeer>;
       includePeers: Vector<Raw.TypeInputPeer>;
     }) {
       super();
       this.classType = 'types';
       this.className = 'DialogFilterChatlist';
-      this.constructorId = 0xd64a04a8;
+      this.constructorId = 0x9fe28ea4;
       this.subclassOfId = 0x692bc457;
-      this._slots = ['hasMyInvites', 'id', 'title', 'emoticon', 'pinnedPeers', 'includePeers'];
+      this._slots = [
+        'hasMyInvites',
+        'id',
+        'title',
+        'emoticon',
+        'color',
+        'pinnedPeers',
+        'includePeers',
+      ];
       this.hasMyInvites = params.hasMyInvites;
       this.id = params.id;
       this.title = params.title;
       this.emoticon = params.emoticon;
+      this.color = params.color;
       this.pinnedPeers = params.pinnedPeers;
       this.includePeers = params.includePeers;
     }
@@ -47838,6 +48185,7 @@ export namespace Raw {
       let id = await Primitive.Int.read(b);
       let title = await Primitive.String.read(b);
       let emoticon = flags & (1 << 25) ? await Primitive.String.read(b) : undefined;
+      let color = flags & (1 << 27) ? await Primitive.Int.read(b) : undefined;
       let pinnedPeers = await TLObject.read(b);
       let includePeers = await TLObject.read(b);
       return new Raw.DialogFilterChatlist({
@@ -47845,6 +48193,7 @@ export namespace Raw {
         id: id,
         title: title,
         emoticon: emoticon,
+        color: color,
         pinnedPeers: pinnedPeers,
         includePeers: includePeers,
       });
@@ -47860,6 +48209,7 @@ export namespace Raw {
       let flags = 0;
       flags |= this.hasMyInvites ? 1 << 26 : 0;
       flags |= this.emoticon !== undefined ? 1 << 25 : 0;
+      flags |= this.color !== undefined ? 1 << 27 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -47870,6 +48220,9 @@ export namespace Raw {
       }
       if (this.emoticon !== undefined) {
         b.write(Primitive.String.write(this.emoticon) as unknown as Buffer);
+      }
+      if (this.color !== undefined) {
+        b.write(Primitive.Int.write(this.color) as unknown as Buffer);
       }
       if (this.pinnedPeers) {
         b.write(Primitive.Vector.write(this.pinnedPeers) as unknown as Buffer);
@@ -56657,6 +57010,958 @@ export namespace Raw {
       return b.buffer;
     }
   }
+  export class SmsJob extends TLObject {
+    jobId!: string;
+    phoneNumber!: string;
+    text!: string;
+
+    constructor(params: { jobId: string; phoneNumber: string; text: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'SmsJob';
+      this.constructorId = 0xe6a1eeb8;
+      this.subclassOfId = 0x1f24187e;
+      this._slots = ['jobId', 'phoneNumber', 'text'];
+      this.jobId = params.jobId;
+      this.phoneNumber = params.phoneNumber;
+      this.text = params.text;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.SmsJob> {
+      // no flags
+
+      let jobId = await Primitive.String.read(b);
+      let phoneNumber = await Primitive.String.read(b);
+      let text = await Primitive.String.read(b);
+      return new Raw.SmsJob({ jobId: jobId, phoneNumber: phoneNumber, text: text });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.jobId !== undefined) {
+        b.write(Primitive.String.write(this.jobId) as unknown as Buffer);
+      }
+      if (this.phoneNumber !== undefined) {
+        b.write(Primitive.String.write(this.phoneNumber) as unknown as Buffer);
+      }
+      if (this.text !== undefined) {
+        b.write(Primitive.String.write(this.text) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessWeeklyOpen extends TLObject {
+    startMinute!: int;
+    endMinute!: int;
+
+    constructor(params: { startMinute: int; endMinute: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessWeeklyOpen';
+      this.constructorId = 0x120b1ab9;
+      this.subclassOfId = 0x18402627;
+      this._slots = ['startMinute', 'endMinute'];
+      this.startMinute = params.startMinute;
+      this.endMinute = params.endMinute;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BusinessWeeklyOpen> {
+      // no flags
+
+      let startMinute = await Primitive.Int.read(b);
+      let endMinute = await Primitive.Int.read(b);
+      return new Raw.BusinessWeeklyOpen({ startMinute: startMinute, endMinute: endMinute });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.startMinute !== undefined) {
+        b.write(Primitive.Int.write(this.startMinute) as unknown as Buffer);
+      }
+      if (this.endMinute !== undefined) {
+        b.write(Primitive.Int.write(this.endMinute) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessWorkHours extends TLObject {
+    openNow?: boolean;
+    timezoneId!: string;
+    weeklyOpen!: Vector<Raw.TypeBusinessWeeklyOpen>;
+
+    constructor(params: {
+      openNow?: boolean;
+      timezoneId: string;
+      weeklyOpen: Vector<Raw.TypeBusinessWeeklyOpen>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessWorkHours';
+      this.constructorId = 0x8c92b098;
+      this.subclassOfId = 0x659fa805;
+      this._slots = ['openNow', 'timezoneId', 'weeklyOpen'];
+      this.openNow = params.openNow;
+      this.timezoneId = params.timezoneId;
+      this.weeklyOpen = params.weeklyOpen;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BusinessWorkHours> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let openNow = flags & (1 << 0) ? true : false;
+      let timezoneId = await Primitive.String.read(b);
+      let weeklyOpen = await TLObject.read(b);
+      return new Raw.BusinessWorkHours({
+        openNow: openNow,
+        timezoneId: timezoneId,
+        weeklyOpen: weeklyOpen,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.openNow ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.timezoneId !== undefined) {
+        b.write(Primitive.String.write(this.timezoneId) as unknown as Buffer);
+      }
+      if (this.weeklyOpen) {
+        b.write(Primitive.Vector.write(this.weeklyOpen) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessLocation extends TLObject {
+    geoPoint?: Raw.TypeGeoPoint;
+    address!: string;
+
+    constructor(params: { geoPoint?: Raw.TypeGeoPoint; address: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessLocation';
+      this.constructorId = 0xac5c1af7;
+      this.subclassOfId = 0x99accad0;
+      this._slots = ['geoPoint', 'address'];
+      this.geoPoint = params.geoPoint;
+      this.address = params.address;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BusinessLocation> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let geoPoint = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+      let address = await Primitive.String.read(b);
+      return new Raw.BusinessLocation({ geoPoint: geoPoint, address: address });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.geoPoint !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.geoPoint !== undefined) {
+        b.write(this.geoPoint.write() as unknown as Buffer);
+      }
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class InputBusinessRecipients extends TLObject {
+    existingChats?: boolean;
+    newChats?: boolean;
+    contacts?: boolean;
+    nonContacts?: boolean;
+    excludeSelected?: boolean;
+    users?: Vector<Raw.TypeInputUser>;
+
+    constructor(params: {
+      existingChats?: boolean;
+      newChats?: boolean;
+      contacts?: boolean;
+      nonContacts?: boolean;
+      excludeSelected?: boolean;
+      users?: Vector<Raw.TypeInputUser>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputBusinessRecipients';
+      this.constructorId = 0x6f8b32aa;
+      this.subclassOfId = 0xd7ee53f;
+      this._slots = [
+        'existingChats',
+        'newChats',
+        'contacts',
+        'nonContacts',
+        'excludeSelected',
+        'users',
+      ];
+      this.existingChats = params.existingChats;
+      this.newChats = params.newChats;
+      this.contacts = params.contacts;
+      this.nonContacts = params.nonContacts;
+      this.excludeSelected = params.excludeSelected;
+      this.users = params.users;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputBusinessRecipients> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let existingChats = flags & (1 << 0) ? true : false;
+      let newChats = flags & (1 << 1) ? true : false;
+      let contacts = flags & (1 << 2) ? true : false;
+      let nonContacts = flags & (1 << 3) ? true : false;
+      let excludeSelected = flags & (1 << 5) ? true : false;
+      let users = flags & (1 << 4) ? await TLObject.read(b) : [];
+      return new Raw.InputBusinessRecipients({
+        existingChats: existingChats,
+        newChats: newChats,
+        contacts: contacts,
+        nonContacts: nonContacts,
+        excludeSelected: excludeSelected,
+        users: users,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.existingChats ? 1 << 0 : 0;
+      flags |= this.newChats ? 1 << 1 : 0;
+      flags |= this.contacts ? 1 << 2 : 0;
+      flags |= this.nonContacts ? 1 << 3 : 0;
+      flags |= this.excludeSelected ? 1 << 5 : 0;
+      flags |= this.users ? 1 << 4 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.users) {
+        b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessRecipients extends TLObject {
+    existingChats?: boolean;
+    newChats?: boolean;
+    contacts?: boolean;
+    nonContacts?: boolean;
+    excludeSelected?: boolean;
+    users?: Vector<long>;
+
+    constructor(params: {
+      existingChats?: boolean;
+      newChats?: boolean;
+      contacts?: boolean;
+      nonContacts?: boolean;
+      excludeSelected?: boolean;
+      users?: Vector<long>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessRecipients';
+      this.constructorId = 0x21108ff7;
+      this.subclassOfId = 0x52852e46;
+      this._slots = [
+        'existingChats',
+        'newChats',
+        'contacts',
+        'nonContacts',
+        'excludeSelected',
+        'users',
+      ];
+      this.existingChats = params.existingChats;
+      this.newChats = params.newChats;
+      this.contacts = params.contacts;
+      this.nonContacts = params.nonContacts;
+      this.excludeSelected = params.excludeSelected;
+      this.users = params.users;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BusinessRecipients> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let existingChats = flags & (1 << 0) ? true : false;
+      let newChats = flags & (1 << 1) ? true : false;
+      let contacts = flags & (1 << 2) ? true : false;
+      let nonContacts = flags & (1 << 3) ? true : false;
+      let excludeSelected = flags & (1 << 5) ? true : false;
+      let users = flags & (1 << 4) ? await TLObject.read(b, Primitive.Long) : [];
+      return new Raw.BusinessRecipients({
+        existingChats: existingChats,
+        newChats: newChats,
+        contacts: contacts,
+        nonContacts: nonContacts,
+        excludeSelected: excludeSelected,
+        users: users,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.existingChats ? 1 << 0 : 0;
+      flags |= this.newChats ? 1 << 1 : 0;
+      flags |= this.contacts ? 1 << 2 : 0;
+      flags |= this.nonContacts ? 1 << 3 : 0;
+      flags |= this.excludeSelected ? 1 << 5 : 0;
+      flags |= this.users ? 1 << 4 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.users) {
+        b.write(Primitive.Vector.write(this.users, Primitive.Long) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessAwayMessageScheduleAlways extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessAwayMessageScheduleAlways';
+      this.constructorId = 0xc9b9e2b9;
+      this.subclassOfId = 0x2818a05e;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.BusinessAwayMessageScheduleAlways> {
+      // no flags
+
+      return new Raw.BusinessAwayMessageScheduleAlways();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      return b.buffer;
+    }
+  }
+  export class BusinessAwayMessageScheduleOutsideWorkHours extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessAwayMessageScheduleOutsideWorkHours';
+      this.constructorId = 0xc3f2f501;
+      this.subclassOfId = 0x2818a05e;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.BusinessAwayMessageScheduleOutsideWorkHours> {
+      // no flags
+
+      return new Raw.BusinessAwayMessageScheduleOutsideWorkHours();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      return b.buffer;
+    }
+  }
+  export class BusinessAwayMessageScheduleCustom extends TLObject {
+    startDate!: int;
+    endDate!: int;
+
+    constructor(params: { startDate: int; endDate: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessAwayMessageScheduleCustom';
+      this.constructorId = 0xcc4d9ecc;
+      this.subclassOfId = 0x2818a05e;
+      this._slots = ['startDate', 'endDate'];
+      this.startDate = params.startDate;
+      this.endDate = params.endDate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.BusinessAwayMessageScheduleCustom> {
+      // no flags
+
+      let startDate = await Primitive.Int.read(b);
+      let endDate = await Primitive.Int.read(b);
+      return new Raw.BusinessAwayMessageScheduleCustom({ startDate: startDate, endDate: endDate });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.startDate !== undefined) {
+        b.write(Primitive.Int.write(this.startDate) as unknown as Buffer);
+      }
+      if (this.endDate !== undefined) {
+        b.write(Primitive.Int.write(this.endDate) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class InputBusinessGreetingMessage extends TLObject {
+    shortcutId!: int;
+    recipients!: Raw.TypeInputBusinessRecipients;
+    noActivityDays!: int;
+
+    constructor(params: {
+      shortcutId: int;
+      recipients: Raw.TypeInputBusinessRecipients;
+      noActivityDays: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputBusinessGreetingMessage';
+      this.constructorId = 0x194cb3b;
+      this.subclassOfId = 0x6278dcdd;
+      this._slots = ['shortcutId', 'recipients', 'noActivityDays'];
+      this.shortcutId = params.shortcutId;
+      this.recipients = params.recipients;
+      this.noActivityDays = params.noActivityDays;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputBusinessGreetingMessage> {
+      // no flags
+
+      let shortcutId = await Primitive.Int.read(b);
+      let recipients = await TLObject.read(b);
+      let noActivityDays = await Primitive.Int.read(b);
+      return new Raw.InputBusinessGreetingMessage({
+        shortcutId: shortcutId,
+        recipients: recipients,
+        noActivityDays: noActivityDays,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      if (this.recipients !== undefined) {
+        b.write(this.recipients.write() as unknown as Buffer);
+      }
+      if (this.noActivityDays !== undefined) {
+        b.write(Primitive.Int.write(this.noActivityDays) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessGreetingMessage extends TLObject {
+    shortcutId!: int;
+    recipients!: Raw.TypeBusinessRecipients;
+    noActivityDays!: int;
+
+    constructor(params: {
+      shortcutId: int;
+      recipients: Raw.TypeBusinessRecipients;
+      noActivityDays: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessGreetingMessage';
+      this.constructorId = 0xe519abab;
+      this.subclassOfId = 0xb344eace;
+      this._slots = ['shortcutId', 'recipients', 'noActivityDays'];
+      this.shortcutId = params.shortcutId;
+      this.recipients = params.recipients;
+      this.noActivityDays = params.noActivityDays;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BusinessGreetingMessage> {
+      // no flags
+
+      let shortcutId = await Primitive.Int.read(b);
+      let recipients = await TLObject.read(b);
+      let noActivityDays = await Primitive.Int.read(b);
+      return new Raw.BusinessGreetingMessage({
+        shortcutId: shortcutId,
+        recipients: recipients,
+        noActivityDays: noActivityDays,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      if (this.recipients !== undefined) {
+        b.write(this.recipients.write() as unknown as Buffer);
+      }
+      if (this.noActivityDays !== undefined) {
+        b.write(Primitive.Int.write(this.noActivityDays) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class InputBusinessAwayMessage extends TLObject {
+    offlineOnly?: boolean;
+    shortcutId!: int;
+    schedule!: Raw.TypeBusinessAwayMessageSchedule;
+    recipients!: Raw.TypeInputBusinessRecipients;
+
+    constructor(params: {
+      offlineOnly?: boolean;
+      shortcutId: int;
+      schedule: Raw.TypeBusinessAwayMessageSchedule;
+      recipients: Raw.TypeInputBusinessRecipients;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputBusinessAwayMessage';
+      this.constructorId = 0x832175e0;
+      this.subclassOfId = 0xd8559c77;
+      this._slots = ['offlineOnly', 'shortcutId', 'schedule', 'recipients'];
+      this.offlineOnly = params.offlineOnly;
+      this.shortcutId = params.shortcutId;
+      this.schedule = params.schedule;
+      this.recipients = params.recipients;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputBusinessAwayMessage> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let offlineOnly = flags & (1 << 0) ? true : false;
+      let shortcutId = await Primitive.Int.read(b);
+      let schedule = await TLObject.read(b);
+      let recipients = await TLObject.read(b);
+      return new Raw.InputBusinessAwayMessage({
+        offlineOnly: offlineOnly,
+        shortcutId: shortcutId,
+        schedule: schedule,
+        recipients: recipients,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.offlineOnly ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      if (this.schedule !== undefined) {
+        b.write(this.schedule.write() as unknown as Buffer);
+      }
+      if (this.recipients !== undefined) {
+        b.write(this.recipients.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class BusinessAwayMessage extends TLObject {
+    offlineOnly?: boolean;
+    shortcutId!: int;
+    schedule!: Raw.TypeBusinessAwayMessageSchedule;
+    recipients!: Raw.TypeBusinessRecipients;
+
+    constructor(params: {
+      offlineOnly?: boolean;
+      shortcutId: int;
+      schedule: Raw.TypeBusinessAwayMessageSchedule;
+      recipients: Raw.TypeBusinessRecipients;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BusinessAwayMessage';
+      this.constructorId = 0xef156a5c;
+      this.subclassOfId = 0xf1d3ae24;
+      this._slots = ['offlineOnly', 'shortcutId', 'schedule', 'recipients'];
+      this.offlineOnly = params.offlineOnly;
+      this.shortcutId = params.shortcutId;
+      this.schedule = params.schedule;
+      this.recipients = params.recipients;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.BusinessAwayMessage> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let offlineOnly = flags & (1 << 0) ? true : false;
+      let shortcutId = await Primitive.Int.read(b);
+      let schedule = await TLObject.read(b);
+      let recipients = await TLObject.read(b);
+      return new Raw.BusinessAwayMessage({
+        offlineOnly: offlineOnly,
+        shortcutId: shortcutId,
+        schedule: schedule,
+        recipients: recipients,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.offlineOnly ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      if (this.schedule !== undefined) {
+        b.write(this.schedule.write() as unknown as Buffer);
+      }
+      if (this.recipients !== undefined) {
+        b.write(this.recipients.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class Timezone extends TLObject {
+    id!: string;
+    name!: string;
+    utcOffset!: int;
+
+    constructor(params: { id: string; name: string; utcOffset: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'Timezone';
+      this.constructorId = 0xff9289f5;
+      this.subclassOfId = 0xce77d0c1;
+      this._slots = ['id', 'name', 'utcOffset'];
+      this.id = params.id;
+      this.name = params.name;
+      this.utcOffset = params.utcOffset;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.Timezone> {
+      // no flags
+
+      let id = await Primitive.String.read(b);
+      let name = await Primitive.String.read(b);
+      let utcOffset = await Primitive.Int.read(b);
+      return new Raw.Timezone({ id: id, name: name, utcOffset: utcOffset });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
+      if (this.name !== undefined) {
+        b.write(Primitive.String.write(this.name) as unknown as Buffer);
+      }
+      if (this.utcOffset !== undefined) {
+        b.write(Primitive.Int.write(this.utcOffset) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class QuickReply extends TLObject {
+    shortcutId!: int;
+    shortcut!: string;
+    topMessage!: int;
+    count!: int;
+
+    constructor(params: { shortcutId: int; shortcut: string; topMessage: int; count: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'QuickReply';
+      this.constructorId = 0x697102b;
+      this.subclassOfId = 0xe2ea0f12;
+      this._slots = ['shortcutId', 'shortcut', 'topMessage', 'count'];
+      this.shortcutId = params.shortcutId;
+      this.shortcut = params.shortcut;
+      this.topMessage = params.topMessage;
+      this.count = params.count;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.QuickReply> {
+      // no flags
+
+      let shortcutId = await Primitive.Int.read(b);
+      let shortcut = await Primitive.String.read(b);
+      let topMessage = await Primitive.Int.read(b);
+      let count = await Primitive.Int.read(b);
+      return new Raw.QuickReply({
+        shortcutId: shortcutId,
+        shortcut: shortcut,
+        topMessage: topMessage,
+        count: count,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      if (this.shortcut !== undefined) {
+        b.write(Primitive.String.write(this.shortcut) as unknown as Buffer);
+      }
+      if (this.topMessage !== undefined) {
+        b.write(Primitive.Int.write(this.topMessage) as unknown as Buffer);
+      }
+      if (this.count !== undefined) {
+        b.write(Primitive.Int.write(this.count) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class InputQuickReplyShortcut extends TLObject {
+    shortcut!: string;
+
+    constructor(params: { shortcut: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputQuickReplyShortcut';
+      this.constructorId = 0x24596d41;
+      this.subclassOfId = 0xa5687c57;
+      this._slots = ['shortcut'];
+      this.shortcut = params.shortcut;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputQuickReplyShortcut> {
+      // no flags
+
+      let shortcut = await Primitive.String.read(b);
+      return new Raw.InputQuickReplyShortcut({ shortcut: shortcut });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcut !== undefined) {
+        b.write(Primitive.String.write(this.shortcut) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class InputQuickReplyShortcutId extends TLObject {
+    shortcutId!: int;
+
+    constructor(params: { shortcutId: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputQuickReplyShortcutId';
+      this.constructorId = 0x1190cf1;
+      this.subclassOfId = 0xa5687c57;
+      this._slots = ['shortcutId'];
+      this.shortcutId = params.shortcutId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.InputQuickReplyShortcutId> {
+      // no flags
+
+      let shortcutId = await Primitive.Int.read(b);
+      return new Raw.InputQuickReplyShortcutId({ shortcutId: shortcutId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.shortcutId !== undefined) {
+        b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class ConnectedBot extends TLObject {
+    canReply?: boolean;
+    botId!: long;
+    recipients!: Raw.TypeBusinessRecipients;
+
+    constructor(params: {
+      canReply?: boolean;
+      botId: long;
+      recipients: Raw.TypeBusinessRecipients;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'ConnectedBot';
+      this.constructorId = 0xe7e999e7;
+      this.subclassOfId = 0x35e81b9e;
+      this._slots = ['canReply', 'botId', 'recipients'];
+      this.canReply = params.canReply;
+      this.botId = params.botId;
+      this.recipients = params.recipients;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.ConnectedBot> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let canReply = flags & (1 << 0) ? true : false;
+      let botId = await Primitive.Long.read(b);
+      let recipients = await TLObject.read(b);
+      return new Raw.ConnectedBot({ canReply: canReply, botId: botId, recipients: recipients });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.canReply ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.botId !== undefined) {
+        b.write(Primitive.Long.write(this.botId) as unknown as Buffer);
+      }
+      if (this.recipients !== undefined) {
+        b.write(this.recipients.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
   export class InvokeAfterMsg extends TLObject {
     __response__!: X;
     msgId!: long;
@@ -60146,6 +61451,7 @@ export namespace Raw {
     }
   }
   export namespace help {
+    export type TypeTimezonesList = Raw.help.TimezonesListNotModified | Raw.help.TimezonesList;
     export type TypePeerColors = Raw.help.PeerColorsNotModified | Raw.help.PeerColors;
     export type TypePremiumPromo = Raw.help.PremiumPromo;
     export type TypeCountriesList = Raw.help.CountriesListNotModified | Raw.help.CountriesList;
@@ -61696,6 +63002,80 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class TimezonesListNotModified extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'help.TimezonesListNotModified';
+        this.constructorId = 0x970708cc;
+        this.subclassOfId = 0xca76e475;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.help.TimezonesListNotModified> {
+        // no flags
+
+        return new Raw.help.TimezonesListNotModified();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class TimezonesList extends TLObject {
+      timezones!: Vector<Raw.TypeTimezone>;
+      hash!: int;
+
+      constructor(params: { timezones: Vector<Raw.TypeTimezone>; hash: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'help.TimezonesList';
+        this.constructorId = 0x7b74ed71;
+        this.subclassOfId = 0xca76e475;
+        this._slots = ['timezones', 'hash'];
+        this.timezones = params.timezones;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.help.TimezonesList> {
+        // no flags
+
+        let timezones = await TLObject.read(b);
+        let hash = await Primitive.Int.read(b);
+        return new Raw.help.TimezonesList({ timezones: timezones, hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.timezones) {
+          b.write(Primitive.Vector.write(this.timezones) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Int.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
     export class GetConfig extends TLObject {
       __response__!: Raw.TypeConfig;
 
@@ -62555,6 +63935,43 @@ export namespace Raw {
 
         let hash = await Primitive.Int.read(b);
         return new Raw.help.GetPeerProfileColors({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Int.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetTimezonesList extends TLObject {
+      __response__!: Raw.help.TypeTimezonesList;
+      hash!: int;
+
+      constructor(params: { hash: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'help.GetTimezonesList';
+        this.constructorId = 0x49b30240;
+        this.subclassOfId = 0xca76e475;
+        this._slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.help.GetTimezonesList> {
+        // no flags
+
+        let hash = await Primitive.Int.read(b);
+        return new Raw.help.GetTimezonesList({ hash: hash });
       }
       /**
        * Generate buffer from TLObject.
@@ -66683,6 +68100,7 @@ export namespace Raw {
       | Raw.messages.SponsoredMessages
       | Raw.messages.SponsoredMessagesEmpty;
     export type TypeInactiveChats = Raw.messages.InactiveChats;
+    export type TypeQuickReplies = Raw.messages.QuickReplies | Raw.messages.QuickRepliesNotModified;
     export type TypeSavedReactionTags =
       | Raw.messages.SavedReactionTagsNotModified
       | Raw.messages.SavedReactionTags;
@@ -66712,6 +68130,7 @@ export namespace Raw {
     export type TypeHistoryImportParsed = Raw.messages.HistoryImportParsed;
     export type TypeAffectedFoundMessages = Raw.messages.AffectedFoundMessages;
     export type TypeDiscussionMessage = Raw.messages.DiscussionMessage;
+    export type TypeDialogFilters = Raw.messages.DialogFilters;
     export type TypeVotesList = Raw.messages.VotesList;
     export type TypeSearchCounter = Raw.messages.SearchCounter;
     export type TypeFoundStickerSets =
@@ -70761,6 +72180,147 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class QuickReplies extends TLObject {
+      quickReplies!: Vector<Raw.TypeQuickReply>;
+      messages!: Vector<Raw.TypeMessage>;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        quickReplies: Vector<Raw.TypeQuickReply>;
+        messages: Vector<Raw.TypeMessage>;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.QuickReplies';
+        this.constructorId = 0xc68d6695;
+        this.subclassOfId = 0xf737e966;
+        this._slots = ['quickReplies', 'messages', 'chats', 'users'];
+        this.quickReplies = params.quickReplies;
+        this.messages = params.messages;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.QuickReplies> {
+        // no flags
+
+        let quickReplies = await TLObject.read(b);
+        let messages = await TLObject.read(b);
+        let chats = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.messages.QuickReplies({
+          quickReplies: quickReplies,
+          messages: messages,
+          chats: chats,
+          users: users,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.quickReplies) {
+          b.write(Primitive.Vector.write(this.quickReplies) as unknown as Buffer);
+        }
+        if (this.messages) {
+          b.write(Primitive.Vector.write(this.messages) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class QuickRepliesNotModified extends TLObject {
+      constructor() {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.QuickRepliesNotModified';
+        this.constructorId = 0x5f91eb5b;
+        this.subclassOfId = 0xf737e966;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.QuickRepliesNotModified> {
+        // no flags
+
+        return new Raw.messages.QuickRepliesNotModified();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class DialogFilters extends TLObject {
+      tagsEnabled?: boolean;
+      filters!: Vector<Raw.TypeDialogFilter>;
+
+      constructor(params: { tagsEnabled?: boolean; filters: Vector<Raw.TypeDialogFilter> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.DialogFilters';
+        this.constructorId = 0x2ad93719;
+        this.subclassOfId = 0xa5fff1b7;
+        this._slots = ['tagsEnabled', 'filters'];
+        this.tagsEnabled = params.tagsEnabled;
+        this.filters = params.filters;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.DialogFilters> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let tagsEnabled = flags & (1 << 0) ? true : false;
+        let filters = await TLObject.read(b);
+        return new Raw.messages.DialogFilters({ tagsEnabled: tagsEnabled, filters: filters });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.tagsEnabled ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.filters) {
+          b.write(Primitive.Vector.write(this.filters) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
     export class GetMessages extends TLObject {
       __response__!: Raw.messages.TypeMessages;
       id!: Vector<Raw.TypeInputMessage>;
@@ -71469,6 +73029,7 @@ export namespace Raw {
       entities?: Vector<Raw.TypeMessageEntity>;
       scheduleDate?: int;
       sendAs?: Raw.TypeInputPeer;
+      quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
 
       constructor(params: {
         noWebpage?: boolean;
@@ -71486,11 +73047,12 @@ export namespace Raw {
         entities?: Vector<Raw.TypeMessageEntity>;
         scheduleDate?: int;
         sendAs?: Raw.TypeInputPeer;
+        quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendMessage';
-        this.constructorId = 0x280d096f;
+        this.constructorId = 0xdff8042c;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'noWebpage',
@@ -71508,6 +73070,7 @@ export namespace Raw {
           'entities',
           'scheduleDate',
           'sendAs',
+          'quickReplyShortcut',
         ];
         this.noWebpage = params.noWebpage;
         this.silent = params.silent;
@@ -71524,6 +73087,7 @@ export namespace Raw {
         this.entities = params.entities;
         this.scheduleDate = params.scheduleDate;
         this.sendAs = params.sendAs;
+        this.quickReplyShortcut = params.quickReplyShortcut;
       }
       /**
        * Generate the TLObject from buffer.
@@ -71549,6 +73113,7 @@ export namespace Raw {
         let entities = flags & (1 << 3) ? await TLObject.read(b) : [];
         let scheduleDate = flags & (1 << 10) ? await Primitive.Int.read(b) : undefined;
         let sendAs = flags & (1 << 13) ? await TLObject.read(b) : undefined;
+        let quickReplyShortcut = flags & (1 << 17) ? await TLObject.read(b) : undefined;
         return new Raw.messages.SendMessage({
           noWebpage: noWebpage,
           silent: silent,
@@ -71565,6 +73130,7 @@ export namespace Raw {
           entities: entities,
           scheduleDate: scheduleDate,
           sendAs: sendAs,
+          quickReplyShortcut: quickReplyShortcut,
         });
       }
       /**
@@ -71588,6 +73154,7 @@ export namespace Raw {
         flags |= this.entities ? 1 << 3 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
+        flags |= this.quickReplyShortcut !== undefined ? 1 << 17 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
@@ -71614,6 +73181,9 @@ export namespace Raw {
         if (this.sendAs !== undefined) {
           b.write(this.sendAs.write() as unknown as Buffer);
         }
+        if (this.quickReplyShortcut !== undefined) {
+          b.write(this.quickReplyShortcut.write() as unknown as Buffer);
+        }
         return b.buffer;
       }
     }
@@ -71634,6 +73204,7 @@ export namespace Raw {
       entities?: Vector<Raw.TypeMessageEntity>;
       scheduleDate?: int;
       sendAs?: Raw.TypeInputPeer;
+      quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
 
       constructor(params: {
         silent?: boolean;
@@ -71651,11 +73222,12 @@ export namespace Raw {
         entities?: Vector<Raw.TypeMessageEntity>;
         scheduleDate?: int;
         sendAs?: Raw.TypeInputPeer;
+        quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendMedia';
-        this.constructorId = 0x72ccc23d;
+        this.constructorId = 0x7bd66041;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'silent',
@@ -71673,6 +73245,7 @@ export namespace Raw {
           'entities',
           'scheduleDate',
           'sendAs',
+          'quickReplyShortcut',
         ];
         this.silent = params.silent;
         this.background = params.background;
@@ -71689,6 +73262,7 @@ export namespace Raw {
         this.entities = params.entities;
         this.scheduleDate = params.scheduleDate;
         this.sendAs = params.sendAs;
+        this.quickReplyShortcut = params.quickReplyShortcut;
       }
       /**
        * Generate the TLObject from buffer.
@@ -71714,6 +73288,7 @@ export namespace Raw {
         let entities = flags & (1 << 3) ? await TLObject.read(b) : [];
         let scheduleDate = flags & (1 << 10) ? await Primitive.Int.read(b) : undefined;
         let sendAs = flags & (1 << 13) ? await TLObject.read(b) : undefined;
+        let quickReplyShortcut = flags & (1 << 17) ? await TLObject.read(b) : undefined;
         return new Raw.messages.SendMedia({
           silent: silent,
           background: background,
@@ -71730,6 +73305,7 @@ export namespace Raw {
           entities: entities,
           scheduleDate: scheduleDate,
           sendAs: sendAs,
+          quickReplyShortcut: quickReplyShortcut,
         });
       }
       /**
@@ -71752,6 +73328,7 @@ export namespace Raw {
         flags |= this.entities ? 1 << 3 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
+        flags |= this.quickReplyShortcut !== undefined ? 1 << 17 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
@@ -71781,6 +73358,9 @@ export namespace Raw {
         if (this.sendAs !== undefined) {
           b.write(this.sendAs.write() as unknown as Buffer);
         }
+        if (this.quickReplyShortcut !== undefined) {
+          b.write(this.quickReplyShortcut.write() as unknown as Buffer);
+        }
         return b.buffer;
       }
     }
@@ -71799,6 +73379,7 @@ export namespace Raw {
       topMsgId?: int;
       scheduleDate?: int;
       sendAs?: Raw.TypeInputPeer;
+      quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
 
       constructor(params: {
         silent?: boolean;
@@ -71814,11 +73395,12 @@ export namespace Raw {
         topMsgId?: int;
         scheduleDate?: int;
         sendAs?: Raw.TypeInputPeer;
+        quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.ForwardMessages';
-        this.constructorId = 0xc661bbc4;
+        this.constructorId = 0xd5039208;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'silent',
@@ -71834,6 +73416,7 @@ export namespace Raw {
           'topMsgId',
           'scheduleDate',
           'sendAs',
+          'quickReplyShortcut',
         ];
         this.silent = params.silent;
         this.background = params.background;
@@ -71848,6 +73431,7 @@ export namespace Raw {
         this.topMsgId = params.topMsgId;
         this.scheduleDate = params.scheduleDate;
         this.sendAs = params.sendAs;
+        this.quickReplyShortcut = params.quickReplyShortcut;
       }
       /**
        * Generate the TLObject from buffer.
@@ -71871,6 +73455,7 @@ export namespace Raw {
         let topMsgId = flags & (1 << 9) ? await Primitive.Int.read(b) : undefined;
         let scheduleDate = flags & (1 << 10) ? await Primitive.Int.read(b) : undefined;
         let sendAs = flags & (1 << 13) ? await TLObject.read(b) : undefined;
+        let quickReplyShortcut = flags & (1 << 17) ? await TLObject.read(b) : undefined;
         return new Raw.messages.ForwardMessages({
           silent: silent,
           background: background,
@@ -71885,6 +73470,7 @@ export namespace Raw {
           topMsgId: topMsgId,
           scheduleDate: scheduleDate,
           sendAs: sendAs,
+          quickReplyShortcut: quickReplyShortcut,
         });
       }
       /**
@@ -71905,6 +73491,7 @@ export namespace Raw {
         flags |= this.topMsgId !== undefined ? 1 << 9 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
+        flags |= this.quickReplyShortcut !== undefined ? 1 << 17 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.fromPeer !== undefined) {
@@ -71927,6 +73514,9 @@ export namespace Raw {
         }
         if (this.sendAs !== undefined) {
           b.write(this.sendAs.write() as unknown as Buffer);
+        }
+        if (this.quickReplyShortcut !== undefined) {
+          b.write(this.quickReplyShortcut.write() as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -74115,6 +75705,7 @@ export namespace Raw {
       id!: string;
       scheduleDate?: int;
       sendAs?: Raw.TypeInputPeer;
+      quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
 
       constructor(params: {
         silent?: boolean;
@@ -74128,11 +75719,12 @@ export namespace Raw {
         id: string;
         scheduleDate?: int;
         sendAs?: Raw.TypeInputPeer;
+        quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendInlineBotResult';
-        this.constructorId = 0xf7bc68ba;
+        this.constructorId = 0x3ebee86a;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'silent',
@@ -74146,6 +75738,7 @@ export namespace Raw {
           'id',
           'scheduleDate',
           'sendAs',
+          'quickReplyShortcut',
         ];
         this.silent = params.silent;
         this.background = params.background;
@@ -74158,6 +75751,7 @@ export namespace Raw {
         this.id = params.id;
         this.scheduleDate = params.scheduleDate;
         this.sendAs = params.sendAs;
+        this.quickReplyShortcut = params.quickReplyShortcut;
       }
       /**
        * Generate the TLObject from buffer.
@@ -74182,6 +75776,7 @@ export namespace Raw {
         let id = await Primitive.String.read(b);
         let scheduleDate = flags & (1 << 10) ? await Primitive.Int.read(b) : undefined;
         let sendAs = flags & (1 << 13) ? await TLObject.read(b) : undefined;
+        let quickReplyShortcut = flags & (1 << 17) ? await TLObject.read(b) : undefined;
         return new Raw.messages.SendInlineBotResult({
           silent: silent,
           background: background,
@@ -74194,6 +75789,7 @@ export namespace Raw {
           id: id,
           scheduleDate: scheduleDate,
           sendAs: sendAs,
+          quickReplyShortcut: quickReplyShortcut,
         });
       }
       /**
@@ -74212,6 +75808,7 @@ export namespace Raw {
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
+        flags |= this.quickReplyShortcut !== undefined ? 1 << 17 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
@@ -74234,6 +75831,9 @@ export namespace Raw {
         }
         if (this.sendAs !== undefined) {
           b.write(this.sendAs.write() as unknown as Buffer);
+        }
+        if (this.quickReplyShortcut !== undefined) {
+          b.write(this.quickReplyShortcut.write() as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -74292,6 +75892,7 @@ export namespace Raw {
       replyMarkup?: Raw.TypeReplyMarkup;
       entities?: Vector<Raw.TypeMessageEntity>;
       scheduleDate?: int;
+      quickReplyShortcutId?: int;
 
       constructor(params: {
         noWebpage?: boolean;
@@ -74303,11 +75904,12 @@ export namespace Raw {
         replyMarkup?: Raw.TypeReplyMarkup;
         entities?: Vector<Raw.TypeMessageEntity>;
         scheduleDate?: int;
+        quickReplyShortcutId?: int;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.EditMessage';
-        this.constructorId = 0x48f71778;
+        this.constructorId = 0xdfd14005;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'noWebpage',
@@ -74319,6 +75921,7 @@ export namespace Raw {
           'replyMarkup',
           'entities',
           'scheduleDate',
+          'quickReplyShortcutId',
         ];
         this.noWebpage = params.noWebpage;
         this.invertMedia = params.invertMedia;
@@ -74329,6 +75932,7 @@ export namespace Raw {
         this.replyMarkup = params.replyMarkup;
         this.entities = params.entities;
         this.scheduleDate = params.scheduleDate;
+        this.quickReplyShortcutId = params.quickReplyShortcutId;
       }
       /**
        * Generate the TLObject from buffer.
@@ -74348,6 +75952,7 @@ export namespace Raw {
         let replyMarkup = flags & (1 << 2) ? await TLObject.read(b) : undefined;
         let entities = flags & (1 << 3) ? await TLObject.read(b) : [];
         let scheduleDate = flags & (1 << 15) ? await Primitive.Int.read(b) : undefined;
+        let quickReplyShortcutId = flags & (1 << 17) ? await Primitive.Int.read(b) : undefined;
         return new Raw.messages.EditMessage({
           noWebpage: noWebpage,
           invertMedia: invertMedia,
@@ -74358,6 +75963,7 @@ export namespace Raw {
           replyMarkup: replyMarkup,
           entities: entities,
           scheduleDate: scheduleDate,
+          quickReplyShortcutId: quickReplyShortcutId,
         });
       }
       /**
@@ -74376,6 +75982,7 @@ export namespace Raw {
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
         flags |= this.entities ? 1 << 3 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 15 : 0;
+        flags |= this.quickReplyShortcutId !== undefined ? 1 << 17 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
@@ -74398,6 +76005,9 @@ export namespace Raw {
         }
         if (this.scheduleDate !== undefined) {
           b.write(Primitive.Int.write(this.scheduleDate) as unknown as Buffer);
+        }
+        if (this.quickReplyShortcutId !== undefined) {
+          b.write(Primitive.Int.write(this.quickReplyShortcutId) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -76205,6 +77815,7 @@ export namespace Raw {
       multiMedia!: Vector<Raw.TypeInputSingleMedia>;
       scheduleDate?: int;
       sendAs?: Raw.TypeInputPeer;
+      quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
 
       constructor(params: {
         silent?: boolean;
@@ -76218,11 +77829,12 @@ export namespace Raw {
         multiMedia: Vector<Raw.TypeInputSingleMedia>;
         scheduleDate?: int;
         sendAs?: Raw.TypeInputPeer;
+        quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SendMultiMedia';
-        this.constructorId = 0x456e8987;
+        this.constructorId = 0xc964709;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'silent',
@@ -76236,6 +77848,7 @@ export namespace Raw {
           'multiMedia',
           'scheduleDate',
           'sendAs',
+          'quickReplyShortcut',
         ];
         this.silent = params.silent;
         this.background = params.background;
@@ -76248,6 +77861,7 @@ export namespace Raw {
         this.multiMedia = params.multiMedia;
         this.scheduleDate = params.scheduleDate;
         this.sendAs = params.sendAs;
+        this.quickReplyShortcut = params.quickReplyShortcut;
       }
       /**
        * Generate the TLObject from buffer.
@@ -76269,6 +77883,7 @@ export namespace Raw {
         let multiMedia = await TLObject.read(b);
         let scheduleDate = flags & (1 << 10) ? await Primitive.Int.read(b) : undefined;
         let sendAs = flags & (1 << 13) ? await TLObject.read(b) : undefined;
+        let quickReplyShortcut = flags & (1 << 17) ? await TLObject.read(b) : undefined;
         return new Raw.messages.SendMultiMedia({
           silent: silent,
           background: background,
@@ -76281,6 +77896,7 @@ export namespace Raw {
           multiMedia: multiMedia,
           scheduleDate: scheduleDate,
           sendAs: sendAs,
+          quickReplyShortcut: quickReplyShortcut,
         });
       }
       /**
@@ -76301,6 +77917,7 @@ export namespace Raw {
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
+        flags |= this.quickReplyShortcut !== undefined ? 1 << 17 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
@@ -76317,6 +77934,9 @@ export namespace Raw {
         }
         if (this.sendAs !== undefined) {
           b.write(this.sendAs.write() as unknown as Buffer);
+        }
+        if (this.quickReplyShortcut !== undefined) {
+          b.write(this.quickReplyShortcut.write() as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -77614,14 +79234,14 @@ export namespace Raw {
       }
     }
     export class GetDialogFilters extends TLObject {
-      __response__!: Vector<Raw.TypeDialogFilter>;
+      __response__!: Raw.messages.TypeDialogFilters;
 
       constructor() {
         super();
         this.classType = 'functions';
         this.className = 'messages.GetDialogFilters';
-        this.constructorId = 0xf19ed96d;
-        this.subclassOfId = 0x601ce94d;
+        this.constructorId = 0xefd48c89;
+        this.subclassOfId = 0xa5fff1b7;
         this._slots = [];
       }
       /**
@@ -82177,6 +83797,406 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class GetQuickReplies extends TLObject {
+      __response__!: Raw.messages.TypeQuickReplies;
+      hash!: long;
+
+      constructor(params: { hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetQuickReplies';
+        this.constructorId = 0xd483f2a8;
+        this.subclassOfId = 0xf737e966;
+        this._slots = ['hash'];
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.messages.GetQuickReplies> {
+        // no flags
+
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.GetQuickReplies({ hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class ReorderQuickReplies extends TLObject {
+      __response__!: Bool;
+      order!: Vector<int>;
+
+      constructor(params: { order: Vector<int> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ReorderQuickReplies';
+        this.constructorId = 0x60331907;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['order'];
+        this.order = params.order;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.ReorderQuickReplies> {
+        // no flags
+
+        let order = await TLObject.read(b, Primitive.Int);
+        return new Raw.messages.ReorderQuickReplies({ order: order });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.order) {
+          b.write(Primitive.Vector.write(this.order, Primitive.Int) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class CheckQuickReplyShortcut extends TLObject {
+      __response__!: Bool;
+      shortcut!: string;
+
+      constructor(params: { shortcut: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.CheckQuickReplyShortcut';
+        this.constructorId = 0xf1d0fbd3;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['shortcut'];
+        this.shortcut = params.shortcut;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.CheckQuickReplyShortcut> {
+        // no flags
+
+        let shortcut = await Primitive.String.read(b);
+        return new Raw.messages.CheckQuickReplyShortcut({ shortcut: shortcut });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.shortcut !== undefined) {
+          b.write(Primitive.String.write(this.shortcut) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class EditQuickReplyShortcut extends TLObject {
+      __response__!: Bool;
+      shortcutId!: int;
+      shortcut!: string;
+
+      constructor(params: { shortcutId: int; shortcut: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.EditQuickReplyShortcut';
+        this.constructorId = 0x5c003cef;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['shortcutId', 'shortcut'];
+        this.shortcutId = params.shortcutId;
+        this.shortcut = params.shortcut;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.EditQuickReplyShortcut> {
+        // no flags
+
+        let shortcutId = await Primitive.Int.read(b);
+        let shortcut = await Primitive.String.read(b);
+        return new Raw.messages.EditQuickReplyShortcut({
+          shortcutId: shortcutId,
+          shortcut: shortcut,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.shortcutId !== undefined) {
+          b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+        }
+        if (this.shortcut !== undefined) {
+          b.write(Primitive.String.write(this.shortcut) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DeleteQuickReplyShortcut extends TLObject {
+      __response__!: Bool;
+      shortcutId!: int;
+
+      constructor(params: { shortcutId: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.DeleteQuickReplyShortcut';
+        this.constructorId = 0x3cc04740;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['shortcutId'];
+        this.shortcutId = params.shortcutId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.DeleteQuickReplyShortcut> {
+        // no flags
+
+        let shortcutId = await Primitive.Int.read(b);
+        return new Raw.messages.DeleteQuickReplyShortcut({ shortcutId: shortcutId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.shortcutId !== undefined) {
+          b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetQuickReplyMessages extends TLObject {
+      __response__!: Raw.messages.TypeMessages;
+      shortcutId!: int;
+      id?: Vector<int>;
+      hash!: long;
+
+      constructor(params: { shortcutId: int; id?: Vector<int>; hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetQuickReplyMessages';
+        this.constructorId = 0x94a495c3;
+        this.subclassOfId = 0xd4b40b5e;
+        this._slots = ['shortcutId', 'id', 'hash'];
+        this.shortcutId = params.shortcutId;
+        this.id = params.id;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.GetQuickReplyMessages> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let shortcutId = await Primitive.Int.read(b);
+        let id = flags & (1 << 0) ? await TLObject.read(b, Primitive.Int) : [];
+        let hash = await Primitive.Long.read(b);
+        return new Raw.messages.GetQuickReplyMessages({
+          shortcutId: shortcutId,
+          id: id,
+          hash: hash,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.id ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.shortcutId !== undefined) {
+          b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+        }
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id, Primitive.Int) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SendQuickReplyMessages extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      shortcutId!: int;
+
+      constructor(params: { peer: Raw.TypeInputPeer; shortcutId: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.SendQuickReplyMessages';
+        this.constructorId = 0x33153ad4;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['peer', 'shortcutId'];
+        this.peer = params.peer;
+        this.shortcutId = params.shortcutId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.SendQuickReplyMessages> {
+        // no flags
+
+        let peer = await TLObject.read(b);
+        let shortcutId = await Primitive.Int.read(b);
+        return new Raw.messages.SendQuickReplyMessages({ peer: peer, shortcutId: shortcutId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.shortcutId !== undefined) {
+          b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class DeleteQuickReplyMessages extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      shortcutId!: int;
+      id!: Vector<int>;
+
+      constructor(params: { shortcutId: int; id: Vector<int> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.DeleteQuickReplyMessages';
+        this.constructorId = 0xe105e910;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['shortcutId', 'id'];
+        this.shortcutId = params.shortcutId;
+        this.id = params.id;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.DeleteQuickReplyMessages> {
+        // no flags
+
+        let shortcutId = await Primitive.Int.read(b);
+        let id = await TLObject.read(b, Primitive.Int);
+        return new Raw.messages.DeleteQuickReplyMessages({ shortcutId: shortcutId, id: id });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.shortcutId !== undefined) {
+          b.write(Primitive.Int.write(this.shortcutId) as unknown as Buffer);
+        }
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id, Primitive.Int) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class ToggleDialogFilterTags extends TLObject {
+      __response__!: Bool;
+      enabled!: Bool;
+
+      constructor(params: { enabled: Bool }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ToggleDialogFilterTags';
+        this.constructorId = 0xfd2dda49;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['enabled'];
+        this.enabled = params.enabled;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.messages.ToggleDialogFilterTags> {
+        // no flags
+
+        let enabled = await Primitive.Bool.read(b);
+        return new Raw.messages.ToggleDialogFilterTags({ enabled: enabled });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.enabled !== undefined) {
+          b.write(Primitive.Bool.write(this.enabled) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace updates {
     export type TypeChannelDifference =
@@ -84108,6 +86128,7 @@ export namespace Raw {
     }
   }
   export namespace account {
+    export type TypeConnectedBots = Raw.account.ConnectedBots;
     export type TypeAutoSaveSettings = Raw.account.AutoSaveSettings;
     export type TypeEmojiStatuses =
       | Raw.account.EmojiStatusesNotModified
@@ -85495,6 +87516,51 @@ export namespace Raw {
         }
         if (this.chats) {
           b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class ConnectedBots extends TLObject {
+      connectedBots!: Vector<Raw.TypeConnectedBot>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        connectedBots: Vector<Raw.TypeConnectedBot>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'account.ConnectedBots';
+        this.constructorId = 0x17d7f87b;
+        this.subclassOfId = 0xe4caf7d3;
+        this._slots = ['connectedBots', 'users'];
+        this.connectedBots = params.connectedBots;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.account.ConnectedBots> {
+        // no flags
+
+        let connectedBots = await TLObject.read(b);
+        let users = await TLObject.read(b);
+        return new Raw.account.ConnectedBots({ connectedBots: connectedBots, users: users });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.connectedBots) {
+          b.write(Primitive.Vector.write(this.connectedBots) as unknown as Buffer);
         }
         if (this.users) {
           b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
@@ -89642,6 +91708,294 @@ export namespace Raw {
         if (this.hash !== undefined) {
           b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
         }
+        return b.buffer;
+      }
+    }
+    export class UpdateBusinessWorkHours extends TLObject {
+      __response__!: Bool;
+      businessWorkHours?: Raw.TypeBusinessWorkHours;
+
+      constructor(params: { businessWorkHours?: Raw.TypeBusinessWorkHours }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.UpdateBusinessWorkHours';
+        this.constructorId = 0x4b00e066;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['businessWorkHours'];
+        this.businessWorkHours = params.businessWorkHours;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.UpdateBusinessWorkHours> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let businessWorkHours = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+        return new Raw.account.UpdateBusinessWorkHours({ businessWorkHours: businessWorkHours });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.businessWorkHours !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.businessWorkHours !== undefined) {
+          b.write(this.businessWorkHours.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class UpdateBusinessLocation extends TLObject {
+      __response__!: Bool;
+      geoPoint?: Raw.TypeInputGeoPoint;
+      address?: string;
+
+      constructor(params: { geoPoint?: Raw.TypeInputGeoPoint; address?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.UpdateBusinessLocation';
+        this.constructorId = 0x9e6b131a;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['geoPoint', 'address'];
+        this.geoPoint = params.geoPoint;
+        this.address = params.address;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.UpdateBusinessLocation> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let geoPoint = flags & (1 << 1) ? await TLObject.read(b) : undefined;
+        let address = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        return new Raw.account.UpdateBusinessLocation({ geoPoint: geoPoint, address: address });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.geoPoint !== undefined ? 1 << 1 : 0;
+        flags |= this.address !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.geoPoint !== undefined) {
+          b.write(this.geoPoint.write() as unknown as Buffer);
+        }
+        if (this.address !== undefined) {
+          b.write(Primitive.String.write(this.address) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class UpdateBusinessGreetingMessage extends TLObject {
+      __response__!: Bool;
+      message?: Raw.TypeInputBusinessGreetingMessage;
+
+      constructor(params: { message?: Raw.TypeInputBusinessGreetingMessage }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.UpdateBusinessGreetingMessage';
+        this.constructorId = 0x66cdafc4;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['message'];
+        this.message = params.message;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.UpdateBusinessGreetingMessage> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let message = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+        return new Raw.account.UpdateBusinessGreetingMessage({ message: message });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.message !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.message !== undefined) {
+          b.write(this.message.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class UpdateBusinessAwayMessage extends TLObject {
+      __response__!: Bool;
+      message?: Raw.TypeInputBusinessAwayMessage;
+
+      constructor(params: { message?: Raw.TypeInputBusinessAwayMessage }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.UpdateBusinessAwayMessage';
+        this.constructorId = 0xa26a7fa5;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['message'];
+        this.message = params.message;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.UpdateBusinessAwayMessage> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let message = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+        return new Raw.account.UpdateBusinessAwayMessage({ message: message });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.message !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.message !== undefined) {
+          b.write(this.message.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class UpdateConnectedBot extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      canReply?: boolean;
+      deleted?: boolean;
+      bot!: Raw.TypeInputUser;
+      recipients!: Raw.TypeInputBusinessRecipients;
+
+      constructor(params: {
+        canReply?: boolean;
+        deleted?: boolean;
+        bot: Raw.TypeInputUser;
+        recipients: Raw.TypeInputBusinessRecipients;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.UpdateConnectedBot';
+        this.constructorId = 0x9c2d527d;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['canReply', 'deleted', 'bot', 'recipients'];
+        this.canReply = params.canReply;
+        this.deleted = params.deleted;
+        this.bot = params.bot;
+        this.recipients = params.recipients;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.account.UpdateConnectedBot> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let canReply = flags & (1 << 0) ? true : false;
+        let deleted = flags & (1 << 1) ? true : false;
+        let bot = await TLObject.read(b);
+        let recipients = await TLObject.read(b);
+        return new Raw.account.UpdateConnectedBot({
+          canReply: canReply,
+          deleted: deleted,
+          bot: bot,
+          recipients: recipients,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.canReply ? 1 << 0 : 0;
+        flags |= this.deleted ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.bot !== undefined) {
+          b.write(this.bot.write() as unknown as Buffer);
+        }
+        if (this.recipients !== undefined) {
+          b.write(this.recipients.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetConnectedBots extends TLObject {
+      __response__!: Raw.account.TypeConnectedBots;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetConnectedBots';
+        this.constructorId = 0x4ea4c80f;
+        this.subclassOfId = 0xe4caf7d3;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.account.GetConnectedBots> {
+        // no flags
+
+        return new Raw.account.GetConnectedBots();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
         return b.buffer;
       }
     }
@@ -102476,6 +104830,414 @@ export namespace Raw {
         }
         if (this.userId !== undefined) {
           b.write(this.userId.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+  }
+  export namespace smsjobs {
+    export type TypeStatus = Raw.smsjobs.Status;
+    export type TypeEligibilityToJoin = Raw.smsjobs.EligibleToJoin;
+    export class EligibleToJoin extends TLObject {
+      termsUrl!: string;
+      monthlySentSms!: int;
+
+      constructor(params: { termsUrl: string; monthlySentSms: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'smsjobs.EligibleToJoin';
+        this.constructorId = 0xdc8b44cf;
+        this.subclassOfId = 0x5eb760a6;
+        this._slots = ['termsUrl', 'monthlySentSms'];
+        this.termsUrl = params.termsUrl;
+        this.monthlySentSms = params.monthlySentSms;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.EligibleToJoin> {
+        // no flags
+
+        let termsUrl = await Primitive.String.read(b);
+        let monthlySentSms = await Primitive.Int.read(b);
+        return new Raw.smsjobs.EligibleToJoin({
+          termsUrl: termsUrl,
+          monthlySentSms: monthlySentSms,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.termsUrl !== undefined) {
+          b.write(Primitive.String.write(this.termsUrl) as unknown as Buffer);
+        }
+        if (this.monthlySentSms !== undefined) {
+          b.write(Primitive.Int.write(this.monthlySentSms) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class Status extends TLObject {
+      allowInternational?: boolean;
+      recentSent!: int;
+      recentSince!: int;
+      recentRemains!: int;
+      totalSent!: int;
+      totalSince!: int;
+      lastGiftSlug?: string;
+      termsUrl!: string;
+
+      constructor(params: {
+        allowInternational?: boolean;
+        recentSent: int;
+        recentSince: int;
+        recentRemains: int;
+        totalSent: int;
+        totalSince: int;
+        lastGiftSlug?: string;
+        termsUrl: string;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'smsjobs.Status';
+        this.constructorId = 0x2aee9191;
+        this.subclassOfId = 0xcd8f2b25;
+        this._slots = [
+          'allowInternational',
+          'recentSent',
+          'recentSince',
+          'recentRemains',
+          'totalSent',
+          'totalSince',
+          'lastGiftSlug',
+          'termsUrl',
+        ];
+        this.allowInternational = params.allowInternational;
+        this.recentSent = params.recentSent;
+        this.recentSince = params.recentSince;
+        this.recentRemains = params.recentRemains;
+        this.totalSent = params.totalSent;
+        this.totalSince = params.totalSince;
+        this.lastGiftSlug = params.lastGiftSlug;
+        this.termsUrl = params.termsUrl;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.Status> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let allowInternational = flags & (1 << 0) ? true : false;
+        let recentSent = await Primitive.Int.read(b);
+        let recentSince = await Primitive.Int.read(b);
+        let recentRemains = await Primitive.Int.read(b);
+        let totalSent = await Primitive.Int.read(b);
+        let totalSince = await Primitive.Int.read(b);
+        let lastGiftSlug = flags & (1 << 1) ? await Primitive.String.read(b) : undefined;
+        let termsUrl = await Primitive.String.read(b);
+        return new Raw.smsjobs.Status({
+          allowInternational: allowInternational,
+          recentSent: recentSent,
+          recentSince: recentSince,
+          recentRemains: recentRemains,
+          totalSent: totalSent,
+          totalSince: totalSince,
+          lastGiftSlug: lastGiftSlug,
+          termsUrl: termsUrl,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.allowInternational ? 1 << 0 : 0;
+        flags |= this.lastGiftSlug !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.recentSent !== undefined) {
+          b.write(Primitive.Int.write(this.recentSent) as unknown as Buffer);
+        }
+        if (this.recentSince !== undefined) {
+          b.write(Primitive.Int.write(this.recentSince) as unknown as Buffer);
+        }
+        if (this.recentRemains !== undefined) {
+          b.write(Primitive.Int.write(this.recentRemains) as unknown as Buffer);
+        }
+        if (this.totalSent !== undefined) {
+          b.write(Primitive.Int.write(this.totalSent) as unknown as Buffer);
+        }
+        if (this.totalSince !== undefined) {
+          b.write(Primitive.Int.write(this.totalSince) as unknown as Buffer);
+        }
+        if (this.lastGiftSlug !== undefined) {
+          b.write(Primitive.String.write(this.lastGiftSlug) as unknown as Buffer);
+        }
+        if (this.termsUrl !== undefined) {
+          b.write(Primitive.String.write(this.termsUrl) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class IsEligibleToJoin extends TLObject {
+      __response__!: Raw.smsjobs.TypeEligibilityToJoin;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.IsEligibleToJoin';
+        this.constructorId = 0xedc39d0;
+        this.subclassOfId = 0x5eb760a6;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.IsEligibleToJoin> {
+        // no flags
+
+        return new Raw.smsjobs.IsEligibleToJoin();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class Join extends TLObject {
+      __response__!: Bool;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.Join';
+        this.constructorId = 0xa74ece2d;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.Join> {
+        // no flags
+
+        return new Raw.smsjobs.Join();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class Leave extends TLObject {
+      __response__!: Bool;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.Leave';
+        this.constructorId = 0x9898ad73;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.Leave> {
+        // no flags
+
+        return new Raw.smsjobs.Leave();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class UpdateSettings extends TLObject {
+      __response__!: Bool;
+      allowInternational?: boolean;
+
+      constructor(params: { allowInternational?: boolean }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.UpdateSettings';
+        this.constructorId = 0x93fa0bf;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['allowInternational'];
+        this.allowInternational = params.allowInternational;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.UpdateSettings> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let allowInternational = flags & (1 << 0) ? true : false;
+        return new Raw.smsjobs.UpdateSettings({ allowInternational: allowInternational });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.allowInternational ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        return b.buffer;
+      }
+    }
+    export class GetStatus extends TLObject {
+      __response__!: Raw.smsjobs.TypeStatus;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.GetStatus';
+        this.constructorId = 0x10a698e8;
+        this.subclassOfId = 0xcd8f2b25;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.GetStatus> {
+        // no flags
+
+        return new Raw.smsjobs.GetStatus();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class GetSmsJob extends TLObject {
+      __response__!: Raw.TypeSmsJob;
+      jobId!: string;
+
+      constructor(params: { jobId: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.GetSmsJob';
+        this.constructorId = 0x778d902f;
+        this.subclassOfId = 0x1f24187e;
+        this._slots = ['jobId'];
+        this.jobId = params.jobId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.GetSmsJob> {
+        // no flags
+
+        let jobId = await Primitive.String.read(b);
+        return new Raw.smsjobs.GetSmsJob({ jobId: jobId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.jobId !== undefined) {
+          b.write(Primitive.String.write(this.jobId) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class FinishJob extends TLObject {
+      __response__!: Bool;
+      jobId!: string;
+      error?: string;
+
+      constructor(params: { jobId: string; error?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'smsjobs.FinishJob';
+        this.constructorId = 0x4f1ebf24;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['jobId', 'error'];
+        this.jobId = params.jobId;
+        this.error = params.error;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.smsjobs.FinishJob> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let jobId = await Primitive.String.read(b);
+        let error = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        return new Raw.smsjobs.FinishJob({ jobId: jobId, error: error });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.error !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.jobId !== undefined) {
+          b.write(Primitive.String.write(this.jobId) as unknown as Buffer);
+        }
+        if (this.error !== undefined) {
+          b.write(Primitive.String.write(this.error) as unknown as Buffer);
         }
         return b.buffer;
       }
