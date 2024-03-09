@@ -4,9 +4,9 @@
   "description": "Pure Telegram MTProto framework for nodejs",
   "main": "./lib/src/index.js",
   "devDependencies": {
-    "@types/node": "20.11.16",
+    "@types/node": "20.11.25",
     "deno2node": "1.11.0",
-    "prettier": "3.2.4"
+    "prettier": "3.2.5"
   },
   "scripts": {
     "build": "deno2node tsconfig.json",
@@ -42,7 +42,7 @@
     "@tgsnake/log": "latest",
     "async-mutex": "0.4.1",
     "big-integer": "1.6.52",
-    "socks": "2.7.1"
+    "socks": "2.8.1"
   },
   "isBeta": false,
   "isPrivate": false
