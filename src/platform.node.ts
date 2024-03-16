@@ -7,13 +7,13 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import * as crypto from 'node:crypto';
-import * as net from 'node:net';
-import * as os from 'node:os';
-import * as path from 'node:path';
-import * as buffer from 'node:buffer';
-export { inspect } from 'node:util';
-export { gzipSync, gunzipSync } from 'node:zlib';
+import * as crypto from 'crypto';
+import * as net from 'net';
+import * as os from 'os';
+import * as path from 'path';
+import * as buffer from 'buffer';
+export { inspect } from 'util';
+export { gzipSync, gunzipSync } from 'zlib';
 import bigInt from 'big-integer';
 export { Logger } from '@tgsnake/log';
 export { SocksClient } from 'socks';
