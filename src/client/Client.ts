@@ -138,7 +138,7 @@ export class Client {
   constructor(
     session: AbstractSession,
     apiHash: string,
-    apiId?: number,
+    apiId: number,
     clientOptions?: ClientOptions,
   ) {
     this._storage = session;
