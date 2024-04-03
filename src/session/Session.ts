@@ -51,7 +51,6 @@ export class Session {
   private _connection!: Connection;
   private _pingTask!: any;
   private _client!: Client;
-  private _lastRequest?: number;
 
   private _sessionId: Buffer = Buffer.from(crypto.randomBytes(8));
   private _msgFactory: { (body: TLObject, msgId: MsgId): Message } = MsgFactory();
@@ -205,7 +204,6 @@ export class Session {
     );
     let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
-      this._lastRequest = Date.now();
       Logger.debug(`[51] Sending ${payload.length} bytes payload.`);
       await this._connection.send(payload);
     } catch (error: any) {
@@ -271,14 +269,6 @@ export class Session {
       }
       return this._pingWorker();
     };
-    // send some content-related request every 30 minutes, otherwise telegram will stop sending updates.
-    if (Date.now() - (this._lastRequest || 0) > 1800000) {
-      try {
-        await this.invoke(new Raw.updates.GetState());
-      } catch (errror) {
-        // we don't care about error
-      }
-    }
     this._pingTask = setTimeout(ping, this.PING_INTERVAL);
     return this._pingTask;
   }
@@ -325,7 +315,6 @@ export class Session {
     try {
       this._networkTask = false;
       this._isConnected = false;
-      this._lastRequest = undefined;
       clearTimeout(this._pingTask);
       await this._connection.close();
       this._results.clear();
@@ -460,11 +449,6 @@ export class Session {
           `[71] System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`,
         );
         Logger.info(`[135] Getting Update State`);
-        try {
-          await this.invoke(new Raw.updates.GetState());
-        } catch (errror) {
-          // we don't care about error
-        }
         this._pingWorker();
         this._isConnected = true;
         Logger.info('[72] Session Started');

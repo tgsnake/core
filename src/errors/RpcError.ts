@@ -67,7 +67,7 @@ export class RPCError extends Error {
   protected _format() {
     this.message = `Telegram Says: [${this._isSigned ? '-' : ''}${this.code} ${
       this.id || this.name
-    }] - ${this.message.replace(/\{value\}/g, String(this.value))} ${
+    }] - ${(this.message || '').replace(/\{value\}/g, String(this.value))} ${
       this._rpcName ? `(caused by ${this._rpcName})` : ''
     }`;
   }

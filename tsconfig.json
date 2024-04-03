@@ -9,7 +9,7 @@
     "lib": [
       "ES5",
       "ES2023",
-      "ES2017",
+      "ES2017"
     ] /* Specify library files to be included in the compilation. */,
     "allowJs": true /* Allow javascript files to be compiled. */,
     "checkJs": true /* Report errors in .js files. */,
@@ -72,9 +72,9 @@
     "resolveJsonModule": true /* Include modules imported with '.json' extension */,
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
-    "newLine": "crlf" /* Specify the end of line sequence to be used when emitting files: ‘CRLF’ (dos) or ‘LF’ (unix). */,
+    "newLine": "crlf" /* Specify the end of line sequence to be used when emitting files: ‘CRLF’ (dos) or ‘LF’ (unix). */
   },
   "include": ["src"],
   "exclude": ["node_modules", "tes", "lib", "example"],
-  "ignoreCompilerErrors": true,
+  "ignoreCompilerErrors": true
 }

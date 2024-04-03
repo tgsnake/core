@@ -145,10 +145,10 @@ export async function invoke(
     query = new Raw.InvokeWithTakeout({ query, takeoutId: client._takeoutId });
   }
   const r = await client._session.invoke(query, retries, timeout, sleepTreshold);
-  if ('users' in r) {
+  if (r.users) {
     await client.fetchPeers(r.users as unknown as Array<Raw.TypeUser>);
   }
-  if ('chats' in r) {
+  if (r.chats) {
     await client.fetchPeers(r.chats as unknown as Array<Raw.TypeChat>);
   }
   return r;
