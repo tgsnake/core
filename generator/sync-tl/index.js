@@ -8,7 +8,6 @@
  * it under the terms of the MIT License as published.
  */
 
-const notify = require('../notify');
 const fs = require('fs');
 const path = require('path');
 
@@ -45,7 +44,6 @@ async function getTl() {
       path.join(__dirname, '../api/source/api.tl'),
       `// https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/api.tl\n${tl}`,
     );
-    await notify.start(intTL);
   }
   if (+intTL !== +intMd) {
     fs.writeFileSync(
