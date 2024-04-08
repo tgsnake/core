@@ -32,6 +32,8 @@ async function getAllMethodRoutes() {
 }
 async function getPossibleErrorsList(page) {
   const html = await (await fetch(page, { method: 'GET', mode: 'cors' })).text();
+  const splited = page.split('/');
+  const tl = splited[splited.length - 1];
   const $ = cheerio.load(html);
   const results = [];
   $('h3').each((i, el) => {
@@ -53,6 +55,7 @@ async function getPossibleErrorsList(page) {
             result.desc = value.replace(/\%[aA-zZ]/gm, '{value}').trim();
           }
         });
+        result.affected = [tl];
         results.push(result);
       });
     }
@@ -71,10 +74,18 @@ async function getAllPossibleErrorsAndGrouped() {
     listErrors.push.apply(listErrors, errors);
   }
   const results = listErrors
-    .filter(
-      (link, i) =>
-        i === listErrors.findIndex((other) => link.code === other.code && link.msg === other.msg),
-    )
+    .filter((link, i) => {
+      const index = listErrors.findIndex(
+        (other) => link.code === other.code && link.msg === other.msg,
+      );
+      if (i !== index) {
+        const affected = [...link.affected, ...listErrors[index].affected];
+        listErrors[index].affected = affected
+          .filter((item, aindex) => aindex === affected.findIndex((b) => b === item))
+          .sort((a, b) => a - b);
+      }
+      return i === index;
+    })
     .sort((a, b) => {
       let code = a.code - b.code;
       if (code === 0) {
@@ -84,6 +95,7 @@ async function getAllPossibleErrorsAndGrouped() {
       }
       return code;
     });
+  console.log(results);
   spinner.stop();
   return results;
 }
@@ -93,10 +105,13 @@ async function build() {
   const newest = await getAllPossibleErrorsAndGrouped();
   const listErrors = [...old, ...newest];
   const results = listErrors
-    .filter(
-      (link, i) =>
-        i === listErrors.findIndex((other) => link.code === other.code && link.msg === other.msg),
-    )
+    .filter((link, i) => {
+      const index = newest.findIndex((other) => link.code === other.code && link.msg === other.msg);
+      listErrors[i].affected = newest[index]?.affected || [];
+      return (
+        i === listErrors.findIndex((other) => link.code === other.code && link.msg === other.msg)
+      );
+    })
     .sort((a, b) => {
       let code = a.code - b.code;
       if (code === 0) {
