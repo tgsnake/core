@@ -18,7 +18,8 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           yarn config set enableImmutableInstalls false
-          yarn install yarn build:sync
+          yarn install
+          yarn build:sync
           yarn build:api
           yarn build
           yarn prettier
