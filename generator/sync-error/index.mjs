@@ -33,9 +33,13 @@ async function getAllMethodRoutes() {
 async function getPossibleErrorsList(page) {
   const html = await (await fetch(page, { method: 'GET', mode: 'cors' })).text();
   const splited = page.split('/');
-  const tl = splited[splited.length - 1];
+  const tl = splited[splited.length - 1].split('.');
   const $ = cheerio.load(html);
   const results = [];
+  tl[tl.length - 1] = tl[tl.length - 1].replace(
+    tl[tl.length - 1][0],
+    tl[tl.length - 1][0].toUpperCase(),
+  );
   $('h3').each((i, el) => {
     const cur = $(el);
     if (cur.has('#possible-errors').length) {
@@ -55,7 +59,7 @@ async function getPossibleErrorsList(page) {
             result.desc = value.replace(/\%[aA-zZ]/gm, '{value}').trim();
           }
         });
-        result.affected = [tl];
+        result.affected = [tl.join('.')];
         results.push(result);
       });
     }
@@ -95,7 +99,6 @@ async function getAllPossibleErrorsAndGrouped() {
       }
       return code;
     });
-  console.log(results);
   spinner.stop();
   return results;
 }

@@ -33,145 +33,145 @@
     "code": 400,
     "msg": "ABOUT_TOO_LONG",
     "desc": "The provided about/bio text is too long",
-    "affected": ["account.updateProfile"]
+    "affected": ["account.UpdateProfile"]
   },
   {
     "code": 400,
     "msg": "ACCESS_TOKEN_EXPIRED",
     "desc": "The bot token has expired",
-    "affected": ["auth.importBotAuthorization"]
+    "affected": ["auth.ImportBotAuthorization"]
   },
   {
     "code": 400,
     "msg": "ACCESS_TOKEN_INVALID",
     "desc": "The bot access token is invalid",
-    "affected": ["auth.importBotAuthorization"]
+    "affected": ["auth.ImportBotAuthorization"]
   },
   {
     "code": 400,
     "msg": "ADDRESS_INVALID",
     "desc": "The specified geopoint address is invalid.",
-    "affected": ["channels.createChannel"]
+    "affected": ["channels.CreateChannel"]
   },
   {
     "code": 400,
     "msg": "ADMINS_TOO_MUCH",
     "desc": "The chat has too many administrators",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "ADMIN_ID_INVALID",
     "desc": "The specified admin ID is invalid.",
-    "affected": ["messages.deleteRevokedExportedChatInvites", "messages.getExportedChatInvites"]
+    "affected": ["messages.DeleteRevokedExportedChatInvites", "messages.GetExportedChatInvites"]
   },
   {
     "code": 400,
     "msg": "ADMIN_RANK_EMOJI_NOT_ALLOWED",
     "desc": "Emoji are not allowed in custom administrator titles",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "ADMIN_RANK_INVALID",
     "desc": "The custom administrator title is invalid or too long",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
-  { "code": 400, "msg": "ADMIN_RIGHTS_EMPTY", "desc": "", "affected": ["messages.sendMessage"] },
+  { "code": 400, "msg": "ADMIN_RIGHTS_EMPTY", "desc": "", "affected": ["messages.SendMessage"] },
   {
     "code": 400,
     "msg": "ALBUM_PHOTOS_TOO_MANY",
     "desc": "Too many photos were included in the album",
-    "affected": ["photos.uploadProfilePhoto", "photos.updateProfilePhoto"]
+    "affected": ["photos.UploadProfilePhoto", "photos.UpdateProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "API_ID_INVALID",
     "desc": "The api_id/api_hash combination is invalid",
     "affected": [
-      "auth.importWebTokenAuthorization",
-      "auth.sendCode",
-      "auth.importBotAuthorization",
-      "auth.exportLoginToken"
+      "auth.ImportWebTokenAuthorization",
+      "auth.SendCode",
+      "auth.ImportBotAuthorization",
+      "auth.ExportLoginToken"
     ]
   },
   {
     "code": 400,
     "msg": "API_ID_PUBLISHED_FLOOD",
     "desc": "You are using an API key that is limited on the server side because it was published somewhere",
-    "affected": ["auth.sendCode", "auth.importBotAuthorization", "auth.exportLoginToken"]
+    "affected": ["auth.SendCode", "auth.ImportBotAuthorization", "auth.ExportLoginToken"]
   },
   {
     "code": 400,
     "msg": "ARTICLE_TITLE_EMPTY",
     "desc": "The article title is empty",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "AUDIO_CONTENT_URL_EMPTY",
     "desc": "The remote URL specified in the content field is empty.",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "AUDIO_TITLE_EMPTY",
     "desc": "The title attribute of the audio is empty",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "AUTH_BYTES_INVALID",
     "desc": "The authorization bytes are invalid",
-    "affected": ["auth.importAuthorization", "invokeWithLayer"]
+    "affected": ["auth.ImportAuthorization", "InvokeWithLayer"]
   },
   {
     "code": 400,
     "msg": "AUTH_TOKEN_ALREADY_ACCEPTED",
     "desc": "The authorization token was already used",
-    "affected": ["auth.importLoginToken", "auth.acceptLoginToken"]
+    "affected": ["auth.ImportLoginToken", "auth.AcceptLoginToken"]
   },
   {
     "code": 400,
     "msg": "AUTH_TOKEN_EXCEPTION",
     "desc": "An error occurred while importing the auth token.",
-    "affected": ["auth.acceptLoginToken"]
+    "affected": ["auth.AcceptLoginToken"]
   },
   {
     "code": 400,
     "msg": "AUTH_TOKEN_EXPIRED",
     "desc": "The provided authorization token has expired and the updated QR-code must be re-scanned",
-    "affected": ["auth.importLoginToken", "auth.acceptLoginToken"]
+    "affected": ["auth.ImportLoginToken", "auth.AcceptLoginToken"]
   },
   {
     "code": 400,
     "msg": "AUTH_TOKEN_INVALID",
     "desc": "An invalid authorization token was provided",
-    "affected": ["auth.importLoginToken"]
+    "affected": ["auth.ImportLoginToken"]
   },
   {
     "code": 400,
     "msg": "AUTH_TOKEN_INVALIDX",
     "desc": "The specified auth token is invalid.",
-    "affected": ["auth.importLoginToken", "auth.acceptLoginToken"]
+    "affected": ["auth.ImportLoginToken", "auth.AcceptLoginToken"]
   },
   {
     "code": 400,
     "msg": "AUTOARCHIVE_NOT_AVAILABLE",
     "desc": "This feature is not yet enabled for your account due to it not receiving too many private messages from strangers",
-    "affected": ["account.setGlobalPrivacySettings"]
+    "affected": ["account.SetGlobalPrivacySettings"]
   },
   {
     "code": 400,
     "msg": "BANK_CARD_NUMBER_INVALID",
     "desc": "The credit card number is invalid",
-    "affected": ["payments.getBankCardData"]
+    "affected": ["payments.GetBankCardData"]
   },
   {
     "code": 400,
     "msg": "BANNED_RIGHTS_INVALID",
     "desc": "You provided a set of restrictions that is invalid",
-    "affected": ["messages.editChatDefaultBannedRights"]
+    "affected": ["messages.EditChatDefaultBannedRights"]
   },
   {
     "code": 400,
@@ -183,61 +183,61 @@
     "code": 400,
     "msg": "BOOSTS_EMPTY",
     "desc": "No boost slots were specified.",
-    "affected": ["premium.applyBoost"]
+    "affected": ["premium.ApplyBoost"]
   },
   {
     "code": 400,
     "msg": "BOOSTS_REQUIRED",
     "desc": "The specified channel must first be boosted by its users in order to perform this action.",
-    "affected": ["stories.canSendStory", "channels.updateColor"]
+    "affected": ["stories.CanSendStory", "channels.UpdateColor"]
   },
   {
     "code": 400,
     "msg": "BOOST_PEER_INVALID",
     "desc": "The specified boost_peer is invalid.",
-    "affected": ["payments.getPaymentForm"]
+    "affected": ["payments.GetPaymentForm"]
   },
   {
     "code": 400,
     "msg": "BOTS_TOO_MUCH",
     "desc": "The chat has too many bots",
-    "affected": ["channels.inviteToChannel", "channels.editAdmin"]
+    "affected": ["channels.InviteToChannel", "channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "BOT_APP_INVALID",
     "desc": "The specified bot app is invalid.",
-    "affected": ["messages.getBotApp", "messages.requestAppWebView"]
+    "affected": ["messages.GetBotApp", "messages.RequestAppWebView"]
   },
   {
     "code": 400,
     "msg": "BOT_APP_SHORTNAME_INVALID",
     "desc": "The specified bot app short name is invalid.",
-    "affected": ["messages.requestAppWebView"]
+    "affected": ["messages.RequestAppWebView"]
   },
   {
     "code": 400,
     "msg": "BOT_CHANNELS_NA",
     "desc": "Bots can't edit admin privileges",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "BOT_COMMAND_DESCRIPTION_INVALID",
     "desc": "The command description was empty, too long or had invalid characters",
-    "affected": ["bots.setBotCommands"]
+    "affected": ["bots.SetBotCommands"]
   },
   {
     "code": 400,
     "msg": "BOT_COMMAND_INVALID",
     "desc": "The specified command is invalid.",
-    "affected": ["bots.setBotCommands"]
+    "affected": ["bots.SetBotCommands"]
   },
   {
     "code": 400,
     "msg": "BOT_DOMAIN_INVALID",
     "desc": "The domain used for the auth button does not match the one configured in @BotFather",
-    "affected": ["messages.sendMessage", "messages.editMessage"]
+    "affected": ["messages.SendMessage", "messages.EditMessage"]
   },
   {
     "code": 400,
@@ -249,31 +249,31 @@
     "code": 400,
     "msg": "BOT_GROUPS_BLOCKED",
     "desc": "This bot can't be added to groups",
-    "affected": ["messages.addChatUser", "channels.inviteToChannel", "channels.editAdmin"]
+    "affected": ["messages.AddChatUser", "channels.InviteToChannel", "channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "BOT_INLINE_DISABLED",
     "desc": "The inline feature of the bot is disabled",
-    "affected": ["messages.getInlineBotResults"]
+    "affected": ["messages.GetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "BOT_INVALID",
     "desc": "This is not a valid bot",
     "affected": [
-      "photos.uploadProfilePhoto",
-      "messages.getAttachMenuBot",
-      "messages.sendMessage",
-      "messages.editMessage",
-      "messages.getInlineBotResults",
-      "bots.invokeWebViewCustomMethod",
-      "bots.allowSendMessage",
-      "bots.canSendMessage",
-      "messages.requestWebView",
-      "bots.toggleUsername",
-      "bots.reorderUsernames",
-      "messages.startBot"
+      "photos.UploadProfilePhoto",
+      "messages.GetAttachMenuBot",
+      "messages.SendMessage",
+      "messages.EditMessage",
+      "messages.GetInlineBotResults",
+      "bots.InvokeWebViewCustomMethod",
+      "bots.AllowSendMessage",
+      "bots.CanSendMessage",
+      "messages.RequestWebView",
+      "bots.ToggleUsername",
+      "bots.ReorderUsernames",
+      "messages.StartBot"
     ]
   },
   {
@@ -287,23 +287,23 @@
     "msg": "BOT_MISSING",
     "desc": "This method can only be run by a bot",
     "affected": [
-      "stickers.removeStickerFromSet",
-      "stickers.deleteStickerSet",
-      "stickers.changeSticker",
-      "stickers.addStickerToSet"
+      "stickers.RemoveStickerFromSet",
+      "stickers.DeleteStickerSet",
+      "stickers.ChangeSticker",
+      "stickers.AddStickerToSet"
     ]
   },
   {
     "code": 400,
     "msg": "BOT_ONESIDE_NOT_AVAIL",
     "desc": "Bots can't pin messages in PM just for themselves.",
-    "affected": ["messages.updatePinnedMessage"]
+    "affected": ["messages.UpdatePinnedMessage"]
   },
   {
     "code": 400,
     "msg": "BOT_PAYMENTS_DISABLED",
     "desc": "This method can only be run by a bot",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -315,65 +315,65 @@
     "code": 400,
     "msg": "BOT_RESPONSE_TIMEOUT",
     "desc": "The bot did not answer to the callback query in time",
-    "affected": ["messages.getBotCallbackAnswer", "messages.getInlineBotResults"]
+    "affected": ["messages.GetBotCallbackAnswer", "messages.GetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "BOT_SCORE_NOT_MODIFIED",
     "desc": "The bot score was not modified",
-    "affected": ["messages.setGameScore"]
+    "affected": ["messages.SetGameScore"]
   },
   {
     "code": 400,
     "msg": "BOT_WEBVIEW_DISABLED",
     "desc": "",
-    "affected": ["messages.requestWebView"]
+    "affected": ["messages.RequestWebView"]
   },
   {
     "code": 400,
     "msg": "BROADCAST_ID_INVALID",
     "desc": "The channel is invalid",
-    "affected": ["channels.setDiscussionGroup"]
+    "affected": ["channels.SetDiscussionGroup"]
   },
   {
     "code": 400,
     "msg": "BROADCAST_PUBLIC_VOTERS_FORBIDDEN",
     "desc": "Polls with public voters cannot be sent in channels",
-    "affected": ["messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 400,
     "msg": "BROADCAST_REQUIRED",
     "desc": "The request can only be used with a channel",
-    "affected": ["stats.getBroadcastStats"]
+    "affected": ["stats.GetBroadcastStats"]
   },
   {
     "code": 400,
     "msg": "BUTTON_DATA_INVALID",
     "desc": "The button callback data is invalid or too large",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.editInlineBotMessage",
-      "messages.setInlineBotResults"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.EditInlineBotMessage",
+      "messages.SetInlineBotResults"
     ]
   },
   {
     "code": 400,
     "msg": "BUTTON_TEXT_INVALID",
     "desc": "The specified button text is invalid.",
-    "affected": ["bots.setBotMenuButton"]
+    "affected": ["bots.SetBotMenuButton"]
   },
   {
     "code": 400,
     "msg": "BUTTON_TYPE_INVALID",
     "desc": "The type of one of the buttons you provided is invalid",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.setInlineBotResults"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.SetInlineBotResults"
     ]
   },
   {
@@ -381,83 +381,83 @@
     "msg": "BUTTON_URL_INVALID",
     "desc": "The button url is invalid",
     "affected": [
-      "bots.setBotMenuButton",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.setInlineBotResults"
+      "bots.SetBotMenuButton",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.SetInlineBotResults"
     ]
   },
   {
     "code": 400,
     "msg": "BUTTON_USER_INVALID",
     "desc": "The user_id passed to inputKeyboardButtonUserProfile is invalid!",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
     "msg": "BUTTON_USER_PRIVACY_RESTRICTED",
     "desc": "The privacy setting of the user specified in a inputKeyboardButtonUserProfile button do not allow creating such a button.",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
     "msg": "CALL_ALREADY_ACCEPTED",
     "desc": "The call is already accepted",
-    "affected": ["phone.discardCall", "phone.acceptCall"]
+    "affected": ["phone.DiscardCall", "phone.AcceptCall"]
   },
   {
     "code": 400,
     "msg": "CALL_ALREADY_DECLINED",
     "desc": "The call is already declined",
-    "affected": ["phone.receivedCall", "phone.confirmCall", "phone.acceptCall"]
+    "affected": ["phone.ReceivedCall", "phone.ConfirmCall", "phone.AcceptCall"]
   },
   {
     "code": 400,
     "msg": "CALL_PEER_INVALID",
     "desc": "The provided call peer object is invalid",
     "affected": [
-      "phone.setCallRating",
-      "phone.saveCallDebug",
-      "phone.receivedCall",
-      "phone.discardCall",
-      "phone.confirmCall",
-      "phone.acceptCall"
+      "phone.SetCallRating",
+      "phone.SaveCallDebug",
+      "phone.ReceivedCall",
+      "phone.DiscardCall",
+      "phone.ConfirmCall",
+      "phone.AcceptCall"
     ]
   },
   {
     "code": 400,
     "msg": "CALL_PROTOCOL_FLAGS_INVALID",
     "desc": "Call protocol flags invalid",
-    "affected": ["phone.requestCall", "phone.acceptCall"]
+    "affected": ["phone.RequestCall", "phone.AcceptCall"]
   },
   {
     "code": 400,
     "msg": "CDN_METHOD_INVALID",
     "desc": "The method can't be used on CDN DCs",
     "affected": [
-      "updates.getDifference",
-      "upload.getFile",
-      "upload.reuploadCdnFile",
-      "upload.getCdnFileHashes",
-      "invokeWithLayer"
+      "updates.GetDifference",
+      "upload.GetFile",
+      "upload.ReuploadCdnFile",
+      "upload.GetCdnFileHashes",
+      "InvokeWithLayer"
     ]
   },
   {
     "code": 400,
     "msg": "CHANNELS_ADMIN_LOCATED_TOO_MUCH",
     "desc": "The user has reached the limit of public geogroups.",
-    "affected": ["channels.getAdminedPublicChannels", "channels.createChannel"]
+    "affected": ["channels.GetAdminedPublicChannels", "channels.CreateChannel"]
   },
   {
     "code": 400,
     "msg": "CHANNELS_ADMIN_PUBLIC_TOO_MUCH",
     "desc": "You are an administrator of too many public channels",
     "affected": [
-      "channels.updateUsername",
-      "channels.checkUsername",
-      "channels.getAdminedPublicChannels",
-      "channels.editCreator"
+      "channels.UpdateUsername",
+      "channels.CheckUsername",
+      "channels.GetAdminedPublicChannels",
+      "channels.EditCreator"
     ]
   },
   {
@@ -465,12 +465,12 @@
     "msg": "CHANNELS_TOO_MUCH",
     "desc": "You have joined too many channels or supergroups, leave some and try again",
     "affected": [
-      "messages.migrateChat",
-      "messages.hideAllChatJoinRequests",
-      "messages.hideChatJoinRequest",
-      "messages.importChatInvite",
-      "channels.joinChannel",
-      "channels.createChannel"
+      "messages.MigrateChat",
+      "messages.HideAllChatJoinRequests",
+      "messages.HideChatJoinRequest",
+      "messages.ImportChatInvite",
+      "channels.JoinChannel",
+      "channels.CreateChannel"
     ]
   },
   { "code": 400, "msg": "CHANNEL_ADD_INVALID", "desc": "Internal error.", "affected": [] },
@@ -480,324 +480,324 @@
     "msg": "CHANNEL_FORUM_MISSING",
     "desc": "This supergroup is not a forum.",
     "affected": [
-      "channels.editForumTopic",
-      "channels.getForumTopicsByID",
-      "channels.getForumTopics",
-      "channels.createForumTopic"
+      "channels.EditForumTopic",
+      "channels.GetForumTopicsByID",
+      "channels.GetForumTopics",
+      "channels.CreateForumTopic"
     ]
   },
   {
     "code": 400,
     "msg": "CHANNEL_ID_INVALID",
     "desc": "The specified supergroup ID is invalid.",
-    "affected": ["channels.convertToGigagroup"]
+    "affected": ["channels.ConvertToGigagroup"]
   },
   {
     "code": 400,
     "msg": "CHANNEL_INVALID",
     "desc": "The channel parameter is invalid",
     "affected": [
-      "channels.updateUsername",
-      "channels.checkUsername",
-      "channels.clickSponsoredMessage",
-      "channels.viewSponsoredMessage",
-      "channels.getSponsoredMessages",
-      "messages.sendVote",
-      "users.getUsers",
-      "users.getFullUser",
-      "account.updateNotifySettings",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.search",
-      "messages.readMentions",
-      "messages.getUnreadMentions",
-      "messages.getMessagesViews",
-      "messages.getHistory",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.getDiscussionMessage",
-      "messages.getReplies",
-      "messages.setTyping",
-      "messages.getPeerSettings",
-      "messages.getPeerDialogs",
-      "messages.getBotCallbackAnswer",
-      "messages.sendInlineBotResult",
-      "messages.getInlineBotResults",
-      "updates.getDifference",
-      "updates.getChannelDifference",
-      "stories.getPeerStories",
-      "stories.getStoriesViews",
-      "stories.getStoriesByID",
-      "stats.getMessageStats",
-      "stats.getMegagroupStats",
-      "stats.getMessagePublicForwards",
-      "stats.getBroadcastStats",
-      "messages.sendReaction",
-      "channels.reorderUsernames",
-      "channels.toggleViewForumAsMessages",
-      "channels.deleteTopicHistory",
-      "channels.editForumTopic",
-      "channels.getForumTopicsByID",
-      "channels.getForumTopics",
-      "channels.createForumTopic",
-      "messages.uploadMedia",
-      "upload.getFile",
-      "channels.updateEmojiStatus",
-      "channels.convertToGigagroup",
-      "messages.editChatAbout",
-      "channels.toggleJoinRequest",
-      "channels.toggleJoinToSend",
-      "messages.hideAllChatJoinRequests",
-      "messages.importChatInvite",
-      "messages.getChatInviteImporters",
-      "messages.getExportedChatInvites",
-      "messages.exportChatInvite",
-      "channels.toggleSlowMode",
-      "channels.toggleSignatures",
-      "channels.togglePreHistoryHidden",
-      "channels.setStickers",
-      "channels.setDiscussionGroup",
-      "channels.readMessageContents",
-      "channels.readHistory",
-      "channels.leaveChannel",
-      "channels.joinChannel",
-      "channels.inviteToChannel",
-      "channels.getParticipants",
-      "channels.getParticipant",
-      "channels.getMessages",
-      "channels.getFullChannel",
-      "channels.getChannels",
-      "channels.getAdminLog",
-      "channels.exportMessageLink",
-      "channels.editTitle",
-      "channels.editPhoto",
-      "channels.editBanned",
-      "channels.editAdmin",
-      "channels.deleteParticipantHistory",
-      "channels.deleteMessages",
-      "channels.deleteHistory",
-      "channels.deleteChannel",
-      "channels.getChannelRecommendations",
-      "channels.updateColor",
-      "messages.report",
-      "channels.reportSpam"
+      "channels.UpdateUsername",
+      "channels.CheckUsername",
+      "channels.ClickSponsoredMessage",
+      "channels.ViewSponsoredMessage",
+      "channels.GetSponsoredMessages",
+      "messages.SendVote",
+      "users.GetUsers",
+      "users.GetFullUser",
+      "account.UpdateNotifySettings",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.Search",
+      "messages.ReadMentions",
+      "messages.GetUnreadMentions",
+      "messages.GetMessagesViews",
+      "messages.GetHistory",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.GetDiscussionMessage",
+      "messages.GetReplies",
+      "messages.SetTyping",
+      "messages.GetPeerSettings",
+      "messages.GetPeerDialogs",
+      "messages.GetBotCallbackAnswer",
+      "messages.SendInlineBotResult",
+      "messages.GetInlineBotResults",
+      "updates.GetDifference",
+      "updates.GetChannelDifference",
+      "stories.GetPeerStories",
+      "stories.GetStoriesViews",
+      "stories.GetStoriesByID",
+      "stats.GetMessageStats",
+      "stats.GetMegagroupStats",
+      "stats.GetMessagePublicForwards",
+      "stats.GetBroadcastStats",
+      "messages.SendReaction",
+      "channels.ReorderUsernames",
+      "channels.ToggleViewForumAsMessages",
+      "channels.DeleteTopicHistory",
+      "channels.EditForumTopic",
+      "channels.GetForumTopicsByID",
+      "channels.GetForumTopics",
+      "channels.CreateForumTopic",
+      "messages.UploadMedia",
+      "upload.GetFile",
+      "channels.UpdateEmojiStatus",
+      "channels.ConvertToGigagroup",
+      "messages.EditChatAbout",
+      "channels.ToggleJoinRequest",
+      "channels.ToggleJoinToSend",
+      "messages.HideAllChatJoinRequests",
+      "messages.ImportChatInvite",
+      "messages.GetChatInviteImporters",
+      "messages.GetExportedChatInvites",
+      "messages.ExportChatInvite",
+      "channels.ToggleSlowMode",
+      "channels.ToggleSignatures",
+      "channels.TogglePreHistoryHidden",
+      "channels.SetStickers",
+      "channels.SetDiscussionGroup",
+      "channels.ReadMessageContents",
+      "channels.ReadHistory",
+      "channels.LeaveChannel",
+      "channels.JoinChannel",
+      "channels.InviteToChannel",
+      "channels.GetParticipants",
+      "channels.GetParticipant",
+      "channels.GetMessages",
+      "channels.GetFullChannel",
+      "channels.GetChannels",
+      "channels.GetAdminLog",
+      "channels.ExportMessageLink",
+      "channels.EditTitle",
+      "channels.EditPhoto",
+      "channels.EditBanned",
+      "channels.EditAdmin",
+      "channels.DeleteParticipantHistory",
+      "channels.DeleteMessages",
+      "channels.DeleteHistory",
+      "channels.DeleteChannel",
+      "channels.GetChannelRecommendations",
+      "channels.UpdateColor",
+      "messages.Report",
+      "channels.ReportSpam"
     ]
   },
   {
     "code": 400,
     "msg": "CHANNEL_PARICIPANT_MISSING",
     "desc": "The current user is not in the channel.",
-    "affected": ["channels.deleteHistory"]
+    "affected": ["channels.DeleteHistory"]
   },
   {
     "code": 400,
     "msg": "CHANNEL_PRIVATE",
     "desc": "The channel/supergroup is not accessible",
     "affected": [
-      "channels.updateUsername",
-      "channels.checkUsername",
-      "channels.viewSponsoredMessage",
-      "channels.getSponsoredMessages",
-      "messages.sendVote",
-      "users.getUsers",
-      "users.getFullUser",
-      "account.updateNotifySettings",
-      "channels.getSendAs",
-      "messages.updatePinnedMessage",
-      "messages.sendMultiMedia",
-      "messages.search",
-      "messages.readMentions",
-      "messages.readHistory",
-      "messages.getUnreadMentions",
-      "messages.deleteHistory",
-      "messages.getDiscussionMessage",
-      "messages.getReplies",
-      "phone.createGroupCall",
-      "folders.editPeerFolders",
-      "messages.getOnlines",
-      "messages.getPeerSettings",
-      "messages.toggleDialogPin",
-      "contacts.unblock",
-      "contacts.block",
-      "contacts.addContact",
-      "messages.getBotCallbackAnswer",
-      "messages.sendInlineBotResult",
-      "updates.getDifference",
-      "stories.getPeerStories",
-      "stories.getStoriesViews",
-      "stats.getBroadcastStats",
-      "messages.sendReaction",
-      "messages.getMessagesReactions",
-      "channels.toggleUsername",
-      "channels.getForumTopics",
-      "messages.uploadMedia",
-      "upload.getFile",
-      "messages.editChatDefaultBannedRights",
-      "messages.editChatAbout",
-      "messages.hideAllChatJoinRequests",
-      "messages.hideChatJoinRequest",
-      "messages.importChatInvite",
-      "messages.getChatInviteImporters",
-      "messages.editExportedChatInvite",
-      "messages.getExportedChatInvites",
-      "messages.getExportedChatInvite",
-      "messages.exportChatInvite",
-      "channels.togglePreHistoryHidden",
-      "channels.exportMessageLink",
-      "channels.editTitle",
-      "channels.editPhoto",
-      "channels.editCreator",
-      "channels.editAdmin",
-      "channels.deleteParticipantHistory",
-      "channels.deleteHistory",
-      "messages.reportSpam",
-      "messages.report",
-      "account.reportPeer"
+      "channels.UpdateUsername",
+      "channels.CheckUsername",
+      "channels.ViewSponsoredMessage",
+      "channels.GetSponsoredMessages",
+      "messages.SendVote",
+      "users.GetUsers",
+      "users.GetFullUser",
+      "account.UpdateNotifySettings",
+      "channels.GetSendAs",
+      "messages.UpdatePinnedMessage",
+      "messages.SendMultiMedia",
+      "messages.Search",
+      "messages.ReadMentions",
+      "messages.ReadHistory",
+      "messages.GetUnreadMentions",
+      "messages.DeleteHistory",
+      "messages.GetDiscussionMessage",
+      "messages.GetReplies",
+      "phone.CreateGroupCall",
+      "folders.EditPeerFolders",
+      "messages.GetOnlines",
+      "messages.GetPeerSettings",
+      "messages.ToggleDialogPin",
+      "contacts.Unblock",
+      "contacts.Block",
+      "contacts.AddContact",
+      "messages.GetBotCallbackAnswer",
+      "messages.SendInlineBotResult",
+      "updates.GetDifference",
+      "stories.GetPeerStories",
+      "stories.GetStoriesViews",
+      "stats.GetBroadcastStats",
+      "messages.SendReaction",
+      "messages.GetMessagesReactions",
+      "channels.ToggleUsername",
+      "channels.GetForumTopics",
+      "messages.UploadMedia",
+      "upload.GetFile",
+      "messages.EditChatDefaultBannedRights",
+      "messages.EditChatAbout",
+      "messages.HideAllChatJoinRequests",
+      "messages.HideChatJoinRequest",
+      "messages.ImportChatInvite",
+      "messages.GetChatInviteImporters",
+      "messages.EditExportedChatInvite",
+      "messages.GetExportedChatInvites",
+      "messages.GetExportedChatInvite",
+      "messages.ExportChatInvite",
+      "channels.TogglePreHistoryHidden",
+      "channels.ExportMessageLink",
+      "channels.EditTitle",
+      "channels.EditPhoto",
+      "channels.EditCreator",
+      "channels.EditAdmin",
+      "channels.DeleteParticipantHistory",
+      "channels.DeleteHistory",
+      "messages.ReportSpam",
+      "messages.Report",
+      "account.ReportPeer"
     ]
   },
   {
     "code": 400,
     "msg": "CHANNEL_TOO_BIG",
     "desc": "This channel has too many participants (>1000) to be deleted.",
-    "affected": ["channels.deleteHistory"]
+    "affected": ["channels.DeleteHistory"]
   },
   { "code": 400, "msg": "CHANNEL_TOO_LARGE", "desc": "The channel is too large", "affected": [] },
   {
     "code": 400,
     "msg": "CHATLIST_EXCLUDE_INVALID",
     "desc": "",
-    "affected": ["messages.updateDialogFilter"]
+    "affected": ["messages.UpdateDialogFilter"]
   },
   {
     "code": 400,
     "msg": "CHAT_ABOUT_NOT_MODIFIED",
     "desc": "The chat about text was not modified because you tried to edit it using the same content",
-    "affected": ["messages.editChatAbout"]
+    "affected": ["messages.EditChatAbout"]
   },
   {
     "code": 400,
     "msg": "CHAT_ABOUT_TOO_LONG",
     "desc": "The chat about text is too long",
-    "affected": ["messages.editChatAbout", "channels.createChannel"]
+    "affected": ["messages.EditChatAbout", "channels.CreateChannel"]
   },
   {
     "code": 400,
     "msg": "CHAT_ADMIN_REQUIRED",
     "desc": "The method requires chat admin privileges",
     "affected": [
-      "messages.getScheduledMessages",
-      "messages.getScheduledHistory",
-      "messages.toggleNoForwards",
-      "messages.unpinAllMessages",
-      "messages.updatePinnedMessage",
-      "messages.sendMultiMedia",
-      "messages.getMessageEditData",
-      "messages.deleteHistory",
-      "messages.checkHistoryImportPeer",
-      "messages.uploadImportedMedia",
-      "phone.getGroupCallStreamRtmpUrl",
-      "phone.createGroupCall",
-      "messages.setTyping",
-      "messages.sendInlineBotResult",
-      "stories.getStoriesArchive",
-      "stories.canSendStory",
-      "stats.getMessageStats",
-      "stats.getMessagePublicForwards",
-      "messages.setChatAvailableReactions",
-      "channels.toggleUsername",
-      "messages.uploadMedia",
-      "messages.startBot",
-      "channels.convertToGigagroup",
-      "messages.deleteChat",
-      "messages.editChatDefaultBannedRights",
-      "messages.editChatAbout",
-      "messages.deleteChatUser",
-      "channels.toggleJoinRequest",
-      "channels.toggleJoinToSend",
-      "messages.hideAllChatJoinRequests",
-      "messages.hideChatJoinRequest",
-      "messages.getChatInviteImporters",
-      "messages.getAdminsWithInvites",
-      "messages.editExportedChatInvite",
-      "messages.getExportedChatInvites",
-      "messages.getExportedChatInvite",
-      "messages.exportChatInvite",
-      "channels.toggleSlowMode",
-      "channels.toggleSignatures",
-      "channels.togglePreHistoryHidden",
-      "channels.setDiscussionGroup",
-      "channels.editLocation",
-      "channels.editCreator",
-      "channels.deleteParticipantHistory",
-      "channels.deleteHistory",
-      "channels.deleteChannel",
-      "premium.getBoostsList",
-      "channels.reportSpam"
+      "messages.GetScheduledMessages",
+      "messages.GetScheduledHistory",
+      "messages.ToggleNoForwards",
+      "messages.UnpinAllMessages",
+      "messages.UpdatePinnedMessage",
+      "messages.SendMultiMedia",
+      "messages.GetMessageEditData",
+      "messages.DeleteHistory",
+      "messages.CheckHistoryImportPeer",
+      "messages.UploadImportedMedia",
+      "phone.GetGroupCallStreamRtmpUrl",
+      "phone.CreateGroupCall",
+      "messages.SetTyping",
+      "messages.SendInlineBotResult",
+      "stories.GetStoriesArchive",
+      "stories.CanSendStory",
+      "stats.GetMessageStats",
+      "stats.GetMessagePublicForwards",
+      "messages.SetChatAvailableReactions",
+      "channels.ToggleUsername",
+      "messages.UploadMedia",
+      "messages.StartBot",
+      "channels.ConvertToGigagroup",
+      "messages.DeleteChat",
+      "messages.EditChatDefaultBannedRights",
+      "messages.EditChatAbout",
+      "messages.DeleteChatUser",
+      "channels.ToggleJoinRequest",
+      "channels.ToggleJoinToSend",
+      "messages.HideAllChatJoinRequests",
+      "messages.HideChatJoinRequest",
+      "messages.GetChatInviteImporters",
+      "messages.GetAdminsWithInvites",
+      "messages.EditExportedChatInvite",
+      "messages.GetExportedChatInvites",
+      "messages.GetExportedChatInvite",
+      "messages.ExportChatInvite",
+      "channels.ToggleSlowMode",
+      "channels.ToggleSignatures",
+      "channels.TogglePreHistoryHidden",
+      "channels.SetDiscussionGroup",
+      "channels.EditLocation",
+      "channels.EditCreator",
+      "channels.DeleteParticipantHistory",
+      "channels.DeleteHistory",
+      "channels.DeleteChannel",
+      "premium.GetBoostsList",
+      "channels.ReportSpam"
     ]
   },
   {
     "code": 400,
     "msg": "CHAT_DISCUSSION_UNALLOWED",
     "desc": "You can't enable forum topics in a discussion group linked to a channel.",
-    "affected": ["channels.toggleForum"]
+    "affected": ["channels.ToggleForum"]
   },
   {
     "code": 400,
     "msg": "CHAT_FORWARDS_RESTRICTED",
     "desc": "The chat restricts forwarding content",
-    "affected": ["messages.sendMultiMedia", "messages.sendMedia", "messages.editMessage"]
+    "affected": ["messages.SendMultiMedia", "messages.SendMedia", "messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "CHAT_ID_EMPTY",
     "desc": "The provided chat id is empty",
-    "affected": ["messages.discardEncryption"]
+    "affected": ["messages.DiscardEncryption"]
   },
   {
     "code": 400,
     "msg": "CHAT_ID_INVALID",
     "desc": "The chat id being used is invalid or not known yet. Make sure you see the chat before interacting with it",
     "affected": [
-      "channels.checkUsername",
-      "channels.getSendAs",
-      "messages.sendMessage",
-      "messages.search",
-      "messages.readHistory",
-      "messages.getMessagesViews",
-      "messages.getHistory",
-      "messages.forwardMessages",
-      "messages.deleteHistory",
-      "messages.readDiscussion",
-      "folders.editPeerFolders",
-      "messages.updateDialogFilter",
-      "messages.setTyping",
-      "messages.getOnlines",
-      "messages.sendEncryptedService",
-      "messages.sendEncryptedFile",
-      "messages.sendEncrypted",
-      "messages.acceptEncryption",
-      "messages.setEncryptedTyping",
-      "messages.uploadMedia",
-      "messages.migrateChat",
-      "messages.getFullChat",
-      "messages.deleteChat",
-      "messages.getChats",
-      "messages.editChatTitle",
-      "messages.editChatPhoto",
-      "messages.editChatDefaultBannedRights",
-      "messages.editChatAdmin",
-      "messages.editChatAbout",
-      "messages.deleteChatUser",
-      "messages.addChatUser",
-      "channels.toggleJoinRequest",
-      "channels.toggleJoinToSend",
-      "messages.exportChatInvite",
-      "channels.toggleParticipantsHidden",
-      "channels.toggleSlowMode",
-      "channels.toggleSignatures",
-      "channels.togglePreHistoryHidden",
-      "channels.setStickers",
-      "messages.reportEncryptedSpam"
+      "channels.CheckUsername",
+      "channels.GetSendAs",
+      "messages.SendMessage",
+      "messages.Search",
+      "messages.ReadHistory",
+      "messages.GetMessagesViews",
+      "messages.GetHistory",
+      "messages.ForwardMessages",
+      "messages.DeleteHistory",
+      "messages.ReadDiscussion",
+      "folders.EditPeerFolders",
+      "messages.UpdateDialogFilter",
+      "messages.SetTyping",
+      "messages.GetOnlines",
+      "messages.SendEncryptedService",
+      "messages.SendEncryptedFile",
+      "messages.SendEncrypted",
+      "messages.AcceptEncryption",
+      "messages.SetEncryptedTyping",
+      "messages.UploadMedia",
+      "messages.MigrateChat",
+      "messages.GetFullChat",
+      "messages.DeleteChat",
+      "messages.GetChats",
+      "messages.EditChatTitle",
+      "messages.EditChatPhoto",
+      "messages.EditChatDefaultBannedRights",
+      "messages.EditChatAdmin",
+      "messages.EditChatAbout",
+      "messages.DeleteChatUser",
+      "messages.AddChatUser",
+      "channels.ToggleJoinRequest",
+      "channels.ToggleJoinToSend",
+      "messages.ExportChatInvite",
+      "channels.ToggleParticipantsHidden",
+      "channels.ToggleSlowMode",
+      "channels.ToggleSignatures",
+      "channels.TogglePreHistoryHidden",
+      "channels.SetStickers",
+      "messages.ReportEncryptedSpam"
     ]
   },
   {
@@ -805,79 +805,79 @@
     "msg": "CHAT_INVALID",
     "desc": "The chat is invalid",
     "affected": [
-      "messages.createChat",
-      "messages.importChatInvite",
-      "channels.leaveChannel",
-      "channels.joinChannel",
-      "channels.inviteToChannel"
+      "messages.CreateChat",
+      "messages.ImportChatInvite",
+      "channels.LeaveChannel",
+      "channels.JoinChannel",
+      "channels.InviteToChannel"
     ]
   },
   {
     "code": 400,
     "msg": "CHAT_INVITE_PERMANENT",
     "desc": "The chat invite link is primary",
-    "affected": ["messages.editExportedChatInvite"]
+    "affected": ["messages.EditExportedChatInvite"]
   },
   {
     "code": 400,
     "msg": "CHAT_LINK_EXISTS",
     "desc": "The action failed because the supergroup is linked to a channel",
-    "affected": ["channels.togglePreHistoryHidden"]
+    "affected": ["channels.TogglePreHistoryHidden"]
   },
   {
     "code": 400,
     "msg": "CHAT_NOT_MODIFIED",
     "desc": "The chat settings (title, permissions, photo, etc..) were not modified because you tried to edit them using the same content",
     "affected": [
-      "channels.updateUsername",
-      "channels.toggleAntiSpam",
-      "messages.toggleNoForwards",
-      "messages.unpinAllMessages",
-      "messages.updatePinnedMessage",
-      "messages.setHistoryTTL",
-      "messages.setChatAvailableReactions",
-      "channels.toggleForum",
-      "messages.editChatTitle",
-      "messages.editChatPhoto",
-      "messages.editChatDefaultBannedRights",
-      "messages.editChatAbout",
-      "channels.toggleJoinRequest",
-      "channels.toggleJoinToSend",
-      "channels.toggleParticipantsHidden",
-      "channels.toggleSlowMode",
-      "channels.toggleSignatures",
-      "channels.togglePreHistoryHidden",
-      "channels.getFullChannel",
-      "channels.editTitle",
-      "channels.editPhoto",
-      "channels.editLocation",
-      "channels.editCreator",
-      "channels.deleteChannel"
+      "channels.UpdateUsername",
+      "channels.ToggleAntiSpam",
+      "messages.ToggleNoForwards",
+      "messages.UnpinAllMessages",
+      "messages.UpdatePinnedMessage",
+      "messages.SetHistoryTTL",
+      "messages.SetChatAvailableReactions",
+      "channels.ToggleForum",
+      "messages.EditChatTitle",
+      "messages.EditChatPhoto",
+      "messages.EditChatDefaultBannedRights",
+      "messages.EditChatAbout",
+      "channels.ToggleJoinRequest",
+      "channels.ToggleJoinToSend",
+      "channels.ToggleParticipantsHidden",
+      "channels.ToggleSlowMode",
+      "channels.ToggleSignatures",
+      "channels.TogglePreHistoryHidden",
+      "channels.GetFullChannel",
+      "channels.EditTitle",
+      "channels.EditPhoto",
+      "channels.EditLocation",
+      "channels.EditCreator",
+      "channels.DeleteChannel"
     ]
   },
   {
     "code": 400,
     "msg": "CHAT_PUBLIC_REQUIRED",
     "desc": "You can only enable join requests in public groups.",
-    "affected": ["channels.toggleJoinRequest"]
+    "affected": ["channels.ToggleJoinRequest"]
   },
   {
     "code": 400,
     "msg": "CHAT_RESTRICTED",
     "desc": "The chat is restricted and cannot be used",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult",
-      "messages.uploadMedia"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult",
+      "messages.UploadMedia"
     ]
   },
   {
     "code": 400,
     "msg": "CHAT_REVOKE_DATE_UNSUPPORTED",
     "desc": "min_date and max_date are not available for using with non-user peers.",
-    "affected": ["messages.deleteHistory"]
+    "affected": ["messages.DeleteHistory"]
   },
   {
     "code": 400,
@@ -890,48 +890,48 @@
     "msg": "CHAT_TITLE_EMPTY",
     "desc": "The chat title is empty",
     "affected": [
-      "messages.editChatTitle",
-      "messages.createChat",
-      "channels.editTitle",
-      "channels.createChannel"
+      "messages.EditChatTitle",
+      "messages.CreateChat",
+      "channels.EditTitle",
+      "channels.CreateChannel"
     ]
   },
   {
     "code": 400,
     "msg": "CHAT_TOO_BIG",
     "desc": "The chat is too big for this action",
-    "affected": ["messages.getMessageReadParticipants"]
+    "affected": ["messages.GetMessageReadParticipants"]
   },
   {
     "code": 400,
     "msg": "CODE_EMPTY",
     "desc": "The provided code is empty",
-    "affected": ["auth.recoverPassword"]
+    "affected": ["auth.RecoverPassword"]
   },
   {
     "code": 400,
     "msg": "CODE_HASH_INVALID",
     "desc": "The provided code hash invalid",
-    "affected": ["account.confirmPhone"]
+    "affected": ["account.ConfirmPhone"]
   },
   {
     "code": 400,
     "msg": "CODE_INVALID",
     "desc": "The provided code is invalid (i.e. from email)",
-    "affected": ["account.confirmPasswordEmail"]
+    "affected": ["account.ConfirmPasswordEmail"]
   },
-  { "code": 400, "msg": "COLOR_INVALID", "desc": "", "affected": ["account.updateColor"] },
+  { "code": 400, "msg": "COLOR_INVALID", "desc": "", "affected": ["account.UpdateColor"] },
   {
     "code": 400,
     "msg": "CONNECTION_API_ID_INVALID",
     "desc": "The provided API id is invalid",
-    "affected": ["invokeWithLayer", "help.getConfig"]
+    "affected": ["InvokeWithLayer", "help.GetConfig"]
   },
   {
     "code": 400,
     "msg": "CONNECTION_APP_VERSION_EMPTY",
     "desc": "App version is empty",
-    "affected": ["help.getConfig"]
+    "affected": ["help.GetConfig"]
   },
   {
     "code": 400,
@@ -949,7 +949,7 @@
     "code": 400,
     "msg": "CONNECTION_LAYER_INVALID",
     "desc": "The connection layer is invalid. Missing InvokeWithLayer-InitConnection call",
-    "affected": ["contacts.resolveUsername", "initConnection", "help.getConfig"]
+    "affected": ["contacts.ResolveUsername", "InitConnection", "help.GetConfig"]
   },
   {
     "code": 400,
@@ -973,64 +973,64 @@
     "code": 400,
     "msg": "CONTACT_ADD_MISSING",
     "desc": "Contact to add is missing",
-    "affected": ["contacts.acceptContact"]
+    "affected": ["contacts.AcceptContact"]
   },
   {
     "code": 400,
     "msg": "CONTACT_ID_INVALID",
     "desc": "The provided contact id is invalid",
     "affected": [
-      "contacts.unblock",
-      "contacts.block",
-      "contacts.addContact",
-      "contacts.acceptContact"
+      "contacts.Unblock",
+      "contacts.Block",
+      "contacts.AddContact",
+      "contacts.AcceptContact"
     ]
   },
   {
     "code": 400,
     "msg": "CONTACT_MISSING",
     "desc": "The specified user is not a contact.",
-    "affected": ["photos.uploadContactProfilePhoto"]
+    "affected": ["photos.UploadContactProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "CONTACT_NAME_EMPTY",
     "desc": "The provided contact name is empty",
-    "affected": ["contacts.addContact"]
+    "affected": ["contacts.AddContact"]
   },
   {
     "code": 400,
     "msg": "CONTACT_REQ_MISSING",
     "desc": "Missing contact request",
-    "affected": ["contacts.acceptContact"]
+    "affected": ["contacts.AcceptContact"]
   },
   {
     "code": 400,
     "msg": "CREATE_CALL_FAILED",
     "desc": "An error occurred while creating the call.",
-    "affected": ["phone.createGroupCall"]
+    "affected": ["phone.CreateGroupCall"]
   },
   {
     "code": 400,
     "msg": "CURRENCY_TOTAL_AMOUNT_INVALID",
     "desc": "The total amount of all prices is invalid.",
-    "affected": ["payments.exportInvoice", "messages.sendMedia"]
+    "affected": ["payments.ExportInvoice", "messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "CUSTOM_REACTIONS_TOO_MANY",
     "desc": "",
-    "affected": ["messages.sendReaction"]
+    "affected": ["messages.SendReaction"]
   },
   {
     "code": 400,
     "msg": "DATA_INVALID",
     "desc": "The encrypted data is invalid",
     "affected": [
-      "messages.getBotCallbackAnswer",
-      "messages.sendEncryptedService",
-      "messages.sendEncrypted",
-      "help.getConfig"
+      "messages.GetBotCallbackAnswer",
+      "messages.SendEncryptedService",
+      "messages.SendEncrypted",
+      "help.GetConfig"
     ]
   },
   {
@@ -1038,50 +1038,50 @@
     "msg": "DATA_JSON_INVALID",
     "desc": "The provided JSON data is invalid",
     "affected": [
-      "phone.joinGroupCall",
-      "bots.sendCustomRequest",
-      "bots.answerWebhookJSONQuery",
-      "phone.saveCallDebug",
-      "help.acceptTermsOfService"
+      "phone.JoinGroupCall",
+      "bots.SendCustomRequest",
+      "bots.AnswerWebhookJSONQuery",
+      "phone.SaveCallDebug",
+      "help.AcceptTermsOfService"
     ]
   },
   {
     "code": 400,
     "msg": "DATA_TOO_LONG",
     "desc": "Data too long",
-    "affected": ["messages.sendEncryptedFile", "messages.sendEncrypted"]
+    "affected": ["messages.SendEncryptedFile", "messages.SendEncrypted"]
   },
   {
     "code": 400,
     "msg": "DATE_EMPTY",
     "desc": "The date argument is empty",
-    "affected": ["updates.getDifference"]
+    "affected": ["updates.GetDifference"]
   },
   {
     "code": 400,
     "msg": "DC_ID_INVALID",
     "desc": "The dc_id parameter is invalid",
-    "affected": ["auth.exportAuthorization"]
+    "affected": ["auth.ExportAuthorization"]
   },
   {
     "code": 400,
     "msg": "DH_G_A_INVALID",
     "desc": "The g_a parameter invalid",
-    "affected": ["messages.requestEncryption"]
+    "affected": ["messages.RequestEncryption"]
   },
   {
     "code": 400,
     "msg": "DOCUMENT_INVALID",
     "desc": "The document is invalid",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.setInlineBotResults",
-      "messages.sendReaction",
-      "channels.editForumTopic",
-      "upload.getWebFile",
-      "account.updateEmojiStatus"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.SetInlineBotResults",
+      "messages.SendReaction",
+      "channels.EditForumTopic",
+      "upload.GetWebFile",
+      "account.UpdateEmojiStatus"
     ]
   },
   {
@@ -1089,9 +1089,9 @@
     "msg": "EMAIL_HASH_EXPIRED",
     "desc": "The email hash expired and cannot be used to verify it",
     "affected": [
-      "account.cancelPasswordEmail",
-      "account.resendPasswordEmail",
-      "account.confirmPasswordEmail"
+      "account.CancelPasswordEmail",
+      "account.ResendPasswordEmail",
+      "account.ConfirmPasswordEmail"
     ]
   },
   {
@@ -1099,145 +1099,145 @@
     "msg": "EMAIL_INVALID",
     "desc": "The email provided is invalid",
     "affected": [
-      "account.updatePasswordSettings",
-      "account.verifyEmail",
-      "account.sendVerifyEmailCode"
+      "account.UpdatePasswordSettings",
+      "account.VerifyEmail",
+      "account.SendVerifyEmailCode"
     ]
   },
   {
     "code": 400,
     "msg": "EMAIL_NOT_SETUP",
     "desc": "In order to change the login email with emailVerifyPurposeLoginChange, an existing login email must already be set using emailVerifyPurposeLoginSetup.",
-    "affected": ["account.sendVerifyEmailCode"]
+    "affected": ["account.SendVerifyEmailCode"]
   },
   {
     "code": 400,
     "msg": "EMAIL_UNCONFIRMED",
     "desc": "Email unconfirmed",
-    "affected": ["account.updatePasswordSettings"]
+    "affected": ["account.UpdatePasswordSettings"]
   },
   {
     "code": 400,
     "msg": "EMAIL_UNCONFIRMED_X",
     "desc": "The provided email isn't confirmed, {value} is the length of the verification code that was just sent to the email",
-    "affected": ["account.updatePasswordSettings"]
+    "affected": ["account.UpdatePasswordSettings"]
   },
   {
     "code": 400,
     "msg": "EMAIL_VERIFY_EXPIRED",
     "desc": "The verification email has expired",
-    "affected": ["account.verifyEmail"]
+    "affected": ["account.VerifyEmail"]
   },
   {
     "code": 400,
     "msg": "EMOJI_INVALID",
     "desc": "The specified theme emoji is valid.",
-    "affected": ["messages.setChatTheme"]
+    "affected": ["messages.SetChatTheme"]
   },
   {
     "code": 400,
     "msg": "EMOJI_MARKUP_INVALID",
     "desc": "The specified video_emoji_markup was invalid.",
-    "affected": ["photos.uploadProfilePhoto"]
+    "affected": ["photos.UploadProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "EMOJI_NOT_MODIFIED",
     "desc": "The theme wasn't changed.",
-    "affected": ["messages.setChatTheme"]
+    "affected": ["messages.SetChatTheme"]
   },
   {
     "code": 400,
     "msg": "EMOTICON_EMPTY",
     "desc": "The emoticon parameter is empty",
-    "affected": ["messages.getStickers", "messages.searchCustomEmoji"]
+    "affected": ["messages.GetStickers", "messages.SearchCustomEmoji"]
   },
   {
     "code": 400,
     "msg": "EMOTICON_INVALID",
     "desc": "The emoticon parameter is invalid",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "EMOTICON_STICKERPACK_MISSING",
     "desc": "The emoticon sticker pack you are trying to obtain is missing",
-    "affected": ["messages.getStickerSet"]
+    "affected": ["messages.GetStickerSet"]
   },
   {
     "code": 400,
     "msg": "ENCRYPTED_MESSAGE_INVALID",
     "desc": "The special binding message (bind_auth_key_inner) contains invalid data",
-    "affected": ["auth.bindTempAuthKey"]
+    "affected": ["auth.BindTempAuthKey"]
   },
   {
     "code": 400,
     "msg": "ENCRYPTION_ALREADY_ACCEPTED",
     "desc": "The secret chat is already accepted",
-    "affected": ["messages.discardEncryption", "messages.acceptEncryption"]
+    "affected": ["messages.DiscardEncryption", "messages.AcceptEncryption"]
   },
   {
     "code": 400,
     "msg": "ENCRYPTION_ALREADY_DECLINED",
     "desc": "The secret chat is already declined",
-    "affected": ["messages.discardEncryption", "messages.acceptEncryption"]
+    "affected": ["messages.DiscardEncryption", "messages.AcceptEncryption"]
   },
   {
     "code": 400,
     "msg": "ENCRYPTION_DECLINED",
     "desc": "The secret chat was declined",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendEncryptedService",
-      "messages.sendEncryptedFile",
-      "messages.sendEncrypted"
+      "messages.SendMessage",
+      "messages.SendEncryptedService",
+      "messages.SendEncryptedFile",
+      "messages.SendEncrypted"
     ]
   },
   {
     "code": 400,
     "msg": "ENCRYPTION_ID_INVALID",
     "desc": "The provided secret chat id is invalid",
-    "affected": ["messages.sendEncryptedService", "messages.discardEncryption"]
+    "affected": ["messages.SendEncryptedService", "messages.DiscardEncryption"]
   },
   {
     "code": 400,
     "msg": "ENTITIES_TOO_LONG",
     "desc": "The entity provided contains data that is too long, or you passed too many entities to this message",
-    "affected": ["messages.sendMessage", "messages.editMessage"]
+    "affected": ["messages.SendMessage", "messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "ENTITY_BOUNDS_INVALID",
     "desc": "A specified entity offset or length is invalid, see here » for info on how to properly compute the entity offset/length.",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.saveDraft",
-      "messages.editInlineBotMessage",
-      "messages.sendInlineBotResult",
-      "messages.getWebPagePreview",
-      "help.editUserInfo"
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.SaveDraft",
+      "messages.EditInlineBotMessage",
+      "messages.SendInlineBotResult",
+      "messages.GetWebPagePreview",
+      "help.EditUserInfo"
     ]
   },
   {
     "code": 400,
     "msg": "ENTITY_MENTION_USER_INVALID",
     "desc": "The mentioned entity is not an user",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
     "msg": "ERROR_TEXT_EMPTY",
     "desc": "The provided error message is empty",
-    "affected": ["messages.setBotPrecheckoutResults"]
+    "affected": ["messages.SetBotPrecheckoutResults"]
   },
   {
     "code": 400,
     "msg": "EXPIRE_DATE_INVALID",
     "desc": "The expiration date is invalid",
-    "affected": ["messages.exportChatInvite"]
+    "affected": ["messages.ExportChatInvite"]
   },
   {
     "code": 400,
@@ -1249,7 +1249,7 @@
     "code": 400,
     "msg": "EXTERNAL_URL_INVALID",
     "desc": "The external media URL is invalid",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -1267,19 +1267,19 @@
     "code": 400,
     "msg": "FILE_CONTENT_TYPE_INVALID",
     "desc": "File content-type is invalid.",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "FILE_EMTPY",
     "desc": "An empty file was provided.",
-    "affected": ["messages.sendEncryptedFile"]
+    "affected": ["messages.SendEncryptedFile"]
   },
   {
     "code": 400,
     "msg": "FILE_ID_INVALID",
     "desc": "The file id is invalid",
-    "affected": ["upload.getFile"]
+    "affected": ["upload.GetFile"]
   },
   {
     "code": 400,
@@ -1292,50 +1292,50 @@
     "msg": "FILE_PARTS_INVALID",
     "desc": "Invalid number of parts.",
     "affected": [
-      "photos.uploadProfilePhoto",
-      "photos.updateProfilePhoto",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.uploadMedia",
-      "upload.saveBigFilePart",
-      "channels.editPhoto"
+      "photos.UploadProfilePhoto",
+      "photos.UpdateProfilePhoto",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.UploadMedia",
+      "upload.SaveBigFilePart",
+      "channels.EditPhoto"
     ]
   },
   {
     "code": 400,
     "msg": "FILE_PART_EMPTY",
     "desc": "The file part sent is empty",
-    "affected": ["upload.saveFilePart", "upload.saveBigFilePart"]
+    "affected": ["upload.SaveFilePart", "upload.SaveBigFilePart"]
   },
   {
     "code": 400,
     "msg": "FILE_PART_INVALID",
     "desc": "The file part number is invalid.",
-    "affected": ["upload.saveFilePart", "upload.saveBigFilePart"]
+    "affected": ["upload.SaveFilePart", "upload.SaveBigFilePart"]
   },
   {
     "code": 400,
     "msg": "FILE_PART_LENGTH_INVALID",
     "desc": "The length of a file part is invalid",
-    "affected": ["messages.sendMedia", "messages.uploadMedia"]
+    "affected": ["messages.SendMedia", "messages.UploadMedia"]
   },
   {
     "code": 400,
     "msg": "FILE_PART_SIZE_CHANGED",
     "desc": "The part size is different from the size of one of the previous parts in the same file",
-    "affected": ["upload.saveBigFilePart"]
+    "affected": ["upload.SaveBigFilePart"]
   },
   {
     "code": 400,
     "msg": "FILE_PART_SIZE_INVALID",
     "desc": "The file part size is invalid",
-    "affected": ["upload.saveBigFilePart"]
+    "affected": ["upload.SaveBigFilePart"]
   },
   {
     "code": 400,
     "msg": "FILE_PART_TOO_BIG",
     "desc": "The size limit for the content of the file part has been exceeded",
-    "affected": ["upload.saveBigFilePart"]
+    "affected": ["upload.SaveBigFilePart"]
   },
   {
     "code": 400,
@@ -1347,51 +1347,51 @@
     "code": 400,
     "msg": "FILE_REFERENCE_*",
     "desc": "The file reference expired, it must be refreshed.",
-    "affected": ["upload.getFile"]
+    "affected": ["upload.GetFile"]
   },
   {
     "code": 400,
     "msg": "FILE_REFERENCE_EMPTY",
     "desc": "The file id contains an empty file reference, you must obtain a valid one by fetching the message from the origin context",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "FILE_REFERENCE_EXPIRED",
     "desc": "The file id contains an expired file reference, you must obtain a valid one by fetching the message from the origin context",
-    "affected": ["messages.sendMedia", "upload.getFile"]
+    "affected": ["messages.SendMedia", "upload.GetFile"]
   },
   {
     "code": 400,
     "msg": "FILE_REFERENCE_INVALID",
     "desc": "The file id contains an invalid file reference, you must obtain a valid one by fetching the message from the origin context",
-    "affected": ["channels.editPhoto"]
+    "affected": ["channels.EditPhoto"]
   },
   {
     "code": 400,
     "msg": "FILE_TITLE_EMPTY",
     "desc": "An empty file title was specified.",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "FILE_TOKEN_INVALID",
     "desc": "The specified file token is invalid.",
-    "affected": ["upload.reuploadCdnFile", "upload.getCdnFileHashes"]
+    "affected": ["upload.ReuploadCdnFile", "upload.GetCdnFileHashes"]
   },
   {
     "code": 400,
     "msg": "FILTER_ID_INVALID",
     "desc": "The specified filter ID is invalid",
     "affected": [
-      "chatlists.getLeaveChatlistSuggestions",
-      "chatlists.hideChatlistUpdates",
-      "chatlists.joinChatlistUpdates",
-      "chatlists.getChatlistUpdates",
-      "chatlists.editExportedInvite",
-      "chatlists.deleteExportedInvite",
-      "chatlists.exportChatlistInvite",
-      "messages.updateDialogFilter"
+      "chatlists.GetLeaveChatlistSuggestions",
+      "chatlists.HideChatlistUpdates",
+      "chatlists.JoinChatlistUpdates",
+      "chatlists.GetChatlistUpdates",
+      "chatlists.EditExportedInvite",
+      "chatlists.DeleteExportedInvite",
+      "chatlists.ExportChatlistInvite",
+      "messages.UpdateDialogFilter"
     ]
   },
   {
@@ -1399,9 +1399,9 @@
     "msg": "FILTER_INCLUDE_EMPTY",
     "desc": "The include_peers vector of the filter is empty.",
     "affected": [
-      "chatlists.joinChatlistUpdates",
-      "chatlists.joinChatlistInvite",
-      "messages.updateDialogFilter"
+      "chatlists.JoinChatlistUpdates",
+      "chatlists.JoinChatlistInvite",
+      "messages.UpdateDialogFilter"
     ]
   },
   {
@@ -1409,27 +1409,27 @@
     "msg": "FILTER_NOT_SUPPORTED",
     "desc": "The specified filter cannot be used in this context.",
     "affected": [
-      "messages.searchSentMedia",
-      "messages.getSearchResultsCalendar",
-      "chatlists.getLeaveChatlistSuggestions",
-      "chatlists.hideChatlistUpdates",
-      "chatlists.getChatlistUpdates",
-      "chatlists.editExportedInvite",
-      "chatlists.deleteExportedInvite",
-      "chatlists.exportChatlistInvite"
+      "messages.SearchSentMedia",
+      "messages.GetSearchResultsCalendar",
+      "chatlists.GetLeaveChatlistSuggestions",
+      "chatlists.HideChatlistUpdates",
+      "chatlists.GetChatlistUpdates",
+      "chatlists.EditExportedInvite",
+      "chatlists.DeleteExportedInvite",
+      "chatlists.ExportChatlistInvite"
     ]
   },
   {
     "code": 400,
     "msg": "FILTER_TITLE_EMPTY",
     "desc": "The title field of the filter is empty.",
-    "affected": ["messages.updateDialogFilter"]
+    "affected": ["messages.UpdateDialogFilter"]
   },
   {
     "code": 400,
     "msg": "FIRSTNAME_INVALID",
     "desc": "The first name is invalid",
-    "affected": ["account.updateProfile", "auth.signUp"]
+    "affected": ["account.UpdateProfile", "auth.SignUp"]
   },
   {
     "code": 400,
@@ -1442,17 +1442,17 @@
     "msg": "FOLDER_ID_INVALID",
     "desc": "The folder id is invalid",
     "affected": [
-      "messages.searchGlobal",
-      "folders.editPeerFolders",
-      "messages.getPinnedDialogs",
-      "messages.getDialogs"
+      "messages.SearchGlobal",
+      "folders.EditPeerFolders",
+      "messages.GetPinnedDialogs",
+      "messages.GetDialogs"
     ]
   },
   {
     "code": 400,
     "msg": "FORUM_ENABLED",
     "desc": "You can't execute the specified action because the group is a forum, disable forum functionality to continue.",
-    "affected": ["channels.convertToGigagroup", "channels.togglePreHistoryHidden"]
+    "affected": ["channels.ConvertToGigagroup", "channels.TogglePreHistoryHidden"]
   },
   {
     "code": 400,
@@ -1464,115 +1464,115 @@
     "code": 400,
     "msg": "FROM_MESSAGE_BOT_DISABLED",
     "desc": "Bots can't use fromMessage min constructors",
-    "affected": ["users.getUsers", "messages.sendMessage", "updates.getChannelDifference"]
+    "affected": ["users.GetUsers", "messages.SendMessage", "updates.GetChannelDifference"]
   },
   {
     "code": 400,
     "msg": "FROM_PEER_INVALID",
     "desc": "The from peer value is invalid",
-    "affected": ["messages.search"]
+    "affected": ["messages.Search"]
   },
   {
     "code": 400,
     "msg": "GAME_BOT_INVALID",
     "desc": "You cannot send that game with the current bot",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "GENERAL_MODIFY_ICON_FORBIDDEN",
     "desc": "You can't modify the icon of the \"General\" topic.",
-    "affected": ["channels.editForumTopic"]
+    "affected": ["channels.EditForumTopic"]
   },
   {
     "code": 400,
     "msg": "GEO_POINT_INVALID",
     "desc": "Invalid geo point provided",
-    "affected": ["contacts.getLocated"]
+    "affected": ["contacts.GetLocated"]
   },
   {
     "code": 400,
     "msg": "GIFT_SLUG_EXPIRED",
     "desc": "The specified gift slug has expired.",
-    "affected": ["payments.applyGiftCode"]
+    "affected": ["payments.ApplyGiftCode"]
   },
   {
     "code": 400,
     "msg": "GIFT_SLUG_INVALID",
     "desc": "",
-    "affected": ["payments.applyGiftCode", "payments.checkGiftCode"]
+    "affected": ["payments.ApplyGiftCode", "payments.CheckGiftCode"]
   },
   {
     "code": 400,
     "msg": "GIF_CONTENT_TYPE_INVALID",
     "desc": "GIF content-type invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "GIF_ID_INVALID",
     "desc": "The provided gif/animation id is invalid",
-    "affected": ["messages.saveGif"]
+    "affected": ["messages.SaveGif"]
   },
   {
     "code": 400,
     "msg": "GRAPH_EXPIRED_RELOAD",
     "desc": "This graph has expired, please obtain a new graph token.",
-    "affected": ["stats.loadAsyncGraph"]
+    "affected": ["stats.LoadAsyncGraph"]
   },
   {
     "code": 400,
     "msg": "GRAPH_INVALID_RELOAD",
     "desc": "Invalid graph token provided, please reload the stats and provide the updated token",
-    "affected": ["stats.loadAsyncGraph"]
+    "affected": ["stats.LoadAsyncGraph"]
   },
   {
     "code": 400,
     "msg": "GRAPH_OUTDATED_RELOAD",
     "desc": "The graph data is outdated",
-    "affected": ["stats.loadAsyncGraph"]
+    "affected": ["stats.LoadAsyncGraph"]
   },
   {
     "code": 400,
     "msg": "GROUPCALL_ALREADY_DISCARDED",
     "desc": "The group call was already discarded.",
-    "affected": ["phone.discardGroupCall"]
+    "affected": ["phone.DiscardGroupCall"]
   },
   {
     "code": 400,
     "msg": "GROUPCALL_INVALID",
     "desc": "The specified group call is invalid.",
     "affected": [
-      "phone.getGroupCallStreamChannels",
-      "phone.discardGroupCall",
-      "phone.joinGroupCall",
-      "phone.getGroupCall",
-      "phone.inviteToGroupCall"
+      "phone.GetGroupCallStreamChannels",
+      "phone.DiscardGroupCall",
+      "phone.JoinGroupCall",
+      "phone.GetGroupCall",
+      "phone.InviteToGroupCall"
     ]
   },
   {
     "code": 400,
     "msg": "GROUPCALL_JOIN_MISSING",
     "desc": "You haven't joined this group call.",
-    "affected": ["phone.getGroupCallStreamChannels", "phone.checkGroupCall"]
+    "affected": ["phone.GetGroupCallStreamChannels", "phone.CheckGroupCall"]
   },
   {
     "code": 400,
     "msg": "GROUPCALL_NOT_MODIFIED",
     "desc": "Group call settings weren't modified.",
-    "affected": ["phone.toggleGroupCallSettings", "phone.toggleGroupCallRecord"]
+    "affected": ["phone.ToggleGroupCallSettings", "phone.ToggleGroupCallRecord"]
   },
   {
     "code": 400,
     "msg": "GROUPCALL_SSRC_DUPLICATE_MUCH",
     "desc": "Too many group call synchronization source duplicates",
-    "affected": ["phone.joinGroupCall"]
+    "affected": ["phone.JoinGroupCall"]
   },
   {
     "code": 400,
     "msg": "GROUPED_MEDIA_INVALID",
     "desc": "The album contains invalid media",
-    "affected": ["messages.forwardMessages"]
+    "affected": ["messages.ForwardMessages"]
   },
   { "code": 400, "msg": "GROUP_CALL_INVALID", "desc": "The group call is invalid", "affected": [] },
   {
@@ -1580,68 +1580,68 @@
     "msg": "HASH_INVALID",
     "desc": "The provided hash is invalid",
     "affected": [
-      "account.sendConfirmPhoneCode",
-      "account.resetAuthorization",
-      "account.resetWebAuthorization",
-      "account.changeAuthorizationSettings"
+      "account.SendConfirmPhoneCode",
+      "account.ResetAuthorization",
+      "account.ResetWebAuthorization",
+      "account.ChangeAuthorizationSettings"
     ]
   },
   {
     "code": 400,
     "msg": "HIDE_REQUESTER_MISSING",
     "desc": "The join request was missing or was already handled.",
-    "affected": ["messages.hideAllChatJoinRequests", "messages.hideChatJoinRequest"]
+    "affected": ["messages.HideAllChatJoinRequests", "messages.HideChatJoinRequest"]
   },
   {
     "code": 400,
     "msg": "IMAGE_PROCESS_FAILED",
     "desc": "The server failed to process your image",
     "affected": [
-      "photos.uploadProfilePhoto",
-      "photos.updateProfilePhoto",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "stories.sendStory",
-      "messages.uploadMedia",
-      "messages.editChatPhoto",
-      "channels.editPhoto"
+      "photos.UploadProfilePhoto",
+      "photos.UpdateProfilePhoto",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "stories.SendStory",
+      "messages.UploadMedia",
+      "messages.EditChatPhoto",
+      "channels.EditPhoto"
     ]
   },
   {
     "code": 400,
     "msg": "IMPORT_FILE_INVALID",
     "desc": "The imported file is invalid",
-    "affected": ["messages.initHistoryImport"]
+    "affected": ["messages.InitHistoryImport"]
   },
   {
     "code": 400,
     "msg": "IMPORT_FORMAT_UNRECOGNIZED",
     "desc": "The imported format is unrecognized",
-    "affected": ["messages.initHistoryImport", "messages.checkHistoryImport"]
+    "affected": ["messages.InitHistoryImport", "messages.CheckHistoryImport"]
   },
   {
     "code": 400,
     "msg": "IMPORT_ID_INVALID",
     "desc": "The import id is invalid",
-    "affected": ["messages.startHistoryImport"]
+    "affected": ["messages.StartHistoryImport"]
   },
   {
     "code": 400,
     "msg": "IMPORT_TOKEN_INVALID",
     "desc": "The specified token is invalid.",
-    "affected": ["contacts.importContactToken"]
+    "affected": ["contacts.ImportContactToken"]
   },
   {
     "code": 400,
     "msg": "INLINE_RESULT_EXPIRED",
     "desc": "The inline bot query expired",
-    "affected": ["messages.sendInlineBotResult"]
+    "affected": ["messages.SendInlineBotResult"]
   },
   {
     "code": 400,
     "msg": "INPUT_CHATLIST_INVALID",
     "desc": "The specified folder is invalid.",
-    "affected": ["chatlists.getChatlistUpdates"]
+    "affected": ["chatlists.GetChatlistUpdates"]
   },
   {
     "code": 400,
@@ -1665,7 +1665,7 @@
     "code": 400,
     "msg": "INPUT_FILTER_INVALID",
     "desc": "The filter is invalid for this query",
-    "affected": ["messages.search"]
+    "affected": ["messages.Search"]
   },
   {
     "code": 400,
@@ -1689,551 +1689,551 @@
     "code": 400,
     "msg": "INPUT_TEXT_EMPTY",
     "desc": "The specified text is empty.",
-    "affected": ["messages.translateText"]
+    "affected": ["messages.TranslateText"]
   },
   {
     "code": 400,
     "msg": "INPUT_TEXT_TOO_LONG",
     "desc": "The specified text is too long.",
-    "affected": ["messages.translateText"]
+    "affected": ["messages.TranslateText"]
   },
   {
     "code": 400,
     "msg": "INPUT_USER_DEACTIVATED",
     "desc": "The target user has been deleted/deactivated",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.search",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.setTyping",
-      "messages.sendScreenshotNotification",
-      "contacts.block",
-      "messages.sendInlineBotResult",
-      "messages.getInlineBotResults",
-      "messages.requestEncryption",
-      "messages.requestWebView",
-      "messages.uploadMedia",
-      "messages.startBot",
-      "messages.createChat",
-      "messages.addChatUser",
-      "messages.hideChatJoinRequest",
-      "channels.inviteToChannel",
-      "channels.editBanned",
-      "channels.editAdmin",
-      "phone.requestCall",
-      "channels.reportSpam"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.Search",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.SetTyping",
+      "messages.SendScreenshotNotification",
+      "contacts.Block",
+      "messages.SendInlineBotResult",
+      "messages.GetInlineBotResults",
+      "messages.RequestEncryption",
+      "messages.RequestWebView",
+      "messages.UploadMedia",
+      "messages.StartBot",
+      "messages.CreateChat",
+      "messages.AddChatUser",
+      "messages.HideChatJoinRequest",
+      "channels.InviteToChannel",
+      "channels.EditBanned",
+      "channels.EditAdmin",
+      "phone.RequestCall",
+      "channels.ReportSpam"
     ]
   },
   {
     "code": 400,
     "msg": "INVITES_TOO_MUCH",
     "desc": "The maximum number of per-folder invites specified by the chatlist_invites_limit_default/chatlist_invites_limit_premium client configuration parameters » was reached.",
-    "affected": ["chatlists.exportChatlistInvite"]
+    "affected": ["chatlists.ExportChatlistInvite"]
   },
   {
     "code": 400,
     "msg": "INVITE_FORBIDDEN_WITH_JOINAS",
     "desc": "If the user has anonymously joined a group call as a channel, they can't invite other users to the group call because that would cause deanonymization, because the invite would be sent using the original user ID, not the anonymized channel ID.",
-    "affected": ["phone.inviteToGroupCall"]
+    "affected": ["phone.InviteToGroupCall"]
   },
   {
     "code": 400,
     "msg": "INVITE_HASH_EMPTY",
     "desc": "The invite hash is empty",
-    "affected": ["messages.importChatInvite", "messages.checkChatInvite", "channels.joinChannel"]
+    "affected": ["messages.ImportChatInvite", "messages.CheckChatInvite", "channels.JoinChannel"]
   },
   {
     "code": 400,
     "msg": "INVITE_HASH_EXPIRED",
     "desc": "The chat invite link is no longer valid",
     "affected": [
-      "messages.hideAllChatJoinRequests",
-      "messages.getChatInviteImporters",
-      "messages.deleteExportedChatInvite",
-      "messages.editExportedChatInvite",
-      "messages.getExportedChatInvite"
+      "messages.HideAllChatJoinRequests",
+      "messages.GetChatInviteImporters",
+      "messages.DeleteExportedChatInvite",
+      "messages.EditExportedChatInvite",
+      "messages.GetExportedChatInvite"
     ]
   },
   {
     "code": 400,
     "msg": "INVITE_HASH_INVALID",
     "desc": "The invite link hash is invalid",
-    "affected": ["messages.importChatInvite", "messages.checkChatInvite", "channels.joinChannel"]
+    "affected": ["messages.ImportChatInvite", "messages.CheckChatInvite", "channels.JoinChannel"]
   },
   {
     "code": 400,
     "msg": "INVITE_REQUEST_SENT",
     "desc": "You have successfully requested to join this chat or channel.",
-    "affected": ["messages.importChatInvite", "channels.joinChannel"]
+    "affected": ["messages.ImportChatInvite", "channels.JoinChannel"]
   },
   {
     "code": 400,
     "msg": "INVITE_REVOKED_MISSING",
     "desc": "The action required a chat invite link to be revoked first",
-    "affected": ["messages.deleteExportedChatInvite"]
+    "affected": ["messages.DeleteExportedChatInvite"]
   },
   {
     "code": 400,
     "msg": "INVITE_SLUG_EMPTY",
     "desc": "The specified invite slug is empty.",
-    "affected": ["chatlists.joinChatlistInvite", "chatlists.checkChatlistInvite"]
+    "affected": ["chatlists.JoinChatlistInvite", "chatlists.CheckChatlistInvite"]
   },
   {
     "code": 400,
     "msg": "INVITE_SLUG_EXPIRED",
     "desc": "The specified chat folder link has expired.",
-    "affected": ["chatlists.joinChatlistInvite", "chatlists.checkChatlistInvite"]
+    "affected": ["chatlists.JoinChatlistInvite", "chatlists.CheckChatlistInvite"]
   },
   {
     "code": 400,
     "msg": "INVOICE_PAYLOAD_INVALID",
     "desc": "The specified invoice payload is invalid.",
-    "affected": ["payments.exportInvoice"]
+    "affected": ["payments.ExportInvoice"]
   },
   {
     "code": 400,
     "msg": "JOIN_AS_PEER_INVALID",
     "desc": "The specified peer cannot be used to join a group call.",
-    "affected": ["phone.saveDefaultGroupCallJoinAs", "phone.joinGroupCall"]
+    "affected": ["phone.SaveDefaultGroupCallJoinAs", "phone.JoinGroupCall"]
   },
   {
     "code": 400,
     "msg": "LANG_CODE_INVALID",
     "desc": "The specified language code is invalid.",
-    "affected": ["bots.getBotInfo", "bots.setBotCommands", "bots.resetBotCommands"]
+    "affected": ["bots.GetBotInfo", "bots.SetBotCommands", "bots.ResetBotCommands"]
   },
   {
     "code": 400,
     "msg": "LANG_CODE_NOT_SUPPORTED",
     "desc": "The specified language code is not supported.",
-    "affected": ["langpack.getStrings", "langpack.getLanguage", "langpack.getLangPack"]
+    "affected": ["langpack.GetStrings", "langpack.GetLanguage", "langpack.GetLangPack"]
   },
   {
     "code": 400,
     "msg": "LANG_PACK_INVALID",
     "desc": "The provided language pack is invalid",
     "affected": [
-      "langpack.getStrings",
-      "langpack.getLanguages",
-      "langpack.getLanguage",
-      "langpack.getLangPack",
-      "langpack.getDifference"
+      "langpack.GetStrings",
+      "langpack.GetLanguages",
+      "langpack.GetLanguage",
+      "langpack.GetLangPack",
+      "langpack.GetDifference"
     ]
   },
   {
     "code": 400,
     "msg": "LASTNAME_INVALID",
     "desc": "The last name is invalid",
-    "affected": ["auth.signUp"]
+    "affected": ["auth.SignUp"]
   },
   {
     "code": 400,
     "msg": "LIMIT_INVALID",
     "desc": "The limit parameter is invalid",
-    "affected": ["upload.getFile"]
+    "affected": ["upload.GetFile"]
   },
   {
     "code": 400,
     "msg": "LINK_NOT_MODIFIED",
     "desc": "The chat link was not modified because you tried to link to the same target",
-    "affected": ["channels.setDiscussionGroup"]
+    "affected": ["channels.SetDiscussionGroup"]
   },
   {
     "code": 400,
     "msg": "LOCATION_INVALID",
     "desc": "The file location is invalid",
     "affected": [
-      "photos.updateProfilePhoto",
-      "upload.getWebFile",
-      "upload.getFileHashes",
-      "upload.getFile"
+      "photos.UpdateProfilePhoto",
+      "upload.GetWebFile",
+      "upload.GetFileHashes",
+      "upload.GetFile"
     ]
   },
   {
     "code": 400,
     "msg": "MAX_DATE_INVALID",
     "desc": "The specified maximum date is invalid.",
-    "affected": ["messages.deleteHistory", "messages.readEncryptedHistory"]
+    "affected": ["messages.DeleteHistory", "messages.ReadEncryptedHistory"]
   },
   {
     "code": 400,
     "msg": "MAX_ID_INVALID",
     "desc": "The max_id parameter is invalid",
-    "affected": ["photos.getUserPhotos", "stories.readStories"]
+    "affected": ["photos.GetUserPhotos", "stories.ReadStories"]
   },
   {
     "code": 400,
     "msg": "MAX_QTS_INVALID",
     "desc": "The provided QTS is invalid",
-    "affected": ["messages.receivedQueue"]
+    "affected": ["messages.ReceivedQueue"]
   },
   {
     "code": 400,
     "msg": "MD5_CHECKSUM_INVALID",
     "desc": "The file's checksum did not match the md5_checksum parameter",
-    "affected": ["messages.sendMedia", "messages.sendEncryptedFile"]
+    "affected": ["messages.SendMedia", "messages.SendEncryptedFile"]
   },
   {
     "code": 400,
     "msg": "MEDIA_CAPTION_TOO_LONG",
     "desc": "The media caption is too long",
-    "affected": ["messages.sendMultiMedia", "messages.sendMedia", "messages.editMessage"]
+    "affected": ["messages.SendMultiMedia", "messages.SendMedia", "messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "MEDIA_EMPTY",
     "desc": "The media you tried to send is invalid",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.sendInlineBotResult",
-      "stories.sendStory"
+      "messages.SendMultiMedia",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.SendInlineBotResult",
+      "stories.SendStory"
     ]
   },
   {
     "code": 400,
     "msg": "MEDIA_FILE_INVALID",
     "desc": "The specified media file is invalid.",
-    "affected": ["stories.sendStory"]
+    "affected": ["stories.SendStory"]
   },
   {
     "code": 400,
     "msg": "MEDIA_GROUPED_INVALID",
     "desc": "You tried to send media of different types in an album.",
-    "affected": ["messages.editMessage"]
+    "affected": ["messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "MEDIA_INVALID",
     "desc": "The media is invalid",
     "affected": [
-      "payments.exportInvoice",
-      "messages.sendMultiMedia",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.uploadMedia"
+      "payments.ExportInvoice",
+      "messages.SendMultiMedia",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.UploadMedia"
     ]
   },
   {
     "code": 400,
     "msg": "MEDIA_NEW_INVALID",
     "desc": "The new media to edit the message with is invalid",
-    "affected": ["messages.editMessage"]
+    "affected": ["messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "MEDIA_PREV_INVALID",
     "desc": "The previous media cannot be edited with anything else",
-    "affected": ["messages.editMessage"]
+    "affected": ["messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "MEDIA_TTL_INVALID",
     "desc": "The specified media TTL is invalid.",
-    "affected": ["messages.editMessage"]
+    "affected": ["messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "MEDIA_TYPE_INVALID",
     "desc": "The specified media type cannot be used in stories.",
-    "affected": ["stories.sendStory"]
+    "affected": ["stories.SendStory"]
   },
   {
     "code": 400,
     "msg": "MEDIA_VIDEO_STORY_MISSING",
     "desc": "",
-    "affected": ["stories.sendStory"]
+    "affected": ["stories.SendStory"]
   },
   {
     "code": 400,
     "msg": "MEGAGROUP_GEO_REQUIRED",
     "desc": "",
-    "affected": ["channels.editLocation"]
+    "affected": ["channels.EditLocation"]
   },
   {
     "code": 400,
     "msg": "MEGAGROUP_ID_INVALID",
     "desc": "The supergroup is invalid",
-    "affected": ["channels.setDiscussionGroup"]
+    "affected": ["channels.SetDiscussionGroup"]
   },
   {
     "code": 400,
     "msg": "MEGAGROUP_PREHISTORY_HIDDEN",
     "desc": "The action failed because the supergroup has the pre-history hidden",
-    "affected": ["channels.setDiscussionGroup"]
+    "affected": ["channels.SetDiscussionGroup"]
   },
   {
     "code": 400,
     "msg": "MEGAGROUP_REQUIRED",
     "desc": "The request can only be used with a supergroup",
-    "affected": ["stats.getMegagroupStats", "channels.editLocation"]
+    "affected": ["stats.GetMegagroupStats", "channels.EditLocation"]
   },
   {
     "code": 400,
     "msg": "MESSAGE_EDIT_TIME_EXPIRED",
     "desc": "You can no longer edit this message because too much time has passed",
-    "affected": ["messages.editMessage"]
+    "affected": ["messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "MESSAGE_EMPTY",
     "desc": "The message sent is empty or contains invalid characters",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.setInlineBotResults",
-      "messages.getWebPagePreview"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.SetInlineBotResults",
+      "messages.GetWebPagePreview"
     ]
   },
   {
     "code": 400,
     "msg": "MESSAGE_IDS_EMPTY",
     "desc": "The requested message doesn't exist or you provided no message id",
-    "affected": ["messages.forwardMessages", "channels.getMessages"]
+    "affected": ["messages.ForwardMessages", "channels.GetMessages"]
   },
   {
     "code": 400,
     "msg": "MESSAGE_ID_INVALID",
     "desc": "The message id is invalid",
     "affected": [
-      "messages.sendScheduledMessages",
-      "messages.sendVote",
-      "messages.getPollResults",
-      "payments.getPaymentReceipt",
-      "payments.sendPaymentForm",
-      "payments.validateRequestedInfo",
-      "payments.getPaymentForm",
-      "messages.updatePinnedMessage",
-      "messages.getMessageEditData",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.deleteMessages",
-      "messages.deleteHistory",
-      "messages.setInlineGameScore",
-      "messages.setGameScore",
-      "messages.getInlineGameHighScores",
-      "messages.getGameHighScores",
-      "messages.editInlineBotMessage",
-      "messages.getBotCallbackAnswer",
-      "stats.getMessageStats",
-      "stats.getMessagePublicForwards",
-      "messages.sendReaction",
-      "channels.exportMessageLink"
+      "messages.SendScheduledMessages",
+      "messages.SendVote",
+      "messages.GetPollResults",
+      "payments.GetPaymentReceipt",
+      "payments.SendPaymentForm",
+      "payments.ValidateRequestedInfo",
+      "payments.GetPaymentForm",
+      "messages.UpdatePinnedMessage",
+      "messages.GetMessageEditData",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.DeleteMessages",
+      "messages.DeleteHistory",
+      "messages.SetInlineGameScore",
+      "messages.SetGameScore",
+      "messages.GetInlineGameHighScores",
+      "messages.GetGameHighScores",
+      "messages.EditInlineBotMessage",
+      "messages.GetBotCallbackAnswer",
+      "stats.GetMessageStats",
+      "stats.GetMessagePublicForwards",
+      "messages.SendReaction",
+      "channels.ExportMessageLink"
     ]
   },
   {
     "code": 400,
     "msg": "MESSAGE_NOT_MODIFIED",
     "desc": "The message was not modified because you tried to edit it using the same content",
-    "affected": ["messages.editMessage", "messages.editInlineBotMessage", "messages.sendReaction"]
+    "affected": ["messages.EditMessage", "messages.EditInlineBotMessage", "messages.SendReaction"]
   },
   {
     "code": 400,
     "msg": "MESSAGE_POLL_CLOSED",
     "desc": "You can't interact with a closed poll",
-    "affected": ["messages.sendVote"]
+    "affected": ["messages.SendVote"]
   },
   {
     "code": 400,
     "msg": "MESSAGE_TOO_LONG",
     "desc": "The message text is too long",
     "affected": [
-      "messages.sendMessage",
-      "messages.editMessage",
-      "messages.setBotCallbackAnswer",
-      "messages.setInlineBotResults"
+      "messages.SendMessage",
+      "messages.EditMessage",
+      "messages.SetBotCallbackAnswer",
+      "messages.SetInlineBotResults"
     ]
   },
   {
     "code": 400,
     "msg": "METHOD_INVALID",
     "desc": "The API method is invalid and cannot be used",
-    "affected": ["bots.sendCustomRequest"]
+    "affected": ["bots.SendCustomRequest"]
   },
   {
     "code": 400,
     "msg": "MIN_DATE_INVALID",
     "desc": "The specified minimum date is invalid.",
-    "affected": ["messages.deleteHistory"]
+    "affected": ["messages.DeleteHistory"]
   },
   {
     "code": 400,
     "msg": "MSG_ID_INVALID",
     "desc": "The message ID used in the peer was invalid",
     "affected": [
-      "channels.checkUsername",
-      "photos.getUserPhotos",
-      "channels.getSponsoredMessages",
-      "messages.sendVote",
-      "messages.getPollVotes",
-      "users.getUsers",
-      "users.getFullUser",
-      "account.updateNotifySettings",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.search",
-      "messages.readMentions",
-      "messages.readHistory",
-      "messages.getUnreadMentions",
-      "messages.getMessagesViews",
-      "messages.getHistory",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.deleteHistory",
-      "messages.readDiscussion",
-      "messages.getDiscussionMessage",
-      "contacts.blockFromReplies",
-      "messages.getReplies",
-      "messages.saveDraft",
-      "messages.setTyping",
-      "messages.getPeerSettings",
-      "messages.getPeerDialogs",
-      "contacts.unblock",
-      "contacts.block",
-      "contacts.addContact",
-      "contacts.acceptContact",
-      "messages.sendInlineBotResult",
-      "messages.getInlineBotResults",
-      "updates.getDifference",
-      "updates.getChannelDifference",
-      "stories.getPeerStories",
-      "messages.translateText",
-      "messages.reportReaction",
-      "messages.getMessageReactionsList",
-      "messages.sendReaction",
-      "messages.uploadMedia",
-      "upload.saveFilePart",
-      "upload.getFile",
-      "messages.startBot",
-      "messages.getCommonChats",
-      "messages.addChatUser",
-      "messages.getMessageReadParticipants",
-      "messages.hideChatJoinRequest",
-      "messages.importChatInvite",
-      "messages.exportChatInvite",
-      "channels.readMessageContents",
-      "channels.readHistory",
-      "channels.leaveChannel",
-      "channels.joinChannel",
-      "channels.inviteToChannel",
-      "channels.getParticipants",
-      "channels.getParticipant",
-      "channels.getMessages",
-      "channels.getFullChannel",
-      "channels.getChannels",
-      "channels.getAdminLog",
-      "channels.exportMessageLink",
-      "channels.editBanned",
-      "channels.deleteParticipantHistory",
-      "channels.deleteMessages",
-      "help.getConfig",
-      "messages.reportSpam",
-      "channels.reportSpam"
+      "channels.CheckUsername",
+      "photos.GetUserPhotos",
+      "channels.GetSponsoredMessages",
+      "messages.SendVote",
+      "messages.GetPollVotes",
+      "users.GetUsers",
+      "users.GetFullUser",
+      "account.UpdateNotifySettings",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.Search",
+      "messages.ReadMentions",
+      "messages.ReadHistory",
+      "messages.GetUnreadMentions",
+      "messages.GetMessagesViews",
+      "messages.GetHistory",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.DeleteHistory",
+      "messages.ReadDiscussion",
+      "messages.GetDiscussionMessage",
+      "contacts.BlockFromReplies",
+      "messages.GetReplies",
+      "messages.SaveDraft",
+      "messages.SetTyping",
+      "messages.GetPeerSettings",
+      "messages.GetPeerDialogs",
+      "contacts.Unblock",
+      "contacts.Block",
+      "contacts.AddContact",
+      "contacts.AcceptContact",
+      "messages.SendInlineBotResult",
+      "messages.GetInlineBotResults",
+      "updates.GetDifference",
+      "updates.GetChannelDifference",
+      "stories.GetPeerStories",
+      "messages.TranslateText",
+      "messages.ReportReaction",
+      "messages.GetMessageReactionsList",
+      "messages.SendReaction",
+      "messages.UploadMedia",
+      "upload.SaveFilePart",
+      "upload.GetFile",
+      "messages.StartBot",
+      "messages.GetCommonChats",
+      "messages.AddChatUser",
+      "messages.GetMessageReadParticipants",
+      "messages.HideChatJoinRequest",
+      "messages.ImportChatInvite",
+      "messages.ExportChatInvite",
+      "channels.ReadMessageContents",
+      "channels.ReadHistory",
+      "channels.LeaveChannel",
+      "channels.JoinChannel",
+      "channels.InviteToChannel",
+      "channels.GetParticipants",
+      "channels.GetParticipant",
+      "channels.GetMessages",
+      "channels.GetFullChannel",
+      "channels.GetChannels",
+      "channels.GetAdminLog",
+      "channels.ExportMessageLink",
+      "channels.EditBanned",
+      "channels.DeleteParticipantHistory",
+      "channels.DeleteMessages",
+      "help.GetConfig",
+      "messages.ReportSpam",
+      "channels.ReportSpam"
     ]
   },
   {
     "code": 400,
     "msg": "MSG_TOO_OLD",
     "desc": "chat_read_mark_expire_period seconds have passed since the message was sent, read receipts were deleted.",
-    "affected": ["messages.getMessageReadParticipants"]
+    "affected": ["messages.GetMessageReadParticipants"]
   },
   {
     "code": 400,
     "msg": "MSG_WAIT_FAILED",
     "desc": "A waiting call returned an error",
-    "affected": ["messages.sendEncryptedFile", "messages.readEncryptedHistory"]
+    "affected": ["messages.SendEncryptedFile", "messages.ReadEncryptedHistory"]
   },
   {
     "code": 400,
     "msg": "MULTI_MEDIA_TOO_LONG",
     "desc": "The album/media group contains too many items",
-    "affected": ["messages.sendMultiMedia"]
+    "affected": ["messages.SendMultiMedia"]
   },
   {
     "code": 400,
     "msg": "NEW_SALT_INVALID",
     "desc": "The new salt is invalid",
-    "affected": ["account.updatePasswordSettings"]
+    "affected": ["account.UpdatePasswordSettings"]
   },
   {
     "code": 400,
     "msg": "NEW_SETTINGS_EMPTY",
     "desc": "No password is set on the current account, and no new password was specified in new_settings.",
-    "affected": ["account.updatePasswordSettings"]
+    "affected": ["account.UpdatePasswordSettings"]
   },
   {
     "code": 400,
     "msg": "NEW_SETTINGS_INVALID",
     "desc": "The new settings are invalid",
-    "affected": ["account.updatePasswordSettings", "auth.recoverPassword"]
+    "affected": ["account.UpdatePasswordSettings", "auth.RecoverPassword"]
   },
   {
     "code": 400,
     "msg": "NEXT_OFFSET_INVALID",
     "desc": "The next offset value is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "OFFSET_INVALID",
     "desc": "The offset parameter is invalid",
-    "affected": ["upload.getFile"]
+    "affected": ["upload.GetFile"]
   },
   {
     "code": 400,
     "msg": "OFFSET_PEER_ID_INVALID",
     "desc": "The provided offset peer is invalid",
-    "affected": ["messages.getDialogs"]
+    "affected": ["messages.GetDialogs"]
   },
   {
     "code": 400,
     "msg": "OPTIONS_TOO_MUCH",
     "desc": "The poll options are too many",
-    "affected": ["messages.sendVote"]
+    "affected": ["messages.SendVote"]
   },
   {
     "code": 400,
     "msg": "OPTION_INVALID",
     "desc": "The option specified is invalid and does not exist in the target poll",
-    "affected": ["messages.sendVote"]
+    "affected": ["messages.SendVote"]
   },
   {
     "code": 400,
     "msg": "ORDER_INVALID",
     "desc": "The specified username order is invalid.",
-    "affected": ["account.reorderUsernames"]
+    "affected": ["account.ReorderUsernames"]
   },
   {
     "code": 400,
     "msg": "PACK_SHORT_NAME_INVALID",
     "desc": "Invalid sticker pack name. It must begin with a letter, can't contain consecutive underscores and must end in '_by_<bot username>'.",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "PACK_SHORT_NAME_OCCUPIED",
     "desc": "A sticker pack with this name already exists",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "PACK_TITLE_INVALID",
     "desc": "The sticker pack title is invalid",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "PARTICIPANTS_TOO_FEW",
     "desc": "The chat doesn't have enough participants",
     "affected": [
-      "channels.convertToGigagroup",
-      "channels.toggleParticipantsHidden",
-      "channels.setStickers"
+      "channels.ConvertToGigagroup",
+      "channels.ToggleParticipantsHidden",
+      "channels.SetStickers"
     ]
   },
   {
@@ -2241,82 +2241,82 @@
     "msg": "PARTICIPANT_ID_INVALID",
     "desc": "The specified participant ID is invalid.",
     "affected": [
-      "channels.getParticipant",
-      "channels.editBanned",
-      "channels.deleteParticipantHistory"
+      "channels.GetParticipant",
+      "channels.EditBanned",
+      "channels.DeleteParticipantHistory"
     ]
   },
   {
     "code": 400,
     "msg": "PARTICIPANT_JOIN_MISSING",
     "desc": "Trying to enable a presentation, when the user hasn't joined the Video Chat with phone.joinGroupCall.",
-    "affected": ["phone.editGroupCallParticipant"]
+    "affected": ["phone.EditGroupCallParticipant"]
   },
   {
     "code": 400,
     "msg": "PARTICIPANT_VERSION_OUTDATED",
     "desc": "The other participant is using an outdated Telegram app version",
-    "affected": ["phone.requestCall"]
+    "affected": ["phone.RequestCall"]
   },
   {
     "code": 400,
     "msg": "PASSWORD_EMPTY",
     "desc": "The password provided is empty",
-    "affected": ["auth.requestPasswordRecovery", "account.resetPassword"]
+    "affected": ["auth.RequestPasswordRecovery", "account.ResetPassword"]
   },
   {
     "code": 400,
     "msg": "PASSWORD_HASH_INVALID",
     "desc": "The two-step verification password is invalid",
     "affected": [
-      "account.getTmpPassword",
-      "channels.editCreator",
-      "account.updatePasswordSettings",
-      "account.getPasswordSettings",
-      "auth.checkPassword"
+      "account.GetTmpPassword",
+      "channels.EditCreator",
+      "account.UpdatePasswordSettings",
+      "account.GetPasswordSettings",
+      "auth.CheckPassword"
     ]
   },
   {
     "code": 400,
     "msg": "PASSWORD_MISSING",
     "desc": "The account is missing the two-step verification password",
-    "affected": ["channels.editCreator"]
+    "affected": ["channels.EditCreator"]
   },
   {
     "code": 400,
     "msg": "PASSWORD_RECOVERY_EXPIRED",
     "desc": "The recovery code has expired.",
-    "affected": ["auth.checkRecoveryPassword"]
+    "affected": ["auth.CheckRecoveryPassword"]
   },
   {
     "code": 400,
     "msg": "PASSWORD_RECOVERY_NA",
     "desc": "The password recovery e-mail is not available",
-    "affected": ["auth.requestPasswordRecovery"]
+    "affected": ["auth.RequestPasswordRecovery"]
   },
   {
     "code": 400,
     "msg": "PASSWORD_REQUIRED",
     "desc": "The two-step verification password is required for this method",
-    "affected": ["account.saveSecureValue"]
+    "affected": ["account.SaveSecureValue"]
   },
   {
     "code": 400,
     "msg": "PASSWORD_TOO_FRESH_X",
     "desc": "The two-step verification password was added recently and you are required to wait {value} seconds",
-    "affected": ["channels.editCreator"]
+    "affected": ["channels.EditCreator"]
   },
   {
     "code": 400,
     "msg": "PAYMENT_PROVIDER_INVALID",
     "desc": "The payment provider was not recognised or its token was invalid",
-    "affected": ["payments.exportInvoice", "messages.sendMedia"]
+    "affected": ["payments.ExportInvoice", "messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "PEERS_LIST_EMPTY",
     "desc": "The specified list of peers is empty.",
-    "affected": ["chatlists.exportChatlistInvite"]
+    "affected": ["chatlists.ExportChatlistInvite"]
   },
   {
     "code": 400,
@@ -2328,168 +2328,168 @@
     "code": 400,
     "msg": "PEER_HISTORY_EMPTY",
     "desc": "You can't pin an empty chat with a user.",
-    "affected": ["messages.toggleDialogPin"]
+    "affected": ["messages.ToggleDialogPin"]
   },
   {
     "code": 400,
     "msg": "PEER_ID_INVALID",
     "desc": "The peer id being used is invalid or not known yet. Make sure you meet the peer before interacting with it",
     "affected": [
-      "channels.checkUsername",
-      "messages.getScheduledMessages",
-      "messages.deleteScheduledMessages",
-      "messages.getScheduledHistory",
-      "messages.sendScheduledMessages",
-      "messages.sendVote",
-      "messages.getPollResults",
-      "account.updateNotifySettings",
-      "account.getNotifySettings",
-      "channels.getSendAs",
-      "messages.saveDefaultSendAs",
-      "messages.toggleNoForwards",
-      "messages.updatePinnedMessage",
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.search",
-      "messages.readMentions",
-      "messages.readHistory",
-      "messages.getUnreadMentions",
-      "messages.getSearchCounters",
-      "messages.getMessagesViews",
-      "messages.getMessageEditData",
-      "messages.getHistory",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.deleteHistory",
-      "messages.readDiscussion",
-      "messages.getDiscussionMessage",
-      "messages.getReplies",
-      "account.saveAutoSaveSettings",
-      "messages.checkHistoryImportPeer",
-      "phone.createGroupCall",
-      "phone.getGroupCallJoinAs",
-      "messages.setGameScore",
-      "messages.getGameHighScores",
-      "messages.saveDraft",
-      "messages.setTyping",
-      "messages.sendScreenshotNotification",
-      "messages.getOnlines",
-      "messages.getPeerSettings",
-      "messages.markDialogUnread",
-      "messages.reorderPinnedDialogs",
-      "messages.toggleDialogPin",
-      "messages.getPeerDialogs",
-      "contacts.unblock",
-      "contacts.resetTopPeerRating",
-      "contacts.block",
-      "bots.setBotCommands",
-      "messages.getBotCallbackAnswer",
-      "messages.sendInlineBotResult",
-      "messages.setChatWallPaper",
-      "messages.transcribeAudio",
-      "stories.sendReaction",
-      "stories.togglePeerStoriesHidden",
-      "stories.getPeerStories",
-      "stories.report",
-      "stories.exportStoryLink",
-      "stories.getStoriesViews",
-      "stories.getStoryReactionsList",
-      "stories.getStoryViewsList",
-      "stories.incrementStoryViews",
-      "stories.readStories",
-      "stories.getStoriesByID",
-      "stories.getStoriesArchive",
-      "stories.getPinnedStories",
-      "stories.togglePinned",
-      "stories.deleteStories",
-      "stories.editStory",
-      "stories.sendStory",
-      "stories.canSendStory",
-      "stickers.createStickerSet",
-      "stats.getStoryPublicForwards",
-      "stats.getStoryStats",
-      "stats.getMessageStats",
-      "stats.getMessagePublicForwards",
-      "messages.toggleSavedDialogPin",
-      "messages.deleteSavedHistory",
-      "messages.getSavedHistory",
-      "messages.requestWebView",
-      "messages.translateText",
-      "messages.setChatAvailableReactions",
-      "messages.readReactions",
-      "messages.sendReaction",
-      "payments.launchPrepaidGiveaway",
-      "payments.getGiveawayInfo",
-      "messages.uploadMedia",
-      "upload.getFile",
-      "messages.startBot",
-      "messages.setChatTheme",
-      "messages.migrateChat",
-      "messages.getFullChat",
-      "messages.deleteChat",
-      "messages.getChats",
-      "messages.editChatTitle",
-      "messages.editChatPhoto",
-      "messages.editChatDefaultBannedRights",
-      "messages.editChatAdmin",
-      "messages.editChatAbout",
-      "messages.deleteChatUser",
-      "messages.addChatUser",
-      "messages.getMessageReadParticipants",
-      "messages.hideAllChatJoinRequests",
-      "messages.hideChatJoinRequest",
-      "messages.importChatInvite",
-      "messages.getChatInviteImporters",
-      "messages.getAdminsWithInvites",
-      "messages.deleteExportedChatInvite",
-      "messages.deleteRevokedExportedChatInvites",
-      "messages.editExportedChatInvite",
-      "messages.getExportedChatInvites",
-      "messages.getExportedChatInvite",
-      "messages.exportChatInvite",
-      "channels.joinChannel",
-      "channels.editBanned",
-      "channels.editAdmin",
-      "premium.getUserBoosts",
-      "premium.getBoostsStatus",
-      "premium.applyBoost",
-      "premium.getBoostsList",
-      "messages.reportSpam",
-      "messages.report",
-      "account.reportProfilePhoto",
-      "account.reportPeer"
+      "channels.CheckUsername",
+      "messages.GetScheduledMessages",
+      "messages.DeleteScheduledMessages",
+      "messages.GetScheduledHistory",
+      "messages.SendScheduledMessages",
+      "messages.SendVote",
+      "messages.GetPollResults",
+      "account.UpdateNotifySettings",
+      "account.GetNotifySettings",
+      "channels.GetSendAs",
+      "messages.SaveDefaultSendAs",
+      "messages.ToggleNoForwards",
+      "messages.UpdatePinnedMessage",
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.Search",
+      "messages.ReadMentions",
+      "messages.ReadHistory",
+      "messages.GetUnreadMentions",
+      "messages.GetSearchCounters",
+      "messages.GetMessagesViews",
+      "messages.GetMessageEditData",
+      "messages.GetHistory",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.DeleteHistory",
+      "messages.ReadDiscussion",
+      "messages.GetDiscussionMessage",
+      "messages.GetReplies",
+      "account.SaveAutoSaveSettings",
+      "messages.CheckHistoryImportPeer",
+      "phone.CreateGroupCall",
+      "phone.GetGroupCallJoinAs",
+      "messages.SetGameScore",
+      "messages.GetGameHighScores",
+      "messages.SaveDraft",
+      "messages.SetTyping",
+      "messages.SendScreenshotNotification",
+      "messages.GetOnlines",
+      "messages.GetPeerSettings",
+      "messages.MarkDialogUnread",
+      "messages.ReorderPinnedDialogs",
+      "messages.ToggleDialogPin",
+      "messages.GetPeerDialogs",
+      "contacts.Unblock",
+      "contacts.ResetTopPeerRating",
+      "contacts.Block",
+      "bots.SetBotCommands",
+      "messages.GetBotCallbackAnswer",
+      "messages.SendInlineBotResult",
+      "messages.SetChatWallPaper",
+      "messages.TranscribeAudio",
+      "stories.SendReaction",
+      "stories.TogglePeerStoriesHidden",
+      "stories.GetPeerStories",
+      "stories.Report",
+      "stories.ExportStoryLink",
+      "stories.GetStoriesViews",
+      "stories.GetStoryReactionsList",
+      "stories.GetStoryViewsList",
+      "stories.IncrementStoryViews",
+      "stories.ReadStories",
+      "stories.GetStoriesByID",
+      "stories.GetStoriesArchive",
+      "stories.GetPinnedStories",
+      "stories.TogglePinned",
+      "stories.DeleteStories",
+      "stories.EditStory",
+      "stories.SendStory",
+      "stories.CanSendStory",
+      "stickers.CreateStickerSet",
+      "stats.GetStoryPublicForwards",
+      "stats.GetStoryStats",
+      "stats.GetMessageStats",
+      "stats.GetMessagePublicForwards",
+      "messages.ToggleSavedDialogPin",
+      "messages.DeleteSavedHistory",
+      "messages.GetSavedHistory",
+      "messages.RequestWebView",
+      "messages.TranslateText",
+      "messages.SetChatAvailableReactions",
+      "messages.ReadReactions",
+      "messages.SendReaction",
+      "payments.LaunchPrepaidGiveaway",
+      "payments.GetGiveawayInfo",
+      "messages.UploadMedia",
+      "upload.GetFile",
+      "messages.StartBot",
+      "messages.SetChatTheme",
+      "messages.MigrateChat",
+      "messages.GetFullChat",
+      "messages.DeleteChat",
+      "messages.GetChats",
+      "messages.EditChatTitle",
+      "messages.EditChatPhoto",
+      "messages.EditChatDefaultBannedRights",
+      "messages.EditChatAdmin",
+      "messages.EditChatAbout",
+      "messages.DeleteChatUser",
+      "messages.AddChatUser",
+      "messages.GetMessageReadParticipants",
+      "messages.HideAllChatJoinRequests",
+      "messages.HideChatJoinRequest",
+      "messages.ImportChatInvite",
+      "messages.GetChatInviteImporters",
+      "messages.GetAdminsWithInvites",
+      "messages.DeleteExportedChatInvite",
+      "messages.DeleteRevokedExportedChatInvites",
+      "messages.EditExportedChatInvite",
+      "messages.GetExportedChatInvites",
+      "messages.GetExportedChatInvite",
+      "messages.ExportChatInvite",
+      "channels.JoinChannel",
+      "channels.EditBanned",
+      "channels.EditAdmin",
+      "premium.GetUserBoosts",
+      "premium.GetBoostsStatus",
+      "premium.ApplyBoost",
+      "premium.GetBoostsList",
+      "messages.ReportSpam",
+      "messages.Report",
+      "account.ReportProfilePhoto",
+      "account.ReportPeer"
     ]
   },
   {
     "code": 400,
     "msg": "PEER_ID_NOT_SUPPORTED",
     "desc": "The provided peer id is not supported",
-    "affected": ["messages.search"]
+    "affected": ["messages.Search"]
   },
   {
     "code": 400,
     "msg": "PERSISTENT_TIMESTAMP_EMPTY",
     "desc": "The pts argument is empty",
-    "affected": ["updates.getDifference", "updates.getChannelDifference"]
+    "affected": ["updates.GetDifference", "updates.GetChannelDifference"]
   },
   {
     "code": 400,
     "msg": "PERSISTENT_TIMESTAMP_INVALID",
     "desc": "The persistent timestamp is invalid",
-    "affected": ["updates.getDifference", "updates.getChannelDifference"]
+    "affected": ["updates.GetDifference", "updates.GetChannelDifference"]
   },
   {
     "code": 400,
     "msg": "PHONE_CODE_EMPTY",
     "desc": "The phone code is missing",
     "affected": [
-      "account.confirmPhone",
-      "account.changePhone",
-      "account.verifyPhone",
-      "auth.signUp",
-      "auth.signIn",
-      "auth.resendCode"
+      "account.ConfirmPhone",
+      "account.ChangePhone",
+      "account.VerifyPhone",
+      "auth.SignUp",
+      "auth.SignIn",
+      "auth.ResendCode"
     ]
   },
   {
@@ -2497,113 +2497,113 @@
     "msg": "PHONE_CODE_EXPIRED",
     "desc": "The confirmation code has expired",
     "affected": [
-      "account.changePhone",
-      "account.verifyPhone",
-      "auth.signUp",
-      "auth.signIn",
-      "auth.resendCode",
-      "auth.cancelCode"
+      "account.ChangePhone",
+      "account.VerifyPhone",
+      "auth.SignUp",
+      "auth.SignIn",
+      "auth.ResendCode",
+      "auth.CancelCode"
     ]
   },
   {
     "code": 400,
     "msg": "PHONE_CODE_HASH_EMPTY",
     "desc": "The phone code hash is missing",
-    "affected": ["auth.resendCode"]
+    "affected": ["auth.ResendCode"]
   },
   {
     "code": 400,
     "msg": "PHONE_CODE_INVALID",
     "desc": "The confirmation code is invalid",
-    "affected": ["auth.signUp", "auth.signIn"]
+    "affected": ["auth.SignUp", "auth.SignIn"]
   },
   {
     "code": 400,
     "msg": "PHONE_HASH_EXPIRED",
     "desc": "An invalid or expired phone_code_hash was provided.",
-    "affected": ["account.sendVerifyEmailCode"]
+    "affected": ["account.SendVerifyEmailCode"]
   },
   {
     "code": 400,
     "msg": "PHONE_NOT_OCCUPIED",
     "desc": "No user is associated to the specified phone number.",
-    "affected": ["contacts.resolvePhone"]
+    "affected": ["contacts.ResolvePhone"]
   },
   {
     "code": 400,
     "msg": "PHONE_NUMBER_APP_SIGNUP_FORBIDDEN",
     "desc": "You can't sign up using this app",
-    "affected": ["auth.sendCode"]
+    "affected": ["auth.SendCode"]
   },
   {
     "code": 400,
     "msg": "PHONE_NUMBER_BANNED",
     "desc": "The phone number is banned from Telegram and cannot be used",
-    "affected": ["account.sendChangePhoneCode", "auth.sendCode"]
+    "affected": ["account.SendChangePhoneCode", "auth.SendCode"]
   },
   {
     "code": 400,
     "msg": "PHONE_NUMBER_FLOOD",
     "desc": "This number has tried to login too many times",
-    "affected": ["auth.signUp", "auth.sendCode"]
+    "affected": ["auth.SignUp", "auth.SendCode"]
   },
   {
     "code": 400,
     "msg": "PHONE_NUMBER_INVALID",
     "desc": "The phone number is invalid",
     "affected": [
-      "account.verifyPhone",
-      "account.sendVerifyPhoneCode",
-      "auth.requestFirebaseSms",
-      "auth.resetLoginEmail",
-      "account.sendVerifyEmailCode"
+      "account.VerifyPhone",
+      "account.SendVerifyPhoneCode",
+      "auth.RequestFirebaseSms",
+      "auth.ResetLoginEmail",
+      "account.SendVerifyEmailCode"
     ]
   },
   {
     "code": 400,
     "msg": "PHONE_NUMBER_OCCUPIED",
     "desc": "The phone number is already in use",
-    "affected": ["account.sendChangePhoneCode", "account.changePhone", "auth.signUp"]
+    "affected": ["account.SendChangePhoneCode", "account.ChangePhone", "auth.SignUp"]
   },
   {
     "code": 400,
     "msg": "PHONE_NUMBER_UNOCCUPIED",
     "desc": "The phone number is not yet being used",
-    "affected": ["auth.signIn"]
+    "affected": ["auth.SignIn"]
   },
   {
     "code": 400,
     "msg": "PHONE_PASSWORD_PROTECTED",
     "desc": "The phone is password protected",
-    "affected": ["auth.sendCode"]
+    "affected": ["auth.SendCode"]
   },
   {
     "code": 400,
     "msg": "PHOTO_CONTENT_TYPE_INVALID",
     "desc": "The photo content type is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "PHOTO_CONTENT_URL_EMPTY",
     "desc": "The photo content URL is empty",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "PHOTO_CROP_FILE_MISSING",
     "desc": "Photo crop file missing",
-    "affected": ["photos.uploadProfilePhoto"]
+    "affected": ["photos.UploadProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "PHOTO_CROP_SIZE_SMALL",
     "desc": "The photo is too small",
     "affected": [
-      "photos.uploadProfilePhoto",
-      "photos.updateProfilePhoto",
-      "messages.editChatPhoto",
-      "channels.editPhoto"
+      "photos.UploadProfilePhoto",
+      "photos.UpdateProfilePhoto",
+      "messages.EditChatPhoto",
+      "channels.EditPhoto"
     ]
   },
   {
@@ -2611,54 +2611,54 @@
     "msg": "PHOTO_EXT_INVALID",
     "desc": "The photo extension is invalid",
     "affected": [
-      "photos.uploadProfilePhoto",
-      "photos.updateProfilePhoto",
-      "messages.sendMedia",
-      "messages.uploadMedia",
-      "messages.editChatPhoto",
-      "channels.editPhoto"
+      "photos.UploadProfilePhoto",
+      "photos.UpdateProfilePhoto",
+      "messages.SendMedia",
+      "messages.UploadMedia",
+      "messages.EditChatPhoto",
+      "channels.EditPhoto"
     ]
   },
   {
     "code": 400,
     "msg": "PHOTO_FILE_MISSING",
     "desc": "Profile photo file missing",
-    "affected": ["photos.uploadProfilePhoto"]
+    "affected": ["photos.UploadProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "PHOTO_ID_INVALID",
     "desc": "The photo id is invalid",
-    "affected": ["photos.updateProfilePhoto"]
+    "affected": ["photos.UpdateProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "PHOTO_INVALID",
     "desc": "The photo is invalid",
     "affected": [
-      "photos.uploadProfilePhoto",
-      "messages.setInlineBotResults",
-      "messages.editChatPhoto",
-      "channels.editPhoto"
+      "photos.UploadProfilePhoto",
+      "messages.SetInlineBotResults",
+      "messages.EditChatPhoto",
+      "channels.EditPhoto"
     ]
   },
   {
     "code": 400,
     "msg": "PHOTO_INVALID_DIMENSIONS",
     "desc": "The photo dimensions are invalid",
-    "affected": ["messages.sendMedia", "messages.uploadMedia"]
+    "affected": ["messages.SendMedia", "messages.UploadMedia"]
   },
   {
     "code": 400,
     "msg": "PHOTO_SAVE_FILE_INVALID",
     "desc": "The photo you tried to send cannot be saved by Telegram",
-    "affected": ["messages.sendMedia", "messages.uploadMedia"]
+    "affected": ["messages.SendMedia", "messages.UploadMedia"]
   },
   {
     "code": 400,
     "msg": "PHOTO_THUMB_URL_EMPTY",
     "desc": "The photo thumb URL is empty",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
@@ -2670,43 +2670,43 @@
     "code": 400,
     "msg": "PINNED_DIALOGS_TOO_MUCH",
     "desc": "Too many pinned dialogs",
-    "affected": ["messages.sendMessage", "messages.toggleDialogPin", "updates.getChannelDifference"]
+    "affected": ["messages.SendMessage", "messages.ToggleDialogPin", "updates.GetChannelDifference"]
   },
   {
     "code": 400,
     "msg": "PIN_RESTRICTED",
     "desc": "You can't pin messages in private chats with other people",
-    "affected": ["messages.updatePinnedMessage"]
+    "affected": ["messages.UpdatePinnedMessage"]
   },
   {
     "code": 400,
     "msg": "POLL_ANSWERS_INVALID",
     "desc": "The poll answers are invalid",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "POLL_ANSWER_INVALID",
     "desc": "One of the poll answers is not acceptable.",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "POLL_OPTION_DUPLICATE",
     "desc": "A duplicate option was sent in the same poll",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "POLL_OPTION_INVALID",
     "desc": "A poll option used invalid data (the data may be too long)",
-    "affected": ["messages.sendMessage", "messages.sendMedia"]
+    "affected": ["messages.SendMessage", "messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "POLL_QUESTION_INVALID",
     "desc": "The poll question is invalid",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -2724,127 +2724,127 @@
     "code": 400,
     "msg": "PREMIUM_ACCOUNT_REQUIRED",
     "desc": "A premium account is required to execute this action.",
-    "affected": ["stories.sendStory", "stories.canSendStory"]
+    "affected": ["stories.SendStory", "stories.CanSendStory"]
   },
   {
     "code": 400,
     "msg": "PRIVACY_KEY_INVALID",
     "desc": "The privacy key is invalid",
-    "affected": ["account.setPrivacy", "account.getPrivacy"]
+    "affected": ["account.SetPrivacy", "account.GetPrivacy"]
   },
   {
     "code": 400,
     "msg": "PRIVACY_TOO_LONG",
     "desc": "Your privacy exception list has exceeded the maximum capacity",
-    "affected": ["account.setPrivacy"]
+    "affected": ["account.SetPrivacy"]
   },
   {
     "code": 400,
     "msg": "PRIVACY_VALUE_INVALID",
     "desc": "The privacy value is invalid",
-    "affected": ["account.setPrivacy"]
+    "affected": ["account.SetPrivacy"]
   },
   {
     "code": 400,
     "msg": "PUBLIC_KEY_REQUIRED",
     "desc": "A public key is required.",
-    "affected": ["account.getAuthorizationForm", "account.acceptAuthorization"]
+    "affected": ["account.GetAuthorizationForm", "account.AcceptAuthorization"]
   },
   {
     "code": 400,
     "msg": "QUERY_ID_EMPTY",
     "desc": "The query ID is empty",
-    "affected": ["messages.sendInlineBotResult"]
+    "affected": ["messages.SendInlineBotResult"]
   },
   {
     "code": 400,
     "msg": "QUERY_ID_INVALID",
     "desc": "The callback query id is invalid",
     "affected": [
-      "messages.setBotShippingResults",
-      "bots.answerWebhookJSONQuery",
-      "messages.setBotCallbackAnswer",
-      "messages.setInlineBotResults",
-      "messages.sendWebViewResultMessage"
+      "messages.SetBotShippingResults",
+      "bots.AnswerWebhookJSONQuery",
+      "messages.SetBotCallbackAnswer",
+      "messages.SetInlineBotResults",
+      "messages.SendWebViewResultMessage"
     ]
   },
   {
     "code": 400,
     "msg": "QUERY_TOO_SHORT",
     "desc": "The query is too short",
-    "affected": ["contacts.search"]
+    "affected": ["contacts.Search"]
   },
   {
     "code": 400,
     "msg": "QUIZ_ANSWER_MISSING",
     "desc": "You can forward a quiz while hiding the original author only after choosing an option in the quiz.",
-    "affected": ["messages.forwardMessages"]
+    "affected": ["messages.ForwardMessages"]
   },
   {
     "code": 400,
     "msg": "QUIZ_CORRECT_ANSWERS_EMPTY",
     "desc": "The correct answers of the quiz are empty",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "QUIZ_CORRECT_ANSWERS_TOO_MUCH",
     "desc": "The quiz contains too many correct answers",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "QUIZ_CORRECT_ANSWER_INVALID",
     "desc": "The correct answers of the quiz are invalid",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "QUIZ_MULTIPLE_INVALID",
     "desc": "A quiz can't have multiple answers",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "RANDOM_ID_EMPTY",
     "desc": "The random ID is empty",
-    "affected": ["messages.sendMultiMedia"]
+    "affected": ["messages.SendMultiMedia"]
   },
   {
     "code": 400,
     "msg": "RANDOM_ID_INVALID",
     "desc": "The provided random ID is invalid",
-    "affected": ["messages.forwardMessages"]
+    "affected": ["messages.ForwardMessages"]
   },
   {
     "code": 400,
     "msg": "RANDOM_LENGTH_INVALID",
     "desc": "The random length is invalid",
-    "affected": ["messages.getDhConfig"]
+    "affected": ["messages.GetDhConfig"]
   },
   {
     "code": 400,
     "msg": "RANGES_INVALID",
     "desc": "Invalid range provided",
-    "affected": ["updates.getChannelDifference"]
+    "affected": ["updates.GetChannelDifference"]
   },
   {
     "code": 400,
     "msg": "REACTIONS_TOO_MANY",
     "desc": "The message already has exactly reactions_uniq_max reaction emojis, you can't react with a new emoji, see the docs for more info ».",
-    "affected": ["messages.sendReaction"]
+    "affected": ["messages.SendReaction"]
   },
   {
     "code": 400,
     "msg": "REACTION_EMPTY",
     "desc": "The reaction provided is empty",
-    "affected": ["messages.sendReaction"]
+    "affected": ["messages.SendReaction"]
   },
   {
     "code": 400,
     "msg": "REACTION_INVALID",
     "desc": "Invalid reaction provided (only valid emoji are allowed)",
-    "affected": ["stories.sendReaction", "messages.sendReaction", "messages.setDefaultReaction"]
+    "affected": ["stories.SendReaction", "messages.SendReaction", "messages.SetDefaultReaction"]
   },
   {
     "code": 400,
@@ -2856,7 +2856,7 @@
     "code": 400,
     "msg": "REPLY_MARKUP_BUY_EMPTY",
     "desc": "Reply markup for buy button empty",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -2869,197 +2869,197 @@
     "msg": "REPLY_MARKUP_INVALID",
     "desc": "The provided reply markup is invalid",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.editMessage",
-      "messages.setInlineBotResults"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.EditMessage",
+      "messages.SetInlineBotResults"
     ]
   },
   {
     "code": 400,
     "msg": "REPLY_MARKUP_TOO_LONG",
     "desc": "The reply markup is too long",
-    "affected": ["messages.sendMessage", "messages.sendMedia", "messages.editMessage"]
+    "affected": ["messages.SendMessage", "messages.SendMedia", "messages.EditMessage"]
   },
   {
     "code": 400,
     "msg": "REPLY_MESSAGE_ID_INVALID",
     "desc": "The specified reply-to message ID is invalid.",
-    "affected": ["messages.sendScreenshotNotification"]
+    "affected": ["messages.SendScreenshotNotification"]
   },
   {
     "code": 400,
     "msg": "REPLY_TO_INVALID",
     "desc": "The specified replyTo field is invalid",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
     "msg": "REPLY_TO_USER_INVALID",
     "desc": "The specified replyTo user field is invalid",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
     "msg": "RESET_REQUEST_MISSING",
     "desc": "No password reset is in progress.",
-    "affected": ["account.declinePasswordReset"]
+    "affected": ["account.DeclinePasswordReset"]
   },
   {
     "code": 400,
     "msg": "RESULTS_TOO_MUCH",
     "desc": "The result contains too many items",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "RESULT_ID_DUPLICATE",
     "desc": "The result contains items with duplicated identifiers",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "RESULT_ID_EMPTY",
     "desc": "Result ID empty",
-    "affected": ["messages.sendInlineBotResult"]
+    "affected": ["messages.SendInlineBotResult"]
   },
   {
     "code": 400,
     "msg": "RESULT_ID_INVALID",
     "desc": "The given result cannot be used to send the selection to the bot",
-    "affected": ["messages.sendInlineBotResult", "messages.setInlineBotResults"]
+    "affected": ["messages.SendInlineBotResult", "messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "RESULT_TYPE_INVALID",
     "desc": "The result type is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "REVOTE_NOT_ALLOWED",
     "desc": "You cannot change your vote",
-    "affected": ["messages.sendVote"]
+    "affected": ["messages.SendVote"]
   },
   {
     "code": 400,
     "msg": "RIGHTS_NOT_MODIFIED",
     "desc": "The new admin rights are equal to the old rights, no change was made.",
-    "affected": ["bots.setBotGroupDefaultAdminRights", "bots.setBotBroadcastDefaultAdminRights"]
+    "affected": ["bots.SetBotGroupDefaultAdminRights", "bots.SetBotBroadcastDefaultAdminRights"]
   },
   {
     "code": 400,
     "msg": "RSA_DECRYPT_FAILED",
     "desc": "Internal RSA decryption failed",
-    "affected": ["upload.reuploadCdnFile", "upload.getCdnFileHashes"]
+    "affected": ["upload.ReuploadCdnFile", "upload.GetCdnFileHashes"]
   },
   {
     "code": 400,
     "msg": "SCHEDULE_BOT_NOT_ALLOWED",
     "desc": "Bots are not allowed to schedule messages",
-    "affected": ["messages.sendMessage", "messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMessage", "messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 400,
     "msg": "SCHEDULE_DATE_INVALID",
     "desc": "Invalid schedule date provided",
-    "affected": ["messages.editMessage", "phone.createGroupCall"]
+    "affected": ["messages.EditMessage", "phone.CreateGroupCall"]
   },
   {
     "code": 400,
     "msg": "SCHEDULE_DATE_TOO_LATE",
     "desc": "The date you tried to schedule is too far in the future (more than one year)",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
     "code": 400,
     "msg": "SCHEDULE_STATUS_PRIVATE",
     "desc": "You cannot schedule a message until the person comes online if their privacy does not show this information",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
     "msg": "SCHEDULE_TOO_MUCH",
     "desc": "You tried to schedule too many messages in this chat",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
     "code": 400,
     "msg": "SCORE_INVALID",
     "desc": "The specified game score is invalid.",
-    "affected": ["messages.setGameScore"]
+    "affected": ["messages.SetGameScore"]
   },
   {
     "code": 400,
     "msg": "SEARCH_QUERY_EMPTY",
     "desc": "The search query is empty",
-    "affected": ["messages.searchGlobal", "messages.search", "contacts.search"]
+    "affected": ["messages.SearchGlobal", "messages.Search", "contacts.Search"]
   },
   {
     "code": 400,
     "msg": "SEARCH_WITH_LINK_NOT_SUPPORTED",
     "desc": "You cannot provide a search query and an invite link at the same time.",
-    "affected": ["messages.getChatInviteImporters"]
+    "affected": ["messages.GetChatInviteImporters"]
   },
   {
     "code": 400,
     "msg": "SECONDS_INVALID",
     "desc": "The seconds interval is invalid",
-    "affected": ["channels.toggleSlowMode"]
+    "affected": ["channels.ToggleSlowMode"]
   },
   {
     "code": 400,
     "msg": "SEND_AS_PEER_INVALID",
     "desc": "You can't send messages as the specified peer.",
     "affected": [
-      "messages.saveDefaultSendAs",
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages"
+      "messages.SaveDefaultSendAs",
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages"
     ]
   },
   {
     "code": 400,
     "msg": "SEND_MESSAGE_MEDIA_INVALID",
     "desc": "The message media is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "SEND_MESSAGE_TYPE_INVALID",
     "desc": "The message type is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "SESSION_TOO_FRESH_X",
     "desc": "You can't do this action because the current session was logged-in recently",
-    "affected": ["channels.editCreator"]
+    "affected": ["channels.EditCreator"]
   },
   {
     "code": 400,
     "msg": "SETTINGS_INVALID",
     "desc": "Invalid settings were provided",
-    "affected": ["account.updateNotifySettings"]
+    "affected": ["account.UpdateNotifySettings"]
   },
   {
     "code": 400,
     "msg": "SHA256_HASH_INVALID",
     "desc": "The provided SHA256 hash is invalid",
-    "affected": ["messages.getDocumentByHash"]
+    "affected": ["messages.GetDocumentByHash"]
   },
   {
     "code": 400,
@@ -3071,218 +3071,218 @@
     "code": 400,
     "msg": "SHORT_NAME_INVALID",
     "desc": "The specified short name is invalid.",
-    "affected": ["stickers.checkShortName"]
+    "affected": ["stickers.CheckShortName"]
   },
   {
     "code": 400,
     "msg": "SHORT_NAME_OCCUPIED",
     "desc": "The specified short name is already in use.",
-    "affected": ["stickers.checkShortName"]
+    "affected": ["stickers.CheckShortName"]
   },
   {
     "code": 400,
     "msg": "SLOTS_EMPTY",
     "desc": "The specified slot list is empty.",
-    "affected": ["premium.applyBoost"]
+    "affected": ["premium.ApplyBoost"]
   },
   {
     "code": 400,
     "msg": "SLOWMODE_MULTI_MSGS_DISABLED",
     "desc": "Slowmode is enabled, you cannot forward multiple messages to this group",
-    "affected": ["messages.forwardMessages"]
+    "affected": ["messages.ForwardMessages"]
   },
   {
     "code": 400,
     "msg": "SLUG_INVALID",
     "desc": "The specified invoice slug is invalid.",
-    "affected": ["payments.getPaymentForm"]
+    "affected": ["payments.GetPaymentForm"]
   },
   {
     "code": 400,
     "msg": "SMS_CODE_CREATE_FAILED",
     "desc": "An error occurred while creating the SMS code",
-    "affected": ["auth.sendCode"]
+    "affected": ["auth.SendCode"]
   },
   {
     "code": 400,
     "msg": "SRP_ID_INVALID",
     "desc": "Invalid SRP ID provided",
-    "affected": ["channels.editCreator", "account.updatePasswordSettings", "auth.checkPassword"]
+    "affected": ["channels.EditCreator", "account.UpdatePasswordSettings", "auth.CheckPassword"]
   },
   {
     "code": 400,
     "msg": "SRP_PASSWORD_CHANGED",
     "desc": "The password has changed",
-    "affected": ["account.updatePasswordSettings", "auth.checkPassword"]
+    "affected": ["account.UpdatePasswordSettings", "auth.CheckPassword"]
   },
   {
     "code": 400,
     "msg": "START_PARAM_EMPTY",
     "desc": "The start parameter is empty",
-    "affected": ["messages.setInlineBotResults", "messages.startBot"]
+    "affected": ["messages.SetInlineBotResults", "messages.StartBot"]
   },
   {
     "code": 400,
     "msg": "START_PARAM_INVALID",
     "desc": "The start parameter is invalid",
-    "affected": ["messages.setInlineBotResults", "messages.startBot"]
+    "affected": ["messages.SetInlineBotResults", "messages.StartBot"]
   },
   {
     "code": 400,
     "msg": "START_PARAM_TOO_LONG",
     "desc": "The start parameter is too long",
-    "affected": ["messages.startBot"]
+    "affected": ["messages.StartBot"]
   },
   {
     "code": 400,
     "msg": "STICKERPACK_STICKERS_TOO_MUCH",
     "desc": "There are too many stickers in this stickerpack, you can't add any more.",
-    "affected": ["stickers.addStickerToSet"]
+    "affected": ["stickers.AddStickerToSet"]
   },
   {
     "code": 400,
     "msg": "STICKERSET_INVALID",
     "desc": "The requested sticker set is invalid",
     "affected": [
-      "stickers.deleteStickerSet",
-      "stickers.renameStickerSet",
-      "stickers.setStickerSetThumb"
+      "stickers.DeleteStickerSet",
+      "stickers.RenameStickerSet",
+      "stickers.SetStickerSetThumb"
     ]
   },
   {
     "code": 400,
     "msg": "STICKERS_EMPTY",
     "desc": "The sticker provided is empty",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKERS_TOO_MUCH",
     "desc": "There are too many stickers in this stickerpack, you can't add any more.",
-    "affected": ["stickers.addStickerToSet"]
+    "affected": ["stickers.AddStickerToSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_DOCUMENT_INVALID",
     "desc": "The sticker document is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "STICKER_EMOJI_INVALID",
     "desc": "The sticker emoji is invalid",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_FILE_INVALID",
     "desc": "The sticker file is invalid",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_GIF_DIMENSIONS",
     "desc": "The specified video sticker has invalid dimensions.",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_ID_INVALID",
     "desc": "The provided sticker id is invalid",
-    "affected": ["messages.saveRecentSticker", "messages.faveSticker"]
+    "affected": ["messages.SaveRecentSticker", "messages.FaveSticker"]
   },
   {
     "code": 400,
     "msg": "STICKER_INVALID",
     "desc": "The provided sticker is invalid",
     "affected": [
-      "stickers.removeStickerFromSet",
-      "stickers.changeSticker",
-      "stickers.changeStickerPosition"
+      "stickers.RemoveStickerFromSet",
+      "stickers.ChangeSticker",
+      "stickers.ChangeStickerPosition"
     ]
   },
   {
     "code": 400,
     "msg": "STICKER_MIME_INVALID",
     "desc": "The specified sticker MIME type is invalid.",
-    "affected": ["photos.uploadProfilePhoto", "channels.editPhoto"]
+    "affected": ["photos.UploadProfilePhoto", "channels.EditPhoto"]
   },
   {
     "code": 400,
     "msg": "STICKER_PNG_DIMENSIONS",
     "desc": "The sticker png dimensions are invalid",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_PNG_NOPNG",
     "desc": "Stickers must be png files but the provided image was not a png",
-    "affected": ["stickers.createStickerSet", "stickers.addStickerToSet"]
+    "affected": ["stickers.CreateStickerSet", "stickers.AddStickerToSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_TGS_NODOC",
     "desc": "You must send the animated sticker as a document.",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_TGS_NOTGS",
     "desc": "A tgs sticker file was expected, but something else was provided",
-    "affected": ["stickers.createStickerSet", "stickers.addStickerToSet"]
+    "affected": ["stickers.CreateStickerSet", "stickers.AddStickerToSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_THUMB_PNG_NOPNG",
     "desc": "A png sticker thumbnail file was expected, but something else was provided",
-    "affected": ["stickers.createStickerSet", "stickers.setStickerSetThumb"]
+    "affected": ["stickers.CreateStickerSet", "stickers.SetStickerSetThumb"]
   },
   {
     "code": 400,
     "msg": "STICKER_THUMB_TGS_NOTGS",
     "desc": "Incorrect stickerset TGS thumb file provided.",
-    "affected": ["stickers.createStickerSet", "stickers.setStickerSetThumb"]
+    "affected": ["stickers.CreateStickerSet", "stickers.SetStickerSetThumb"]
   },
   {
     "code": 400,
     "msg": "STICKER_VIDEO_BIG",
     "desc": "The specified video sticker is too big.",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_VIDEO_NODOC",
     "desc": "You must send the video sticker as a document.",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STICKER_VIDEO_NOWEBM",
     "desc": "The specified video sticker is not in webm format.",
-    "affected": ["stickers.createStickerSet"]
+    "affected": ["stickers.CreateStickerSet"]
   },
   {
     "code": 400,
     "msg": "STORIES_NEVER_CREATED",
     "desc": "",
-    "affected": ["stories.readStories", "stories.getStoriesByID"]
+    "affected": ["stories.ReadStories", "stories.GetStoriesByID"]
   },
   {
     "code": 400,
     "msg": "STORIES_TOO_MUCH",
     "desc": "You have hit the maximum active stories limit as specified by the story_expiring_limit_* client configuration parameters: you should buy a Premium subscription, delete an active story, or wait for the oldest story to expire.",
-    "affected": ["stories.sendStory", "stories.canSendStory"]
+    "affected": ["stories.SendStory", "stories.CanSendStory"]
   },
   {
     "code": 400,
     "msg": "STORY_ID_EMPTY",
     "desc": "You specified no story IDs.",
     "affected": [
-      "stories.sendReaction",
-      "stories.exportStoryLink",
-      "stories.getStoriesViews",
-      "stories.incrementStoryViews",
-      "stories.getStoriesByID"
+      "stories.SendReaction",
+      "stories.ExportStoryLink",
+      "stories.GetStoriesViews",
+      "stories.IncrementStoryViews",
+      "stories.GetStoriesByID"
     ]
   },
   {
@@ -3290,46 +3290,46 @@
     "msg": "STORY_ID_INVALID",
     "desc": "",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendScreenshotNotification",
-      "stories.getStoryViewsList"
+      "messages.SendMessage",
+      "messages.SendScreenshotNotification",
+      "stories.GetStoryViewsList"
     ]
   },
   {
     "code": 400,
     "msg": "STORY_NOT_MODIFIED",
     "desc": "The new story information you passed is equal to the previous story information, thus it wasn't modified.",
-    "affected": ["stories.editStory"]
+    "affected": ["stories.EditStory"]
   },
   {
     "code": 400,
     "msg": "STORY_PERIOD_INVALID",
     "desc": "The specified story period is invalid for this account.",
-    "affected": ["stories.sendStory"]
+    "affected": ["stories.SendStory"]
   },
   {
     "code": 400,
     "msg": "STORY_SEND_FLOOD_MONTHLY_X",
     "desc": "You've hit the monthly story limit as specified by the stories_sent_monthly_limit_* client configuration parameters: wait for the specified number of seconds before posting a new story.",
-    "affected": ["stories.canSendStory"]
+    "affected": ["stories.CanSendStory"]
   },
   {
     "code": 400,
     "msg": "STORY_SEND_FLOOD_WEEKLY_X",
     "desc": "You've hit the weekly story limit as specified by the stories_sent_weekly_limit_* client configuration parameters: wait for the specified number of seconds before posting a new story.",
-    "affected": ["stories.canSendStory"]
+    "affected": ["stories.CanSendStory"]
   },
   {
     "code": 400,
     "msg": "SWITCH_PM_TEXT_EMPTY",
     "desc": "The switch_pm.text field was empty.",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "TAKEOUT_INVALID",
     "desc": "The takeout id is invalid",
-    "affected": ["messages.getHistory"]
+    "affected": ["messages.GetHistory"]
   },
   {
     "code": 400,
@@ -3341,61 +3341,61 @@
     "code": 400,
     "msg": "TASK_ALREADY_EXISTS",
     "desc": "An email reset was already requested.",
-    "affected": ["auth.resetLoginEmail"]
+    "affected": ["auth.ResetLoginEmail"]
   },
   {
     "code": 400,
     "msg": "TEMP_AUTH_KEY_ALREADY_BOUND",
     "desc": "The passed temporary key is already bound to another perm_auth_key_id.",
-    "affected": ["auth.bindTempAuthKey"]
+    "affected": ["auth.BindTempAuthKey"]
   },
   {
     "code": 400,
     "msg": "TEMP_AUTH_KEY_EMPTY",
     "desc": "The temporary auth key provided is empty",
-    "affected": ["auth.bindTempAuthKey"]
+    "affected": ["auth.BindTempAuthKey"]
   },
   {
     "code": 400,
     "msg": "THEME_FILE_INVALID",
     "desc": "Invalid theme file provided",
-    "affected": ["account.uploadTheme"]
+    "affected": ["account.UploadTheme"]
   },
   {
     "code": 400,
     "msg": "THEME_FORMAT_INVALID",
     "desc": "Invalid theme format provided",
-    "affected": ["account.getTheme"]
+    "affected": ["account.GetTheme"]
   },
   {
     "code": 400,
     "msg": "THEME_INVALID",
     "desc": "Invalid theme provided",
-    "affected": ["account.getTheme", "account.updateTheme"]
+    "affected": ["account.GetTheme", "account.UpdateTheme"]
   },
   {
     "code": 400,
     "msg": "THEME_MIME_INVALID",
     "desc": "You cannot create this theme because the mime-type is invalid",
-    "affected": ["account.createTheme"]
+    "affected": ["account.CreateTheme"]
   },
   {
     "code": 400,
     "msg": "THEME_TITLE_INVALID",
     "desc": "The specified theme title is invalid.",
-    "affected": ["account.createTheme"]
+    "affected": ["account.CreateTheme"]
   },
   {
     "code": 400,
     "msg": "TITLE_INVALID",
     "desc": "The specified stickerpack title is invalid.",
-    "affected": ["stickers.suggestShortName"]
+    "affected": ["stickers.SuggestShortName"]
   },
   {
     "code": 400,
     "msg": "TMP_PASSWORD_DISABLED",
     "desc": "The temporary password is disabled",
-    "affected": ["account.getTmpPassword"]
+    "affected": ["account.GetTmpPassword"]
   },
   {
     "code": 400,
@@ -3407,114 +3407,114 @@
     "code": 400,
     "msg": "TOKEN_EMPTY",
     "desc": "The specified token is empty.",
-    "affected": ["account.registerDevice"]
+    "affected": ["account.RegisterDevice"]
   },
   {
     "code": 400,
     "msg": "TOKEN_INVALID",
     "desc": "The provided token is invalid",
-    "affected": ["account.unregisterDevice", "account.registerDevice"]
+    "affected": ["account.UnregisterDevice", "account.RegisterDevice"]
   },
   {
     "code": 400,
     "msg": "TOKEN_TYPE_INVALID",
     "desc": "The specified token type is invalid.",
-    "affected": ["account.registerDevice"]
+    "affected": ["account.RegisterDevice"]
   },
   {
     "code": 400,
     "msg": "TOPICS_EMPTY",
     "desc": "You specified no topic IDs.",
-    "affected": ["channels.getForumTopicsByID"]
+    "affected": ["channels.GetForumTopicsByID"]
   },
   {
     "code": 400,
     "msg": "TOPIC_CLOSED",
     "desc": "This topic was closed, you can't send messages to it anymore.",
-    "affected": ["messages.sendMultiMedia"]
+    "affected": ["messages.SendMultiMedia"]
   },
   {
     "code": 400,
     "msg": "TOPIC_CLOSE_SEPARATELY",
     "desc": "The close flag cannot be provided together with any of the other flags.",
-    "affected": ["channels.editForumTopic"]
+    "affected": ["channels.EditForumTopic"]
   },
   {
     "code": 400,
     "msg": "TOPIC_DELETED",
     "desc": "The specified topic was deleted.",
-    "affected": ["messages.sendMultiMedia", "messages.sendInlineBotResult"]
+    "affected": ["messages.SendMultiMedia", "messages.SendInlineBotResult"]
   },
   {
     "code": 400,
     "msg": "TOPIC_HIDE_SEPARATELY",
     "desc": "The hide flag cannot be provided together with any of the other flags.",
-    "affected": ["channels.editForumTopic"]
+    "affected": ["channels.EditForumTopic"]
   },
   {
     "code": 400,
     "msg": "TOPIC_ID_INVALID",
     "desc": "The specified topic ID is invalid.",
     "affected": [
-      "messages.getDiscussionMessage",
-      "messages.getReplies",
-      "channels.deleteTopicHistory",
-      "channels.updatePinnedForumTopic",
-      "channels.editForumTopic"
+      "messages.GetDiscussionMessage",
+      "messages.GetReplies",
+      "channels.DeleteTopicHistory",
+      "channels.UpdatePinnedForumTopic",
+      "channels.EditForumTopic"
     ]
   },
   {
     "code": 400,
     "msg": "TOPIC_NOT_MODIFIED",
     "desc": "The updated topic info is equal to the current topic info, nothing was changed.",
-    "affected": ["channels.editForumTopic"]
+    "affected": ["channels.EditForumTopic"]
   },
   {
     "code": 400,
     "msg": "TOPIC_TITLE_EMPTY",
     "desc": "The specified topic title is empty.",
-    "affected": ["channels.createForumTopic"]
+    "affected": ["channels.CreateForumTopic"]
   },
   {
     "code": 400,
     "msg": "TO_LANG_INVALID",
     "desc": "The specified destination language is invalid.",
-    "affected": ["messages.translateText"]
+    "affected": ["messages.TranslateText"]
   },
   {
     "code": 400,
     "msg": "TRANSCRIPTION_FAILED",
     "desc": "Audio transcription failed.",
-    "affected": ["messages.transcribeAudio"]
+    "affected": ["messages.TranscribeAudio"]
   },
   {
     "code": 400,
     "msg": "TTL_DAYS_INVALID",
     "desc": "The provided TTL days is invalid",
-    "affected": ["account.setAccountTTL", "account.setAuthorizationTTL"]
+    "affected": ["account.SetAccountTTL", "account.SetAuthorizationTTL"]
   },
   {
     "code": 400,
     "msg": "TTL_MEDIA_INVALID",
     "desc": "The media does not support self-destruction",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "TTL_PERIOD_INVALID",
     "desc": "The specified TTL period is invalid.",
     "affected": [
-      "messages.setDefaultHistoryTTL",
-      "messages.setHistoryTTL",
-      "messages.createChat",
-      "channels.createChannel"
+      "messages.SetDefaultHistoryTTL",
+      "messages.SetHistoryTTL",
+      "messages.CreateChat",
+      "channels.CreateChannel"
     ]
   },
   {
     "code": 400,
     "msg": "TYPES_EMPTY",
     "desc": "The types parameter is empty",
-    "affected": ["contacts.getTopPeers"]
+    "affected": ["contacts.GetTopPeers"]
   },
   {
     "code": 400,
@@ -3526,64 +3526,64 @@
     "code": 400,
     "msg": "UNTIL_DATE_INVALID",
     "desc": "That date parameter is invalid",
-    "affected": ["payments.getPaymentForm", "messages.editChatDefaultBannedRights"]
+    "affected": ["payments.GetPaymentForm", "messages.EditChatDefaultBannedRights"]
   },
   {
     "code": 400,
     "msg": "URL_INVALID",
     "desc": "The URL provided is invalid",
-    "affected": ["messages.setBotCallbackAnswer", "messages.setInlineBotResults"]
+    "affected": ["messages.SetBotCallbackAnswer", "messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "USAGE_LIMIT_INVALID",
     "desc": "The usage limit is invalid",
-    "affected": ["messages.editExportedChatInvite", "messages.exportChatInvite"]
+    "affected": ["messages.EditExportedChatInvite", "messages.ExportChatInvite"]
   },
   {
     "code": 400,
     "msg": "USERNAMES_ACTIVE_TOO_MUCH",
     "desc": "The maximum number of active usernames was reached.",
-    "affected": ["channels.toggleUsername", "account.toggleUsername"]
+    "affected": ["channels.ToggleUsername", "account.ToggleUsername"]
   },
   {
     "code": 400,
     "msg": "USERNAME_INVALID",
     "desc": "The username is invalid",
     "affected": [
-      "contacts.resolveUsername",
-      "account.checkUsername",
-      "account.updateUsername",
-      "channels.updateUsername",
-      "channels.checkUsername",
-      "updates.getDifference",
-      "channels.toggleUsername",
-      "account.toggleUsername",
-      "help.getConfig"
+      "contacts.ResolveUsername",
+      "account.CheckUsername",
+      "account.UpdateUsername",
+      "channels.UpdateUsername",
+      "channels.CheckUsername",
+      "updates.GetDifference",
+      "channels.ToggleUsername",
+      "account.ToggleUsername",
+      "help.GetConfig"
     ]
   },
   {
     "code": 400,
     "msg": "USERNAME_NOT_MODIFIED",
     "desc": "The username was not modified because you tried to edit it using the same one",
-    "affected": ["account.updateUsername", "channels.updateUsername"]
+    "affected": ["account.UpdateUsername", "channels.UpdateUsername"]
   },
   {
     "code": 400,
     "msg": "USERNAME_NOT_OCCUPIED",
     "desc": "The username is not occupied by anyone",
-    "affected": ["contacts.resolveUsername"]
+    "affected": ["contacts.ResolveUsername"]
   },
   {
     "code": 400,
     "msg": "USERNAME_OCCUPIED",
     "desc": "The username is already in use by someone else",
     "affected": [
-      "account.checkUsername",
-      "account.updateUsername",
-      "channels.updateUsername",
-      "channels.checkUsername",
-      "users.getFullUser"
+      "account.CheckUsername",
+      "account.UpdateUsername",
+      "channels.UpdateUsername",
+      "channels.CheckUsername",
+      "users.GetFullUser"
     ]
   },
   {
@@ -3591,10 +3591,10 @@
     "msg": "USERNAME_PURCHASE_AVAILABLE",
     "desc": "The specified username can be purchased on https://fragment.com.",
     "affected": [
-      "account.checkUsername",
-      "account.updateUsername",
-      "channels.updateUsername",
-      "channels.checkUsername"
+      "account.CheckUsername",
+      "account.UpdateUsername",
+      "channels.UpdateUsername",
+      "channels.CheckUsername"
     ]
   },
   {
@@ -3607,41 +3607,41 @@
     "code": 400,
     "msg": "USERS_TOO_FEW",
     "desc": "Not enough users (to create a chat, for example)",
-    "affected": ["messages.createChat"]
+    "affected": ["messages.CreateChat"]
   },
   {
     "code": 400,
     "msg": "USERS_TOO_MUCH",
     "desc": "The maximum number of users has been exceeded (to create a chat, for example)",
     "affected": [
-      "messages.addChatUser",
-      "messages.importChatInvite",
-      "channels.joinChannel",
-      "channels.inviteToChannel",
-      "channels.editAdmin"
+      "messages.AddChatUser",
+      "messages.ImportChatInvite",
+      "channels.JoinChannel",
+      "channels.InviteToChannel",
+      "channels.EditAdmin"
     ]
   },
   {
     "code": 400,
     "msg": "USER_ADMIN_INVALID",
     "desc": "The action requires admin privileges. Probably you tried to edit admin privileges on someone you don't have rights to",
-    "affected": ["channels.editBanned"]
+    "affected": ["channels.EditBanned"]
   },
   {
     "code": 400,
     "msg": "USER_ALREADY_INVITED",
     "desc": "You have already invited this user.",
-    "affected": ["phone.inviteToGroupCall"]
+    "affected": ["phone.InviteToGroupCall"]
   },
   {
     "code": 400,
     "msg": "USER_ALREADY_PARTICIPANT",
     "desc": "The user is already a participant of this chat",
     "affected": [
-      "messages.addChatUser",
-      "messages.hideChatJoinRequest",
-      "messages.importChatInvite",
-      "channels.joinChannel"
+      "messages.AddChatUser",
+      "messages.HideChatJoinRequest",
+      "messages.ImportChatInvite",
+      "channels.JoinChannel"
     ]
   },
   {
@@ -3649,56 +3649,56 @@
     "msg": "USER_BANNED_IN_CHANNEL",
     "desc": "You are limited from sending messages in supergroups/channels, check @SpamBot for details",
     "affected": [
-      "users.getUsers",
-      "messages.updatePinnedMessage",
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.setTyping",
-      "messages.sendInlineBotResult",
-      "updates.getChannelDifference",
-      "messages.sendReaction",
-      "messages.uploadMedia",
-      "channels.leaveChannel",
-      "channels.inviteToChannel",
-      "channels.getMessages",
-      "channels.getChannels"
+      "users.GetUsers",
+      "messages.UpdatePinnedMessage",
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.SetTyping",
+      "messages.SendInlineBotResult",
+      "updates.GetChannelDifference",
+      "messages.SendReaction",
+      "messages.UploadMedia",
+      "channels.LeaveChannel",
+      "channels.InviteToChannel",
+      "channels.GetMessages",
+      "channels.GetChannels"
     ]
   },
   {
     "code": 400,
     "msg": "USER_BLOCKED",
     "desc": "The user is blocked",
-    "affected": ["channels.inviteToChannel", "channels.editAdmin"]
+    "affected": ["channels.InviteToChannel", "channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "USER_BOT",
     "desc": "Bots in channels can only be administrators, not members.",
-    "affected": ["channels.inviteToChannel"]
+    "affected": ["channels.InviteToChannel"]
   },
   {
     "code": 400,
     "msg": "USER_BOT_INVALID",
     "desc": "This method can only be used by a bot",
-    "affected": ["bots.getBotInfo", "bots.setBotInfo", "bots.getBotCommands"]
+    "affected": ["bots.GetBotInfo", "bots.SetBotInfo", "bots.GetBotCommands"]
   },
   {
     "code": 400,
     "msg": "USER_BOT_REQUIRED",
     "desc": "The method can be used by bots only",
     "affected": [
-      "bots.getBotMenuButton",
-      "messages.setInlineGameScore",
-      "messages.setGameScore",
-      "messages.getInlineGameHighScores",
-      "messages.getGameHighScores",
-      "bots.setBotCommands",
-      "messages.setBotCallbackAnswer",
-      "bots.setBotGroupDefaultAdminRights",
-      "users.setSecureValueErrors"
+      "bots.GetBotMenuButton",
+      "messages.SetInlineGameScore",
+      "messages.SetGameScore",
+      "messages.GetInlineGameHighScores",
+      "messages.GetGameHighScores",
+      "bots.SetBotCommands",
+      "messages.SetBotCallbackAnswer",
+      "bots.SetBotGroupDefaultAdminRights",
+      "users.SetSecureValueErrors"
     ]
   },
   {
@@ -3706,45 +3706,45 @@
     "msg": "USER_CHANNELS_TOO_MUCH",
     "desc": "The user is already in too many channels or supergroups",
     "affected": [
-      "messages.hideAllChatJoinRequests",
-      "messages.importChatInvite",
-      "channels.joinChannel"
+      "messages.HideAllChatJoinRequests",
+      "messages.ImportChatInvite",
+      "channels.JoinChannel"
     ]
   },
   {
     "code": 400,
     "msg": "USER_CREATOR",
     "desc": "You can't leave this channel because you're its creator",
-    "affected": ["channels.leaveChannel", "channels.editAdmin"]
+    "affected": ["channels.LeaveChannel", "channels.EditAdmin"]
   },
   {
     "code": 400,
     "msg": "USER_ID_INVALID",
     "desc": "The user id being used is invalid or not known yet. Make sure you meet the user before interacting with it",
     "affected": [
-      "photos.uploadContactProfilePhoto",
-      "photos.getUserPhotos",
-      "users.getFullUser",
-      "messages.search",
-      "bots.setBotCommands",
-      "users.setSecureValueErrors",
-      "stories.getPinnedStories",
-      "stickers.createStickerSet",
-      "messages.requestEncryption",
-      "messages.reportReaction",
-      "messages.getCommonChats",
-      "messages.editChatAdmin",
-      "messages.deleteChatUser",
-      "messages.addChatUser",
-      "messages.hideChatJoinRequest",
-      "channels.inviteToChannel",
-      "channels.getParticipant",
-      "channels.editCreator",
-      "channels.editBanned",
-      "channels.editAdmin",
-      "phone.requestCall",
-      "auth.importAuthorization",
-      "channels.reportSpam"
+      "photos.UploadContactProfilePhoto",
+      "photos.GetUserPhotos",
+      "users.GetFullUser",
+      "messages.Search",
+      "bots.SetBotCommands",
+      "users.SetSecureValueErrors",
+      "stories.GetPinnedStories",
+      "stickers.CreateStickerSet",
+      "messages.RequestEncryption",
+      "messages.ReportReaction",
+      "messages.GetCommonChats",
+      "messages.EditChatAdmin",
+      "messages.DeleteChatUser",
+      "messages.AddChatUser",
+      "messages.HideChatJoinRequest",
+      "channels.InviteToChannel",
+      "channels.GetParticipant",
+      "channels.EditCreator",
+      "channels.EditBanned",
+      "channels.EditAdmin",
+      "phone.RequestCall",
+      "auth.ImportAuthorization",
+      "channels.ReportSpam"
     ]
   },
   { "code": 400, "msg": "USER_INVALID", "desc": "The provided user is invalid", "affected": [] },
@@ -3752,79 +3752,79 @@
     "code": 400,
     "msg": "USER_IS_BLOCKED",
     "desc": "The user blocked you",
-    "affected": ["messages.addChatUser"]
+    "affected": ["messages.AddChatUser"]
   },
   {
     "code": 400,
     "msg": "USER_IS_BOT",
     "desc": "A bot cannot send messages to other bots or to itself",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.setTyping"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SetTyping"
     ]
   },
   {
     "code": 400,
     "msg": "USER_KICKED",
     "desc": "This user was kicked from this chat",
-    "affected": ["channels.inviteToChannel"]
+    "affected": ["channels.InviteToChannel"]
   },
   {
     "code": 400,
     "msg": "USER_NOT_MUTUAL_CONTACT",
     "desc": "The user is not a mutual contact",
-    "affected": ["messages.checkHistoryImportPeer"]
+    "affected": ["messages.CheckHistoryImportPeer"]
   },
   {
     "code": 400,
     "msg": "USER_NOT_PARTICIPANT",
     "desc": "The user is not a member of this chat",
     "affected": [
-      "updates.getDifference",
-      "messages.editChatAdmin",
-      "messages.deleteChatUser",
-      "channels.leaveChannel",
-      "channels.getParticipant"
+      "updates.GetDifference",
+      "messages.EditChatAdmin",
+      "messages.DeleteChatUser",
+      "channels.LeaveChannel",
+      "channels.GetParticipant"
     ]
   },
   {
     "code": 400,
     "msg": "USER_PUBLIC_MISSING",
     "desc": "",
-    "affected": ["stories.exportStoryLink"]
+    "affected": ["stories.ExportStoryLink"]
   },
   {
     "code": 400,
     "msg": "USER_VOLUME_INVALID",
     "desc": "The specified user volume is invalid.",
-    "affected": ["phone.editGroupCallParticipant"]
+    "affected": ["phone.EditGroupCallParticipant"]
   },
-  { "code": 400, "msg": "VENUE_ID_INVALID", "desc": "", "affected": ["stories.sendStory"] },
+  { "code": 400, "msg": "VENUE_ID_INVALID", "desc": "", "affected": ["stories.SendStory"] },
   {
     "code": 400,
     "msg": "VIDEO_CONTENT_TYPE_INVALID",
     "desc": "The video content type is invalid (i.e.: not streamable)",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "VIDEO_FILE_INVALID",
     "desc": "The video file is invalid",
-    "affected": ["photos.uploadProfilePhoto"]
+    "affected": ["photos.UploadProfilePhoto"]
   },
   {
     "code": 400,
     "msg": "VIDEO_TITLE_EMPTY",
     "desc": "The specified video title is empty.",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "VOICE_MESSAGES_FORBIDDEN",
     "desc": "This user's privacy settings forbid you from sending voice messages.",
-    "affected": ["messages.sendMedia", "messages.sendInlineBotResult"]
+    "affected": ["messages.SendMedia", "messages.SendInlineBotResult"]
   },
   {
     "code": 400,
@@ -3836,55 +3836,55 @@
     "code": 400,
     "msg": "WALLPAPER_FILE_INVALID",
     "desc": "The provided file cannot be used as a wallpaper",
-    "affected": ["account.uploadWallPaper"]
+    "affected": ["account.UploadWallPaper"]
   },
   {
     "code": 400,
     "msg": "WALLPAPER_INVALID",
     "desc": "The input wallpaper was not valid",
     "affected": [
-      "messages.setChatWallPaper",
-      "account.saveWallPaper",
-      "account.installWallPaper",
-      "account.getWallPaper",
-      "account.getMultiWallPapers"
+      "messages.SetChatWallPaper",
+      "account.SaveWallPaper",
+      "account.InstallWallPaper",
+      "account.GetWallPaper",
+      "account.GetMultiWallPapers"
     ]
   },
   {
     "code": 400,
     "msg": "WALLPAPER_MIME_INVALID",
     "desc": "The wallpaper mime type is invalid",
-    "affected": ["account.uploadWallPaper"]
+    "affected": ["account.UploadWallPaper"]
   },
   {
     "code": 400,
     "msg": "WALLPAPER_NOT_FOUND",
     "desc": "",
-    "affected": ["messages.setChatWallPaper"]
+    "affected": ["messages.SetChatWallPaper"]
   },
   {
     "code": 400,
     "msg": "WC_CONVERT_URL_INVALID",
     "desc": "WC convert URL invalid",
-    "affected": ["messages.sendMessage", "messages.getWebPage"]
+    "affected": ["messages.SendMessage", "messages.GetWebPage"]
   },
   {
     "code": 400,
     "msg": "WEBDOCUMENT_INVALID",
     "desc": "The web document is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "WEBDOCUMENT_MIME_INVALID",
     "desc": "The web document mime type is invalid",
-    "affected": ["messages.sendMedia", "messages.setInlineBotResults"]
+    "affected": ["messages.SendMedia", "messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "WEBDOCUMENT_SIZE_TOO_BIG",
     "desc": "The web document is too big",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
@@ -3896,62 +3896,62 @@
     "code": 400,
     "msg": "WEBDOCUMENT_URL_INVALID",
     "desc": "The web document URL is invalid",
-    "affected": ["messages.setInlineBotResults"]
+    "affected": ["messages.SetInlineBotResults"]
   },
   {
     "code": 400,
     "msg": "WEBPAGE_CURL_FAILED",
     "desc": "Telegram server could not fetch the provided URL",
-    "affected": ["messages.sendMedia", "messages.sendInlineBotResult", "messages.uploadMedia"]
+    "affected": ["messages.SendMedia", "messages.SendInlineBotResult", "messages.UploadMedia"]
   },
   {
     "code": 400,
     "msg": "WEBPAGE_MEDIA_EMPTY",
     "desc": "The URL doesn't contain any valid media",
-    "affected": ["messages.sendMedia", "messages.sendInlineBotResult"]
+    "affected": ["messages.SendMedia", "messages.SendInlineBotResult"]
   },
   {
     "code": 400,
     "msg": "WEBPAGE_NOT_FOUND",
     "desc": "A preview for the specified webpage url could not be generated.",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "WEBPAGE_URL_INVALID",
     "desc": "The specified webpage url is invalid.",
-    "affected": ["messages.sendMedia"]
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
     "msg": "WEBPUSH_AUTH_INVALID",
     "desc": "The specified web push authentication secret is invalid.",
-    "affected": ["account.registerDevice"]
+    "affected": ["account.RegisterDevice"]
   },
   {
     "code": 400,
     "msg": "WEBPUSH_KEY_INVALID",
     "desc": "The specified web push elliptic curve Diffie-Hellman public key is invalid.",
-    "affected": ["account.registerDevice"]
+    "affected": ["account.RegisterDevice"]
   },
   {
     "code": 400,
     "msg": "WEBPUSH_TOKEN_INVALID",
     "desc": "The specified web push token is invalid.",
-    "affected": ["account.registerDevice"]
+    "affected": ["account.RegisterDevice"]
   },
   {
     "code": 400,
     "msg": "YOU_BLOCKED_USER",
     "desc": "You blocked this user",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendScreenshotNotification",
-      "messages.sendInlineBotResult",
-      "messages.requestWebView",
-      "messages.addChatUser"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendScreenshotNotification",
+      "messages.SendInlineBotResult",
+      "messages.RequestWebView",
+      "messages.AddChatUser"
     ]
   },
   {
@@ -4007,50 +4007,50 @@
     "code": 403,
     "msg": "ANONYMOUS_REACTIONS_DISABLED",
     "desc": "",
-    "affected": ["messages.sendReaction"]
+    "affected": ["messages.SendReaction"]
   },
   {
     "code": 403,
     "msg": "BROADCAST_FORBIDDEN",
     "desc": "The request can't be used in channels",
-    "affected": ["messages.getPollVotes", "messages.getMessageReactionsList"]
+    "affected": ["messages.GetPollVotes", "messages.GetMessageReactionsList"]
   },
   {
     "code": 403,
     "msg": "CHANNEL_PUBLIC_GROUP_NA",
     "desc": "The channel/supergroup is not available",
-    "affected": ["updates.getChannelDifference", "channels.leaveChannel", "channels.getFullChannel"]
+    "affected": ["updates.GetChannelDifference", "channels.LeaveChannel", "channels.GetFullChannel"]
   },
   {
     "code": 403,
     "msg": "CHAT_ADMIN_INVITE_REQUIRED",
     "desc": "You don't have rights to invite other users",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 403,
     "msg": "CHAT_ADMIN_REQUIRED",
     "desc": "The method requires chat admin privileges",
     "affected": [
-      "channels.updateUsername",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.search",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "stats.getMegagroupStats",
-      "stats.getBroadcastStats",
-      "channels.editForumTopic",
-      "messages.migrateChat",
-      "messages.addChatUser",
-      "channels.inviteToChannel",
-      "channels.getParticipants",
-      "channels.getParticipant",
-      "channels.getAdminLog",
-      "channels.editTitle",
-      "channels.editPhoto",
-      "channels.editBanned",
-      "channels.editAdmin"
+      "channels.UpdateUsername",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.Search",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "stats.GetMegagroupStats",
+      "stats.GetBroadcastStats",
+      "channels.EditForumTopic",
+      "messages.MigrateChat",
+      "messages.AddChatUser",
+      "channels.InviteToChannel",
+      "channels.GetParticipants",
+      "channels.GetParticipant",
+      "channels.GetAdminLog",
+      "channels.EditTitle",
+      "channels.EditPhoto",
+      "channels.EditBanned",
+      "channels.EditAdmin"
     ]
   },
   { "code": 403, "msg": "CHAT_FORBIDDEN", "desc": "You cannot write in this chat", "affected": [] },
@@ -4059,56 +4059,56 @@
     "msg": "CHAT_GUEST_SEND_FORBIDDEN",
     "desc": "You join the discussion group before commenting, see here » for more info.",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_AUDIOS_FORBIDDEN",
     "desc": "You can't send audio messages in this chat.",
-    "affected": ["messages.sendMedia", "messages.forwardMessages", "messages.sendInlineBotResult"]
+    "affected": ["messages.SendMedia", "messages.ForwardMessages", "messages.SendInlineBotResult"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_DOCS_FORBIDDEN",
     "desc": "You can't send documents in this chat.",
-    "affected": ["messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_GAME_FORBIDDEN",
     "desc": "You can't send a game to this chat.",
-    "affected": ["messages.forwardMessages", "messages.sendInlineBotResult"]
+    "affected": ["messages.ForwardMessages", "messages.SendInlineBotResult"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_GIFS_FORBIDDEN",
     "desc": "You can't send animations in this chat",
     "affected": [
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.sendInlineBotResult"
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.SendInlineBotResult"
     ]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_INLINE_FORBIDDEN",
     "desc": "You cannot use inline bots to send messages in this chat",
-    "affected": ["messages.sendInlineBotResult"]
+    "affected": ["messages.SendInlineBotResult"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_MEDIA_FORBIDDEN",
     "desc": "You can't send media messages in this chat",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMultiMedia",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
@@ -4116,10 +4116,10 @@
     "msg": "CHAT_SEND_PHOTOS_FORBIDDEN",
     "desc": "You can't send photos in this chat.",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMultiMedia",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
@@ -4127,247 +4127,247 @@
     "msg": "CHAT_SEND_PLAIN_FORBIDDEN",
     "desc": "You can't send non-media (text) messages in this chat.",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_POLL_FORBIDDEN",
     "desc": "You can't send polls in this chat",
-    "affected": ["messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_STICKERS_FORBIDDEN",
     "desc": "You can't send stickers in this chat",
-    "affected": ["messages.sendMedia", "messages.forwardMessages", "messages.sendInlineBotResult"]
+    "affected": ["messages.SendMedia", "messages.ForwardMessages", "messages.SendInlineBotResult"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_VIDEOS_FORBIDDEN",
     "desc": "You can't send videos in this chat.",
-    "affected": ["messages.sendMultiMedia", "messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMultiMedia", "messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 403,
     "msg": "CHAT_SEND_VOICES_FORBIDDEN",
     "desc": "You can't send voice recordings in this chat.",
-    "affected": ["messages.sendMedia", "messages.forwardMessages", "messages.sendInlineBotResult"]
+    "affected": ["messages.SendMedia", "messages.ForwardMessages", "messages.SendInlineBotResult"]
   },
   {
     "code": 403,
     "msg": "CHAT_WRITE_FORBIDDEN",
     "desc": "You don't have rights to send messages in this chat",
     "affected": [
-      "channels.updateUsername",
-      "messages.updatePinnedMessage",
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.getMessageEditData",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.setTyping",
-      "messages.getDialogs",
-      "messages.sendInlineBotResult",
-      "updates.getDifference",
-      "updates.getChannelDifference",
-      "messages.sendReaction",
-      "channels.createForumTopic",
-      "messages.uploadMedia",
-      "messages.startBot",
-      "channels.convertToGigagroup",
-      "messages.editChatDefaultBannedRights",
-      "messages.editChatAbout",
-      "messages.addChatUser",
-      "messages.hideAllChatJoinRequests",
-      "messages.hideChatJoinRequest",
-      "messages.getChatInviteImporters",
-      "messages.getAdminsWithInvites",
-      "messages.editExportedChatInvite",
-      "messages.getExportedChatInvites",
-      "messages.getExportedChatInvite",
-      "messages.exportChatInvite",
-      "channels.setDiscussionGroup",
-      "channels.inviteToChannel",
-      "channels.getAdminLog",
-      "channels.editTitle",
-      "channels.editPhoto",
-      "channels.editCreator",
-      "channels.editBanned",
-      "channels.editAdmin",
-      "channels.deleteParticipantHistory",
-      "channels.deleteChannel",
-      "invokeWithLayer"
+      "channels.UpdateUsername",
+      "messages.UpdatePinnedMessage",
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.GetMessageEditData",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.SetTyping",
+      "messages.GetDialogs",
+      "messages.SendInlineBotResult",
+      "updates.GetDifference",
+      "updates.GetChannelDifference",
+      "messages.SendReaction",
+      "channels.CreateForumTopic",
+      "messages.UploadMedia",
+      "messages.StartBot",
+      "channels.ConvertToGigagroup",
+      "messages.EditChatDefaultBannedRights",
+      "messages.EditChatAbout",
+      "messages.AddChatUser",
+      "messages.HideAllChatJoinRequests",
+      "messages.HideChatJoinRequest",
+      "messages.GetChatInviteImporters",
+      "messages.GetAdminsWithInvites",
+      "messages.EditExportedChatInvite",
+      "messages.GetExportedChatInvites",
+      "messages.GetExportedChatInvite",
+      "messages.ExportChatInvite",
+      "channels.SetDiscussionGroup",
+      "channels.InviteToChannel",
+      "channels.GetAdminLog",
+      "channels.EditTitle",
+      "channels.EditPhoto",
+      "channels.EditCreator",
+      "channels.EditBanned",
+      "channels.EditAdmin",
+      "channels.DeleteParticipantHistory",
+      "channels.DeleteChannel",
+      "InvokeWithLayer"
     ]
   },
   {
     "code": 403,
     "msg": "EDIT_BOT_INVITE_FORBIDDEN",
     "desc": "Bots' chat invite links can't be edited",
-    "affected": ["messages.editExportedChatInvite"]
+    "affected": ["messages.EditExportedChatInvite"]
   },
   {
     "code": 403,
     "msg": "GROUPCALL_ALREADY_STARTED",
     "desc": "The groupcall has already started, you can join directly using phone.joinGroupCall.",
-    "affected": ["phone.toggleGroupCallStartSubscription"]
+    "affected": ["phone.ToggleGroupCallStartSubscription"]
   },
   {
     "code": 403,
     "msg": "GROUPCALL_FORBIDDEN",
     "desc": "The group call has already ended.",
     "affected": [
-      "phone.discardGroupCall",
-      "phone.joinGroupCall",
-      "phone.getGroupCall",
-      "phone.inviteToGroupCall",
-      "phone.editGroupCallTitle",
-      "phone.toggleGroupCallRecord",
-      "phone.editGroupCallParticipant",
-      "messages.setTyping"
+      "phone.DiscardGroupCall",
+      "phone.JoinGroupCall",
+      "phone.GetGroupCall",
+      "phone.InviteToGroupCall",
+      "phone.EditGroupCallTitle",
+      "phone.ToggleGroupCallRecord",
+      "phone.EditGroupCallParticipant",
+      "messages.SetTyping"
     ]
   },
   {
     "code": 403,
     "msg": "INLINE_BOT_REQUIRED",
     "desc": "The action must be performed through an inline bot callback",
-    "affected": ["messages.editMessage"]
+    "affected": ["messages.EditMessage"]
   },
   {
     "code": 403,
     "msg": "MESSAGE_AUTHOR_REQUIRED",
     "desc": "You are not the author of this message",
-    "affected": ["messages.getMessageEditData", "messages.editMessage"]
+    "affected": ["messages.GetMessageEditData", "messages.EditMessage"]
   },
   {
     "code": 403,
     "msg": "MESSAGE_DELETE_FORBIDDEN",
     "desc": "You don't have rights to delete messages in this chat, most likely because you are not the author of them",
-    "affected": ["messages.deleteMessages", "channels.deleteMessages"]
+    "affected": ["messages.DeleteMessages", "channels.DeleteMessages"]
   },
   {
     "code": 403,
     "msg": "PARTICIPANT_JOIN_MISSING",
     "desc": "Trying to enable a presentation, when the user hasn't joined the Video Chat with phone.joinGroupCall.",
-    "affected": ["phone.joinGroupCallPresentation"]
+    "affected": ["phone.JoinGroupCallPresentation"]
   },
   {
     "code": 403,
     "msg": "POLL_VOTE_REQUIRED",
     "desc": "Cast a vote in the poll before calling this method",
-    "affected": ["messages.getPollVotes"]
+    "affected": ["messages.GetPollVotes"]
   },
   {
     "code": 403,
     "msg": "PREMIUM_ACCOUNT_REQUIRED",
     "desc": "This action requires a premium account",
     "affected": [
-      "messages.sendMedia",
-      "messages.transcribeAudio",
-      "messages.sendReaction",
-      "channels.createForumTopic"
+      "messages.SendMedia",
+      "messages.TranscribeAudio",
+      "messages.SendReaction",
+      "channels.CreateForumTopic"
     ]
   },
   {
     "code": 403,
     "msg": "PUBLIC_CHANNEL_MISSING",
     "desc": "You can only export group call invite links for public chats or channels.",
-    "affected": ["phone.exportGroupCallInvite"]
+    "affected": ["phone.ExportGroupCallInvite"]
   },
   {
     "code": 403,
     "msg": "RIGHT_FORBIDDEN",
     "desc": "You don't have enough rights for this action, or you tried to set one or more admin rights that can't be applied to this kind of chat (channel or supergroup)",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 403,
     "msg": "SENSITIVE_CHANGE_FORBIDDEN",
     "desc": "Your sensitive content settings can't be changed at this time",
-    "affected": ["account.setContentSettings"]
+    "affected": ["account.SetContentSettings"]
   },
   {
     "code": 403,
     "msg": "TAKEOUT_REQUIRED",
     "desc": "The method must be invoked inside a takeout session",
-    "affected": ["channels.getLeftChannels", "account.finishTakeoutSession", "contacts.getSaved"]
+    "affected": ["channels.GetLeftChannels", "account.FinishTakeoutSession", "contacts.GetSaved"]
   },
   {
     "code": 403,
     "msg": "USER_BOT_INVALID",
     "desc": "This method can only be called by a bot",
     "affected": [
-      "bots.sendCustomRequest",
-      "bots.answerWebhookJSONQuery",
-      "messages.setInlineBotResults",
-      "users.setSecureValueErrors"
+      "bots.SendCustomRequest",
+      "bots.AnswerWebhookJSONQuery",
+      "messages.SetInlineBotResults",
+      "users.SetSecureValueErrors"
     ]
   },
   {
     "code": 403,
     "msg": "USER_CHANNELS_TOO_MUCH",
     "desc": "One of the users you tried to add is already in too many channels/supergroups",
-    "affected": ["messages.hideChatJoinRequest", "channels.inviteToChannel", "channels.editAdmin"]
+    "affected": ["messages.HideChatJoinRequest", "channels.InviteToChannel", "channels.EditAdmin"]
   },
   {
     "code": 403,
     "msg": "USER_DELETED",
     "desc": "You can't send this secret message because the other participant deleted their account.",
-    "affected": ["messages.sendEncryptedService"]
+    "affected": ["messages.SendEncryptedService"]
   },
   {
     "code": 403,
     "msg": "USER_INVALID",
     "desc": "The provided user is invalid",
-    "affected": ["help.getUserInfo", "help.editUserInfo", "help.getSupportName"]
+    "affected": ["help.GetUserInfo", "help.EditUserInfo", "help.GetSupportName"]
   },
   {
     "code": 403,
     "msg": "USER_IS_BLOCKED",
     "desc": "The user is blocked",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.setTyping",
-      "messages.sendEncryptedService",
-      "messages.sendEncrypted",
-      "phone.requestCall"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SetTyping",
+      "messages.SendEncryptedService",
+      "messages.SendEncrypted",
+      "phone.RequestCall"
     ]
   },
   {
     "code": 403,
     "msg": "USER_NOT_MUTUAL_CONTACT",
     "desc": "The provided user is not a mutual contact",
-    "affected": ["messages.addChatUser", "channels.inviteToChannel", "channels.editAdmin"]
+    "affected": ["messages.AddChatUser", "channels.InviteToChannel", "channels.EditAdmin"]
   },
   {
     "code": 403,
     "msg": "USER_PRIVACY_RESTRICTED",
     "desc": "The user's privacy settings is preventing you to perform this action",
     "affected": [
-      "messages.addChatUser",
-      "channels.inviteToChannel",
-      "channels.editAdmin",
-      "phone.requestCall",
-      "help.getConfig"
+      "messages.AddChatUser",
+      "channels.InviteToChannel",
+      "channels.EditAdmin",
+      "phone.RequestCall",
+      "help.GetConfig"
     ]
   },
   {
     "code": 403,
     "msg": "USER_RESTRICTED",
     "desc": "You are limited/restricted. You can't perform this action",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 403,
     "msg": "VOICE_MESSAGES_FORBIDDEN",
     "desc": "This user's privacy settings forbid you from sending voice messages.",
-    "affected": ["messages.forwardMessages"]
+    "affected": ["messages.ForwardMessages"]
   },
   {
     "code": 406,
@@ -4379,84 +4379,84 @@
     "code": 406,
     "msg": "BANNED_RIGHTS_INVALID",
     "desc": "You provided some invalid flags in the banned rights.",
-    "affected": ["channels.editBanned"]
+    "affected": ["channels.EditBanned"]
   },
   {
     "code": 406,
     "msg": "CALL_PROTOCOL_COMPAT_LAYER_INVALID",
     "desc": "The other side of the call does not support any of the VoIP protocols supported by the local client, as specified by the protocol.layer and protocol.library_versions fields.",
-    "affected": ["phone.acceptCall"]
+    "affected": ["phone.AcceptCall"]
   },
   {
     "code": 406,
     "msg": "CHANNEL_PRIVATE",
     "desc": "The channel/supergroup is not accessible",
     "affected": [
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.getMessagesViews",
-      "messages.getHistory",
-      "messages.forwardMessages",
-      "messages.editMessage",
-      "messages.setTyping",
-      "messages.getPeerDialogs",
-      "messages.getInlineBotResults",
-      "updates.getChannelDifference",
-      "messages.checkChatInvite",
-      "channels.readMessageContents",
-      "channels.readHistory",
-      "channels.leaveChannel",
-      "channels.joinChannel",
-      "channels.inviteToChannel",
-      "channels.getParticipants",
-      "channels.getParticipant",
-      "channels.getMessages",
-      "channels.getFullChannel",
-      "channels.getChannels",
-      "channels.getAdminLog",
-      "channels.editBanned",
-      "channels.deleteMessages",
-      "channels.deleteChannel"
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.GetMessagesViews",
+      "messages.GetHistory",
+      "messages.ForwardMessages",
+      "messages.EditMessage",
+      "messages.SetTyping",
+      "messages.GetPeerDialogs",
+      "messages.GetInlineBotResults",
+      "updates.GetChannelDifference",
+      "messages.CheckChatInvite",
+      "channels.ReadMessageContents",
+      "channels.ReadHistory",
+      "channels.LeaveChannel",
+      "channels.JoinChannel",
+      "channels.InviteToChannel",
+      "channels.GetParticipants",
+      "channels.GetParticipant",
+      "channels.GetMessages",
+      "channels.GetFullChannel",
+      "channels.GetChannels",
+      "channels.GetAdminLog",
+      "channels.EditBanned",
+      "channels.DeleteMessages",
+      "channels.DeleteChannel"
     ]
   },
   {
     "code": 406,
     "msg": "CHANNEL_TOO_LARGE",
     "desc": "Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).",
-    "affected": ["channels.deleteChannel"]
+    "affected": ["channels.DeleteChannel"]
   },
   {
     "code": 406,
     "msg": "CHAT_FORWARDS_RESTRICTED",
     "desc": "You can't forward messages from a protected chat.",
-    "affected": ["messages.forwardMessages"]
+    "affected": ["messages.ForwardMessages"]
   },
   {
     "code": 406,
     "msg": "FILEREF_UPGRADE_NEEDED",
     "desc": "The file reference has expired and you must use a refreshed one by obtaining the original media message",
-    "affected": ["upload.getFile"]
+    "affected": ["upload.GetFile"]
   },
   {
     "code": 406,
     "msg": "FRESH_CHANGE_ADMINS_FORBIDDEN",
     "desc": "You were just elected admin, you can't add or modify other admins yet",
-    "affected": ["channels.editAdmin"]
+    "affected": ["channels.EditAdmin"]
   },
   {
     "code": 406,
     "msg": "FRESH_CHANGE_PHONE_FORBIDDEN",
     "desc": "You can't change your phone number because your session was logged-in recently",
-    "affected": ["account.sendChangePhoneCode"]
+    "affected": ["account.SendChangePhoneCode"]
   },
   {
     "code": 406,
     "msg": "FRESH_RESET_AUTHORISATION_FORBIDDEN",
     "desc": "You can't terminate other authorized sessions because the current was logged-in recently",
     "affected": [
-      "account.resetAuthorization",
-      "auth.resetAuthorizations",
-      "account.setAuthorizationTTL"
+      "account.ResetAuthorization",
+      "auth.ResetAuthorizations",
+      "account.SetAuthorizationTTL"
     ]
   },
   { "code": 406, "msg": "GIFTCODE_NOT_ALLOWED", "desc": "", "affected": [] },
@@ -4465,108 +4465,108 @@
     "msg": "INVITE_HASH_EXPIRED",
     "desc": "The invite link has expired.",
     "affected": [
-      "messages.importChatInvite",
-      "messages.checkChatInvite",
-      "channels.joinChannel",
-      "invokeWithLayer"
+      "messages.ImportChatInvite",
+      "messages.CheckChatInvite",
+      "channels.JoinChannel",
+      "InvokeWithLayer"
     ]
   },
   {
     "code": 406,
     "msg": "PAYMENT_UNSUPPORTED",
     "desc": "A detailed description of the error will be received separately as described here ».",
-    "affected": ["messages.sendMessage", "messages.forwardMessages"]
+    "affected": ["messages.SendMessage", "messages.ForwardMessages"]
   },
   {
     "code": 406,
     "msg": "PHONE_NUMBER_INVALID",
     "desc": "The phone number is invalid",
     "affected": [
-      "account.sendChangePhoneCode",
-      "account.changePhone",
-      "auth.signUp",
-      "auth.signIn",
-      "auth.sendCode",
-      "auth.resendCode",
-      "auth.cancelCode"
+      "account.SendChangePhoneCode",
+      "account.ChangePhone",
+      "auth.SignUp",
+      "auth.SignIn",
+      "auth.SendCode",
+      "auth.ResendCode",
+      "auth.CancelCode"
     ]
   },
   {
     "code": 406,
     "msg": "PHONE_PASSWORD_FLOOD",
     "desc": "You have tried to log-in too many times",
-    "affected": ["auth.sendCode"]
+    "affected": ["auth.SendCode"]
   },
   {
     "code": 406,
     "msg": "PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN",
     "desc": "Import for this chat is already in progress, wait {value} minutes before starting a new one.",
-    "affected": ["messages.initHistoryImport"]
+    "affected": ["messages.InitHistoryImport"]
   },
   {
     "code": 406,
     "msg": "PRIVACY_PREMIUM_REQUIRED",
     "desc": "You need a Telegram Premium subscription to send a message to this user.",
-    "affected": ["messages.sendMessage"]
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 406,
     "msg": "SEND_CODE_UNAVAILABLE",
     "desc": "Returned when all available options for this type of number were already used (e.g. flash-call, then SMS, then this error might be returned to trigger a second resend).",
-    "affected": ["auth.resendCode"]
+    "affected": ["auth.ResendCode"]
   },
   {
     "code": 406,
     "msg": "STICKERSET_INVALID",
     "desc": "The sticker set is invalid",
     "affected": [
-      "messages.uninstallStickerSet",
-      "messages.installStickerSet",
-      "messages.getStickerSet",
-      "stickers.addStickerToSet"
+      "messages.UninstallStickerSet",
+      "messages.InstallStickerSet",
+      "messages.GetStickerSet",
+      "stickers.AddStickerToSet"
     ]
   },
   {
     "code": 406,
     "msg": "STICKERSET_OWNER_ANONYMOUS",
     "desc": "This sticker set can't be used as the group's sticker set because it was created by one of its anonymous admins",
-    "affected": ["channels.setStickers"]
+    "affected": ["channels.SetStickers"]
   },
   {
     "code": 406,
     "msg": "TOPIC_CLOSED",
     "desc": "This topic was closed, you can't send messages to it anymore.",
-    "affected": ["messages.sendMessage", "messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMessage", "messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 406,
     "msg": "TOPIC_DELETED",
     "desc": "The specified topic was deleted.",
-    "affected": ["messages.sendMessage", "messages.sendMedia", "messages.forwardMessages"]
+    "affected": ["messages.SendMessage", "messages.SendMedia", "messages.ForwardMessages"]
   },
   {
     "code": 406,
     "msg": "USERPIC_PRIVACY_REQUIRED",
     "desc": "You need to disable privacy settings for your profile picture in order to make your geolocation public.",
-    "affected": ["contacts.getLocated"]
+    "affected": ["contacts.GetLocated"]
   },
   {
     "code": 406,
     "msg": "USERPIC_UPLOAD_REQUIRED",
     "desc": "You must have a profile picture to publish your geolocation",
-    "affected": ["contacts.getLocated"]
+    "affected": ["contacts.GetLocated"]
   },
   {
     "code": 406,
     "msg": "USER_RESTRICTED",
     "desc": "You are limited/restricted. You can't perform this action",
-    "affected": ["messages.createChat", "channels.createChannel"]
+    "affected": ["messages.CreateChat", "channels.CreateChannel"]
   },
   {
     "code": 420,
     "msg": "2FA_CONFIRM_WAIT_X",
     "desc": "A wait of {value} seconds is required because this account is active and protected by a 2FA password",
-    "affected": ["account.deleteAccount"]
+    "affected": ["account.DeleteAccount"]
   },
   {
     "code": 420,
@@ -4584,25 +4584,25 @@
     "code": 420,
     "msg": "PREMIUM_SUB_ACTIVE_UNTIL_X",
     "desc": "You already have a premium subscription active until unixtime {value} .",
-    "affected": ["payments.applyGiftCode"]
+    "affected": ["payments.ApplyGiftCode"]
   },
   {
     "code": 420,
     "msg": "SLOWMODE_WAIT_X",
     "desc": "A wait of {value} seconds is required to send messages in this chat.",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult"
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult"
     ]
   },
   {
     "code": 420,
     "msg": "TAKEOUT_INIT_DELAY_X",
     "desc": "You have to confirm the data export request using one of your mobile devices or wait {value} seconds",
-    "affected": ["account.initTakeoutSession"]
+    "affected": ["account.InitTakeoutSession"]
   },
   {
     "code": 500,
@@ -4614,31 +4614,31 @@
     "code": 500,
     "msg": "AUTH_RESTART",
     "desc": "User authorization has restarted",
-    "affected": ["auth.signIn", "auth.sendCode"]
+    "affected": ["auth.SignIn", "auth.SendCode"]
   },
   {
     "code": 500,
     "msg": "CALL_OCCUPY_FAILED",
     "desc": "The call failed because the user is already making another call",
-    "affected": ["phone.discardCall", "phone.acceptCall"]
+    "affected": ["phone.DiscardCall", "phone.AcceptCall"]
   },
   {
     "code": 500,
     "msg": "CDN_UPLOAD_TIMEOUT",
     "desc": "A server-side timeout occurred while reuploading the file to the CDN DC.",
-    "affected": ["upload.reuploadCdnFile"]
+    "affected": ["upload.ReuploadCdnFile"]
   },
   {
     "code": 500,
     "msg": "CHAT_ID_GENERATE_FAILED",
     "desc": "Failure while generating the chat ID due to Telegram having internal problems. Please try again later",
-    "affected": ["messages.createChat"]
+    "affected": ["messages.CreateChat"]
   },
   {
     "code": 500,
     "msg": "CHAT_INVALID",
     "desc": "Invalid chat.",
-    "affected": ["messages.migrateChat", "channels.createChannel"]
+    "affected": ["messages.MigrateChat", "channels.CreateChannel"]
   },
   {
     "code": 500,
@@ -4755,11 +4755,11 @@
     "msg": "MSG_WAIT_FAILED",
     "desc": "A waiting call returned an error.",
     "affected": [
-      "messages.sendMessage",
-      "messages.editMessage",
-      "messages.receivedQueue",
-      "messages.sendEncryptedService",
-      "messages.sendEncrypted"
+      "messages.SendMessage",
+      "messages.EditMessage",
+      "messages.ReceivedQueue",
+      "messages.SendEncryptedService",
+      "messages.SendEncrypted"
     ]
   },
   {
@@ -4796,7 +4796,7 @@
     "code": 500,
     "msg": "PERSISTENT_TIMESTAMP_OUTDATED",
     "desc": "The persistent timestamp is outdated due to Telegram having internal problems. Please try again later",
-    "affected": ["updates.getChannelDifference"]
+    "affected": ["updates.GetChannelDifference"]
   },
   {
     "code": 500,
@@ -4816,13 +4816,13 @@
     "msg": "RANDOM_ID_DUPLICATE",
     "desc": "You provided a random ID that was already used",
     "affected": [
-      "messages.sendMultiMedia",
-      "messages.sendMessage",
-      "messages.sendMedia",
-      "messages.forwardMessages",
-      "messages.sendInlineBotResult",
-      "updates.getDifference",
-      "messages.startBot"
+      "messages.SendMultiMedia",
+      "messages.SendMessage",
+      "messages.SendMedia",
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult",
+      "updates.GetDifference",
+      "messages.StartBot"
     ]
   },
   {
@@ -4853,13 +4853,13 @@
     "code": 500,
     "msg": "SEND_MEDIA_INVALID",
     "desc": "",
-    "affected": ["messages.sendInlineBotResult"]
+    "affected": ["messages.SendInlineBotResult"]
   },
   {
     "code": 500,
     "msg": "SIGN_IN_FAILED",
     "desc": "Failure while signing in due to Telegram having internal problems. Please try again later",
-    "affected": ["auth.signIn"]
+    "affected": ["auth.SignIn"]
   },
   {
     "code": 500,
@@ -4913,6 +4913,6 @@
     "code": 503,
     "msg": "Timeout",
     "desc": "Timeout while fetching data.",
-    "affected": ["messages.getBotCallbackAnswer", "messages.getInlineBotResults"]
+    "affected": ["messages.GetBotCallbackAnswer", "messages.GetInlineBotResults"]
   }
 ]
