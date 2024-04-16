@@ -11,106 +11,64 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as cheerio from 'https://esm.sh/cheerio@1.0.0-rc.12';
-import { wait } from 'https://deno.land/x/wait/mod.ts';
 import * as denoPath from 'https://deno.land/std@0.209.0/path/mod.ts';
 
 const __dirname = denoPath.dirname(denoPath.fromFileUrl(import.meta.url));
-const reHref = /\<td\>\<a href=\"(.*)\"\>.*\<\/a\>\<\/td\>/gm;
-
-async function getAllMethodRoutes() {
-  const base = 'https://corefork.telegram.org';
-  const html = await (
-    await fetch(`${base}/methods`, {
-      method: 'GET',
-      mode: 'cors',
-    })
-  ).text();
-  return html.match(reHref).map((matches) => {
-    const [full, href] = /\<a href=\"(.*)\"\>.*\<\/a\>/.exec(matches);
-    return base + href;
-  });
-}
-async function getPossibleErrorsList(page) {
-  const html = await (await fetch(page, { method: 'GET', mode: 'cors' })).text();
-  const splited = page.split('/');
-  const tl = splited[splited.length - 1].split('.');
-  const $ = cheerio.load(html);
-  const results = [];
-  tl[tl.length - 1] = tl[tl.length - 1].replace(
-    tl[tl.length - 1][0],
-    tl[tl.length - 1][0].toUpperCase(),
+const reHref = /^\/file\/\d+\/\d+\/[aA-zZ0-9]+\.\d+\.json\/[aA-zZ0-9]+/gm;
+const base = 'https://corefork.telegram.org';
+async function getHref() {
+  const html = await fetch(`${base}/api/errors`, { method: 'GET', mode: 'cors' }).then((res) =>
+    res.text(),
   );
-  $('h3').each((i, el) => {
-    const cur = $(el);
-    if (cur.has('#possible-errors').length) {
-      const table = $(cur.next('table'));
-      const tbody = $(table.find('tbody')[0]);
-      const trs = tbody.find('tr');
-      trs.each((i1, el1) => {
-        const tds = $(el1).find('td');
-        const result = {};
-        tds.each((i2, el2) => {
-          const value = $(el2).text();
-          if (i2 === 0) {
-            result.code = Math.abs(Number(value));
-          } else if (i2 === 1) {
-            result.msg = value.replace(/\%[aA-zZ]/gm, 'X').trim();
-          } else {
-            result.desc = value.replace(/\%[aA-zZ]/gm, '{value}').trim();
-          }
-        });
-        result.affected = [tl.join('.')];
-        results.push(result);
-      });
+  const $ = cheerio.load(html);
+  let href = '';
+  $('p').each((i, el) => {
+    const aTag = $(el).find('a');
+    if (aTag) {
+      const _href = $(aTag).attr('href');
+      if (reHref.test(_href)) {
+        return (href = _href);
+      }
     }
   });
-  return results;
+  return href;
 }
-async function getAllPossibleErrorsAndGrouped() {
-  const spinner = wait('Generating Content').start();
-  const listLink = await getAllMethodRoutes();
-  const listErrors = [];
-  for (let i = 0; i < listLink.length; i++) {
-    const link = listLink[i];
-    const splited = link.split('/');
-    spinner.text = `[${i + 1}/${listLink.length}] ${splited[splited.length - 1]}`;
-    const errors = await getPossibleErrorsList(link);
-    listErrors.push.apply(listErrors, errors);
+async function getGroupedJson() {
+  const link = await getHref();
+  const json = await fetch(`${base}${link}`, { method: 'GET', mode: 'cors' }).then((res) =>
+    res.json(),
+  );
+  const results = [];
+  for (let [code, list] of Object.entries(json.errors)) {
+    for (let [name, affected] of Object.entries(list)) {
+      results.push({
+        code: Number(code.replace('-', '')),
+        msg: name.replace(/\%[aA-zZ]/gm, 'X').trim(),
+        desc: json.descriptions[name].replace(/\%[aA-zZ]/gm, '{value}').trim() || '',
+        affected: affected || [],
+      });
+    }
   }
-  const results = listErrors
-    .filter((link, i) => {
-      const index = listErrors.findIndex(
-        (other) => link.code === other.code && link.msg === other.msg,
-      );
-      if (i !== index) {
-        const affected = [...link.affected, ...listErrors[index].affected];
-        listErrors[index].affected = affected
-          .filter((item, aindex) => aindex === affected.findIndex((b) => b === item))
-          .sort((a, b) => a - b);
-      }
-      return i === index;
-    })
-    .sort((a, b) => {
-      let code = a.code - b.code;
-      if (code === 0) {
-        if (a.msg < b.msg) return -1;
-        if (a.msg > b.msg) return 1;
-        return 0;
-      }
-      return code;
-    });
-  spinner.stop();
-  return results;
+  return results.sort((a, b) => {
+    let code = a.code - b.code;
+    if (code === 0) {
+      if (a.msg < b.msg) return -1;
+      if (a.msg > b.msg) return 1;
+      return 0;
+    }
+    return code;
+  });
 }
 
 async function build() {
   const old = JSON.parse(fs.readFileSync(path.join(__dirname, '../error/source/errors.json')));
-  const newest = await getAllPossibleErrorsAndGrouped();
+  const newest = await getGroupedJson();
   const listErrors = [...old, ...newest];
   const results = listErrors
     .filter((link, i) => {
       const index = newest.findIndex((other) => link.code === other.code && link.msg === other.msg);
       listErrors[i].affected = newest[index]?.affected || [];
+      listErrors[i].desc = newest[index]?.desc || listErrors[i].desc;
       return (
         i === listErrors.findIndex((other) => link.code === other.code && link.msg === other.msg)
       );
