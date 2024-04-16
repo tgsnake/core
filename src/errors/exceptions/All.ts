@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 641;
+const count = 645;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -53,6 +53,7 @@ const Exceptions = {
     BASE_PORT_LOC_INVALID: 'BadRequest.BasePortLocInvalid',
     BOOSTS_EMPTY: 'BadRequest.BoostsEmpty',
     BOOSTS_REQUIRED: 'BadRequest.BoostsRequired',
+    BOOST_NOT_MODIFIED: 'BadRequest.BoostNotModified',
     BOOST_PEER_INVALID: 'BadRequest.BoostPeerInvalid',
     BOTS_TOO_MUCH: 'BadRequest.BotsTooMuch',
     BOT_APP_INVALID: 'BadRequest.BotAppInvalid',
@@ -84,6 +85,7 @@ const Exceptions = {
     BUTTON_USER_PRIVACY_RESTRICTED: 'BadRequest.ButtonUserPrivacyRestricted',
     CALL_ALREADY_ACCEPTED: 'BadRequest.CallAlreadyAccepted',
     CALL_ALREADY_DECLINED: 'BadRequest.CallAlreadyDeclined',
+    CALL_OCCUPY_FAILED: 'BadRequest.CallOccupyFailed',
     CALL_PEER_INVALID: 'BadRequest.CallPeerInvalid',
     CALL_PROTOCOL_FLAGS_INVALID: 'BadRequest.CallProtocolFlagsInvalid',
     CDN_METHOD_INVALID: 'BadRequest.CdnMethodInvalid',
@@ -210,6 +212,7 @@ const Exceptions = {
     GRAPH_INVALID_RELOAD: 'BadRequest.GraphInvalidReload',
     GRAPH_OUTDATED_RELOAD: 'BadRequest.GraphOutdatedReload',
     GROUPCALL_ALREADY_DISCARDED: 'BadRequest.GroupcallAlreadyDiscarded',
+    GROUPCALL_FORBIDDEN: 'BadRequest.GroupcallForbidden',
     GROUPCALL_INVALID: 'BadRequest.GroupcallInvalid',
     GROUPCALL_JOIN_MISSING: 'BadRequest.GroupcallJoinMissing',
     GROUPCALL_NOT_MODIFIED: 'BadRequest.GroupcallNotModified',
@@ -572,6 +575,7 @@ const Exceptions = {
     PARTICIPANT_JOIN_MISSING: 'Forbidden.ParticipantJoinMissing',
     POLL_VOTE_REQUIRED: 'Forbidden.PollVoteRequired',
     PREMIUM_ACCOUNT_REQUIRED: 'Forbidden.PremiumAccountRequired',
+    PRIVACY_PREMIUM_REQUIRED: 'Forbidden.PrivacyPremiumRequired',
     PUBLIC_CHANNEL_MISSING: 'Forbidden.PublicChannelMissing',
     RIGHT_FORBIDDEN: 'Forbidden.RightForbidden',
     SENSITIVE_CHANGE_FORBIDDEN: 'Forbidden.SensitiveChangeForbidden',

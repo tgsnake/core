@@ -22,7 +22,7 @@ export class Flood extends RPCError {
 export class TwoFaConfirmWait extends Flood {
   id: string = '2FA_CONFIRM_WAIT_X';
   message: string =
-    'A wait of {value} seconds is required because this account is active and protected by a 2FA password';
+    "Since this account is active and protected by a 2FA password, we will delete it in 1 week for security purposes. You can cancel this process at any time, you'll be able to reset your account in {value} seconds.";
 }
 export class FloodTestPhoneWait extends Flood {
   id: string = 'FLOOD_TEST_PHONE_WAIT_X';
@@ -38,10 +38,11 @@ export class PremiumSubActiveUntil extends Flood {
 }
 export class SlowmodeWait extends Flood {
   id: string = 'SLOWMODE_WAIT_X';
-  message: string = 'A wait of {value} seconds is required to send messages in this chat.';
+  message: string =
+    'Slowmode is enabled in this chat: wait {value} seconds before sending another message to this chat.';
 }
 export class TakeoutInitDelay extends Flood {
   id: string = 'TAKEOUT_INIT_DELAY_X';
   message: string =
-    'You have to confirm the data export request using one of your mobile devices or wait {value} seconds';
+    "Sorry, for security reasons, you will be able to begin downloading your data in {value} seconds. We have notified all your devices about the export request to make sure it's authorized and to give you time to react if it's not.";
 }

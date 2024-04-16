@@ -26,11 +26,11 @@ export class ApiCallError extends InternalServerError {
 }
 export class AuthRestart extends InternalServerError {
   id: string = 'AUTH_RESTART';
-  message: string = 'User authorization has restarted';
+  message: string = 'Restart the authorization process.';
 }
 export class CallOccupyFailed extends InternalServerError {
   id: string = 'CALL_OCCUPY_FAILED';
-  message: string = 'The call failed because the user is already making another call';
+  message: string = 'The call failed because the user is already making another call.';
 }
 export class CdnUploadTimeout extends InternalServerError {
   id: string = 'CDN_UPLOAD_TIMEOUT';
@@ -38,8 +38,7 @@ export class CdnUploadTimeout extends InternalServerError {
 }
 export class ChatIdGenerateFailed extends InternalServerError {
   id: string = 'CHAT_ID_GENERATE_FAILED';
-  message: string =
-    'Failure while generating the chat ID due to Telegram having internal problems. Please try again later';
+  message: string = 'Failure while generating the chat ID.';
 }
 export class ChatInvalid extends InternalServerError {
   id: string = 'CHAT_INVALID';
@@ -164,7 +163,7 @@ export class ParticipantCallFailed extends InternalServerError {
 export class PersistentTimestampOutdated extends InternalServerError {
   id: string = 'PERSISTENT_TIMESTAMP_OUTDATED';
   message: string =
-    'The persistent timestamp is outdated due to Telegram having internal problems. Please try again later';
+    'Channel internal replication issues, try again later (treat this like an RPC_CALL_FAIL).';
 }
 export class PhotoCreateFailed extends InternalServerError {
   id: string = 'PHOTO_CREATE_FAILED';
@@ -181,7 +180,7 @@ export class PtsChangeEmpty extends InternalServerError {
 }
 export class RandomIdDuplicate extends InternalServerError {
   id: string = 'RANDOM_ID_DUPLICATE';
-  message: string = 'You provided a random ID that was already used';
+  message: string = 'You provided a random ID that was already used.';
 }
 export class RegIdGenerateFailed extends InternalServerError {
   id: string = 'REG_ID_GENERATE_FAILED';
@@ -202,12 +201,11 @@ export class RpcMcgetFail extends InternalServerError {
 }
 export class SendMediaInvalid extends InternalServerError {
   id: string = 'SEND_MEDIA_INVALID';
-  message: string = '';
+  message: string = 'The specified media is invalid.';
 }
 export class SignInFailed extends InternalServerError {
   id: string = 'SIGN_IN_FAILED';
-  message: string =
-    'Failure while signing in due to Telegram having internal problems. Please try again later';
+  message: string = 'Failure while signing in.';
 }
 export class StorageCheckFailed extends InternalServerError {
   id: string = 'STORAGE_CHECK_FAILED';

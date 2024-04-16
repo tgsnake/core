@@ -31,11 +31,11 @@ export class BannedRightsInvalid extends NotAcceptable {
 export class CallProtocolCompatLayerInvalid extends NotAcceptable {
   id: string = 'CALL_PROTOCOL_COMPAT_LAYER_INVALID';
   message: string =
-    'The other side of the call does not support any of the VoIP protocols supported by the local client, as specified by the protocol.layer and protocol.library_versions fields.';
+    'The other side of the call does not support any of the VoIP protocols supported by the local client, as specified by the `protocol.layer` and `protocol.library_versions` fields.';
 }
 export class ChannelPrivate extends NotAcceptable {
   id: string = 'CHANNEL_PRIVATE';
-  message: string = 'The channel/supergroup is not accessible';
+  message: string = "You haven't joined this channel/supergroup.";
 }
 export class ChannelTooLarge extends NotAcceptable {
   id: string = 'CHANNEL_TOO_LARGE';
@@ -49,21 +49,21 @@ export class ChatForwardsRestricted extends NotAcceptable {
 export class FilerefUpgradeNeeded extends NotAcceptable {
   id: string = 'FILEREF_UPGRADE_NEEDED';
   message: string =
-    'The file reference has expired and you must use a refreshed one by obtaining the original media message';
+    'The client has to be updated in order to support [file references](https://core.telegram.org/api/file_reference).';
 }
 export class FreshChangeAdminsForbidden extends NotAcceptable {
   id: string = 'FRESH_CHANGE_ADMINS_FORBIDDEN';
-  message: string = "You were just elected admin, you can't add or modify other admins yet";
+  message: string = "You were just elected admin, you can't add or modify other admins yet.";
 }
 export class FreshChangePhoneForbidden extends NotAcceptable {
   id: string = 'FRESH_CHANGE_PHONE_FORBIDDEN';
   message: string =
-    "You can't change your phone number because your session was logged-in recently";
+    "You can't change phone number right after logging in, please wait at least 24 hours.";
 }
 export class FreshResetAuthorisationForbidden extends NotAcceptable {
   id: string = 'FRESH_RESET_AUTHORISATION_FORBIDDEN';
   message: string =
-    "You can't terminate other authorized sessions because the current was logged-in recently";
+    "You can't logout other sessions if less than 24 hours have passed since you logged on the current session.";
 }
 export class GiftcodeNotAllowed extends NotAcceptable {
   id: string = 'GIFTCODE_NOT_ALLOWED';
@@ -76,15 +76,15 @@ export class InviteHashExpired extends NotAcceptable {
 export class PaymentUnsupported extends NotAcceptable {
   id: string = 'PAYMENT_UNSUPPORTED';
   message: string =
-    'A detailed description of the error will be received separately as described here ».';
+    'A detailed description of the error will be received separately as described [here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).';
 }
 export class PhoneNumberInvalid extends NotAcceptable {
   id: string = 'PHONE_NUMBER_INVALID';
-  message: string = 'The phone number is invalid';
+  message: string = 'The phone number is invalid.';
 }
 export class PhonePasswordFlood extends NotAcceptable {
   id: string = 'PHONE_PASSWORD_FLOOD';
-  message: string = 'You have tried to log-in too many times';
+  message: string = 'You have tried logging in too many times.';
 }
 export class PreviousChatImportActiveWaitmin extends NotAcceptable {
   id: string = 'PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN';
@@ -93,7 +93,8 @@ export class PreviousChatImportActiveWaitmin extends NotAcceptable {
 }
 export class PrivacyPremiumRequired extends NotAcceptable {
   id: string = 'PRIVACY_PREMIUM_REQUIRED';
-  message: string = 'You need a Telegram Premium subscription to send a message to this user.';
+  message: string =
+    'You need a [Telegram Premium subscription](https://core.telegram.org/api/premium) to send a message to this user.';
 }
 export class SendCodeUnavailable extends NotAcceptable {
   id: string = 'SEND_CODE_UNAVAILABLE';
@@ -102,12 +103,12 @@ export class SendCodeUnavailable extends NotAcceptable {
 }
 export class StickersetInvalid extends NotAcceptable {
   id: string = 'STICKERSET_INVALID';
-  message: string = 'The sticker set is invalid';
+  message: string = 'The provided sticker set is invalid.';
 }
 export class StickersetOwnerAnonymous extends NotAcceptable {
   id: string = 'STICKERSET_OWNER_ANONYMOUS';
   message: string =
-    "This sticker set can't be used as the group's sticker set because it was created by one of its anonymous admins";
+    "Provided stickerset can't be installed as group stickerset to prevent admin deanonymization.";
 }
 export class TopicClosed extends NotAcceptable {
   id: string = 'TOPIC_CLOSED';
@@ -124,9 +125,9 @@ export class UserpicPrivacyRequired extends NotAcceptable {
 }
 export class UserpicUploadRequired extends NotAcceptable {
   id: string = 'USERPIC_UPLOAD_REQUIRED';
-  message: string = 'You must have a profile picture to publish your geolocation';
+  message: string = 'You must have a profile picture to publish your geolocation.';
 }
 export class UserRestricted extends NotAcceptable {
   id: string = 'USER_RESTRICTED';
-  message: string = "You are limited/restricted. You can't perform this action";
+  message: string = "You're spamreported, you can't create channels or chats.";
 }

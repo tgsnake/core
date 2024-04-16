@@ -45,7 +45,15 @@ async function getGroupedJson() {
         code: Number(code.replace('-', '')),
         msg: name.replace(/\%[aA-zZ]/gm, 'X').trim(),
         desc: json.descriptions[name].replace(/\%[aA-zZ]/gm, '{value}').trim() || '',
-        affected: affected || [],
+        affected:
+          affected.map((el) => {
+            const split = el.split('.');
+            split[split.length - 1] = split[split.length - 1].replace(
+              split[split.length - 1][0],
+              split[split.length - 1][0].toUpperCase(),
+            );
+            return split.join('.');
+          }) || [],
       });
     }
   }

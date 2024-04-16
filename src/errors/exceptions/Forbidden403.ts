@@ -21,23 +21,25 @@ export class Forbidden extends RPCError {
 }
 export class AnonymousReactionsDisabled extends Forbidden {
   id: string = 'ANONYMOUS_REACTIONS_DISABLED';
-  message: string = '';
+  message: string =
+    'Sorry, anonymous administrators cannot leave reactions or participate in polls.';
 }
 export class BroadcastForbidden extends Forbidden {
   id: string = 'BROADCAST_FORBIDDEN';
-  message: string = "The request can't be used in channels";
+  message: string =
+    'Channel poll voters and reactions cannot be fetched to prevent deanonymization.';
 }
 export class ChannelPublicGroupNa extends Forbidden {
   id: string = 'CHANNEL_PUBLIC_GROUP_NA';
-  message: string = 'The channel/supergroup is not available';
+  message: string = 'channel/supergroup not available.';
 }
 export class ChatAdminInviteRequired extends Forbidden {
   id: string = 'CHAT_ADMIN_INVITE_REQUIRED';
-  message: string = "You don't have rights to invite other users";
+  message: string = 'You do not have the rights to do this.';
 }
 export class ChatAdminRequired extends Forbidden {
   id: string = 'CHAT_ADMIN_REQUIRED';
-  message: string = 'The method requires chat admin privileges';
+  message: string = 'You must be an admin in this chat to do this.';
 }
 export class ChatForbidden extends Forbidden {
   id: string = 'CHAT_FORBIDDEN';
@@ -45,7 +47,8 @@ export class ChatForbidden extends Forbidden {
 }
 export class ChatGuestSendForbidden extends Forbidden {
   id: string = 'CHAT_GUEST_SEND_FORBIDDEN';
-  message: string = 'You join the discussion group before commenting, see here » for more info.';
+  message: string =
+    'You join the discussion group before commenting, see [here &raquo;](/api/discussion#requiring-users-to-join-the-group) for more info.';
 }
 export class ChatSendAudiosForbidden extends Forbidden {
   id: string = 'CHAT_SEND_AUDIOS_FORBIDDEN';
@@ -61,15 +64,15 @@ export class ChatSendGameForbidden extends Forbidden {
 }
 export class ChatSendGifsForbidden extends Forbidden {
   id: string = 'CHAT_SEND_GIFS_FORBIDDEN';
-  message: string = "You can't send animations in this chat";
+  message: string = "You can't send gifs in this chat.";
 }
 export class ChatSendInlineForbidden extends Forbidden {
   id: string = 'CHAT_SEND_INLINE_FORBIDDEN';
-  message: string = 'You cannot use inline bots to send messages in this chat';
+  message: string = "You can't send inline messages in this group.";
 }
 export class ChatSendMediaForbidden extends Forbidden {
   id: string = 'CHAT_SEND_MEDIA_FORBIDDEN';
-  message: string = "You can't send media messages in this chat";
+  message: string = "You can't send media in this chat.";
 }
 export class ChatSendPhotosForbidden extends Forbidden {
   id: string = 'CHAT_SEND_PHOTOS_FORBIDDEN';
@@ -81,11 +84,11 @@ export class ChatSendPlainForbidden extends Forbidden {
 }
 export class ChatSendPollForbidden extends Forbidden {
   id: string = 'CHAT_SEND_POLL_FORBIDDEN';
-  message: string = "You can't send polls in this chat";
+  message: string = "You can't send polls in this chat.";
 }
 export class ChatSendStickersForbidden extends Forbidden {
   id: string = 'CHAT_SEND_STICKERS_FORBIDDEN';
-  message: string = "You can't send stickers in this chat";
+  message: string = "You can't send stickers in this chat.";
 }
 export class ChatSendVideosForbidden extends Forbidden {
   id: string = 'CHAT_SEND_VIDEOS_FORBIDDEN';
@@ -97,16 +100,16 @@ export class ChatSendVoicesForbidden extends Forbidden {
 }
 export class ChatWriteForbidden extends Forbidden {
   id: string = 'CHAT_WRITE_FORBIDDEN';
-  message: string = "You don't have rights to send messages in this chat";
+  message: string = "You can't write in this chat.";
 }
 export class EditBotInviteForbidden extends Forbidden {
   id: string = 'EDIT_BOT_INVITE_FORBIDDEN';
-  message: string = "Bots' chat invite links can't be edited";
+  message: string = "Normal users can't edit invites that were created by bots.";
 }
 export class GroupcallAlreadyStarted extends Forbidden {
   id: string = 'GROUPCALL_ALREADY_STARTED';
   message: string =
-    'The groupcall has already started, you can join directly using phone.joinGroupCall.';
+    'The groupcall has already started, you can join directly using [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).';
 }
 export class GroupcallForbidden extends Forbidden {
   id: string = 'GROUPCALL_FORBIDDEN';
@@ -114,29 +117,34 @@ export class GroupcallForbidden extends Forbidden {
 }
 export class InlineBotRequired extends Forbidden {
   id: string = 'INLINE_BOT_REQUIRED';
-  message: string = 'The action must be performed through an inline bot callback';
+  message: string = 'Only the inline bot can edit message.';
 }
 export class MessageAuthorRequired extends Forbidden {
   id: string = 'MESSAGE_AUTHOR_REQUIRED';
-  message: string = 'You are not the author of this message';
+  message: string = 'Message author required.';
 }
 export class MessageDeleteForbidden extends Forbidden {
   id: string = 'MESSAGE_DELETE_FORBIDDEN';
   message: string =
-    "You don't have rights to delete messages in this chat, most likely because you are not the author of them";
+    "You can't delete one of the messages you tried to delete, most likely because it is a service message.";
 }
 export class ParticipantJoinMissing extends Forbidden {
   id: string = 'PARTICIPANT_JOIN_MISSING';
   message: string =
-    "Trying to enable a presentation, when the user hasn't joined the Video Chat with phone.joinGroupCall.";
+    "Trying to enable a presentation, when the user hasn't joined the Video Chat with [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).";
 }
 export class PollVoteRequired extends Forbidden {
   id: string = 'POLL_VOTE_REQUIRED';
-  message: string = 'Cast a vote in the poll before calling this method';
+  message: string = 'Cast a vote in the poll before calling this method.';
 }
 export class PremiumAccountRequired extends Forbidden {
   id: string = 'PREMIUM_ACCOUNT_REQUIRED';
-  message: string = 'This action requires a premium account';
+  message: string = 'A premium account is required to execute this action.';
+}
+export class PrivacyPremiumRequired extends Forbidden {
+  id: string = 'PRIVACY_PREMIUM_REQUIRED';
+  message: string =
+    'You need a [Telegram Premium subscription](https://core.telegram.org/api/premium) to send a message to this user.';
 }
 export class PublicChannelMissing extends Forbidden {
   id: string = 'PUBLIC_CHANNEL_MISSING';
@@ -144,24 +152,26 @@ export class PublicChannelMissing extends Forbidden {
 }
 export class RightForbidden extends Forbidden {
   id: string = 'RIGHT_FORBIDDEN';
-  message: string =
-    "You don't have enough rights for this action, or you tried to set one or more admin rights that can't be applied to this kind of chat (channel or supergroup)";
+  message: string = 'Your admin rights do not allow you to do this.';
 }
 export class SensitiveChangeForbidden extends Forbidden {
   id: string = 'SENSITIVE_CHANGE_FORBIDDEN';
-  message: string = "Your sensitive content settings can't be changed at this time";
+  message: string = "You can't change your sensitive content settings.";
 }
 export class TakeoutRequired extends Forbidden {
   id: string = 'TAKEOUT_REQUIRED';
-  message: string = 'The method must be invoked inside a takeout session';
+  message: string =
+    'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).';
 }
 export class UserBotInvalid extends Forbidden {
   id: string = 'USER_BOT_INVALID';
-  message: string = 'This method can only be called by a bot';
+  message: string =
+    'User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.';
 }
 export class UserChannelsTooMuch extends Forbidden {
   id: string = 'USER_CHANNELS_TOO_MUCH';
-  message: string = 'One of the users you tried to add is already in too many channels/supergroups';
+  message: string =
+    'One of the users you tried to add is already in too many channels/supergroups.';
 }
 export class UserDeleted extends Forbidden {
   id: string = 'USER_DELETED';
@@ -170,23 +180,23 @@ export class UserDeleted extends Forbidden {
 }
 export class UserInvalid extends Forbidden {
   id: string = 'USER_INVALID';
-  message: string = 'The provided user is invalid';
+  message: string = 'Invalid user provided.';
 }
 export class UserIsBlocked extends Forbidden {
   id: string = 'USER_IS_BLOCKED';
-  message: string = 'The user is blocked';
+  message: string = 'You were blocked by this user.';
 }
 export class UserNotMutualContact extends Forbidden {
   id: string = 'USER_NOT_MUTUAL_CONTACT';
-  message: string = 'The provided user is not a mutual contact';
+  message: string = 'The provided user is not a mutual contact.';
 }
 export class UserPrivacyRestricted extends Forbidden {
   id: string = 'USER_PRIVACY_RESTRICTED';
-  message: string = "The user's privacy settings is preventing you to perform this action";
+  message: string = "The user's privacy settings do not allow you to do this.";
 }
 export class UserRestricted extends Forbidden {
   id: string = 'USER_RESTRICTED';
-  message: string = "You are limited/restricted. You can't perform this action";
+  message: string = "You're spamreported, you can't create channels or chats.";
 }
 export class VoiceMessagesForbidden extends Forbidden {
   id: string = 'VOICE_MESSAGES_FORBIDDEN';
