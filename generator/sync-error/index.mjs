@@ -44,7 +44,14 @@ async function getGroupedJson() {
       results.push({
         code: Number(code.replace('-', '')),
         msg: name.replace(/\%[aA-zZ]/gm, 'X').trim(),
-        desc: json.descriptions[name].replace(/\%[aA-zZ]/gm, '{value}').trim() || '',
+        desc: (json.descriptions[name] || '')
+          .replace(/\%[aA-zZ]/gm, '{value}')
+          .trim()
+          .replace(
+            /\[([^\[\]]*)\]\((.*?)\)/gm,
+            (match, text, href) =>
+              `[${text}](${/^http(s?):\/\//.test(href) ? href : `https://core.telegram.org${href}`})`,
+          ),
         affected:
           affected.map((el) => {
             const split = el.split('.');

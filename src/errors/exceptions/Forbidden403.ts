@@ -48,7 +48,7 @@ export class ChatForbidden extends Forbidden {
 export class ChatGuestSendForbidden extends Forbidden {
   id: string = 'CHAT_GUEST_SEND_FORBIDDEN';
   message: string =
-    'You join the discussion group before commenting, see [here &raquo;](/api/discussion#requiring-users-to-join-the-group) for more info.';
+    'You join the discussion group before commenting, see [here &raquo;](https://core.telegram.org/api/discussion#requiring-users-to-join-the-group) for more info.';
 }
 export class ChatSendAudiosForbidden extends Forbidden {
   id: string = 'CHAT_SEND_AUDIOS_FORBIDDEN';
@@ -161,7 +161,7 @@ export class SensitiveChangeForbidden extends Forbidden {
 export class TakeoutRequired extends Forbidden {
   id: string = 'TAKEOUT_REQUIRED';
   message: string =
-    'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).';
+    'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).';
 }
 export class UserBotInvalid extends Forbidden {
   id: string = 'USER_BOT_INVALID';

@@ -409,7 +409,7 @@
   {
     "code": 400,
     "msg": "BUTTON_USER_PRIVACY_RESTRICTED",
-    "desc": "The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.",
+    "desc": "The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.",
     "affected": ["messages.SendMessage"]
   },
   {
@@ -1302,7 +1302,7 @@
   {
     "code": 400,
     "msg": "ENTITY_BOUNDS_INVALID",
-    "desc": "A specified [entity offset or length](/api/entities#entity-length) is invalid, see [here &raquo;](/api/entities#entity-length) for info on how to properly compute the entity offset/length.",
+    "desc": "A specified [entity offset or length](https://core.telegram.org/api/entities#entity-length) is invalid, see [here &raquo;](https://core.telegram.org/api/entities#entity-length) for info on how to properly compute the entity offset/length.",
     "affected": [
       "help.EditUserInfo",
       "messages.EditInlineBotMessage",
@@ -1830,7 +1830,7 @@
   {
     "code": 400,
     "msg": "INVITES_TOO_MUCH",
-    "desc": "The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](/api/config#chatlist-invites-limit-default) was reached.",
+    "desc": "The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](https://core.telegram.org/api/config#chatlist-invites-limit-default) was reached.",
     "affected": ["chatlists.ExportChatlistInvite"]
   },
   {
@@ -2969,7 +2969,7 @@
   {
     "code": 400,
     "msg": "REACTIONS_TOO_MANY",
-    "desc": "The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](/api/config#client-configuration).",
+    "desc": "The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](https://core.telegram.org/api/config#client-configuration).",
     "affected": ["messages.SendReaction"]
   },
   {
@@ -3422,7 +3422,7 @@
   {
     "code": 400,
     "msg": "STORIES_TOO_MUCH",
-    "desc": "You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](/api/premium) subscription, delete an active story, or wait for the oldest story to expire.",
+    "desc": "You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](https://core.telegram.org/api/premium) subscription, delete an active story, or wait for the oldest story to expire.",
     "affected": ["stories.CanSendStory", "stories.SendStory"]
   },
   {
@@ -3486,7 +3486,7 @@
   {
     "code": 400,
     "msg": "TAKEOUT_REQUIRED",
-    "desc": "A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).",
+    "desc": "A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).",
     "affected": ["contacts.GetSaved"]
   },
   {
@@ -4255,7 +4255,7 @@
   {
     "code": 403,
     "msg": "CHAT_GUEST_SEND_FORBIDDEN",
-    "desc": "You join the discussion group before commenting, see [here &raquo;](/api/discussion#requiring-users-to-join-the-group) for more info.",
+    "desc": "You join the discussion group before commenting, see [here &raquo;](https://core.telegram.org/api/discussion#requiring-users-to-join-the-group) for more info.",
     "affected": [
       "messages.ForwardMessages",
       "messages.SendInlineBotResult",
@@ -4498,7 +4498,7 @@
   {
     "code": 403,
     "msg": "TAKEOUT_REQUIRED",
-    "desc": "A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).",
+    "desc": "A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).",
     "affected": ["account.FinishTakeoutSession", "channels.GetLeftChannels", "contacts.GetSaved"]
   },
   {

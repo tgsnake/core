@@ -253,7 +253,7 @@ export class ButtonUserInvalid extends BadRequest {
 export class ButtonUserPrivacyRestricted extends BadRequest {
   id: string = 'BUTTON_USER_PRIVACY_RESTRICTED';
   message: string =
-    'The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.';
+    'The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.';
 }
 export class CallAlreadyAccepted extends BadRequest {
   id: string = 'CALL_ALREADY_ACCEPTED';
@@ -588,7 +588,7 @@ export class EntitiesTooLong extends BadRequest {
 export class EntityBoundsInvalid extends BadRequest {
   id: string = 'ENTITY_BOUNDS_INVALID';
   message: string =
-    'A specified [entity offset or length](/api/entities#entity-length) is invalid, see [here &raquo;](/api/entities#entity-length) for info on how to properly compute the entity offset/length.';
+    'A specified [entity offset or length](https://core.telegram.org/api/entities#entity-length) is invalid, see [here &raquo;](https://core.telegram.org/api/entities#entity-length) for info on how to properly compute the entity offset/length.';
 }
 export class EntityMentionUserInvalid extends BadRequest {
   id: string = 'ENTITY_MENTION_USER_INVALID';
@@ -892,7 +892,7 @@ export class InputUserDeactivated extends BadRequest {
 export class InvitesTooMuch extends BadRequest {
   id: string = 'INVITES_TOO_MUCH';
   message: string =
-    'The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](/api/config#chatlist-invites-limit-default) was reached.';
+    'The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](https://core.telegram.org/api/config#chatlist-invites-limit-default) was reached.';
 }
 export class InviteForbiddenWithJoinas extends BadRequest {
   id: string = 'INVITE_FORBIDDEN_WITH_JOINAS';
@@ -1428,7 +1428,7 @@ export class RangesInvalid extends BadRequest {
 export class ReactionsTooMany extends BadRequest {
   id: string = 'REACTIONS_TOO_MANY';
   message: string =
-    "The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](/api/config#client-configuration).";
+    "The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](https://core.telegram.org/api/config#client-configuration).";
 }
 export class ReactionEmpty extends BadRequest {
   id: string = 'REACTION_EMPTY';
@@ -1704,7 +1704,7 @@ export class StoriesNeverCreated extends BadRequest {
 export class StoriesTooMuch extends BadRequest {
   id: string = 'STORIES_TOO_MUCH';
   message: string =
-    'You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](/api/premium) subscription, delete an active story, or wait for the oldest story to expire.';
+    'You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](https://core.telegram.org/api/premium) subscription, delete an active story, or wait for the oldest story to expire.';
 }
 export class StoryIdEmpty extends BadRequest {
   id: string = 'STORY_ID_EMPTY';
@@ -1744,7 +1744,7 @@ export class TakeoutInvalid extends BadRequest {
 export class TakeoutRequired extends BadRequest {
   id: string = 'TAKEOUT_REQUIRED';
   message: string =
-    'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).';
+    'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).';
 }
 export class TaskAlreadyExists extends BadRequest {
   id: string = 'TASK_ALREADY_EXISTS';

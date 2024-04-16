@@ -60,7 +60,7 @@ code	id	message
 400	BUTTON_TYPE_INVALID	The type of one or more of the buttons you provided is invalid.
 400	BUTTON_URL_INVALID	Button URL invalid.
 400	BUTTON_USER_INVALID	The user_id passed to inputKeyboardButtonUserProfile is invalid!
-400	BUTTON_USER_PRIVACY_RESTRICTED	The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.
+400	BUTTON_USER_PRIVACY_RESTRICTED	The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.
 400	CALL_ALREADY_ACCEPTED	The call was already accepted.
 400	CALL_ALREADY_DECLINED	The call was already declined.
 400	CALL_OCCUPY_FAILED	The call failed because the user is already making another call.
@@ -142,7 +142,7 @@ code	id	message
 400	ENCRYPTION_DECLINED	The secret chat was declined.
 400	ENCRYPTION_ID_INVALID	The provided secret chat ID is invalid.
 400	ENTITIES_TOO_LONG	You provided too many styled message entities.
-400	ENTITY_BOUNDS_INVALID	A specified [entity offset or length](/api/entities#entity-length) is invalid, see [here &raquo;](/api/entities#entity-length) for info on how to properly compute the entity offset/length.
+400	ENTITY_BOUNDS_INVALID	A specified [entity offset or length](https://core.telegram.org/api/entities#entity-length) is invalid, see [here &raquo;](https://core.telegram.org/api/entities#entity-length) for info on how to properly compute the entity offset/length.
 400	ENTITY_MENTION_USER_INVALID	You mentioned an invalid user.
 400	ERROR_TEXT_EMPTY	The provided error message is empty.
 400	EXPIRE_DATE_INVALID	The specified expiration date is invalid.
@@ -216,7 +216,7 @@ code	id	message
 400	INPUT_TEXT_EMPTY	The specified text is empty.
 400	INPUT_TEXT_TOO_LONG	The specified text is too long.
 400	INPUT_USER_DEACTIVATED	The specified user was deleted.
-400	INVITES_TOO_MUCH	The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](/api/config#chatlist-invites-limit-default) was reached.
+400	INVITES_TOO_MUCH	The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](https://core.telegram.org/api/config#chatlist-invites-limit-default) was reached.
 400	INVITE_FORBIDDEN_WITH_JOINAS	If the user has anonymously joined a group call as a channel, they can't invite other users to the group call because that would cause deanonymization, because the invite would be sent using the original user ID, not the anonymized channel ID.
 400	INVITE_HASH_EMPTY	The invite hash is empty.
 400	INVITE_HASH_EXPIRED	The invite link has expired.
@@ -347,7 +347,7 @@ code	id	message
 400	RANDOM_ID_INVALID	A provided random ID is invalid.
 400	RANDOM_LENGTH_INVALID	Random length invalid.
 400	RANGES_INVALID	Invalid range provided.
-400	REACTIONS_TOO_MANY	The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](/api/config#client-configuration).
+400	REACTIONS_TOO_MANY	The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](https://core.telegram.org/api/config#client-configuration).
 400	REACTION_EMPTY	Empty reaction provided.
 400	REACTION_INVALID	The specified reaction is invalid.
 400	REFLECTOR_NOT_AVAILABLE	The call reflector is not available
@@ -415,7 +415,7 @@ code	id	message
 400	STICKER_VIDEO_NODOC	You must send the video sticker as a document.
 400	STICKER_VIDEO_NOWEBM	The specified video sticker is not in webm format.
 400	STORIES_NEVER_CREATED	This peer hasn't ever posted any stories.
-400	STORIES_TOO_MUCH	You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](/api/premium) subscription, delete an active story, or wait for the oldest story to expire.
+400	STORIES_TOO_MUCH	You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](https://core.telegram.org/api/premium) subscription, delete an active story, or wait for the oldest story to expire.
 400	STORY_ID_EMPTY	You specified no story IDs.
 400	STORY_ID_INVALID	The specified story ID is invalid.
 400	STORY_NOT_MODIFIED	The new story information you passed is equal to the previous story information, thus it wasn't modified.
@@ -424,7 +424,7 @@ code	id	message
 400	STORY_SEND_FLOOD_WEEKLY_X	You've hit the weekly story limit as specified by the [`stories_sent_weekly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-weekly-limit-default): wait for the specified number of seconds before posting a new story.
 400	SWITCH_PM_TEXT_EMPTY	The switch_pm.text field was empty.
 400	TAKEOUT_INVALID	The specified takeout ID is invalid.
-400	TAKEOUT_REQUIRED	A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).
+400	TAKEOUT_REQUIRED	A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).
 400	TASK_ALREADY_EXISTS	An email reset was already requested.
 400	TEMP_AUTH_KEY_ALREADY_BOUND	The passed temporary key is already bound to another **perm_auth_key_id**.
 400	TEMP_AUTH_KEY_EMPTY	No temporary auth key provided.
@@ -524,7 +524,7 @@ code	id	message
 403	CHAT_ADMIN_INVITE_REQUIRED	You do not have the rights to do this.
 403	CHAT_ADMIN_REQUIRED	You must be an admin in this chat to do this.
 403	CHAT_FORBIDDEN	You cannot write in this chat
-403	CHAT_GUEST_SEND_FORBIDDEN	You join the discussion group before commenting, see [here &raquo;](/api/discussion#requiring-users-to-join-the-group) for more info.
+403	CHAT_GUEST_SEND_FORBIDDEN	You join the discussion group before commenting, see [here &raquo;](https://core.telegram.org/api/discussion#requiring-users-to-join-the-group) for more info.
 403	CHAT_SEND_AUDIOS_FORBIDDEN	You can't send audio messages in this chat.
 403	CHAT_SEND_DOCS_FORBIDDEN	You can't send documents in this chat.
 403	CHAT_SEND_GAME_FORBIDDEN	You can't send a game to this chat.
@@ -551,7 +551,7 @@ code	id	message
 403	PUBLIC_CHANNEL_MISSING	You can only export group call invite links for public chats or channels.
 403	RIGHT_FORBIDDEN	Your admin rights do not allow you to do this.
 403	SENSITIVE_CHANGE_FORBIDDEN	You can't change your sensitive content settings.
-403	TAKEOUT_REQUIRED	A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](/api/takeout).
+403	TAKEOUT_REQUIRED	A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).
 403	USER_BOT_INVALID	User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.
 403	USER_CHANNELS_TOO_MUCH	One of the users you tried to add is already in too many channels/supergroups.
 403	USER_DELETED	You can't send this secret message because the other participant deleted their account.
