@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 177;
+  export const Layer: number = 178;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -192,6 +192,9 @@ export namespace Raw {
     | Raw.account.GetBusinessChatLinks
     | Raw.account.ResolveBusinessChatLink
     | Raw.account.UpdatePersonalChannel
+    | Raw.account.ToggleSponsoredMessages
+    | Raw.account.GetReactionsNotifySettings
+    | Raw.account.SetReactionsNotifySettings
     | Raw.users.GetUsers
     | Raw.users.GetFullUser
     | Raw.users.SetSecureValueErrors
@@ -660,6 +663,7 @@ export namespace Raw {
     | Raw.stories.GetChatsToSend
     | Raw.stories.TogglePeerStoriesHidden
     | Raw.stories.GetStoryReactionsList
+    | Raw.stories.TogglePinnedToTop
     | Raw.premium.GetBoostsList
     | Raw.premium.GetMyBoosts
     | Raw.premium.ApplyBoost
@@ -822,6 +826,7 @@ export namespace Raw {
   export type TypeSavedContact = Raw.SavedPhoneContact;
   export type TypeInputContact = Raw.InputPhoneContact;
   export type TypeContactStatus = Raw.ContactStatus;
+  export type TypeReactionsNotifySettings = Raw.ReactionsNotifySettings;
   export type TypeInputBusinessChatLink = Raw.InputBusinessChatLink;
   export type TypeInputBusinessIntro = Raw.InputBusinessIntro;
   export type TypeInputBusinessBotRecipients = Raw.InputBusinessBotRecipients;
@@ -886,6 +891,9 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeReactionNotificationsFrom =
+    | Raw.ReactionNotificationsFromContacts
+    | Raw.ReactionNotificationsFromAll;
   export type TypeBroadcastRevenueTransaction =
     | Raw.BroadcastRevenueTransactionProceeds
     | Raw.BroadcastRevenueTransactionWithdrawal
@@ -956,7 +964,6 @@ export namespace Raw {
   export type TypeSearchResultsPosition = Raw.SearchResultPosition;
   export type TypeSearchResultsCalendarPeriod = Raw.SearchResultsCalendarPeriod;
   export type TypeSponsoredMessage = Raw.SponsoredMessage;
-  export type TypeSponsoredWebPage = Raw.SponsoredWebPage;
   export type TypeGroupCallParticipantVideoSourceGroup = Raw.GroupCallParticipantVideoSourceGroup;
   export type TypeChatAdminWithInvites = Raw.ChatAdminWithInvites;
   export type TypeChatInviteImporter = Raw.ChatInviteImporter;
@@ -1236,7 +1243,10 @@ export namespace Raw {
     | Raw.PasswordKdfAlgoUnknown
     | Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow;
   export type TypeAuthorization = Raw.Authorization;
-  export type TypeWebPageAttribute = Raw.WebPageAttributeTheme | Raw.WebPageAttributeStory;
+  export type TypeWebPageAttribute =
+    | Raw.WebPageAttributeTheme
+    | Raw.WebPageAttributeStory
+    | Raw.WebPageAttributeStickerSet;
   export type TypePage = Raw.Page;
   export type TypeMaskCoords = Raw.MaskCoords;
   export type TypeInputUser =
@@ -1381,6 +1391,7 @@ export namespace Raw {
     | Raw.UpdateBotNewBusinessMessage
     | Raw.UpdateBotEditBusinessMessage
     | Raw.UpdateBotDeleteBusinessMessage
+    | Raw.UpdateNewStoryReaction
     | UpdateSecretChatMessage;
   export type TypeBotBusinessConnection = Raw.BotBusinessConnection;
   export type TypeQuickReply = Raw.QuickReply;
@@ -8293,6 +8304,7 @@ export namespace Raw {
     requestsPending?: int;
     recentRequesters?: Vector<long>;
     availableReactions?: Raw.TypeChatReactions;
+    reactionsLimit?: int;
 
     constructor(params: {
       canSetUsername?: boolean;
@@ -8314,11 +8326,12 @@ export namespace Raw {
       requestsPending?: int;
       recentRequesters?: Vector<long>;
       availableReactions?: Raw.TypeChatReactions;
+      reactionsLimit?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'ChatFull';
-      this.constructorId = 0xc9d31138;
+      this.constructorId = 0x2633421b;
       this.subclassOfId = 0xd49a2697;
       this._slots = [
         'canSetUsername',
@@ -8340,6 +8353,7 @@ export namespace Raw {
         'requestsPending',
         'recentRequesters',
         'availableReactions',
+        'reactionsLimit',
       ];
       this.canSetUsername = params.canSetUsername;
       this.hasScheduled = params.hasScheduled;
@@ -8360,6 +8374,7 @@ export namespace Raw {
       this.requestsPending = params.requestsPending;
       this.recentRequesters = params.recentRequesters;
       this.availableReactions = params.availableReactions;
+      this.reactionsLimit = params.reactionsLimit;
     }
     /**
      * Generate the TLObject from buffer.
@@ -8389,6 +8404,7 @@ export namespace Raw {
       let requestsPending = flags & (1 << 17) ? await Primitive.Int.read(b) : undefined;
       let recentRequesters = flags & (1 << 17) ? await TLObject.read(b, Primitive.Long) : [];
       let availableReactions = flags & (1 << 18) ? await TLObject.read(b) : undefined;
+      let reactionsLimit = flags & (1 << 20) ? await Primitive.Int.read(b) : undefined;
       return new Raw.ChatFull({
         canSetUsername: canSetUsername,
         hasScheduled: hasScheduled,
@@ -8409,6 +8425,7 @@ export namespace Raw {
         requestsPending: requestsPending,
         recentRequesters: recentRequesters,
         availableReactions: availableReactions,
+        reactionsLimit: reactionsLimit,
       });
     }
     /**
@@ -8435,6 +8452,7 @@ export namespace Raw {
       flags |= this.requestsPending !== undefined ? 1 << 17 : 0;
       flags |= this.recentRequesters ? 1 << 17 : 0;
       flags |= this.availableReactions !== undefined ? 1 << 18 : 0;
+      flags |= this.reactionsLimit !== undefined ? 1 << 20 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -8484,6 +8502,9 @@ export namespace Raw {
       }
       if (this.availableReactions !== undefined) {
         b.write(this.availableReactions.write() as unknown as Buffer);
+      }
+      if (this.reactionsLimit !== undefined) {
+        b.write(Primitive.Int.write(this.reactionsLimit) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -8540,6 +8561,7 @@ export namespace Raw {
     recentRequesters?: Vector<long>;
     defaultSendAs?: Raw.TypePeer;
     availableReactions?: Raw.TypeChatReactions;
+    reactionsLimit?: int;
     stories?: Raw.TypePeerStories;
     wallpaper?: Raw.TypeWallPaper;
     boostsApplied?: int;
@@ -8598,6 +8620,7 @@ export namespace Raw {
       recentRequesters?: Vector<long>;
       defaultSendAs?: Raw.TypePeer;
       availableReactions?: Raw.TypeChatReactions;
+      reactionsLimit?: int;
       stories?: Raw.TypePeerStories;
       wallpaper?: Raw.TypeWallPaper;
       boostsApplied?: int;
@@ -8607,7 +8630,7 @@ export namespace Raw {
       super();
       this.classType = 'types';
       this.className = 'ChannelFull';
-      this.constructorId = 0x44c054a7;
+      this.constructorId = 0xbbab348d;
       this.subclassOfId = 0xd49a2697;
       this._slots = [
         'canViewParticipants',
@@ -8661,6 +8684,7 @@ export namespace Raw {
         'recentRequesters',
         'defaultSendAs',
         'availableReactions',
+        'reactionsLimit',
         'stories',
         'wallpaper',
         'boostsApplied',
@@ -8718,6 +8742,7 @@ export namespace Raw {
       this.recentRequesters = params.recentRequesters;
       this.defaultSendAs = params.defaultSendAs;
       this.availableReactions = params.availableReactions;
+      this.reactionsLimit = params.reactionsLimit;
       this.stories = params.stories;
       this.wallpaper = params.wallpaper;
       this.boostsApplied = params.boostsApplied;
@@ -8784,6 +8809,7 @@ export namespace Raw {
       let recentRequesters = flags & (1 << 28) ? await TLObject.read(b, Primitive.Long) : [];
       let defaultSendAs = flags & (1 << 29) ? await TLObject.read(b) : undefined;
       let availableReactions = flags & (1 << 30) ? await TLObject.read(b) : undefined;
+      let reactionsLimit = flags2 & (1 << 13) ? await Primitive.Int.read(b) : undefined;
       let stories = flags2 & (1 << 4) ? await TLObject.read(b) : undefined;
       let wallpaper = flags2 & (1 << 7) ? await TLObject.read(b) : undefined;
       let boostsApplied = flags2 & (1 << 8) ? await Primitive.Int.read(b) : undefined;
@@ -8841,6 +8867,7 @@ export namespace Raw {
         recentRequesters: recentRequesters,
         defaultSendAs: defaultSendAs,
         availableReactions: availableReactions,
+        reactionsLimit: reactionsLimit,
         stories: stories,
         wallpaper: wallpaper,
         boostsApplied: boostsApplied,
@@ -8901,6 +8928,7 @@ export namespace Raw {
       flags2 |= this.viewForumAsMessages ? 1 << 6 : 0;
       flags2 |= this.restrictedSponsored ? 1 << 11 : 0;
       flags2 |= this.canViewRevenue ? 1 << 12 : 0;
+      flags2 |= this.reactionsLimit !== undefined ? 1 << 13 : 0;
       flags2 |= this.stories !== undefined ? 1 << 4 : 0;
       flags2 |= this.wallpaper !== undefined ? 1 << 7 : 0;
       flags2 |= this.boostsApplied !== undefined ? 1 << 8 : 0;
@@ -9014,6 +9042,9 @@ export namespace Raw {
       }
       if (this.availableReactions !== undefined) {
         b.write(this.availableReactions.write() as unknown as Buffer);
+      }
+      if (this.reactionsLimit !== undefined) {
+        b.write(Primitive.Int.write(this.reactionsLimit) as unknown as Buffer);
       }
       if (this.stories !== undefined) {
         b.write(this.stories.write() as unknown as Buffer);
@@ -14887,6 +14918,7 @@ export namespace Raw {
     wallpaperOverridden?: boolean;
     contactRequirePremium?: boolean;
     readDatesPrivate?: boolean;
+    sponsoredEnabled?: boolean;
     id!: long;
     about?: string;
     settings!: Raw.TypePeerSettings;
@@ -14929,6 +14961,7 @@ export namespace Raw {
       wallpaperOverridden?: boolean;
       contactRequirePremium?: boolean;
       readDatesPrivate?: boolean;
+      sponsoredEnabled?: boolean;
       id: long;
       about?: string;
       settings: Raw.TypePeerSettings;
@@ -14976,6 +15009,7 @@ export namespace Raw {
         'wallpaperOverridden',
         'contactRequirePremium',
         'readDatesPrivate',
+        'sponsoredEnabled',
         'id',
         'about',
         'settings',
@@ -15017,6 +15051,7 @@ export namespace Raw {
       this.wallpaperOverridden = params.wallpaperOverridden;
       this.contactRequirePremium = params.contactRequirePremium;
       this.readDatesPrivate = params.readDatesPrivate;
+      this.sponsoredEnabled = params.sponsoredEnabled;
       this.id = params.id;
       this.about = params.about;
       this.settings = params.settings;
@@ -15067,6 +15102,7 @@ export namespace Raw {
       let readDatesPrivate = flags & (1 << 30) ? true : false;
       let flags2 = await Primitive.Int.read(b);
 
+      let sponsoredEnabled = flags2 & (1 << 7) ? true : false;
       let id = await Primitive.Long.read(b);
       let about = flags & (1 << 1) ? await Primitive.String.read(b) : undefined;
       let settings = await TLObject.read(b);
@@ -15108,6 +15144,7 @@ export namespace Raw {
         wallpaperOverridden: wallpaperOverridden,
         contactRequirePremium: contactRequirePremium,
         readDatesPrivate: readDatesPrivate,
+        sponsoredEnabled: sponsoredEnabled,
         id: id,
         about: about,
         settings: settings,
@@ -15176,6 +15213,7 @@ export namespace Raw {
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       let flags2 = 0;
+      flags2 |= this.sponsoredEnabled ? 1 << 7 : 0;
       flags2 |= this.businessWorkHours !== undefined ? 1 << 0 : 0;
       flags2 |= this.businessLocation !== undefined ? 1 << 1 : 0;
       flags2 |= this.businessGreetingMessage !== undefined ? 1 << 2 : 0;
@@ -22661,6 +22699,54 @@ export namespace Raw {
       }
       if (this.qts !== undefined) {
         b.write(Primitive.Int.write(this.qts) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class UpdateNewStoryReaction extends TLObject {
+    storyId!: int;
+    peer!: Raw.TypePeer;
+    reaction!: Raw.TypeReaction;
+
+    constructor(params: { storyId: int; peer: Raw.TypePeer; reaction: Raw.TypeReaction }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateNewStoryReaction';
+      this.constructorId = 0x1824e40b;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['storyId', 'peer', 'reaction'];
+      this.storyId = params.storyId;
+      this.peer = params.peer;
+      this.reaction = params.reaction;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.UpdateNewStoryReaction> {
+      // no flags
+
+      let storyId = await Primitive.Int.read(b);
+      let peer = await TLObject.read(b);
+      let reaction = await TLObject.read(b);
+      return new Raw.UpdateNewStoryReaction({ storyId: storyId, peer: peer, reaction: reaction });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      if (this.storyId !== undefined) {
+        b.write(Primitive.Int.write(this.storyId) as unknown as Buffer);
+      }
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.reaction !== undefined) {
+        b.write(this.reaction.write() as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -46818,6 +46904,7 @@ export namespace Raw {
     allowAppHash?: boolean;
     allowMissedCall?: boolean;
     allowFirebase?: boolean;
+    unknownNumber?: boolean;
     logoutTokens?: Vector<bytes>;
     token?: string;
     appSandbox?: Bool;
@@ -46828,6 +46915,7 @@ export namespace Raw {
       allowAppHash?: boolean;
       allowMissedCall?: boolean;
       allowFirebase?: boolean;
+      unknownNumber?: boolean;
       logoutTokens?: Vector<bytes>;
       token?: string;
       appSandbox?: Bool;
@@ -46843,6 +46931,7 @@ export namespace Raw {
         'allowAppHash',
         'allowMissedCall',
         'allowFirebase',
+        'unknownNumber',
         'logoutTokens',
         'token',
         'appSandbox',
@@ -46852,6 +46941,7 @@ export namespace Raw {
       this.allowAppHash = params.allowAppHash;
       this.allowMissedCall = params.allowMissedCall;
       this.allowFirebase = params.allowFirebase;
+      this.unknownNumber = params.unknownNumber;
       this.logoutTokens = params.logoutTokens;
       this.token = params.token;
       this.appSandbox = params.appSandbox;
@@ -46870,6 +46960,7 @@ export namespace Raw {
       let allowAppHash = flags & (1 << 4) ? true : false;
       let allowMissedCall = flags & (1 << 5) ? true : false;
       let allowFirebase = flags & (1 << 7) ? true : false;
+      let unknownNumber = flags & (1 << 9) ? true : false;
       let logoutTokens = flags & (1 << 6) ? await TLObject.read(b, Primitive.Bytes) : [];
       let token = flags & (1 << 8) ? await Primitive.String.read(b) : undefined;
       let appSandbox = flags & (1 << 8) ? await Primitive.Bool.read(b) : undefined;
@@ -46879,6 +46970,7 @@ export namespace Raw {
         allowAppHash: allowAppHash,
         allowMissedCall: allowMissedCall,
         allowFirebase: allowFirebase,
+        unknownNumber: unknownNumber,
         logoutTokens: logoutTokens,
         token: token,
         appSandbox: appSandbox,
@@ -46898,6 +46990,7 @@ export namespace Raw {
       flags |= this.allowAppHash ? 1 << 4 : 0;
       flags |= this.allowMissedCall ? 1 << 5 : 0;
       flags |= this.allowFirebase ? 1 << 7 : 0;
+      flags |= this.unknownNumber ? 1 << 9 : 0;
       flags |= this.logoutTokens ? 1 << 6 : 0;
       flags |= this.token !== undefined ? 1 << 8 : 0;
       flags |= this.appSandbox !== undefined ? 1 << 8 : 0;
@@ -48534,6 +48627,63 @@ export namespace Raw {
       }
       if (this.story !== undefined) {
         b.write(this.story.write() as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class WebPageAttributeStickerSet extends TLObject {
+    emojis?: boolean;
+    textColor?: boolean;
+    stickers!: Vector<Raw.TypeDocument>;
+
+    constructor(params: {
+      emojis?: boolean;
+      textColor?: boolean;
+      stickers: Vector<Raw.TypeDocument>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WebPageAttributeStickerSet';
+      this.constructorId = 0x50cc03d3;
+      this.subclassOfId = 0xafcfe9c7;
+      this._slots = ['emojis', 'textColor', 'stickers'];
+      this.emojis = params.emojis;
+      this.textColor = params.textColor;
+      this.stickers = params.stickers;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.WebPageAttributeStickerSet> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let emojis = flags & (1 << 0) ? true : false;
+      let textColor = flags & (1 << 1) ? true : false;
+      let stickers = await TLObject.read(b);
+      return new Raw.WebPageAttributeStickerSet({
+        emojis: emojis,
+        textColor: textColor,
+        stickers: stickers,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.emojis ? 1 << 0 : 0;
+      flags |= this.textColor ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.stickers) {
+        b.write(Primitive.Vector.write(this.stickers) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -51060,76 +51210,60 @@ export namespace Raw {
   }
   export class SponsoredMessage extends TLObject {
     recommended?: boolean;
-    showPeerPhoto?: boolean;
     canReport?: boolean;
     randomId!: bytes;
-    fromId?: Raw.TypePeer;
-    chatInvite?: Raw.TypeChatInvite;
-    chatInviteHash?: string;
-    channelPost?: int;
-    startParam?: string;
-    webpage?: Raw.TypeSponsoredWebPage;
-    app?: Raw.TypeBotApp;
+    url!: string;
+    title!: string;
     message!: string;
     entities?: Vector<Raw.TypeMessageEntity>;
-    buttonText?: string;
+    photo?: Raw.TypePhoto;
+    color?: Raw.TypePeerColor;
+    buttonText!: string;
     sponsorInfo?: string;
     additionalInfo?: string;
 
     constructor(params: {
       recommended?: boolean;
-      showPeerPhoto?: boolean;
       canReport?: boolean;
       randomId: bytes;
-      fromId?: Raw.TypePeer;
-      chatInvite?: Raw.TypeChatInvite;
-      chatInviteHash?: string;
-      channelPost?: int;
-      startParam?: string;
-      webpage?: Raw.TypeSponsoredWebPage;
-      app?: Raw.TypeBotApp;
+      url: string;
+      title: string;
       message: string;
       entities?: Vector<Raw.TypeMessageEntity>;
-      buttonText?: string;
+      photo?: Raw.TypePhoto;
+      color?: Raw.TypePeerColor;
+      buttonText: string;
       sponsorInfo?: string;
       additionalInfo?: string;
     }) {
       super();
       this.classType = 'types';
       this.className = 'SponsoredMessage';
-      this.constructorId = 0xed5383f7;
+      this.constructorId = 0xbdedf566;
       this.subclassOfId = 0xe157d836;
       this._slots = [
         'recommended',
-        'showPeerPhoto',
         'canReport',
         'randomId',
-        'fromId',
-        'chatInvite',
-        'chatInviteHash',
-        'channelPost',
-        'startParam',
-        'webpage',
-        'app',
+        'url',
+        'title',
         'message',
         'entities',
+        'photo',
+        'color',
         'buttonText',
         'sponsorInfo',
         'additionalInfo',
       ];
       this.recommended = params.recommended;
-      this.showPeerPhoto = params.showPeerPhoto;
       this.canReport = params.canReport;
       this.randomId = params.randomId;
-      this.fromId = params.fromId;
-      this.chatInvite = params.chatInvite;
-      this.chatInviteHash = params.chatInviteHash;
-      this.channelPost = params.channelPost;
-      this.startParam = params.startParam;
-      this.webpage = params.webpage;
-      this.app = params.app;
+      this.url = params.url;
+      this.title = params.title;
       this.message = params.message;
       this.entities = params.entities;
+      this.photo = params.photo;
+      this.color = params.color;
       this.buttonText = params.buttonText;
       this.sponsorInfo = params.sponsorInfo;
       this.additionalInfo = params.additionalInfo;
@@ -51144,35 +51278,27 @@ export namespace Raw {
       let flags = await Primitive.Int.read(b);
 
       let recommended = flags & (1 << 5) ? true : false;
-      let showPeerPhoto = flags & (1 << 6) ? true : false;
       let canReport = flags & (1 << 12) ? true : false;
       let randomId = await Primitive.Bytes.read(b);
-      let fromId = flags & (1 << 3) ? await TLObject.read(b) : undefined;
-      let chatInvite = flags & (1 << 4) ? await TLObject.read(b) : undefined;
-      let chatInviteHash = flags & (1 << 4) ? await Primitive.String.read(b) : undefined;
-      let channelPost = flags & (1 << 2) ? await Primitive.Int.read(b) : undefined;
-      let startParam = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
-      let webpage = flags & (1 << 9) ? await TLObject.read(b) : undefined;
-      let app = flags & (1 << 10) ? await TLObject.read(b) : undefined;
+      let url = await Primitive.String.read(b);
+      let title = await Primitive.String.read(b);
       let message = await Primitive.String.read(b);
       let entities = flags & (1 << 1) ? await TLObject.read(b) : [];
-      let buttonText = flags & (1 << 11) ? await Primitive.String.read(b) : undefined;
+      let photo = flags & (1 << 6) ? await TLObject.read(b) : undefined;
+      let color = flags & (1 << 13) ? await TLObject.read(b) : undefined;
+      let buttonText = await Primitive.String.read(b);
       let sponsorInfo = flags & (1 << 7) ? await Primitive.String.read(b) : undefined;
       let additionalInfo = flags & (1 << 8) ? await Primitive.String.read(b) : undefined;
       return new Raw.SponsoredMessage({
         recommended: recommended,
-        showPeerPhoto: showPeerPhoto,
         canReport: canReport,
         randomId: randomId,
-        fromId: fromId,
-        chatInvite: chatInvite,
-        chatInviteHash: chatInviteHash,
-        channelPost: channelPost,
-        startParam: startParam,
-        webpage: webpage,
-        app: app,
+        url: url,
+        title: title,
         message: message,
         entities: entities,
+        photo: photo,
+        color: color,
         buttonText: buttonText,
         sponsorInfo: sponsorInfo,
         additionalInfo: additionalInfo,
@@ -51188,17 +51314,10 @@ export namespace Raw {
 
       let flags = 0;
       flags |= this.recommended ? 1 << 5 : 0;
-      flags |= this.showPeerPhoto ? 1 << 6 : 0;
       flags |= this.canReport ? 1 << 12 : 0;
-      flags |= this.fromId !== undefined ? 1 << 3 : 0;
-      flags |= this.chatInvite !== undefined ? 1 << 4 : 0;
-      flags |= this.chatInviteHash !== undefined ? 1 << 4 : 0;
-      flags |= this.channelPost !== undefined ? 1 << 2 : 0;
-      flags |= this.startParam !== undefined ? 1 << 0 : 0;
-      flags |= this.webpage !== undefined ? 1 << 9 : 0;
-      flags |= this.app !== undefined ? 1 << 10 : 0;
       flags |= this.entities ? 1 << 1 : 0;
-      flags |= this.buttonText !== undefined ? 1 << 11 : 0;
+      flags |= this.photo !== undefined ? 1 << 6 : 0;
+      flags |= this.color !== undefined ? 1 << 13 : 0;
       flags |= this.sponsorInfo !== undefined ? 1 << 7 : 0;
       flags |= this.additionalInfo !== undefined ? 1 << 8 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
@@ -51206,32 +51325,23 @@ export namespace Raw {
       if (this.randomId !== undefined) {
         b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
       }
-      if (this.fromId !== undefined) {
-        b.write(this.fromId.write() as unknown as Buffer);
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
       }
-      if (this.chatInvite !== undefined) {
-        b.write(this.chatInvite.write() as unknown as Buffer);
-      }
-      if (this.chatInviteHash !== undefined) {
-        b.write(Primitive.String.write(this.chatInviteHash) as unknown as Buffer);
-      }
-      if (this.channelPost !== undefined) {
-        b.write(Primitive.Int.write(this.channelPost) as unknown as Buffer);
-      }
-      if (this.startParam !== undefined) {
-        b.write(Primitive.String.write(this.startParam) as unknown as Buffer);
-      }
-      if (this.webpage !== undefined) {
-        b.write(this.webpage.write() as unknown as Buffer);
-      }
-      if (this.app !== undefined) {
-        b.write(this.app.write() as unknown as Buffer);
+      if (this.title !== undefined) {
+        b.write(Primitive.String.write(this.title) as unknown as Buffer);
       }
       if (this.message !== undefined) {
         b.write(Primitive.String.write(this.message) as unknown as Buffer);
       }
       if (this.entities) {
         b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      if (this.photo !== undefined) {
+        b.write(this.photo.write() as unknown as Buffer);
+      }
+      if (this.color !== undefined) {
+        b.write(this.color.write() as unknown as Buffer);
       }
       if (this.buttonText !== undefined) {
         b.write(Primitive.String.write(this.buttonText) as unknown as Buffer);
@@ -55351,60 +55461,6 @@ export namespace Raw {
       }
       if (this.date !== undefined) {
         b.write(Primitive.Int.write(this.date) as unknown as Buffer);
-      }
-      return b.buffer;
-    }
-  }
-  export class SponsoredWebPage extends TLObject {
-    url!: string;
-    siteName!: string;
-    photo?: Raw.TypePhoto;
-
-    constructor(params: { url: string; siteName: string; photo?: Raw.TypePhoto }) {
-      super();
-      this.classType = 'types';
-      this.className = 'SponsoredWebPage';
-      this.constructorId = 0x3db8ec63;
-      this.subclassOfId = 0xcdfea554;
-      this._slots = ['url', 'siteName', 'photo'];
-      this.url = params.url;
-      this.siteName = params.siteName;
-      this.photo = params.photo;
-    }
-    /**
-     * Generate the TLObject from buffer.
-     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
-     */
-    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.SponsoredWebPage> {
-      // no flags
-
-      let flags = await Primitive.Int.read(b);
-
-      let url = await Primitive.String.read(b);
-      let siteName = await Primitive.String.read(b);
-      let photo = flags & (1 << 0) ? await TLObject.read(b) : undefined;
-      return new Raw.SponsoredWebPage({ url: url, siteName: siteName, photo: photo });
-    }
-    /**
-     * Generate buffer from TLObject.
-     */
-    write(): Buffer {
-      let b: BytesIO = new BytesIO();
-      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-      // no flags
-
-      let flags = 0;
-      flags |= this.photo !== undefined ? 1 << 0 : 0;
-      b.write(Primitive.Int.write(flags) as unknown as Buffer);
-
-      if (this.url !== undefined) {
-        b.write(Primitive.String.write(this.url) as unknown as Buffer);
-      }
-      if (this.siteName !== undefined) {
-        b.write(Primitive.String.write(this.siteName) as unknown as Buffer);
-      }
-      if (this.photo !== undefined) {
-        b.write(this.photo.write() as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -59805,6 +59861,138 @@ export namespace Raw {
       }
       if (this.provider !== undefined) {
         b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+      }
+      return b.buffer;
+    }
+  }
+  export class ReactionNotificationsFromContacts extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'ReactionNotificationsFromContacts';
+      this.constructorId = 0xbac3a61a;
+      this.subclassOfId = 0x345f7940;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      b: BytesIO,
+      ...args: Array<any>
+    ): Promise<Raw.ReactionNotificationsFromContacts> {
+      // no flags
+
+      return new Raw.ReactionNotificationsFromContacts();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      return b.buffer;
+    }
+  }
+  export class ReactionNotificationsFromAll extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'ReactionNotificationsFromAll';
+      this.constructorId = 0x4b9e22a0;
+      this.subclassOfId = 0x345f7940;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.ReactionNotificationsFromAll> {
+      // no flags
+
+      return new Raw.ReactionNotificationsFromAll();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      return b.buffer;
+    }
+  }
+  export class ReactionsNotifySettings extends TLObject {
+    messagesNotifyFrom?: Raw.TypeReactionNotificationsFrom;
+    storiesNotifyFrom?: Raw.TypeReactionNotificationsFrom;
+    sound!: Raw.TypeNotificationSound;
+    showPreviews!: Bool;
+
+    constructor(params: {
+      messagesNotifyFrom?: Raw.TypeReactionNotificationsFrom;
+      storiesNotifyFrom?: Raw.TypeReactionNotificationsFrom;
+      sound: Raw.TypeNotificationSound;
+      showPreviews: Bool;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'ReactionsNotifySettings';
+      this.constructorId = 0x56e34970;
+      this.subclassOfId = 0x8dff0851;
+      this._slots = ['messagesNotifyFrom', 'storiesNotifyFrom', 'sound', 'showPreviews'];
+      this.messagesNotifyFrom = params.messagesNotifyFrom;
+      this.storiesNotifyFrom = params.storiesNotifyFrom;
+      this.sound = params.sound;
+      this.showPreviews = params.showPreviews;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.ReactionsNotifySettings> {
+      // no flags
+
+      let flags = await Primitive.Int.read(b);
+
+      let messagesNotifyFrom = flags & (1 << 0) ? await TLObject.read(b) : undefined;
+      let storiesNotifyFrom = flags & (1 << 1) ? await TLObject.read(b) : undefined;
+      let sound = await TLObject.read(b);
+      let showPreviews = await Primitive.Bool.read(b);
+      return new Raw.ReactionsNotifySettings({
+        messagesNotifyFrom: messagesNotifyFrom,
+        storiesNotifyFrom: storiesNotifyFrom,
+        sound: sound,
+        showPreviews: showPreviews,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+
+      let flags = 0;
+      flags |= this.messagesNotifyFrom !== undefined ? 1 << 0 : 0;
+      flags |= this.storiesNotifyFrom !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.messagesNotifyFrom !== undefined) {
+        b.write(this.messagesNotifyFrom.write() as unknown as Buffer);
+      }
+      if (this.storiesNotifyFrom !== undefined) {
+        b.write(this.storiesNotifyFrom.write() as unknown as Buffer);
+      }
+      if (this.sound !== undefined) {
+        b.write(this.sound.write() as unknown as Buffer);
+      }
+      if (this.showPreviews !== undefined) {
+        b.write(Primitive.Bool.write(this.showPreviews) as unknown as Buffer);
       }
       return b.buffer;
     }
@@ -77254,6 +77442,7 @@ export namespace Raw {
     }
     export class SearchGlobal extends TLObject {
       __response__!: Raw.messages.TypeMessages;
+      broadcastsOnly?: boolean;
       folderId?: int;
       q!: string;
       filter!: Raw.TypeMessagesFilter;
@@ -77265,6 +77454,7 @@ export namespace Raw {
       limit!: int;
 
       constructor(params: {
+        broadcastsOnly?: boolean;
         folderId?: int;
         q: string;
         filter: Raw.TypeMessagesFilter;
@@ -77281,6 +77471,7 @@ export namespace Raw {
         this.constructorId = 0x4bc6589a;
         this.subclassOfId = 0xd4b40b5e;
         this._slots = [
+          'broadcastsOnly',
           'folderId',
           'q',
           'filter',
@@ -77291,6 +77482,7 @@ export namespace Raw {
           'offsetId',
           'limit',
         ];
+        this.broadcastsOnly = params.broadcastsOnly;
         this.folderId = params.folderId;
         this.q = params.q;
         this.filter = params.filter;
@@ -77310,6 +77502,7 @@ export namespace Raw {
 
         let flags = await Primitive.Int.read(b);
 
+        let broadcastsOnly = flags & (1 << 1) ? true : false;
         let folderId = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
         let q = await Primitive.String.read(b);
         let filter = await TLObject.read(b);
@@ -77320,6 +77513,7 @@ export namespace Raw {
         let offsetId = await Primitive.Int.read(b);
         let limit = await Primitive.Int.read(b);
         return new Raw.messages.SearchGlobal({
+          broadcastsOnly: broadcastsOnly,
           folderId: folderId,
           q: q,
           filter: filter,
@@ -77340,6 +77534,7 @@ export namespace Raw {
         // no flags
 
         let flags = 0;
+        flags |= this.broadcastsOnly ? 1 << 1 : 0;
         flags |= this.folderId !== undefined ? 1 << 0 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -83286,16 +83481,22 @@ export namespace Raw {
       __response__!: Raw.TypeUpdates;
       peer!: Raw.TypeInputPeer;
       availableReactions!: Raw.TypeChatReactions;
+      reactionsLimit?: int;
 
-      constructor(params: { peer: Raw.TypeInputPeer; availableReactions: Raw.TypeChatReactions }) {
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        availableReactions: Raw.TypeChatReactions;
+        reactionsLimit?: int;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.SetChatAvailableReactions';
-        this.constructorId = 0xfeb16771;
+        this.constructorId = 0x5a150bd4;
         this.subclassOfId = 0x8af52aac;
-        this._slots = ['peer', 'availableReactions'];
+        this._slots = ['peer', 'availableReactions', 'reactionsLimit'];
         this.peer = params.peer;
         this.availableReactions = params.availableReactions;
+        this.reactionsLimit = params.reactionsLimit;
       }
       /**
        * Generate the TLObject from buffer.
@@ -83307,11 +83508,15 @@ export namespace Raw {
       ): Promise<Raw.messages.SetChatAvailableReactions> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
         let peer = await TLObject.read(b);
         let availableReactions = await TLObject.read(b);
+        let reactionsLimit = flags & (1 << 0) ? await Primitive.Int.read(b) : undefined;
         return new Raw.messages.SetChatAvailableReactions({
           peer: peer,
           availableReactions: availableReactions,
+          reactionsLimit: reactionsLimit,
         });
       }
       /**
@@ -83322,11 +83527,18 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
+        let flags = 0;
+        flags |= this.reactionsLimit !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
         if (this.peer !== undefined) {
           b.write(this.peer.write() as unknown as Buffer);
         }
         if (this.availableReactions !== undefined) {
           b.write(this.availableReactions.write() as unknown as Buffer);
+        }
+        if (this.reactionsLimit !== undefined) {
+          b.write(Primitive.Int.write(this.reactionsLimit) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -94730,6 +94942,120 @@ export namespace Raw {
         return b.buffer;
       }
     }
+    export class ToggleSponsoredMessages extends TLObject {
+      __response__!: Bool;
+      enabled!: Bool;
+
+      constructor(params: { enabled: Bool }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.ToggleSponsoredMessages';
+        this.constructorId = 0xb9d9a38d;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['enabled'];
+        this.enabled = params.enabled;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.ToggleSponsoredMessages> {
+        // no flags
+
+        let enabled = await Primitive.Bool.read(b);
+        return new Raw.account.ToggleSponsoredMessages({ enabled: enabled });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.enabled !== undefined) {
+          b.write(Primitive.Bool.write(this.enabled) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class GetReactionsNotifySettings extends TLObject {
+      __response__!: Raw.TypeReactionsNotifySettings;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetReactionsNotifySettings';
+        this.constructorId = 0x6dd654c;
+        this.subclassOfId = 0x8dff0851;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.GetReactionsNotifySettings> {
+        // no flags
+
+        return new Raw.account.GetReactionsNotifySettings();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        return b.buffer;
+      }
+    }
+    export class SetReactionsNotifySettings extends TLObject {
+      __response__!: Raw.TypeReactionsNotifySettings;
+      settings!: Raw.TypeReactionsNotifySettings;
+
+      constructor(params: { settings: Raw.TypeReactionsNotifySettings }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.SetReactionsNotifySettings';
+        this.constructorId = 0x316ce548;
+        this.subclassOfId = 0x8dff0851;
+        this._slots = ['settings'];
+        this.settings = params.settings;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        b: BytesIO,
+        ...args: Array<any>
+      ): Promise<Raw.account.SetReactionsNotifySettings> {
+        // no flags
+
+        let settings = await TLObject.read(b);
+        return new Raw.account.SetReactionsNotifySettings({ settings: settings });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.settings !== undefined) {
+          b.write(this.settings.write() as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
   }
   export namespace channels {
     export type TypeSponsoredMessageReportResult =
@@ -98047,13 +98373,13 @@ export namespace Raw {
     }
     export class GetChannelRecommendations extends TLObject {
       __response__!: Raw.messages.TypeChats;
-      channel!: Raw.TypeInputChannel;
+      channel?: Raw.TypeInputChannel;
 
-      constructor(params: { channel: Raw.TypeInputChannel }) {
+      constructor(params: { channel?: Raw.TypeInputChannel }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.GetChannelRecommendations';
-        this.constructorId = 0x83b70d97;
+        this.constructorId = 0x25a71742;
         this.subclassOfId = 0x99d5cb14;
         this._slots = ['channel'];
         this.channel = params.channel;
@@ -98068,7 +98394,9 @@ export namespace Raw {
       ): Promise<Raw.channels.GetChannelRecommendations> {
         // no flags
 
-        let channel = await TLObject.read(b);
+        let flags = await Primitive.Int.read(b);
+
+        let channel = flags & (1 << 0) ? await TLObject.read(b) : undefined;
         return new Raw.channels.GetChannelRecommendations({ channel: channel });
       }
       /**
@@ -98078,6 +98406,10 @@ export namespace Raw {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
+
+        let flags = 0;
+        flags |= this.channel !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.channel !== undefined) {
           b.write(this.channel.write() as unknown as Buffer);
@@ -105993,23 +106325,26 @@ export namespace Raw {
     export class Stories extends TLObject {
       count!: int;
       stories!: Vector<Raw.TypeStoryItem>;
+      pinnedToTop?: Vector<int>;
       chats!: Vector<Raw.TypeChat>;
       users!: Vector<Raw.TypeUser>;
 
       constructor(params: {
         count: int;
         stories: Vector<Raw.TypeStoryItem>;
+        pinnedToTop?: Vector<int>;
         chats: Vector<Raw.TypeChat>;
         users: Vector<Raw.TypeUser>;
       }) {
         super();
         this.classType = 'types';
         this.className = 'stories.Stories';
-        this.constructorId = 0x5dd8c3c8;
+        this.constructorId = 0x63c3dd0a;
         this.subclassOfId = 0x251c0c2c;
-        this._slots = ['count', 'stories', 'chats', 'users'];
+        this._slots = ['count', 'stories', 'pinnedToTop', 'chats', 'users'];
         this.count = params.count;
         this.stories = params.stories;
+        this.pinnedToTop = params.pinnedToTop;
         this.chats = params.chats;
         this.users = params.users;
       }
@@ -106020,13 +106355,17 @@ export namespace Raw {
       static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.Stories> {
         // no flags
 
+        let flags = await Primitive.Int.read(b);
+
         let count = await Primitive.Int.read(b);
         let stories = await TLObject.read(b);
+        let pinnedToTop = flags & (1 << 0) ? await TLObject.read(b, Primitive.Int) : [];
         let chats = await TLObject.read(b);
         let users = await TLObject.read(b);
         return new Raw.stories.Stories({
           count: count,
           stories: stories,
+          pinnedToTop: pinnedToTop,
           chats: chats,
           users: users,
         });
@@ -106039,11 +106378,18 @@ export namespace Raw {
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
 
+        let flags = 0;
+        flags |= this.pinnedToTop ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
         if (this.count !== undefined) {
           b.write(Primitive.Int.write(this.count) as unknown as Buffer);
         }
         if (this.stories) {
           b.write(Primitive.Vector.write(this.stories) as unknown as Buffer);
+        }
+        if (this.pinnedToTop) {
+          b.write(Primitive.Vector.write(this.pinnedToTop, Primitive.Int) as unknown as Buffer);
         }
         if (this.chats) {
           b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
@@ -107673,6 +108019,49 @@ export namespace Raw {
         }
         if (this.limit !== undefined) {
           b.write(Primitive.Int.write(this.limit) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class TogglePinnedToTop extends TLObject {
+      __response__!: Bool;
+      peer!: Raw.TypeInputPeer;
+      id!: Vector<int>;
+
+      constructor(params: { peer: Raw.TypeInputPeer; id: Vector<int> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'stories.TogglePinnedToTop';
+        this.constructorId = 0xb297e9b;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['peer', 'id'];
+        this.peer = params.peer;
+        this.id = params.id;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.stories.TogglePinnedToTop> {
+        // no flags
+
+        let peer = await TLObject.read(b);
+        let id = await TLObject.read(b, Primitive.Int);
+        return new Raw.stories.TogglePinnedToTop({ peer: peer, id: id });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id, Primitive.Int) as unknown as Buffer);
         }
         return b.buffer;
       }
