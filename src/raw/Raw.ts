@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 178;
+  export const Layer: number = 179;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -83,6 +83,7 @@ export namespace Raw {
     | Raw.auth.ImportWebTokenAuthorization
     | Raw.auth.RequestFirebaseSms
     | Raw.auth.ResetLoginEmail
+    | Raw.auth.ReportMissingCode
     | Raw.account.RegisterDevice
     | Raw.account.UnregisterDevice
     | Raw.account.UpdateNotifySettings
@@ -938,7 +939,6 @@ export namespace Raw {
   export type TypeExportedChatlistInvite = Raw.ExportedChatlistInvite;
   export type TypeAutoSaveException = Raw.AutoSaveException;
   export type TypeAutoSaveSettings = Raw.AutoSaveSettings;
-  export type TypeTextWithEntities = Raw.TextWithEntities;
   export type TypeEmojiGroup = Raw.EmojiGroup;
   export type TypePremiumSubscriptionOption = Raw.PremiumSubscriptionOption;
   export type TypePremiumGiftCodeOption = Raw.PremiumGiftCodeOption;
@@ -1017,6 +1017,7 @@ export namespace Raw {
   export type TypeAutoDownloadSettings = Raw.AutoDownloadSettings;
   export type TypePollAnswerVoters = Raw.PollAnswerVoters;
   export type TypePollAnswer = Raw.PollAnswer;
+  export type TypeTextWithEntities = Raw.TextWithEntities;
   export type TypePageTableCell = Raw.PageTableCell;
   export type TypeJSONObjectValue = Raw.JsonObjectValue;
   export type TypeJSONValue =
@@ -46073,14 +46074,14 @@ export namespace Raw {
     }
   }
   export class PollAnswer extends TLObject {
-    text!: string;
+    text!: Raw.TypeTextWithEntities;
     option!: bytes;
 
-    constructor(params: { text: string; option: bytes }) {
+    constructor(params: { text: Raw.TypeTextWithEntities; option: bytes }) {
       super();
       this.classType = 'types';
       this.className = 'PollAnswer';
-      this.constructorId = 0x6ca9c2e9;
+      this.constructorId = 0xff16e2ca;
       this.subclassOfId = 0x7ea5dd9e;
       this._slots = ['text', 'option'];
       this.text = params.text;
@@ -46093,7 +46094,7 @@ export namespace Raw {
     static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.PollAnswer> {
       // no flags
 
-      let text = await Primitive.String.read(b);
+      let text = await TLObject.read(b);
       let option = await Primitive.Bytes.read(b);
       return new Raw.PollAnswer({ text: text, option: option });
     }
@@ -46106,7 +46107,7 @@ export namespace Raw {
       // no flags
 
       if (this.text !== undefined) {
-        b.write(Primitive.String.write(this.text) as unknown as Buffer);
+        b.write(this.text.write() as unknown as Buffer);
       }
       if (this.option !== undefined) {
         b.write(Primitive.Bytes.write(this.option) as unknown as Buffer);
@@ -46120,7 +46121,7 @@ export namespace Raw {
     publicVoters?: boolean;
     multipleChoice?: boolean;
     quiz?: boolean;
-    question!: string;
+    question!: Raw.TypeTextWithEntities;
     answers!: Vector<Raw.TypePollAnswer>;
     closePeriod?: int;
     closeDate?: int;
@@ -46131,7 +46132,7 @@ export namespace Raw {
       publicVoters?: boolean;
       multipleChoice?: boolean;
       quiz?: boolean;
-      question: string;
+      question: Raw.TypeTextWithEntities;
       answers: Vector<Raw.TypePollAnswer>;
       closePeriod?: int;
       closeDate?: int;
@@ -46139,7 +46140,7 @@ export namespace Raw {
       super();
       this.classType = 'types';
       this.className = 'Poll';
-      this.constructorId = 0x86e18161;
+      this.constructorId = 0x58747131;
       this.subclassOfId = 0x248e557b;
       this._slots = [
         'id',
@@ -46176,7 +46177,7 @@ export namespace Raw {
       let publicVoters = flags & (1 << 1) ? true : false;
       let multipleChoice = flags & (1 << 2) ? true : false;
       let quiz = flags & (1 << 3) ? true : false;
-      let question = await Primitive.String.read(b);
+      let question = await TLObject.read(b);
       let answers = await TLObject.read(b);
       let closePeriod = flags & (1 << 4) ? await Primitive.Int.read(b) : undefined;
       let closeDate = flags & (1 << 5) ? await Primitive.Int.read(b) : undefined;
@@ -46213,7 +46214,7 @@ export namespace Raw {
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.question !== undefined) {
-        b.write(Primitive.String.write(this.question) as unknown as Buffer);
+        b.write(this.question.write() as unknown as Buffer);
       }
       if (this.answers) {
         b.write(Primitive.Vector.write(this.answers) as unknown as Buffer);
@@ -66394,7 +66395,9 @@ export namespace Raw {
       | Raw.auth.SentCodeTypeEmailCode
       | Raw.auth.SentCodeTypeSetUpEmailRequired
       | Raw.auth.SentCodeTypeFragmentSms
-      | Raw.auth.SentCodeTypeFirebaseSms;
+      | Raw.auth.SentCodeTypeFirebaseSms
+      | Raw.auth.SentCodeTypeSmsWord
+      | Raw.auth.SentCodeTypeSmsPhrase;
     export class SentCode extends TLObject {
       type!: Raw.auth.TypeSentCodeType;
       phoneCodeHash!: string;
@@ -67290,6 +67293,90 @@ export namespace Raw {
         }
         if (this.length !== undefined) {
           b.write(Primitive.Int.write(this.length) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SentCodeTypeSmsWord extends TLObject {
+      beginning?: string;
+
+      constructor(params: { beginning?: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'auth.SentCodeTypeSmsWord';
+        this.constructorId = 0xa416ac81;
+        this.subclassOfId = 0xff5b158e;
+        this._slots = ['beginning'];
+        this.beginning = params.beginning;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.auth.SentCodeTypeSmsWord> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let beginning = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        return new Raw.auth.SentCodeTypeSmsWord({ beginning: beginning });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.beginning !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.beginning !== undefined) {
+          b.write(Primitive.String.write(this.beginning) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class SentCodeTypeSmsPhrase extends TLObject {
+      beginning?: string;
+
+      constructor(params: { beginning?: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'auth.SentCodeTypeSmsPhrase';
+        this.constructorId = 0xb37794af;
+        this.subclassOfId = 0xff5b158e;
+        this._slots = ['beginning'];
+        this.beginning = params.beginning;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.auth.SentCodeTypeSmsPhrase> {
+        // no flags
+
+        let flags = await Primitive.Int.read(b);
+
+        let beginning = flags & (1 << 0) ? await Primitive.String.read(b) : undefined;
+        return new Raw.auth.SentCodeTypeSmsPhrase({ beginning: beginning });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        let flags = 0;
+        flags |= this.beginning !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.beginning !== undefined) {
+          b.write(Primitive.String.write(this.beginning) as unknown as Buffer);
         }
         return b.buffer;
       }
@@ -68519,6 +68606,59 @@ export namespace Raw {
         }
         if (this.phoneCodeHash !== undefined) {
           b.write(Primitive.String.write(this.phoneCodeHash) as unknown as Buffer);
+        }
+        return b.buffer;
+      }
+    }
+    export class ReportMissingCode extends TLObject {
+      __response__!: Bool;
+      phoneNumber!: string;
+      phoneCodeHash!: string;
+      mnc!: string;
+
+      constructor(params: { phoneNumber: string; phoneCodeHash: string; mnc: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'auth.ReportMissingCode';
+        this.constructorId = 0xcb9deff6;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['phoneNumber', 'phoneCodeHash', 'mnc'];
+        this.phoneNumber = params.phoneNumber;
+        this.phoneCodeHash = params.phoneCodeHash;
+        this.mnc = params.mnc;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(b: BytesIO, ...args: Array<any>): Promise<Raw.auth.ReportMissingCode> {
+        // no flags
+
+        let phoneNumber = await Primitive.String.read(b);
+        let phoneCodeHash = await Primitive.String.read(b);
+        let mnc = await Primitive.String.read(b);
+        return new Raw.auth.ReportMissingCode({
+          phoneNumber: phoneNumber,
+          phoneCodeHash: phoneCodeHash,
+          mnc: mnc,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+
+        if (this.phoneNumber !== undefined) {
+          b.write(Primitive.String.write(this.phoneNumber) as unknown as Buffer);
+        }
+        if (this.phoneCodeHash !== undefined) {
+          b.write(Primitive.String.write(this.phoneCodeHash) as unknown as Buffer);
+        }
+        if (this.mnc !== undefined) {
+          b.write(Primitive.String.write(this.mnc) as unknown as Buffer);
         }
         return b.buffer;
       }
