@@ -20,11 +20,8 @@ const mutex = new Mutex();
  */
 export class Socket {
   private _client!: any;
-
   private _data!: Buffer;
-
   private _read!: boolean | Promise<boolean>;
-
   private _promisedReading!: (value?: any) => void;
   /**
    * The timeout used to run the function of the {@link net.Socket Socket}. If more than the time has been found, it will return a TimeoutError error.

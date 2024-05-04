@@ -34,7 +34,9 @@ export const aesjs = {
     },
   },
 }; // Deno compatibility
-// @ts-ignore
-export const isBrowser = typeof window !== 'undefined'; // browser compatibility
+export const isDeno = 'Deno' in globalThis; // Deno compatibility
+export const isBun = 'Bun' in globalThis; // Bun compatibility
+export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
+export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
 export const { Buffer } = buffer;
 export { crypto, net, os, bigInt, path };

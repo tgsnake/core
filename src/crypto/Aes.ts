@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, aesjs, Buffer } from '../platform.deno.ts';
+import { crypto, aesjs, Buffer, where } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers.ts';
 
@@ -71,7 +71,7 @@ export function AES(key: Buffer) {
   const iv = Buffer.alloc(0);
   return {
     encrypt: (data: Buffer) => {
-      if ('Deno' in globalThis) {
+      if (where !== 'Node' && where !== 'Bun') {
         const cipher = new aesjs.ModeOfOperation.ecb(key);
         return Buffer.from(cipher.encrypt(data));
       } else {
@@ -81,7 +81,7 @@ export function AES(key: Buffer) {
       }
     },
     decrypt: (data: Buffer) => {
-      if ('Deno' in globalThis) {
+      if (where !== 'Node' && where !== 'Bun') {
         const cipher = new aesjs.ModeOfOperation.ecb(key);
         return Buffer.from(cipher.decrypt(data));
       } else {

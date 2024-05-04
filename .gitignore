@@ -119,3 +119,4 @@ test/**
 # src/raw/Raw.ts
 # src/raw/All.ts
 # src/errors/exceptions
+./browser

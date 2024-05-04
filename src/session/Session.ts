@@ -303,6 +303,23 @@ export class Session {
         } catch (error: any) {
           if (!this._isConnected) {
             break;
+          } else if (
+            (error instanceof Errors.WSError.ReadClosed ||
+              error instanceof Errors.WSError.Disconnected ||
+              error instanceof Errors.ClientError.ClientDisconnected) &&
+            this._client._autoReconnect
+          ) {
+            Logger.info('[136] Reconnecting to Telegram Server.');
+            this._networkTask = false;
+            this._isConnected = false;
+            Logger.debug('[137] Stop ping task.');
+            clearTimeout(this._pingTask);
+            if (this._client._clearAllTask) {
+              Logger.debug('[138] Clearing all task');
+              this._results.clear();
+              this._task.clear();
+            }
+            return this.start();
           } else {
             throw error;
           }

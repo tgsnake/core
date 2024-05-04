@@ -6,3 +6,4 @@ lib/**
 node_modules/**
 # changelog 
 CHANGELOG.md
+./browser/**
