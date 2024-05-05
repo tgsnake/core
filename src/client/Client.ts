@@ -99,15 +99,10 @@ export interface ClientOptions {
    */
   maxConcurrentTransmissions?: number;
   /**
-   * Automatically reconnect to the Telegram server when the connection is interrupted.
-   * Default is true
+   * How many attempts to connect to the telegram server when the connection is interrupted.
+   * Default is 3
    */
-  autoReconnect?: boolean;
-  /**
-   * Delete all pending task when trying to reconnect to the Telegram server.
-   * Default is true
-   */
-  clearAllTask?: boolean;
+  maxReconnectRetries?: number;
 }
 
 export class Client {
@@ -136,8 +131,7 @@ export class Client {
   _secretChat!: SecretChat;
   _getFileSemaphore!: Semaphore;
   _saveFileSemaphore!: Semaphore;
-  _autoReconnect!: boolean;
-  _clearAllTask!: boolean;
+  _maxReconnectRetries!: number;
   _me?: Raw.users.UserFull;
   private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
   /**
@@ -182,8 +176,7 @@ export class Client {
     this._secretChat = new SecretChat(session, this);
     this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
-    this._autoReconnect = clientOptions?.autoReconnect ?? true;
-    this._clearAllTask = clientOptions?.clearAllTask ?? true;
+    this._maxReconnectRetries = clientOptions?.maxReconnectRetries || 3;
   }
   /**
    * Exporting current session to string.

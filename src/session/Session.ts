@@ -301,31 +301,51 @@ export class Session {
             }
           }
         } catch (error: any) {
+          Logger.error('[139] Network worker error:', error);
           if (!this._isConnected) {
             break;
           } else if (
             (error instanceof Errors.WSError.ReadClosed ||
               error instanceof Errors.WSError.Disconnected ||
               error instanceof Errors.ClientError.ClientDisconnected) &&
-            this._client._autoReconnect
+            this._client._maxReconnectRetries
           ) {
-            Logger.info('[136] Reconnecting to Telegram Server.');
-            this._networkTask = false;
-            this._isConnected = false;
-            Logger.debug('[137] Stop ping task.');
-            clearTimeout(this._pingTask);
-            if (this._client._clearAllTask) {
-              Logger.debug('[138] Clearing all task');
-              this._results.clear();
-              this._task.clear();
-            }
-            return this.start();
+            return this.retriesReconnect(); // disable networkWorker and try to reconnecting
           } else {
             throw error;
           }
         }
       }
     }
+  }
+  async retriesReconnect(retries = this._client._maxReconnectRetries) {
+    try {
+      Logger.info('[136] Reconnecting to Telegram Server.');
+      Logger.debug('[137] Stop ping task.');
+      clearTimeout(this._pingTask);
+      this._isConnected = false; // disable invoke method when client is disconnected
+      await this._connection.connect();
+      this._networkWorker();
+      const isInited = await this.initConnection();
+      if (isInited) {
+        this._isConnected = true;
+        this._pingWorker();
+        return isInited;
+      }
+    } catch (e) {
+      Logger.error(
+        `[138] Got error when trying to reconnecting to Telegram Server, retries ${retries}:`,
+        e,
+      );
+      // force restart connection
+      if (e instanceof Errors.ClientError.ClientReady) {
+        await this._connection.close().catch(() => {});
+      }
+      if (!retries) {
+        throw e;
+      }
+    }
+    return this.retriesReconnect(retries - 1);
   }
   async stop() {
     const release = await this._mutex.acquire();
@@ -434,32 +454,7 @@ export class Session {
         Logger.debug(`[68] Connecting to telegram server`);
         await this._connection.connect();
         this._networkWorker();
-        await this._send(
-          new Raw.Ping({
-            pingId: BigInt(0),
-          }),
-          true,
-          this.START_TIMEOUT,
-        );
-        if (!this._isCdn) {
-          await this._send(
-            new Raw.InvokeWithLayer({
-              layer: Raw.Layer,
-              query: new Raw.InitConnection({
-                apiId: this._client._apiId,
-                appVersion: this._client._appVersion,
-                deviceModel: this._client._deviceModel,
-                systemVersion: this._client._systemVersion,
-                systemLangCode: this._client._systemLangCode,
-                langCode: this._client._langCode,
-                langPack: '',
-                query: new Raw.help.GetConfig(),
-              }),
-            }),
-            true,
-            this.START_TIMEOUT,
-          );
-        }
+        await this.initConnection();
         Logger.info(`[69] Session initialized: Layer ${Raw.Layer}`);
         Logger.info(`[70] Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
         Logger.info(
@@ -482,6 +477,36 @@ export class Session {
         }
       }
     }
+  }
+  async initConnection() {
+    const ping = await this._send(
+      new Raw.Ping({
+        pingId: BigInt(0),
+      }),
+      true,
+      this.START_TIMEOUT,
+    );
+    if (!this._isCdn) {
+      const initData = await this._send(
+        new Raw.InvokeWithLayer({
+          layer: Raw.Layer,
+          query: new Raw.InitConnection({
+            apiId: this._client._apiId,
+            appVersion: this._client._appVersion,
+            deviceModel: this._client._deviceModel,
+            systemVersion: this._client._systemVersion,
+            systemLangCode: this._client._systemLangCode,
+            langCode: this._client._langCode,
+            langPack: '',
+            query: new Raw.help.GetConfig(),
+          }),
+        }),
+        true,
+        this.START_TIMEOUT,
+      );
+      return initData;
+    }
+    return ping;
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
