@@ -37,7 +37,7 @@ export class Timeout {
         } else {
           rej(new TimeoutError(time));
         }
-        task.finally(() => {
+        task.catch(rej).finally(() => {
           return 'Running timeout';
         });
       }, time);
