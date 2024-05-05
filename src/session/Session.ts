@@ -318,35 +318,49 @@ export class Session {
       }
     }
   }
+  /**
+   * When client connection to Telegram server interrupted, it will try to reconnecting until reach maxReconnectRetries.
+   */
   async retriesReconnect(retries = this._client._maxReconnectRetries) {
     try {
       Logger.info('[136] Reconnecting to Telegram Server.');
       Logger.debug('[137] Stop ping task.');
       clearTimeout(this._pingTask);
       this._isConnected = false; // disable invoke method when client is disconnected
+      await this._connection.close().catch(() => {}); // force close current connection.
       await this._connection.connect();
       this._networkWorker();
       const isInited = await this.initConnection();
       if (isInited) {
         this._isConnected = true;
         this._pingWorker();
-        return isInited;
+        if (!this._client._storage.isBot && this._client._takeout) {
+          let takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
+          this._client._takeoutId = (takeout as Raw.account.TypeTakeout).id;
+        }
+        await this.invoke(new Raw.updates.GetState());
+        const me = await this.invoke(
+          new Raw.users.GetFullUser({
+            id: new Raw.InputUserSelf(),
+          }),
+        );
+        this._client._me = me as Raw.users.UserFull;
+        return me;
       }
     } catch (e) {
       Logger.error(
         `[138] Got error when trying to reconnecting to Telegram Server, retries ${retries}:`,
         e,
       );
-      // force restart connection
-      if (e instanceof Errors.ClientError.ClientReady) {
-        await this._connection.close().catch(() => {});
-      }
       if (!retries) {
         throw e;
       }
     }
     return this.retriesReconnect(retries - 1);
   }
+  /**
+   * Stop connection to Telegram server.
+   */
   async stop() {
     const release = await this._mutex.acquire();
     try {
@@ -361,11 +375,17 @@ export class Session {
       release();
     }
   }
+  /**
+   * Restarting client connection.
+   */
   restart() {
     Logger.debug(`[61] Restarting client`);
     this.stop();
     this.start();
   }
+  /**
+   * Send data to the telegram server as an executable function.
+   */
   async invoke(
     data: TLObject,
     retries: number = this.MAX_RETRIES,
@@ -438,6 +458,10 @@ export class Session {
       }
     }
   }
+  /**
+   * Start a connection to the telegram server.
+   * This function will continue to loop if it fails to connect to the Telegram server.
+   */
   async start() {
     while (true) {
       this._connection = new Connection(
@@ -478,6 +502,9 @@ export class Session {
       }
     }
   }
+  /**
+   * Initiation of connection. Call the ping function and send the layer information used by the client to the telegram server.
+   */
   async initConnection() {
     const ping = await this._send(
       new Raw.Ping({
