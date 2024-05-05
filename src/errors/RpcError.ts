@@ -81,6 +81,7 @@ export class RPCError extends Error {
       throw new UnknownError(`[${code} ${message}]`, name, true, isSigned);
     }
     let id = message.replace(/\_\d+/gm, '_X');
+    let value = message.match(/\_(\d+)/gm);
     if (!(id in Exceptions[code])) {
       // try to replace the last word with asterisk (*)
       // example: FILE_REFERENCE_*
@@ -88,13 +89,14 @@ export class RPCError extends Error {
       if (!(id in Exceptions[code])) {
         let modules = await getModule(Exceptions[code]['_']);
         // @ts-ignore
-        let _module = new modules(`[${code} ${message}]`, name, true, isSigned);
+        let _module = new modules(value, name, true, isSigned);
+        _module.message = `[${code} ${message}]`;
+        _module.id = message.replace(/\_\d+/gm, '_X');
         // @ts-ignore
         _module._format();
         throw _module;
       }
     }
-    let value = message.match(/\_(\d+)/gm);
     if (value) {
       //@ts-ignore
       value = value[0].replace(/\_/g, '');

@@ -106,8 +106,8 @@ export function computePasswordCheck(
   return new Raw.InputCheckPasswordSRP({
     // @ts-ignore
     srpId,
-    A: ABytes,
-    M1: M1Bytes,
+    a: ABytes,
+    m1: M1Bytes,
   });
 }
 /**
