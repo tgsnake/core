@@ -1,4 +1,18 @@
- <a name="1.10.10"></a>
+ <a name="1.11.0"></a>
+
+## [1.11.0](https://github.com/tgsnake/core/compare/1.10.10...1.11.0)
+
+> 2024-05-05
+
+### Add
+
+- catch in timeout task - maxReconnextRetries options - option to autoreconnect - list of affected error in error.json  ### Change
+
+- invoke getMe when client is reconnecting - Update TLSchema - Update TLSchema - Update CHANGELOG.md  ### Fix
+
+- 2fa error  ### Remove
+
+- notify   <a name="1.10.10"></a>
 
 ## [1.10.10](https://github.com/tgsnake/core/compare/1.10.9...1.10.10)
 
