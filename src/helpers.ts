@@ -66,13 +66,14 @@ export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
 }
 // https://t.me/butthxforward/85
 export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1) {
-  let slc = buffer.slice(start, stop < start ? start + stop : stop);
+  let slc = buffer.slice(start, stop);
   let res = slc;
   if (step === 0) {
     throw new Error('slice step cannot be zero.');
   }
   if (step < 0) {
-    res = slc.reverse();
+    slc = Buffer.from(buffer.slice(stop - step, start - step)).reverse();
+    res = slc;
     step = -step;
   }
   if (step > 1) {

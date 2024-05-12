@@ -12,7 +12,7 @@ import { TCP } from './tcp.ts';
 import { includesBuffer, sliceBuffer, bigintToBuffer } from '../../helpers.ts';
 import { crypto, Buffer } from '../../platform.deno.ts';
 import { ctr256Encrypt, ctr256Decrypt } from '../../crypto/Aes.ts';
-import { Primitive } from '../../raw/index.ts';
+import { Primitive } from '../../raw/core/index.ts';
 import type { ProxyInterface } from '../connection.ts';
 
 /**
@@ -22,69 +22,51 @@ import type { ProxyInterface } from '../connection.ts';
  */
 export class TCPIntermediateO extends TCP {
   /** @hidden */
-  private _reserved!: Array<Buffer>;
+  private _reserved!: Array<number>;
   /** @hidden */
-  private _encrypt!: Array<Buffer>;
+  private _encrypt!: [key: Buffer, iv: Buffer];
   /** @hidden */
-  private _decrypt!: Array<Buffer>;
+  private _decrypt!: [key: Buffer, iv: Buffer];
   constructor() {
     super();
     this._reserved = [
-      Buffer.from('HEAD'),
-      Buffer.from('POST'),
-      Buffer.from('GET'),
-      Buffer.from('OPTI'),
-      // should be equal with b"\xee" * 4
-      Buffer.concat([
-        Buffer.from('ee', 'hex'),
-        Buffer.from('ee', 'hex'),
-        Buffer.from('ee', 'hex'),
-        Buffer.from('ee', 'hex'),
-      ]),
+      0x44414548, 0x54534f50, 0x20544547, 0x4954504f, 0xdddddddd, 0xeeeeeeee, 0x02010316,
     ];
   }
   async connect(ip: string, port: number, proxy?: ProxyInterface) {
     await super.connect(ip, port, proxy);
     let nonce;
     while (true) {
-      nonce = crypto.randomBytes(64);
+      nonce = Uint8Array.from(crypto.randomBytes(64));
       if (
-        !Buffer.from([nonce[0]]).equals(Buffer.from('ef', 'hex')) &&
-        !includesBuffer(this._reserved, sliceBuffer(nonce, 0, 4)) &&
-        !sliceBuffer(nonce, 4, 4).equals(
-          Buffer.concat([
-            Buffer.from('00', 'hex'),
-            Buffer.from('00', 'hex'),
-            Buffer.from('00', 'hex'),
-            Buffer.from('00', 'hex'),
-          ]),
-        )
+        nonce[0] !== 0xef &&
+        !this._reserved.includes(Buffer.from(nonce.slice(0, 4)).readUInt32LE(0)) &&
+        Buffer.from(nonce.slice(4, 8)).readUInt32LE(0) !== 0
       ) {
-        nonce[56] = nonce[57] = nonce[58] = nonce[59] = 0xee;
+        nonce.set(new Uint8Array([0xee, 0xee, 0xee, 0xee]), 56);
         break;
       }
     }
-    let temp = sliceBuffer(nonce, 55, 7, -1);
-    this._encrypt = [sliceBuffer(nonce, 8, 40), sliceBuffer(nonce, 40, 56)];
-    this._decrypt = [sliceBuffer(nonce, 0, 32), sliceBuffer(nonce, 32, 48)];
-    let encryptedData = ctr256Encrypt(nonce, this._encrypt[0], this._encrypt[1]);
-    nonce = Buffer.concat([nonce.slice(0, 56), encryptedData.slice(56, 64)]);
-    await super.send(nonce);
+    const temp = Uint8Array.from(nonce.slice(8, 56)).reverse();
+    this._encrypt = [Buffer.from(nonce.slice(8, 40)), Buffer.from(nonce.slice(40, 56))];
+    this._decrypt = [Buffer.from(temp.slice(0, 32)), Buffer.from(temp.slice(32, 48))];
+    const encryptedData = Uint8Array.from(ctr256Encrypt(Buffer.from(nonce), ...this._encrypt));
+    nonce.set(encryptedData.slice(56, 64), 56);
+    await super.send(Buffer.from(nonce));
   }
   async send(data: Buffer) {
     let payload = ctr256Encrypt(
-      Primitive.Int.write(data.length),
-      this._encrypt[0],
-      this._encrypt[1],
+      Buffer.concat([Primitive.Int.write(data.length), data]),
+      ...this._encrypt,
     );
     return await super.send(payload);
   }
   async recv(length: number = 0) {
     let _length = await super.recv(4);
     if (!_length) return;
-    _length = ctr256Decrypt(_length, this._decrypt[0], this._decrypt[1]);
-    let data = await super.recv(_length.readInt32LE(0));
+    let decryptedLength = ctr256Decrypt(_length, ...this._decrypt);
+    let data = await super.recv(decryptedLength.readInt32LE(0));
     if (!data) return;
-    return ctr256Decrypt(data, this._decrypt[0], this._decrypt[1]);
+    return ctr256Decrypt(data, ...this._decrypt);
   }
 }

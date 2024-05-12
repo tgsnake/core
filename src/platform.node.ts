@@ -19,24 +19,27 @@ export { Logger } from '@tgsnake/log';
 export { SocksClient } from 'socks';
 export { Mutex, Semaphore } from 'async-mutex';
 export { Readable, Writable, Duplex } from 'stream';
-export const aesjs = {
-  ModeOfOperation: {
-    ecb: class ECB {
-      constructor(...args: Array<any>) {
-        throw new Error('not implemented');
-      }
-      encrypt(...args: Array<any>): buffer.Buffer {
-        return buffer.Buffer.alloc(0);
-      }
-      decrypt(...args: Array<any>): buffer.Buffer {
-        return buffer.Buffer.alloc(0);
-      }
-    },
-  },
-}; // Deno compatibility
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
 export const { Buffer } = buffer;
+export const aesjs =
+  where === 'Browser'
+    ? require('aes-js')
+    : {
+        ModeOfOperation: {
+          ecb: class ECB {
+            constructor(...args: Array<any>) {
+              throw new Error('not implemented');
+            }
+            encrypt(...args: Array<any>): buffer.Buffer {
+              return buffer.Buffer.alloc(0);
+            }
+            decrypt(...args: Array<any>): buffer.Buffer {
+              return buffer.Buffer.alloc(0);
+            }
+          },
+        },
+      }; // Deno compatibility
 export { crypto, net, os, bigInt, path };
