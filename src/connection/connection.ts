@@ -24,6 +24,7 @@ export const TCPModes = {
   2: TCP.TCPIntermediate,
   3: TCP.TCPAbridgedO,
   4: TCP.TCPIntermediateO,
+  5: TCP.TCPPaddedIntermediate,
 };
 
 export type TypeTCP =
@@ -31,9 +32,10 @@ export type TypeTCP =
   | TCP.TCPAbridged
   | TCP.TCPIntermediate
   | TCP.TCPAbridgedO
-  | TCP.TCPIntermediateO;
+  | TCP.TCPIntermediateO
+  | TCP.TCPPaddedIntermediate;
 
-export interface ProxyInterface {
+export interface SocksProxyInterface {
   /**
    * IP destination for MTProto proxy.
    */
@@ -55,6 +57,12 @@ export interface ProxyInterface {
    */
   password?: string;
 }
+export interface MtprotoProxyInterface {
+  server: string;
+  port: number;
+  secret: string;
+}
+export type ProxyInterface = SocksProxyInterface;
 
 export class Connection {
   /**

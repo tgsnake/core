@@ -14,3 +14,4 @@ export { TCPAbridgedO } from './TCPAbridgedO.ts';
 export { TCPFull } from './TCPFull.ts';
 export { TCPIntermediate } from './TCPIntermediate.ts';
 export { TCPIntermediateO } from './TCPIntermediateO.ts';
+export { TCPPaddedIntermediate } from './TCPPaddedIntermediate.ts';
