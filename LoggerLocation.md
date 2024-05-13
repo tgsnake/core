@@ -4,9 +4,11 @@ If you set logger to `debug` or any logger level then see number in the array th
 You will se like this : `[n] message`.  
 So, if you want to know the location of the logger called, please see the list below.
 
+> 140
+
 `1 – 2, 106` : level is `(debug,error)` located on `src/connection/connection.ts`  
 `3` : level is `(debug)` located on `src/connection/webSocket.ts`  
-`4 – 7` : level is `(debug)` located on `src/crypto/Aes.ts`  
+`4 – 7, 140` : level is `(debug)` located on `src/crypto/Aes.ts`  
 `8 – 9` : level is `(debug)` as RPCError, parent class located on`src/errors/RPCError.ts`  
 `10` : level is `(debug)` located on `src/raw/core/TLObject.ts`  
 `11 – 32` : level is `(debug,error)` located on `src/session/Auth.ts`  

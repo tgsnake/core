@@ -50,7 +50,7 @@ export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
   try {
     const cipher = crypto.createCipheriv('AES-256-CTR', key, iv);
     return (data: Buffer) => {
-      Logger.debug(`Cryptograph ${data.length} bytes data with AES-256-CTR`);
+      Logger.debug(`[140] Cryptograph ${data.length} bytes data with AES-256-CTR`);
       return Buffer.from(cipher.update(data));
     };
   } catch (error) {
