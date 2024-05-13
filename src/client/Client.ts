@@ -27,7 +27,7 @@ import type { Session } from '../session/index.ts';
 
 export interface ClientOptions {
   /**
-   * Connect to telegram using MTProto proxy.
+   * Connect to telegram using MTProto proxy or Socks proxy.
    */
   proxy?: ProxyInterface;
   /**

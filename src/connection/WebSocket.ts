@@ -43,7 +43,7 @@ export class Socket {
    */
   async connect(ip: string, port: number, proxy?: ProxyInterface) {
     if (isBrowser) {
-      if (proxy) {
+      if (proxy && !('server' in proxy && 'port' in proxy && 'secret' in proxy)) {
         throw new WSError.ProxyUnsupported();
       }
       if (port === 443) {
@@ -73,7 +73,13 @@ export class Socket {
         };
       });
     } else {
-      if (proxy) {
+      if (
+        proxy &&
+        !('server' in proxy && 'port' in proxy && 'secret' in proxy) &&
+        'hostname' in proxy &&
+        'port' in proxy &&
+        'socks' in proxy
+      ) {
         const ws = await SocksClient.createConnection({
           proxy: {
             host: proxy.hostname,

@@ -526,6 +526,13 @@ export class Session {
             langCode: this._client._langCode,
             langPack: '',
             query: new Raw.help.GetConfig(),
+            proxy:
+              this._proxy &&
+              'secret' in this._proxy &&
+              'port' in this._proxy &&
+              'server' in this._proxy
+                ? new Raw.InputClientProxy({ address: this._proxy.server, port: this._proxy.port })
+                : undefined,
           }),
         }),
         true,

@@ -20,8 +20,8 @@ export class TCPPaddedIntermediate extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number, proxy?: ProxyInterface) {
-    await super.connect(ip, port, proxy);
+  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+    await super.connect(ip, port, proxy, dcId);
     await super.send(
       Buffer.concat([
         Buffer.from('dd', 'hex'),

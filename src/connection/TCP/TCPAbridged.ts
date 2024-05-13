@@ -21,8 +21,8 @@ export class TCPAbridged extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number, proxy?: ProxyInterface) {
-    await super.connect(ip, port, proxy);
+  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+    await super.connect(ip, port, proxy, dcId);
     return await super.send(Buffer.from('ef', 'hex'));
   }
   async send(data: Buffer) {

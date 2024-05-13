@@ -22,9 +22,9 @@ export const TCPModes = {
   0: TCP.TCPFull,
   1: TCP.TCPAbridged,
   2: TCP.TCPIntermediate,
-  3: TCP.TCPAbridgedO,
-  4: TCP.TCPIntermediateO,
-  5: TCP.TCPPaddedIntermediate,
+  3: TCP.TCPPaddedIntermediate,
+  4: TCP.TCPAbridgedO,
+  5: TCP.TCPIntermediateO,
 };
 
 export type TypeTCP =
@@ -37,11 +37,11 @@ export type TypeTCP =
 
 export interface SocksProxyInterface {
   /**
-   * IP destination for MTProto proxy.
+   * IP destination for socks proxy.
    */
   hostname: string;
   /**
-   * Port destination for MTProto proxy.
+   * Port destination for socks proxy.
    */
   port: number;
   /**
@@ -58,11 +58,20 @@ export interface SocksProxyInterface {
   password?: string;
 }
 export interface MtprotoProxyInterface {
+  /**
+   * Destination hostname or server for connecting MTProto Proxy server.
+   */
   server: string;
+  /**
+   * Destination port for connecting to MTProto Proxy server.
+   */
   port: number;
-  secret: string;
+  /**
+   * Secret of MTProto Proxy, can be encoded as hex string or buffer.
+   */
+  secret: string | Buffer;
 }
-export type ProxyInterface = SocksProxyInterface;
+export type ProxyInterface = SocksProxyInterface | MtprotoProxyInterface;
 
 export class Connection {
   /**
@@ -117,6 +126,17 @@ export class Connection {
       throw new ClientError.ClientReady();
     }
     for (let i = 0; i < this.maxRetries; i++) {
+      if (
+        this._proxy &&
+        'server' in this._proxy &&
+        'port' in this._proxy &&
+        'secret' in this._proxy &&
+        // @ts-ignore
+        (this._mode !== TCPModes[4] || this._mode !== TCPModes[5])
+      ) {
+        // @ts-ignore
+        this._mode = TCPModes[4];
+      }
       //@ts-ignore
       this._protocol = new this._mode();
       try {
@@ -125,6 +145,7 @@ export class Connection {
           this._address[0],
           isBrowser ? (this._local ? 80 : this._address[1]) : this._address[1],
           this._proxy,
+          this._dcId + (this._test ? 10000 : 0) * (this._media ? -1 : 1),
         );
         this._connected = true;
         break;

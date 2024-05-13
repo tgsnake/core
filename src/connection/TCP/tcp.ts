@@ -38,8 +38,9 @@ export class TCP {
    * @param {String} ip - Telegram data center IP.
    * @param {Number} port - Port for connecting to telegram data center.
    * @param {ProxyInterface | undefined} proxy - Connect to telegram via socks proxy. This only applies on platforms other than browsers.
+   * @param {Number | undefined} dcId - Data center for connecting to MTProxy.
    */
-  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
     const release = await this._mutex.acquire();
     try {
       await this._socks.connect(ip, port, proxy);

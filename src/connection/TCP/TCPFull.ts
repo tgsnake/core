@@ -23,8 +23,8 @@ export class TCPFull extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number, proxy?: ProxyInterface) {
-    await super.connect(ip, port, proxy);
+  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+    await super.connect(ip, port, proxy, dcId);
     this._seq = 0;
   }
   async send(data: Buffer) {
