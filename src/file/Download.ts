@@ -121,14 +121,13 @@ export async function handleDownload(
             }
           }
           let chunk = r2.bytes;
-          let decryptedChunk = await AES.ctr256Decrypt(
-            chunk,
+          let decryptedChunk = await AES.ctr256Cipher(
             (r as Raw.upload.FileCdnRedirect).encryptionKey,
             Buffer.concat([
               (r as Raw.upload.FileCdnRedirect).encryptionIv.slice(0, -4),
               bigintToBuffer(offsetBytes / BigInt(16), 4, false),
             ]),
-          );
+          )(chunk);
           let hashes: Array<Raw.FileHash> = (await session.invoke(
             new Raw.upload.GetCdnFileHashes({
               fileToken: (r as Raw.upload.FileCdnRedirect).fileToken,
