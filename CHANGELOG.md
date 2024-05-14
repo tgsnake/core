@@ -1,4 +1,20 @@
- <a name="1.11.0"></a>
+ <a name="1.12.0"></a>
+
+## [1.12.0](https://github.com/tgsnake/core/compare/1.11.0...1.12.0)
+
+> 2024-05-14
+
+### Add
+
+- mtproxy (untested) - TCP Padded Intermediate  ### Change
+
+- using aes-256-ctr from node:crypto - Update CHANGELOG.md  ### Fixed
+
+- TCPO  ### Remove
+
+- build-doc workflow  ### Rewrite
+
+- TCP Obfuscation   <a name="1.11.0"></a>
 
 ## [1.11.0](https://github.com/tgsnake/core/compare/1.10.10...1.11.0)
 
