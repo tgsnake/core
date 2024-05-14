@@ -14,7 +14,7 @@ function buildForBrowser() {
   const file = fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8');
   const json = JSON.parse(file);
   json.main = './browser/src/index.js';
-  json.scripts.prepare = 'node ./generator/bundler/index.js && yarn prettier';
+  json.scripts.prepare = 'node ./generator/bundler/index.mjs && yarn prettier';
   json.files = ['browser/**/**'];
   fs.writeFileSync(path.join(process.cwd(), 'package.json'), JSON.stringify(json, null, 2));
 }

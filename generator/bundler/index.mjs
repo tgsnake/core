@@ -7,9 +7,10 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-const esbuild = require('esbuild');
-const path = require('path');
-const fs = require('fs');
+import * as esbuild from 'esbuild';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as deno2node from 'deno2node';
 
 function flatten(route) {
   const contents = fs.readdirSync(path.join(process.cwd(), route));
@@ -24,7 +25,6 @@ function flatten(route) {
   }
   return results;
 }
-
 async function build() {
   console.log('Building...');
   const pluginBuild = {
@@ -59,9 +59,17 @@ async function build() {
     plugins: [pluginBuild],
   });
   console.log(resultFromBuild);
+  await emitDts();
   cleaning();
-  renaming();
   fixImport();
+}
+async function emitDts() {
+  console.log('Emitting d.ts file');
+  const ctx = new deno2node.Context({
+    tsConfigFilePath: path.join(process.cwd(), './tsconfig.browser.json'),
+  });
+  await deno2node.deno2node(ctx);
+  await deno2node.emit(ctx.project);
 }
 function cleaning() {
   console.log('Cleaning');
@@ -69,32 +77,12 @@ function cleaning() {
   for (let content of contents) {
     if (
       content.endsWith('.node.js') ||
-      content.endsWith('.browser.js') ||
+      content.endsWith('.deno.js') ||
       content.endsWith('.node.d.ts') ||
-      content.endsWith('.browser.d.ts')
+      content.endsWith('.deno.d.ts')
     ) {
       console.log(`-> ${content}`);
       fs.unlinkSync(path.join(process.cwd(), content));
-    }
-  }
-}
-function renaming() {
-  console.log('Renaming');
-  const contents = flatten('./browser/src');
-  for (let content of contents) {
-    if (content.endsWith('.deno.js')) {
-      console.log(`-> ${content}`);
-      fs.renameSync(
-        path.join(process.cwd(), content),
-        path.join(process.cwd(), content.replace('.deno.js', '.browser.js')),
-      );
-    }
-    if (content.endsWith('.deno.d.ts')) {
-      console.log(`-> ${content}`);
-      fs.renameSync(
-        path.join(process.cwd(), content),
-        path.join(process.cwd(), content.replace('.deno.d.ts', '.browser.d.ts')),
-      );
     }
   }
 }
@@ -108,7 +96,10 @@ function fixImport() {
       fs.writeFileSync(
         path.join(process.cwd(), content),
         code.replace(/from "(.*.)"\;/gm, (match) => {
-          return match.replace('.ts', '.js').replace('.deno', '.browser');
+          return match
+            .replace('.ts', '.js')
+            .replace('.deno', '.browser')
+            .replace('.node', '.browser');
         }),
       );
     }
