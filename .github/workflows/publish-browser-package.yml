@@ -1,0 +1,23 @@
+name: Publish Package to npmjs
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: |
+          yarn config set enableImmutableInstalls false
+          yarn install
+          yarn add esbuild --dev 
+          yarn add aes-js browserify-zlib buffer crypto-browserify events net-browserify os-browserify path-browserify stream-browserify util
+          node ./generator/change_package_json
+      - run: npm publish --tag browser --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
