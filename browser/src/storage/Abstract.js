@@ -1,2 +1,0 @@
-class AbstractSession {}
-export { AbstractSession };
