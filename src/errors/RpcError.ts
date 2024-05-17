@@ -11,10 +11,10 @@
 import { Logger } from '../Logger.ts';
 import { Raw, TLObject } from '../raw/index.ts';
 import { Exceptions } from './exceptions/All.ts';
-import { inspect } from '../platform.deno.ts';
+import { inspect, where } from '../platform.deno.ts';
 async function req(paths: string): Promise<{ [key: string]: any }> {
   let res = {};
-  if ('Deno' in globalThis) {
+  if (where === 'Deno' || where === 'Browser') {
     // @ts-ignore
     res = await import(paths);
   } else {

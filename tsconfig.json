@@ -76,6 +76,6 @@
     "newLine": "crlf" /* Specify the end of line sequence to be used when emitting files: ‘CRLF’ (dos) or ‘LF’ (unix). */
   },
   "include": ["src"],
-  "exclude": ["node_modules", "tes", "lib", "example", "src/platform.browser.ts"],
+  "exclude": ["node_modules", "tes", "lib", "example", "**/*.browser.ts"],
   "ignoreCompilerErrors": true
 }

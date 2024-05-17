@@ -32,6 +32,17 @@ export const aesjs = {
         return buffer.Buffer.alloc(0);
       }
     },
+    ctr: class CTR {
+      constructor(...args: Array<any>) {
+        throw new Error('not implemented');
+      }
+      encrypt(...args: Array<any>): buffer.Buffer {
+        return buffer.Buffer.alloc(0);
+      }
+      decrypt(...args: Array<any>): buffer.Buffer {
+        return buffer.Buffer.alloc(0);
+      }
+    },
   },
 }; // Deno compatibility
 export const isDeno = 'Deno' in globalThis; // Deno compatibility

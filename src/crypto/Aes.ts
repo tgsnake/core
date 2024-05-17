@@ -47,6 +47,13 @@ export type CtrCipherFn = (data: Buffer) => Buffer;
  * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
+  if (where === 'Browser') {
+    const cipher = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(Uint8Array.from(iv)));
+    return (data: Buffer) => {
+      Logger.debug(`[140] Cryptograph ${data.length} bytes data with AES-256-CTR`);
+      return Buffer.from(cipher.encrypt(data));
+    };
+  }
   try {
     const cipher = crypto.createCipheriv('AES-256-CTR', key, iv);
     return (data: Buffer) => {
@@ -54,9 +61,9 @@ export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
       return Buffer.from(cipher.update(data));
     };
   } catch (error) {
-    const cipher = ctr(key, iv, Buffer.alloc(0));
+    const cipher = ctr(key, iv);
     return (data: Buffer) => {
-      Logger.debug(`Cryptograph ${data.length} bytes data with AES-256-CTR`);
+      Logger.debug(`[140] Cryptograph ${data.length} bytes data with AES-256-CTR`);
       return Buffer.from(cipher.update(data));
     };
   }
@@ -72,28 +79,30 @@ export function xor(a: Buffer, b: Buffer) {
  */
 export function AES(key: Buffer) {
   const iv = Buffer.alloc(0);
-  return {
-    encrypt: (data: Buffer) => {
-      if (where !== 'Node' && where !== 'Bun') {
-        const cipher = new aesjs.ModeOfOperation.ecb(key);
+  if (where === 'Browser' || where === 'Deno') {
+    const cipher = new aesjs.ModeOfOperation.ecb(key);
+    return {
+      encrypt(data: Buffer): Buffer {
         return Buffer.from(cipher.encrypt(data));
-      } else {
-        const cipher = crypto.createCipheriv('aes-256-ecb', key, iv);
-        cipher.setAutoPadding(false);
-        return Buffer.concat([cipher.update(data), cipher.final()]);
-      }
-    },
-    decrypt: (data: Buffer) => {
-      if (where !== 'Node' && where !== 'Bun') {
-        const cipher = new aesjs.ModeOfOperation.ecb(key);
+      },
+      decrypt(data: Buffer): Buffer {
         return Buffer.from(cipher.decrypt(data));
-      } else {
-        const decipher = crypto.createDecipheriv('aes-256-ecb', key, iv);
-        decipher.setAutoPadding(false);
-        return Buffer.concat([decipher.update(data), decipher.final()]);
-      }
-    },
-  };
+      },
+    };
+  } else {
+    const cipher = crypto.createCipheriv('aes-256-ecb', key, iv);
+    const decipher = crypto.createDecipheriv('aes-256-ecb', key, iv);
+    cipher.setAutoPadding(false);
+    decipher.setAutoPadding(false);
+    return {
+      encrypt(data: Buffer): Buffer {
+        return Buffer.from(cipher.update(data));
+      },
+      decrypt(data: Buffer): Buffer {
+        return Buffer.from(decipher.update(data));
+      },
+    };
+  }
 }
 
 /**
@@ -125,12 +134,13 @@ function ige(data: Buffer, key: Buffer, iv: Buffer, encrypt: boolean): Buffer {
 /**
  * Make AES-256-CTR mode.
  */
-function ctr(key: Buffer, iv: Buffer, state: Buffer) {
-  const cipher = AES(key);
+export function ctr(key: Buffer, iv: Buffer, state: Buffer = Buffer.alloc(1)) {
+  const cipher = AES(Buffer.from(key));
+  const _iv = Buffer.from(iv);
+  let chunk = Buffer.from(cipher.encrypt(iv));
   return {
     update: (data: Buffer) => {
       let out = Buffer.from(data);
-      let chunk = cipher.encrypt(iv);
       for (let i of range(0, data.length, 16)) {
         for (let j of range(0, Math.min(data.length - i, 16))) {
           out[i + j] ^= chunk[state[0]];
@@ -140,13 +150,14 @@ function ctr(key: Buffer, iv: Buffer, state: Buffer) {
           }
           if (state[0] === 0) {
             for (let k of range(15, -1, -1)) {
-              try {
-                iv[k] += 1;
-              } catch (error) {
-                iv[k] = 0;
+              if (_iv[k] === 255) {
+                _iv[k] = 0;
+              } else {
+                _iv[k] += 1;
+                break;
               }
             }
-            chunk = cipher.encrypt(iv);
+            chunk = cipher.encrypt(_iv);
           }
         }
       }

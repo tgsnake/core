@@ -7,10 +7,11 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import * as esbuild from 'esbuild';
+// import * as esbuild from 'esbuild';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as deno2node from 'deno2node';
+import * as tsmorph from 'ts-morph';
 
 function flatten(route) {
   const contents = fs.readdirSync(path.join(process.cwd(), route));
@@ -27,82 +28,45 @@ function flatten(route) {
 }
 async function build() {
   console.log('Building...');
-  const pluginBuild = {
-    name: 'Replace .deno.ts file',
-    setup(build) {
-      build.onResolve({ filter: /\.deno\.ts$/ }, (args) => {
-        if (
-          fs.existsSync(path.join(args.resolveDir, args.path.replace(/\.deno\.ts$/, '.browser.ts')))
-        ) {
-          return {
-            path: path.join(args.resolveDir, args.path.replace(/\.deno\.ts$/, '.browser.ts')),
-          };
-        }
-        return {
-          path: path.join(args.resolveDir, args.path.replace(/\.deno\.ts$/, '.node.ts')),
-        };
-      });
-    },
-  };
-  const files = flatten('./src');
-  const resultFromBuild = await esbuild.build({
-    entryPoints: [...files, path.join(process.cwd(), 'package.json')],
-    bundle: false,
-    minify: false,
-    sourcemap: false,
-    splitting: true,
-    allowOverwrite: true,
-    treeShaking: true,
-    outdir: 'browser',
-    platform: 'browser',
-    format: 'esm',
-    plugins: [pluginBuild],
-  });
-  console.log(resultFromBuild);
-  await emitDts();
-  cleaning();
-  fixImport();
+  if (fs.existsSync(path.join(process.cwd(), './browser'))) {
+    fs.rmSync(path.join(process.cwd(), './browser'), { recursive: true, force: true });
+  }
+  await emit();
 }
-async function emitDts() {
-  console.log('Emitting d.ts file');
+async function emit() {
   const ctx = new deno2node.Context({
     tsConfigFilePath: path.join(process.cwd(), './tsconfig.browser.json'),
   });
-  await deno2node.deno2node(ctx);
-  await deno2node.emit(ctx.project);
-}
-function cleaning() {
-  console.log('Cleaning');
-  const contents = flatten('./browser/src');
-  for (let content of contents) {
-    if (
-      content.endsWith('.node.js') ||
-      content.endsWith('.deno.js') ||
-      content.endsWith('.node.d.ts') ||
-      content.endsWith('.deno.d.ts')
-    ) {
-      console.log(`-> ${content}`);
-      fs.unlinkSync(path.join(process.cwd(), content));
+  for (const sourcefile of ctx.project.getSourceFiles()) {
+    let name = sourcefile.getBaseNameWithoutExtension().toLowerCase();
+    if (name.endsWith('.deno') || name.endsWith('.node')) {
+      ctx.project.removeSourceFile(sourcefile);
+      continue;
+    }
+    for (const statement of sourcefile.getStatements()) {
+      if (
+        tsmorph.Node.isImportDeclaration(statement) ||
+        tsmorph.Node.isExportDeclaration(statement)
+      ) {
+        const module = statement.getModuleSpecifierValue();
+        if (module !== undefined) {
+          if (/^\.\.?\//.test(module)) {
+            statement.setModuleSpecifier(
+              module.replace(/\.[jt]sx?$/i, '.js').replace(/\.(deno|node)\.js$/i, '.browser.js'),
+            );
+          }
+        }
+      }
     }
   }
-}
-function fixImport() {
-  console.log('Fixing import statement');
-  const contents = flatten('./browser/src');
-  for (let content of contents) {
-    const code = fs.readFileSync(content, 'utf8');
-    if (/from "(.*.)"\;/gm.test(code)) {
-      console.log(`-> ${content}`);
-      fs.writeFileSync(
-        path.join(process.cwd(), content),
-        code.replace(/from "(.*.)"\;/gm, (match) => {
-          return match
-            .replace('.ts', '.js')
-            .replace('.deno', '.browser')
-            .replace('.node', '.browser');
-        }),
-      );
-    }
+  await deno2node.deno2node(ctx);
+  console.log('Emitting file');
+  const diag = await deno2node.emit(ctx.project);
+  if (diag.length !== 0) {
+    console.info(ctx.project.formatDiagnosticsWithColorAndContext(diag));
+    console.info('TypeScript', tsmorph.ts.version);
+    console.info(`Found ${diag.length} errors.`);
+    process.exit(1);
   }
 }
 build();

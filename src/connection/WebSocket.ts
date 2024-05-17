@@ -48,10 +48,10 @@ export class Socket {
       }
       if (port === 443) {
         // @ts-ignore
-        this._client = new WebSocket(`wss://${ip.replace('$PORT', String(port))}`);
+        this._client = new WebSocket(`wss://${ip.replace('$PORT', String(port))}`, 'binary');
       } else {
         // @ts-ignore
-        this._client = new WebSocket(`ws://${ip.replace('$PORT', String(port))}`);
+        this._client = new WebSocket(`ws://${ip.replace('$PORT', String(port))}`, 'binary');
       }
       this._connectionClosed = false;
       this._read = new Promise((resolve) => {
@@ -71,6 +71,7 @@ export class Socket {
             this._connectionClosed = true;
           }
         };
+        window.addEventListener('offline', this.destroy);
       });
     } else {
       if (
@@ -169,6 +170,7 @@ export class Socket {
     if (this._client && !this._connectionClosed) {
       if (isBrowser) {
         this._client.onmessage = async (data: Buffer) => {
+          data = Buffer.from(await new Response(data).arrayBuffer());
           const release = await mutex.acquire();
           try {
             Logger.debug(`[3] Receive ${data.length} bytes data`);

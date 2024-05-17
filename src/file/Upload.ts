@@ -115,7 +115,7 @@ export async function upload(
     const isBig = fileSize > 10 * 1024 * 1024;
     const workersAmount = isBig ? 4 : 1;
     const isMissingPart = fileId !== undefined;
-    fileId = fileId || crypto.randomBytes(8).readBigInt64LE();
+    fileId = fileId || Buffer.from(crypto.randomBytes(8)).readBigInt64LE();
     const file = new BytesIO(source);
     const md5 =
       !isBig && !isMissingPart ? crypto.createHash('md5').update(source).digest('hex') : '';
@@ -141,7 +141,7 @@ export async function upload(
         if (isBig) {
           await queue.put(
             new Raw.upload.SaveBigFilePart({
-              fileId: fileId,
+              fileId: fileId!,
               filePart: filePart,
               fileTotalParts: fileTotalParts,
               bytes: chunk,
@@ -150,7 +150,7 @@ export async function upload(
         } else {
           await queue.put(
             new Raw.upload.SaveFilePart({
-              fileId: fileId,
+              fileId: fileId!,
               filePart: filePart,
               bytes: chunk,
             }),
@@ -175,13 +175,13 @@ export async function upload(
       await session.stop();
       if (isBig) {
         return new Raw.InputFileBig({
-          id: fileId,
+          id: fileId!,
           parts: fileTotalParts,
           name: fileName ?? 'file.unknown',
         });
       } else {
         return new Raw.InputFile({
-          id: fileId,
+          id: fileId!,
           parts: fileTotalParts,
           name: fileName ?? 'file.unknown',
           md5Checksum: md5,
