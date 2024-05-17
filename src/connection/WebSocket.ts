@@ -19,7 +19,7 @@ const mutex = new Mutex();
  * Promised version of {@link net.Socket Socket}
  */
 export class Socket {
-  private _client!: any;
+  private _client!: WebSocket | net.Socket;
   private _data!: Buffer;
   private _read!: boolean | Promise<boolean>;
   private _promisedReading!: (value?: any) => void;
@@ -58,15 +58,15 @@ export class Socket {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
       return new Promise((resolve, reject) => {
-        this._client.onopen = () => {
+        (this._client as WebSocket).onopen = () => {
           this.recv();
           resolve(this);
         };
-        this._client.onerror = (error: any) => {
+        (this._client as WebSocket).onerror = (error: any) => {
           return error.message ? reject(new WSError.WebSocketError(error.message)) : reject(error);
         };
-        this._client.onclose = () => {
-          if (this._client.destroyed) {
+        (this._client as WebSocket).onclose = () => {
+          if ((this._client as WebSocket).readyState >= 2) {
             if (this._promisedReading) this._promisedReading(false);
             this._connectionClosed = true;
           }
@@ -97,19 +97,19 @@ export class Socket {
           },
         });
         this._client = ws.socket;
-        this._client.setTimeout(this.timeout);
+        (this._client as net.Socket).setTimeout(this.timeout);
         this._connectionClosed = false;
         this._read = new Promise((resolve) => {
           this._promisedReading = resolve;
         }) as unknown as Promise<boolean>;
         return new Promise((resolve, reject) => {
-          this._client.on('error', (error: any) => {
+          (this._client as net.Socket).on('error', (error: any) => {
             return error.message
               ? reject(new WSError.WebSocketError(error.message))
               : reject(error);
           });
-          this._client.on('close', () => {
-            if (this._client.destroyed) {
+          (this._client as net.Socket).on('close', () => {
+            if ((this._client as net.Socket).destroyed) {
               if (this._promisedReading) this._promisedReading(false);
               this._connectionClosed = true;
             }
@@ -119,23 +119,23 @@ export class Socket {
         });
       } else {
         this._client = new net.Socket();
-        this._client.setTimeout(this.timeout);
+        (this._client as net.Socket).setTimeout(this.timeout);
         this._connectionClosed = false;
         this._read = new Promise((resolve) => {
           this._promisedReading = resolve;
         }) as unknown as Promise<boolean>;
         return new Promise((resolve, reject) => {
-          this._client.connect(port, ip, () => {
+          (this._client as net.Socket).connect(port, ip, () => {
             this.recv();
             resolve(this);
           });
-          this._client.on('error', (error: any) => {
+          (this._client as net.Socket).on('error', (error: any) => {
             return error.message
               ? reject(new WSError.WebSocketError(error.message))
               : reject(error);
           });
-          this._client.on('close', () => {
-            if (this._client.destroyed) {
+          (this._client as net.Socket).on('close', () => {
+            if ((this._client as net.Socket).destroyed) {
               if (this._promisedReading) this._promisedReading(false);
               this._connectionClosed = true;
             }
@@ -154,10 +154,10 @@ export class Socket {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
       if (isBrowser) {
-        await this._client.close();
+        await (this._client as WebSocket).close();
       } else {
-        await this._client.destroy();
-        await this._client.unref();
+        await (this._client as net.Socket).destroy();
+        await (this._client as net.Socket).unref();
       }
     }
     return this._connectionClosed;
@@ -169,19 +169,19 @@ export class Socket {
   async recv() {
     if (this._client && !this._connectionClosed) {
       if (isBrowser) {
-        this._client.onmessage = async (data: Buffer) => {
-          data = Buffer.from(await new Response(data).arrayBuffer());
+        (this._client as WebSocket).onmessage = async (data) => {
+          let _data = Buffer.from(await new Response(data.data).arrayBuffer());
           const release = await mutex.acquire();
           try {
-            Logger.debug(`[3] Receive ${data.length} bytes data`);
-            this._data = Buffer.concat([this._data, data]);
+            Logger.debug(`[3] Receive ${_data.length} bytes data`);
+            this._data = Buffer.concat([this._data, _data]);
             if (this._promisedReading) this._promisedReading(true);
           } finally {
             release();
           }
         };
       } else {
-        this._client.on('data', async (data: Buffer) => {
+        (this._client as net.Socket).on('data', async (data: Buffer) => {
           const release = await mutex.acquire();
           try {
             Logger.debug(`[3] Receive ${data.length} bytes data`);
@@ -206,9 +206,9 @@ export class Socket {
       const release = await mutex.acquire();
       try {
         if (isBrowser) {
-          this._client.send(data);
+          (this._client as WebSocket).send(data);
         } else {
-          this._client.write(data);
+          (this._client as net.Socket).write(data);
         }
       } finally {
         release();

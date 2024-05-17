@@ -134,7 +134,7 @@ function ige(data: Buffer, key: Buffer, iv: Buffer, encrypt: boolean): Buffer {
 /**
  * Make AES-256-CTR mode.
  */
-export function ctr(key: Buffer, iv: Buffer, state: Buffer = Buffer.alloc(1)) {
+function ctr(key: Buffer, iv: Buffer, state: Buffer = Buffer.alloc(1)) {
   const cipher = AES(Buffer.from(key));
   const _iv = Buffer.from(iv);
   let chunk = Buffer.from(cipher.encrypt(iv));

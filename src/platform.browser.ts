@@ -18,29 +18,66 @@ export { gzipSync, gunzipSync } from 'browserify-zlib';
 export { Logger } from '@tgsnake/log';
 export { Mutex, Semaphore } from 'async-mutex';
 // node compatibility
-export const net = {
-  Socket: class Socket {
-    constructor(...args: Array<any>) {}
-    connect(...args: Array<any>): any {}
-    on(...args: Array<any>): any {}
+export namespace net {
+  export class Socket {
+    destroyed!: boolean;
+    constructor(...args: Array<any>) {
+      throw new Error('not implemented');
+    }
+    connect(...args: Array<any>): any {
+      throw new Error('not implemented');
+    }
+    on(...args: Array<any>): any {
+      throw new Error('not implemented');
+    }
+    unref(...args: Array<any>): any {
+      throw new Error('not implemented');
+    }
+    destroy(...args: Array<any>): any {
+      throw new Error('not implemented');
+    }
+    setTimeout(...args: Array<any>): any {
+      throw new Error('not implemented');
+    }
+    write(...args: Array<any>): any {
+      throw new Error('not implemented');
+    }
+  }
+}
+export const SocksClient = {
+  createConnection: (...args: Array<any>): any => {
+    throw new Error('not implemented');
   },
 };
-export const SocksClient = {
-  createConnection: (...args: Array<any>): any => {},
-};
 export class Readable {
-  constructor(...args: Array<any>) {}
-  pipe(...args: Array<any>): any {}
+  constructor(...args: Array<any>) {
+    throw new Error('not implemented');
+  }
+  pipe(...args: Array<any>): any {
+    throw new Error('not implemented');
+  }
 }
 export class Writable {
-  constructor(...args: Array<any>) {}
-  push(...args: Array<any>): any {}
+  constructor(...args: Array<any>) {
+    throw new Error('not implemented');
+  }
+  push(...args: Array<any>): any {
+    throw new Error('not implemented');
+  }
 }
 export class Duplex {
-  constructor(...args: Array<any>) {}
-  on(...args: Array<any>): any {}
-  pipe(...args: Array<any>): any {}
-  push(...args: Array<any>): any {}
+  constructor(...args: Array<any>) {
+    throw new Error('not implemented');
+  }
+  on(...args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  pipe(...args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  push(...args: Array<any>): any {
+    throw new Error('not implemented');
+  }
 }
 export const { Buffer } = buffer;
 export const isDeno = 'Deno' in globalThis; // Deno compatibility

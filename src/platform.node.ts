@@ -19,9 +19,9 @@ export { Logger } from '@tgsnake/log';
 export { SocksClient } from 'socks';
 export { Mutex, Semaphore } from 'async-mutex';
 export { Readable, Writable, Duplex } from 'stream';
-export const aesjs = {
-  ModeOfOperation: {
-    ecb: class ECB {
+export namespace aesjs {
+  export namespace ModeOfOperation {
+    export class ecb {
       constructor(...args: Array<any>) {
         throw new Error('not implemented');
       }
@@ -31,8 +31,8 @@ export const aesjs = {
       decrypt(...args: Array<any>): buffer.Buffer {
         return buffer.Buffer.alloc(0);
       }
-    },
-    ctr: class CTR {
+    }
+    export class ctr {
       constructor(...args: Array<any>) {
         throw new Error('not implemented');
       }
@@ -42,9 +42,14 @@ export const aesjs = {
       decrypt(...args: Array<any>): buffer.Buffer {
         return buffer.Buffer.alloc(0);
       }
-    },
-  },
-}; // Deno compatibility
+    }
+  }
+  export class Counter {
+    constructor(...args: Array<any>) {
+      throw new Error('not implemented');
+    }
+  }
+} // Deno compatibility
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
