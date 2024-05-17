@@ -12,19 +12,10 @@ import { Logger } from '../Logger.ts';
 import { Raw, TLObject } from '../raw/index.ts';
 import { Exceptions } from './exceptions/All.ts';
 import { inspect, where } from '../platform.deno.ts';
-async function req(paths: string): Promise<{ [key: string]: any }> {
-  let res = {};
-  if (where === 'Deno' || where === 'Browser') {
-    // @ts-ignore
-    res = await import(paths);
-  } else {
-    res = await require(paths.replace('.ts', '.js'));
-  }
-  return res;
-}
-async function getModule(name: string) {
+import { Exceptions as AllExceptions } from './index.ts';
+
+function getModule(name: string) {
   let [n, m] = name.split('.');
-  const AllExceptions = await req('./exceptions/index.ts');
   if (AllExceptions[n] && AllExceptions[n][m]) {
     return AllExceptions[n][m];
   }
@@ -87,7 +78,7 @@ export class RPCError extends Error {
       // example: FILE_REFERENCE_*
       id = id.split('_').splice(-1, 1, '*').join('_');
       if (!(id in Exceptions[code])) {
-        let modules = await getModule(Exceptions[code]['_']);
+        let modules = getModule(Exceptions[code]['_']);
         // @ts-ignore
         let _module = new modules(value, name, true, isSigned);
         _module.message = `[${code} ${message}]`;

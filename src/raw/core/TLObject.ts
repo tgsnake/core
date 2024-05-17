@@ -12,31 +12,24 @@ import { Object } from '../All.ts';
 import { BytesIO } from './BytesIO.ts';
 import { Logger } from '../../Logger.ts';
 import { inspect, Buffer, where } from '../../platform.deno.ts';
-async function req(paths: string): Promise<{ [key: string]: any }> {
-  let res = {};
-  if (where === 'Deno' || where === 'Browser') {
-    // @ts-ignore
-    res = await import(paths);
-  } else {
-    res = await require(paths.replace('.ts', '.js'));
-  }
-  return res;
-}
-async function getModule(name: string): Promise<TLObject> {
+import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.ts';
+
+function getModule(
+  name: string,
+): typeof TLObject | typeof Message | typeof GzipPacked | typeof MsgContainer {
   if (!name) {
     throw new Error("name of module can't be undefined");
   }
   if (name === 'Message') {
-    return (await req('./Message.ts')).Message;
+    return Message;
   } else if (name === 'GzipPacked') {
-    return (await req('./GzipPacked.ts')).GzipPacked;
+    return GzipPacked;
   } else if (name === 'MsgContainer') {
-    return (await req('./MsgContainer.ts')).MsgContainer;
+    return MsgContainer;
   } else if (name.startsWith('Primitive')) {
-    return (await req('./primitive/index.ts'))[name.split('.')[1]];
+    return Primitive[name.split('.')[1]];
   } else {
     const split = name.split('.');
-    const { Raw } = await req('../Raw.ts');
     if (split.length == 3) {
       return Raw[split[1]][split[2]];
     }
@@ -59,7 +52,7 @@ export class TLObject {
   static async read(data: BytesIO, ...args: Array<any>): Promise<any> {
     const id = data.readUInt32LE(4);
     Logger.debug(`[10] Reading TLObject with id: ${id.toString(16)} (${Object[id]})`);
-    const _class = await getModule(Object[id]);
+    const _class = getModule(Object[id]);
     return await _class.read(data, ...args);
   }
   static write(...args: Array<any>): Buffer {

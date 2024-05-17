@@ -8,6 +8,8 @@
  * it under the terms of the MIT License as published.
  */
 
+export { Raw } from './Raw.ts';
+export { Object } from './All.ts';
 export {
   BytesIO,
   Primitive,
@@ -19,5 +21,3 @@ export {
   SecretChatMessage,
   SecretChatMessageService,
 } from './core/index.ts';
-export { Object } from './All.ts';
-export { Raw } from './Raw.ts';
