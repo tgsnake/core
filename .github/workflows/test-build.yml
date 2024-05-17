@@ -1,0 +1,33 @@
+name: Testing Build Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  node-build:
+    name: Building package for NodeJs and Bun
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: yarn config set enableImmutableInstalls false
+      - run: yarn install
+      - run: yarn build
+  browser-build:
+    name: Building package for Browser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: yarn config set enableImmutableInstalls false
+      - run: yarn install
+      - run: yarn add aes-js browserify-zlib buffer crypto-browserify events os-browserify path-browserify util
+      - run: node ./generator/change_package_json/index.js
+      - run: node ./generator/bundler/index.mjs
