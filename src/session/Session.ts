@@ -127,6 +127,9 @@ export class Session {
             `[40] Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`,
           );
           msgId = msg.body.badMsgId;
+          if (msg.body instanceof Raw.BadServerSalt) {
+            this._salt = (msg.body as Raw.BadServerSalt).newServerSalt;
+          }
         } else if (msg.body instanceof Raw.FutureSalts || msg.body instanceof Raw.RpcResult) {
           Logger.debug(
             `[41] Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`,
