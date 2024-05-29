@@ -15,7 +15,7 @@ jobs:
       - run: |
           yarn config set enableImmutableInstalls false
           yarn install
-          yarn add aes-js browserify-zlib buffer crypto-browserify events os-browserify path-browserify util
+          yarn add aes-js browserify-zlib buffer crypto-browserify events os-browserify path-browserify util stream-browserify
           node ./generator/change_package_json
       - run: npm publish --tag browser --access public
         env:

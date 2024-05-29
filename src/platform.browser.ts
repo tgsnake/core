@@ -15,6 +15,7 @@ import aesjs from 'aes-js';
 import bigInt from 'big-integer';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'browserify-zlib';
+export { Readable, Writable, Duplex } from 'stream-browserify';
 export { Logger } from '@tgsnake/log';
 export { Mutex, Semaphore } from 'async-mutex';
 // node compatibility
@@ -49,36 +50,6 @@ export const SocksClient = {
     throw new Error('not implemented');
   },
 };
-export class Readable {
-  constructor(...args: Array<any>) {
-    throw new Error('not implemented');
-  }
-  pipe(...args: Array<any>): any {
-    throw new Error('not implemented');
-  }
-}
-export class Writable {
-  constructor(...args: Array<any>) {
-    throw new Error('not implemented');
-  }
-  push(...args: Array<any>): any {
-    throw new Error('not implemented');
-  }
-}
-export class Duplex {
-  constructor(...args: Array<any>) {
-    throw new Error('not implemented');
-  }
-  on(...args: Array<any>): any {
-    throw new Error('not implemented');
-  }
-  pipe(...args: Array<any>): any {
-    throw new Error('not implemented');
-  }
-  push(...args: Array<any>): any {
-    throw new Error('not implemented');
-  }
-}
 export const { Buffer } = buffer;
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility

@@ -429,7 +429,7 @@ export class Session {
             if (amount > sleepThreshold >= 0) {
               throw error;
             }
-            Logger.warning(
+            Logger.info(
               `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`,
             );
             await sleep(amount);
@@ -438,7 +438,7 @@ export class Session {
               throw error;
             }
             if (retries < 2) {
-              Logger.warning(
+              Logger.info(
                 `[66] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
                   error.message
                 }`,

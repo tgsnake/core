@@ -33,7 +33,7 @@
   "license": "MIT",
   "engineStrict": true,
   "engines": {
-    "node": ">=16.1.1",
+    "node": ">=16.0.0",
     "npm": ">=6.0.0",
     "yarn": ">=1.0.0"
   },
