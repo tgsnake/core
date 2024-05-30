@@ -48,13 +48,13 @@ export class File extends Duplex {
   /**
    * Internal Use: Browser compatibility!
    */
-  push(chunk: TypeFileChunk, encoding?: string): void {
+  push(chunk: TypeFileChunk, encoding?: BufferEncoding): boolean {
     return super.push(chunk, encoding);
   }
   /**
    * Internal Use: Browser compatibility!
    */
-  on(event: string, callback: TypeFileCallback): void {
+  on(event: string, callback: TypeFileCallback): this {
     return super.on(event, callback);
   }
   get bytes(): BytesIO {
