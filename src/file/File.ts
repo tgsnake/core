@@ -10,6 +10,8 @@
 import { Duplex, inspect } from '../platform.deno.ts';
 import { BytesIO } from '../raw/index.ts';
 
+export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
+export type TypeFileCallback = (error?: any) => void;
 /**
  * @class
  * Streamable File.
@@ -22,21 +24,40 @@ export class File extends Duplex {
   }
   /**
    * Write a chunk.
-   * @param {Buffer} chunk - Buffer will be written.
+   * @param {TypeFileChunk} chunk - Buffer will be written.
    * @param {String} encoding - Encoding of buffers.
    * @param {Function} next - Next function, this will be called when done write chunk.
    */
-  _write(chunk, encoding, next): void {
-    this._bytes.write(chunk);
+  _write(chunk: TypeFileChunk, encoding: string, next: TypeFileCallback): void {
+    this._bytes.write(Buffer.from(chunk));
     return next();
   }
   /**
    * Read buffer
    * @param {Number} length - Length of chunk
    */
-  _read(length?: number) {}
+  _read(length?: number): Buffer | null {
+    if (length) {
+      if (this._bytes.length > 0) {
+        return this._bytes.read(length as number);
+      }
+    }
+    return null;
+  }
   // _final(callback){}
-  get bytes() {
+  /**
+   * Internal Use: Browser compatibility!
+   */
+  push(chunk: TypeFileChunk, encoding?: string): void {
+    return super.push(chunk, encoding);
+  }
+  /**
+   * Internal Use: Browser compatibility!
+   */
+  on(event: string, callback: TypeFileCallback): void {
+    return super.on(event, callback);
+  }
+  get bytes(): BytesIO {
     return this._bytes;
   }
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
