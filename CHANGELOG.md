@@ -1,4 +1,20 @@
- <a name="1.12.0"></a>
+ <a name="1.13.0"></a>
+
+## [1.13.0](https://github.com/tgsnake/core/compare/1.12.0...1.13.0)
+
+> 2024-05-31
+
+### Add
+
+- Workflow to test building source code - dts file in browser folder - browser package builder - workflow for publish package to github registry  ### Change
+
+- add push, on property - log warning to info - static import - salts when is bad - scripts.prepare on browser build - Update CHANGELOG.md  ### Fix
+
+- auto reconnect - file in node - websocket  ### Fixed
+
+- TCPO on Deno  ### Remove
+
+- github registry   <a name="1.12.0"></a>
 
 ## [1.12.0](https://github.com/tgsnake/core/compare/1.11.0...1.12.0)
 
