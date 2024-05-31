@@ -211,9 +211,17 @@ export class Session {
       await this._connection.send(payload);
     } catch (error: any) {
       Logger.error(`[52] Got error when trying to send ${payload.length} bytes payload:`, error);
-      if (error instanceof Errors.WSError.Disconnected) {
+      if (
+        error instanceof Errors.WSError.ReadClosed ||
+        error instanceof Errors.WSError.Disconnected ||
+        error instanceof Errors.ClientError.ClientDisconnected
+      ) {
         Logger.debug(`[108] Restarting client due to disconnected`);
-        await this.restart();
+        if (this._client._maxReconnectRetries) {
+          return this.retriesReconnect();
+        } else {
+          await this.restart();
+        }
         return;
       }
       let promises = this._results.get(BigInt(msgId));
@@ -370,7 +378,8 @@ export class Session {
       this._networkTask = false;
       this._isConnected = false;
       clearTimeout(this._pingTask);
-      await this._connection.close();
+      // force close
+      await this._connection.close().catch(() => {});
       this._results.clear();
       this._task.clear();
       Logger.info(`[60] Session stopped.`);
@@ -382,9 +391,11 @@ export class Session {
    * Restarting client connection.
    */
   restart() {
-    Logger.debug(`[61] Restarting client`);
-    this.stop();
-    this.start();
+    try {
+      Logger.debug(`[61] Restarting client`);
+      this.stop();
+      this.start();
+    } catch (error) {}
   }
   /**
    * Send data to the telegram server as an executable function.
