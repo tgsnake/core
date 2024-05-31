@@ -601,6 +601,23 @@ export class Client {
       offset || BigInt(0),
     );
   }
+  /**
+   * Downloading file asynchronous.
+   * This function will be return Buffer.
+  */
+  download(peer: Raw.TypeInputPeer, { file, dcId, fileSize, limit, offset }: Files.DownloadParam): Promise<Buffer> {
+    const pipe = new Files.File()
+    const stream = Files.downloadStream(this, file, peer, dcId, fileSize || 0, limit || 0, offset || BigInt(0))
+    let resolve
+    const promise = new Promise((res, rej) => {
+      resolve = res
+    })
+    pipe.on('finish', () => {
+      return resolve(pipe.bytes.buffer)
+    })
+    stream.pipe(pipe)
+    return promise as Promise<Buffer>
+  }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
