@@ -17,6 +17,7 @@ function buildForBrowser() {
   json.scripts.prepare = json.scripts.build = 'node ./generator/bundler/index.mjs';
   json.files = ['browser/**/**'];
   json.type = 'module';
+  json.version = `${json.version}-browser.0`;
   fs.writeFileSync(path.join(process.cwd(), 'package.json'), JSON.stringify(json, null, 2));
 }
 buildForBrowser();
