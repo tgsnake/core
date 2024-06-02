@@ -589,17 +589,9 @@ export class Client {
    */
   downloadStream(
     peer: Raw.TypeInputPeer,
-    { file, dcId, fileSize, limit, offset }: Files.DownloadParam,
+    { file, dcId, limit, offset }: Files.DownloadParam,
   ): Files.File {
-    return Files.downloadStream(
-      this,
-      file,
-      peer,
-      dcId,
-      fileSize || 0,
-      limit || 0,
-      offset || BigInt(0),
-    );
+    return Files.downloadStream(this, file, peer, dcId, limit || 0, offset || BigInt(0));
   }
   /**
    * Downloading file asynchronous.
@@ -607,7 +599,7 @@ export class Client {
    */
   async download(
     peer: Raw.TypeInputPeer,
-    { file, dcId, fileSize, limit, offset }: Files.DownloadParam,
+    { file, dcId, limit, offset }: Files.DownloadParam,
   ): Promise<Buffer> {
     const pipe = new Files.File();
     const stream = await Files.downloadStream(
@@ -615,7 +607,6 @@ export class Client {
       file,
       peer,
       dcId,
-      fileSize || 0,
       limit || 0,
       offset || BigInt(0),
     );

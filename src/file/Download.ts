@@ -22,7 +22,6 @@ export async function handleDownload(
   location: Raw.TypeInputFileLocation,
   peer: Raw.TypeInputPeer,
   dcId: number,
-  fileSize: number,
   limit: number,
   offset: bigint,
 ) {
@@ -166,12 +165,11 @@ export function downloadStream(
   location: Raw.TypeInputFileLocation,
   peer: Raw.TypeInputPeer,
   dcId: number,
-  fileSize: number,
   limit: number = 0,
   offset: bigint = BigInt(0),
 ): File {
   const file = new File();
-  handleDownload(client, file, location, peer, dcId, fileSize, limit, offset);
+  handleDownload(client, file, location, peer, dcId, limit, offset);
   return file;
 }
 
@@ -184,10 +182,6 @@ export interface DownloadParam {
    * DC id where the file is stored.
    */
   dcId: number;
-  /**
-   * File size of the file to be downloaded.
-   */
-  fileSize?: number;
   /**
    * Limit of bytes file to be downloaded.
    */

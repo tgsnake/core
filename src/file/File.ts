@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Duplex, inspect, Writable } from '../platform.deno.ts';
+import { Duplex, inspect } from '../platform.deno.ts';
 import { BytesIO } from '../raw/index.ts';
 
 export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
