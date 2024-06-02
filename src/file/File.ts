@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Duplex, inspect } from '../platform.deno.ts';
+import { Duplex, inspect, Writable } from '../platform.deno.ts';
 import { BytesIO } from '../raw/index.ts';
 
 export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
@@ -56,6 +56,12 @@ export class File extends Duplex {
    */
   on(event: string, callback: TypeFileCallback): this {
     return super.on(event, callback);
+  }
+  /**
+   * Internal Use: Browser compatibility!
+   */
+  pipe(destination: any, options?: { end?: boolean }) {
+    return super.pipe(destination, options);
   }
   get bytes(): BytesIO {
     return this._bytes;

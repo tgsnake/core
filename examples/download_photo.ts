@@ -18,7 +18,7 @@ async function listenNewMessageGroup(event: Raw.TypeUpdates) {
                 thumbSize: 'y',
               }),
               dcId: photo.dcId,
-              fileSize: 0
+              fileSize: 0,
             });
             let resolve;
             const promise = new Promise((res, rej) => {
