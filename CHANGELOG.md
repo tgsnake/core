@@ -1,4 +1,12 @@
- <a name="1.13.1"></a>
+ <a name="1.13.2"></a>
+
+## [1.13.2](https://github.com/tgsnake/core/compare/1.13.1...1.13.2)
+
+> 2024-06-03
+
+### Change
+
+- Update CHANGELOG.md - by default using TCPO on browser   <a name="1.13.1"></a>
 
 ## [1.13.1](https://github.com/tgsnake/core/compare/1.13.0...1.13.1)
 
