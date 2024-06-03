@@ -1,4 +1,16 @@
- <a name="1.13.0"></a>
+ <a name="1.13.1"></a>
+
+## [1.13.1](https://github.com/tgsnake/core/compare/1.13.0...1.13.1)
+
+> 2024-06-02
+
+### Add
+
+- async download - async download - surrfix in browser version  ### Change
+
+- Update TLSchema - Update CHANGELOG.md  ### Remove
+
+- fileSize cause unless   <a name="1.13.0"></a>
 
 ## [1.13.0](https://github.com/tgsnake/core/compare/1.12.0...1.13.0)
 
