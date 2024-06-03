@@ -53,7 +53,15 @@ export const SocksClient = {
 export const { Buffer } = buffer;
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility
-export const { Readable, Writable, Duplex } = stream;
+export class Readable extends stream.Readable {
+  constructor() {
+    super();
+  }
+  pipe(destination: any, options?: { end?: boolean }) {
+    return super.pipe(destination, options);
+  }
+}
+export const { Writable, Duplex } = stream;
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
 export { crypto, os, bigInt, path, aesjs };

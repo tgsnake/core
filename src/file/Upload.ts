@@ -46,7 +46,6 @@ export interface SaveFileStreamParams {
   /**
    * Readable stream which will be uploaded to the telegram server. Source must can be pipe to writeable.
    */
-  // @ts-ignore
   source: Readable | File;
   /**
    * The file name which will be uploaded to the telegram server. Default is file.unknown.
