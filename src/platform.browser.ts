@@ -11,11 +11,11 @@ import * as crypto from 'crypto-browserify';
 import * as os from 'os-browserify';
 import * as path from 'path-browserify';
 import * as buffer from 'buffer';
+import stream from 'stream-browserify';
 import aesjs from 'aes-js';
 import bigInt from 'big-integer';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'browserify-zlib';
-export { Readable, Writable, Duplex } from 'stream-browserify';
 export { Logger } from '@tgsnake/log';
 export { Mutex, Semaphore } from 'async-mutex';
 // node compatibility
@@ -53,6 +53,7 @@ export const SocksClient = {
 export const { Buffer } = buffer;
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility
+export const { Readable, Writable, Duplex } = stream;
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
 export { crypto, os, bigInt, path, aesjs };

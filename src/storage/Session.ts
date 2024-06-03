@@ -202,7 +202,11 @@ export class BaseSession extends AbstractSession {
     bytes = Buffer.concat([bytes, Buffer.alloc(1)]);
     bytes.writeUInt8(this._isBot ? 1 : 0, 270); // 271
     Logger.debug(`[80] Exporting ${bytes.length} bytes of session`);
-    return bytes.toString('base64url').replace(/=/g, '');
+    try {
+      return bytes.toString('base64url').replace(/=+$/g, '');
+    } catch (error) {
+      return bytes.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    }
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {

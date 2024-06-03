@@ -127,10 +127,11 @@ export class Connection {
     }
     for (let i = 0; i < this.maxRetries; i++) {
       if (
-        this._proxy &&
-        'server' in this._proxy &&
-        'port' in this._proxy &&
-        'secret' in this._proxy &&
+        ((this._proxy &&
+          'server' in this._proxy &&
+          'port' in this._proxy &&
+          'secret' in this._proxy) ||
+          isBrowser) &&
         // @ts-ignore
         (this._mode !== TCPModes[4] || this._mode !== TCPModes[5])
       ) {
