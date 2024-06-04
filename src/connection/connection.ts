@@ -108,7 +108,7 @@ export class Connection {
     proxy?: ProxyInterface,
     media: boolean = false,
     mode: number = 0,
-    local: boolean = true,
+    local: boolean = window.location.protocol !== 'https:',
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;

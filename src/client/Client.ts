@@ -172,7 +172,7 @@ export class Client {
     this._noUpdates = clientOptions?.noUpdates ?? false;
     this._takeout = clientOptions?.takeout ?? false;
     this._connectionMode = clientOptions?.tcp ?? 0;
-    this._local = clientOptions?.local ?? true;
+    this._local = clientOptions?.local ?? window.location.protocol !== 'https:';
     this._secretChat = new SecretChat(session, this);
     this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
