@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { os, inspect, Semaphore } from '../platform.deno.ts';
+import { os, inspect, Semaphore, isBrowser } from '../platform.deno.ts';
 import * as Errors from '../errors/index.ts';
 import {
   Raw,
@@ -172,7 +172,9 @@ export class Client {
     this._noUpdates = clientOptions?.noUpdates ?? false;
     this._takeout = clientOptions?.takeout ?? false;
     this._connectionMode = clientOptions?.tcp ?? 0;
-    this._local = clientOptions?.local ?? window.location.protocol !== 'https:';
+    this._local =
+      clientOptions?.local ??
+      ((isBrowser && window && window.location.protocol !== 'https:') || true);
     this._secretChat = new SecretChat(session, this);
     this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
