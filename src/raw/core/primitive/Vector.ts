@@ -26,7 +26,7 @@ export class Vector extends TLObject {
         b.write(i.write());
       }
     }
-    return b.buffer;
+    return Buffer.from(b.buffer);
   }
   static async readBare(data: BytesIO, size: number): Promise<any> {
     if (size === 4) {

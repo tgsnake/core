@@ -17,6 +17,7 @@ import {
 } from '../raw/index.ts';
 import { AbstractSession } from '../storage/index.ts';
 import { SecretChat } from '../session/secretChats/index.ts';
+import { TCP } from '../connection/connection.ts';
 import * as _Session from './Session.ts';
 import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
@@ -87,7 +88,7 @@ export interface ClientOptions {
    * Fill with index of tcp modes if you want to switch from one tcp to another. <br/>
    * Default is 1 (TCPAbridge)
    */
-  tcp?: number;
+  tcp?: TCP;
   /**
    * Only for browser platform! Set false when you deployed your app offside the local machine. it wil use `ws://` in local machine and `wss://` in deployment.
    */
@@ -171,7 +172,7 @@ export class Client {
     this._isCdn = clientOptions?.isCdn ?? false;
     this._noUpdates = clientOptions?.noUpdates ?? false;
     this._takeout = clientOptions?.takeout ?? false;
-    this._connectionMode = clientOptions?.tcp ?? 0;
+    this._connectionMode = clientOptions?.tcp ?? TCP.TCPFull;
     this._local =
       clientOptions?.local ??
       ((isBrowser && window && window.location.protocol !== 'https:') || true);
@@ -562,7 +563,7 @@ export class Client {
   }: Files.SaveFileStreamParams): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
     const file = new Files.File();
     let promiseResolve: (value: Raw.InputFile | Raw.InputFileBig | undefined) => void = (
-      value,
+      _value,
     ) => {};
     const promise: Promise<Raw.InputFile | Raw.InputFileBig | undefined> = new Promise<
       Raw.InputFile | Raw.InputFileBig | undefined
@@ -589,31 +590,18 @@ export class Client {
    * You can pipe the results to writeable stream.
    * @since v1.10.0
    */
-  downloadStream(
-    peer: Raw.TypeInputPeer,
-    { file, dcId, limit, offset }: Files.DownloadParam,
-  ): Files.File {
-    return Files.downloadStream(this, file, peer, dcId, limit || 0, offset || BigInt(0));
+  downloadStream({ file, dcId, limit, offset }: Files.DownloadParam): Files.File {
+    return Files.downloadStream(this, file, dcId, limit || 0, offset || BigInt(0));
   }
   /**
    * Downloading file asynchronous.
    * This function will be return Buffer.
    */
-  async download(
-    peer: Raw.TypeInputPeer,
-    { file, dcId, limit, offset }: Files.DownloadParam,
-  ): Promise<Buffer> {
+  async download({ file, dcId, limit, offset }: Files.DownloadParam): Promise<Buffer> {
     const pipe = new Files.File();
-    const stream = await Files.downloadStream(
-      this,
-      file,
-      peer,
-      dcId,
-      limit || 0,
-      offset || BigInt(0),
-    );
+    const stream = await Files.downloadStream(this, file, dcId, limit || 0, offset || BigInt(0));
     let resolve;
-    const promise = new Promise((res, rej) => {
+    const promise = new Promise((res) => {
       resolve = res;
     });
     pipe.on('finish', () => {

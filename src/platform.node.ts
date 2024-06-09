@@ -22,30 +22,30 @@ export { Readable, Writable, Duplex } from 'stream';
 export namespace aesjs {
   export namespace ModeOfOperation {
     export class ecb {
-      constructor(...args: Array<any>) {
+      constructor(..._args: Array<any>) {
         throw new Error('not implemented');
       }
-      encrypt(...args: Array<any>): buffer.Buffer {
+      encrypt(..._args: Array<any>): buffer.Buffer {
         return buffer.Buffer.alloc(0);
       }
-      decrypt(...args: Array<any>): buffer.Buffer {
+      decrypt(..._args: Array<any>): buffer.Buffer {
         return buffer.Buffer.alloc(0);
       }
     }
     export class ctr {
-      constructor(...args: Array<any>) {
+      constructor(..._args: Array<any>) {
         throw new Error('not implemented');
       }
-      encrypt(...args: Array<any>): buffer.Buffer {
+      encrypt(..._args: Array<any>): buffer.Buffer {
         return buffer.Buffer.alloc(0);
       }
-      decrypt(...args: Array<any>): buffer.Buffer {
+      decrypt(..._args: Array<any>): buffer.Buffer {
         return buffer.Buffer.alloc(0);
       }
     }
   }
   export class Counter {
-    constructor(...args: Array<any>) {
+    constructor(..._args: Array<any>) {
       throw new Error('not implemented');
     }
   }

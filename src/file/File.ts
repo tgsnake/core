@@ -25,11 +25,11 @@ export class File extends Duplex {
   /**
    * Write a chunk.
    * @param {TypeFileChunk} chunk - Buffer will be written.
-   * @param {String} encoding - Encoding of buffers.
+   * @param {BufferEncoding} encoding - Encoding of buffers.
    * @param {Function} next - Next function, this will be called when done write chunk.
    */
-  _write(chunk: TypeFileChunk, encoding: string, next: TypeFileCallback): void {
-    this._bytes.write(Buffer.from(chunk));
+  _write(chunk: TypeFileChunk, encoding: BufferEncoding, next: TypeFileCallback): void {
+    this._bytes.write(Buffer.from(chunk, encoding));
     return next();
   }
   /**

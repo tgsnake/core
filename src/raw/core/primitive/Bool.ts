@@ -19,7 +19,7 @@ export class BoolFalse extends TLObject {
     buff.writeUInt32LE(BoolFalse.ID);
     return buff;
   }
-  static async read(data: BytesIO, ...arg: Array<any>): Promise<boolean> {
+  static async read(_data: BytesIO, ..._arg: Array<any>): Promise<boolean> {
     return BoolFalse.value;
   }
 }
@@ -31,7 +31,7 @@ export class BoolTrue extends BoolFalse {
     buff.writeUInt32LE(BoolTrue.ID);
     return buff;
   }
-  static async read(data: BytesIO, ...arg: Array<any>): Promise<boolean> {
+  static async read(_data: BytesIO, ..._arg: Array<any>): Promise<boolean> {
     return BoolTrue.value;
   }
 }
@@ -40,7 +40,7 @@ export class Bool extends TLObject {
   static write(value: boolean): Buffer {
     return value ? BoolTrue.write() : BoolFalse.write();
   }
-  static async read(data: BytesIO, ...arg: Array<any>): Promise<boolean> {
+  static async read(data: BytesIO, ..._arg: Array<any>): Promise<boolean> {
     return data.readUInt32LE(4) === BoolTrue.ID;
   }
 }

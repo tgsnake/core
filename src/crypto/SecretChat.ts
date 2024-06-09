@@ -9,10 +9,9 @@
  */
 import { crypto, Buffer } from '../platform.deno.ts';
 import { SecurityCheckMismatch, SecretChatError } from '../errors/index.ts';
-import { Primitive, BytesIO, TLObject } from '../raw/index.ts';
-import { mod, range, bigIntMod } from '../helpers.ts';
+import { BytesIO, TLObject } from '../raw/index.ts';
+import { mod } from '../helpers.ts';
 import { ige256Encrypt, ige256Decrypt } from './Aes.ts';
-import { Logger } from '../Logger.ts';
 import { Raw } from '../raw/index.ts';
 
 function sha256(data: Buffer): Buffer {

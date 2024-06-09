@@ -23,7 +23,7 @@ export class MsgContainer extends TLObject {
     this.className = 'MsgContainer';
     this.messages = messages;
   }
-  static async read(data: BytesIO, ...args: Array<any>): Promise<MsgContainer> {
+  static async read(data: BytesIO, ..._args: Array<any>): Promise<MsgContainer> {
     const count = await Primitive.Int.read(data);
     let messages: Array<Message> = [];
     for (let i = 0; i < count; i++) {
@@ -38,6 +38,6 @@ export class MsgContainer extends TLObject {
     for (let message of this.messages) {
       b.write(message.write());
     }
-    return b.buffer;
+    return Buffer.from(b.buffer);
   }
 }

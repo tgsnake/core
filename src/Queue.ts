@@ -24,7 +24,7 @@ export class Queue<T> {
     this._maxsize = maxsize;
     this._queues = [];
     this._possiblePut = this._queues.length < maxsize;
-    this._resolvePut = (value) => {};
+    this._resolvePut = (_value) => {};
     this._possibleGet = new Promise((resolve) => {
       this._resolveGet = resolve;
     });

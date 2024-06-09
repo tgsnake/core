@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, os, Mutex, inspect, Buffer } from '../platform.deno.ts';
+import { crypto, Mutex, inspect, Buffer } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { Connection, ProxyInterface } from '../connection/connection.ts';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw/index.ts';
@@ -16,7 +16,6 @@ import * as Mtproto from '../crypto/Mtproto.ts';
 import * as Errors from '../errors/index.ts';
 import { MsgId } from './internals/MsgId.ts';
 import { MsgFactory } from './internals/MsgFactory.ts';
-import { BaseSession } from '../storage/index.ts';
 import { sleep } from '../helpers.ts';
 import { Timeout } from '../Timeout.ts';
 import type { Client } from '../client/Client.ts';

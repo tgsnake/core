@@ -117,7 +117,7 @@ export class BaseSession extends AbstractSession {
   async load() {}
   async delete() {}
   async save() {}
-  async updatePts(pts, date) {}
+  async updatePts(_pts, _date) {}
   async getPts() {
     const res: [pts: number, date: number] = [0, 0];
     return res;
@@ -171,7 +171,7 @@ export class BaseSession extends AbstractSession {
   }
   async getPeerByUsername(username: string) {
     Logger.debug(`[78] Getting peer by username: ${username}`);
-    for (let [id, peer] of this._peers) {
+    for (let [, peer] of this._peers) {
       if (peer[3] && peer[3] === username) {
         return getInputPeer(peer[0], peer[1], peer[2]);
       }
@@ -179,7 +179,7 @@ export class BaseSession extends AbstractSession {
   }
   async getPeerByPhoneNumber(phoneNumber: string) {
     Logger.debug(`[79] Getting peer by phone number: ${phoneNumber}`);
-    for (let [id, peer] of this._peers) {
+    for (let [, peer] of this._peers) {
       if (peer[4] && peer[4] === phoneNumber) {
         return getInputPeer(peer[0], peer[1], peer[2]);
       }

@@ -11,7 +11,7 @@
 import { Logger } from '../Logger.ts';
 import { Raw, TLObject } from '../raw/index.ts';
 import { Exceptions } from './exceptions/All.ts';
-import { inspect, where } from '../platform.deno.ts';
+import { inspect } from '../platform.deno.ts';
 import { Exceptions as AllExceptions } from './index.ts';
 
 function getModule(name: string) {

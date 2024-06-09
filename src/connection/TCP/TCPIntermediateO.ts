@@ -9,7 +9,7 @@
  */
 
 import { TCP } from './tcp.ts';
-import { includesBuffer, sliceBuffer, bigintToBuffer } from '../../helpers.ts';
+import { includesBuffer, sliceBuffer } from '../../helpers.ts';
 import { crypto, Buffer } from '../../platform.deno.ts';
 import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
 import { Primitive } from '../../raw/core/index.ts';
@@ -95,11 +95,11 @@ export class TCPIntermediateO extends TCP {
     let payload = this._encryptor(Buffer.concat([Primitive.Int.write(data.length), data]));
     return await super.send(payload);
   }
-  async recv(length: number = 0) {
-    let _length = await super.recv(4);
-    if (!_length) return;
-    _length = this._decryptor(_length);
-    let data = await super.recv(_length.readInt32LE(0));
+  async recv(_length: number = 0) {
+    let length = await super.recv(4);
+    if (!length) return;
+    length = this._decryptor(length);
+    let data = await super.recv(length.readInt32LE(0));
     if (!data) return;
     return this._decryptor(data);
   }

@@ -104,7 +104,7 @@ export class Int128 extends Long {
   ): Promise<bigint> {
     return toBigint(data.read(size), little, signed);
   }
-  static write(value: bigint, signed: boolean = true, little: boolean = true): Buffer {
+  static write(value: bigint, _signed: boolean = true, _little: boolean = true): Buffer {
     const bytesArray: Array<number> = [];
     for (let i = 0; i < Int128.SIZE; i++) {
       let shift = value >> BigInt(Long.SIZE * i);
@@ -124,7 +124,7 @@ export class Int256 extends Long {
   ): Promise<bigint> {
     return Int128.read(data, signed, little, size);
   }
-  static write(value: bigint, signed: boolean = true, little: boolean = true): Buffer {
+  static write(value: bigint, _signed: boolean = true, _little: boolean = true): Buffer {
     const bytesArray: Array<number> = [];
     for (let i = 0; i < Int256.SIZE; i++) {
       let shift = value >> BigInt(Long.SIZE * i);

@@ -77,7 +77,7 @@ export async function upload(
   filePart: number = 0,
   progress?: Progress,
 ): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
-  const [smValue, release] = await client._saveFileSemaphore.acquire();
+  const [, release] = await client._saveFileSemaphore.acquire();
   try {
     const queue = new Queue<TLObject | null>(1);
     const partSize = 512 * 1024;
@@ -129,7 +129,7 @@ export async function upload(
     );
     const workers = Array(workersAmount)
       .fill(null)
-      .map((el, i) => (() => worker(session, i + 1))());
+      .map((_, i) => (() => worker(session, i + 1))());
     try {
       await session.start();
       file.seek(partSize * filePart);

@@ -9,8 +9,9 @@
  */
 
 import { Raw } from '../raw/index.ts';
-import type { SecretChat } from './SecretChat.ts';
-import type { Buffer } from '../platform.deno.ts';
+import { type SecretChat } from './SecretChat.ts';
+// @ts-ignore
+import { Buffer } from '../platform.deno.ts';
 
 /**
  * @class AbstractSession

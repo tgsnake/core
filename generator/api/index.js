@@ -35,7 +35,7 @@ const reNamespace = /((\w+\.)?(\w+))#(\w+)\s+/m; // /([\w.]+)#(\w+)\s+/m;
 const reArgs = /(\w+):([\w?!.<>#]+)/g;
 const reResult = /\s+([\w<>.]+);$/;
 const flagsArgType = /flags(\d+)?.(\d+)\?([\w?!.<>#]+)/;
-const flagsArg = /flags(\d+?):#/;
+const flagsArg = /flags(\d+)?:#/;
 const lineSection = /---(\w+)---/;
 const layerSection = /\/\/\s+LAYER\s+(\d+)/;
 const layerSecretChat = /={3}(\d+)={3}/;
@@ -212,8 +212,8 @@ function start(source, template) {
       let constructorString = '';
       let typesArgsString = '';
       let interfaceArgsString = '';
-      let writerString = hasFlags ? '' : '// no flags\n';
-      let readerString = hasFlags ? '' : '// no flags\n';
+      let writerString = hasFlags ? '' : '// no flags';
+      let readerString = hasFlags ? '' : '// no flags';
       if (full.includes('_')) {
         full = snakeCaseToCamelCase(full);
         if (namespace) namespace = snakeCaseToCamelCase(namespace);
@@ -281,14 +281,14 @@ function start(source, template) {
               }
             }
             writerFlag = [
-              `\n    let ${parseArgName(argName)} = 0;`,
+              `\n    // @ts-ignore\n    let ${parseArgName(argName)} = 0;`,
               writerFlag.join('\n'),
               `    b.write((Primitive.Int.write(${parseArgName(
                 argName,
               )})) as unknown as Buffer);\n`,
             ].join('\n');
             writerString += writerFlag;
-            readerString += `\n    let ${parseArgName(argName)} = await Primitive.Int.read(b);\n`;
+            readerString += `\n    // @ts-ignore\n    let ${parseArgName(argName)} = await Primitive.Int.read(_data);`;
             continue;
           }
           if (flag) {
@@ -313,7 +313,7 @@ function start(source, template) {
                 flagNumber ?? ''
               } & (1 << ${flagIndex})) ? await Primitive.${Uppercase(
                 flagType.trim(),
-              )}.read(b) : undefined;`;
+              )}.read(_data) : undefined;`;
             } else if (/Vector<(\w+\.?\w+?)>/i.test(flagType.trim())) {
               let [vectorFull, vectorType] = flagType.trim().match(/Vector<(\w+\.?\w+?)>/i);
               writerString += `\n    if(this.${argName}){\n`;
@@ -325,7 +325,7 @@ function start(source, template) {
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = (flags${
                 flagNumber ?? ''
-              } & (1 << ${flagIndex})) ? await TLObject.read(b${
+              } & (1 << ${flagIndex})) ? await TLObject.read(_data${
                 VECTOR_CORE_TYPES.has(vectorType.trim())
                   ? `,Primitive.${Uppercase(vectorType.trim())}`
                   : ''
@@ -336,7 +336,7 @@ function start(source, template) {
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = (flags${
                 flagNumber ?? ''
-              } & (1 << ${flagIndex})) ? await TLObject.read(b) : undefined;`;
+              } & (1 << ${flagIndex})) ? await TLObject.read(_data) : undefined;`;
             }
           } else {
             if (!flagsArg.test(argName)) {
@@ -353,7 +353,7 @@ function start(source, template) {
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = await Primitive.${Uppercase(
                 argType.trim(),
-              )}.read(b);`;
+              )}.read(_data);`;
             } else if (/Vector<(\w+\.?\w+?)>/i.test(argType.trim())) {
               let [vectorFull, vectorType] = argType.trim().match(/Vector<(\w+\.?\w+?)>/i);
               writerString += `\n    if(this.${argName}){\n`;
@@ -363,7 +363,7 @@ function start(source, template) {
                   : ''
               })) as unknown as Buffer);`;
               writerString += `\n    }`;
-              readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b${
+              readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(_data${
                 VECTOR_CORE_TYPES.has(vectorType.trim())
                   ? `,Primitive.${Uppercase(vectorType.trim())}`
                   : ''
@@ -372,7 +372,7 @@ function start(source, template) {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
               writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
               writerString += `\n    }`;
-              readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(b);`;
+              readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(_data);`;
             }
           }
         }

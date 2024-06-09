@@ -8,10 +8,11 @@
  * it under the terms of the MIT License as published.
  */
 
-import * as TCP from './TCP/index.ts';
+import * as TCPs from './TCP/index.ts';
 import { DataCenter } from '../session/index.ts';
 import { sleep } from '../helpers.ts';
 import { Logger } from '../Logger.ts';
+// @ts-ignore
 import { Mutex, isBrowser, inspect, Buffer } from '../platform.deno.ts';
 import { ClientError } from '../errors/index.ts';
 
@@ -19,21 +20,30 @@ import { ClientError } from '../errors/index.ts';
  * Several TCP models are available.
  */
 export const TCPModes = {
-  0: TCP.TCPFull,
-  1: TCP.TCPAbridged,
-  2: TCP.TCPIntermediate,
-  3: TCP.TCPPaddedIntermediate,
-  4: TCP.TCPAbridgedO,
-  5: TCP.TCPIntermediateO,
+  0: TCPs.TCPFull,
+  1: TCPs.TCPAbridged,
+  2: TCPs.TCPIntermediate,
+  3: TCPs.TCPPaddedIntermediate,
+  4: TCPs.TCPAbridgedO,
+  5: TCPs.TCPIntermediateO,
 };
 
 export type TypeTCP =
-  | TCP.TCPFull
-  | TCP.TCPAbridged
-  | TCP.TCPIntermediate
-  | TCP.TCPAbridgedO
-  | TCP.TCPIntermediateO
-  | TCP.TCPPaddedIntermediate;
+  | TCPs.TCPFull
+  | TCPs.TCPAbridged
+  | TCPs.TCPIntermediate
+  | TCPs.TCPAbridgedO
+  | TCPs.TCPIntermediateO
+  | TCPs.TCPPaddedIntermediate;
+
+export enum TCP {
+  TCPFull = 0,
+  TCPAbridged = 1,
+  TCPIntermediate = 2,
+  TCPPaddedIntermediate = 3,
+  TCPAbridgedO = 4,
+  TCPIntermediateO = 5,
+}
 
 export interface SocksProxyInterface {
   /**
@@ -79,43 +89,39 @@ export class Connection {
    * If it exceeds the specified amount, it will return an @link {ClientError.ClientFailed} error.
    */
   maxRetries!: number;
-  /** @hidden */
+  /** @ignore */
   private _dcId!: number;
-  /** @hidden */
+  /** @ignore */
   private _test!: boolean;
-  /** @hidden */
-  private _ipv6!: boolean;
-  /** @hidden */
+  /** @ignore */
   private _proxy?: ProxyInterface;
-  /** @hidden */
+  /** @ignore */
   private _media!: boolean;
-  /** @hidden */
+  /** @ignore */
   private _mode!: TypeTCP;
-  /** @hidden */
+  /** @ignore */
   private _address!: [ip: string, port: number];
-  /** @hidden */
+  /** @ignore */
   private _protocol!: TypeTCP;
-  /** @hidden */
+  /** @ignore */
   private _connected!: boolean;
-  /** @hidden */
+  /** @ignore */
   private _local!: boolean;
-  /** @hidden */
-  private _mutex: Mutex = new Mutex();
   constructor(
     dcId: number,
     test: boolean,
     ipv6: boolean,
     proxy?: ProxyInterface,
     media: boolean = false,
-    mode: number = 0,
+    mode: TCP = TCP.TCPFull,
     local: boolean = (isBrowser && window && window.location.protocol !== 'https:') || true,
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;
     this._test = test;
-    this._ipv6 = ipv6;
     this._proxy = proxy;
     this._media = media;
+    // @ts-ignore
     this._mode = TCPModes[mode];
     this._address = DataCenter.DataCenter(dcId, test, ipv6, media);
     this._local = local;

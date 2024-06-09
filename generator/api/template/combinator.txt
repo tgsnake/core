@@ -6,9 +6,9 @@ export class {{ CLASS-NAME }} extends TLObject {
   }
   /**
     * Generate the TLObject from buffer. 
-    * @param {Object} data - BytesIO class from TLObject will be convert to TLObject class.
+    * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
   */
-  static async read(b:BytesIO,...args:Array<any>) : Promise<Raw.{{ CLASS-NAME-WITH-NAMESPACE }}> {
+  static async read(_data:BytesIO,..._args:Array<any>) : Promise<Raw.{{ CLASS-NAME-WITH-NAMESPACE }}> {
     {{ READER }}
     return new Raw.{{ CLASS-NAME-WITH-NAMESPACE }}({{ VARIABLE }})
   }
@@ -19,6 +19,6 @@ export class {{ CLASS-NAME }} extends TLObject {
     let b:BytesIO = new BytesIO()
     b.write((Primitive.Int.write(this.constructorId,false)) as unknown as Buffer)
     {{ WRITER }}
-    return b.buffer
+    return Buffer.from(b.buffer)
   }
 }

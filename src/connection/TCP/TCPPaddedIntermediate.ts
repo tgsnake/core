@@ -37,10 +37,10 @@ export class TCPPaddedIntermediate extends TCP {
     allocLength.writeInt32LE(data.length, 0);
     await super.send(Buffer.concat([allocLength, data]));
   }
-  async recv(length: number = 0) {
-    let _length = await super.recv(4);
-    if (!_length) return;
-    let data = await super.recv(_length.readInt32LE(0));
+  async recv(_length: number = 0) {
+    let length = await super.recv(4);
+    if (!length) return;
+    let data = await super.recv(length.readInt32LE(0));
     if (!data) return;
     return data.slice(0, data.length - (data.length % 4));
   }

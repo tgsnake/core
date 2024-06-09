@@ -20,12 +20,11 @@ export async function handleDownload(
   client: Client,
   file: File,
   location: Raw.TypeInputFileLocation,
-  peer: Raw.TypeInputPeer,
   dcId: number,
   limit: number,
   offset: bigint,
 ) {
-  const [smValue, release] = await client._getFileSemaphore.acquire();
+  const [, release] = await client._getFileSemaphore.acquire();
   let current = 0;
   let total = Math.abs(limit) || (1 << 31) - 1;
   let chunkSize = 1024 * 1024;
@@ -163,13 +162,12 @@ export async function handleDownload(
 export function downloadStream(
   client: Client,
   location: Raw.TypeInputFileLocation,
-  peer: Raw.TypeInputPeer,
   dcId: number,
   limit: number = 0,
   offset: bigint = BigInt(0),
 ): File {
   const file = new File();
-  handleDownload(client, file, location, peer, dcId, limit, offset);
+  handleDownload(client, file, location, dcId, limit, offset);
   return file;
 }
 

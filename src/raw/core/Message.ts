@@ -37,7 +37,7 @@ export class Message extends TLObject {
     this.length = length;
     this.body = body;
   }
-  static async read(data: BytesIO, ...args: Array<any>): Promise<Message> {
+  static async read(data: BytesIO, ..._args: Array<any>): Promise<Message> {
     let msgId = await Primitive.Long.read(data);
     let seqNo = await Primitive.Int.read(data);
     let length = await Primitive.Int.read(data);
@@ -50,6 +50,6 @@ export class Message extends TLObject {
     b.write(Primitive.Int.write(this.seqNo));
     b.write(Primitive.Int.write(this.length));
     b.write(this.body.write());
-    return b.buffer;
+    return Buffer.from(b.buffer);
   }
 }

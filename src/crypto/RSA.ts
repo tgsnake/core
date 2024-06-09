@@ -9,7 +9,6 @@
  */
 
 import {
-  bigIntMod as mod,
   bigIntPow as pow,
   bigintToBuffer as toBuffer,
   bufferToBigint as toBigint,
@@ -194,6 +193,6 @@ export function encrypt(data: Buffer, fingerprint: bigint) {
   if (key == undefined) {
     throw new Error(`unknown fingerprint ${fingerprint}n`);
   }
-  return toBuffer(pow(toBigint(data, false), key.e, key.m), 256, false);
+  return Buffer.from(toBuffer(pow(toBigint(data, false), key.e, key.m), 256, false));
 }
 export { PublicKey };

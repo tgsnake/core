@@ -44,7 +44,7 @@ export class SecretChat {
     this.id = id;
     this.accessHash = accessHash;
     this.isAdmin = isAdmin;
-    this.authKey = authKey;
+    this.authKey = Buffer.from(authKey);
     this.created = Date.now() / 1000;
     this.changed = 0;
     this.mtproto = 2;

@@ -38,14 +38,14 @@ export class TCPAbridged extends TCP {
       );
     }
   }
-  async recv(length: number = 0) {
-    let _length = await super.recv(1);
-    if (!_length) return;
-    if (_length.equals(Buffer.from('7f', 'hex'))) {
-      _length = await super.recv(3);
-      if (!_length) return;
-      return await super.recv(Buffer.concat([_length, Buffer.alloc(1)]).readInt32LE(0) * 4);
+  async recv(_length: number = 0) {
+    let length = await super.recv(1);
+    if (!length) return;
+    if (length.equals(Buffer.from('7f', 'hex'))) {
+      length = await super.recv(3);
+      if (!length) return;
+      return await super.recv(Buffer.concat([length, Buffer.alloc(1)]).readInt32LE(0) * 4);
     }
-    return await super.recv(_length[0] * 4);
+    return await super.recv(length[0] * 4);
   }
 }

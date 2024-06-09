@@ -22,31 +22,31 @@ export { Mutex, Semaphore } from 'async-mutex';
 export namespace net {
   export class Socket {
     destroyed!: boolean;
-    constructor(...args: Array<any>) {
+    constructor(..._args: Array<any>) {
       throw new Error('not implemented');
     }
-    connect(...args: Array<any>): any {
+    connect(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
-    on(...args: Array<any>): any {
+    on(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
-    unref(...args: Array<any>): any {
+    unref(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
-    destroy(...args: Array<any>): any {
+    destroy(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
     setTimeout(...args: Array<any>): any {
       throw new Error('not implemented');
     }
-    write(...args: Array<any>): any {
+    write(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
   }
 }
 export const SocksClient = {
-  createConnection: (...args: Array<any>): any => {
+  createConnection: (..._args: Array<any>): any => {
     throw new Error('not implemented');
   },
 };

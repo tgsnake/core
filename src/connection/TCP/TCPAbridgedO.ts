@@ -105,23 +105,21 @@ export class TCPAbridgedO extends TCP {
       );
     }
   }
-  async recv(length: number = 0) {
-    let _length = await super.recv(1);
-    if (!_length) return;
-    _length = Buffer.from(this._decryptor(_length));
-    if (_length.equals(Buffer.from('7f', 'hex'))) {
-      _length = await super.recv(3);
-      if (!_length) return;
-      _length = Buffer.from(this._decryptor(_length));
+  async recv(_length: number = 0) {
+    let length = await super.recv(1);
+    if (!length) return;
+    length = Buffer.from(this._decryptor(length));
+    if (length.equals(Buffer.from('7f', 'hex'))) {
+      length = await super.recv(3);
+      if (!length) return;
+      length = Buffer.from(this._decryptor(length));
       return Buffer.from(
         this._decryptor(
-          (await super.recv(
-            Buffer.concat([_length, Buffer.alloc(1)]).readInt32LE(0) * 4,
-          )) as Buffer,
+          (await super.recv(Buffer.concat([length, Buffer.alloc(1)]).readInt32LE(0) * 4)) as Buffer,
         ),
       );
     }
-    return Buffer.from(this._decryptor((await super.recv(_length[0] * 4)) as Buffer));
+    return Buffer.from(this._decryptor((await super.recv(length[0] * 4)) as Buffer));
   }
 }
 

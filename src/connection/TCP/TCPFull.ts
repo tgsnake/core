@@ -39,12 +39,12 @@ export class TCPFull extends TCP {
     this._seq += 1;
     await super.send(data);
   }
-  async recv(length: number = 0) {
-    let _length = await super.recv(4);
-    if (!_length) return;
-    let packet = await super.recv(_length.readInt32LE(0) - 4);
+  async recv(_length: number = 0) {
+    let length = await super.recv(4);
+    if (!length) return;
+    let packet = await super.recv(length.readInt32LE(0) - 4);
     if (!packet) return;
-    packet = Buffer.concat([_length, packet]);
+    packet = Buffer.concat([length, packet]);
     let checksum = packet.slice(-4);
     packet = packet.slice(0, -4);
     if (crc32(packet) !== checksum.readUInt32LE(0)) return;

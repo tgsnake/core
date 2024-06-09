@@ -11,6 +11,7 @@
 export { Client } from './client/Client.ts';
 export { Raw } from './raw/index.ts';
 export { Queue } from './Queue.ts';
+export { TCP } from './connection/connection.ts';
 export * as Clients from './client/index.ts';
 export * as Connections from './connection/index.ts';
 export * as Cryptos from './crypto/index.ts';
@@ -22,4 +23,4 @@ export * as Storages from './storage/index.ts';
 export * as Versions from './Version.deno.ts';
 export * as Helpers from './helpers.ts';
 export * as Timeouts from './Timeout.ts';
-import * as Loggers from './Logger.ts';
+export * as Loggers from './Logger.ts';

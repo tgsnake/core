@@ -15,12 +15,9 @@ import { Logger } from '../../Logger.ts';
 import { SecurityCheckMismatch, SecretChatError } from '../../errors/index.ts';
 import { SecretChats } from '../../crypto/index.ts';
 import {
-  sleep,
-  mod,
   bufferToBigint as toBigint,
   bigintToBuffer as toBuffer,
   bigIntPow,
-  generateRandomBigInt,
 } from '../../helpers.ts';
 import type { Client } from '../../client/Client.ts';
 
@@ -36,7 +33,7 @@ export class SecretChat {
   private _storage!: AbstractSession;
   private _client!: Client;
   private _dhConfig!: Raw.messages.DhConfig;
-  private _dhP!: bigint;
+  //  private _dhP!: bigint;
   private _mutex!: Mutex;
   private _tempAuthKey!: Map<bigint, Buffer>;
   private _waiting!: Array<number>;
@@ -256,7 +253,7 @@ export class SecretChat {
     }
     Logger.debug(`[132] ${chatId} was removed from session`);
     try {
-      const res = await this._client.invoke(
+      await this._client.invoke(
         new Raw.messages.DiscardEncryption({
           chatId: chatId,
         }),

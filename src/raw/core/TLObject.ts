@@ -11,7 +11,7 @@
 import { Object } from '../All.ts';
 import { BytesIO } from './BytesIO.ts';
 import { Logger } from '../../Logger.ts';
-import { inspect, Buffer, where } from '../../platform.deno.ts';
+import { inspect, Buffer } from '../../platform.deno.ts';
 import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.ts';
 
 function getModule(
@@ -55,7 +55,7 @@ export class TLObject {
     const _class = getModule(Object[id]);
     return await _class.read(data, ...args);
   }
-  static write(...args: Array<any>): Buffer {
+  static write(..._args: Array<any>): Buffer {
     return Buffer.alloc(0);
   }
   async read(data: BytesIO, ...args: Array<any>): Promise<any> {

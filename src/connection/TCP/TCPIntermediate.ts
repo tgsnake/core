@@ -36,9 +36,9 @@ export class TCPIntermediate extends TCP {
     allocLength.writeInt32LE(data.length, 0);
     await super.send(Buffer.concat([allocLength, data]));
   }
-  async recv(length: number = 0) {
-    let _length = await super.recv(4);
-    if (!_length) return;
-    return await super.recv(_length.readInt32LE(0));
+  async recv(_length: number = 0) {
+    let length = await super.recv(4);
+    if (!length) return;
+    return await super.recv(length.readInt32LE(0));
   }
 }

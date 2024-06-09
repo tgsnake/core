@@ -11,7 +11,6 @@
 import { Socket } from '../WebSocket.ts';
 import { Mutex, inspect, Buffer } from '../../platform.deno.ts';
 import { Timeout } from '../../Timeout.ts';
-import { Logger } from '../../Logger.ts';
 import { sleep } from '../../helpers.ts';
 import type { ProxyInterface } from '../connection.ts';
 
@@ -38,9 +37,9 @@ export class TCP {
    * @param {String} ip - Telegram data center IP.
    * @param {Number} port - Port for connecting to telegram data center.
    * @param {ProxyInterface | undefined} proxy - Connect to telegram via socks proxy. This only applies on platforms other than browsers.
-   * @param {Number | undefined} dcId - Data center for connecting to MTProxy.
+   * @param {Number | undefined} _dcId - Data center for connecting to MTProxy.
    */
-  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  async connect(ip: string, port: number, proxy?: ProxyInterface, _dcId?: number) {
     const release = await this._mutex.acquire();
     try {
       await this._socks.connect(ip, port, proxy);
