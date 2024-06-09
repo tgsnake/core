@@ -37,7 +37,7 @@ export namespace net {
     destroy(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
-    setTimeout(...args: Array<any>): any {
+    setTimeout(..._args: Array<any>): any {
       throw new Error('not implemented');
     }
     write(..._args: Array<any>): any {
