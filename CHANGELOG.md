@@ -1,4 +1,12 @@
- <a name="1.13.3"></a>
+ <a name="1.13.4"></a>
+
+## [1.13.4](https://github.com/tgsnake/core/compare/1.13.3...1.13.4)
+
+> 2024-06-04
+
+### Change
+
+- Update CHANGELOG.md   <a name="1.13.3"></a>
 
 ## [1.13.3](https://github.com/tgsnake/core/compare/1.13.2...1.13.3)
 
