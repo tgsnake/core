@@ -1,6 +1,6 @@
 {
   "name": "@tgsnake/core",
-  "version": "1.13.4",
+  "version": "1.13.5",
   "description": "Pure Telegram MTProto framework for nodejs",
   "main": "./lib/src/index.js",
   "devDependencies": {
