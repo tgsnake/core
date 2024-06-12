@@ -1,4 +1,14 @@
- <a name="1.13.4"></a>
+ <a name="1.13.5"></a>
+
+## [1.13.5](https://github.com/tgsnake/core/compare/1.13.4...1.13.5)
+
+> 2024-06-11
+
+### Change
+
+- use moduleResolution nodenext in browser - Update CHANGELOG.md - module to nodenext and esnext - require engine version to node >= 12  ### Remove
+
+- unused import and parameters   <a name="1.13.4"></a>
 
 ## [1.13.4](https://github.com/tgsnake/core/compare/1.13.3...1.13.4)
 
