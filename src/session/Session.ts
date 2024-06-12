@@ -416,7 +416,15 @@ export class Session {
       throw new Errors.NotAFunctionClass(data.className);
     }
     let className = data.className;
-    if (data instanceof Raw.InvokeWithoutUpdates || data instanceof Raw.InvokeWithTakeout) {
+    if (
+      data instanceof Raw.InvokeWithLayer ||
+      data instanceof Raw.InvokeWithoutUpdates ||
+      data instanceof Raw.InvokeWithTakeout ||
+      data instanceof Raw.InvokeWithBusinessConnection ||
+      data instanceof Raw.InvokeWithGooglePlayIntegrity ||
+      data instanceof Raw.InvokeWithApnsSecret ||
+      data instanceof Raw.InvokeWithMessagesRange
+    ) {
       // @ts-ignore
       className = data.query.className;
     }
