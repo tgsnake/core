@@ -24,13 +24,22 @@ export class TwoFaConfirmWait extends Flood {
   message: string =
     "Since this account is active and protected by a 2FA password, we will delete it in 1 week for security purposes. You can cancel this process at any time, you'll be able to reset your account in {value} seconds.";
 }
+export class AddressInvalid extends Flood {
+  id: string = 'ADDRESS_INVALID';
+  message: string = 'The specified geopoint address is invalid.';
+}
+export class FloodPremiumWait extends Flood {
+  id: string = 'FLOOD_PREMIUM_WAIT_X';
+  message: string =
+    'Please wait {value} seconds before repeating the action, or purchase a [Telegram Premium subscription](https://core.telegram.org/api/premium) to remove this rate limit.';
+}
 export class FloodTestPhoneWait extends Flood {
   id: string = 'FLOOD_TEST_PHONE_WAIT_X';
   message: string = 'A wait of {value} seconds is required in the test servers';
 }
 export class FloodWait extends Flood {
   id: string = 'FLOOD_WAIT_X';
-  message: string = 'A wait of {value} seconds is required';
+  message: string = 'Please wait {value} seconds before repeating the action.';
 }
 export class PremiumSubActiveUntil extends Flood {
   id: string = 'PREMIUM_SUB_ACTIVE_UNTIL_X';

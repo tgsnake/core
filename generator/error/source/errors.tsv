@@ -1,9 +1,9 @@
 code	id	message
 303	FILE_MIGRATE_X	The file to be accessed is currently stored in DC{value}
-303	NETWORK_MIGRATE_X	The source IP address is associated with DC{value} (for registration)
-303	PHONE_MIGRATE_X	The phone number a user is trying to use for authorization is associated with DC{value}
-303	STATS_MIGRATE_X	The statistics of the group/channel are stored in DC{value}
-303	USER_MIGRATE_X	The user whose identity is being used to execute queries is associated with DC{value} (for registration)
+303	NETWORK_MIGRATE_X	Your IP address is associated to DC {value}, please re-send the query to that DC.
+303	PHONE_MIGRATE_X	Your phone number is associated to DC {value}, please re-send the query to that DC.
+303	STATS_MIGRATE_X	Channel statistics for the specified channel are stored on DC {value}, please re-send the query to that DC.
+303	USER_MIGRATE_X	Your account is associated to DC {value}, please re-send the query to that DC.
 400	ABOUT_TOO_LONG	About string too long.
 400	ACCESS_TOKEN_EXPIRED	Access token expired.
 400	ACCESS_TOKEN_INVALID	Access token invalid.
@@ -34,6 +34,7 @@ code	id	message
 400	BOOST_NOT_MODIFIED	You're already [boosting](https://core.telegram.org/api/boost) the specified channel.
 400	BOOST_PEER_INVALID	The specified `boost_peer` is invalid.
 400	BOTS_TOO_MUCH	There are too many bots in this chat/channel.
+400	BOT_APP_BOT_INVALID	The bot_id passed in the inputBotAppShortName constructor is invalid.
 400	BOT_APP_INVALID	The specified bot app is invalid.
 400	BOT_APP_SHORTNAME_INVALID	The specified bot app short name is invalid.
 400	BOT_CHANNELS_NA	Bots can't edit admin privileges.
@@ -44,7 +45,7 @@ code	id	message
 400	BOT_GROUPS_BLOCKED	This bot can't be added to groups.
 400	BOT_INLINE_DISABLED	This bot can't be used in inline mode.
 400	BOT_INVALID	This is not a valid bot.
-400	BOT_METHOD_INVALID	The method can't be used by bots
+400	BOT_METHOD_INVALID	The specified method cannot be used by bots.
 400	BOT_MISSING	Only bots can call this method, please use [@stickers](https://t.me/stickers) if you're a user.
 400	BOT_ONESIDE_NOT_AVAIL	Bots can't pin messages in PM just for themselves.
 400	BOT_PAYMENTS_DISABLED	Please enable bot payments in botfather before calling this method.
@@ -59,7 +60,7 @@ code	id	message
 400	BUTTON_TEXT_INVALID	The specified button text is invalid.
 400	BUTTON_TYPE_INVALID	The type of one or more of the buttons you provided is invalid.
 400	BUTTON_URL_INVALID	Button URL invalid.
-400	BUTTON_USER_INVALID	The user_id passed to inputKeyboardButtonUserProfile is invalid!
+400	BUTTON_USER_INVALID	The `user_id` passed to inputKeyboardButtonUserProfile is invalid!
 400	BUTTON_USER_PRIVACY_RESTRICTED	The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.
 400	CALL_ALREADY_ACCEPTED	The call was already accepted.
 400	CALL_ALREADY_DECLINED	The call was already declined.
@@ -79,6 +80,7 @@ code	id	message
 400	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
 400	CHANNEL_TOO_BIG	This channel has too many participants (>1000) to be deleted.
 400	CHANNEL_TOO_LARGE	Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).
+400	CHATLINK_SLUG_EMPTY	The specified slug is empty.
 400	CHATLIST_EXCLUDE_INVALID	The specified `exclude_peers` are invalid.
 400	CHAT_ABOUT_NOT_MODIFIED	About text has not changed.
 400	CHAT_ABOUT_TOO_LONG	Chat about too long.
@@ -100,15 +102,18 @@ code	id	message
 400	CODE_EMPTY	The provided code is empty.
 400	CODE_HASH_INVALID	Code hash invalid.
 400	CODE_INVALID	Code invalid.
+400	COLLECTIBLE_INVALID	The specified collectible is invalid.
+400	COLLECTIBLE_NOT_FOUND	The specified collectible could not be found.
 400	COLOR_INVALID	The specified color palette ID was invalid.
 400	CONNECTION_API_ID_INVALID	The provided API id is invalid.
 400	CONNECTION_APP_VERSION_EMPTY	App version is empty.
-400	CONNECTION_DEVICE_MODEL_EMPTY	The device model is empty
-400	CONNECTION_LANG_PACK_INVALID	The specified language pack is not valid
+400	CONNECTION_DEVICE_MODEL_EMPTY	The specified device model is empty.
+400	CONNECTION_ID_INVALID	The specified connection ID is invalid.
+400	CONNECTION_LANG_PACK_INVALID	The specified language pack is empty.
 400	CONNECTION_LAYER_INVALID	Layer invalid.
-400	CONNECTION_NOT_INITED	The connection was not initialized
-400	CONNECTION_SYSTEM_EMPTY	The connection to the system is empty
-400	CONNECTION_SYSTEM_LANG_CODE_EMPTY	The system language code is empty
+400	CONNECTION_NOT_INITED	Please initialize the connection using initConnection before making queries.
+400	CONNECTION_SYSTEM_EMPTY	The specified system version is empty.
+400	CONNECTION_SYSTEM_LANG_CODE_EMPTY	The specified system language code is empty.
 400	CONTACT_ADD_MISSING	Contact to add is missing.
 400	CONTACT_ID_INVALID	The provided contact ID is invalid.
 400	CONTACT_MISSING	The specified user is not a contact.
@@ -153,7 +158,7 @@ code	id	message
 400	FILE_CONTENT_TYPE_INVALID	File content-type is invalid.
 400	FILE_EMTPY	An empty file was provided.
 400	FILE_ID_INVALID	The provided file id is invalid.
-400	FILE_MIGRATE_X	The file is in Data Center No. {value}
+400	FILE_MIGRATE_X	The file currently being accessed is stored in DC {value}, please re-send the query to that DC.
 400	FILE_PARTS_INVALID	The number of file parts is invalid.
 400	FILE_PART_EMPTY	The provided file part is empty.
 400	FILE_PART_INVALID	The file part number is invalid.
@@ -161,7 +166,7 @@ code	id	message
 400	FILE_PART_SIZE_CHANGED	Provided file part size has changed.
 400	FILE_PART_SIZE_INVALID	The provided file part size is invalid.
 400	FILE_PART_TOO_BIG	The uploaded file part is too big.
-400	FILE_PART_X_MISSING	Part {value} of the file is missing from storage
+400	FILE_PART_X_MISSING	Part {value} of the file is missing from storage. Try repeating the method call to resave the part.
 400	FILE_REFERENCE_*	The file reference expired, it [must be refreshed](https://core.telegram.org/api/file_reference).
 400	FILE_REFERENCE_EMPTY	An empty [file reference](https://core.telegram.org/api/file_reference) was specified.
 400	FILE_REFERENCE_EXPIRED	File reference expired, it must be refetched as described in [the documentation](https://core.telegram.org/api/file_reference).
@@ -201,18 +206,20 @@ code	id	message
 400	HIDE_REQUESTER_MISSING	The join request was missing or was already handled.
 400	IMAGE_PROCESS_FAILED	Failure while processing image.
 400	IMPORT_FILE_INVALID	The specified chat export file is invalid.
+400	IMPORT_FORMAT_DATE_INVALID	The date specified in the import file is invalid.
 400	IMPORT_FORMAT_UNRECOGNIZED	The specified chat export file was exported from an unsupported chat app.
+400	IMPORT_HISTORY_LOG_EMPTY	
 400	IMPORT_ID_INVALID	The specified import ID is invalid.
 400	IMPORT_TOKEN_INVALID	The specified token is invalid.
 400	INLINE_RESULT_EXPIRED	The inline query expired.
 400	INPUT_CHATLIST_INVALID	The specified folder is invalid.
-400	INPUT_CONSTRUCTOR_INVALID	The provided constructor is invalid
-400	INPUT_FETCH_ERROR	An error occurred while deserializing TL parameters
-400	INPUT_FETCH_FAIL	Failed deserializing TL payload
+400	INPUT_CONSTRUCTOR_INVALID	The specified TL constructor is invalid.
+400	INPUT_FETCH_ERROR	An error occurred while parsing the provided TL constructor.
+400	INPUT_FETCH_FAIL	An error occurred while parsing the provided TL constructor.
 400	INPUT_FILTER_INVALID	The specified filter is invalid.
-400	INPUT_LAYER_INVALID	The provided layer is invalid
-400	INPUT_METHOD_INVALID	The method invoked is invalid in the current schema
-400	INPUT_REQUEST_TOO_LONG	The input request is too long
+400	INPUT_LAYER_INVALID	The specified layer is invalid.
+400	INPUT_METHOD_INVALID	The specified method is invalid.
+400	INPUT_REQUEST_TOO_LONG	The request payload is too long.
 400	INPUT_TEXT_EMPTY	The specified text is empty.
 400	INPUT_TEXT_TOO_LONG	The specified text is too long.
 400	INPUT_USER_DEACTIVATED	The specified user was deleted.
@@ -247,7 +254,7 @@ code	id	message
 400	MEDIA_PREV_INVALID	Previous media invalid.
 400	MEDIA_TTL_INVALID	The specified media TTL is invalid.
 400	MEDIA_TYPE_INVALID	The specified media type cannot be used in stories.
-400	MEDIA_VIDEO_STORY_MISSING	
+400	MEDIA_VIDEO_STORY_MISSING	A non-story video cannot be repubblished as a story (emitted when trying to resend a non-story video as a story using inputDocument).
 400	MEGAGROUP_GEO_REQUIRED	This method can only be invoked on a geogroup.
 400	MEGAGROUP_ID_INVALID	Invalid supergroup ID.
 400	MEGAGROUP_PREHISTORY_HIDDEN	Group with hidden history for new members can't be set as discussion groups.
@@ -269,6 +276,8 @@ code	id	message
 400	NEW_SETTINGS_EMPTY	No password is set on the current account, and no new password was specified in `new_settings`.
 400	NEW_SETTINGS_INVALID	The new password settings are invalid.
 400	NEXT_OFFSET_INVALID	The specified offset is longer than 64 bytes.
+400	NOT_ELIGIBLE	The current user is not eligible to join the Peer-to-Peer Login Program.
+400	NOT_JOINED	The current user hasn't joined the Peer-to-Peer Login Program.
 400	OFFSET_INVALID	The provided offset is invalid.
 400	OFFSET_PEER_ID_INVALID	The provided offset peer is invalid.
 400	OPTIONS_TOO_MUCH	Too many options provided.
@@ -290,7 +299,7 @@ code	id	message
 400	PASSWORD_TOO_FRESH_X	The password was modified less than 24 hours ago, try again in {value} seconds.
 400	PAYMENT_PROVIDER_INVALID	The specified payment provider is invalid.
 400	PEERS_LIST_EMPTY	The specified list of peers is empty.
-400	PEER_FLOOD	The method can't be used because your account is currently limited
+400	PEER_FLOOD	The current account is spamreported, you cannot execute this action, check @spambot for more info.
 400	PEER_HISTORY_EMPTY	You can't pin an empty chat with a user.
 400	PEER_ID_INVALID	The provided peer id is invalid.
 400	PEER_ID_NOT_SUPPORTED	The provided peer ID is not supported.
@@ -343,6 +352,8 @@ code	id	message
 400	QUIZ_CORRECT_ANSWERS_TOO_MUCH	You specified too many correct answers in a quiz, quizzes can only have one right answer!
 400	QUIZ_CORRECT_ANSWER_INVALID	An invalid value was provided to the correct_answers field.
 400	QUIZ_MULTIPLE_INVALID	Quizzes can't have the multiple_choice flag set!
+400	QUOTE_TEXT_INVALID	The specified `reply_to`.`quote_text` field is invalid.
+400	RAISE_HAND_FORBIDDEN	You cannot raise your hand.
 400	RANDOM_ID_EMPTY	Random ID empty.
 400	RANDOM_ID_INVALID	A provided random ID is invalid.
 400	RANDOM_LENGTH_INVALID	Random length invalid.
@@ -358,6 +369,7 @@ code	id	message
 400	REPLY_MESSAGE_ID_INVALID	The specified reply-to message ID is invalid.
 400	REPLY_TO_INVALID	The specified `reply_to` field is invalid.
 400	REPLY_TO_USER_INVALID	The replied-to user is invalid.
+400	REQUEST_TOKEN_INVALID	The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.
 400	RESET_REQUEST_MISSING	No password reset is in progress.
 400	RESULTS_TOO_MUCH	Too many results were provided.
 400	RESULT_ID_DUPLICATE	You provided a duplicate result ID.
@@ -382,12 +394,14 @@ code	id	message
 400	SESSION_TOO_FRESH_X	This session was created less than 24 hours ago, try again in {value} seconds.
 400	SETTINGS_INVALID	Invalid settings were provided.
 400	SHA256_HASH_INVALID	The provided SHA256 hash is invalid.
+400	SHORTCUT_INVALID	The specified shortcut is invalid.
 400	SHORTNAME_OCCUPY_FAILED	An error occurred when trying to register the short-name used for the sticker pack. Try a different name
 400	SHORT_NAME_INVALID	The specified short name is invalid.
 400	SHORT_NAME_OCCUPIED	The specified short name is already in use.
 400	SLOTS_EMPTY	The specified slot list is empty.
 400	SLOWMODE_MULTI_MSGS_DISABLED	Slowmode is enabled, you cannot forward multiple messages to this group.
 400	SLUG_INVALID	The specified invoice slug is invalid.
+400	SMSJOB_ID_INVALID	The specified job ID is invalid.
 400	SMS_CODE_CREATE_FAILED	An error occurred while creating the SMS code.
 400	SRP_ID_INVALID	Invalid SRP ID provided.
 400	SRP_PASSWORD_CHANGED	Password has changed.
@@ -396,6 +410,7 @@ code	id	message
 400	START_PARAM_TOO_LONG	Start parameter is too long.
 400	STICKERPACK_STICKERS_TOO_MUCH	There are too many stickers in this stickerpack, you can't add any more.
 400	STICKERSET_INVALID	The provided sticker set is invalid.
+400	STICKERSET_NOT_MODIFIED	
 400	STICKERS_EMPTY	No sticker provided.
 400	STICKERS_TOO_MUCH	There are too many stickers in this stickerpack, you can't add any more.
 400	STICKER_DOCUMENT_INVALID	The specified sticker document is invalid.
@@ -423,6 +438,7 @@ code	id	message
 400	STORY_SEND_FLOOD_MONTHLY_X	You've hit the monthly story limit as specified by the [`stories_sent_monthly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-monthly-limit-default): wait for the specified number of seconds before posting a new story.
 400	STORY_SEND_FLOOD_WEEKLY_X	You've hit the weekly story limit as specified by the [`stories_sent_weekly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-weekly-limit-default): wait for the specified number of seconds before posting a new story.
 400	SWITCH_PM_TEXT_EMPTY	The switch_pm.text field was empty.
+400	SWITCH_WEBVIEW_URL_INVALID	The URL specified in switch_webview.url is invalid!
 400	TAKEOUT_INVALID	The specified takeout ID is invalid.
 400	TAKEOUT_REQUIRED	A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).
 400	TASK_ALREADY_EXISTS	An email reset was already requested.
@@ -435,7 +451,7 @@ code	id	message
 400	THEME_TITLE_INVALID	The specified theme title is invalid.
 400	TITLE_INVALID	The specified stickerpack title is invalid.
 400	TMP_PASSWORD_DISABLED	The temporary password is disabled.
-400	TMP_PASSWORD_INVALID	The temporary password is invalid
+400	TMP_PASSWORD_INVALID	The passed tmp_password is invalid.
 400	TOKEN_EMPTY	The specified token is empty.
 400	TOKEN_INVALID	The provided token is invalid.
 400	TOKEN_TYPE_INVALID	The specified token type is invalid.
@@ -449,6 +465,7 @@ code	id	message
 400	TOPIC_TITLE_EMPTY	The specified topic title is empty.
 400	TO_LANG_INVALID	The specified destination language is invalid.
 400	TRANSCRIPTION_FAILED	Audio transcription failed.
+400	TRANSLATE_REQ_QUOTA_EXCEEDED	
 400	TTL_DAYS_INVALID	The provided TTL is invalid.
 400	TTL_MEDIA_INVALID	Invalid media Time To Live was provided.
 400	TTL_PERIOD_INVALID	The specified TTL period is invalid.
@@ -488,6 +505,8 @@ code	id	message
 400	VENUE_ID_INVALID	The specified venue ID is invalid.
 400	VIDEO_CONTENT_TYPE_INVALID	The video's content type is invalid.
 400	VIDEO_FILE_INVALID	The specified video file is invalid.
+400	VIDEO_PAUSE_FORBIDDEN	You cannot pause the video stream.
+400	VIDEO_STOP_FORBIDDEN	You cannot stop the video stream.
 400	VIDEO_TITLE_EMPTY	The specified video title is empty.
 400	VOICE_MESSAGES_FORBIDDEN	This user's privacy settings forbid you from sending voice messages.
 400	VOLUME_LOC_NOT_FOUND	The volume location can't be found
@@ -499,7 +518,7 @@ code	id	message
 400	WEBDOCUMENT_INVALID	Invalid webdocument URL provided.
 400	WEBDOCUMENT_MIME_INVALID	Invalid webdocument mime type provided.
 400	WEBDOCUMENT_SIZE_TOO_BIG	Webdocument is too big!
-400	WEBDOCUMENT_URL_EMPTY	The web document URL is empty
+400	WEBDOCUMENT_URL_EMPTY	The passed web document URL is empty.
 400	WEBDOCUMENT_URL_INVALID	The specified webdocument URL is invalid.
 400	WEBPAGE_CURL_FAILED	Failure while fetching the webpage with cURL.
 400	WEBPAGE_MEDIA_EMPTY	Webpage media empty.
@@ -510,20 +529,20 @@ code	id	message
 400	WEBPUSH_TOKEN_INVALID	The specified web push token is invalid.
 400	YOU_BLOCKED_USER	You blocked this user.
 401	ACTIVE_USER_REQUIRED	The method is only available to already activated users
-401	AUTH_KEY_INVALID	The key is invalid
-401	AUTH_KEY_PERM_EMPTY	The method is unavailable for temporary authorization key, not bound to permanent
-401	AUTH_KEY_UNREGISTERED	The key is not registered in the system. Delete your session file and login again
-401	SESSION_EXPIRED	The authorization has expired
-401	SESSION_PASSWORD_NEEDED	The two-step verification is enabled and a password is required
-401	SESSION_REVOKED	The authorization has been invalidated, because of the user terminating all sessions
-401	USER_DEACTIVATED	The user has been deleted/deactivated
-401	USER_DEACTIVATED_BAN	The user has been deleted/deactivated
+401	AUTH_KEY_INVALID	The specified auth key is invalid.
+401	AUTH_KEY_PERM_EMPTY	The method is unavailable for temporary authorization keys, not bound to a permanent authorization key.
+401	AUTH_KEY_UNREGISTERED	The specified authorization key is not registered in the system (for example, a PFS temporary key has expired).
+401	SESSION_EXPIRED	The session has expired.
+401	SESSION_PASSWORD_NEEDED	2FA is enabled, use a password to login.
+401	SESSION_REVOKED	The session was revoked by the user.
+401	USER_DEACTIVATED	The current account was deleted by the user.
+401	USER_DEACTIVATED_BAN	The current account was deleted and banned by Telegram's antispam system.
 403	ANONYMOUS_REACTIONS_DISABLED	Sorry, anonymous administrators cannot leave reactions or participate in polls.
 403	BROADCAST_FORBIDDEN	Channel poll voters and reactions cannot be fetched to prevent deanonymization.
 403	CHANNEL_PUBLIC_GROUP_NA	channel/supergroup not available.
 403	CHAT_ADMIN_INVITE_REQUIRED	You do not have the rights to do this.
 403	CHAT_ADMIN_REQUIRED	You must be an admin in this chat to do this.
-403	CHAT_FORBIDDEN	You cannot write in this chat
+403	CHAT_FORBIDDEN	This chat is not available to the current user.
 403	CHAT_GUEST_SEND_FORBIDDEN	You join the discussion group before commenting, see [here &raquo;](https://core.telegram.org/api/discussion#requiring-users-to-join-the-group) for more info.
 403	CHAT_SEND_AUDIOS_FORBIDDEN	You can't send audio messages in this chat.
 403	CHAT_SEND_DOCS_FORBIDDEN	You can't send documents in this chat.
@@ -534,6 +553,7 @@ code	id	message
 403	CHAT_SEND_PHOTOS_FORBIDDEN	You can't send photos in this chat.
 403	CHAT_SEND_PLAIN_FORBIDDEN	You can't send non-media (text) messages in this chat.
 403	CHAT_SEND_POLL_FORBIDDEN	You can't send polls in this chat.
+403	CHAT_SEND_ROUNDVIDEOS_FORBIDDEN	You can't send round videos to this chat.
 403	CHAT_SEND_STICKERS_FORBIDDEN	You can't send stickers in this chat.
 403	CHAT_SEND_VIDEOS_FORBIDDEN	You can't send videos in this chat.
 403	CHAT_SEND_VOICES_FORBIDDEN	You can't send voice recordings in this chat.
@@ -544,6 +564,7 @@ code	id	message
 403	INLINE_BOT_REQUIRED	Only the inline bot can edit message.
 403	MESSAGE_AUTHOR_REQUIRED	Message author required.
 403	MESSAGE_DELETE_FORBIDDEN	You can't delete one of the messages you tried to delete, most likely because it is a service message.
+403	NOT_ELIGIBLE	The current user is not eligible to join the Peer-to-Peer Login Program.
 403	PARTICIPANT_JOIN_MISSING	Trying to enable a presentation, when the user hasn't joined the Video Chat with [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).
 403	POLL_VOTE_REQUIRED	Cast a vote in the poll before calling this method.
 403	PREMIUM_ACCOUNT_REQUIRED	A premium account is required to execute this action.
@@ -561,7 +582,7 @@ code	id	message
 403	USER_PRIVACY_RESTRICTED	The user's privacy settings do not allow you to do this.
 403	USER_RESTRICTED	You're spamreported, you can't create channels or chats.
 403	VOICE_MESSAGES_FORBIDDEN	This user's privacy settings forbid you from sending voice messages.
-406	AUTH_KEY_DUPLICATED	The same authorization key (session file) was used in more than one place simultaneously. You must delete your session file and log in again with your phone number or bot token
+406	AUTH_KEY_DUPLICATED	Concurrent usage of the current session from multiple connections was detected, the current session was invalidated by the server for security reasons!
 406	BANNED_RIGHTS_INVALID	You provided some invalid flags in the banned rights.
 406	CALL_PROTOCOL_COMPAT_LAYER_INVALID	The other side of the call does not support any of the VoIP protocols supported by the local client, as specified by the `protocol.layer` and `protocol.library_versions` fields.
 406	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
@@ -587,14 +608,17 @@ code	id	message
 406	USERPIC_UPLOAD_REQUIRED	You must have a profile picture to publish your geolocation.
 406	USER_RESTRICTED	You're spamreported, you can't create channels or chats.
 420	2FA_CONFIRM_WAIT_X	Since this account is active and protected by a 2FA password, we will delete it in 1 week for security purposes. You can cancel this process at any time, you'll be able to reset your account in {value} seconds.
+420	ADDRESS_INVALID	The specified geopoint address is invalid.
+420	FLOOD_PREMIUM_WAIT_X	Please wait {value} seconds before repeating the action, or purchase a [Telegram Premium subscription](https://core.telegram.org/api/premium) to remove this rate limit.
 420	FLOOD_TEST_PHONE_WAIT_X	A wait of {value} seconds is required in the test servers
-420	FLOOD_WAIT_X	A wait of {value} seconds is required
+420	FLOOD_WAIT_X	Please wait {value} seconds before repeating the action.
 420	PREMIUM_SUB_ACTIVE_UNTIL_X	You already have a premium subscription active until unixtime {value} .
 420	SLOWMODE_WAIT_X	Slowmode is enabled in this chat: wait {value} seconds before sending another message to this chat.
 420	TAKEOUT_INIT_DELAY_X	Sorry, for security reasons, you will be able to begin downloading your data in {value} seconds. We have notified all your devices about the export request to make sure it's authorized and to give you time to react if it's not.
 500	API_CALL_ERROR	API call error due to Telegram having internal problems. Please try again later
 500	AUTH_RESTART	Restart the authorization process.
 500	CALL_OCCUPY_FAILED	The call failed because the user is already making another call.
+500	CDN_SALTS_EMPTY	
 500	CDN_UPLOAD_TIMEOUT	A server-side timeout occurred while reuploading the file to the CDN DC.
 500	CHAT_ID_GENERATE_FAILED	Failure while generating the chat ID.
 500	CHAT_INVALID	Invalid chat.
@@ -643,4 +667,5 @@ code	id	message
 500	WORKER_BUSY_TOO_LONG_RETRY	Server workers are too busy right now due to Telegram having internal problems. Please try again later
 500	WP_ID_GENERATE_FAILED	Telegram is having internal problems. Please try again later
 503	ApiCallError	Telegram is having internal problems. Please try again later.
+503	MSG_WAIT_TIMEOUT	Spent too much time waiting for a previous query in the invokeAfterMsg request queue, aborting!
 503	Timeout	Timeout while fetching data.

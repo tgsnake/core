@@ -23,6 +23,11 @@ export class ApiCallError extends ServiceUnavailable {
   id: string = 'ApiCallError';
   message: string = 'Telegram is having internal problems. Please try again later.';
 }
+export class MsgWaitTimeout extends ServiceUnavailable {
+  id: string = 'MSG_WAIT_TIMEOUT';
+  message: string =
+    'Spent too much time waiting for a previous query in the invokeAfterMsg request queue, aborting!';
+}
 export class Timeout extends ServiceUnavailable {
   id: string = 'Timeout';
   message: string = 'Timeout while fetching data.';

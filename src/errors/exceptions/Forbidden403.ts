@@ -43,7 +43,7 @@ export class ChatAdminRequired extends Forbidden {
 }
 export class ChatForbidden extends Forbidden {
   id: string = 'CHAT_FORBIDDEN';
-  message: string = 'You cannot write in this chat';
+  message: string = 'This chat is not available to the current user.';
 }
 export class ChatGuestSendForbidden extends Forbidden {
   id: string = 'CHAT_GUEST_SEND_FORBIDDEN';
@@ -86,6 +86,10 @@ export class ChatSendPollForbidden extends Forbidden {
   id: string = 'CHAT_SEND_POLL_FORBIDDEN';
   message: string = "You can't send polls in this chat.";
 }
+export class ChatSendRoundvideosForbidden extends Forbidden {
+  id: string = 'CHAT_SEND_ROUNDVIDEOS_FORBIDDEN';
+  message: string = "You can't send round videos to this chat.";
+}
 export class ChatSendStickersForbidden extends Forbidden {
   id: string = 'CHAT_SEND_STICKERS_FORBIDDEN';
   message: string = "You can't send stickers in this chat.";
@@ -127,6 +131,10 @@ export class MessageDeleteForbidden extends Forbidden {
   id: string = 'MESSAGE_DELETE_FORBIDDEN';
   message: string =
     "You can't delete one of the messages you tried to delete, most likely because it is a service message.";
+}
+export class NotEligible extends Forbidden {
+  id: string = 'NOT_ELIGIBLE';
+  message: string = 'The current user is not eligible to join the Peer-to-Peer Login Program.';
 }
 export class ParticipantJoinMissing extends Forbidden {
   id: string = 'PARTICIPANT_JOIN_MISSING';

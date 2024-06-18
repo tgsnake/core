@@ -8,25 +8,25 @@
   {
     "code": 303,
     "msg": "NETWORK_MIGRATE_X",
-    "desc": "The source IP address is associated with DC{value} (for registration)",
+    "desc": "Your IP address is associated to DC {value}, please re-send the query to that DC.",
     "affected": []
   },
   {
     "code": 303,
     "msg": "PHONE_MIGRATE_X",
-    "desc": "The phone number a user is trying to use for authorization is associated with DC{value}",
+    "desc": "Your phone number is associated to DC {value}, please re-send the query to that DC.",
     "affected": []
   },
   {
     "code": 303,
     "msg": "STATS_MIGRATE_X",
-    "desc": "The statistics of the group/channel are stored in DC{value}",
+    "desc": "Channel statistics for the specified channel are stored on DC {value}, please re-send the query to that DC.",
     "affected": []
   },
   {
     "code": 303,
     "msg": "USER_MIGRATE_X",
-    "desc": "The user whose identity is being used to execute queries is associated with DC{value} (for registration)",
+    "desc": "Your account is associated to DC {value}, please re-send the query to that DC.",
     "affected": []
   },
   {
@@ -194,7 +194,7 @@
     "code": 400,
     "msg": "BOOSTS_REQUIRED",
     "desc": "The specified channel must first be [boosted by its users](https://core.telegram.org/api/boost) in order to perform this action.",
-    "affected": ["channels.UpdateColor", "stories.CanSendStory"]
+    "affected": ["channels.UpdateColor", "stories.CanSendStory", "stories.SendStory"]
   },
   {
     "code": 400,
@@ -216,6 +216,12 @@
   },
   {
     "code": 400,
+    "msg": "BOT_APP_BOT_INVALID",
+    "desc": "The bot_id passed in the inputBotAppShortName constructor is invalid.",
+    "affected": ["messages.GetBotApp"]
+  },
+  {
+    "code": 400,
     "msg": "BOT_APP_INVALID",
     "desc": "The specified bot app is invalid.",
     "affected": ["messages.GetBotApp", "messages.RequestAppWebView"]
@@ -224,7 +230,7 @@
     "code": 400,
     "msg": "BOT_APP_SHORTNAME_INVALID",
     "desc": "The specified bot app short name is invalid.",
-    "affected": ["messages.RequestAppWebView"]
+    "affected": ["messages.GetBotApp", "messages.RequestAppWebView"]
   },
   {
     "code": 400,
@@ -275,22 +281,25 @@
     "affected": [
       "bots.AllowSendMessage",
       "bots.CanSendMessage",
+      "bots.GetBotInfo",
       "bots.InvokeWebViewCustomMethod",
       "bots.ReorderUsernames",
       "bots.ToggleUsername",
       "messages.EditMessage",
       "messages.GetAttachMenuBot",
       "messages.GetInlineBotResults",
+      "messages.RequestSimpleWebView",
       "messages.RequestWebView",
       "messages.SendMessage",
       "messages.StartBot",
+      "messages.ToggleBotInAttachMenu",
       "photos.UploadProfilePhoto"
     ]
   },
   {
     "code": 400,
     "msg": "BOT_METHOD_INVALID",
-    "desc": "The method can't be used by bots",
+    "desc": "The specified method cannot be used by bots.",
     "affected": []
   },
   {
@@ -403,8 +412,8 @@
   {
     "code": 400,
     "msg": "BUTTON_USER_INVALID",
-    "desc": "The user_id passed to inputKeyboardButtonUserProfile is invalid!",
-    "affected": []
+    "desc": "The `user_id` passed to inputKeyboardButtonUserProfile is invalid!",
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
@@ -543,6 +552,7 @@
       "channels.GetMessages",
       "channels.GetParticipant",
       "channels.GetParticipants",
+      "channels.GetSendAs",
       "channels.GetSponsoredMessages",
       "channels.InviteToChannel",
       "channels.JoinChannel",
@@ -575,6 +585,7 @@
       "messages.GetExportedChatInvites",
       "messages.GetHistory",
       "messages.GetInlineBotResults",
+      "messages.GetMessagesReactions",
       "messages.GetMessagesViews",
       "messages.GetPeerDialogs",
       "messages.GetPeerSettings",
@@ -588,6 +599,7 @@
       "messages.SendInlineBotResult",
       "messages.SendMedia",
       "messages.SendMessage",
+      "messages.SendMultiMedia",
       "messages.SendReaction",
       "messages.SendVote",
       "messages.SetTyping",
@@ -633,6 +645,7 @@
       "channels.EditTitle",
       "channels.ExportMessageLink",
       "channels.GetAdminLog",
+      "channels.GetChannelRecommendations",
       "channels.GetChannels",
       "channels.GetForumTopics",
       "channels.GetFullChannel",
@@ -656,6 +669,7 @@
       "folders.EditPeerFolders",
       "messages.DeleteHistory",
       "messages.EditChatAbout",
+      "messages.EditChatDefaultBannedRights",
       "messages.EditExportedChatInvite",
       "messages.EditMessage",
       "messages.ExportChatInvite",
@@ -695,6 +709,7 @@
       "phone.CreateGroupCall",
       "stats.GetBroadcastStats",
       "stories.GetPeerStories",
+      "stories.GetStoriesByID",
       "stories.GetStoriesViews",
       "updates.GetChannelDifference",
       "updates.GetDifference",
@@ -714,6 +729,16 @@
     "msg": "CHANNEL_TOO_LARGE",
     "desc": "Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).",
     "affected": ["channels.DeleteChannel"]
+  },
+  {
+    "code": 400,
+    "msg": "CHATLINK_SLUG_EMPTY",
+    "desc": "The specified slug is empty.",
+    "affected": [
+      "account.DeleteBusinessChatLink",
+      "account.EditBusinessChatLink",
+      "account.ResolveBusinessChatLink"
+    ]
   },
   {
     "code": 400,
@@ -773,6 +798,7 @@
       "messages.DeleteHistory",
       "messages.EditChatAbout",
       "messages.EditChatDefaultBannedRights",
+      "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
       "messages.EditMessage",
       "messages.ExportChatInvite",
@@ -786,6 +812,7 @@
       "messages.GetScheduledMessages",
       "messages.HideAllChatJoinRequests",
       "messages.HideChatJoinRequest",
+      "messages.InitHistoryImport",
       "messages.MigrateChat",
       "messages.Search",
       "messages.SendInlineBotResult",
@@ -1010,6 +1037,18 @@
   },
   {
     "code": 400,
+    "msg": "COLLECTIBLE_INVALID",
+    "desc": "The specified collectible is invalid.",
+    "affected": ["fragment.GetCollectibleInfo"]
+  },
+  {
+    "code": 400,
+    "msg": "COLLECTIBLE_NOT_FOUND",
+    "desc": "The specified collectible could not be found.",
+    "affected": ["fragment.GetCollectibleInfo"]
+  },
+  {
+    "code": 400,
     "msg": "COLOR_INVALID",
     "desc": "The specified color palette ID was invalid.",
     "affected": ["account.UpdateColor"]
@@ -1029,13 +1068,19 @@
   {
     "code": 400,
     "msg": "CONNECTION_DEVICE_MODEL_EMPTY",
-    "desc": "The device model is empty",
+    "desc": "The specified device model is empty.",
     "affected": []
   },
   {
     "code": 400,
+    "msg": "CONNECTION_ID_INVALID",
+    "desc": "The specified connection ID is invalid.",
+    "affected": ["account.GetBotBusinessConnection"]
+  },
+  {
+    "code": 400,
     "msg": "CONNECTION_LANG_PACK_INVALID",
-    "desc": "The specified language pack is not valid",
+    "desc": "The specified language pack is empty.",
     "affected": []
   },
   {
@@ -1047,19 +1092,19 @@
   {
     "code": 400,
     "msg": "CONNECTION_NOT_INITED",
-    "desc": "The connection was not initialized",
+    "desc": "Please initialize the connection using initConnection before making queries.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "CONNECTION_SYSTEM_EMPTY",
-    "desc": "The connection to the system is empty",
+    "desc": "The specified system version is empty.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "CONNECTION_SYSTEM_LANG_CODE_EMPTY",
-    "desc": "The system language code is empty",
+    "desc": "The specified system language code is empty.",
     "affected": []
   },
   {
@@ -1378,7 +1423,7 @@
   {
     "code": 400,
     "msg": "FILE_MIGRATE_X",
-    "desc": "The file is in Data Center No. {value}",
+    "desc": "The file currently being accessed is stored in DC {value}, please re-send the query to that DC.",
     "affected": []
   },
   {
@@ -1434,7 +1479,7 @@
   {
     "code": 400,
     "msg": "FILE_PART_X_MISSING",
-    "desc": "Part {value} of the file is missing from storage",
+    "desc": "Part {value} of the file is missing from storage. Try repeating the method call to resave the part.",
     "affected": []
   },
   {
@@ -1471,7 +1516,7 @@
     "code": 400,
     "msg": "FILE_TOKEN_INVALID",
     "desc": "The specified file token is invalid.",
-    "affected": ["upload.GetCdnFileHashes", "upload.ReuploadCdnFile"]
+    "affected": ["upload.GetCdnFile", "upload.GetCdnFileHashes", "upload.ReuploadCdnFile"]
   },
   {
     "code": 400,
@@ -1589,7 +1634,7 @@
     "code": 400,
     "msg": "GIFT_SLUG_EXPIRED",
     "desc": "The specified gift slug has expired.",
-    "affected": ["payments.ApplyGiftCode"]
+    "affected": ["payments.ApplyGiftCode", "payments.CheckGiftCode"]
   },
   {
     "code": 400,
@@ -1645,10 +1690,12 @@
     "desc": "The specified group call is invalid.",
     "affected": [
       "phone.DiscardGroupCall",
+      "phone.EditGroupCallTitle",
       "phone.GetGroupCall",
       "phone.GetGroupCallStreamChannels",
       "phone.InviteToGroupCall",
-      "phone.JoinGroupCall"
+      "phone.JoinGroupCall",
+      "phone.ToggleGroupCallRecord"
     ]
   },
   {
@@ -1716,9 +1763,21 @@
   },
   {
     "code": 400,
+    "msg": "IMPORT_FORMAT_DATE_INVALID",
+    "desc": "The date specified in the import file is invalid.",
+    "affected": ["messages.InitHistoryImport"]
+  },
+  {
+    "code": 400,
     "msg": "IMPORT_FORMAT_UNRECOGNIZED",
     "desc": "The specified chat export file was exported from an unsupported chat app.",
     "affected": ["messages.CheckHistoryImport", "messages.InitHistoryImport"]
+  },
+  {
+    "code": 400,
+    "msg": "IMPORT_HISTORY_LOG_EMPTY",
+    "desc": "",
+    "affected": ["messages.InitHistoryImport"]
   },
   {
     "code": 400,
@@ -1747,43 +1806,43 @@
   {
     "code": 400,
     "msg": "INPUT_CONSTRUCTOR_INVALID",
-    "desc": "The provided constructor is invalid",
+    "desc": "The specified TL constructor is invalid.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "INPUT_FETCH_ERROR",
-    "desc": "An error occurred while deserializing TL parameters",
+    "desc": "An error occurred while parsing the provided TL constructor.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "INPUT_FETCH_FAIL",
-    "desc": "Failed deserializing TL payload",
+    "desc": "An error occurred while parsing the provided TL constructor.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "INPUT_FILTER_INVALID",
     "desc": "The specified filter is invalid.",
-    "affected": ["messages.Search"]
+    "affected": ["messages.Search", "messages.SearchGlobal"]
   },
   {
     "code": 400,
     "msg": "INPUT_LAYER_INVALID",
-    "desc": "The provided layer is invalid",
+    "desc": "The specified layer is invalid.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "INPUT_METHOD_INVALID",
-    "desc": "The method invoked is invalid in the current schema",
+    "desc": "The specified method is invalid.",
     "affected": []
   },
   {
     "code": 400,
     "msg": "INPUT_REQUEST_TOO_LONG",
-    "desc": "The input request is too long",
+    "desc": "The request payload is too long.",
     "affected": []
   },
   {
@@ -1850,7 +1909,6 @@
     "msg": "INVITE_HASH_EXPIRED",
     "desc": "The invite link has expired.",
     "affected": [
-      "1817183516",
       "channels.ExportInvite",
       "channels.JoinChannel",
       "InvokeWithLayer",
@@ -1955,7 +2013,8 @@
       "photos.UpdateProfilePhoto",
       "upload.GetFile",
       "upload.GetFileHashes",
-      "upload.GetWebFile"
+      "upload.GetWebFile",
+      "upload.ReuploadCdnFile"
     ]
   },
   {
@@ -2052,7 +2111,7 @@
   {
     "code": 400,
     "msg": "MEDIA_VIDEO_STORY_MISSING",
-    "desc": "",
+    "desc": "A non-story video cannot be repubblished as a story (emitted when trying to resend a non-story video as a story using inputDocument).",
     "affected": ["stories.SendStory"]
   },
   {
@@ -2226,6 +2285,7 @@
       "messages.ReadMentions",
       "messages.ReportReaction",
       "messages.ReportSpam",
+      "messages.RequestWebView",
       "messages.SaveDraft",
       "messages.Search",
       "messages.SendInlineBotResult",
@@ -2236,6 +2296,7 @@
       "messages.SetTyping",
       "messages.StartBot",
       "messages.TranslateText",
+      "messages.UpdateDialogFilter",
       "messages.UploadMedia",
       "photos.GetUserPhotos",
       "stories.GetPeerStories",
@@ -2294,6 +2355,18 @@
     "msg": "NEXT_OFFSET_INVALID",
     "desc": "The specified offset is longer than 64 bytes.",
     "affected": ["messages.SetInlineBotResults"]
+  },
+  {
+    "code": 400,
+    "msg": "NOT_ELIGIBLE",
+    "desc": "The current user is not eligible to join the Peer-to-Peer Login Program.",
+    "affected": ["smsjobs.Join"]
+  },
+  {
+    "code": 400,
+    "msg": "NOT_JOINED",
+    "desc": "The current user hasn't joined the Peer-to-Peer Login Program.",
+    "affected": ["smsjobs.GetStatus", "smsjobs.Leave", "smsjobs.UpdateSettings"]
   },
   {
     "code": 400,
@@ -2438,7 +2511,7 @@
   {
     "code": 400,
     "msg": "PEER_FLOOD",
-    "desc": "The method can't be used because your account is currently limited",
+    "desc": "The current account is spamreported, you cannot execute this action, check @spambot for more info.",
     "affected": []
   },
   {
@@ -2510,10 +2583,12 @@
       "messages.GetSearchCounters",
       "messages.GetStatsURL",
       "messages.GetUnreadMentions",
+      "messages.GetUnreadReactions",
       "messages.HideAllChatJoinRequests",
       "messages.HideChatJoinRequest",
       "messages.HideReportSpam",
       "messages.ImportChatInvite",
+      "messages.InitHistoryImport",
       "messages.MarkDialogUnread",
       "messages.MigrateChat",
       "messages.ReadDiscussion",
@@ -2546,12 +2621,16 @@
       "messages.ToggleSavedDialogPin",
       "messages.TranscribeAudio",
       "messages.TranslateText",
+      "messages.UnpinAllMessages",
+      "messages.UpdateDialogFilter",
       "messages.UpdatePinnedMessage",
       "messages.UploadMedia",
       "payments.GetGiveawayInfo",
       "payments.LaunchPrepaidGiveaway",
       "phone.CreateGroupCall",
       "phone.GetGroupCallJoinAs",
+      "phone.GetGroupCallStreamRtmpUrl",
+      "phone.SaveDefaultGroupCallJoinAs",
       "premium.ApplyBoost",
       "premium.GetBoostsList",
       "premium.GetBoostsStatus",
@@ -2583,7 +2662,8 @@
       "stories.SendStory",
       "stories.TogglePeerStoriesHidden",
       "stories.TogglePinned",
-      "upload.GetFile"
+      "upload.GetFile",
+      "users.GetUsers"
     ]
   },
   {
@@ -2612,6 +2692,7 @@
       "account.ChangePhone",
       "account.ConfirmPhone",
       "account.VerifyPhone",
+      "auth.RequestFirebaseSms",
       "auth.ResendCode",
       "auth.SignIn",
       "auth.SignUp"
@@ -2944,6 +3025,18 @@
   },
   {
     "code": 400,
+    "msg": "QUOTE_TEXT_INVALID",
+    "desc": "The specified `reply_to`.`quote_text` field is invalid.",
+    "affected": ["messages.SendMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "RAISE_HAND_FORBIDDEN",
+    "desc": "You cannot raise your hand.",
+    "affected": ["phone.EditGroupCallParticipant"]
+  },
+  {
+    "code": 400,
     "msg": "RANDOM_ID_EMPTY",
     "desc": "Random ID empty.",
     "affected": ["messages.SendMultiMedia"]
@@ -3005,7 +3098,7 @@
     "code": 400,
     "msg": "REPLY_MARKUP_GAME_EMPTY",
     "desc": "The provided reply markup for the game is empty",
-    "affected": []
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -3028,7 +3121,7 @@
     "code": 400,
     "msg": "REPLY_MESSAGE_ID_INVALID",
     "desc": "The specified reply-to message ID is invalid.",
-    "affected": ["messages.SendScreenshotNotification"]
+    "affected": ["messages.SendMessage", "messages.SendScreenshotNotification"]
   },
   {
     "code": 400,
@@ -3041,6 +3134,12 @@
     "msg": "REPLY_TO_USER_INVALID",
     "desc": "The replied-to user is invalid.",
     "affected": ["messages.SendMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "REQUEST_TOKEN_INVALID",
+    "desc": "The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.",
+    "affected": ["upload.ReuploadCdnFile"]
   },
   {
     "code": 400,
@@ -3173,6 +3272,7 @@
     "desc": "You can't send messages as the specified peer.",
     "affected": [
       "messages.ForwardMessages",
+      "messages.RequestWebView",
       "messages.SaveDefaultSendAs",
       "messages.SendMedia",
       "messages.SendMessage",
@@ -3211,6 +3311,17 @@
   },
   {
     "code": 400,
+    "msg": "SHORTCUT_INVALID",
+    "desc": "The specified shortcut is invalid.",
+    "affected": [
+      "messages.DeleteQuickReplyMessages",
+      "messages.DeleteQuickReplyShortcut",
+      "messages.EditQuickReplyShortcut",
+      "messages.GetQuickReplyMessages"
+    ]
+  },
+  {
+    "code": 400,
     "msg": "SHORTNAME_OCCUPY_FAILED",
     "desc": "An error occurred when trying to register the short-name used for the sticker pack. Try a different name",
     "affected": []
@@ -3244,6 +3355,12 @@
     "msg": "SLUG_INVALID",
     "desc": "The specified invoice slug is invalid.",
     "affected": ["payments.GetPaymentForm"]
+  },
+  {
+    "code": 400,
+    "msg": "SMSJOB_ID_INVALID",
+    "desc": "The specified job ID is invalid.",
+    "affected": ["smsjobs.FinishJob", "smsjobs.GetSmsJob"]
   },
   {
     "code": 400,
@@ -3301,6 +3418,7 @@
       "stickers.SetStickerSetThumb"
     ]
   },
+  { "code": 400, "msg": "STICKERSET_NOT_MODIFIED", "desc": "", "affected": [] },
   {
     "code": 400,
     "msg": "STICKERS_EMPTY",
@@ -3430,6 +3548,7 @@
     "msg": "STORY_ID_EMPTY",
     "desc": "You specified no story IDs.",
     "affected": [
+      "stories.DeleteStories",
       "stories.ExportStoryLink",
       "stories.GetStoriesByID",
       "stories.GetStoriesViews",
@@ -3442,9 +3561,11 @@
     "msg": "STORY_ID_INVALID",
     "desc": "The specified story ID is invalid.",
     "affected": [
+      "messages.SendMedia",
       "messages.SendMessage",
       "messages.SendScreenshotNotification",
-      "stories.GetStoryViewsList"
+      "stories.GetStoryViewsList",
+      "stories.SendReaction"
     ]
   },
   {
@@ -3475,6 +3596,12 @@
     "code": 400,
     "msg": "SWITCH_PM_TEXT_EMPTY",
     "desc": "The switch_pm.text field was empty.",
+    "affected": ["messages.SetInlineBotResults"]
+  },
+  {
+    "code": 400,
+    "msg": "SWITCH_WEBVIEW_URL_INVALID",
+    "desc": "The URL specified in switch_webview.url is invalid!",
     "affected": ["messages.SetInlineBotResults"]
   },
   {
@@ -3552,7 +3679,7 @@
   {
     "code": 400,
     "msg": "TMP_PASSWORD_INVALID",
-    "desc": "The temporary password is invalid",
+    "desc": "The passed tmp_password is invalid.",
     "affected": []
   },
   {
@@ -3652,6 +3779,12 @@
   },
   {
     "code": 400,
+    "msg": "TRANSLATE_REQ_QUOTA_EXCEEDED",
+    "desc": "",
+    "affected": ["messages.TranslateText"]
+  },
+  {
+    "code": 400,
     "msg": "TTL_DAYS_INVALID",
     "desc": "The provided TTL is invalid.",
     "affected": ["account.SetAccountTTL", "account.SetAuthorizationTTL"]
@@ -3695,7 +3828,11 @@
     "code": 400,
     "msg": "URL_INVALID",
     "desc": "Invalid URL provided.",
-    "affected": ["messages.SetBotCallbackAnswer", "messages.SetInlineBotResults"]
+    "affected": [
+      "messages.RequestSimpleWebView",
+      "messages.SetBotCallbackAnswer",
+      "messages.SetInlineBotResults"
+    ]
   },
   {
     "code": 400,
@@ -4012,6 +4149,18 @@
   },
   {
     "code": 400,
+    "msg": "VIDEO_PAUSE_FORBIDDEN",
+    "desc": "You cannot pause the video stream.",
+    "affected": ["phone.EditGroupCallParticipant"]
+  },
+  {
+    "code": 400,
+    "msg": "VIDEO_STOP_FORBIDDEN",
+    "desc": "You cannot stop the video stream.",
+    "affected": ["phone.EditGroupCallParticipant"]
+  },
+  {
+    "code": 400,
     "msg": "VIDEO_TITLE_EMPTY",
     "desc": "The specified video title is empty.",
     "affected": ["messages.SetInlineBotResults"]
@@ -4085,7 +4234,7 @@
   {
     "code": 400,
     "msg": "WEBDOCUMENT_URL_EMPTY",
-    "desc": "The web document URL is empty",
+    "desc": "The passed web document URL is empty.",
     "affected": []
   },
   {
@@ -4110,7 +4259,7 @@
     "code": 400,
     "msg": "WEBPAGE_NOT_FOUND",
     "desc": "A preview for the specified webpage `url` could not be generated.",
-    "affected": ["messages.SendMedia"]
+    "affected": ["messages.EditMessage", "messages.SendMedia"]
   },
   {
     "code": 400,
@@ -4157,47 +4306,47 @@
     "desc": "The method is only available to already activated users",
     "affected": []
   },
-  { "code": 401, "msg": "AUTH_KEY_INVALID", "desc": "The key is invalid", "affected": [] },
+  {
+    "code": 401,
+    "msg": "AUTH_KEY_INVALID",
+    "desc": "The specified auth key is invalid.",
+    "affected": []
+  },
   {
     "code": 401,
     "msg": "AUTH_KEY_PERM_EMPTY",
-    "desc": "The method is unavailable for temporary authorization key, not bound to permanent",
+    "desc": "The method is unavailable for temporary authorization keys, not bound to a permanent authorization key.",
     "affected": []
   },
   {
     "code": 401,
     "msg": "AUTH_KEY_UNREGISTERED",
-    "desc": "The key is not registered in the system. Delete your session file and login again",
+    "desc": "The specified authorization key is not registered in the system (for example, a PFS temporary key has expired).",
     "affected": []
   },
-  {
-    "code": 401,
-    "msg": "SESSION_EXPIRED",
-    "desc": "The authorization has expired",
-    "affected": []
-  },
+  { "code": 401, "msg": "SESSION_EXPIRED", "desc": "The session has expired.", "affected": [] },
   {
     "code": 401,
     "msg": "SESSION_PASSWORD_NEEDED",
-    "desc": "The two-step verification is enabled and a password is required",
+    "desc": "2FA is enabled, use a password to login.",
     "affected": []
   },
   {
     "code": 401,
     "msg": "SESSION_REVOKED",
-    "desc": "The authorization has been invalidated, because of the user terminating all sessions",
+    "desc": "The session was revoked by the user.",
     "affected": []
   },
   {
     "code": 401,
     "msg": "USER_DEACTIVATED",
-    "desc": "The user has been deleted/deactivated",
+    "desc": "The current account was deleted by the user.",
     "affected": []
   },
   {
     "code": 401,
     "msg": "USER_DEACTIVATED_BAN",
-    "desc": "The user has been deleted/deactivated",
+    "desc": "The current account was deleted and banned by Telegram's antispam system.",
     "affected": []
   },
   {
@@ -4251,7 +4400,12 @@
       "stats.GetMegagroupStats"
     ]
   },
-  { "code": 403, "msg": "CHAT_FORBIDDEN", "desc": "You cannot write in this chat", "affected": [] },
+  {
+    "code": 403,
+    "msg": "CHAT_FORBIDDEN",
+    "desc": "This chat is not available to the current user.",
+    "affected": []
+  },
   {
     "code": 403,
     "msg": "CHAT_GUEST_SEND_FORBIDDEN",
@@ -4336,6 +4490,12 @@
     "msg": "CHAT_SEND_POLL_FORBIDDEN",
     "desc": "You can't send polls in this chat.",
     "affected": ["messages.ForwardMessages", "messages.SendMedia"]
+  },
+  {
+    "code": 403,
+    "msg": "CHAT_SEND_ROUNDVIDEOS_FORBIDDEN",
+    "desc": "You can't send round videos to this chat.",
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 403,
@@ -4446,7 +4606,17 @@
     "code": 403,
     "msg": "MESSAGE_DELETE_FORBIDDEN",
     "desc": "You can't delete one of the messages you tried to delete, most likely because it is a service message.",
-    "affected": ["channels.DeleteMessages", "messages.DeleteMessages"]
+    "affected": [
+      "channels.DeleteMessages",
+      "messages.DeleteMessages",
+      "messages.DeleteScheduledMessages"
+    ]
+  },
+  {
+    "code": 403,
+    "msg": "NOT_ELIGIBLE",
+    "desc": "The current user is not eligible to join the Peer-to-Peer Login Program.",
+    "affected": ["smsjobs.IsEligibleToJoin"]
   },
   {
     "code": 403,
@@ -4475,7 +4645,12 @@
     "code": 403,
     "msg": "PRIVACY_PREMIUM_REQUIRED",
     "desc": "You need a [Telegram Premium subscription](https://core.telegram.org/api/premium) to send a message to this user.",
-    "affected": ["messages.SendMessage"]
+    "affected": [
+      "messages.ForwardMessages",
+      "messages.RequestWebView",
+      "messages.SendMedia",
+      "messages.SendMessage"
+    ]
   },
   {
     "code": 403,
@@ -4577,7 +4752,7 @@
   {
     "code": 406,
     "msg": "AUTH_KEY_DUPLICATED",
-    "desc": "The same authorization key (session file) was used in more than one place simultaneously. You must delete your session file and log in again with your phone number or bot token",
+    "desc": "Concurrent usage of the current session from multiple connections was detected, the current session was invalidated by the server for security reasons!",
     "affected": []
   },
   {
@@ -4713,7 +4888,7 @@
     "code": 406,
     "msg": "PRIVACY_PREMIUM_REQUIRED",
     "desc": "You need a [Telegram Premium subscription](https://core.telegram.org/api/premium) to send a message to this user.",
-    "affected": ["messages.SendMessage"]
+    "affected": ["messages.ForwardMessages", "messages.SendMessage"]
   },
   {
     "code": 406,
@@ -4776,6 +4951,18 @@
   },
   {
     "code": 420,
+    "msg": "ADDRESS_INVALID",
+    "desc": "The specified geopoint address is invalid.",
+    "affected": ["channels.CreateChannel"]
+  },
+  {
+    "code": 420,
+    "msg": "FLOOD_PREMIUM_WAIT_X",
+    "desc": "Please wait {value} seconds before repeating the action, or purchase a [Telegram Premium subscription](https://core.telegram.org/api/premium) to remove this rate limit.",
+    "affected": ["upload.GetFile"]
+  },
+  {
+    "code": 420,
     "msg": "FLOOD_TEST_PHONE_WAIT_X",
     "desc": "A wait of {value} seconds is required in the test servers",
     "affected": []
@@ -4783,7 +4970,7 @@
   {
     "code": 420,
     "msg": "FLOOD_WAIT_X",
-    "desc": "A wait of {value} seconds is required",
+    "desc": "Please wait {value} seconds before repeating the action.",
     "affected": []
   },
   {
@@ -4828,6 +5015,7 @@
     "desc": "The call failed because the user is already making another call.",
     "affected": ["phone.AcceptCall", "phone.DiscardCall"]
   },
+  { "code": 500, "msg": "CDN_SALTS_EMPTY", "desc": "", "affected": ["upload.GetCdnFileHashes"] },
   {
     "code": 500,
     "msg": "CDN_UPLOAD_TIMEOUT",
@@ -5027,6 +5215,7 @@
       "messages.SendMedia",
       "messages.SendMessage",
       "messages.SendMultiMedia",
+      "messages.SendScheduledMessages",
       "messages.StartBot",
       "updates.GetDifference"
     ]
@@ -5113,6 +5302,12 @@
     "code": 503,
     "msg": "ApiCallError",
     "desc": "Telegram is having internal problems. Please try again later.",
+    "affected": []
+  },
+  {
+    "code": 503,
+    "msg": "MSG_WAIT_TIMEOUT",
+    "desc": "Spent too much time waiting for a previous query in the invokeAfterMsg request queue, aborting!",
     "affected": []
   },
   {

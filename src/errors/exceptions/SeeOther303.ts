@@ -25,19 +25,21 @@ export class FileMigrate extends SeeOther {
 }
 export class NetworkMigrate extends SeeOther {
   id: string = 'NETWORK_MIGRATE_X';
-  message: string = 'The source IP address is associated with DC{value} (for registration)';
+  message: string =
+    'Your IP address is associated to DC {value}, please re-send the query to that DC.';
 }
 export class PhoneMigrate extends SeeOther {
   id: string = 'PHONE_MIGRATE_X';
   message: string =
-    'The phone number a user is trying to use for authorization is associated with DC{value}';
+    'Your phone number is associated to DC {value}, please re-send the query to that DC.';
 }
 export class StatsMigrate extends SeeOther {
   id: string = 'STATS_MIGRATE_X';
-  message: string = 'The statistics of the group/channel are stored in DC{value}';
+  message: string =
+    'Channel statistics for the specified channel are stored on DC {value}, please re-send the query to that DC.';
 }
 export class UserMigrate extends SeeOther {
   id: string = 'USER_MIGRATE_X';
   message: string =
-    'The user whose identity is being used to execute queries is associated with DC{value} (for registration)';
+    'Your account is associated to DC {value}, please re-send the query to that DC.';
 }

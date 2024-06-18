@@ -143,6 +143,10 @@ export class BotsTooMuch extends BadRequest {
   id: string = 'BOTS_TOO_MUCH';
   message: string = 'There are too many bots in this chat/channel.';
 }
+export class BotAppBotInvalid extends BadRequest {
+  id: string = 'BOT_APP_BOT_INVALID';
+  message: string = 'The bot_id passed in the inputBotAppShortName constructor is invalid.';
+}
 export class BotAppInvalid extends BadRequest {
   id: string = 'BOT_APP_INVALID';
   message: string = 'The specified bot app is invalid.';
@@ -185,7 +189,7 @@ export class BotInvalid extends BadRequest {
 }
 export class BotMethodInvalid extends BadRequest {
   id: string = 'BOT_METHOD_INVALID';
-  message: string = "The method can't be used by bots";
+  message: string = 'The specified method cannot be used by bots.';
 }
 export class BotMissing extends BadRequest {
   id: string = 'BOT_MISSING';
@@ -248,7 +252,7 @@ export class ButtonUrlInvalid extends BadRequest {
 }
 export class ButtonUserInvalid extends BadRequest {
   id: string = 'BUTTON_USER_INVALID';
-  message: string = 'The user_id passed to inputKeyboardButtonUserProfile is invalid!';
+  message: string = 'The `user_id` passed to inputKeyboardButtonUserProfile is invalid!';
 }
 export class ButtonUserPrivacyRestricted extends BadRequest {
   id: string = 'BUTTON_USER_PRIVACY_RESTRICTED';
@@ -328,6 +332,10 @@ export class ChannelTooLarge extends BadRequest {
   id: string = 'CHANNEL_TOO_LARGE';
   message: string =
     'Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).';
+}
+export class ChatlinkSlugEmpty extends BadRequest {
+  id: string = 'CHATLINK_SLUG_EMPTY';
+  message: string = 'The specified slug is empty.';
 }
 export class ChatlistExcludeInvalid extends BadRequest {
   id: string = 'CHATLIST_EXCLUDE_INVALID';
@@ -415,6 +423,14 @@ export class CodeInvalid extends BadRequest {
   id: string = 'CODE_INVALID';
   message: string = 'Code invalid.';
 }
+export class CollectibleInvalid extends BadRequest {
+  id: string = 'COLLECTIBLE_INVALID';
+  message: string = 'The specified collectible is invalid.';
+}
+export class CollectibleNotFound extends BadRequest {
+  id: string = 'COLLECTIBLE_NOT_FOUND';
+  message: string = 'The specified collectible could not be found.';
+}
 export class ColorInvalid extends BadRequest {
   id: string = 'COLOR_INVALID';
   message: string = 'The specified color palette ID was invalid.';
@@ -429,11 +445,15 @@ export class ConnectionAppVersionEmpty extends BadRequest {
 }
 export class ConnectionDeviceModelEmpty extends BadRequest {
   id: string = 'CONNECTION_DEVICE_MODEL_EMPTY';
-  message: string = 'The device model is empty';
+  message: string = 'The specified device model is empty.';
+}
+export class ConnectionIdInvalid extends BadRequest {
+  id: string = 'CONNECTION_ID_INVALID';
+  message: string = 'The specified connection ID is invalid.';
 }
 export class ConnectionLangPackInvalid extends BadRequest {
   id: string = 'CONNECTION_LANG_PACK_INVALID';
-  message: string = 'The specified language pack is not valid';
+  message: string = 'The specified language pack is empty.';
 }
 export class ConnectionLayerInvalid extends BadRequest {
   id: string = 'CONNECTION_LAYER_INVALID';
@@ -441,15 +461,15 @@ export class ConnectionLayerInvalid extends BadRequest {
 }
 export class ConnectionNotInited extends BadRequest {
   id: string = 'CONNECTION_NOT_INITED';
-  message: string = 'The connection was not initialized';
+  message: string = 'Please initialize the connection using initConnection before making queries.';
 }
 export class ConnectionSystemEmpty extends BadRequest {
   id: string = 'CONNECTION_SYSTEM_EMPTY';
-  message: string = 'The connection to the system is empty';
+  message: string = 'The specified system version is empty.';
 }
 export class ConnectionSystemLangCodeEmpty extends BadRequest {
   id: string = 'CONNECTION_SYSTEM_LANG_CODE_EMPTY';
-  message: string = 'The system language code is empty';
+  message: string = 'The specified system language code is empty.';
 }
 export class ContactAddMissing extends BadRequest {
   id: string = 'CONTACT_ADD_MISSING';
@@ -632,7 +652,8 @@ export class FileIdInvalid extends BadRequest {
 }
 export class FileMigrate extends BadRequest {
   id: string = 'FILE_MIGRATE_X';
-  message: string = 'The file is in Data Center No. {value}';
+  message: string =
+    'The file currently being accessed is stored in DC {value}, please re-send the query to that DC.';
 }
 export class FilePartsInvalid extends BadRequest {
   id: string = 'FILE_PARTS_INVALID';
@@ -664,7 +685,8 @@ export class FilePartTooBig extends BadRequest {
 }
 export class FilePartMissing extends BadRequest {
   id: string = 'FILE_PART_X_MISSING';
-  message: string = 'Part {value} of the file is missing from storage';
+  message: string =
+    'Part {value} of the file is missing from storage. Try repeating the method call to resave the part.';
 }
 export class FileReferenceAny extends BadRequest {
   id: string = 'FILE_REFERENCE_*';
@@ -829,9 +851,17 @@ export class ImportFileInvalid extends BadRequest {
   id: string = 'IMPORT_FILE_INVALID';
   message: string = 'The specified chat export file is invalid.';
 }
+export class ImportFormatDateInvalid extends BadRequest {
+  id: string = 'IMPORT_FORMAT_DATE_INVALID';
+  message: string = 'The date specified in the import file is invalid.';
+}
 export class ImportFormatUnrecognized extends BadRequest {
   id: string = 'IMPORT_FORMAT_UNRECOGNIZED';
   message: string = 'The specified chat export file was exported from an unsupported chat app.';
+}
+export class ImportHistoryLogEmpty extends BadRequest {
+  id: string = 'IMPORT_HISTORY_LOG_EMPTY';
+  message: string = '';
 }
 export class ImportIdInvalid extends BadRequest {
   id: string = 'IMPORT_ID_INVALID';
@@ -851,15 +881,15 @@ export class InputChatlistInvalid extends BadRequest {
 }
 export class InputConstructorInvalid extends BadRequest {
   id: string = 'INPUT_CONSTRUCTOR_INVALID';
-  message: string = 'The provided constructor is invalid';
+  message: string = 'The specified TL constructor is invalid.';
 }
 export class InputFetchError extends BadRequest {
   id: string = 'INPUT_FETCH_ERROR';
-  message: string = 'An error occurred while deserializing TL parameters';
+  message: string = 'An error occurred while parsing the provided TL constructor.';
 }
 export class InputFetchFail extends BadRequest {
   id: string = 'INPUT_FETCH_FAIL';
-  message: string = 'Failed deserializing TL payload';
+  message: string = 'An error occurred while parsing the provided TL constructor.';
 }
 export class InputFilterInvalid extends BadRequest {
   id: string = 'INPUT_FILTER_INVALID';
@@ -867,15 +897,15 @@ export class InputFilterInvalid extends BadRequest {
 }
 export class InputLayerInvalid extends BadRequest {
   id: string = 'INPUT_LAYER_INVALID';
-  message: string = 'The provided layer is invalid';
+  message: string = 'The specified layer is invalid.';
 }
 export class InputMethodInvalid extends BadRequest {
   id: string = 'INPUT_METHOD_INVALID';
-  message: string = 'The method invoked is invalid in the current schema';
+  message: string = 'The specified method is invalid.';
 }
 export class InputRequestTooLong extends BadRequest {
   id: string = 'INPUT_REQUEST_TOO_LONG';
-  message: string = 'The input request is too long';
+  message: string = 'The request payload is too long.';
 }
 export class InputTextEmpty extends BadRequest {
   id: string = 'INPUT_TEXT_EMPTY';
@@ -1017,7 +1047,8 @@ export class MediaTypeInvalid extends BadRequest {
 }
 export class MediaVideoStoryMissing extends BadRequest {
   id: string = 'MEDIA_VIDEO_STORY_MISSING';
-  message: string = '';
+  message: string =
+    'A non-story video cannot be repubblished as a story (emitted when trying to resend a non-story video as a story using inputDocument).';
 }
 export class MegagroupGeoRequired extends BadRequest {
   id: string = 'MEGAGROUP_GEO_REQUIRED';
@@ -1106,6 +1137,14 @@ export class NewSettingsInvalid extends BadRequest {
 export class NextOffsetInvalid extends BadRequest {
   id: string = 'NEXT_OFFSET_INVALID';
   message: string = 'The specified offset is longer than 64 bytes.';
+}
+export class NotEligible extends BadRequest {
+  id: string = 'NOT_ELIGIBLE';
+  message: string = 'The current user is not eligible to join the Peer-to-Peer Login Program.';
+}
+export class NotJoined extends BadRequest {
+  id: string = 'NOT_JOINED';
+  message: string = "The current user hasn't joined the Peer-to-Peer Login Program.";
 }
 export class OffsetInvalid extends BadRequest {
   id: string = 'OFFSET_INVALID';
@@ -1197,7 +1236,8 @@ export class PeersListEmpty extends BadRequest {
 }
 export class PeerFlood extends BadRequest {
   id: string = 'PEER_FLOOD';
-  message: string = "The method can't be used because your account is currently limited";
+  message: string =
+    'The current account is spamreported, you cannot execute this action, check @spambot for more info.';
 }
 export class PeerHistoryEmpty extends BadRequest {
   id: string = 'PEER_HISTORY_EMPTY';
@@ -1409,6 +1449,14 @@ export class QuizMultipleInvalid extends BadRequest {
   id: string = 'QUIZ_MULTIPLE_INVALID';
   message: string = "Quizzes can't have the multiple_choice flag set!";
 }
+export class QuoteTextInvalid extends BadRequest {
+  id: string = 'QUOTE_TEXT_INVALID';
+  message: string = 'The specified `reply_to`.`quote_text` field is invalid.';
+}
+export class RaiseHandForbidden extends BadRequest {
+  id: string = 'RAISE_HAND_FORBIDDEN';
+  message: string = 'You cannot raise your hand.';
+}
 export class RandomIdEmpty extends BadRequest {
   id: string = 'RANDOM_ID_EMPTY';
   message: string = 'Random ID empty.';
@@ -1469,6 +1517,11 @@ export class ReplyToInvalid extends BadRequest {
 export class ReplyToUserInvalid extends BadRequest {
   id: string = 'REPLY_TO_USER_INVALID';
   message: string = 'The replied-to user is invalid.';
+}
+export class RequestTokenInvalid extends BadRequest {
+  id: string = 'REQUEST_TOKEN_INVALID';
+  message: string =
+    'The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.';
 }
 export class ResetRequestMissing extends BadRequest {
   id: string = 'RESET_REQUEST_MISSING';
@@ -1568,6 +1621,10 @@ export class Sha256HashInvalid extends BadRequest {
   id: string = 'SHA256_HASH_INVALID';
   message: string = 'The provided SHA256 hash is invalid.';
 }
+export class ShortcutInvalid extends BadRequest {
+  id: string = 'SHORTCUT_INVALID';
+  message: string = 'The specified shortcut is invalid.';
+}
 export class ShortnameOccupyFailed extends BadRequest {
   id: string = 'SHORTNAME_OCCUPY_FAILED';
   message: string =
@@ -1592,6 +1649,10 @@ export class SlowmodeMultiMsgsDisabled extends BadRequest {
 export class SlugInvalid extends BadRequest {
   id: string = 'SLUG_INVALID';
   message: string = 'The specified invoice slug is invalid.';
+}
+export class SmsjobIdInvalid extends BadRequest {
+  id: string = 'SMSJOB_ID_INVALID';
+  message: string = 'The specified job ID is invalid.';
 }
 export class SmsCodeCreateFailed extends BadRequest {
   id: string = 'SMS_CODE_CREATE_FAILED';
@@ -1624,6 +1685,10 @@ export class StickerpackStickersTooMuch extends BadRequest {
 export class StickersetInvalid extends BadRequest {
   id: string = 'STICKERSET_INVALID';
   message: string = 'The provided sticker set is invalid.';
+}
+export class StickersetNotModified extends BadRequest {
+  id: string = 'STICKERSET_NOT_MODIFIED';
+  message: string = '';
 }
 export class StickersEmpty extends BadRequest {
   id: string = 'STICKERS_EMPTY';
@@ -1737,6 +1802,10 @@ export class SwitchPmTextEmpty extends BadRequest {
   id: string = 'SWITCH_PM_TEXT_EMPTY';
   message: string = 'The switch_pm.text field was empty.';
 }
+export class SwitchWebviewUrlInvalid extends BadRequest {
+  id: string = 'SWITCH_WEBVIEW_URL_INVALID';
+  message: string = 'The URL specified in switch_webview.url is invalid!';
+}
 export class TakeoutInvalid extends BadRequest {
   id: string = 'TAKEOUT_INVALID';
   message: string = 'The specified takeout ID is invalid.';
@@ -1788,7 +1857,7 @@ export class TmpPasswordDisabled extends BadRequest {
 }
 export class TmpPasswordInvalid extends BadRequest {
   id: string = 'TMP_PASSWORD_INVALID';
-  message: string = 'The temporary password is invalid';
+  message: string = 'The passed tmp_password is invalid.';
 }
 export class TokenEmpty extends BadRequest {
   id: string = 'TOKEN_EMPTY';
@@ -1842,6 +1911,10 @@ export class ToLangInvalid extends BadRequest {
 export class TranscriptionFailed extends BadRequest {
   id: string = 'TRANSCRIPTION_FAILED';
   message: string = 'Audio transcription failed.';
+}
+export class TranslateReqQuotaExceeded extends BadRequest {
+  id: string = 'TRANSLATE_REQ_QUOTA_EXCEEDED';
+  message: string = '';
 }
 export class TtlDaysInvalid extends BadRequest {
   id: string = 'TTL_DAYS_INVALID';
@@ -2002,6 +2075,14 @@ export class VideoFileInvalid extends BadRequest {
   id: string = 'VIDEO_FILE_INVALID';
   message: string = 'The specified video file is invalid.';
 }
+export class VideoPauseForbidden extends BadRequest {
+  id: string = 'VIDEO_PAUSE_FORBIDDEN';
+  message: string = 'You cannot pause the video stream.';
+}
+export class VideoStopForbidden extends BadRequest {
+  id: string = 'VIDEO_STOP_FORBIDDEN';
+  message: string = 'You cannot stop the video stream.';
+}
 export class VideoTitleEmpty extends BadRequest {
   id: string = 'VIDEO_TITLE_EMPTY';
   message: string = 'The specified video title is empty.';
@@ -2048,7 +2129,7 @@ export class WebdocumentSizeTooBig extends BadRequest {
 }
 export class WebdocumentUrlEmpty extends BadRequest {
   id: string = 'WEBDOCUMENT_URL_EMPTY';
-  message: string = 'The web document URL is empty';
+  message: string = 'The passed web document URL is empty.';
 }
 export class WebdocumentUrlInvalid extends BadRequest {
   id: string = 'WEBDOCUMENT_URL_INVALID';

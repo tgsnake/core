@@ -22,7 +22,7 @@ export class NotAcceptable extends RPCError {
 export class AuthKeyDuplicated extends NotAcceptable {
   id: string = 'AUTH_KEY_DUPLICATED';
   message: string =
-    'The same authorization key (session file) was used in more than one place simultaneously. You must delete your session file and log in again with your phone number or bot token';
+    'Concurrent usage of the current session from multiple connections was detected, the current session was invalidated by the server for security reasons!';
 }
 export class BannedRightsInvalid extends NotAcceptable {
   id: string = 'BANNED_RIGHTS_INVALID';

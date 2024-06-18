@@ -25,36 +25,35 @@ export class ActiveUserRequired extends Unauthorized {
 }
 export class AuthKeyInvalid extends Unauthorized {
   id: string = 'AUTH_KEY_INVALID';
-  message: string = 'The key is invalid';
+  message: string = 'The specified auth key is invalid.';
 }
 export class AuthKeyPermEmpty extends Unauthorized {
   id: string = 'AUTH_KEY_PERM_EMPTY';
   message: string =
-    'The method is unavailable for temporary authorization key, not bound to permanent';
+    'The method is unavailable for temporary authorization keys, not bound to a permanent authorization key.';
 }
 export class AuthKeyUnregistered extends Unauthorized {
   id: string = 'AUTH_KEY_UNREGISTERED';
   message: string =
-    'The key is not registered in the system. Delete your session file and login again';
+    'The specified authorization key is not registered in the system (for example, a PFS temporary key has expired).';
 }
 export class SessionExpired extends Unauthorized {
   id: string = 'SESSION_EXPIRED';
-  message: string = 'The authorization has expired';
+  message: string = 'The session has expired.';
 }
 export class SessionPasswordNeeded extends Unauthorized {
   id: string = 'SESSION_PASSWORD_NEEDED';
-  message: string = 'The two-step verification is enabled and a password is required';
+  message: string = '2FA is enabled, use a password to login.';
 }
 export class SessionRevoked extends Unauthorized {
   id: string = 'SESSION_REVOKED';
-  message: string =
-    'The authorization has been invalidated, because of the user terminating all sessions';
+  message: string = 'The session was revoked by the user.';
 }
 export class UserDeactivated extends Unauthorized {
   id: string = 'USER_DEACTIVATED';
-  message: string = 'The user has been deleted/deactivated';
+  message: string = 'The current account was deleted by the user.';
 }
 export class UserDeactivatedBan extends Unauthorized {
   id: string = 'USER_DEACTIVATED_BAN';
-  message: string = 'The user has been deleted/deactivated';
+  message: string = "The current account was deleted and banned by Telegram's antispam system.";
 }

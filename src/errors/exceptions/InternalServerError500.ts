@@ -32,6 +32,10 @@ export class CallOccupyFailed extends InternalServerError {
   id: string = 'CALL_OCCUPY_FAILED';
   message: string = 'The call failed because the user is already making another call.';
 }
+export class CdnSaltsEmpty extends InternalServerError {
+  id: string = 'CDN_SALTS_EMPTY';
+  message: string = '';
+}
 export class CdnUploadTimeout extends InternalServerError {
   id: string = 'CDN_UPLOAD_TIMEOUT';
   message: string = 'A server-side timeout occurred while reuploading the file to the CDN DC.';
