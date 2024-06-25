@@ -203,6 +203,7 @@ export async function uploadStream(
     throw new FileErrors.FileIsNotReadable();
   }
   // file part should be 512 * 1024
+  // @ts-ignore
   if (source.readableHighWaterMark !== 512 * 1024) {
     // @ts-ignore
     source._readableState.highWaterMark = 512 * 1024;
