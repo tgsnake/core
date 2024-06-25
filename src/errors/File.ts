@@ -74,3 +74,9 @@ export class FileUploadBigger extends FileError {
     );
   }
 }
+
+export class FileIsNotReadable extends FileError {
+  constructor() {
+    super('FILE_IS_NOT_READABLE', 'The argument provided is not a Readable stream.');
+  }
+}

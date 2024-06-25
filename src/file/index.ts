@@ -9,5 +9,11 @@
  */
 
 export { File } from './File.ts';
-export { upload, type Progress, type SaveFileParams, type SaveFileStreamParams } from './Upload.ts';
+export {
+  upload,
+  uploadStream,
+  type Progress,
+  type SaveFileParams,
+  type SaveFileStreamParams,
+} from './Upload.ts';
 export { handleDownload, downloadStream, type DownloadParam } from './Download.ts';

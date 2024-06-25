@@ -557,32 +557,9 @@ export class Client {
   saveFileStream({
     source,
     fileName,
-    fileId,
-    filePart,
     progress,
   }: Files.SaveFileStreamParams): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
-    const file = new Files.File();
-    let promiseResolve: (value: Raw.InputFile | Raw.InputFileBig | undefined) => void = (
-      _value,
-    ) => {};
-    const promise: Promise<Raw.InputFile | Raw.InputFileBig | undefined> = new Promise<
-      Raw.InputFile | Raw.InputFileBig | undefined
-    >((resolve) => {
-      promiseResolve = resolve;
-    });
-    file.on('finish', async () => {
-      const res: Raw.InputFile | Raw.InputFileBig | undefined = await Files.upload(
-        this,
-        file.bytes.buffer,
-        fileName,
-        fileId,
-        filePart,
-        progress,
-      );
-      promiseResolve(res);
-    });
-    source.pipe(file);
-    return promise;
+    return Files.uploadStream(this, source, fileName, progress);
   }
   /**
    * Downloading file.

@@ -13,7 +13,7 @@ import { Session, Auth } from '../session/index.ts';
 import { bigMath, bigintToBuffer } from '../helpers.ts';
 import { Exceptions, CDNFileHashMismatch } from '../errors/index.ts';
 import { AES } from '../crypto/index.ts';
-import { crypto, Buffer } from '../platform.deno.ts';
+import { crypto, Buffer, isDeno } from '../platform.deno.ts';
 import { type Client } from '../client/Client.ts';
 
 export async function handleDownload(
@@ -24,7 +24,7 @@ export async function handleDownload(
   limit: number,
   offset: bigint,
 ) {
-  const [, release] = await client._getFileSemaphore.acquire();
+  const release = await client._getFileSemaphore.acquire();
   let current = 0;
   let total = Math.abs(limit) || (1 << 31) - 1;
   let chunkSize = 1024 * 1024;
@@ -155,7 +155,12 @@ export async function handleDownload(
   } finally {
     await session.stop();
     file.push(null);
-    release();
+    if (isDeno) {
+      // @ts-ignore
+      release();
+    } else {
+      release[1]();
+    }
   }
 }
 
