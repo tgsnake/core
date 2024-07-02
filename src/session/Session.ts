@@ -242,7 +242,15 @@ export class Session {
         Logger.debug(`[54] Got response from msg id ${msgId}: ${response.constructor.name}`);
         if (response instanceof Raw.RpcError) {
           // response as Raw.RpcError;
-          if (data instanceof Raw.InvokeWithoutUpdates || data instanceof Raw.InvokeWithTakeout) {
+          if (
+            data instanceof Raw.InvokeWithoutUpdates ||
+            data instanceof Raw.InvokeWithTakeout ||
+            data instanceof Raw.InvokeWithTakeout ||
+            data instanceof Raw.InvokeWithBusinessConnection ||
+            data instanceof Raw.InvokeWithGooglePlayIntegrity ||
+            data instanceof Raw.InvokeWithApnsSecret ||
+            data instanceof Raw.InvokeWithMessagesRange
+          ) {
             //@ts-ignore
             data = data.query;
           }

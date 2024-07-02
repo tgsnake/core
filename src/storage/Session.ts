@@ -51,10 +51,10 @@ export class BaseSession extends AbstractSession {
   protected _port!: number;
   protected _peers: Map<
     bigint,
-    [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
+    [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   > = new Map<
     bigint,
-    [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
+    [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >();
   protected _secretChats: Map<number, SecretChat> = new Map<number, SecretChat>();
   protected _authKey!: Buffer;
@@ -141,7 +141,7 @@ export class BaseSession extends AbstractSession {
   }
   async updatePeers(
     peers: Array<
-      [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
+      [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
     >,
   ) {
     Logger.debug(`[76] Updating ${peers.length} peers`);
@@ -172,8 +172,10 @@ export class BaseSession extends AbstractSession {
   async getPeerByUsername(username: string) {
     Logger.debug(`[78] Getting peer by username: ${username}`);
     for (let [, peer] of this._peers) {
-      if (peer[3] && peer[3] === username) {
-        return getInputPeer(peer[0], peer[1], peer[2]);
+      if (peer[3]) {
+        if (Array.isArray(peer[3]) && peer[3].includes(username.toLowerCase())) {
+          return getInputPeer(peer[0], peer[1], peer[2]);
+        }
       }
     }
   }

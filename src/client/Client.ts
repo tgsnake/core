@@ -349,7 +349,7 @@ export class Client {
   async fetchPeers(peers: Array<Raw.TypeUser | Raw.TypeChat>): Promise<boolean> {
     let isMin = false;
     let parsedPeers: Array<
-      [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
+      [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
     > = [];
     for (let peer of peers) {
       // @ts-ignore
@@ -364,9 +364,9 @@ export class Client {
           peer.accessHash ?? BigInt(0),
           peer.bot ? 'bot' : 'user',
           peer.username
-            ? peer.username.toLowerCase()
-            : peer.usernames && peer.usernames[0]
-              ? (peer.usernames[0] as Raw.Username).username.toLowerCase()
+            ? [peer.username.toLowerCase()]
+            : peer.usernames && peer.usernames.length
+              ? peer.usernames.map((username) => username.username.toLowerCase())
               : undefined,
           peer.phone ? peer.phone : undefined,
         ]);
@@ -379,7 +379,7 @@ export class Client {
           // @ts-ignore
           peer.broadcast ? 'channel' : 'supergroup',
           // @ts-ignore
-          peer.username ? peer.username.toLowerCase() : undefined,
+          peer.username ? [peer.username.toLowerCase()] : undefined,
           undefined,
         ]);
       }

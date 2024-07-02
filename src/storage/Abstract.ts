@@ -35,7 +35,7 @@ export abstract class AbstractSession {
    */
   protected abstract _peers: Map<
     bigint,
-    [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
+    [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >;
   /**
    * Collective of secret chat.
@@ -128,13 +128,7 @@ export abstract class AbstractSession {
    */
   abstract get peers(): Map<
     bigint,
-    [
-      id: bigint,
-      accessHash: bigint,
-      type: string,
-      username?: string | undefined,
-      phoneNumber?: string | undefined,
-    ]
+    [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >;
   abstract get secretChats(): Map<number, SecretChat>;
   /**
@@ -160,7 +154,7 @@ export abstract class AbstractSession {
    */
   abstract updatePeers(
     peers: Array<
-      [id: bigint, accessHash: bigint, type: string, username?: string, phoneNumber?: string]
+      [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
     >,
   ): Promise<void>;
   /**
