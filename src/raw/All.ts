@@ -222,6 +222,7 @@ export const Object = {
   0x2a9fadc5: 'Raw.MessageActionGiveawayResults',
   0xcc02aa6d: 'Raw.MessageActionBoostApply',
   0x93b31848: 'Raw.MessageActionRequestedPeerSentMe',
+  0x41b3e202: 'Raw.MessageActionPaymentRefunded',
   0xd58a08c6: 'Raw.Dialog',
   0x71bd134c: 'Raw.DialogFolder',
   0x2331b22d: 'Raw.PhotoEmpty',

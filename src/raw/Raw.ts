@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 183;
+  export const Layer: number = 184;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -1664,7 +1664,8 @@ export namespace Raw {
     | Raw.MessageActionGiveawayLaunch
     | Raw.MessageActionGiveawayResults
     | Raw.MessageActionBoostApply
-    | Raw.MessageActionRequestedPeerSentMe;
+    | Raw.MessageActionRequestedPeerSentMe
+    | Raw.MessageActionPaymentRefunded;
   export type TypeFactCheck = Raw.FactCheck;
   export type TypeMessageReactions = Raw.MessageReactions;
   export type TypeMessageReplies = Raw.MessageReplies;
@@ -8411,6 +8412,7 @@ export namespace Raw {
     restrictedSponsored?: boolean;
     canViewRevenue?: boolean;
     paidMediaAllowed?: boolean;
+    canViewStarsRevenue?: boolean;
     id!: long;
     about!: string;
     participantsCount?: int;
@@ -8471,6 +8473,7 @@ export namespace Raw {
       restrictedSponsored?: boolean;
       canViewRevenue?: boolean;
       paidMediaAllowed?: boolean;
+      canViewStarsRevenue?: boolean;
       id: long;
       about: string;
       participantsCount?: int;
@@ -8536,6 +8539,7 @@ export namespace Raw {
         'restrictedSponsored',
         'canViewRevenue',
         'paidMediaAllowed',
+        'canViewStarsRevenue',
         'id',
         'about',
         'participantsCount',
@@ -8595,6 +8599,7 @@ export namespace Raw {
       this.restrictedSponsored = params.restrictedSponsored;
       this.canViewRevenue = params.canViewRevenue;
       this.paidMediaAllowed = params.paidMediaAllowed;
+      this.canViewStarsRevenue = params.canViewStarsRevenue;
       this.id = params.id;
       this.about = params.about;
       this.participantsCount = params.participantsCount;
@@ -8663,6 +8668,7 @@ export namespace Raw {
       let restrictedSponsored = flags2 & (1 << 11) ? true : false;
       let canViewRevenue = flags2 & (1 << 12) ? true : false;
       let paidMediaAllowed = flags2 & (1 << 14) ? true : false;
+      let canViewStarsRevenue = flags2 & (1 << 15) ? true : false;
       let id = await Primitive.Long.read(_data);
       let about = await Primitive.String.read(_data);
       let participantsCount = flags & (1 << 0) ? await Primitive.Int.read(_data) : undefined;
@@ -8723,6 +8729,7 @@ export namespace Raw {
         restrictedSponsored: restrictedSponsored,
         canViewRevenue: canViewRevenue,
         paidMediaAllowed: paidMediaAllowed,
+        canViewStarsRevenue: canViewStarsRevenue,
         id: id,
         about: about,
         participantsCount: participantsCount,
@@ -8822,6 +8829,7 @@ export namespace Raw {
       flags2 |= this.restrictedSponsored ? 1 << 11 : 0;
       flags2 |= this.canViewRevenue ? 1 << 12 : 0;
       flags2 |= this.paidMediaAllowed ? 1 << 14 : 0;
+      flags2 |= this.canViewStarsRevenue ? 1 << 15 : 0;
       flags2 |= this.reactionsLimit !== undefined ? 1 << 13 : 0;
       flags2 |= this.stories !== undefined ? 1 << 4 : 0;
       flags2 |= this.wallpaper !== undefined ? 1 << 7 : 0;
@@ -12938,6 +12946,85 @@ export namespace Raw {
       }
       if (this.peers) {
         b.write(Primitive.Vector.write(this.peers) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer);
+    }
+  }
+  export class MessageActionPaymentRefunded extends TLObject {
+    peer!: Raw.TypePeer;
+    currency!: string;
+    totalAmount!: long;
+    payload?: bytes;
+    charge!: Raw.TypePaymentCharge;
+
+    constructor(params: {
+      peer: Raw.TypePeer;
+      currency: string;
+      totalAmount: long;
+      payload?: bytes;
+      charge: Raw.TypePaymentCharge;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionPaymentRefunded';
+      this.constructorId = 0x41b3e202;
+      this.subclassOfId = 0x8680d126;
+      this._slots = ['peer', 'currency', 'totalAmount', 'payload', 'charge'];
+      this.peer = params.peer;
+      this.currency = params.currency;
+      this.totalAmount = params.totalAmount;
+      this.payload = params.payload;
+      this.charge = params.charge;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageActionPaymentRefunded> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let peer = await TLObject.read(_data);
+      let currency = await Primitive.String.read(_data);
+      let totalAmount = await Primitive.Long.read(_data);
+      let payload = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+      let charge = await TLObject.read(_data);
+      return new Raw.MessageActionPaymentRefunded({
+        peer: peer,
+        currency: currency,
+        totalAmount: totalAmount,
+        payload: payload,
+        charge: charge,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.payload !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.currency !== undefined) {
+        b.write(Primitive.String.write(this.currency) as unknown as Buffer);
+      }
+      if (this.totalAmount !== undefined) {
+        b.write(Primitive.Long.write(this.totalAmount) as unknown as Buffer);
+      }
+      if (this.payload !== undefined) {
+        b.write(Primitive.Bytes.write(this.payload) as unknown as Buffer);
+      }
+      if (this.charge !== undefined) {
+        b.write(this.charge.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
