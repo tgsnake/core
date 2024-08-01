@@ -47,6 +47,7 @@ async function getGroupedJson() {
         desc: (json.descriptions[name] || '')
           .replace(/\%[aA-zZ]/gm, '{value}')
           .trim()
+          .replace(/madelineproto/gim, 'tgsnake')
           .replace(
             /\[([^\[\]]*)\]\((.*?)\)/gm,
             (match, text, href) =>
