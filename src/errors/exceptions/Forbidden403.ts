@@ -33,6 +33,10 @@ export class ChannelPublicGroupNa extends Forbidden {
   id: string = 'CHANNEL_PUBLIC_GROUP_NA';
   message: string = 'channel/supergroup not available.';
 }
+export class ChatActionForbidden extends Forbidden {
+  id: string = 'CHAT_ACTION_FORBIDDEN';
+  message: string = 'You cannot execute this action.';
+}
 export class ChatAdminInviteRequired extends Forbidden {
   id: string = 'CHAT_ADMIN_INVITE_REQUIRED';
   message: string = 'You do not have the rights to do this.';
@@ -209,4 +213,9 @@ export class UserRestricted extends Forbidden {
 export class VoiceMessagesForbidden extends Forbidden {
   id: string = 'VOICE_MESSAGES_FORBIDDEN';
   message: string = "This user's privacy settings forbid you from sending voice messages.";
+}
+export class YourPrivacyRestricted extends Forbidden {
+  id: string = 'YOUR_PRIVACY_RESTRICTED';
+  message: string =
+    'You cannot fetch the read date of this message because you have disallowed other users to do so for *your* messages; to fix, allow other users to see *your* exact last online date OR purchase a [Telegram Premium](https://core.telegram.org/api/premium) subscription.';
 }

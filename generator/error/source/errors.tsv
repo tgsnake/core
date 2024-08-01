@@ -13,6 +13,7 @@ code	id	message
 400	ADMIN_RANK_EMOJI_NOT_ALLOWED	An admin rank cannot contain emojis.
 400	ADMIN_RANK_INVALID	The specified admin rank is invalid.
 400	ADMIN_RIGHTS_EMPTY	The chatAdminRights constructor passed in keyboardButtonRequestPeer.peer_type.user_admin_rights has no rights set (i.e. flags is 0).
+400	AD_EXPIRED	The ad has expired (too old or not found).
 400	ALBUM_PHOTOS_TOO_MANY	You have uploaded too many profile photos, delete some before retrying.
 400	API_ID_INVALID	API ID invalid.
 400	API_ID_PUBLISHED_FLOOD	This API id was published somewhere, you can't use it now.
@@ -29,6 +30,7 @@ code	id	message
 400	BANK_CARD_NUMBER_INVALID	The specified card number is invalid.
 400	BANNED_RIGHTS_INVALID	You provided some invalid flags in the banned rights.
 400	BASE_PORT_LOC_INVALID	The base port location is invalid
+400	BIRTHDAY_INVALID	An invalid age was specified, must be between 0 and 150 years.
 400	BOOSTS_EMPTY	No boost slots were specified.
 400	BOOSTS_REQUIRED	The specified channel must first be [boosted by its users](https://core.telegram.org/api/boost) in order to perform this action.
 400	BOOST_NOT_MODIFIED	You're already [boosting](https://core.telegram.org/api/boost) the specified channel.
@@ -37,6 +39,7 @@ code	id	message
 400	BOT_APP_BOT_INVALID	The bot_id passed in the inputBotAppShortName constructor is invalid.
 400	BOT_APP_INVALID	The specified bot app is invalid.
 400	BOT_APP_SHORTNAME_INVALID	The specified bot app short name is invalid.
+400	BOT_BUSINESS_MISSING	The specified bot is not a business bot (the [user](https://core.telegram.org/constructor/user).`bot_business` flag is not set).
 400	BOT_CHANNELS_NA	Bots can't edit admin privileges.
 400	BOT_COMMAND_DESCRIPTION_INVALID	The specified command description is invalid.
 400	BOT_COMMAND_INVALID	The specified command is invalid.
@@ -47,6 +50,7 @@ code	id	message
 400	BOT_INVALID	This is not a valid bot.
 400	BOT_METHOD_INVALID	The specified method cannot be used by bots.
 400	BOT_MISSING	Only bots can call this method, please use [@stickers](https://t.me/stickers) if you're a user.
+400	BOT_NOT_CONNECTED_YET	
 400	BOT_ONESIDE_NOT_AVAIL	Bots can't pin messages in PM just for themselves.
 400	BOT_PAYMENTS_DISABLED	Please enable bot payments in botfather before calling this method.
 400	BOT_POLLS_DISABLED	Sending polls by bots has been disabled
@@ -56,6 +60,10 @@ code	id	message
 400	BROADCAST_ID_INVALID	Broadcast ID invalid.
 400	BROADCAST_PUBLIC_VOTERS_FORBIDDEN	You can't forward polls with public voters.
 400	BROADCAST_REQUIRED	This method can only be called on a channel, please use stats.getMegagroupStats for supergroups.
+400	BUSINESS_PEER_INVALID	Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots).
+400	BUSINESS_RECIPIENTS_EMPTY	
+400	BUSINESS_WORK_HOURS_EMPTY	No work hours were specified.
+400	BUSINESS_WORK_HOURS_PERIOD_INVALID	The specified work hours are invalid, see [here &raquo;](https://core.telegram.org/api/business#opening-hours) for the exact requirements.
 400	BUTTON_DATA_INVALID	The data of one or more of the buttons you provided is invalid.
 400	BUTTON_TEXT_INVALID	The specified button text is invalid.
 400	BUTTON_TYPE_INVALID	The type of one or more of the buttons you provided is invalid.
@@ -80,7 +88,10 @@ code	id	message
 400	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
 400	CHANNEL_TOO_BIG	This channel has too many participants (>1000) to be deleted.
 400	CHANNEL_TOO_LARGE	Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).
+400	CHARGE_ALREADY_REFUNDED	The transaction was already refunded.
+400	CHATLINKS_TOO_MUCH	Too many [business chat links](https://core.telegram.org/api/business#business-chat-links) were created, please delete some older links.
 400	CHATLINK_SLUG_EMPTY	The specified slug is empty.
+400	CHATLINK_SLUG_EXPIRED	The specified [business chat link](https://core.telegram.org/api/business#business-chat-links) has expired.
 400	CHATLIST_EXCLUDE_INVALID	The specified `exclude_peers` are invalid.
 400	CHAT_ABOUT_NOT_MODIFIED	About text has not changed.
 400	CHAT_ABOUT_TOO_LONG	Chat about too long.
@@ -171,8 +182,9 @@ code	id	message
 400	FILE_REFERENCE_EMPTY	An empty [file reference](https://core.telegram.org/api/file_reference) was specified.
 400	FILE_REFERENCE_EXPIRED	File reference expired, it must be refetched as described in [the documentation](https://core.telegram.org/api/file_reference).
 400	FILE_REFERENCE_INVALID	The specified [file reference](https://core.telegram.org/api/file_reference) is invalid.
+400	FILE_REFERENCE_X_EXPIRED	
 400	FILE_TITLE_EMPTY	An empty file title was specified.
-400	FILE_TOKEN_INVALID	The specified file token is invalid.
+400	FILE_TOKEN_INVALID	The master DC did not accept the `file_token` (e.g., the token has expired). Continue downloading the file from the master DC using upload.getFile.
 400	FILTER_ID_INVALID	The specified filter ID is invalid.
 400	FILTER_INCLUDE_EMPTY	The include_peers vector of the filter is empty.
 400	FILTER_NOT_SUPPORTED	The specified filter cannot be used in this context.
@@ -202,6 +214,7 @@ code	id	message
 400	GROUPCALL_SSRC_DUPLICATE_MUCH	The app needs to retry joining the group call with a new SSRC value.
 400	GROUPED_MEDIA_INVALID	Invalid grouped media.
 400	GROUP_CALL_INVALID	The group call is invalid
+400	HASHTAG_INVALID	The specified hashtag is invalid.
 400	HASH_INVALID	The provided hash is invalid.
 400	HIDE_REQUESTER_MISSING	The join request was missing or was already handled.
 400	IMAGE_PROCESS_FAILED	Failure while processing image.
@@ -266,6 +279,7 @@ code	id	message
 400	MESSAGE_NOT_MODIFIED	The provided message data is identical to the previous message data, the message wasn't modified.
 400	MESSAGE_POLL_CLOSED	Poll closed.
 400	MESSAGE_TOO_LONG	The provided message is too long.
+400	MESSAGE_TOO_OLD	The message is too old, the requested information is not available.
 400	METHOD_INVALID	The specified method is invalid.
 400	MIN_DATE_INVALID	The specified minimum date is invalid.
 400	MSG_ID_INVALID	Invalid message ID provided.
@@ -292,7 +306,7 @@ code	id	message
 400	PARTICIPANT_VERSION_OUTDATED	The other participant does not use an up to date telegram client with support for calls.
 400	PASSWORD_EMPTY	The provided password is empty.
 400	PASSWORD_HASH_INVALID	The provided password hash is invalid.
-400	PASSWORD_MISSING	You must enable 2FA in order to transfer ownership of a channel.
+400	PASSWORD_MISSING	You must [enable 2FA](https://core.telegram.org/api/srp) before executing this operation.
 400	PASSWORD_RECOVERY_EXPIRED	The recovery code has expired.
 400	PASSWORD_RECOVERY_NA	No email was set, can't recover password via email.
 400	PASSWORD_REQUIRED	A [2FA password](https://core.telegram.org/api/srp) must be configured to use Telegram Passport.
@@ -347,6 +361,7 @@ code	id	message
 400	QUERY_ID_EMPTY	The query ID is empty.
 400	QUERY_ID_INVALID	The query ID is invalid.
 400	QUERY_TOO_SHORT	The query string is too short.
+400	QUICK_REPLIES_TOO_MUCH	A maximum of [appConfig.`quick_replies_limit`](https://core.telegram.org/api/config#quick-replies-limit) shortcuts may be created, the limit was reached.
 400	QUIZ_ANSWER_MISSING	You can forward a quiz while hiding the original author only after choosing an option in the quiz.
 400	QUIZ_CORRECT_ANSWERS_EMPTY	No correct quiz answer was specified.
 400	QUIZ_CORRECT_ANSWERS_TOO_MUCH	You specified too many correct answers in a quiz, quizzes can only have one right answer!
@@ -361,11 +376,13 @@ code	id	message
 400	REACTIONS_TOO_MANY	The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](https://core.telegram.org/api/config#client-configuration).
 400	REACTION_EMPTY	Empty reaction provided.
 400	REACTION_INVALID	The specified reaction is invalid.
+400	RECEIPT_EMPTY	The specified receipt is empty.
 400	REFLECTOR_NOT_AVAILABLE	The call reflector is not available
 400	REPLY_MARKUP_BUY_EMPTY	Reply markup for buy button empty.
 400	REPLY_MARKUP_GAME_EMPTY	The provided reply markup for the game is empty
 400	REPLY_MARKUP_INVALID	The provided reply markup is invalid.
 400	REPLY_MARKUP_TOO_LONG	The specified reply_markup is too long.
+400	REPLY_MESSAGES_TOO_MUCH	Each shortcut can contain a maximum of [appConfig.`quick_reply_messages_limit`](https://core.telegram.org/api/config#quick-reply-messages-limit) messages, the limit was reached.
 400	REPLY_MESSAGE_ID_INVALID	The specified reply-to message ID is invalid.
 400	REPLY_TO_INVALID	The specified `reply_to` field is invalid.
 400	REPLY_TO_USER_INVALID	The replied-to user is invalid.
@@ -378,6 +395,8 @@ code	id	message
 400	RESULT_TYPE_INVALID	Result type invalid.
 400	REVOTE_NOT_ALLOWED	You cannot change your vote.
 400	RIGHTS_NOT_MODIFIED	The new admin rights are equal to the old rights, no change was made.
+400	RINGTONE_INVALID	The specified ringtone is invalid.
+400	RINGTONE_MIME_INVALID	The MIME type for the ringtone is invalid.
 400	RSA_DECRYPT_FAILED	Internal RSA decryption failed.
 400	SCHEDULE_BOT_NOT_ALLOWED	Bots cannot schedule messages.
 400	SCHEDULE_DATE_INVALID	Invalid schedule date provided.
@@ -388,6 +407,7 @@ code	id	message
 400	SEARCH_QUERY_EMPTY	The search query is empty.
 400	SEARCH_WITH_LINK_NOT_SUPPORTED	You cannot provide a search query and an invite link at the same time.
 400	SECONDS_INVALID	Invalid duration provided.
+400	SECURE_SECRET_REQUIRED	A secure secret is required.
 400	SEND_AS_PEER_INVALID	You can't send messages as the specified peer.
 400	SEND_MESSAGE_MEDIA_INVALID	Invalid media provided.
 400	SEND_MESSAGE_TYPE_INVALID	The message type is invalid.
@@ -410,7 +430,7 @@ code	id	message
 400	START_PARAM_TOO_LONG	Start parameter is too long.
 400	STICKERPACK_STICKERS_TOO_MUCH	There are too many stickers in this stickerpack, you can't add any more.
 400	STICKERSET_INVALID	The provided sticker set is invalid.
-400	STICKERSET_NOT_MODIFIED	
+400	STICKERSET_NOT_MODIFIED	The passed stickerset information is equal to the current information.
 400	STICKERS_EMPTY	No sticker provided.
 400	STICKERS_TOO_MUCH	There are too many stickers in this stickerpack, you can't add any more.
 400	STICKER_DOCUMENT_INVALID	The specified sticker document is invalid.
@@ -449,6 +469,7 @@ code	id	message
 400	THEME_INVALID	Invalid theme provided.
 400	THEME_MIME_INVALID	The theme's MIME type is invalid.
 400	THEME_TITLE_INVALID	The specified theme title is invalid.
+400	TIMEZONE_INVALID	The specified timezone does not exist.
 400	TITLE_INVALID	The specified stickerpack title is invalid.
 400	TMP_PASSWORD_DISABLED	The temporary password is disabled.
 400	TMP_PASSWORD_INVALID	The passed tmp_password is invalid.
@@ -540,6 +561,7 @@ code	id	message
 403	ANONYMOUS_REACTIONS_DISABLED	Sorry, anonymous administrators cannot leave reactions or participate in polls.
 403	BROADCAST_FORBIDDEN	Channel poll voters and reactions cannot be fetched to prevent deanonymization.
 403	CHANNEL_PUBLIC_GROUP_NA	channel/supergroup not available.
+403	CHAT_ACTION_FORBIDDEN	You cannot execute this action.
 403	CHAT_ADMIN_INVITE_REQUIRED	You do not have the rights to do this.
 403	CHAT_ADMIN_REQUIRED	You must be an admin in this chat to do this.
 403	CHAT_FORBIDDEN	This chat is not available to the current user.
@@ -582,8 +604,10 @@ code	id	message
 403	USER_PRIVACY_RESTRICTED	The user's privacy settings do not allow you to do this.
 403	USER_RESTRICTED	You're spamreported, you can't create channels or chats.
 403	VOICE_MESSAGES_FORBIDDEN	This user's privacy settings forbid you from sending voice messages.
+403	YOUR_PRIVACY_RESTRICTED	You cannot fetch the read date of this message because you have disallowed other users to do so for *your* messages; to fix, allow other users to see *your* exact last online date OR purchase a [Telegram Premium](https://core.telegram.org/api/premium) subscription.
 406	AUTH_KEY_DUPLICATED	Concurrent usage of the current session from multiple connections was detected, the current session was invalidated by the server for security reasons!
 406	BANNED_RIGHTS_INVALID	You provided some invalid flags in the banned rights.
+406	BUSINESS_ADDRESS_ACTIVE	The user is currently advertising a [Business Location](https://core.telegram.org/api/business#location), the location may only be changed (or removed) using [account.updateBusinessLocation &raquo;](https://core.telegram.org/method/account.updateBusinessLocation).  .
 406	CALL_PROTOCOL_COMPAT_LAYER_INVALID	The other side of the call does not support any of the VoIP protocols supported by the local client, as specified by the `protocol.layer` and `protocol.library_versions` fields.
 406	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
 406	CHANNEL_TOO_LARGE	Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).
@@ -604,6 +628,7 @@ code	id	message
 406	STICKERSET_OWNER_ANONYMOUS	Provided stickerset can't be installed as group stickerset to prevent admin deanonymization.
 406	TOPIC_CLOSED	This topic was closed, you can't send messages to it anymore.
 406	TOPIC_DELETED	The specified topic was deleted.
+406	UPDATE_APP_TO_LOGIN	Please update to the latest version of MadelineProto to login.
 406	USERPIC_PRIVACY_REQUIRED	You need to disable privacy settings for your profile picture in order to make your geolocation public.
 406	USERPIC_UPLOAD_REQUIRED	You must have a profile picture to publish your geolocation.
 406	USER_RESTRICTED	You're spamreported, you can't create channels or chats.

@@ -85,6 +85,12 @@
   },
   {
     "code": 400,
+    "msg": "AD_EXPIRED",
+    "desc": "The ad has expired (too old or not found).",
+    "affected": ["channels.ReportSponsoredMessage"]
+  },
+  {
+    "code": 400,
     "msg": "ALBUM_PHOTOS_TOO_MANY",
     "desc": "You have uploaded too many profile photos, delete some before retrying.",
     "affected": ["photos.UpdateProfilePhoto", "photos.UploadProfilePhoto"]
@@ -186,6 +192,12 @@
   },
   {
     "code": 400,
+    "msg": "BIRTHDAY_INVALID",
+    "desc": "An invalid age was specified, must be between 0 and 150 years.",
+    "affected": ["account.UpdateBirthday"]
+  },
+  {
+    "code": 400,
     "msg": "BOOSTS_EMPTY",
     "desc": "No boost slots were specified.",
     "affected": ["premium.ApplyBoost"]
@@ -234,6 +246,12 @@
   },
   {
     "code": 400,
+    "msg": "BOT_BUSINESS_MISSING",
+    "desc": "The specified bot is not a business bot (the [user](https://core.telegram.org/constructor/user).`bot_business` flag is not set).",
+    "affected": ["account.UpdateConnectedBot"]
+  },
+  {
+    "code": 400,
     "msg": "BOT_CHANNELS_NA",
     "desc": "Bots can't edit admin privileges.",
     "affected": ["channels.EditAdmin"]
@@ -279,6 +297,8 @@
     "msg": "BOT_INVALID",
     "desc": "This is not a valid bot.",
     "affected": [
+      "account.AcceptAuthorization",
+      "account.GetAuthorizationForm",
       "bots.AllowSendMessage",
       "bots.CanSendMessage",
       "bots.GetBotInfo",
@@ -288,9 +308,11 @@
       "messages.EditMessage",
       "messages.GetAttachMenuBot",
       "messages.GetInlineBotResults",
+      "messages.ProlongWebView",
       "messages.RequestSimpleWebView",
       "messages.RequestWebView",
       "messages.SendMessage",
+      "messages.SendWebViewData",
       "messages.StartBot",
       "messages.ToggleBotInAttachMenu",
       "photos.UploadProfilePhoto"
@@ -312,6 +334,12 @@
       "stickers.DeleteStickerSet",
       "stickers.RemoveStickerFromSet"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "BOT_NOT_CONNECTED_YET",
+    "desc": "",
+    "affected": ["account.DisablePeerConnectedBot"]
   },
   {
     "code": 400,
@@ -366,6 +394,30 @@
     "msg": "BROADCAST_REQUIRED",
     "desc": "This method can only be called on a channel, please use stats.getMegagroupStats for supergroups.",
     "affected": ["stats.GetBroadcastStats"]
+  },
+  {
+    "code": 400,
+    "msg": "BUSINESS_PEER_INVALID",
+    "desc": "Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots).",
+    "affected": ["messages.SendMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "BUSINESS_RECIPIENTS_EMPTY",
+    "desc": "",
+    "affected": ["account.UpdateConnectedBot"]
+  },
+  {
+    "code": 400,
+    "msg": "BUSINESS_WORK_HOURS_EMPTY",
+    "desc": "No work hours were specified.",
+    "affected": ["account.UpdateBusinessWorkHours"]
+  },
+  {
+    "code": 400,
+    "msg": "BUSINESS_WORK_HOURS_PERIOD_INVALID",
+    "desc": "The specified work hours are invalid, see [here &raquo;](https://core.telegram.org/api/business#opening-hours) for the exact requirements.",
+    "affected": ["account.UpdateBusinessWorkHours"]
   },
   {
     "code": 400,
@@ -449,6 +501,8 @@
       "phone.DiscardCall",
       "phone.ReceivedCall",
       "phone.SaveCallDebug",
+      "phone.SaveCallLog",
+      "phone.SendSignalingData",
       "phone.SetCallRating"
     ]
   },
@@ -529,6 +583,7 @@
       "channels.ClickSponsoredMessage",
       "channels.ConvertToGigagroup",
       "channels.CreateForumTopic",
+      "channels.DeactivateAllUsernames",
       "channels.DeleteChannel",
       "channels.DeleteHistory",
       "channels.DeleteMessages",
@@ -539,6 +594,7 @@
       "channels.EditAdmin",
       "channels.EditBanned",
       "channels.EditForumTopic",
+      "channels.EditLocation",
       "channels.EditPhoto",
       "channels.EditTitle",
       "channels.ExportInvite",
@@ -559,22 +615,34 @@
       "channels.LeaveChannel",
       "channels.ReadHistory",
       "channels.ReadMessageContents",
+      "channels.ReorderPinnedForumTopics",
       "channels.ReorderUsernames",
+      "channels.ReportAntiSpamFalsePositive",
       "channels.ReportSpam",
+      "channels.ReportSponsoredMessage",
+      "channels.RestrictSponsoredMessages",
+      "channels.SetBoostsToUnblockRestrictions",
       "channels.SetDiscussionGroup",
+      "channels.SetEmojiStickers",
       "channels.SetStickers",
+      "channels.ToggleAntiSpam",
+      "channels.ToggleForum",
       "channels.ToggleInvites",
       "channels.ToggleJoinRequest",
       "channels.ToggleJoinToSend",
+      "channels.ToggleParticipantsHidden",
       "channels.TogglePreHistoryHidden",
       "channels.ToggleSignatures",
       "channels.ToggleSlowMode",
+      "channels.ToggleUsername",
       "channels.ToggleViewForumAsMessages",
       "channels.UpdateColor",
       "channels.UpdateEmojiStatus",
+      "channels.UpdatePinnedForumTopic",
       "channels.UpdatePinnedMessage",
       "channels.UpdateUsername",
       "channels.ViewSponsoredMessage",
+      "chatlists.EditExportedInvite",
       "messages.EditChatAbout",
       "messages.EditMessage",
       "messages.ExportChatInvite",
@@ -604,6 +672,8 @@
       "messages.SendVote",
       "messages.SetTyping",
       "messages.UploadMedia",
+      "stats.GetBroadcastRevenueStats",
+      "stats.GetBroadcastRevenueTransactions",
       "stats.GetBroadcastStats",
       "stats.GetMegagroupStats",
       "stats.GetMessagePublicForwards",
@@ -732,6 +802,18 @@
   },
   {
     "code": 400,
+    "msg": "CHARGE_ALREADY_REFUNDED",
+    "desc": "The transaction was already refunded.",
+    "affected": ["payments.RefundStarsCharge"]
+  },
+  {
+    "code": 400,
+    "msg": "CHATLINKS_TOO_MUCH",
+    "desc": "Too many [business chat links](https://core.telegram.org/api/business#business-chat-links) were created, please delete some older links.",
+    "affected": ["account.CreateBusinessChatLink"]
+  },
+  {
+    "code": 400,
     "msg": "CHATLINK_SLUG_EMPTY",
     "desc": "The specified slug is empty.",
     "affected": [
@@ -739,6 +821,12 @@
       "account.EditBusinessChatLink",
       "account.ResolveBusinessChatLink"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "CHATLINK_SLUG_EXPIRED",
+    "desc": "The specified [business chat link](https://core.telegram.org/api/business#business-chat-links) has expired.",
+    "affected": ["account.DeleteBusinessChatLink", "account.ResolveBusinessChatLink"]
   },
   {
     "code": 400,
@@ -830,6 +918,7 @@
       "phone.CreateGroupCall",
       "phone.GetGroupCallStreamRtmpUrl",
       "premium.GetBoostsList",
+      "stats.GetBroadcastRevenueStats",
       "stats.GetBroadcastStats",
       "stats.GetMegagroupStats",
       "stats.GetMessagePublicForwards",
@@ -898,6 +987,7 @@
       "messages.GetOnlines",
       "messages.MigrateChat",
       "messages.ReadDiscussion",
+      "messages.ReadEncryptedHistory",
       "messages.ReadHistory",
       "messages.ReportEncryptedSpam",
       "messages.Search",
@@ -909,6 +999,7 @@
       "messages.SetTyping",
       "messages.ToggleChatAdmins",
       "messages.UpdateDialogFilter",
+      "messages.UploadEncryptedFile",
       "messages.UploadMedia"
     ]
   },
@@ -947,6 +1038,7 @@
       "channels.EditPhoto",
       "channels.EditTitle",
       "channels.GetFullChannel",
+      "channels.ReorderUsernames",
       "channels.ToggleAntiSpam",
       "channels.ToggleForum",
       "channels.ToggleInvites",
@@ -956,6 +1048,7 @@
       "channels.TogglePreHistoryHidden",
       "channels.ToggleSignatures",
       "channels.ToggleSlowMode",
+      "channels.ToggleUsername",
       "channels.UpdatePinnedMessage",
       "channels.UpdateUsername",
       "messages.EditChatAbout",
@@ -1021,7 +1114,7 @@
     "code": 400,
     "msg": "CODE_EMPTY",
     "desc": "The provided code is empty.",
-    "affected": ["auth.RecoverPassword"]
+    "affected": ["auth.CheckRecoveryPassword", "auth.RecoverPassword"]
   },
   {
     "code": 400,
@@ -1178,8 +1271,10 @@
     "desc": "The provided JSON data is invalid.",
     "affected": [
       "bots.AnswerWebhookJSONQuery",
+      "bots.InvokeWebViewCustomMethod",
       "bots.SendCustomRequest",
       "help.AcceptTermsOfService",
+      "payments.AssignPlayMarketTransaction",
       "phone.JoinGroupCall",
       "phone.SaveCallDebug"
     ]
@@ -1508,6 +1603,12 @@
   },
   {
     "code": 400,
+    "msg": "FILE_REFERENCE_X_EXPIRED",
+    "desc": "",
+    "affected": ["messages.SendMultiMedia"]
+  },
+  {
+    "code": 400,
     "msg": "FILE_TITLE_EMPTY",
     "desc": "An empty file title was specified.",
     "affected": ["messages.SetInlineBotResults"]
@@ -1515,7 +1616,7 @@
   {
     "code": 400,
     "msg": "FILE_TOKEN_INVALID",
-    "desc": "The specified file token is invalid.",
+    "desc": "The master DC did not accept the `file_token` (e.g., the token has expired). Continue downloading the file from the master DC using upload.getFile.",
     "affected": ["upload.GetCdnFile", "upload.GetCdnFileHashes", "upload.ReuploadCdnFile"]
   },
   {
@@ -1527,9 +1628,11 @@
       "chatlists.EditExportedInvite",
       "chatlists.ExportChatlistInvite",
       "chatlists.GetChatlistUpdates",
+      "chatlists.GetExportedInvites",
       "chatlists.GetLeaveChatlistSuggestions",
       "chatlists.HideChatlistUpdates",
       "chatlists.JoinChatlistUpdates",
+      "chatlists.LeaveChatlist",
       "messages.UpdateDialogFilter"
     ]
   },
@@ -1689,13 +1792,23 @@
     "msg": "GROUPCALL_INVALID",
     "desc": "The specified group call is invalid.",
     "affected": [
+      "phone.CheckGroupCall",
       "phone.DiscardGroupCall",
+      "phone.EditGroupCallParticipant",
       "phone.EditGroupCallTitle",
+      "phone.ExportGroupCallInvite",
       "phone.GetGroupCall",
       "phone.GetGroupCallStreamChannels",
+      "phone.GetGroupParticipants",
       "phone.InviteToGroupCall",
       "phone.JoinGroupCall",
-      "phone.ToggleGroupCallRecord"
+      "phone.JoinGroupCallPresentation",
+      "phone.LeaveGroupCall",
+      "phone.LeaveGroupCallPresentation",
+      "phone.StartScheduledGroupCall",
+      "phone.ToggleGroupCallRecord",
+      "phone.ToggleGroupCallSettings",
+      "phone.ToggleGroupCallStartSubscription"
     ]
   },
   {
@@ -1723,6 +1836,12 @@
     "affected": ["messages.ForwardMessages"]
   },
   { "code": 400, "msg": "GROUP_CALL_INVALID", "desc": "The group call is invalid", "affected": [] },
+  {
+    "code": 400,
+    "msg": "HASHTAG_INVALID",
+    "desc": "The specified hashtag is invalid.",
+    "affected": ["stories.SearchPosts"]
+  },
   {
     "code": 400,
     "msg": "HASH_INVALID",
@@ -1783,7 +1902,7 @@
     "code": 400,
     "msg": "IMPORT_ID_INVALID",
     "desc": "The specified import ID is invalid.",
-    "affected": ["messages.StartHistoryImport"]
+    "affected": ["messages.StartHistoryImport", "messages.UploadImportedMedia"]
   },
   {
     "code": 400,
@@ -1943,13 +2062,21 @@
     "code": 400,
     "msg": "INVITE_SLUG_EMPTY",
     "desc": "The specified invite slug is empty.",
-    "affected": ["chatlists.CheckChatlistInvite", "chatlists.JoinChatlistInvite"]
+    "affected": [
+      "chatlists.CheckChatlistInvite",
+      "chatlists.EditExportedInvite",
+      "chatlists.JoinChatlistInvite"
+    ]
   },
   {
     "code": 400,
     "msg": "INVITE_SLUG_EXPIRED",
     "desc": "The specified chat folder link has expired.",
-    "affected": ["chatlists.CheckChatlistInvite", "chatlists.JoinChatlistInvite"]
+    "affected": [
+      "chatlists.CheckChatlistInvite",
+      "chatlists.EditExportedInvite",
+      "chatlists.JoinChatlistInvite"
+    ]
   },
   {
     "code": 400,
@@ -2054,6 +2181,7 @@
     "affected": [
       "messages.EditMessage",
       "messages.ForwardMessages",
+      "messages.GetAttachedStickers",
       "messages.SendInlineBotResult",
       "messages.SendMedia",
       "messages.SendMultiMedia",
@@ -2180,6 +2308,7 @@
       "messages.GetInlineGameHighScores",
       "messages.GetMessageEditData",
       "messages.GetMessagesReadParticipants",
+      "messages.GetOutboxReadDate",
       "messages.GetPollResults",
       "messages.SendReaction",
       "messages.SendScheduledMessages",
@@ -2217,6 +2346,12 @@
       "messages.SetBotCallbackAnswer",
       "messages.SetInlineBotResults"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "MESSAGE_TOO_OLD",
+    "desc": "The message is too old, the requested information is not available.",
+    "affected": ["messages.GetOutboxReadDate"]
   },
   {
     "code": 400,
@@ -2463,14 +2598,21 @@
       "account.GetTmpPassword",
       "account.UpdatePasswordSettings",
       "auth.CheckPassword",
-      "channels.EditCreator"
+      "channels.EditCreator",
+      "payments.GetStarsRevenueWithdrawalUrl",
+      "stats.GetBroadcastRevenueWithdrawalUrl"
     ]
   },
   {
     "code": 400,
     "msg": "PASSWORD_MISSING",
-    "desc": "You must enable 2FA in order to transfer ownership of a channel.",
-    "affected": ["channels.EditCreator"]
+    "desc": "You must [enable 2FA](https://core.telegram.org/api/srp) before executing this operation.",
+    "affected": [
+      "channels.EditCreator",
+      "messages.GetBotCallbackAnswer",
+      "payments.GetStarsRevenueWithdrawalUrl",
+      "stats.GetBroadcastRevenueWithdrawalUrl"
+    ]
   },
   {
     "code": 400,
@@ -2494,7 +2636,11 @@
     "code": 400,
     "msg": "PASSWORD_TOO_FRESH_X",
     "desc": "The password was modified less than 24 hours ago, try again in {value} seconds.",
-    "affected": ["channels.EditCreator"]
+    "affected": [
+      "channels.EditCreator",
+      "payments.GetStarsRevenueWithdrawalUrl",
+      "stats.GetBroadcastRevenueWithdrawalUrl"
+    ]
   },
   {
     "code": 400,
@@ -2506,7 +2652,7 @@
     "code": 400,
     "msg": "PEERS_LIST_EMPTY",
     "desc": "The specified list of peers is empty.",
-    "affected": ["chatlists.ExportChatlistInvite"]
+    "affected": ["chatlists.EditExportedInvite", "chatlists.ExportChatlistInvite"]
   },
   {
     "code": 400,
@@ -2525,10 +2671,12 @@
     "msg": "PEER_ID_INVALID",
     "desc": "The provided peer id is invalid.",
     "affected": [
+      "account.DisablePeerConnectedBot",
       "account.GetNotifySettings",
       "account.ReportPeer",
       "account.ReportProfilePhoto",
       "account.SaveAutoSaveSettings",
+      "account.ToggleConnectedBotPaused",
       "account.UpdateNotifySettings",
       "bots.SetBotCommands",
       "channels.CheckUsername",
@@ -2544,6 +2692,7 @@
       "messages.DeleteChat",
       "messages.DeleteChatUser",
       "messages.DeleteExportedChatInvite",
+      "messages.DeleteFactCheck",
       "messages.DeleteHistory",
       "messages.DeleteRevokedExportedChatInvites",
       "messages.DeleteSavedHistory",
@@ -2554,6 +2703,7 @@
       "messages.EditChatPhoto",
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
+      "messages.EditFactCheck",
       "messages.EditMessage",
       "messages.ExportChatInvite",
       "messages.ForwardMessage",
@@ -2565,6 +2715,7 @@
       "messages.GetDiscussionMessage",
       "messages.GetExportedChatInvite",
       "messages.GetExportedChatInvites",
+      "messages.GetFactCheck",
       "messages.GetFullChat",
       "messages.GetGameHighScores",
       "messages.GetHistory",
@@ -2581,11 +2732,14 @@
       "messages.GetScheduledHistory",
       "messages.GetScheduledMessages",
       "messages.GetSearchCounters",
+      "messages.GetSearchResultsCalendar",
+      "messages.GetSearchResultsPositions",
       "messages.GetStatsURL",
       "messages.GetUnreadMentions",
       "messages.GetUnreadReactions",
       "messages.HideAllChatJoinRequests",
       "messages.HideChatJoinRequest",
+      "messages.HidePeerSettingsBar",
       "messages.HideReportSpam",
       "messages.ImportChatInvite",
       "messages.InitHistoryImport",
@@ -2597,15 +2751,18 @@
       "messages.ReadReactions",
       "messages.ReorderPinnedDialogs",
       "messages.Report",
+      "messages.ReportReaction",
       "messages.ReportSpam",
       "messages.RequestWebView",
       "messages.SaveDefaultSendAs",
       "messages.SaveDraft",
       "messages.Search",
+      "messages.SendBotRequestedPeer",
       "messages.SendInlineBotResult",
       "messages.SendMedia",
       "messages.SendMessage",
       "messages.SendMultiMedia",
+      "messages.SendQuickReplyMessages",
       "messages.SendReaction",
       "messages.SendScheduledMessages",
       "messages.SendScreenshotNotification",
@@ -2614,10 +2771,12 @@
       "messages.SetChatTheme",
       "messages.SetChatWallPaper",
       "messages.SetGameScore",
+      "messages.SetHistoryTTL",
       "messages.SetTyping",
       "messages.StartBot",
       "messages.ToggleDialogPin",
       "messages.ToggleNoForwards",
+      "messages.TogglePeerTranslations",
       "messages.ToggleSavedDialogPin",
       "messages.TranscribeAudio",
       "messages.TranslateText",
@@ -2626,7 +2785,16 @@
       "messages.UpdatePinnedMessage",
       "messages.UploadMedia",
       "payments.GetGiveawayInfo",
+      "payments.GetPaymentForm",
+      "payments.GetStarsRevenueAdsAccountUrl",
+      "payments.GetStarsRevenueStats",
+      "payments.GetStarsStatus",
+      "payments.GetStarsTransactions",
+      "payments.GetStarsTransactionsByID",
       "payments.LaunchPrepaidGiveaway",
+      "payments.SendPaymentForm",
+      "payments.SendStarsForm",
+      "payments.ValidateRequestedInfo",
       "phone.CreateGroupCall",
       "phone.GetGroupCallJoinAs",
       "phone.GetGroupCallStreamRtmpUrl",
@@ -2662,6 +2830,7 @@
       "stories.SendStory",
       "stories.TogglePeerStoriesHidden",
       "stories.TogglePinned",
+      "stories.TogglePinnedToTop",
       "upload.GetFile",
       "users.GetUsers"
     ]
@@ -2762,9 +2931,11 @@
       "account.SendChangePhoneCode",
       "account.SendVerifyEmailCode",
       "account.SendVerifyPhoneCode",
+      "account.VerifyEmail",
       "account.VerifyPhone",
       "auth.CancelCode",
       "auth.CheckPhone",
+      "auth.ReportMissingCode",
       "auth.RequestFirebaseSms",
       "auth.ResendCode",
       "auth.ResetLoginEmail",
@@ -2939,6 +3110,8 @@
     "msg": "PREMIUM_ACCOUNT_REQUIRED",
     "desc": "A premium account is required to execute this action.",
     "affected": [
+      "channels.ReportSponsoredMessage",
+      "stories.ActivateStealthMode",
       "stories.ApplyBoost",
       "stories.CanApplyBoost",
       "stories.CanSendStory",
@@ -2992,6 +3165,18 @@
     "msg": "QUERY_TOO_SHORT",
     "desc": "The query string is too short.",
     "affected": ["contacts.Search"]
+  },
+  {
+    "code": 400,
+    "msg": "QUICK_REPLIES_TOO_MUCH",
+    "desc": "A maximum of [appConfig.`quick_replies_limit`](https://core.telegram.org/api/config#quick-replies-limit) shortcuts may be created, the limit was reached.",
+    "affected": [
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult",
+      "messages.SendMedia",
+      "messages.SendMessage",
+      "messages.SendMultiMedia"
+    ]
   },
   {
     "code": 400,
@@ -3084,6 +3269,12 @@
   },
   {
     "code": 400,
+    "msg": "RECEIPT_EMPTY",
+    "desc": "The specified receipt is empty.",
+    "affected": ["payments.AssignAppStoreTransaction"]
+  },
+  {
+    "code": 400,
     "msg": "REFLECTOR_NOT_AVAILABLE",
     "desc": "The call reflector is not available",
     "affected": []
@@ -3116,6 +3307,18 @@
     "msg": "REPLY_MARKUP_TOO_LONG",
     "desc": "The specified reply_markup is too long.",
     "affected": ["messages.EditMessage", "messages.SendMedia", "messages.SendMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "REPLY_MESSAGES_TOO_MUCH",
+    "desc": "Each shortcut can contain a maximum of [appConfig.`quick_reply_messages_limit`](https://core.telegram.org/api/config#quick-reply-messages-limit) messages, the limit was reached.",
+    "affected": [
+      "messages.ForwardMessages",
+      "messages.SendInlineBotResult",
+      "messages.SendMedia",
+      "messages.SendMessage",
+      "messages.SendMultiMedia"
+    ]
   },
   {
     "code": 400,
@@ -3188,6 +3391,18 @@
     "msg": "RIGHTS_NOT_MODIFIED",
     "desc": "The new admin rights are equal to the old rights, no change was made.",
     "affected": ["bots.SetBotBroadcastDefaultAdminRights", "bots.SetBotGroupDefaultAdminRights"]
+  },
+  {
+    "code": 400,
+    "msg": "RINGTONE_INVALID",
+    "desc": "The specified ringtone is invalid.",
+    "affected": ["account.SaveRingtone"]
+  },
+  {
+    "code": 400,
+    "msg": "RINGTONE_MIME_INVALID",
+    "desc": "The MIME type for the ringtone is invalid.",
+    "affected": ["account.UploadRingtone"]
   },
   {
     "code": 400,
@@ -3265,6 +3480,12 @@
     "msg": "SECONDS_INVALID",
     "desc": "Invalid duration provided.",
     "affected": ["channels.ToggleSlowMode"]
+  },
+  {
+    "code": 400,
+    "msg": "SECURE_SECRET_REQUIRED",
+    "desc": "A secure secret is required.",
+    "affected": ["account.SaveSecureValue"]
   },
   {
     "code": 400,
@@ -3418,7 +3639,12 @@
       "stickers.SetStickerSetThumb"
     ]
   },
-  { "code": 400, "msg": "STICKERSET_NOT_MODIFIED", "desc": "", "affected": [] },
+  {
+    "code": 400,
+    "msg": "STICKERSET_NOT_MODIFIED",
+    "desc": "The passed stickerset information is equal to the current information.",
+    "affected": []
+  },
   {
     "code": 400,
     "msg": "STICKERS_EMPTY",
@@ -3468,7 +3694,8 @@
     "affected": [
       "stickers.ChangeSticker",
       "stickers.ChangeStickerPosition",
-      "stickers.RemoveStickerFromSet"
+      "stickers.RemoveStickerFromSet",
+      "stickers.ReplaceSticker"
     ]
   },
   {
@@ -3565,7 +3792,8 @@
       "messages.SendMessage",
       "messages.SendScreenshotNotification",
       "stories.GetStoryViewsList",
-      "stories.SendReaction"
+      "stories.SendReaction",
+      "stories.TogglePinnedToTop"
     ]
   },
   {
@@ -3608,7 +3836,7 @@
     "code": 400,
     "msg": "TAKEOUT_INVALID",
     "desc": "The specified takeout ID is invalid.",
-    "affected": ["messages.GetHistory"]
+    "affected": ["contacts.GetSaved", "messages.GetHistory"]
   },
   {
     "code": 400,
@@ -3650,19 +3878,25 @@
     "code": 400,
     "msg": "THEME_INVALID",
     "desc": "Invalid theme provided.",
-    "affected": ["account.GetTheme", "account.UpdateTheme"]
+    "affected": ["account.GetTheme", "account.SaveTheme", "account.UpdateTheme"]
   },
   {
     "code": 400,
     "msg": "THEME_MIME_INVALID",
     "desc": "The theme's MIME type is invalid.",
-    "affected": ["account.CreateTheme"]
+    "affected": ["account.CreateTheme", "account.UploadTheme"]
   },
   {
     "code": 400,
     "msg": "THEME_TITLE_INVALID",
     "desc": "The specified theme title is invalid.",
     "affected": ["account.CreateTheme"]
+  },
+  {
+    "code": 400,
+    "msg": "TIMEZONE_INVALID",
+    "desc": "The specified timezone does not exist.",
+    "affected": ["account.UpdateBusinessWorkHours"]
   },
   {
     "code": 400,
@@ -3866,7 +4100,15 @@
     "code": 400,
     "msg": "USERNAME_NOT_MODIFIED",
     "desc": "The username was not modified.",
-    "affected": ["account.UpdateUsername", "channels.UpdateUsername"]
+    "affected": [
+      "account.ReorderUsernames",
+      "account.ToggleUsername",
+      "account.UpdateUsername",
+      "bots.ReorderUsernames",
+      "bots.ToggleUsername",
+      "channels.ToggleUsername",
+      "channels.UpdateUsername"
+    ]
   },
   {
     "code": 400,
@@ -3997,14 +4239,26 @@
     "msg": "USER_BOT_REQUIRED",
     "desc": "This method can only be called by a bot.",
     "affected": [
+      "bots.AnswerWebhookJSONQuery",
+      "bots.GetBotCommands",
       "bots.GetBotMenuButton",
+      "bots.ResetBotCommands",
+      "bots.SendCustomRequest",
+      "bots.SetBotBroadcastDefaultAdminRights",
       "bots.SetBotCommands",
       "bots.SetBotGroupDefaultAdminRights",
+      "bots.SetBotMenuButton",
+      "help.SetBotUpdatesStatus",
       "messages.GetGameHighScores",
       "messages.GetInlineGameHighScores",
+      "messages.SendWebViewResultMessage",
       "messages.SetBotCallbackAnswer",
+      "messages.SetBotPrecheckoutResults",
+      "messages.SetBotShippingResults",
       "messages.SetGameScore",
+      "messages.SetInlineBotResults",
       "messages.SetInlineGameScore",
+      "payments.RefundStarsCharge",
       "users.SetSecureValueErrors"
     ]
   },
@@ -4047,6 +4301,7 @@
       "messages.ReportReaction",
       "messages.RequestEncryption",
       "messages.Search",
+      "payments.RefundStarsCharge",
       "phone.RequestCall",
       "photos.GetUserPhotos",
       "photos.UploadContactProfilePhoto",
@@ -4369,6 +4624,12 @@
   },
   {
     "code": 403,
+    "msg": "CHAT_ACTION_FORBIDDEN",
+    "desc": "You cannot execute this action.",
+    "affected": ["messages.DeleteFactCheck", "messages.EditFactCheck"]
+  },
+  {
+    "code": 403,
     "msg": "CHAT_ADMIN_INVITE_REQUIRED",
     "desc": "You do not have the rights to do this.",
     "affected": ["channels.EditAdmin"]
@@ -4635,10 +4896,22 @@
     "msg": "PREMIUM_ACCOUNT_REQUIRED",
     "desc": "A premium account is required to execute this action.",
     "affected": [
+      "account.CreateBusinessChatLink",
+      "account.EditBusinessChatLink",
+      "account.SetGlobalPrivacySettings",
+      "account.UpdateColor",
+      "account.UpdateConnectedBot",
       "channels.CreateForumTopic",
+      "messages.CheckQuickReplyShortcut",
+      "messages.EditQuickReplyShortcut",
+      "messages.ForwardMessages",
+      "messages.ReorderQuickReplies",
       "messages.SendMedia",
+      "messages.SendQuickReplyMessages",
       "messages.SendReaction",
-      "messages.TranscribeAudio"
+      "messages.ToggleDialogFilterTags",
+      "messages.TranscribeAudio",
+      "messages.UpdateSavedReactionTag"
     ]
   },
   {
@@ -4734,6 +5007,7 @@
       "channels.InviteToChannel",
       "help.GetConfig",
       "messages.AddChatUser",
+      "messages.GetOutboxReadDate",
       "phone.RequestCall"
     ]
   },
@@ -4750,6 +5024,12 @@
     "affected": ["messages.ForwardMessages"]
   },
   {
+    "code": 403,
+    "msg": "YOUR_PRIVACY_RESTRICTED",
+    "desc": "You cannot fetch the read date of this message because you have disallowed other users to do so for *your* messages; to fix, allow other users to see *your* exact last online date OR purchase a [Telegram Premium](https://core.telegram.org/api/premium) subscription.",
+    "affected": ["messages.GetOutboxReadDate"]
+  },
+  {
     "code": 406,
     "msg": "AUTH_KEY_DUPLICATED",
     "desc": "Concurrent usage of the current session from multiple connections was detected, the current session was invalidated by the server for security reasons!",
@@ -4760,6 +5040,12 @@
     "msg": "BANNED_RIGHTS_INVALID",
     "desc": "You provided some invalid flags in the banned rights.",
     "affected": ["channels.EditBanned"]
+  },
+  {
+    "code": 406,
+    "msg": "BUSINESS_ADDRESS_ACTIVE",
+    "desc": "The user is currently advertising a [Business Location](https://core.telegram.org/api/business#location), the location may only be changed (or removed) using [account.updateBusinessLocation &raquo;](https://core.telegram.org/method/account.updateBusinessLocation).  .",
+    "affected": ["contacts.GetLocated"]
   },
   {
     "code": 406,
@@ -4924,6 +5210,12 @@
     "msg": "TOPIC_DELETED",
     "desc": "The specified topic was deleted.",
     "affected": ["messages.ForwardMessages", "messages.SendMedia", "messages.SendMessage"]
+  },
+  {
+    "code": 406,
+    "msg": "UPDATE_APP_TO_LOGIN",
+    "desc": "Please update to the latest version of MadelineProto to login.",
+    "affected": ["auth.SendCode", "auth.SignIn"]
   },
   {
     "code": 406,

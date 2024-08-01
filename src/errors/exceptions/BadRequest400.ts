@@ -56,6 +56,10 @@ export class AdminRightsEmpty extends BadRequest {
   message: string =
     'The chatAdminRights constructor passed in keyboardButtonRequestPeer.peer_type.user_admin_rights has no rights set (i.e. flags is 0).';
 }
+export class AdExpired extends BadRequest {
+  id: string = 'AD_EXPIRED';
+  message: string = 'The ad has expired (too old or not found).';
+}
 export class AlbumPhotosTooMany extends BadRequest {
   id: string = 'ALBUM_PHOTOS_TOO_MANY';
   message: string = 'You have uploaded too many profile photos, delete some before retrying.';
@@ -121,6 +125,10 @@ export class BasePortLocInvalid extends BadRequest {
   id: string = 'BASE_PORT_LOC_INVALID';
   message: string = 'The base port location is invalid';
 }
+export class BirthdayInvalid extends BadRequest {
+  id: string = 'BIRTHDAY_INVALID';
+  message: string = 'An invalid age was specified, must be between 0 and 150 years.';
+}
 export class BoostsEmpty extends BadRequest {
   id: string = 'BOOSTS_EMPTY';
   message: string = 'No boost slots were specified.';
@@ -154,6 +162,11 @@ export class BotAppInvalid extends BadRequest {
 export class BotAppShortnameInvalid extends BadRequest {
   id: string = 'BOT_APP_SHORTNAME_INVALID';
   message: string = 'The specified bot app short name is invalid.';
+}
+export class BotBusinessMissing extends BadRequest {
+  id: string = 'BOT_BUSINESS_MISSING';
+  message: string =
+    'The specified bot is not a business bot (the [user](https://core.telegram.org/constructor/user).`bot_business` flag is not set).';
 }
 export class BotChannelsNa extends BadRequest {
   id: string = 'BOT_CHANNELS_NA';
@@ -196,6 +209,10 @@ export class BotMissing extends BadRequest {
   message: string =
     "Only bots can call this method, please use [@stickers](https://t.me/stickers) if you're a user.";
 }
+export class BotNotConnectedYet extends BadRequest {
+  id: string = 'BOT_NOT_CONNECTED_YET';
+  message: string = '';
+}
 export class BotOnesideNotAvail extends BadRequest {
   id: string = 'BOT_ONESIDE_NOT_AVAIL';
   message: string = "Bots can't pin messages in PM just for themselves.";
@@ -233,6 +250,24 @@ export class BroadcastRequired extends BadRequest {
   id: string = 'BROADCAST_REQUIRED';
   message: string =
     'This method can only be called on a channel, please use stats.getMegagroupStats for supergroups.';
+}
+export class BusinessPeerInvalid extends BadRequest {
+  id: string = 'BUSINESS_PEER_INVALID';
+  message: string =
+    "Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots).";
+}
+export class BusinessRecipientsEmpty extends BadRequest {
+  id: string = 'BUSINESS_RECIPIENTS_EMPTY';
+  message: string = '';
+}
+export class BusinessWorkHoursEmpty extends BadRequest {
+  id: string = 'BUSINESS_WORK_HOURS_EMPTY';
+  message: string = 'No work hours were specified.';
+}
+export class BusinessWorkHoursPeriodInvalid extends BadRequest {
+  id: string = 'BUSINESS_WORK_HOURS_PERIOD_INVALID';
+  message: string =
+    'The specified work hours are invalid, see [here &raquo;](https://core.telegram.org/api/business#opening-hours) for the exact requirements.';
 }
 export class ButtonDataInvalid extends BadRequest {
   id: string = 'BUTTON_DATA_INVALID';
@@ -333,9 +368,23 @@ export class ChannelTooLarge extends BadRequest {
   message: string =
     'Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).';
 }
+export class ChargeAlreadyRefunded extends BadRequest {
+  id: string = 'CHARGE_ALREADY_REFUNDED';
+  message: string = 'The transaction was already refunded.';
+}
+export class ChatlinksTooMuch extends BadRequest {
+  id: string = 'CHATLINKS_TOO_MUCH';
+  message: string =
+    'Too many [business chat links](https://core.telegram.org/api/business#business-chat-links) were created, please delete some older links.';
+}
 export class ChatlinkSlugEmpty extends BadRequest {
   id: string = 'CHATLINK_SLUG_EMPTY';
   message: string = 'The specified slug is empty.';
+}
+export class ChatlinkSlugExpired extends BadRequest {
+  id: string = 'CHATLINK_SLUG_EXPIRED';
+  message: string =
+    'The specified [business chat link](https://core.telegram.org/api/business#business-chat-links) has expired.';
 }
 export class ChatlistExcludeInvalid extends BadRequest {
   id: string = 'CHATLIST_EXCLUDE_INVALID';
@@ -708,13 +757,18 @@ export class FileReferenceInvalid extends BadRequest {
   message: string =
     'The specified [file reference](https://core.telegram.org/api/file_reference) is invalid.';
 }
+export class FileReferenceXExpired extends BadRequest {
+  id: string = 'FILE_REFERENCE_X_EXPIRED';
+  message: string = '';
+}
 export class FileTitleEmpty extends BadRequest {
   id: string = 'FILE_TITLE_EMPTY';
   message: string = 'An empty file title was specified.';
 }
 export class FileTokenInvalid extends BadRequest {
   id: string = 'FILE_TOKEN_INVALID';
-  message: string = 'The specified file token is invalid.';
+  message: string =
+    'The master DC did not accept the `file_token` (e.g., the token has expired). Continue downloading the file from the master DC using upload.getFile.';
 }
 export class FilterIdInvalid extends BadRequest {
   id: string = 'FILTER_ID_INVALID';
@@ -834,6 +888,10 @@ export class GroupedMediaInvalid extends BadRequest {
 export class GroupCallInvalid extends BadRequest {
   id: string = 'GROUP_CALL_INVALID';
   message: string = 'The group call is invalid';
+}
+export class HashtagInvalid extends BadRequest {
+  id: string = 'HASHTAG_INVALID';
+  message: string = 'The specified hashtag is invalid.';
 }
 export class HashInvalid extends BadRequest {
   id: string = 'HASH_INVALID';
@@ -1096,6 +1154,10 @@ export class MessageTooLong extends BadRequest {
   id: string = 'MESSAGE_TOO_LONG';
   message: string = 'The provided message is too long.';
 }
+export class MessageTooOld extends BadRequest {
+  id: string = 'MESSAGE_TOO_OLD';
+  message: string = 'The message is too old, the requested information is not available.';
+}
 export class MethodInvalid extends BadRequest {
   id: string = 'METHOD_INVALID';
   message: string = 'The specified method is invalid.';
@@ -1206,7 +1268,8 @@ export class PasswordHashInvalid extends BadRequest {
 }
 export class PasswordMissing extends BadRequest {
   id: string = 'PASSWORD_MISSING';
-  message: string = 'You must enable 2FA in order to transfer ownership of a channel.';
+  message: string =
+    'You must [enable 2FA](https://core.telegram.org/api/srp) before executing this operation.';
 }
 export class PasswordRecoveryExpired extends BadRequest {
   id: string = 'PASSWORD_RECOVERY_EXPIRED';
@@ -1427,6 +1490,11 @@ export class QueryTooShort extends BadRequest {
   id: string = 'QUERY_TOO_SHORT';
   message: string = 'The query string is too short.';
 }
+export class QuickRepliesTooMuch extends BadRequest {
+  id: string = 'QUICK_REPLIES_TOO_MUCH';
+  message: string =
+    'A maximum of [appConfig.`quick_replies_limit`](https://core.telegram.org/api/config#quick-replies-limit) shortcuts may be created, the limit was reached.';
+}
 export class QuizAnswerMissing extends BadRequest {
   id: string = 'QUIZ_ANSWER_MISSING';
   message: string =
@@ -1486,6 +1554,10 @@ export class ReactionInvalid extends BadRequest {
   id: string = 'REACTION_INVALID';
   message: string = 'The specified reaction is invalid.';
 }
+export class ReceiptEmpty extends BadRequest {
+  id: string = 'RECEIPT_EMPTY';
+  message: string = 'The specified receipt is empty.';
+}
 export class ReflectorNotAvailable extends BadRequest {
   id: string = 'REFLECTOR_NOT_AVAILABLE';
   message: string = 'The call reflector is not available';
@@ -1505,6 +1577,11 @@ export class ReplyMarkupInvalid extends BadRequest {
 export class ReplyMarkupTooLong extends BadRequest {
   id: string = 'REPLY_MARKUP_TOO_LONG';
   message: string = 'The specified reply_markup is too long.';
+}
+export class ReplyMessagesTooMuch extends BadRequest {
+  id: string = 'REPLY_MESSAGES_TOO_MUCH';
+  message: string =
+    'Each shortcut can contain a maximum of [appConfig.`quick_reply_messages_limit`](https://core.telegram.org/api/config#quick-reply-messages-limit) messages, the limit was reached.';
 }
 export class ReplyMessageIdInvalid extends BadRequest {
   id: string = 'REPLY_MESSAGE_ID_INVALID';
@@ -1555,6 +1632,14 @@ export class RightsNotModified extends BadRequest {
   id: string = 'RIGHTS_NOT_MODIFIED';
   message: string = 'The new admin rights are equal to the old rights, no change was made.';
 }
+export class RingtoneInvalid extends BadRequest {
+  id: string = 'RINGTONE_INVALID';
+  message: string = 'The specified ringtone is invalid.';
+}
+export class RingtoneMimeInvalid extends BadRequest {
+  id: string = 'RINGTONE_MIME_INVALID';
+  message: string = 'The MIME type for the ringtone is invalid.';
+}
 export class RsaDecryptFailed extends BadRequest {
   id: string = 'RSA_DECRYPT_FAILED';
   message: string = 'Internal RSA decryption failed.';
@@ -1595,6 +1680,10 @@ export class SearchWithLinkNotSupported extends BadRequest {
 export class SecondsInvalid extends BadRequest {
   id: string = 'SECONDS_INVALID';
   message: string = 'Invalid duration provided.';
+}
+export class SecureSecretRequired extends BadRequest {
+  id: string = 'SECURE_SECRET_REQUIRED';
+  message: string = 'A secure secret is required.';
 }
 export class SendAsPeerInvalid extends BadRequest {
   id: string = 'SEND_AS_PEER_INVALID';
@@ -1688,7 +1777,7 @@ export class StickersetInvalid extends BadRequest {
 }
 export class StickersetNotModified extends BadRequest {
   id: string = 'STICKERSET_NOT_MODIFIED';
-  message: string = '';
+  message: string = 'The passed stickerset information is equal to the current information.';
 }
 export class StickersEmpty extends BadRequest {
   id: string = 'STICKERS_EMPTY';
@@ -1846,6 +1935,10 @@ export class ThemeMimeInvalid extends BadRequest {
 export class ThemeTitleInvalid extends BadRequest {
   id: string = 'THEME_TITLE_INVALID';
   message: string = 'The specified theme title is invalid.';
+}
+export class TimezoneInvalid extends BadRequest {
+  id: string = 'TIMEZONE_INVALID';
+  message: string = 'The specified timezone does not exist.';
 }
 export class TitleInvalid extends BadRequest {
   id: string = 'TITLE_INVALID';

@@ -28,6 +28,11 @@ export class BannedRightsInvalid extends NotAcceptable {
   id: string = 'BANNED_RIGHTS_INVALID';
   message: string = 'You provided some invalid flags in the banned rights.';
 }
+export class BusinessAddressActive extends NotAcceptable {
+  id: string = 'BUSINESS_ADDRESS_ACTIVE';
+  message: string =
+    'The user is currently advertising a [Business Location](https://core.telegram.org/api/business#location), the location may only be changed (or removed) using [account.updateBusinessLocation &raquo;](https://core.telegram.org/method/account.updateBusinessLocation).  .';
+}
 export class CallProtocolCompatLayerInvalid extends NotAcceptable {
   id: string = 'CALL_PROTOCOL_COMPAT_LAYER_INVALID';
   message: string =
@@ -117,6 +122,10 @@ export class TopicClosed extends NotAcceptable {
 export class TopicDeleted extends NotAcceptable {
   id: string = 'TOPIC_DELETED';
   message: string = 'The specified topic was deleted.';
+}
+export class UpdateAppToLogin extends NotAcceptable {
+  id: string = 'UPDATE_APP_TO_LOGIN';
+  message: string = 'Please update to the latest version of MadelineProto to login.';
 }
 export class UserpicPrivacyRequired extends NotAcceptable {
   id: string = 'USERPIC_PRIVACY_REQUIRED';
