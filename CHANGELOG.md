@@ -1,4 +1,14 @@
- <a name="1.13.5"></a>
+ <a name="1.13.6"></a>
+
+## [1.13.6](https://github.com/tgsnake/core/compare/1.13.5...1.13.6)
+
+> 2024-07-02
+
+### Change
+
+- Update TLSchema - saveFileStream - Update Error Reference - Update CHANGELOG.md - using query className when do invoke constructor of invokeWith*  ### Fix
+
+- case sensitive on resolve peer by username   <a name="1.13.5"></a>
 
 ## [1.13.5](https://github.com/tgsnake/core/compare/1.13.4...1.13.5)
 
