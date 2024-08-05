@@ -1,4 +1,12 @@
- <a name="1.13.6"></a>
+ <a name="1.13.7"></a>
+
+## [1.13.7](https://github.com/tgsnake/core/compare/1.13.6...1.13.7)
+
+> 2024-08-01
+
+### Change
+
+- Update CHANGELOG.md - Update Error Reference - Update TLSchema - Update TLSchema   <a name="1.13.6"></a>
 
 ## [1.13.6](https://github.com/tgsnake/core/compare/1.13.5...1.13.6)
 
