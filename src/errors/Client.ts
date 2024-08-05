@@ -57,7 +57,7 @@ export class ClientError extends Error {
 export class ClientDisconnected extends ClientError {
   message: string = "Can't send request to telegram when client is unconnected.";
   description: string =
-    'The provided telegram client is unconnected, make sure to start the telegram client firsy before sending request.';
+    'The provided telegram client is unconnected, make sure to start the telegram client first before sending request.';
 }
 export class ClientFailed extends ClientError {
   message: string = 'Client failed to connect to server.';

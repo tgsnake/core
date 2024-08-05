@@ -65,7 +65,7 @@ export function DataCenter(
     } else {
       if (media) {
         return [
-          ipv6 ? DCProdMediaIPV6[dcId] ?? DCProdIPV6[dcId] : DCProdMedia[dcId] ?? DCProd[dcId],
+          ipv6 ? (DCProdMediaIPV6[dcId] ?? DCProdIPV6[dcId]) : (DCProdMedia[dcId] ?? DCProd[dcId]),
           443,
         ];
       } else {

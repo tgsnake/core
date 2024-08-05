@@ -16,140 +16,136 @@ import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
- * @param {Client} client - Telegram client.
  */
-export async function loadSession(client: Client): Promise<void> {
-  await client._storage.load();
+export async function loadSession(): Promise<void> {
+  await (this as Client)._storage.load();
   // without authkey, that mean the session is fresh.
-  if (!client._storage.authKey) {
-    const [ip, port] = await DataCenter.DataCenter(2, client._testMode, client._ipv6, false);
-    const auth = new Auth(2, client._testMode, client._ipv6);
-    client._storage.setAddress(2, ip, port, client._testMode);
-    client._storage.setApiId(client._apiId);
-    client._storage.setAuthKey(await auth.create(), 2);
+  if (!(this as Client)._storage.authKey) {
+    const [ip, port] = await DataCenter.DataCenter(
+      2,
+      (this as Client)._testMode,
+      (this as Client)._ipv6,
+      false,
+    );
+    const auth = new Auth(2, (this as Client)._testMode, (this as Client)._ipv6);
+    (this as Client)._storage.setAddress(2, ip, port, (this as Client)._testMode);
+    (this as Client)._storage.setApiId((this as Client)._apiId);
+    (this as Client)._storage.setAuthKey(await auth.create(), 2);
   }
   // migrate from old string session
-  if (!client._storage.apiId) {
-    client._storage.setApiId(client._apiId);
+  if (!(this as Client)._storage.apiId) {
+    (this as Client)._storage.setApiId((this as Client)._apiId);
   }
-  if (client._storage.testMode === undefined) {
-    client._storage.setAddress(
-      client._storage.dcId,
-      client._storage.ip,
-      client._storage.port,
-      client._testMode,
+  if ((this as Client)._storage.testMode === undefined) {
+    (this as Client)._storage.setAddress(
+      (this as Client)._storage.dcId,
+      (this as Client)._storage.ip,
+      (this as Client)._storage.port,
+      (this as Client)._testMode,
     );
   }
 }
 /**
  * Connecting client to telegram server.<br/>
  * You can't receive any updates if you not call getMe after connected.
- * @param {Client} client - Telegram client.
  */
-export async function connect(client: Client): Promise<void> {
-  if (!client._isConnected) {
+export async function connect(): Promise<void> {
+  if (!(this as Client)._isConnected) {
     Logger.info(`[100] Using version: ${Version.version} - ${Version.getType()}`);
-    await loadSession(client);
-    client._session = new Session(
-      client,
-      client._storage.dcId,
-      client._storage.authKey,
-      client._storage.testMode,
-      client._proxy,
+    await loadSession.call(this);
+    (this as Client)._session = new Session(
+      this,
+      (this as Client)._storage.dcId,
+      (this as Client)._storage.authKey,
+      (this as Client)._storage.testMode,
+      (this as Client)._proxy,
       false,
-      client._isCdn,
+      (this as Client)._isCdn,
     );
-    await client._session.start();
-    client._isConnected = true;
+    await (this as Client)._session.start();
+    (this as Client)._isConnected = true;
   }
 }
 /**
  * Starting telegram client.
  */
-export async function start(
-  client: Client,
-  auth?: _Auth.SigInBot | _Auth.SigInUser,
-): Promise<Raw.users.UserFull> {
-  await connect(client);
-  if (client._storage.userId === undefined) {
+export async function start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Raw.users.UserFull> {
+  await connect.call(this);
+  if ((this as Client)._storage.userId === undefined) {
     if (auth) {
       // @ts-ignore
       if (auth?.botToken) {
         // @ts-ignore
-        await _Auth.siginBot(client, await auth?.botToken);
+        await _Auth.siginBot.call(this, await auth?.botToken);
       } else {
         // @ts-ignore
-        await _Auth.siginUser(client, { ...auth });
+        await _Auth.siginUser.call(this, { ...auth });
       }
     }
   }
-  if (!client._storage.authKey) {
+  if (!(this as Client)._storage.authKey) {
     throw new Errors.ClientError.AuthKeyMissing();
   }
-  if (!client._storage.isBot && client._takeout) {
-    let takeout = await client.invoke(new Raw.account.InitTakeoutSession({}));
-    client._takeoutId = takeout.id;
-    Logger.warning(`[104] Takeout session ${client._takeoutId} initiated.`);
+  if (!(this as Client)._storage.isBot && (this as Client)._takeout) {
+    let takeout = await (this as Client).invoke(new Raw.account.InitTakeoutSession({}));
+    (this as Client)._takeoutId = takeout.id;
+    Logger.warning(`[104] Takeout session ${(this as Client)._takeoutId} initiated.`);
   }
-  await client.invoke(new Raw.updates.GetState());
-  const me = await _Auth.getMe(client);
-  client._me = me;
+  await (this as Client).invoke(new Raw.updates.GetState());
+  const me = await _Auth.getMe.call(this);
+  (this as Client)._me = me;
   return me;
 }
 /**
  * Logout and kill the client.
- * @param {Client} client - Telegram client.
  */
-export async function logout(client: Client): Promise<any> {
-  await client.invoke(new Raw.auth.LogOut());
-  await client._storage.delete();
+export async function logout(): Promise<any> {
+  await (this as Client).invoke(new Raw.auth.LogOut());
+  await (this as Client)._storage.delete();
   Logger.info(`[105] Logged out.`);
   return process.exit(0); // kill the process
 }
 /**
  * Exporting current session to string.
- * @param {Client} client - Telegram client.
  */
-export async function exportSession(client: Client): Promise<string> {
-  if (!client._storage.userId) {
-    const me = client._me ?? (await _Auth.getMe(client));
-    client._storage.setUserId((me.fullUser as unknown as Raw.UserFull).id);
+export async function exportSession(): Promise<string> {
+  if (!(this as Client)._storage.userId) {
+    const me = (this as Client)._me ?? (await _Auth.getMe.call(this));
+    (this as Client)._storage.setUserId((me.fullUser as unknown as Raw.UserFull).id);
     // @ts-ignore
-    client._storage.setIsBot(Boolean(me.users[0].bot));
+    (this as Client)._storage.setIsBot(Boolean(me.users[0].bot));
   }
-  return client._storage.exportString();
+  return (this as Client)._storage.exportString();
 }
 /**
  * Sending request to telegram. <br/>
  * Only telegram method can be invoked.
- * @param {Client} client - Telegram client.
- * @param {Client} query - Raw class from telegram method.
+ * @param {TLObject} query - Raw class from telegram method.
  * @param {Number} retries - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
  * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
  * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
  */
 export async function invoke(
-  client: Client,
   query: TLObject,
   retries: number,
   timeout: number,
   sleepTreshold: number,
 ): Promise<TLObject> {
-  if (!client._isConnected) {
+  if (!(this as Client)._isConnected) {
     throw new Errors.ClientError.ClientDisconnected();
   }
-  if (client._noUpdates) {
+  if ((this as Client)._noUpdates) {
     query = new Raw.InvokeWithoutUpdates({ query });
   }
-  if (client._takeoutId) {
-    query = new Raw.InvokeWithTakeout({ query, takeoutId: client._takeoutId });
+  if ((this as Client)._takeoutId) {
+    query = new Raw.InvokeWithTakeout({ query, takeoutId: (this as Client)._takeoutId });
   }
-  const r = await client._session.invoke(query, retries, timeout, sleepTreshold);
+  const r = await (this as Client)._session.invoke(query, retries, timeout, sleepTreshold);
   if (typeof r === 'object' && 'users' in r) {
-    await client.fetchPeers(r.users as unknown as Array<Raw.TypeUser>);
+    await (this as Client).fetchPeers(r.users as unknown as Array<Raw.TypeUser>);
   }
   if (typeof r === 'object' && 'chats' in r) {
-    await client.fetchPeers(r.chats as unknown as Array<Raw.TypeChat>);
+    await (this as Client).fetchPeers(r.chats as unknown as Array<Raw.TypeChat>);
   }
   return r;
 }

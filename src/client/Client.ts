@@ -185,7 +185,7 @@ export class Client {
    * Exporting current session to string.
    */
   async exportSession(): Promise<string> {
-    return _Session.exportSession(this);
+    return _Session.exportSession.call(this);
   }
   /**
    * Sending request to telegram. <br/>
@@ -201,19 +201,25 @@ export class Client {
     timeout: number = 15000,
     sleepTreshold: number = this._sleepTreshold,
   ): Promise<T['__response__']> {
-    return _Session.invoke(this, query, retries, timeout, sleepTreshold);
+    return _Session.invoke.call(this, query, retries, timeout, sleepTreshold);
   }
   /**
    * Logout and kill the client.
    */
   async logout(): Promise<any> {
-    return _Session.logout(this);
+    return _Session.logout.call(this);
   }
   /**
    * Starting telegram client.
    */
   async start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Raw.users.UserFull> {
-    return _Session.start(this, auth);
+    return _Session.start.call(this, auth);
+  }
+  /**
+   * Connecting to telegram server without login request.
+   */
+  async connect() {
+    return _Session.connect.call(this);
   }
   /**
    * Handling new updates from telegram.
