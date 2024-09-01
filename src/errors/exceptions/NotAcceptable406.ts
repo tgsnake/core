@@ -91,6 +91,10 @@ export class PhonePasswordFlood extends NotAcceptable {
   id: string = 'PHONE_PASSWORD_FLOOD';
   message: string = 'You have tried logging in too many times.';
 }
+export class PremiumCurrentlyUnavailable extends NotAcceptable {
+  id: string = 'PREMIUM_CURRENTLY_UNAVAILABLE';
+  message: string = 'You cannot currently purchase a Premium subscription.';
+}
 export class PreviousChatImportActiveWaitmin extends NotAcceptable {
   id: string = 'PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN';
   message: string =

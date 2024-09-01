@@ -113,6 +113,11 @@ export class AutoarchiveNotAvailable extends BadRequest {
   message: string =
     'The autoarchive setting is not available at this time: please check the value of the [autoarchive_setting_available field in client config &raquo;](https://core.telegram.org/api/config#client-configuration) before calling this method.';
 }
+export class BalanceTooLow extends BadRequest {
+  id: string = 'BALANCE_TOO_LOW';
+  message: string =
+    'The transaction cannot be completed because the current [Telegram Stars balance](https://core.telegram.org/api/stars) is too low.';
+}
 export class BankCardNumberInvalid extends BadRequest {
   id: string = 'BANK_CARD_NUMBER_INVALID';
   message: string = 'The specified card number is invalid.';
@@ -151,6 +156,10 @@ export class BotsTooMuch extends BadRequest {
   id: string = 'BOTS_TOO_MUCH';
   message: string = 'There are too many bots in this chat/channel.';
 }
+export class BotAlreadyDisabled extends BadRequest {
+  id: string = 'BOT_ALREADY_DISABLED';
+  message: string = 'The connected business bot was already disabled for the specified peer.';
+}
 export class BotAppBotInvalid extends BadRequest {
   id: string = 'BOT_APP_BOT_INVALID';
   message: string = 'The bot_id passed in the inputBotAppShortName constructor is invalid.';
@@ -186,7 +195,7 @@ export class BotDomainInvalid extends BadRequest {
 }
 export class BotGamesDisabled extends BadRequest {
   id: string = 'BOT_GAMES_DISABLED';
-  message: string = 'Bot games cannot be used in this type of chat';
+  message: string = "Games can't be sent to channels.";
 }
 export class BotGroupsBlocked extends BadRequest {
   id: string = 'BOT_GROUPS_BLOCKED';
@@ -211,7 +220,8 @@ export class BotMissing extends BadRequest {
 }
 export class BotNotConnectedYet extends BadRequest {
   id: string = 'BOT_NOT_CONNECTED_YET';
-  message: string = '';
+  message: string =
+    'No [business bot](https://core.telegram.org/api/business#connected-bots) is connected to the currently logged in user.';
 }
 export class BotOnesideNotAvail extends BadRequest {
   id: string = 'BOT_ONESIDE_NOT_AVAIL';
@@ -258,7 +268,8 @@ export class BusinessPeerInvalid extends BadRequest {
 }
 export class BusinessRecipientsEmpty extends BadRequest {
   id: string = 'BUSINESS_RECIPIENTS_EMPTY';
-  message: string = '';
+  message: string =
+    "You didn't set any flag in inputBusinessBotRecipients, thus the bot cannot work with *any* peer.";
 }
 export class BusinessWorkHoursEmpty extends BadRequest {
   id: string = 'BUSINESS_WORK_HOURS_EMPTY';
@@ -272,6 +283,11 @@ export class BusinessWorkHoursPeriodInvalid extends BadRequest {
 export class ButtonDataInvalid extends BadRequest {
   id: string = 'BUTTON_DATA_INVALID';
   message: string = 'The data of one or more of the buttons you provided is invalid.';
+}
+export class ButtonPosInvalid extends BadRequest {
+  id: string = 'BUTTON_POS_INVALID';
+  message: string =
+    'The position of one of the keyboard buttons is invalid (i.e. a Game or Pay button not in the first position, and so on...).';
 }
 export class ButtonTextInvalid extends BadRequest {
   id: string = 'BUTTON_TEXT_INVALID';
@@ -588,6 +604,10 @@ export class EmailInvalid extends BadRequest {
   id: string = 'EMAIL_INVALID';
   message: string = 'The specified email is invalid.';
 }
+export class EmailNotAllowed extends BadRequest {
+  id: string = 'EMAIL_NOT_ALLOWED';
+  message: string = 'The specified email cannot be used to complete the operation.';
+}
 export class EmailNotSetup extends BadRequest {
   id: string = 'EMAIL_NOT_SETUP';
   message: string =
@@ -759,7 +779,13 @@ export class FileReferenceInvalid extends BadRequest {
 }
 export class FileReferenceXExpired extends BadRequest {
   id: string = 'FILE_REFERENCE_X_EXPIRED';
-  message: string = '';
+  message: string =
+    'The file reference of the media file at index {value} in the passed media array expired, it [must be refreshed](https://core.telegram.org/api/file_reference).';
+}
+export class FileReferenceXInvalid extends BadRequest {
+  id: string = 'FILE_REFERENCE_X_INVALID';
+  message: string =
+    'The file reference of the media file at index {value} in the passed media array is invalid.';
 }
 export class FileTitleEmpty extends BadRequest {
   id: string = 'FILE_TITLE_EMPTY';
@@ -797,6 +823,11 @@ export class FolderIdEmpty extends BadRequest {
 export class FolderIdInvalid extends BadRequest {
   id: string = 'FOLDER_ID_INVALID';
   message: string = 'Invalid folder ID.';
+}
+export class FormExpired extends BadRequest {
+  id: string = 'FORM_EXPIRED';
+  message: string =
+    'The form was generated more than 10 minutes ago and has expired, please re-generate it using [payments.getPaymentForm](https://core.telegram.org/method/payments.getPaymentForm) and pass the new `form_id`.';
 }
 export class ForumEnabled extends BadRequest {
   id: string = 'FORUM_ENABLED';
@@ -949,6 +980,11 @@ export class InputFetchFail extends BadRequest {
   id: string = 'INPUT_FETCH_FAIL';
   message: string = 'An error occurred while parsing the provided TL constructor.';
 }
+export class InputFileInvalid extends BadRequest {
+  id: string = 'INPUT_FILE_INVALID';
+  message: string =
+    'The specified [InputFile](https://core.telegram.org/type/InputFile) is invalid.';
+}
 export class InputFilterInvalid extends BadRequest {
   id: string = 'INPUT_FILTER_INVALID';
   message: string = 'The specified filter is invalid.';
@@ -1022,6 +1058,10 @@ export class InvoicePayloadInvalid extends BadRequest {
 export class JoinAsPeerInvalid extends BadRequest {
   id: string = 'JOIN_AS_PEER_INVALID';
   message: string = 'The specified peer cannot be used to join a group call.';
+}
+export class LanguageInvalid extends BadRequest {
+  id: string = 'LANGUAGE_INVALID';
+  message: string = 'The specified lang_code is invalid.';
 }
 export class LangCodeInvalid extends BadRequest {
   id: string = 'LANG_CODE_INVALID';
@@ -1145,6 +1185,10 @@ export class MessageNotModified extends BadRequest {
   id: string = 'MESSAGE_NOT_MODIFIED';
   message: string =
     "The provided message data is identical to the previous message data, the message wasn't modified.";
+}
+export class MessageNotReadYet extends BadRequest {
+  id: string = 'MESSAGE_NOT_READ_YET';
+  message: string = "The specified message wasn't read yet.";
 }
 export class MessagePollClosed extends BadRequest {
   id: string = 'MESSAGE_POLL_CLOSED';
@@ -1568,7 +1612,8 @@ export class ReplyMarkupBuyEmpty extends BadRequest {
 }
 export class ReplyMarkupGameEmpty extends BadRequest {
   id: string = 'REPLY_MARKUP_GAME_EMPTY';
-  message: string = 'The provided reply markup for the game is empty';
+  message: string =
+    "A game message is being edited, but the newly provided keyboard doesn't have a keyboardButtonGame button.";
 }
 export class ReplyMarkupInvalid extends BadRequest {
   id: string = 'REPLY_MARKUP_INVALID';
@@ -2007,7 +2052,8 @@ export class TranscriptionFailed extends BadRequest {
 }
 export class TranslateReqQuotaExceeded extends BadRequest {
   id: string = 'TRANSLATE_REQ_QUOTA_EXCEEDED';
-  message: string = '';
+  message: string =
+    'Translation is currently unavailable due to a temporary server-side lack of resources.';
 }
 export class TtlDaysInvalid extends BadRequest {
   id: string = 'TTL_DAYS_INVALID';
@@ -2118,7 +2164,8 @@ export class UserChannelsTooMuch extends BadRequest {
 }
 export class UserCreator extends BadRequest {
   id: string = 'USER_CREATOR';
-  message: string = "You can't leave this channel, because you're its creator.";
+  message: string =
+    "For channels.editAdmin: you've tried to edit the admin rights of the owner, but you're not the owner; for channels.leaveChannel: you can't leave this channel, because you're its creator.";
 }
 export class UserIdInvalid extends BadRequest {
   id: string = 'USER_ID_INVALID';

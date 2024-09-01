@@ -174,6 +174,12 @@
   },
   {
     "code": 400,
+    "msg": "BALANCE_TOO_LOW",
+    "desc": "The transaction cannot be completed because the current [Telegram Stars balance](https://core.telegram.org/api/stars) is too low.",
+    "affected": ["payments.SendStarsForm"]
+  },
+  {
+    "code": 400,
     "msg": "BANK_CARD_NUMBER_INVALID",
     "desc": "The specified card number is invalid.",
     "affected": ["payments.GetBankCardData"]
@@ -228,6 +234,12 @@
   },
   {
     "code": 400,
+    "msg": "BOT_ALREADY_DISABLED",
+    "desc": "The connected business bot was already disabled for the specified peer.",
+    "affected": ["account.DisablePeerConnectedBot"]
+  },
+  {
+    "code": 400,
     "msg": "BOT_APP_BOT_INVALID",
     "desc": "The bot_id passed in the inputBotAppShortName constructor is invalid.",
     "affected": ["messages.GetBotApp"]
@@ -277,8 +289,8 @@
   {
     "code": 400,
     "msg": "BOT_GAMES_DISABLED",
-    "desc": "Bot games cannot be used in this type of chat",
-    "affected": []
+    "desc": "Games can't be sent to channels.",
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -299,16 +311,23 @@
     "affected": [
       "account.AcceptAuthorization",
       "account.GetAuthorizationForm",
+      "bots.AddPreviewMedia",
       "bots.AllowSendMessage",
       "bots.CanSendMessage",
+      "bots.DeletePreviewMedia",
+      "bots.EditPreviewMedia",
       "bots.GetBotInfo",
+      "bots.GetPreviewInfo",
+      "bots.GetPreviewMedias",
       "bots.InvokeWebViewCustomMethod",
+      "bots.ReorderPreviewMedias",
       "bots.ReorderUsernames",
       "bots.ToggleUsername",
       "messages.EditMessage",
       "messages.GetAttachMenuBot",
       "messages.GetInlineBotResults",
       "messages.ProlongWebView",
+      "messages.RequestMainWebView",
       "messages.RequestSimpleWebView",
       "messages.RequestWebView",
       "messages.SendMessage",
@@ -328,17 +347,12 @@
     "code": 400,
     "msg": "BOT_MISSING",
     "desc": "Only bots can call this method, please use [@stickers](https://t.me/stickers) if you're a user.",
-    "affected": [
-      "stickers.AddStickerToSet",
-      "stickers.ChangeSticker",
-      "stickers.DeleteStickerSet",
-      "stickers.RemoveStickerFromSet"
-    ]
+    "affected": []
   },
   {
     "code": 400,
     "msg": "BOT_NOT_CONNECTED_YET",
-    "desc": "",
+    "desc": "No [business bot](https://core.telegram.org/api/business#connected-bots) is connected to the currently logged in user.",
     "affected": ["account.DisablePeerConnectedBot"]
   },
   {
@@ -404,7 +418,7 @@
   {
     "code": 400,
     "msg": "BUSINESS_RECIPIENTS_EMPTY",
-    "desc": "",
+    "desc": "You didn't set any flag in inputBusinessBotRecipients, thus the bot cannot work with *any* peer.",
     "affected": ["account.UpdateConnectedBot"]
   },
   {
@@ -430,6 +444,12 @@
       "messages.SendMessage",
       "messages.SetInlineBotResults"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "BUTTON_POS_INVALID",
+    "desc": "The position of one of the keyboard buttons is invalid (i.e. a Game or Pay button not in the first position, and so on...).",
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -915,6 +935,7 @@
       "messages.UpdatePinnedMessage",
       "messages.UploadImportedMedia",
       "messages.UploadMedia",
+      "payments.GetStarsTransactions",
       "phone.CreateGroupCall",
       "phone.GetGroupCallStreamRtmpUrl",
       "premium.GetBoostsList",
@@ -1340,6 +1361,12 @@
   },
   {
     "code": 400,
+    "msg": "EMAIL_NOT_ALLOWED",
+    "desc": "The specified email cannot be used to complete the operation.",
+    "affected": ["account.SendVerifyEmailCode", "account.VerifyEmail"]
+  },
+  {
+    "code": 400,
     "msg": "EMAIL_NOT_SETUP",
     "desc": "In order to change the login email with emailVerifyPurposeLoginChange, an existing login email must already be set using emailVerifyPurposeLoginSetup.",
     "affected": ["account.SendVerifyEmailCode"]
@@ -1581,7 +1608,7 @@
     "code": 400,
     "msg": "FILE_REFERENCE_*",
     "desc": "The file reference expired, it [must be refreshed](https://core.telegram.org/api/file_reference).",
-    "affected": ["upload.GetFile"]
+    "affected": []
   },
   {
     "code": 400,
@@ -1604,7 +1631,13 @@
   {
     "code": 400,
     "msg": "FILE_REFERENCE_X_EXPIRED",
-    "desc": "",
+    "desc": "The file reference of the media file at index {value} in the passed media array expired, it [must be refreshed](https://core.telegram.org/api/file_reference).",
+    "affected": ["messages.SendMultiMedia"]
+  },
+  {
+    "code": 400,
+    "msg": "FILE_REFERENCE_X_INVALID",
+    "desc": "The file reference of the media file at index {value} in the passed media array is invalid.",
     "affected": ["messages.SendMultiMedia"]
   },
   {
@@ -1690,6 +1723,12 @@
       "messages.GetPinnedDialogs",
       "messages.SearchGlobal"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "FORM_EXPIRED",
+    "desc": "The form was generated more than 10 minutes ago and has expired, please re-generate it using [payments.getPaymentForm](https://core.telegram.org/method/payments.getPaymentForm) and pass the new `form_id`.",
+    "affected": ["payments.SendStarsForm"]
   },
   {
     "code": 400,
@@ -1892,12 +1931,7 @@
     "desc": "The specified chat export file was exported from an unsupported chat app.",
     "affected": ["messages.CheckHistoryImport", "messages.InitHistoryImport"]
   },
-  {
-    "code": 400,
-    "msg": "IMPORT_HISTORY_LOG_EMPTY",
-    "desc": "",
-    "affected": ["messages.InitHistoryImport"]
-  },
+  { "code": 400, "msg": "IMPORT_HISTORY_LOG_EMPTY", "desc": "", "affected": [] },
   {
     "code": 400,
     "msg": "IMPORT_ID_INVALID",
@@ -1939,6 +1973,12 @@
     "msg": "INPUT_FETCH_FAIL",
     "desc": "An error occurred while parsing the provided TL constructor.",
     "affected": []
+  },
+  {
+    "code": 400,
+    "msg": "INPUT_FILE_INVALID",
+    "desc": "The specified [InputFile](https://core.telegram.org/type/InputFile) is invalid.",
+    "affected": ["messages.SendMedia"]
   },
   {
     "code": 400,
@@ -2089,6 +2129,12 @@
     "msg": "JOIN_AS_PEER_INVALID",
     "desc": "The specified peer cannot be used to join a group call.",
     "affected": ["phone.JoinGroupCall", "phone.SaveDefaultGroupCallJoinAs"]
+  },
+  {
+    "code": 400,
+    "msg": "LANGUAGE_INVALID",
+    "desc": "The specified lang_code is invalid.",
+    "affected": ["langpack.GetLangPack"]
   },
   {
     "code": 400,
@@ -2329,6 +2375,12 @@
     "msg": "MESSAGE_NOT_MODIFIED",
     "desc": "The provided message data is identical to the previous message data, the message wasn't modified.",
     "affected": ["messages.EditInlineBotMessage", "messages.EditMessage", "messages.SendReaction"]
+  },
+  {
+    "code": 400,
+    "msg": "MESSAGE_NOT_READ_YET",
+    "desc": "The specified message wasn't read yet.",
+    "affected": ["messages.GetOutboxReadDate"]
   },
   {
     "code": 400,
@@ -3288,7 +3340,7 @@
   {
     "code": 400,
     "msg": "REPLY_MARKUP_GAME_EMPTY",
-    "desc": "The provided reply markup for the game is empty",
+    "desc": "A game message is being edited, but the newly provided keyboard doesn't have a keyboardButtonGame button.",
     "affected": ["messages.SendMedia"]
   },
   {
@@ -4014,7 +4066,7 @@
   {
     "code": 400,
     "msg": "TRANSLATE_REQ_QUOTA_EXCEEDED",
-    "desc": "",
+    "desc": "Translation is currently unavailable due to a temporary server-side lack of resources.",
     "affected": ["messages.TranslateText"]
   },
   {
@@ -4276,7 +4328,7 @@
   {
     "code": 400,
     "msg": "USER_CREATOR",
-    "desc": "You can't leave this channel, because you're its creator.",
+    "desc": "For channels.editAdmin: you've tried to edit the admin rights of the owner, but you're not the owner; for channels.leaveChannel: you can't leave this channel, because you're its creator.",
     "affected": ["channels.EditAdmin", "channels.LeaveChannel"]
   },
   {
@@ -4834,7 +4886,7 @@
     "code": 403,
     "msg": "GROUPCALL_ALREADY_STARTED",
     "desc": "The groupcall has already started, you can join directly using [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).",
-    "affected": ["phone.ToggleGroupCallStartSubscription"]
+    "affected": ["phone.StartScheduledGroupCall", "phone.ToggleGroupCallStartSubscription"]
   },
   {
     "code": 403,
@@ -4997,6 +5049,12 @@
     "msg": "USER_NOT_MUTUAL_CONTACT",
     "desc": "The provided user is not a mutual contact.",
     "affected": ["channels.EditAdmin", "channels.InviteToChannel", "messages.AddChatUser"]
+  },
+  {
+    "code": 403,
+    "msg": "USER_NOT_PARTICIPANT",
+    "desc": "You're not a member of this supergroup/channel.",
+    "affected": ["phone.InviteToGroupCall"]
   },
   {
     "code": 403,
@@ -5166,6 +5224,12 @@
   },
   {
     "code": 406,
+    "msg": "PREMIUM_CURRENTLY_UNAVAILABLE",
+    "desc": "You cannot currently purchase a Premium subscription.",
+    "affected": ["payments.CanPurchasePremium"]
+  },
+  {
+    "code": 406,
     "msg": "PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN",
     "desc": "Import for this chat is already in progress, wait {value} minutes before starting a new one.",
     "affected": ["messages.InitHistoryImport"]
@@ -5307,7 +5371,7 @@
     "desc": "The call failed because the user is already making another call.",
     "affected": ["phone.AcceptCall", "phone.DiscardCall"]
   },
-  { "code": 500, "msg": "CDN_SALTS_EMPTY", "desc": "", "affected": ["upload.GetCdnFileHashes"] },
+  { "code": 500, "msg": "CDN_SALTS_EMPTY", "desc": "", "affected": [] },
   {
     "code": 500,
     "msg": "CDN_UPLOAD_TIMEOUT",

@@ -202,6 +202,10 @@ export class UserNotMutualContact extends Forbidden {
   id: string = 'USER_NOT_MUTUAL_CONTACT';
   message: string = 'The provided user is not a mutual contact.';
 }
+export class UserNotParticipant extends Forbidden {
+  id: string = 'USER_NOT_PARTICIPANT';
+  message: string = "You're not a member of this supergroup/channel.";
+}
 export class UserPrivacyRestricted extends Forbidden {
   id: string = 'USER_PRIVACY_RESTRICTED';
   message: string = "The user's privacy settings do not allow you to do this.";

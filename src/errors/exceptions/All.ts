@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 695;
+const count = 706;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -49,6 +49,7 @@ const Exceptions = {
     AUTH_TOKEN_INVALID: 'BadRequest.AuthTokenInvalid',
     AUTH_TOKEN_INVALIDX: 'BadRequest.AuthTokenInvalidx',
     AUTOARCHIVE_NOT_AVAILABLE: 'BadRequest.AutoarchiveNotAvailable',
+    BALANCE_TOO_LOW: 'BadRequest.BalanceTooLow',
     BANK_CARD_NUMBER_INVALID: 'BadRequest.BankCardNumberInvalid',
     BANNED_RIGHTS_INVALID: 'BadRequest.BannedRightsInvalid',
     BASE_PORT_LOC_INVALID: 'BadRequest.BasePortLocInvalid',
@@ -58,6 +59,7 @@ const Exceptions = {
     BOOST_NOT_MODIFIED: 'BadRequest.BoostNotModified',
     BOOST_PEER_INVALID: 'BadRequest.BoostPeerInvalid',
     BOTS_TOO_MUCH: 'BadRequest.BotsTooMuch',
+    BOT_ALREADY_DISABLED: 'BadRequest.BotAlreadyDisabled',
     BOT_APP_BOT_INVALID: 'BadRequest.BotAppBotInvalid',
     BOT_APP_INVALID: 'BadRequest.BotAppInvalid',
     BOT_APP_SHORTNAME_INVALID: 'BadRequest.BotAppShortnameInvalid',
@@ -87,6 +89,7 @@ const Exceptions = {
     BUSINESS_WORK_HOURS_EMPTY: 'BadRequest.BusinessWorkHoursEmpty',
     BUSINESS_WORK_HOURS_PERIOD_INVALID: 'BadRequest.BusinessWorkHoursPeriodInvalid',
     BUTTON_DATA_INVALID: 'BadRequest.ButtonDataInvalid',
+    BUTTON_POS_INVALID: 'BadRequest.ButtonPosInvalid',
     BUTTON_TEXT_INVALID: 'BadRequest.ButtonTextInvalid',
     BUTTON_TYPE_INVALID: 'BadRequest.ButtonTypeInvalid',
     BUTTON_URL_INVALID: 'BadRequest.ButtonUrlInvalid',
@@ -164,6 +167,7 @@ const Exceptions = {
     DOCUMENT_INVALID: 'BadRequest.DocumentInvalid',
     EMAIL_HASH_EXPIRED: 'BadRequest.EmailHashExpired',
     EMAIL_INVALID: 'BadRequest.EmailInvalid',
+    EMAIL_NOT_ALLOWED: 'BadRequest.EmailNotAllowed',
     EMAIL_NOT_SETUP: 'BadRequest.EmailNotSetup',
     EMAIL_UNCONFIRMED: 'BadRequest.EmailUnconfirmed',
     EMAIL_UNCONFIRMED_X: 'BadRequest.EmailUnconfirmedX',
@@ -205,6 +209,7 @@ const Exceptions = {
     FILE_REFERENCE_EXPIRED: 'BadRequest.FileReferenceExpired',
     FILE_REFERENCE_INVALID: 'BadRequest.FileReferenceInvalid',
     FILE_REFERENCE_X_EXPIRED: 'BadRequest.FileReferenceXExpired',
+    FILE_REFERENCE_X_INVALID: 'BadRequest.FileReferenceXInvalid',
     FILE_TITLE_EMPTY: 'BadRequest.FileTitleEmpty',
     FILE_TOKEN_INVALID: 'BadRequest.FileTokenInvalid',
     FILTER_ID_INVALID: 'BadRequest.FilterIdInvalid',
@@ -214,6 +219,7 @@ const Exceptions = {
     FIRSTNAME_INVALID: 'BadRequest.FirstnameInvalid',
     FOLDER_ID_EMPTY: 'BadRequest.FolderIdEmpty',
     FOLDER_ID_INVALID: 'BadRequest.FolderIdInvalid',
+    FORM_EXPIRED: 'BadRequest.FormExpired',
     FORUM_ENABLED: 'BadRequest.ForumEnabled',
     FRESH_CHANGE_ADMINS_FORBIDDEN: 'BadRequest.FreshChangeAdminsForbidden',
     FROM_MESSAGE_BOT_DISABLED: 'BadRequest.FromMessageBotDisabled',
@@ -251,6 +257,7 @@ const Exceptions = {
     INPUT_CONSTRUCTOR_INVALID: 'BadRequest.InputConstructorInvalid',
     INPUT_FETCH_ERROR: 'BadRequest.InputFetchError',
     INPUT_FETCH_FAIL: 'BadRequest.InputFetchFail',
+    INPUT_FILE_INVALID: 'BadRequest.InputFileInvalid',
     INPUT_FILTER_INVALID: 'BadRequest.InputFilterInvalid',
     INPUT_LAYER_INVALID: 'BadRequest.InputLayerInvalid',
     INPUT_METHOD_INVALID: 'BadRequest.InputMethodInvalid',
@@ -269,6 +276,7 @@ const Exceptions = {
     INVITE_SLUG_EXPIRED: 'BadRequest.InviteSlugExpired',
     INVOICE_PAYLOAD_INVALID: 'BadRequest.InvoicePayloadInvalid',
     JOIN_AS_PEER_INVALID: 'BadRequest.JoinAsPeerInvalid',
+    LANGUAGE_INVALID: 'BadRequest.LanguageInvalid',
     LANG_CODE_INVALID: 'BadRequest.LangCodeInvalid',
     LANG_CODE_NOT_SUPPORTED: 'BadRequest.LangCodeNotSupported',
     LANG_PACK_INVALID: 'BadRequest.LangPackInvalid',
@@ -299,6 +307,7 @@ const Exceptions = {
     MESSAGE_IDS_EMPTY: 'BadRequest.MessageIdsEmpty',
     MESSAGE_ID_INVALID: 'BadRequest.MessageIdInvalid',
     MESSAGE_NOT_MODIFIED: 'BadRequest.MessageNotModified',
+    MESSAGE_NOT_READ_YET: 'BadRequest.MessageNotReadYet',
     MESSAGE_POLL_CLOSED: 'BadRequest.MessagePollClosed',
     MESSAGE_TOO_LONG: 'BadRequest.MessageTooLong',
     MESSAGE_TOO_OLD: 'BadRequest.MessageTooOld',
@@ -629,6 +638,7 @@ const Exceptions = {
     USER_INVALID: 'Forbidden.UserInvalid',
     USER_IS_BLOCKED: 'Forbidden.UserIsBlocked',
     USER_NOT_MUTUAL_CONTACT: 'Forbidden.UserNotMutualContact',
+    USER_NOT_PARTICIPANT: 'Forbidden.UserNotParticipant',
     USER_PRIVACY_RESTRICTED: 'Forbidden.UserPrivacyRestricted',
     USER_RESTRICTED: 'Forbidden.UserRestricted',
     VOICE_MESSAGES_FORBIDDEN: 'Forbidden.VoiceMessagesForbidden',
@@ -652,6 +662,7 @@ const Exceptions = {
     PAYMENT_UNSUPPORTED: 'NotAcceptable.PaymentUnsupported',
     PHONE_NUMBER_INVALID: 'NotAcceptable.PhoneNumberInvalid',
     PHONE_PASSWORD_FLOOD: 'NotAcceptable.PhonePasswordFlood',
+    PREMIUM_CURRENTLY_UNAVAILABLE: 'NotAcceptable.PremiumCurrentlyUnavailable',
     PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN: 'NotAcceptable.PreviousChatImportActiveWaitmin',
     PRIVACY_PREMIUM_REQUIRED: 'NotAcceptable.PrivacyPremiumRequired',
     SEND_CODE_UNAVAILABLE: 'NotAcceptable.SendCodeUnavailable',
