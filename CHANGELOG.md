@@ -1,4 +1,12 @@
- <a name="1.13.7"></a>
+ <a name="1.13.8"></a>
+
+## [1.13.8](https://github.com/tgsnake/core/compare/1.13.7...1.13.8)
+
+> 2024-08-25
+
+### Change
+
+- Update TLSchema - Update CHANGELOG.md - changing function context using .call   <a name="1.13.7"></a>
 
 ## [1.13.7](https://github.com/tgsnake/core/compare/1.13.6...1.13.7)
 
