@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 187;
+  export const Layer: number = 188;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -1290,7 +1290,8 @@ export namespace Raw {
     | Raw.KeyboardButtonWebView
     | Raw.KeyboardButtonSimpleWebView
     | Raw.KeyboardButtonRequestPeer
-    | Raw.InputKeyboardButtonRequestPeer;
+    | Raw.InputKeyboardButtonRequestPeer
+    | Raw.KeyboardButtonCopy;
   export type TypeRequestPeerType =
     | Raw.RequestPeerTypeUser
     | Raw.RequestPeerTypeChat
@@ -10204,7 +10205,7 @@ export namespace Raw {
     round?: boolean;
     voice?: boolean;
     document?: Raw.TypeDocument;
-    altDocument?: Raw.TypeDocument;
+    altDocuments?: Vector<Raw.TypeDocument>;
     ttlSeconds?: int;
 
     constructor(params: {
@@ -10214,13 +10215,13 @@ export namespace Raw {
       round?: boolean;
       voice?: boolean;
       document?: Raw.TypeDocument;
-      altDocument?: Raw.TypeDocument;
+      altDocuments?: Vector<Raw.TypeDocument>;
       ttlSeconds?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessageMediaDocument';
-      this.constructorId = 0x4cf4d72d;
+      this.constructorId = 0xdd570bd5;
       this.subclassOfId = 0x476cbe32;
       this._slots = [
         'nopremium',
@@ -10229,7 +10230,7 @@ export namespace Raw {
         'round',
         'voice',
         'document',
-        'altDocument',
+        'altDocuments',
         'ttlSeconds',
       ];
       this.nopremium = params.nopremium;
@@ -10238,7 +10239,7 @@ export namespace Raw {
       this.round = params.round;
       this.voice = params.voice;
       this.document = params.document;
-      this.altDocument = params.altDocument;
+      this.altDocuments = params.altDocuments;
       this.ttlSeconds = params.ttlSeconds;
     }
     /**
@@ -10254,7 +10255,7 @@ export namespace Raw {
       let round = flags & (1 << 7) ? true : false;
       let voice = flags & (1 << 8) ? true : false;
       let document = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
-      let altDocument = flags & (1 << 5) ? await TLObject.read(_data) : undefined;
+      let altDocuments = flags & (1 << 5) ? await TLObject.read(_data) : [];
       let ttlSeconds = flags & (1 << 2) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.MessageMediaDocument({
         nopremium: nopremium,
@@ -10263,7 +10264,7 @@ export namespace Raw {
         round: round,
         voice: voice,
         document: document,
-        altDocument: altDocument,
+        altDocuments: altDocuments,
         ttlSeconds: ttlSeconds,
       });
     }
@@ -10282,15 +10283,15 @@ export namespace Raw {
       flags |= this.round ? 1 << 7 : 0;
       flags |= this.voice ? 1 << 8 : 0;
       flags |= this.document !== undefined ? 1 << 0 : 0;
-      flags |= this.altDocument !== undefined ? 1 << 5 : 0;
+      flags |= this.altDocuments ? 1 << 5 : 0;
       flags |= this.ttlSeconds !== undefined ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.document !== undefined) {
         b.write(this.document.write() as unknown as Buffer);
       }
-      if (this.altDocument !== undefined) {
-        b.write(this.altDocument.write() as unknown as Buffer);
+      if (this.altDocuments) {
+        b.write(Primitive.Vector.write(this.altDocuments) as unknown as Buffer);
       }
       if (this.ttlSeconds !== undefined) {
         b.write(Primitive.Int.write(this.ttlSeconds) as unknown as Buffer);
@@ -27641,6 +27642,7 @@ export namespace Raw {
     h!: int;
     preloadPrefixSize?: int;
     videoStartTs?: double;
+    videoCodec?: string;
 
     constructor(params: {
       roundMessage?: boolean;
@@ -27651,11 +27653,12 @@ export namespace Raw {
       h: int;
       preloadPrefixSize?: int;
       videoStartTs?: double;
+      videoCodec?: string;
     }) {
       super();
       this.classType = 'types';
       this.className = 'DocumentAttributeVideo';
-      this.constructorId = 0x17399fad;
+      this.constructorId = 0x43c57c48;
       this.subclassOfId = 0xf729eb9b;
       this._slots = [
         'roundMessage',
@@ -27666,6 +27669,7 @@ export namespace Raw {
         'h',
         'preloadPrefixSize',
         'videoStartTs',
+        'videoCodec',
       ];
       this.roundMessage = params.roundMessage;
       this.supportsStreaming = params.supportsStreaming;
@@ -27675,6 +27679,7 @@ export namespace Raw {
       this.h = params.h;
       this.preloadPrefixSize = params.preloadPrefixSize;
       this.videoStartTs = params.videoStartTs;
+      this.videoCodec = params.videoCodec;
     }
     /**
      * Generate the TLObject from buffer.
@@ -27691,6 +27696,7 @@ export namespace Raw {
       let h = await Primitive.Int.read(_data);
       let preloadPrefixSize = flags & (1 << 2) ? await Primitive.Int.read(_data) : undefined;
       let videoStartTs = flags & (1 << 4) ? await Primitive.Double.read(_data) : undefined;
+      let videoCodec = flags & (1 << 5) ? await Primitive.String.read(_data) : undefined;
       return new Raw.DocumentAttributeVideo({
         roundMessage: roundMessage,
         supportsStreaming: supportsStreaming,
@@ -27700,6 +27706,7 @@ export namespace Raw {
         h: h,
         preloadPrefixSize: preloadPrefixSize,
         videoStartTs: videoStartTs,
+        videoCodec: videoCodec,
       });
     }
     /**
@@ -27716,6 +27723,7 @@ export namespace Raw {
       flags |= this.nosound ? 1 << 3 : 0;
       flags |= this.preloadPrefixSize !== undefined ? 1 << 2 : 0;
       flags |= this.videoStartTs !== undefined ? 1 << 4 : 0;
+      flags |= this.videoCodec !== undefined ? 1 << 5 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.duration !== undefined) {
@@ -27732,6 +27740,9 @@ export namespace Raw {
       }
       if (this.videoStartTs !== undefined) {
         b.write(Primitive.Double.write(this.videoStartTs) as unknown as Buffer);
+      }
+      if (this.videoCodec !== undefined) {
+        b.write(Primitive.String.write(this.videoCodec) as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -30551,6 +30562,46 @@ export namespace Raw {
       }
       if (this.maxQuantity !== undefined) {
         b.write(Primitive.Int.write(this.maxQuantity) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer);
+    }
+  }
+  export class KeyboardButtonCopy extends TLObject {
+    text!: string;
+    copyText!: string;
+
+    constructor(params: { text: string; copyText: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'KeyboardButtonCopy';
+      this.constructorId = 0x75d2698e;
+      this.subclassOfId = 0xbad74a3;
+      this._slots = ['text', 'copyText'];
+      this.text = params.text;
+      this.copyText = params.copyText;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.KeyboardButtonCopy> {
+      // no flags
+      let text = await Primitive.String.read(_data);
+      let copyText = await Primitive.String.read(_data);
+      return new Raw.KeyboardButtonCopy({ text: text, copyText: copyText });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.text !== undefined) {
+        b.write(Primitive.String.write(this.text) as unknown as Buffer);
+      }
+      if (this.copyText !== undefined) {
+        b.write(Primitive.String.write(this.copyText) as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -100068,16 +100119,25 @@ export namespace Raw {
     }
     export class ClickSponsoredMessage extends TLObject {
       __response__!: Bool;
+      media?: boolean;
+      fullscreen?: boolean;
       channel!: Raw.TypeInputChannel;
       randomId!: bytes;
 
-      constructor(params: { channel: Raw.TypeInputChannel; randomId: bytes }) {
+      constructor(params: {
+        media?: boolean;
+        fullscreen?: boolean;
+        channel: Raw.TypeInputChannel;
+        randomId: bytes;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ClickSponsoredMessage';
-        this.constructorId = 0x18afbc93;
+        this.constructorId = 0x1445d75;
         this.subclassOfId = 0xf5b399ac;
-        this._slots = ['channel', 'randomId'];
+        this._slots = ['media', 'fullscreen', 'channel', 'randomId'];
+        this.media = params.media;
+        this.fullscreen = params.fullscreen;
         this.channel = params.channel;
         this.randomId = params.randomId;
       }
@@ -100089,10 +100149,18 @@ export namespace Raw {
         _data: BytesIO,
         ..._args: Array<any>
       ): Promise<Raw.channels.ClickSponsoredMessage> {
-        // no flags
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let media = flags & (1 << 0) ? true : false;
+        let fullscreen = flags & (1 << 1) ? true : false;
         let channel = await TLObject.read(_data);
         let randomId = await Primitive.Bytes.read(_data);
-        return new Raw.channels.ClickSponsoredMessage({ channel: channel, randomId: randomId });
+        return new Raw.channels.ClickSponsoredMessage({
+          media: media,
+          fullscreen: fullscreen,
+          channel: channel,
+          randomId: randomId,
+        });
       }
       /**
        * Generate buffer from TLObject.
@@ -100100,7 +100168,13 @@ export namespace Raw {
       write(): Buffer {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.media ? 1 << 0 : 0;
+        flags |= this.fullscreen ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
         if (this.channel !== undefined) {
           b.write(this.channel.write() as unknown as Buffer);
         }
