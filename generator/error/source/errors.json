@@ -5278,7 +5278,7 @@
   {
     "code": 406,
     "msg": "UPDATE_APP_TO_LOGIN",
-    "desc": "Please update to the latest version of tgsnake to login.",
+    "desc": "Please update your client to login.",
     "affected": ["auth.SendCode", "auth.SignIn"]
   },
   {

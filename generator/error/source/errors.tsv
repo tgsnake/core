@@ -639,7 +639,7 @@ code	id	message
 406	STICKERSET_OWNER_ANONYMOUS	Provided stickerset can't be installed as group stickerset to prevent admin deanonymization.
 406	TOPIC_CLOSED	This topic was closed, you can't send messages to it anymore.
 406	TOPIC_DELETED	The specified topic was deleted.
-406	UPDATE_APP_TO_LOGIN	Please update to the latest version of tgsnake to login.
+406	UPDATE_APP_TO_LOGIN	Please update your client to login.
 406	USERPIC_PRIVACY_REQUIRED	You need to disable privacy settings for your profile picture in order to make your geolocation public.
 406	USERPIC_UPLOAD_REQUIRED	You must have a profile picture to publish your geolocation.
 406	USER_RESTRICTED	You're spamreported, you can't create channels or chats.

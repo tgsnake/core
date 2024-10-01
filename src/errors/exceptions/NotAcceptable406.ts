@@ -129,7 +129,7 @@ export class TopicDeleted extends NotAcceptable {
 }
 export class UpdateAppToLogin extends NotAcceptable {
   id: string = 'UPDATE_APP_TO_LOGIN';
-  message: string = 'Please update to the latest version of tgsnake to login.';
+  message: string = 'Please update your client to login.';
 }
 export class UserpicPrivacyRequired extends NotAcceptable {
   id: string = 'USERPIC_PRIVACY_REQUIRED';
