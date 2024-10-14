@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 189;
+  export const Layer: number = 190;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -1628,12 +1628,12 @@ export namespace Raw {
     | Raw.PhotoCachedSize23;
   export type TypeFolder = Raw.Folder;
   export type TypeDraftMessage = Raw.DraftMessageEmpty | Raw.DraftMessage;
-  export type TypeTextWithEntities = Raw.TextWithEntities;
   export type TypeStarGift = Raw.StarGift;
   export type TypeRequestedPeer =
     | Raw.RequestedPeerUser
     | Raw.RequestedPeerChat
     | Raw.RequestedPeerChannel;
+  export type TypeTextWithEntities = Raw.TextWithEntities;
   export type TypeSecureValueType =
     | Raw.SecureValueTypePersonalDetails
     | Raw.SecureValueTypePassport
@@ -12518,6 +12518,7 @@ export namespace Raw {
     months!: int;
     cryptoCurrency?: string;
     cryptoAmount?: long;
+    message?: Raw.TypeTextWithEntities;
 
     constructor(params: {
       currency: string;
@@ -12525,18 +12526,20 @@ export namespace Raw {
       months: int;
       cryptoCurrency?: string;
       cryptoAmount?: long;
+      message?: Raw.TypeTextWithEntities;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionGiftPremium';
-      this.constructorId = 0xc83d6aec;
+      this.constructorId = 0x6c6274fa;
       this.subclassOfId = 0x8680d126;
-      this._slots = ['currency', 'amount', 'months', 'cryptoCurrency', 'cryptoAmount'];
+      this._slots = ['currency', 'amount', 'months', 'cryptoCurrency', 'cryptoAmount', 'message'];
       this.currency = params.currency;
       this.amount = params.amount;
       this.months = params.months;
       this.cryptoCurrency = params.cryptoCurrency;
       this.cryptoAmount = params.cryptoAmount;
+      this.message = params.message;
     }
     /**
      * Generate the TLObject from buffer.
@@ -12550,12 +12553,14 @@ export namespace Raw {
       let months = await Primitive.Int.read(_data);
       let cryptoCurrency = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
       let cryptoAmount = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let message = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
       return new Raw.MessageActionGiftPremium({
         currency: currency,
         amount: amount,
         months: months,
         cryptoCurrency: cryptoCurrency,
         cryptoAmount: cryptoAmount,
+        message: message,
       });
     }
     /**
@@ -12569,6 +12574,7 @@ export namespace Raw {
       let flags = 0;
       flags |= this.cryptoCurrency !== undefined ? 1 << 0 : 0;
       flags |= this.cryptoAmount !== undefined ? 1 << 0 : 0;
+      flags |= this.message !== undefined ? 1 << 1 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.currency !== undefined) {
@@ -12585,6 +12591,9 @@ export namespace Raw {
       }
       if (this.cryptoAmount !== undefined) {
         b.write(Primitive.Long.write(this.cryptoAmount) as unknown as Buffer);
+      }
+      if (this.message !== undefined) {
+        b.write(this.message.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -12855,6 +12864,7 @@ export namespace Raw {
     amount?: long;
     cryptoCurrency?: string;
     cryptoAmount?: long;
+    message?: Raw.TypeTextWithEntities;
 
     constructor(params: {
       viaGiveaway?: boolean;
@@ -12866,11 +12876,12 @@ export namespace Raw {
       amount?: long;
       cryptoCurrency?: string;
       cryptoAmount?: long;
+      message?: Raw.TypeTextWithEntities;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionGiftCode';
-      this.constructorId = 0x678c2e09;
+      this.constructorId = 0x56d03994;
       this.subclassOfId = 0x8680d126;
       this._slots = [
         'viaGiveaway',
@@ -12882,6 +12893,7 @@ export namespace Raw {
         'amount',
         'cryptoCurrency',
         'cryptoAmount',
+        'message',
       ];
       this.viaGiveaway = params.viaGiveaway;
       this.unclaimed = params.unclaimed;
@@ -12892,6 +12904,7 @@ export namespace Raw {
       this.amount = params.amount;
       this.cryptoCurrency = params.cryptoCurrency;
       this.cryptoAmount = params.cryptoAmount;
+      this.message = params.message;
     }
     /**
      * Generate the TLObject from buffer.
@@ -12909,6 +12922,7 @@ export namespace Raw {
       let amount = flags & (1 << 2) ? await Primitive.Long.read(_data) : undefined;
       let cryptoCurrency = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
       let cryptoAmount = flags & (1 << 3) ? await Primitive.Long.read(_data) : undefined;
+      let message = flags & (1 << 4) ? await TLObject.read(_data) : undefined;
       return new Raw.MessageActionGiftCode({
         viaGiveaway: viaGiveaway,
         unclaimed: unclaimed,
@@ -12919,6 +12933,7 @@ export namespace Raw {
         amount: amount,
         cryptoCurrency: cryptoCurrency,
         cryptoAmount: cryptoAmount,
+        message: message,
       });
     }
     /**
@@ -12937,6 +12952,7 @@ export namespace Raw {
       flags |= this.amount !== undefined ? 1 << 2 : 0;
       flags |= this.cryptoCurrency !== undefined ? 1 << 3 : 0;
       flags |= this.cryptoAmount !== undefined ? 1 << 3 : 0;
+      flags |= this.message !== undefined ? 1 << 4 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.boostPeer !== undefined) {
@@ -12959,6 +12975,9 @@ export namespace Raw {
       }
       if (this.cryptoAmount !== undefined) {
         b.write(Primitive.Long.write(this.cryptoAmount) as unknown as Buffer);
+      }
+      if (this.message !== undefined) {
+        b.write(this.message.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -53013,23 +53032,26 @@ export namespace Raw {
     boostPeer?: Raw.TypeInputPeer;
     currency!: string;
     amount!: long;
+    message?: Raw.TypeTextWithEntities;
 
     constructor(params: {
       users: Vector<Raw.TypeInputUser>;
       boostPeer?: Raw.TypeInputPeer;
       currency: string;
       amount: long;
+      message?: Raw.TypeTextWithEntities;
     }) {
       super();
       this.classType = 'types';
       this.className = 'InputStorePaymentPremiumGiftCode';
-      this.constructorId = 0xa3805f3f;
+      this.constructorId = 0xfb790393;
       this.subclassOfId = 0xe7a4174d;
-      this._slots = ['users', 'boostPeer', 'currency', 'amount'];
+      this._slots = ['users', 'boostPeer', 'currency', 'amount', 'message'];
       this.users = params.users;
       this.boostPeer = params.boostPeer;
       this.currency = params.currency;
       this.amount = params.amount;
+      this.message = params.message;
     }
     /**
      * Generate the TLObject from buffer.
@@ -53045,11 +53067,13 @@ export namespace Raw {
       let boostPeer = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
       let currency = await Primitive.String.read(_data);
       let amount = await Primitive.Long.read(_data);
+      let message = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
       return new Raw.InputStorePaymentPremiumGiftCode({
         users: users,
         boostPeer: boostPeer,
         currency: currency,
         amount: amount,
+        message: message,
       });
     }
     /**
@@ -53062,6 +53086,7 @@ export namespace Raw {
       // @ts-ignore
       let flags = 0;
       flags |= this.boostPeer !== undefined ? 1 << 0 : 0;
+      flags |= this.message !== undefined ? 1 << 1 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.users) {
@@ -53075,6 +53100,9 @@ export namespace Raw {
       }
       if (this.amount !== undefined) {
         b.write(Primitive.Long.write(this.amount) as unknown as Buffer);
+      }
+      if (this.message !== undefined) {
+        b.write(this.message.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
