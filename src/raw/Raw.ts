@@ -35,7 +35,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 190;
+  export const Layer: number = 192;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -445,6 +445,10 @@ export namespace Raw {
     | Raw.messages.SendPaidReaction
     | Raw.messages.TogglePaidReactionPrivacy
     | Raw.messages.GetPaidReactionPrivacy
+    | Raw.messages.ViewSponsoredMessage
+    | Raw.messages.ClickSponsoredMessage
+    | Raw.messages.ReportSponsoredMessage
+    | Raw.messages.GetSponsoredMessages
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -521,8 +525,6 @@ export namespace Raw {
     | Raw.channels.ToggleSlowMode
     | Raw.channels.GetInactiveChannels
     | Raw.channels.ConvertToGigagroup
-    | Raw.channels.ViewSponsoredMessage
-    | Raw.channels.GetSponsoredMessages
     | Raw.channels.GetSendAs
     | Raw.channels.DeleteParticipantHistory
     | Raw.channels.ToggleJoinToSend
@@ -541,14 +543,12 @@ export namespace Raw {
     | Raw.channels.ToggleAntiSpam
     | Raw.channels.ReportAntiSpamFalsePositive
     | Raw.channels.ToggleParticipantsHidden
-    | Raw.channels.ClickSponsoredMessage
     | Raw.channels.UpdateColor
     | Raw.channels.ToggleViewForumAsMessages
     | Raw.channels.GetChannelRecommendations
     | Raw.channels.UpdateEmojiStatus
     | Raw.channels.SetBoostsToUnblockRestrictions
     | Raw.channels.SetEmojiStickers
-    | Raw.channels.ReportSponsoredMessage
     | Raw.channels.RestrictSponsoredMessages
     | Raw.channels.SearchPosts
     | Raw.bots.SendCustomRequest
@@ -953,7 +953,8 @@ export namespace Raw {
     | Raw.StarsTransactionPeerPremiumBot
     | Raw.StarsTransactionPeerFragment
     | Raw.StarsTransactionPeer
-    | Raw.StarsTransactionPeerAds;
+    | Raw.StarsTransactionPeerAds
+    | Raw.StarsTransactionPeerAPI;
   export type TypeAvailableEffect = Raw.AvailableEffect;
   export type TypeReactionNotificationsFrom =
     | Raw.ReactionNotificationsFromContacts
@@ -9489,6 +9490,7 @@ export namespace Raw {
     noforwards?: boolean;
     invertMedia?: boolean;
     offline?: boolean;
+    videoProcessingPending?: boolean;
     id!: int;
     fromId?: Raw.TypePeer;
     fromBoostsApplied?: int;
@@ -9529,6 +9531,7 @@ export namespace Raw {
       noforwards?: boolean;
       invertMedia?: boolean;
       offline?: boolean;
+      videoProcessingPending?: boolean;
       id: int;
       fromId?: Raw.TypePeer;
       fromBoostsApplied?: int;
@@ -9574,6 +9577,7 @@ export namespace Raw {
         'noforwards',
         'invertMedia',
         'offline',
+        'videoProcessingPending',
         'id',
         'fromId',
         'fromBoostsApplied',
@@ -9613,6 +9617,7 @@ export namespace Raw {
       this.noforwards = params.noforwards;
       this.invertMedia = params.invertMedia;
       this.offline = params.offline;
+      this.videoProcessingPending = params.videoProcessingPending;
       this.id = params.id;
       this.fromId = params.fromId;
       this.fromBoostsApplied = params.fromBoostsApplied;
@@ -9661,6 +9666,7 @@ export namespace Raw {
       // @ts-ignore
       let flags2 = await Primitive.Int.read(_data);
       let offline = flags2 & (1 << 1) ? true : false;
+      let videoProcessingPending = flags2 & (1 << 4) ? true : false;
       let id = await Primitive.Int.read(_data);
       let fromId = flags & (1 << 8) ? await TLObject.read(_data) : undefined;
       let fromBoostsApplied = flags & (1 << 29) ? await Primitive.Int.read(_data) : undefined;
@@ -9700,6 +9706,7 @@ export namespace Raw {
         noforwards: noforwards,
         invertMedia: invertMedia,
         offline: offline,
+        videoProcessingPending: videoProcessingPending,
         id: id,
         fromId: fromId,
         fromBoostsApplied: fromBoostsApplied,
@@ -9772,6 +9779,7 @@ export namespace Raw {
       // @ts-ignore
       let flags2 = 0;
       flags2 |= this.offline ? 1 << 1 : 0;
+      flags2 |= this.videoProcessingPending ? 1 << 4 : 0;
       flags2 |= this.viaBusinessBotId !== undefined ? 1 << 0 : 0;
       flags2 |= this.effect !== undefined ? 1 << 2 : 0;
       flags2 |= this.factcheck !== undefined ? 1 << 3 : 0;
@@ -15302,6 +15310,7 @@ export namespace Raw {
     contactRequirePremium?: boolean;
     readDatesPrivate?: boolean;
     sponsoredEnabled?: boolean;
+    canViewRevenue?: boolean;
     id!: long;
     about?: string;
     settings!: Raw.TypePeerSettings;
@@ -15346,6 +15355,7 @@ export namespace Raw {
       contactRequirePremium?: boolean;
       readDatesPrivate?: boolean;
       sponsoredEnabled?: boolean;
+      canViewRevenue?: boolean;
       id: long;
       about?: string;
       settings: Raw.TypePeerSettings;
@@ -15395,6 +15405,7 @@ export namespace Raw {
         'contactRequirePremium',
         'readDatesPrivate',
         'sponsoredEnabled',
+        'canViewRevenue',
         'id',
         'about',
         'settings',
@@ -15438,6 +15449,7 @@ export namespace Raw {
       this.contactRequirePremium = params.contactRequirePremium;
       this.readDatesPrivate = params.readDatesPrivate;
       this.sponsoredEnabled = params.sponsoredEnabled;
+      this.canViewRevenue = params.canViewRevenue;
       this.id = params.id;
       this.about = params.about;
       this.settings = params.settings;
@@ -15490,6 +15502,7 @@ export namespace Raw {
       // @ts-ignore
       let flags2 = await Primitive.Int.read(_data);
       let sponsoredEnabled = flags2 & (1 << 7) ? true : false;
+      let canViewRevenue = flags2 & (1 << 9) ? true : false;
       let id = await Primitive.Long.read(_data);
       let about = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
       let settings = await TLObject.read(_data);
@@ -15533,6 +15546,7 @@ export namespace Raw {
         contactRequirePremium: contactRequirePremium,
         readDatesPrivate: readDatesPrivate,
         sponsoredEnabled: sponsoredEnabled,
+        canViewRevenue: canViewRevenue,
         id: id,
         about: about,
         settings: settings,
@@ -15605,6 +15619,7 @@ export namespace Raw {
       // @ts-ignore
       let flags2 = 0;
       flags2 |= this.sponsoredEnabled ? 1 << 7 : 0;
+      flags2 |= this.canViewRevenue ? 1 << 9 : 0;
       flags2 |= this.businessWorkHours !== undefined ? 1 << 0 : 0;
       flags2 |= this.businessLocation !== undefined ? 1 << 1 : 0;
       flags2 |= this.businessGreetingMessage !== undefined ? 1 << 2 : 0;
@@ -19670,16 +19685,18 @@ export namespace Raw {
   export class UpdateDeleteScheduledMessages extends TLObject {
     peer!: Raw.TypePeer;
     messages!: Vector<int>;
+    sentMessages?: Vector<int>;
 
-    constructor(params: { peer: Raw.TypePeer; messages: Vector<int> }) {
+    constructor(params: { peer: Raw.TypePeer; messages: Vector<int>; sentMessages?: Vector<int> }) {
       super();
       this.classType = 'types';
       this.className = 'UpdateDeleteScheduledMessages';
-      this.constructorId = 0x90866cee;
+      this.constructorId = 0xf2a71983;
       this.subclassOfId = 0x9f89304e;
-      this._slots = ['peer', 'messages'];
+      this._slots = ['peer', 'messages', 'sentMessages'];
       this.peer = params.peer;
       this.messages = params.messages;
+      this.sentMessages = params.sentMessages;
     }
     /**
      * Generate the TLObject from buffer.
@@ -19689,10 +19706,16 @@ export namespace Raw {
       _data: BytesIO,
       ..._args: Array<any>
     ): Promise<Raw.UpdateDeleteScheduledMessages> {
-      // no flags
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
       let peer = await TLObject.read(_data);
       let messages = await TLObject.read(_data, Primitive.Int);
-      return new Raw.UpdateDeleteScheduledMessages({ peer: peer, messages: messages });
+      let sentMessages = flags & (1 << 0) ? await TLObject.read(_data, Primitive.Int) : [];
+      return new Raw.UpdateDeleteScheduledMessages({
+        peer: peer,
+        messages: messages,
+        sentMessages: sentMessages,
+      });
     }
     /**
      * Generate buffer from TLObject.
@@ -19700,12 +19723,20 @@ export namespace Raw {
     write(): Buffer {
       let b: BytesIO = new BytesIO();
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-      // no flags
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.sentMessages ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       if (this.peer !== undefined) {
         b.write(this.peer.write() as unknown as Buffer);
       }
       if (this.messages) {
         b.write(Primitive.Vector.write(this.messages, Primitive.Int) as unknown as Buffer);
+      }
+      if (this.sentMessages) {
+        b.write(Primitive.Vector.write(this.sentMessages, Primitive.Int) as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -60911,6 +60942,33 @@ export namespace Raw {
       return Buffer.from(b.buffer);
     }
   }
+  export class StarsTransactionPeerAPI extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'StarsTransactionPeerAPI';
+      this.constructorId = 0xf9677aad;
+      this.subclassOfId = 0x41b69183;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.StarsTransactionPeerAPI> {
+      // no flags
+      return new Raw.StarsTransactionPeerAPI();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    write(): Buffer {
+      let b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      return Buffer.from(b.buffer);
+    }
+  }
   export class StarsTopupOption extends TLObject {
     extended?: boolean;
     stars!: long;
@@ -61006,6 +61064,7 @@ export namespace Raw {
     subscriptionPeriod?: int;
     giveawayPostId?: int;
     stargift?: Raw.TypeStarGift;
+    floodskipNumber?: int;
 
     constructor(params: {
       refund?: boolean;
@@ -61028,11 +61087,12 @@ export namespace Raw {
       subscriptionPeriod?: int;
       giveawayPostId?: int;
       stargift?: Raw.TypeStarGift;
+      floodskipNumber?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'StarsTransaction';
-      this.constructorId = 0xa9ee4c2;
+      this.constructorId = 0x35d4f276;
       this.subclassOfId = 0x86884772;
       this._slots = [
         'refund',
@@ -61055,6 +61115,7 @@ export namespace Raw {
         'subscriptionPeriod',
         'giveawayPostId',
         'stargift',
+        'floodskipNumber',
       ];
       this.refund = params.refund;
       this.pending = params.pending;
@@ -61076,6 +61137,7 @@ export namespace Raw {
       this.subscriptionPeriod = params.subscriptionPeriod;
       this.giveawayPostId = params.giveawayPostId;
       this.stargift = params.stargift;
+      this.floodskipNumber = params.floodskipNumber;
     }
     /**
      * Generate the TLObject from buffer.
@@ -61104,6 +61166,7 @@ export namespace Raw {
       let subscriptionPeriod = flags & (1 << 12) ? await Primitive.Int.read(_data) : undefined;
       let giveawayPostId = flags & (1 << 13) ? await Primitive.Int.read(_data) : undefined;
       let stargift = flags & (1 << 14) ? await TLObject.read(_data) : undefined;
+      let floodskipNumber = flags & (1 << 15) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.StarsTransaction({
         refund: refund,
         pending: pending,
@@ -61125,6 +61188,7 @@ export namespace Raw {
         subscriptionPeriod: subscriptionPeriod,
         giveawayPostId: giveawayPostId,
         stargift: stargift,
+        floodskipNumber: floodskipNumber,
       });
     }
     /**
@@ -61152,6 +61216,7 @@ export namespace Raw {
       flags |= this.subscriptionPeriod !== undefined ? 1 << 12 : 0;
       flags |= this.giveawayPostId !== undefined ? 1 << 13 : 0;
       flags |= this.stargift !== undefined ? 1 << 14 : 0;
+      flags |= this.floodskipNumber !== undefined ? 1 << 15 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -61198,6 +61263,9 @@ export namespace Raw {
       }
       if (this.stargift !== undefined) {
         b.write(this.stargift.write() as unknown as Buffer);
+      }
+      if (this.floodskipNumber !== undefined) {
+        b.write(Primitive.Int.write(this.floodskipNumber) as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -61920,43 +61988,55 @@ export namespace Raw {
   }
   export class StarGift extends TLObject {
     limited?: boolean;
+    soldOut?: boolean;
     id!: long;
     sticker!: Raw.TypeDocument;
     stars!: long;
     availabilityRemains?: int;
     availabilityTotal?: int;
     convertStars!: long;
+    firstSaleDate?: int;
+    lastSaleDate?: int;
 
     constructor(params: {
       limited?: boolean;
+      soldOut?: boolean;
       id: long;
       sticker: Raw.TypeDocument;
       stars: long;
       availabilityRemains?: int;
       availabilityTotal?: int;
       convertStars: long;
+      firstSaleDate?: int;
+      lastSaleDate?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'StarGift';
-      this.constructorId = 0xaea174ee;
+      this.constructorId = 0x49c577cd;
       this.subclassOfId = 0xc31c590b;
       this._slots = [
         'limited',
+        'soldOut',
         'id',
         'sticker',
         'stars',
         'availabilityRemains',
         'availabilityTotal',
         'convertStars',
+        'firstSaleDate',
+        'lastSaleDate',
       ];
       this.limited = params.limited;
+      this.soldOut = params.soldOut;
       this.id = params.id;
       this.sticker = params.sticker;
       this.stars = params.stars;
       this.availabilityRemains = params.availabilityRemains;
       this.availabilityTotal = params.availabilityTotal;
       this.convertStars = params.convertStars;
+      this.firstSaleDate = params.firstSaleDate;
+      this.lastSaleDate = params.lastSaleDate;
     }
     /**
      * Generate the TLObject from buffer.
@@ -61966,20 +62046,26 @@ export namespace Raw {
       // @ts-ignore
       let flags = await Primitive.Int.read(_data);
       let limited = flags & (1 << 0) ? true : false;
+      let soldOut = flags & (1 << 1) ? true : false;
       let id = await Primitive.Long.read(_data);
       let sticker = await TLObject.read(_data);
       let stars = await Primitive.Long.read(_data);
       let availabilityRemains = flags & (1 << 0) ? await Primitive.Int.read(_data) : undefined;
       let availabilityTotal = flags & (1 << 0) ? await Primitive.Int.read(_data) : undefined;
       let convertStars = await Primitive.Long.read(_data);
+      let firstSaleDate = flags & (1 << 1) ? await Primitive.Int.read(_data) : undefined;
+      let lastSaleDate = flags & (1 << 1) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.StarGift({
         limited: limited,
+        soldOut: soldOut,
         id: id,
         sticker: sticker,
         stars: stars,
         availabilityRemains: availabilityRemains,
         availabilityTotal: availabilityTotal,
         convertStars: convertStars,
+        firstSaleDate: firstSaleDate,
+        lastSaleDate: lastSaleDate,
       });
     }
     /**
@@ -61992,8 +62078,11 @@ export namespace Raw {
       // @ts-ignore
       let flags = 0;
       flags |= this.limited ? 1 << 0 : 0;
+      flags |= this.soldOut ? 1 << 1 : 0;
       flags |= this.availabilityRemains !== undefined ? 1 << 0 : 0;
       flags |= this.availabilityTotal !== undefined ? 1 << 0 : 0;
+      flags |= this.firstSaleDate !== undefined ? 1 << 1 : 0;
+      flags |= this.lastSaleDate !== undefined ? 1 << 1 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -62013,6 +62102,12 @@ export namespace Raw {
       }
       if (this.convertStars !== undefined) {
         b.write(Primitive.Long.write(this.convertStars) as unknown as Buffer);
+      }
+      if (this.firstSaleDate !== undefined) {
+        b.write(Primitive.Int.write(this.firstSaleDate) as unknown as Buffer);
+      }
+      if (this.lastSaleDate !== undefined) {
+        b.write(Primitive.Int.write(this.lastSaleDate) as unknown as Buffer);
       }
       return Buffer.from(b.buffer);
     }
@@ -72606,10 +72701,10 @@ export namespace Raw {
   }
   export namespace messages {
     export type TypeForumTopics = Raw.messages.ForumTopics;
+    export type TypeInactiveChats = Raw.messages.InactiveChats;
     export type TypeSponsoredMessages =
       | Raw.messages.SponsoredMessages
       | Raw.messages.SponsoredMessagesEmpty;
-    export type TypeInactiveChats = Raw.messages.InactiveChats;
     export type TypeAvailableEffects =
       | Raw.messages.AvailableEffectsNotModified
       | Raw.messages.AvailableEffects;
@@ -77596,6 +77691,7 @@ export namespace Raw {
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
       invertMedia?: boolean;
+      allowPaidFloodskip?: boolean;
       peer!: Raw.TypeInputPeer;
       replyTo?: Raw.TypeInputReplyTo;
       message!: string;
@@ -77615,6 +77711,7 @@ export namespace Raw {
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
         invertMedia?: boolean;
+        allowPaidFloodskip?: boolean;
         peer: Raw.TypeInputPeer;
         replyTo?: Raw.TypeInputReplyTo;
         message: string;
@@ -77639,6 +77736,7 @@ export namespace Raw {
           'noforwards',
           'updateStickersetsOrder',
           'invertMedia',
+          'allowPaidFloodskip',
           'peer',
           'replyTo',
           'message',
@@ -77657,6 +77755,7 @@ export namespace Raw {
         this.noforwards = params.noforwards;
         this.updateStickersetsOrder = params.updateStickersetsOrder;
         this.invertMedia = params.invertMedia;
+        this.allowPaidFloodskip = params.allowPaidFloodskip;
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.message = params.message;
@@ -77682,6 +77781,7 @@ export namespace Raw {
         let noforwards = flags & (1 << 14) ? true : false;
         let updateStickersetsOrder = flags & (1 << 15) ? true : false;
         let invertMedia = flags & (1 << 16) ? true : false;
+        let allowPaidFloodskip = flags & (1 << 19) ? true : false;
         let peer = await TLObject.read(_data);
         let replyTo = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
         let message = await Primitive.String.read(_data);
@@ -77700,6 +77800,7 @@ export namespace Raw {
           noforwards: noforwards,
           updateStickersetsOrder: updateStickersetsOrder,
           invertMedia: invertMedia,
+          allowPaidFloodskip: allowPaidFloodskip,
           peer: peer,
           replyTo: replyTo,
           message: message,
@@ -77728,6 +77829,7 @@ export namespace Raw {
         flags |= this.noforwards ? 1 << 14 : 0;
         flags |= this.updateStickersetsOrder ? 1 << 15 : 0;
         flags |= this.invertMedia ? 1 << 16 : 0;
+        flags |= this.allowPaidFloodskip ? 1 << 19 : 0;
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
         flags |= this.entities ? 1 << 3 : 0;
@@ -77778,6 +77880,7 @@ export namespace Raw {
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
       invertMedia?: boolean;
+      allowPaidFloodskip?: boolean;
       peer!: Raw.TypeInputPeer;
       replyTo?: Raw.TypeInputReplyTo;
       media!: Raw.TypeInputMedia;
@@ -77797,6 +77900,7 @@ export namespace Raw {
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
         invertMedia?: boolean;
+        allowPaidFloodskip?: boolean;
         peer: Raw.TypeInputPeer;
         replyTo?: Raw.TypeInputReplyTo;
         media: Raw.TypeInputMedia;
@@ -77821,6 +77925,7 @@ export namespace Raw {
           'noforwards',
           'updateStickersetsOrder',
           'invertMedia',
+          'allowPaidFloodskip',
           'peer',
           'replyTo',
           'media',
@@ -77839,6 +77944,7 @@ export namespace Raw {
         this.noforwards = params.noforwards;
         this.updateStickersetsOrder = params.updateStickersetsOrder;
         this.invertMedia = params.invertMedia;
+        this.allowPaidFloodskip = params.allowPaidFloodskip;
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.media = params.media;
@@ -77864,6 +77970,7 @@ export namespace Raw {
         let noforwards = flags & (1 << 14) ? true : false;
         let updateStickersetsOrder = flags & (1 << 15) ? true : false;
         let invertMedia = flags & (1 << 16) ? true : false;
+        let allowPaidFloodskip = flags & (1 << 19) ? true : false;
         let peer = await TLObject.read(_data);
         let replyTo = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
         let media = await TLObject.read(_data);
@@ -77882,6 +77989,7 @@ export namespace Raw {
           noforwards: noforwards,
           updateStickersetsOrder: updateStickersetsOrder,
           invertMedia: invertMedia,
+          allowPaidFloodskip: allowPaidFloodskip,
           peer: peer,
           replyTo: replyTo,
           media: media,
@@ -77910,6 +78018,7 @@ export namespace Raw {
         flags |= this.noforwards ? 1 << 14 : 0;
         flags |= this.updateStickersetsOrder ? 1 << 15 : 0;
         flags |= this.invertMedia ? 1 << 16 : 0;
+        flags |= this.allowPaidFloodskip ? 1 << 19 : 0;
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
         flags |= this.entities ? 1 << 3 : 0;
@@ -77963,6 +78072,7 @@ export namespace Raw {
       dropAuthor?: boolean;
       dropMediaCaptions?: boolean;
       noforwards?: boolean;
+      allowPaidFloodskip?: boolean;
       fromPeer!: Raw.TypeInputPeer;
       id!: Vector<int>;
       randomId!: Vector<long>;
@@ -77979,6 +78089,7 @@ export namespace Raw {
         dropAuthor?: boolean;
         dropMediaCaptions?: boolean;
         noforwards?: boolean;
+        allowPaidFloodskip?: boolean;
         fromPeer: Raw.TypeInputPeer;
         id: Vector<int>;
         randomId: Vector<long>;
@@ -78000,6 +78111,7 @@ export namespace Raw {
           'dropAuthor',
           'dropMediaCaptions',
           'noforwards',
+          'allowPaidFloodskip',
           'fromPeer',
           'id',
           'randomId',
@@ -78015,6 +78127,7 @@ export namespace Raw {
         this.dropAuthor = params.dropAuthor;
         this.dropMediaCaptions = params.dropMediaCaptions;
         this.noforwards = params.noforwards;
+        this.allowPaidFloodskip = params.allowPaidFloodskip;
         this.fromPeer = params.fromPeer;
         this.id = params.id;
         this.randomId = params.randomId;
@@ -78040,6 +78153,7 @@ export namespace Raw {
         let dropAuthor = flags & (1 << 11) ? true : false;
         let dropMediaCaptions = flags & (1 << 12) ? true : false;
         let noforwards = flags & (1 << 14) ? true : false;
+        let allowPaidFloodskip = flags & (1 << 19) ? true : false;
         let fromPeer = await TLObject.read(_data);
         let id = await TLObject.read(_data, Primitive.Int);
         let randomId = await TLObject.read(_data, Primitive.Long);
@@ -78055,6 +78169,7 @@ export namespace Raw {
           dropAuthor: dropAuthor,
           dropMediaCaptions: dropMediaCaptions,
           noforwards: noforwards,
+          allowPaidFloodskip: allowPaidFloodskip,
           fromPeer: fromPeer,
           id: id,
           randomId: randomId,
@@ -78080,6 +78195,7 @@ export namespace Raw {
         flags |= this.dropAuthor ? 1 << 11 : 0;
         flags |= this.dropMediaCaptions ? 1 << 12 : 0;
         flags |= this.noforwards ? 1 << 14 : 0;
+        flags |= this.allowPaidFloodskip ? 1 << 19 : 0;
         flags |= this.topMsgId !== undefined ? 1 << 9 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
@@ -82383,6 +82499,7 @@ export namespace Raw {
       noforwards?: boolean;
       updateStickersetsOrder?: boolean;
       invertMedia?: boolean;
+      allowPaidFloodskip?: boolean;
       peer!: Raw.TypeInputPeer;
       replyTo?: Raw.TypeInputReplyTo;
       multiMedia!: Vector<Raw.TypeInputSingleMedia>;
@@ -82398,6 +82515,7 @@ export namespace Raw {
         noforwards?: boolean;
         updateStickersetsOrder?: boolean;
         invertMedia?: boolean;
+        allowPaidFloodskip?: boolean;
         peer: Raw.TypeInputPeer;
         replyTo?: Raw.TypeInputReplyTo;
         multiMedia: Vector<Raw.TypeInputSingleMedia>;
@@ -82418,6 +82536,7 @@ export namespace Raw {
           'noforwards',
           'updateStickersetsOrder',
           'invertMedia',
+          'allowPaidFloodskip',
           'peer',
           'replyTo',
           'multiMedia',
@@ -82432,6 +82551,7 @@ export namespace Raw {
         this.noforwards = params.noforwards;
         this.updateStickersetsOrder = params.updateStickersetsOrder;
         this.invertMedia = params.invertMedia;
+        this.allowPaidFloodskip = params.allowPaidFloodskip;
         this.peer = params.peer;
         this.replyTo = params.replyTo;
         this.multiMedia = params.multiMedia;
@@ -82456,6 +82576,7 @@ export namespace Raw {
         let noforwards = flags & (1 << 14) ? true : false;
         let updateStickersetsOrder = flags & (1 << 15) ? true : false;
         let invertMedia = flags & (1 << 16) ? true : false;
+        let allowPaidFloodskip = flags & (1 << 19) ? true : false;
         let peer = await TLObject.read(_data);
         let replyTo = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
         let multiMedia = await TLObject.read(_data);
@@ -82470,6 +82591,7 @@ export namespace Raw {
           noforwards: noforwards,
           updateStickersetsOrder: updateStickersetsOrder,
           invertMedia: invertMedia,
+          allowPaidFloodskip: allowPaidFloodskip,
           peer: peer,
           replyTo: replyTo,
           multiMedia: multiMedia,
@@ -82494,6 +82616,7 @@ export namespace Raw {
         flags |= this.noforwards ? 1 << 14 : 0;
         flags |= this.updateStickersetsOrder ? 1 << 15 : 0;
         flags |= this.invertMedia ? 1 << 16 : 0;
+        flags |= this.allowPaidFloodskip ? 1 << 19 : 0;
         flags |= this.replyTo !== undefined ? 1 << 0 : 0;
         flags |= this.scheduleDate !== undefined ? 1 << 10 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
@@ -89260,6 +89383,209 @@ export namespace Raw {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
+        return Buffer.from(b.buffer);
+      }
+    }
+    export class ViewSponsoredMessage extends TLObject {
+      __response__!: Bool;
+      peer!: Raw.TypeInputPeer;
+      randomId!: bytes;
+
+      constructor(params: { peer: Raw.TypeInputPeer; randomId: bytes }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ViewSponsoredMessage';
+        this.constructorId = 0x673ad8f1;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['peer', 'randomId'];
+        this.peer = params.peer;
+        this.randomId = params.randomId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.ViewSponsoredMessage> {
+        // no flags
+        let peer = await TLObject.read(_data);
+        let randomId = await Primitive.Bytes.read(_data);
+        return new Raw.messages.ViewSponsoredMessage({ peer: peer, randomId: randomId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer);
+      }
+    }
+    export class ClickSponsoredMessage extends TLObject {
+      __response__!: Bool;
+      media?: boolean;
+      fullscreen?: boolean;
+      peer!: Raw.TypeInputPeer;
+      randomId!: bytes;
+
+      constructor(params: {
+        media?: boolean;
+        fullscreen?: boolean;
+        peer: Raw.TypeInputPeer;
+        randomId: bytes;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ClickSponsoredMessage';
+        this.constructorId = 0xf093465;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['media', 'fullscreen', 'peer', 'randomId'];
+        this.media = params.media;
+        this.fullscreen = params.fullscreen;
+        this.peer = params.peer;
+        this.randomId = params.randomId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.ClickSponsoredMessage> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let media = flags & (1 << 0) ? true : false;
+        let fullscreen = flags & (1 << 1) ? true : false;
+        let peer = await TLObject.read(_data);
+        let randomId = await Primitive.Bytes.read(_data);
+        return new Raw.messages.ClickSponsoredMessage({
+          media: media,
+          fullscreen: fullscreen,
+          peer: peer,
+          randomId: randomId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.media ? 1 << 0 : 0;
+        flags |= this.fullscreen ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer);
+      }
+    }
+    export class ReportSponsoredMessage extends TLObject {
+      __response__!: Raw.channels.TypeSponsoredMessageReportResult;
+      peer!: Raw.TypeInputPeer;
+      randomId!: bytes;
+      option!: bytes;
+
+      constructor(params: { peer: Raw.TypeInputPeer; randomId: bytes; option: bytes }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.ReportSponsoredMessage';
+        this.constructorId = 0x1af3dbb8;
+        this.subclassOfId = 0x26231822;
+        this._slots = ['peer', 'randomId', 'option'];
+        this.peer = params.peer;
+        this.randomId = params.randomId;
+        this.option = params.option;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.ReportSponsoredMessage> {
+        // no flags
+        let peer = await TLObject.read(_data);
+        let randomId = await Primitive.Bytes.read(_data);
+        let option = await Primitive.Bytes.read(_data);
+        return new Raw.messages.ReportSponsoredMessage({
+          peer: peer,
+          randomId: randomId,
+          option: option,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.option !== undefined) {
+          b.write(Primitive.Bytes.write(this.option) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer);
+      }
+    }
+    export class GetSponsoredMessages extends TLObject {
+      __response__!: Raw.messages.TypeSponsoredMessages;
+      peer!: Raw.TypeInputPeer;
+
+      constructor(params: { peer: Raw.TypeInputPeer }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetSponsoredMessages';
+        this.constructorId = 0x9bd2f439;
+        this.subclassOfId = 0x7f4169e0;
+        this._slots = ['peer'];
+        this.peer = params.peer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.GetSponsoredMessages> {
+        // no flags
+        let peer = await TLObject.read(_data);
+        return new Raw.messages.GetSponsoredMessages({ peer: peer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      write(): Buffer {
+        let b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
         return Buffer.from(b.buffer);
       }
     }
@@ -97567,16 +97893,16 @@ export namespace Raw {
     }
   }
   export namespace channels {
-    export type TypeSponsoredMessageReportResult =
-      | Raw.channels.SponsoredMessageReportResultChooseOption
-      | Raw.channels.SponsoredMessageReportResultAdsHidden
-      | Raw.channels.SponsoredMessageReportResultReported;
     export type TypeSendAsPeers = Raw.channels.SendAsPeers;
     export type TypeAdminLogResults = Raw.channels.AdminLogResults;
     export type TypeChannelParticipant = Raw.channels.ChannelParticipant;
     export type TypeChannelParticipants =
       | Raw.channels.ChannelParticipants
       | Raw.channels.ChannelParticipantsNotModified;
+    export type TypeSponsoredMessageReportResult =
+      | Raw.channels.SponsoredMessageReportResultChooseOption
+      | Raw.channels.SponsoredMessageReportResultAdsHidden
+      | Raw.channels.SponsoredMessageReportResultReported;
     export class ChannelParticipants extends TLObject {
       count!: int;
       participants!: Vector<Raw.TypeChannelParticipant>;
@@ -99650,88 +99976,6 @@ export namespace Raw {
         return Buffer.from(b.buffer);
       }
     }
-    export class ViewSponsoredMessage extends TLObject {
-      __response__!: Bool;
-      channel!: Raw.TypeInputChannel;
-      randomId!: bytes;
-
-      constructor(params: { channel: Raw.TypeInputChannel; randomId: bytes }) {
-        super();
-        this.classType = 'functions';
-        this.className = 'channels.ViewSponsoredMessage';
-        this.constructorId = 0xbeaedb94;
-        this.subclassOfId = 0xf5b399ac;
-        this._slots = ['channel', 'randomId'];
-        this.channel = params.channel;
-        this.randomId = params.randomId;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(
-        _data: BytesIO,
-        ..._args: Array<any>
-      ): Promise<Raw.channels.ViewSponsoredMessage> {
-        // no flags
-        let channel = await TLObject.read(_data);
-        let randomId = await Primitive.Bytes.read(_data);
-        return new Raw.channels.ViewSponsoredMessage({ channel: channel, randomId: randomId });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
-        }
-        if (this.randomId !== undefined) {
-          b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
-        }
-        return Buffer.from(b.buffer);
-      }
-    }
-    export class GetSponsoredMessages extends TLObject {
-      __response__!: Raw.messages.TypeSponsoredMessages;
-      channel!: Raw.TypeInputChannel;
-
-      constructor(params: { channel: Raw.TypeInputChannel }) {
-        super();
-        this.classType = 'functions';
-        this.className = 'channels.GetSponsoredMessages';
-        this.constructorId = 0xec210fbf;
-        this.subclassOfId = 0x7f4169e0;
-        this._slots = ['channel'];
-        this.channel = params.channel;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(
-        _data: BytesIO,
-        ..._args: Array<any>
-      ): Promise<Raw.channels.GetSponsoredMessages> {
-        // no flags
-        let channel = await TLObject.read(_data);
-        return new Raw.channels.GetSponsoredMessages({ channel: channel });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
-        }
-        return Buffer.from(b.buffer);
-      }
-    }
     export class GetSendAs extends TLObject {
       __response__!: Raw.channels.TypeSendAsPeers;
       peer!: Raw.TypeInputPeer;
@@ -100679,73 +100923,6 @@ export namespace Raw {
         return Buffer.from(b.buffer);
       }
     }
-    export class ClickSponsoredMessage extends TLObject {
-      __response__!: Bool;
-      media?: boolean;
-      fullscreen?: boolean;
-      channel!: Raw.TypeInputChannel;
-      randomId!: bytes;
-
-      constructor(params: {
-        media?: boolean;
-        fullscreen?: boolean;
-        channel: Raw.TypeInputChannel;
-        randomId: bytes;
-      }) {
-        super();
-        this.classType = 'functions';
-        this.className = 'channels.ClickSponsoredMessage';
-        this.constructorId = 0x1445d75;
-        this.subclassOfId = 0xf5b399ac;
-        this._slots = ['media', 'fullscreen', 'channel', 'randomId'];
-        this.media = params.media;
-        this.fullscreen = params.fullscreen;
-        this.channel = params.channel;
-        this.randomId = params.randomId;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(
-        _data: BytesIO,
-        ..._args: Array<any>
-      ): Promise<Raw.channels.ClickSponsoredMessage> {
-        // @ts-ignore
-        let flags = await Primitive.Int.read(_data);
-        let media = flags & (1 << 0) ? true : false;
-        let fullscreen = flags & (1 << 1) ? true : false;
-        let channel = await TLObject.read(_data);
-        let randomId = await Primitive.Bytes.read(_data);
-        return new Raw.channels.ClickSponsoredMessage({
-          media: media,
-          fullscreen: fullscreen,
-          channel: channel,
-          randomId: randomId,
-        });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-
-        // @ts-ignore
-        let flags = 0;
-        flags |= this.media ? 1 << 0 : 0;
-        flags |= this.fullscreen ? 1 << 1 : 0;
-        b.write(Primitive.Int.write(flags) as unknown as Buffer);
-
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
-        }
-        if (this.randomId !== undefined) {
-          b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
-        }
-        return Buffer.from(b.buffer);
-      }
-    }
     export class UpdateColor extends TLObject {
       __response__!: Raw.TypeUpdates;
       forProfile?: boolean;
@@ -101033,60 +101210,6 @@ export namespace Raw {
         }
         if (this.stickerset !== undefined) {
           b.write(this.stickerset.write() as unknown as Buffer);
-        }
-        return Buffer.from(b.buffer);
-      }
-    }
-    export class ReportSponsoredMessage extends TLObject {
-      __response__!: Raw.channels.TypeSponsoredMessageReportResult;
-      channel!: Raw.TypeInputChannel;
-      randomId!: bytes;
-      option!: bytes;
-
-      constructor(params: { channel: Raw.TypeInputChannel; randomId: bytes; option: bytes }) {
-        super();
-        this.classType = 'functions';
-        this.className = 'channels.ReportSponsoredMessage';
-        this.constructorId = 0xaf8ff6b9;
-        this.subclassOfId = 0x26231822;
-        this._slots = ['channel', 'randomId', 'option'];
-        this.channel = params.channel;
-        this.randomId = params.randomId;
-        this.option = params.option;
-      }
-      /**
-       * Generate the TLObject from buffer.
-       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
-       */
-      static async read(
-        _data: BytesIO,
-        ..._args: Array<any>
-      ): Promise<Raw.channels.ReportSponsoredMessage> {
-        // no flags
-        let channel = await TLObject.read(_data);
-        let randomId = await Primitive.Bytes.read(_data);
-        let option = await Primitive.Bytes.read(_data);
-        return new Raw.channels.ReportSponsoredMessage({
-          channel: channel,
-          randomId: randomId,
-          option: option,
-        });
-      }
-      /**
-       * Generate buffer from TLObject.
-       */
-      write(): Buffer {
-        let b: BytesIO = new BytesIO();
-        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
-        }
-        if (this.randomId !== undefined) {
-          b.write(Primitive.Bytes.write(this.randomId) as unknown as Buffer);
-        }
-        if (this.option !== undefined) {
-          b.write(Primitive.Bytes.write(this.option) as unknown as Buffer);
         }
         return Buffer.from(b.buffer);
       }
@@ -107515,17 +107638,17 @@ export namespace Raw {
     export class GetBroadcastRevenueStats extends TLObject {
       __response__!: Raw.stats.TypeBroadcastRevenueStats;
       dark?: boolean;
-      channel!: Raw.TypeInputChannel;
+      peer!: Raw.TypeInputPeer;
 
-      constructor(params: { dark?: boolean; channel: Raw.TypeInputChannel }) {
+      constructor(params: { dark?: boolean; peer: Raw.TypeInputPeer }) {
         super();
         this.classType = 'functions';
         this.className = 'stats.GetBroadcastRevenueStats';
-        this.constructorId = 0x75dfb671;
+        this.constructorId = 0xf788ee19;
         this.subclassOfId = 0x2cee3078;
-        this._slots = ['dark', 'channel'];
+        this._slots = ['dark', 'peer'];
         this.dark = params.dark;
-        this.channel = params.channel;
+        this.peer = params.peer;
       }
       /**
        * Generate the TLObject from buffer.
@@ -107538,8 +107661,8 @@ export namespace Raw {
         // @ts-ignore
         let flags = await Primitive.Int.read(_data);
         let dark = flags & (1 << 0) ? true : false;
-        let channel = await TLObject.read(_data);
-        return new Raw.stats.GetBroadcastRevenueStats({ dark: dark, channel: channel });
+        let peer = await TLObject.read(_data);
+        return new Raw.stats.GetBroadcastRevenueStats({ dark: dark, peer: peer });
       }
       /**
        * Generate buffer from TLObject.
@@ -107553,28 +107676,25 @@ export namespace Raw {
         flags |= this.dark ? 1 << 0 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
         }
         return Buffer.from(b.buffer);
       }
     }
     export class GetBroadcastRevenueWithdrawalUrl extends TLObject {
       __response__!: Raw.stats.TypeBroadcastRevenueWithdrawalUrl;
-      channel!: Raw.TypeInputChannel;
+      peer!: Raw.TypeInputPeer;
       password!: Raw.TypeInputCheckPasswordSRP;
 
-      constructor(params: {
-        channel: Raw.TypeInputChannel;
-        password: Raw.TypeInputCheckPasswordSRP;
-      }) {
+      constructor(params: { peer: Raw.TypeInputPeer; password: Raw.TypeInputCheckPasswordSRP }) {
         super();
         this.classType = 'functions';
         this.className = 'stats.GetBroadcastRevenueWithdrawalUrl';
-        this.constructorId = 0x2a65ef73;
+        this.constructorId = 0x9df4faad;
         this.subclassOfId = 0xd15cc8e5;
-        this._slots = ['channel', 'password'];
-        this.channel = params.channel;
+        this._slots = ['peer', 'password'];
+        this.peer = params.peer;
         this.password = params.password;
       }
       /**
@@ -107586,12 +107706,9 @@ export namespace Raw {
         ..._args: Array<any>
       ): Promise<Raw.stats.GetBroadcastRevenueWithdrawalUrl> {
         // no flags
-        let channel = await TLObject.read(_data);
+        let peer = await TLObject.read(_data);
         let password = await TLObject.read(_data);
-        return new Raw.stats.GetBroadcastRevenueWithdrawalUrl({
-          channel: channel,
-          password: password,
-        });
+        return new Raw.stats.GetBroadcastRevenueWithdrawalUrl({ peer: peer, password: password });
       }
       /**
        * Generate buffer from TLObject.
@@ -107600,8 +107717,8 @@ export namespace Raw {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
         }
         if (this.password !== undefined) {
           b.write(this.password.write() as unknown as Buffer);
@@ -107611,18 +107728,18 @@ export namespace Raw {
     }
     export class GetBroadcastRevenueTransactions extends TLObject {
       __response__!: Raw.stats.TypeBroadcastRevenueTransactions;
-      channel!: Raw.TypeInputChannel;
+      peer!: Raw.TypeInputPeer;
       offset!: int;
       limit!: int;
 
-      constructor(params: { channel: Raw.TypeInputChannel; offset: int; limit: int }) {
+      constructor(params: { peer: Raw.TypeInputPeer; offset: int; limit: int }) {
         super();
         this.classType = 'functions';
         this.className = 'stats.GetBroadcastRevenueTransactions';
-        this.constructorId = 0x69280f;
+        this.constructorId = 0x70990b6d;
         this.subclassOfId = 0x676ea15;
-        this._slots = ['channel', 'offset', 'limit'];
-        this.channel = params.channel;
+        this._slots = ['peer', 'offset', 'limit'];
+        this.peer = params.peer;
         this.offset = params.offset;
         this.limit = params.limit;
       }
@@ -107635,11 +107752,11 @@ export namespace Raw {
         ..._args: Array<any>
       ): Promise<Raw.stats.GetBroadcastRevenueTransactions> {
         // no flags
-        let channel = await TLObject.read(_data);
+        let peer = await TLObject.read(_data);
         let offset = await Primitive.Int.read(_data);
         let limit = await Primitive.Int.read(_data);
         return new Raw.stats.GetBroadcastRevenueTransactions({
-          channel: channel,
+          peer: peer,
           offset: offset,
           limit: limit,
         });
@@ -107651,8 +107768,8 @@ export namespace Raw {
         let b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
         // no flags
-        if (this.channel !== undefined) {
-          b.write(this.channel.write() as unknown as Buffer);
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
         }
         if (this.offset !== undefined) {
           b.write(Primitive.Int.write(this.offset) as unknown as Buffer);
@@ -112435,23 +112552,26 @@ export namespace Raw {
       __response__!: Raw.stories.TypeFoundStories;
       hashtag?: string;
       area?: Raw.TypeMediaArea;
+      peer?: Raw.TypeInputPeer;
       offset!: string;
       limit!: int;
 
       constructor(params: {
         hashtag?: string;
         area?: Raw.TypeMediaArea;
+        peer?: Raw.TypeInputPeer;
         offset: string;
         limit: int;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'stories.SearchPosts';
-        this.constructorId = 0x6cea116a;
+        this.constructorId = 0xd1810907;
         this.subclassOfId = 0x17790b35;
-        this._slots = ['hashtag', 'area', 'offset', 'limit'];
+        this._slots = ['hashtag', 'area', 'peer', 'offset', 'limit'];
         this.hashtag = params.hashtag;
         this.area = params.area;
+        this.peer = params.peer;
         this.offset = params.offset;
         this.limit = params.limit;
       }
@@ -112464,11 +112584,13 @@ export namespace Raw {
         let flags = await Primitive.Int.read(_data);
         let hashtag = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
         let area = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+        let peer = flags & (1 << 2) ? await TLObject.read(_data) : undefined;
         let offset = await Primitive.String.read(_data);
         let limit = await Primitive.Int.read(_data);
         return new Raw.stories.SearchPosts({
           hashtag: hashtag,
           area: area,
+          peer: peer,
           offset: offset,
           limit: limit,
         });
@@ -112484,6 +112606,7 @@ export namespace Raw {
         let flags = 0;
         flags |= this.hashtag !== undefined ? 1 << 0 : 0;
         flags |= this.area !== undefined ? 1 << 1 : 0;
+        flags |= this.peer !== undefined ? 1 << 2 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.hashtag !== undefined) {
@@ -112491,6 +112614,9 @@ export namespace Raw {
         }
         if (this.area !== undefined) {
           b.write(this.area.write() as unknown as Buffer);
+        }
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
         }
         if (this.offset !== undefined) {
           b.write(Primitive.String.write(this.offset) as unknown as Buffer);
