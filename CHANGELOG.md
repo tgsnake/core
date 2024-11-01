@@ -1,4 +1,12 @@
- <a name="1.13.9"></a>
+ <a name="1.13.10"></a>
+
+## [1.13.10](https://github.com/tgsnake/core/compare/1.13.9...1.13.10)
+
+> 2024-10-26
+
+### Change
+
+- Update CHANGELOG.md - target and module versions in tsconfig.json - Update TLSchema - Update TLSchema - Update Error Reference - Update TLSchema   <a name="1.13.9"></a>
 
 ## [1.13.9](https://github.com/tgsnake/core/compare/1.13.8...1.13.9)
 
