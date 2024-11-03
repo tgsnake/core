@@ -106,6 +106,117 @@ export interface ClientOptions {
   maxReconnectRetries?: number;
 }
 
+/**
+ * Represents a client for interacting with Telegram.
+ * 
+ * @class Client
+ * 
+ * @param {AbstractSession} session - The session used for login to Telegram.
+ * @param {string} apiHash - Your API hash, obtained from my.telegram.org.
+ * @param {number} apiId - Your API ID, obtained from my.telegram.org.
+ * @param {ClientOptions} [clientOptions] - Options for initializing the client.
+ * 
+ * @property {number} _apiId - The API ID.
+ * @property {string} _apiHash - The API hash.
+ * @property {AbstractSession} _storage - The session storage.
+ * @property {boolean} _testMode - Indicates if the client is in test mode.
+ * @property {ProxyInterface} [_proxy] - The proxy settings.
+ * @property {boolean} _ipv6 - Indicates if IPv6 is enabled.
+ * @property {string} _deviceModel - The device model.
+ * @property {string} _systemVersion - The system version.
+ * @property {string} _appVersion - The application version.
+ * @property {string} _systemLangCode - The system language code.
+ * @property {string} _langCode - The language code.
+ * @property {number} _maxRetries - The maximum number of retries.
+ * @property {boolean} _isCdn - Indicates if CDN is used.
+ * @property {number} _sleepTreshold - The sleep threshold.
+ * @property {boolean} _takeout - Indicates if takeout is enabled.
+ * @property {boolean} _noUpdates - Indicates if updates are disabled.
+ * @property {bigint} _takeoutId - The takeout ID.
+ * @property {string} _dcId - The data center ID.
+ * @property {Session} _session - The session.
+ * @property {boolean} _isConnected - Indicates if the client is connected.
+ * @property {number} _connectionMode - The connection mode.
+ * @property {boolean} _local - Indicates if the client is in local mode.
+ * @property {SecretChat} _secretChat - The secret chat instance.
+ * @property {Semaphore} _getFileSemaphore - The semaphore for getting files.
+ * @property {Semaphore} _saveFileSemaphore - The semaphore for saving files.
+ * @property {number} _maxReconnectRetries - The maximum number of reconnect retries.
+ * @property {Raw.users.UserFull} [_me] - The current user.
+ * @property {Array<Function>} _handler - The update handlers.
+ * 
+ * @method exportSession - Exports the current session to a string.
+ * @returns {Promise<string>} The exported session string.
+ * 
+ * @method invoke - Sends a request to Telegram.
+ * @param {Object} query - The raw class from the Telegram method.
+ * @param {number} [retries] - The maximum number of retries.
+ * @param {number} [timeout] - The timeout duration.
+ * @param {number} [sleepTreshold] - The sleep threshold.
+ * @returns {Promise<T['__response__']>} The response from Telegram.
+ * 
+ * @method logout - Logs out and kills the client.
+ * @returns {Promise<any>} The logout result.
+ * 
+ * @method start - Starts the Telegram client.
+ * @param {Object} [auth] - The authentication details.
+ * @returns {Promise<Raw.users.UserFull>} The current user.
+ * 
+ * @method connect - Connects to the Telegram server without a login request.
+ * @returns {Promise<void>} The connection result.
+ * 
+ * @method handleUpdate - Handles new updates from Telegram.
+ * @param {Raw.TypeUpdates} update - The update from Telegram.
+ * @returns {Promise<Raw.TypeUpdates>} The handled update.
+ * 
+ * @method addHandler - Adds a handler for updates.
+ * @param {Function} callback - The update handler.
+ * @returns {undefined} 
+ * 
+ * @method fetchPeers - Fetches peers into the session.
+ * @param {Array<Raw.TypeUser | Raw.TypeChat>} peers - The peers to fetch.
+ * @returns {Promise<boolean>} Indicates if any peers were minimal.
+ * 
+ * @method resolvePeer - Resolves a peer ID to a valid peer object.
+ * @param {bigint | string} peerId - The peer ID.
+ * @returns {Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | Raw.InputUserSelf>} The resolved peer.
+ * 
+ * @method startSecretChat - Starts a secret chat.
+ * @param {bigint | string} chatId - The participant ID or interlocutor ID.
+ * @returns {Promise<void>} The result of starting the secret chat.
+ * 
+ * @method destroySecretChat - Destroys a secret chat.
+ * @param {number} chatId - The ID of the secret chat.
+ * @returns {Promise<void>} The result of destroying the secret chat.
+ * 
+ * @method saveFile - Saves a file to Telegram without sending it.
+ * @param {Object} params - The file parameters.
+ * @returns {Promise<Raw.InputFile | Raw.InputFileBig | undefined>} The saved file.
+ * 
+ * @method saveFileStream - Saves a file to Telegram using a stream.
+ * @param {Object} params - The file parameters.
+ * @returns {Promise<Raw.InputFile | Raw.InputFileBig | undefined>} The saved file.
+ * 
+ * @method downloadStream - Downloads a file as a stream.
+ * @param {Object} params - The download parameters.
+ * @returns {Files.File} The file stream.
+ * 
+ * @method download - Downloads a file asynchronously.
+ * @param {Object} params - The download parameters.
+ * @returns {Promise<Buffer>} The downloaded file.
+ * 
+ * @method [Symbol.for('nodejs.util.inspect.custom')] - Custom inspect method for Node.js.
+ * @returns {Object} The inspected object.
+ * 
+ * @method [Symbol.for('Deno.customInspect')] - Custom inspect method for Deno.
+ * @returns {string} The inspected string.
+ * 
+ * @method toJSON - Converts the client to a JSON object.
+ * @returns {Object} The JSON representation of the client.
+ * 
+ * @method toString - Converts the client to a string.
+ * @returns {string} The string representation of the client.
+ */
 export class Client {
   _apiId!: number;
   _apiHash!: string;
@@ -158,9 +269,9 @@ export class Client {
     this._systemVersion =
       clientOptions?.systemVersion ??
       ('Deno' in globalThis
-        ? // @ts-ignore
+        ? // @ts-ignore: deno compatibility
           Deno.version?.deno
-          ? // @ts-ignore
+          ? // @ts-ignore: deno compatibility
             `Deno ${Deno.version?.deno}`
           : `Deno unknown`
         : os.release().toString());
@@ -184,7 +295,7 @@ export class Client {
   /**
    * Exporting current session to string.
    */
-  async exportSession(): Promise<string> {
+  exportSession(): Promise<string> {
     return _Session.exportSession.call(this);
   }
   /**
@@ -195,7 +306,7 @@ export class Client {
    * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
    * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is clientOptions.sleepTreshold or 10s.
    */
-  async invoke<T extends Raw.TypesTLRequest>(
+  invoke<T extends Raw.TypesTLRequest>(
     query: T,
     retries: number = this._maxRetries,
     timeout: number = 15000,
@@ -206,19 +317,19 @@ export class Client {
   /**
    * Logout and kill the client.
    */
-  async logout(): Promise<any> {
+  logout(): Promise<any> {
     return _Session.logout.call(this);
   }
   /**
    * Starting telegram client.
    */
-  async start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Raw.users.UserFull> {
+  start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Raw.users.UserFull> {
     return _Session.start.call(this, auth);
   }
   /**
    * Connecting to telegram server without login request.
    */
-  async connect() {
+  connect() {
     return _Session.connect.call(this);
   }
   /**
@@ -229,7 +340,7 @@ export class Client {
       await this.fetchPeers('users' in update ? update.users : []);
       await this.fetchPeers('chats' in update ? update.chats : []);
       if (update instanceof Raw.Updates) {
-        let parsed: Array<Raw.TypeUpdate> = [];
+        const parsed: Array<Raw.TypeUpdate> = [];
         for (const up of update.updates) {
           if (up instanceof Raw.UpdateEncryption) {
             if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChat) {
@@ -345,8 +456,8 @@ export class Client {
   /**
    * Add handler when update coming.
    */
-  async addHandler(callback: { (update: Raw.TypeUpdates): any }): Promise<any> {
-    return this._handler.push(callback);
+  addHandler(callback: { (update: Raw.TypeUpdates): any }): undefined {
+    this._handler.push(callback);
   }
   /**
    * Fetch the peer into session.
@@ -354,11 +465,11 @@ export class Client {
    */
   async fetchPeers(peers: Array<Raw.TypeUser | Raw.TypeChat>): Promise<boolean> {
     let isMin = false;
-    let parsedPeers: Array<
+    const parsedPeers: Array<
       [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
     > = [];
-    for (let peer of peers) {
-      // @ts-ignore
+    for (const peer of peers) {
+      // @ts-ignore: 'min' is not exist in type TypeChat
       if (peer.min) {
         isMin = true;
         continue;
@@ -382,9 +493,9 @@ export class Client {
         parsedPeers.push([
           helpers.getChannelId(peer.id),
           peer.accessHash ?? BigInt(0),
-          // @ts-ignore
+          // @ts-ignore: 'broadcast' is not exist in type TypeUser
           peer.broadcast ? 'channel' : 'supergroup',
-          // @ts-ignore
+          // @ts-ignore: 'username' is not exist in type TypeChat
           peer.username ? [peer.username.toLowerCase()] : undefined,
           undefined,
         ]);
