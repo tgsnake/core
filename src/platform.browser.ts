@@ -14,7 +14,7 @@ import * as buffer from 'buffer';
 import stream from 'stream-browserify';
 import aesjs from 'aes-js';
 import bigInt from 'big-integer';
-import process from 'process';
+import process from 'browser-process';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'browserify-zlib';
 export { Logger } from '@tgsnake/log';

@@ -31,7 +31,8 @@ export class File extends Duplex {
    * @param {BufferEncoding} encoding - Encoding of buffers.
    * @param {Function} next - Next function, this will be called when done write chunk.
    */
-  override _write(chunk: TypeFileChunk, encoding: BufferEncoding, next: TypeFileCallback): void {
+  // @ts-ignore: doesn't need to be implemented on browser but need on other platform
+  _write(chunk: TypeFileChunk, encoding: BufferEncoding, next: TypeFileCallback): void {
     this._bytes.write(Buffer.from(chunk, encoding));
     return next();
   }
@@ -39,7 +40,8 @@ export class File extends Duplex {
    * Read buffer
    * @param {Number} length - Length of chunk
    */
-  override _read(length?: number): TypeBuffer | null {
+  // @ts-ignore: doesn't need to be implemented on browser but need on other platform
+  _read(length?: number): TypeBuffer | null {
     if (length) {
       if (this._bytes.length > 0) {
         const bytes = this._bytes.read(length as number);
@@ -58,19 +60,22 @@ export class File extends Duplex {
   /**
    * Internal Use: Browser compatibility!
    */
-  override push(chunk: TypeFileChunk, encoding?: BufferEncoding): boolean {
+  // @ts-ignore: doesn't need to be implemented on browser but need on other platform
+  push(chunk: TypeFileChunk, encoding?: BufferEncoding): boolean {
     return super.push(chunk, encoding);
   }
   /**
    * Internal Use: Browser compatibility!
    */
-  override on(event: string, callback: TypeFileCallback): this {
+  // @ts-ignore: doesn't need to be implemented on browser but need on other platform
+  on(event: string, callback: TypeFileCallback): this {
     return super.on(event, callback);
   }
   /**
    * Internal Use: Browser compatibility!
    */
-  override pipe(destination: any, options?: { end?: boolean }) {
+  // @ts-ignore: doesn't need to be implemented on browser but need on other platform
+  pipe(destination: any, options?: { end?: boolean }) {
     return super.pipe(destination, options);
   }
   get bytes(): BytesIO {
@@ -108,7 +113,8 @@ export class File extends Duplex {
     }
     return toPrint;
   }
-  override toString() {
+  // @ts-ignore: doesn't need to be implemented on browser but need on other platform
+  toString() {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }
