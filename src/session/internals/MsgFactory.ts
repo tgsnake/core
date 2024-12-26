@@ -11,6 +11,7 @@
 import { SeqNo } from './SeqNo.ts';
 import { MsgId } from './MsgId.ts';
 import { Raw, Message, MsgContainer, TLObject } from '../../raw/index.ts';
+import { Buffer } from '../../platform.deno.ts';
 
 export function MsgFactory() {
   const seqNo = new SeqNo();
@@ -26,7 +27,7 @@ export function MsgFactory() {
       body,
       BigInt(msgId.getMsgId()),
       seqNo.getSeqNo(!notRelatedContent(body)),
-      body.write().length,
+      Buffer.byteLength(body.write()),
     );
   };
 }

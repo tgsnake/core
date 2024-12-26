@@ -14,7 +14,7 @@
 *         All change made in this file will be lost!       *
 ***********************************************************/
 import { TLObject, BytesIO, Primitive, type UpdateSecretChatMessage } from "./core/index.ts";
-import { Buffer } from '../platform.deno.ts'
+import { Buffer, type TypeBuffer } from '../platform.deno.ts'
 
 /**
   * This is a telegram schema, so you can see the documentation in https://core.telegram.org/schema.
@@ -30,7 +30,7 @@ export namespace Raw {
   export type int128 = bigint;
   export type int256 = bigint;
   export type long = bigint;
-  export type bytes = Buffer;
+  export type bytes = TypeBuffer;
   export type Vector<T> = Array<T>;
   /**
     * The Telegram layer we using.

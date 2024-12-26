@@ -56,20 +56,33 @@ export function DataCenter(
   ipv6: boolean,
   media: boolean,
 ): [ip: string, port: number] {
-  // @ts-ignore
+  // @ts-ignore: browser compatibility
   if (isBrowser) {
-    return [`${WebDC[dcId]}:$PORT/apiws${testMode ? '_test' : ''}`, 443];
+    return [
+      `${WebDC[dcId as keyof typeof WebDC] as string}:$PORT/apiws${testMode ? '_test' : ''}`,
+      443,
+    ];
   } else {
     if (testMode) {
-      return [ipv6 ? DCTestIPV6[dcId] : DCTest[dcId], 80];
+      return [
+        ipv6 ? DCTestIPV6[dcId as keyof typeof DCTestIPV6] : DCTest[dcId as keyof typeof DCTest],
+        80,
+      ];
     } else {
       if (media) {
         return [
-          ipv6 ? (DCProdMediaIPV6[dcId] ?? DCProdIPV6[dcId]) : (DCProdMedia[dcId] ?? DCProd[dcId]),
+          ipv6
+            ? (DCProdMediaIPV6[dcId as keyof typeof DCProdMediaIPV6] ??
+              DCProdIPV6[dcId as keyof typeof DCProdIPV6])
+            : (DCProdMedia[dcId as keyof typeof DCProdMedia] ??
+              DCProd[dcId as keyof typeof DCProd]),
           443,
         ];
       } else {
-        return [ipv6 ? DCProdIPV6[dcId] : DCProd[dcId], 443];
+        return [
+          ipv6 ? DCProdIPV6[dcId as keyof typeof DCProdIPV6] : DCProd[dcId as keyof typeof DCProd],
+          443,
+        ];
       }
     }
   }

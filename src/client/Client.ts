@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { os, inspect, Semaphore, isBrowser } from '../platform.deno.ts';
+import { os, inspect, Semaphore, isBrowser, type TypeBuffer } from '../platform.deno.ts';
 import * as Errors from '../errors/index.ts';
 import {
   Raw,
@@ -108,14 +108,14 @@ export interface ClientOptions {
 
 /**
  * Represents a client for interacting with Telegram.
- * 
+ *
  * @class Client
- * 
+ *
  * @param {AbstractSession} session - The session used for login to Telegram.
  * @param {string} apiHash - Your API hash, obtained from my.telegram.org.
  * @param {number} apiId - Your API ID, obtained from my.telegram.org.
  * @param {ClientOptions} [clientOptions] - Options for initializing the client.
- * 
+ *
  * @property {number} _apiId - The API ID.
  * @property {string} _apiHash - The API hash.
  * @property {AbstractSession} _storage - The session storage.
@@ -144,76 +144,76 @@ export interface ClientOptions {
  * @property {number} _maxReconnectRetries - The maximum number of reconnect retries.
  * @property {Raw.users.UserFull} [_me] - The current user.
  * @property {Array<Function>} _handler - The update handlers.
- * 
+ *
  * @method exportSession - Exports the current session to a string.
  * @returns {Promise<string>} The exported session string.
- * 
+ *
  * @method invoke - Sends a request to Telegram.
  * @param {Object} query - The raw class from the Telegram method.
  * @param {number} [retries] - The maximum number of retries.
  * @param {number} [timeout] - The timeout duration.
  * @param {number} [sleepTreshold] - The sleep threshold.
  * @returns {Promise<T['__response__']>} The response from Telegram.
- * 
+ *
  * @method logout - Logs out and kills the client.
  * @returns {Promise<any>} The logout result.
- * 
+ *
  * @method start - Starts the Telegram client.
  * @param {Object} [auth] - The authentication details.
  * @returns {Promise<Raw.users.UserFull>} The current user.
- * 
+ *
  * @method connect - Connects to the Telegram server without a login request.
  * @returns {Promise<void>} The connection result.
- * 
+ *
  * @method handleUpdate - Handles new updates from Telegram.
  * @param {Raw.TypeUpdates} update - The update from Telegram.
  * @returns {Promise<Raw.TypeUpdates>} The handled update.
- * 
+ *
  * @method addHandler - Adds a handler for updates.
  * @param {Function} callback - The update handler.
- * @returns {undefined} 
- * 
+ * @returns {undefined}
+ *
  * @method fetchPeers - Fetches peers into the session.
  * @param {Array<Raw.TypeUser | Raw.TypeChat>} peers - The peers to fetch.
  * @returns {Promise<boolean>} Indicates if any peers were minimal.
- * 
+ *
  * @method resolvePeer - Resolves a peer ID to a valid peer object.
  * @param {bigint | string} peerId - The peer ID.
  * @returns {Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | Raw.InputUserSelf>} The resolved peer.
- * 
+ *
  * @method startSecretChat - Starts a secret chat.
  * @param {bigint | string} chatId - The participant ID or interlocutor ID.
  * @returns {Promise<void>} The result of starting the secret chat.
- * 
+ *
  * @method destroySecretChat - Destroys a secret chat.
  * @param {number} chatId - The ID of the secret chat.
  * @returns {Promise<void>} The result of destroying the secret chat.
- * 
+ *
  * @method saveFile - Saves a file to Telegram without sending it.
  * @param {Object} params - The file parameters.
  * @returns {Promise<Raw.InputFile | Raw.InputFileBig | undefined>} The saved file.
- * 
+ *
  * @method saveFileStream - Saves a file to Telegram using a stream.
  * @param {Object} params - The file parameters.
  * @returns {Promise<Raw.InputFile | Raw.InputFileBig | undefined>} The saved file.
- * 
+ *
  * @method downloadStream - Downloads a file as a stream.
  * @param {Object} params - The download parameters.
  * @returns {Files.File} The file stream.
- * 
+ *
  * @method download - Downloads a file asynchronously.
  * @param {Object} params - The download parameters.
  * @returns {Promise<Buffer>} The downloaded file.
- * 
+ *
  * @method [Symbol.for('nodejs.util.inspect.custom')] - Custom inspect method for Node.js.
  * @returns {Object} The inspected object.
- * 
+ *
  * @method [Symbol.for('Deno.customInspect')] - Custom inspect method for Deno.
  * @returns {string} The inspected string.
- * 
+ *
  * @method toJSON - Converts the client to a JSON object.
  * @returns {Object} The JSON representation of the client.
- * 
+ *
  * @method toString - Converts the client to a string.
  * @returns {string} The string representation of the client.
  */
@@ -245,7 +245,7 @@ export class Client {
   _saveFileSemaphore!: Semaphore;
   _maxReconnectRetries!: number;
   _me?: Raw.users.UserFull;
-  private _handler: Array<{ (update: Raw.TypeUpdates): any }> = [];
+  private _handler: Array<{ (update: Raw.TypeUpdates): void }> = [];
   /**
    * Client Constructor.
    * @param {AbstractSession} session - What the session will be used for login to telegram.
@@ -286,7 +286,7 @@ export class Client {
     this._connectionMode = clientOptions?.tcp ?? TCP.TCPFull;
     this._local =
       clientOptions?.local ??
-      ((isBrowser && window && window.location.protocol !== 'https:') || true);
+      ((isBrowser && globalThis && globalThis.location.protocol !== 'https:') || true);
     this._secretChat = new SecretChat(session, this);
     this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
@@ -317,7 +317,7 @@ export class Client {
   /**
    * Logout and kill the client.
    */
-  logout(): Promise<any> {
+  logout(): Promise<void> {
     return _Session.logout.call(this);
   }
   /**
@@ -456,7 +456,7 @@ export class Client {
   /**
    * Add handler when update coming.
    */
-  addHandler(callback: { (update: Raw.TypeUpdates): any }): undefined {
+  addHandler(callback: { (update: Raw.TypeUpdates): void }): undefined {
     this._handler.push(callback);
   }
   /**
@@ -521,7 +521,7 @@ export class Client {
       if (peer) {
         return peer;
       } else {
-        let type = await helpers.getPeerType(peerId);
+        const type = await helpers.getPeerType(peerId);
         if (type === 'user') {
           await this.fetchPeers(
             await this.invoke(
@@ -587,7 +587,7 @@ export class Client {
         if (peer) {
           return peer;
         } else {
-          let type = await helpers.getPeerType(BigInt(peerId));
+          const type = await helpers.getPeerType(BigInt(peerId));
           if (type === 'user') {
             await this.fetchPeers(
               await this.invoke(
@@ -641,7 +641,7 @@ export class Client {
    * Start a secret chat.
    * @param { BigInt | String } chatId - Participant id or interlocutor id that you want to transfer to the secret chat.
    */
-  async startSecretChat(chatId: bigint | string) {
+  startSecretChat(chatId: bigint | string) {
     return this._secretChat.start(chatId);
   }
   /**
@@ -649,7 +649,7 @@ export class Client {
    * Secret chats that have been created will be destroyed and closed, so they can no longer be used to send secret messages.
    * @param {Number} chatId - The id of the secret chat that you want to close.
    */
-  async destroySecretChat(chatId: number) {
+  destroySecretChat(chatId: number) {
     return this._secretChat.destroy(chatId);
   }
   /**
@@ -691,18 +691,18 @@ export class Client {
    * Downloading file asynchronous.
    * This function will be return Buffer.
    */
-  async download({ file, dcId, limit, offset }: Files.DownloadParam): Promise<Buffer> {
+  async download({ file, dcId, limit, offset }: Files.DownloadParam): Promise<TypeBuffer> {
     const pipe = new Files.File();
     const stream = await Files.downloadStream(this, file, dcId, limit || 0, offset || BigInt(0));
-    let resolve;
-    const promise = new Promise((res) => {
+    let resolve: (value: TypeBuffer) => void;
+    const promise = new Promise<TypeBuffer>((res) => {
       resolve = res;
     });
     pipe.on('finish', () => {
-      return resolve(pipe.bytes.buffer);
+      return resolve(pipe.bytes.buffer as unknown as TypeBuffer);
     });
     stream.pipe(pipe);
-    return promise as Promise<Buffer>;
+    return promise as unknown as Promise<TypeBuffer>;
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
@@ -710,7 +710,7 @@ export class Client {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -721,6 +721,7 @@ export class Client {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore: deno compatibility
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -729,7 +730,7 @@ export class Client {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           if (typeof value === 'bigint') {

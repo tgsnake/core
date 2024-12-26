@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { inspect, Mutex, Buffer } from '../platform.deno.ts';
+import { inspect, Mutex, Buffer, type TypeBuffer } from '../platform.deno.ts';
 import { Raw } from '../raw/index.ts';
 import { type AbstractSession } from './Abstract.ts';
 
@@ -19,7 +19,7 @@ export class SecretChat {
   created!: number;
   changed!: number;
   isAdmin!: boolean;
-  authKey!: Buffer;
+  authKey!: TypeBuffer;
   mtproto!: number;
   layer!: number;
   inSeqNo!: number;
@@ -39,12 +39,12 @@ export class SecretChat {
     id: number;
     accessHash: bigint;
     isAdmin: boolean;
-    authKey: Buffer;
+    authKey: TypeBuffer;
   }) {
     this.id = id;
     this.accessHash = accessHash;
     this.isAdmin = isAdmin;
-    this.authKey = Buffer.from(authKey);
+    this.authKey = Buffer.from(authKey as unknown as Uint8Array);
     this.created = Date.now() / 1000;
     this.changed = 0;
     this.mtproto = 2;
@@ -62,7 +62,7 @@ export class SecretChat {
   async update(storage: AbstractSession) {
     const release = await this._mutex.acquire();
     try {
-      await storage.updateSecretChats([this]);
+      storage.updateSecretChats([this]);
     } finally {
       release();
     }
@@ -73,17 +73,17 @@ export class SecretChat {
    * @param {AbstractSession} storage - Current used session
    * @param {Object} params - Secret chat object will be saved to session
    */
-  static async save(
+  static save(
     storage: AbstractSession,
     params: {
       id: number;
       accessHash: bigint;
       isAdmin: boolean;
-      authKey: Buffer;
+      authKey: TypeBuffer;
     },
-  ): Promise<SecretChat> {
-    let tempChat = new SecretChat(params);
-    await storage.updateSecretChats([tempChat]);
+  ): SecretChat {
+    const tempChat = new SecretChat(params);
+    storage.updateSecretChats([tempChat]);
     return tempChat;
   }
   /**
@@ -92,7 +92,7 @@ export class SecretChat {
    * @param {Number} id - Secret Chat id
    */
   static async remove(storage: AbstractSession, id: number): Promise<boolean> {
-    return storage.removeSecretChatById(id);
+    return await storage.removeSecretChatById(id);
   }
   /**
    * Get the InputEncryptedChat from SecretChat class
@@ -109,7 +109,7 @@ export class SecretChat {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -120,6 +120,7 @@ export class SecretChat {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore: Deno custom inspect
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -128,7 +129,7 @@ export class SecretChat {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;

@@ -14,7 +14,7 @@
 *         All change made in this file will be lost!       *
 ***********************************************************/
 
-export const Object = {
+export const AllTLObject = {
   0xbc799737 : "Primitive.BoolFalse",
   0x997275b5 : "Primitive.BoolTrue",
   0x1cb5c415 : "Primitive.Vector",

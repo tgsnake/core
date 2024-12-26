@@ -12,6 +12,7 @@ import * as net from 'net';
 import * as os from 'os';
 import * as path from 'path';
 import * as buffer from 'buffer';
+import process from 'process';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'zlib';
 import bigInt from 'big-integer';
@@ -55,4 +56,14 @@ export const isBun = 'Bun' in globalThis; // Bun compatibility
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
 export const { Buffer } = buffer;
-export { crypto, net, os, bigInt, path };
+export type { Buffer as TypeBuffer } from 'buffer';
+export type BufferEncoding =
+  | 'utf-8'
+  | 'utf8'
+  | 'utf-16le'
+  | 'utf16le'
+  | 'latin1'
+  | 'binary'
+  | 'base64'
+  | 'hex'; // NodeJS compatibility
+export { crypto, net, os, bigInt, path, process };

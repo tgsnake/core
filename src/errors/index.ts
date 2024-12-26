@@ -15,101 +15,30 @@ export * as SecretChatError from './SecretChat.ts';
 export * as FileErrors from './File.ts';
 export { RPCError, UnknownError } from './RpcError.ts';
 
-export class TimeoutError extends Error {
-  message!: string;
+import { BaseError } from './Base.ts';
+
+export class TimeoutError extends BaseError {
   timeout!: number;
-  description!: string;
   constructor(timeout: number) {
     super();
     this.message = `Running timeout after ${timeout} ms`;
     this.timeout = timeout;
     this.description = `The function is running too long, until it reaches the time limit that has been given.`;
   }
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = value;
-        }
-      }
-    }
-    Object.setPrototypeOf(toPrint, {
-      stack: this.stack,
-    });
-    return toPrint;
-  }
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-      stack: this.stack,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        }
-      }
-    }
-    return toPrint;
-  }
-  toString(): string {
-    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
-  }
 }
-export class NotAFunctionClass extends Error {
-  message: string = '{value} is not a function.';
-  description: string =
+export class NotAFunctionClass extends BaseError {
+  override message: string = '{value} is not a function.';
+  override description: string =
     "The provided class {value} is not a function constructor, can't sending request with that class.";
   constructor(className: string) {
     super();
     this.message = this.message.replace('{value}', className);
     this.description = this.description.replace('{value}', className);
   }
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = value;
-        }
-      }
-    }
-    Object.setPrototypeOf(toPrint, {
-      stack: this.stack,
-    });
-    return toPrint;
-  }
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-      stack: this.stack,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        }
-      }
-    }
-    return toPrint;
-  }
-  toString(): string {
-    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
-  }
 }
-export class BadMsgNotification extends Error {
-  message!: string;
-  constructor(code) {
-    const description = {
+export class BadMsgNotification extends BaseError {
+  constructor(code: number) {
+    const description: { [key: number]: string } = {
       16: 'The msg_id is too low, the client time has to be synchronized.',
       17: 'The msg_id is too high, the client time has to be synchronized.',
       18: 'Incorrect two lower order of the msg_id bits, the server expects the client message\nmsg_id to be divisible by 4.',
@@ -124,45 +53,8 @@ export class BadMsgNotification extends Error {
     };
     super(`[${code}] ${description[code] ?? 'Unknown Error'}`);
   }
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = value;
-        }
-      }
-    }
-    Object.setPrototypeOf(toPrint, {
-      stack: this.stack,
-    });
-    return toPrint;
-  }
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-      stack: this.stack,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        }
-      }
-    }
-    return toPrint;
-  }
-  toString(): string {
-    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
-  }
 }
-export class SecurityError extends Error {
-  message!: string;
-  description?: string;
+export class SecurityError extends BaseError {
   constructor(description?: string) {
     super();
     this.description = description;
@@ -170,51 +62,16 @@ export class SecurityError extends Error {
   static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityError(description);
   }
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = value;
-        }
-      }
-    }
-    Object.setPrototypeOf(toPrint, {
-      stack: this.stack,
-    });
-    return toPrint;
-  }
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-      stack: this.stack,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_')) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        }
-      }
-    }
-    return toPrint;
-  }
-  toString(): string {
-    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
-  }
 }
 export class SecurityCheckMismatch extends SecurityError {
-  message: string = 'A security check mismatch has occurred.';
-  static check(cond: boolean, description?: string) {
+  override message: string = 'A security check mismatch has occurred.';
+  static override check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityCheckMismatch(description);
   }
 }
 export class CDNFileHashMismatch extends SecurityError {
-  message: string = 'A CDN file hash mismatch has occurred.';
-  static check(cond: boolean, description?: string) {
+  override message: string = 'A CDN file hash mismatch has occurred.';
+  static override check(cond: boolean, description?: string) {
     if (!cond) throw new CDNFileHashMismatch(description);
   }
 }

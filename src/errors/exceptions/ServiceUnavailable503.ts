@@ -16,19 +16,19 @@
 import { RPCError } from '../RpcError.ts';
 
 export class ServiceUnavailable extends RPCError {
-  code: number = 503;
-  name: string = 'SERVICE_UNAVAILABLE';
+  override code: number = 503;
+  override name: string = 'SERVICE_UNAVAILABLE';
 }
 export class ApiCallError extends ServiceUnavailable {
-  id: string = 'ApiCallError';
-  message: string = 'Telegram is having internal problems. Please try again later.';
+  override id: string = 'ApiCallError';
+  override message: string = 'Telegram is having internal problems. Please try again later.';
 }
 export class MsgWaitTimeout extends ServiceUnavailable {
-  id: string = 'MSG_WAIT_TIMEOUT';
-  message: string =
+  override id: string = 'MSG_WAIT_TIMEOUT';
+  override message: string =
     'Spent too much time waiting for a previous query in the invokeAfterMsg request queue, aborting!';
 }
 export class Timeout extends ServiceUnavailable {
-  id: string = 'Timeout';
-  message: string = 'Timeout while fetching data.';
+  override id: string = 'Timeout';
+  override message: string = 'Timeout while fetching data.';
 }

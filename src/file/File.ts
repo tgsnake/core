@@ -7,10 +7,10 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Duplex, inspect, Buffer } from '../platform.deno.ts';
+import { Duplex, inspect, Buffer, type TypeBuffer, type BufferEncoding } from '../platform.deno.ts';
 import { BytesIO } from '../raw/index.ts';
 
-export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
+export type TypeFileChunk = TypeBuffer | ArrayBufferView | DataView | string | null | any;
 export type TypeFileCallback = (error?: any) => void;
 /**
  * @class
@@ -31,7 +31,7 @@ export class File extends Duplex {
    * @param {BufferEncoding} encoding - Encoding of buffers.
    * @param {Function} next - Next function, this will be called when done write chunk.
    */
-  _write(chunk: TypeFileChunk, encoding: BufferEncoding, next: TypeFileCallback): void {
+  override _write(chunk: TypeFileChunk, encoding: BufferEncoding, next: TypeFileCallback): void {
     this._bytes.write(Buffer.from(chunk, encoding));
     return next();
   }
@@ -39,11 +39,11 @@ export class File extends Duplex {
    * Read buffer
    * @param {Number} length - Length of chunk
    */
-  _read(length?: number): Buffer | null {
+  override _read(length?: number): TypeBuffer | null {
     if (length) {
       if (this._bytes.length > 0) {
-        let bytes = this._bytes.read(length as number);
-        if (bytes.length > 0) {
+        const bytes = this._bytes.read(length as number);
+        if (Buffer.byteLength(bytes) > 0) {
           return bytes;
         }
       }
@@ -58,19 +58,19 @@ export class File extends Duplex {
   /**
    * Internal Use: Browser compatibility!
    */
-  push(chunk: TypeFileChunk, encoding?: BufferEncoding): boolean {
+  override push(chunk: TypeFileChunk, encoding?: BufferEncoding): boolean {
     return super.push(chunk, encoding);
   }
   /**
    * Internal Use: Browser compatibility!
    */
-  on(event: string, callback: TypeFileCallback): this {
+  override on(event: string, callback: TypeFileCallback): this {
     return super.on(event, callback);
   }
   /**
    * Internal Use: Browser compatibility!
    */
-  pipe(destination: any, options?: { end?: boolean }) {
+  override pipe(destination: any, options?: { end?: boolean }) {
     return super.pipe(destination, options);
   }
   get bytes(): BytesIO {
@@ -81,7 +81,7 @@ export class File extends Duplex {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -91,6 +91,7 @@ export class File extends Duplex {
     return toPrint;
   }
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore: deno compatibility
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   toJSON(): { [key: string]: any } {
@@ -98,7 +99,7 @@ export class File extends Duplex {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = typeof value === 'bigint' ? String(value) : value;
@@ -107,7 +108,7 @@ export class File extends Duplex {
     }
     return toPrint;
   }
-  toString() {
+  override toString() {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }

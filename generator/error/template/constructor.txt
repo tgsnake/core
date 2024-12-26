@@ -16,6 +16,6 @@
 import { RPCError } from "../RpcError.ts"
 
 export class {{ CONSTRUCTOR-NAME }} extends RPCError {
-  code:number = {{ CODE }};
-  name:string = {{ NAME }};
+  override code:number = {{ CODE }};
+  override name:string = {{ NAME }};
 }

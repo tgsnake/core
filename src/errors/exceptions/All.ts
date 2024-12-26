@@ -14,8 +14,14 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
+export type TypeExceptions = {
+  [code: number]: {
+    [module: string]: string;
+  };
+};
+
 const count = 706;
-const Exceptions = {
+const Exceptions: TypeExceptions = {
   303: {
     _: 'SeeOther.SeeOther',
     FILE_MIGRATE_X: 'SeeOther.FileMigrate',

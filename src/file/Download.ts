@@ -26,8 +26,8 @@ export async function handleDownload(
 ) {
   const release = await client._getFileSemaphore.acquire();
   let current = 0;
-  let total = Math.abs(limit) || (1 << 31) - 1;
-  let chunkSize = 1024 * 1024;
+  const total = Math.abs(limit) || (1 << 31) - 1;
+  const chunkSize = 1024 * 1024;
   let offsetBytes = bigMath.abs(offset) * BigInt(1024);
   const session = new Session(
     client,
@@ -62,11 +62,11 @@ export async function handleDownload(
     );
     if (r instanceof Raw.upload.File) {
       while (true) {
-        let chunk = (r as Raw.upload.File).bytes;
+        const chunk = (r as Raw.upload.File).bytes;
         file.push(chunk);
         current++;
         offsetBytes += BigInt(chunkSize);
-        if (chunk.length < chunkSize || current >= total) {
+        if (Buffer.byteLength(chunk) < chunkSize || current >= total) {
           break;
         }
         r = await session.invoke(
@@ -94,7 +94,7 @@ export async function handleDownload(
       );
       try {
         while (true) {
-          let r2: Raw.upload.File = (await cdnSession.invoke(
+          const r2: Raw.upload.File = (await cdnSession.invoke(
             new Raw.upload.GetCdnFile({
               fileToken: (r as Raw.upload.FileCdnRedirect).fileToken,
               offset: offsetBytes,
@@ -118,24 +118,27 @@ export async function handleDownload(
               }
             }
           }
-          let chunk = r2.bytes;
-          let decryptedChunk = await AES.ctr256Cipher(
+          const chunk = r2.bytes;
+          const decryptedChunk = await AES.ctr256Cipher(
             (r as Raw.upload.FileCdnRedirect).encryptionKey,
             Buffer.concat([
-              (r as Raw.upload.FileCdnRedirect).encryptionIv.slice(0, -4),
-              bigintToBuffer(offsetBytes / BigInt(16), 4, false),
+              (r as Raw.upload.FileCdnRedirect).encryptionIv.subarray(
+                0,
+                -4,
+              ) as unknown as Uint8Array,
+              bigintToBuffer(offsetBytes / BigInt(16), 4, false) as unknown as Uint8Array,
             ]),
           )(chunk);
-          let hashes: Array<Raw.FileHash> = (await session.invoke(
+          const hashes: Array<Raw.FileHash> = (await session.invoke(
             new Raw.upload.GetCdnFileHashes({
               fileToken: (r as Raw.upload.FileCdnRedirect).fileToken,
               offset: offsetBytes,
             }),
           )) as unknown as Array<Raw.FileHash>;
           for (let i = 0; i < hashes.length; i++) {
-            let hash: Raw.FileHash = hashes[i];
-            let hashChunk = decryptedChunk.slice(hash.limit * i, hash.limit * (i + 1));
-            let chash = crypto.createHash('sha256');
+            const hash: Raw.FileHash = hashes[i];
+            const hashChunk = decryptedChunk.subarray(hash.limit * i, hash.limit * (i + 1));
+            const chash = crypto.createHash('sha256');
             chash.update(hashChunk);
             CDNFileHashMismatch.check(
               chash.digest('hex') === hash.hash.toString('hex'),
@@ -144,7 +147,7 @@ export async function handleDownload(
           }
           current++;
           offsetBytes += BigInt(chunkSize);
-          if (chunk.length < chunkSize || current >= total) {
+          if (Buffer.byteLength(chunk) < chunkSize || current >= total) {
             break;
           }
         }
@@ -156,9 +159,10 @@ export async function handleDownload(
     await session.stop();
     file.push(null);
     if (isDeno) {
-      // @ts-ignore
+      // @ts-ignore: deno compatibility
       release();
     } else {
+      // @ts-ignore: node compatibility
       release[1]();
     }
   }

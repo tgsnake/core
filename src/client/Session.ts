@@ -14,10 +14,11 @@ import { Logger } from '../Logger.ts';
 import * as Errors from '../errors/index.ts';
 import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
+import { process } from '../platform.deno.ts';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
  */
-export async function loadSession(): Promise<void> {
+export async function loadSession(this: Client): Promise<void> {
   await (this as Client)._storage.load();
   // without authkey, that mean the session is fresh.
   if (!(this as Client)._storage.authKey) {
@@ -49,7 +50,7 @@ export async function loadSession(): Promise<void> {
  * Connecting client to telegram server.<br/>
  * You can't receive any updates if you not call getMe after connected.
  */
-export async function connect(): Promise<void> {
+export async function connect(this: Client): Promise<void> {
   if (!(this as Client)._isConnected) {
     Logger.info(`[100] Using version: ${Version.version} - ${Version.getType()}`);
     await loadSession.call(this);
@@ -69,17 +70,17 @@ export async function connect(): Promise<void> {
 /**
  * Starting telegram client.
  */
-export async function start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Raw.users.UserFull> {
+export async function start(
+  this: Client,
+  auth?: _Auth.SigInBot | _Auth.SigInUser,
+): Promise<Raw.users.UserFull> {
   await connect.call(this);
   if ((this as Client)._storage.userId === undefined) {
     if (auth) {
-      // @ts-ignore
-      if (auth?.botToken) {
-        // @ts-ignore
-        await _Auth.siginBot.call(this, await auth?.botToken);
+      if ((auth as _Auth.SigInBot).botToken) {
+        await _Auth.siginBot.call(this, await (auth as _Auth.SigInBot).botToken);
       } else {
-        // @ts-ignore
-        await _Auth.siginUser.call(this, { ...auth });
+        await _Auth.siginUser.call(this, { ...(auth as _Auth.SigInUser) });
       }
     }
   }
@@ -87,7 +88,7 @@ export async function start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Ra
     throw new Errors.ClientError.AuthKeyMissing();
   }
   if (!(this as Client)._storage.isBot && (this as Client)._takeout) {
-    let takeout = await (this as Client).invoke(new Raw.account.InitTakeoutSession({}));
+    const takeout = await (this as Client).invoke(new Raw.account.InitTakeoutSession({}));
     (this as Client)._takeoutId = takeout.id;
     Logger.warning(`[104] Takeout session ${(this as Client)._takeoutId} initiated.`);
   }
@@ -99,7 +100,7 @@ export async function start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Ra
 /**
  * Logout and kill the client.
  */
-export async function logout(): Promise<any> {
+export async function logout(this: Client): Promise<any> {
   await (this as Client).invoke(new Raw.auth.LogOut());
   await (this as Client)._storage.delete();
   Logger.info(`[105] Logged out.`);
@@ -108,7 +109,7 @@ export async function logout(): Promise<any> {
 /**
  * Exporting current session to string.
  */
-export async function exportSession(): Promise<string> {
+export async function exportSession(this: Client): Promise<string> {
   if (!(this as Client)._storage.userId) {
     const me = (this as Client)._me ?? (await _Auth.getMe.call(this));
     (this as Client)._storage.setUserId((me.fullUser as unknown as Raw.UserFull).id);
@@ -126,6 +127,7 @@ export async function exportSession(): Promise<string> {
  * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
  */
 export async function invoke(
+  this: Client,
   query: TLObject,
   retries: number,
   timeout: number,

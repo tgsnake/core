@@ -11,7 +11,7 @@
 import { BytesIO } from './BytesIO.ts';
 import { TLObject } from './TLObject.ts';
 import * as Primitive from './primitive/index.ts';
-import { Buffer } from '../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
 
 function toBytes(value: bigint) {
   const bytesArray: Array<number> = [];
@@ -37,19 +37,19 @@ export class Message extends TLObject {
     this.length = length;
     this.body = body;
   }
-  static async read(data: BytesIO, ..._args: Array<any>): Promise<Message> {
-    let msgId = await Primitive.Long.read(data);
-    let seqNo = await Primitive.Int.read(data);
-    let length = await Primitive.Int.read(data);
-    let body = data.read(length);
+  static override async read(data: BytesIO, ..._args: Array<any>): Promise<Message> {
+    const msgId = await Primitive.Long.read(data);
+    const seqNo = await Primitive.Int.read(data);
+    const length = await Primitive.Int.read(data);
+    const body = data.read(length);
     return new Message(await TLObject.read(new BytesIO(body)), msgId, seqNo, length);
   }
-  write(): Buffer {
-    let b = new BytesIO();
-    b.write(toBytes(this.msgId));
-    b.write(Primitive.Int.write(this.seqNo));
-    b.write(Primitive.Int.write(this.length));
-    b.write(this.body.write());
-    return Buffer.from(b.buffer);
+  override write(): TypeBuffer {
+    const bytes = new BytesIO();
+    bytes.write(toBytes(this.msgId));
+    bytes.write(Primitive.Int.write(this.seqNo));
+    bytes.write(Primitive.Int.write(this.length));
+    bytes.write(this.body.write());
+    return Buffer.from(bytes.buffer as unknown as Uint8Array);
   }
 }

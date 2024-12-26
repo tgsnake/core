@@ -7,7 +7,15 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { crypto, isDeno, type Readable, Buffer, Writable } from '../platform.deno.ts';
+import {
+  crypto,
+  isDeno,
+  type Readable,
+  Buffer,
+  Writable,
+  type TypeBuffer,
+  type BufferEncoding,
+} from '../platform.deno.ts';
 import { type Client } from '../client/Client.ts';
 import { File, type TypeFileCallback, type TypeFileChunk } from './File.ts';
 import { Queue } from '../Queue.ts';
@@ -24,7 +32,7 @@ export interface SaveFileParams {
   /**
    * Buffer of the file you want to upload to the telegram server.
    */
-  source: Buffer;
+  source: TypeBuffer;
   /**
    * The file name which will be uploaded to the telegram server. Default is file.unknown.
    */
@@ -63,7 +71,7 @@ export interface SaveFileStreamParams {
  */
 export async function upload(
   client: Client,
-  source: Buffer,
+  source: TypeBuffer,
   fileName?: string,
   fileId?: bigint,
   filePart: number = 0,
@@ -76,7 +84,7 @@ export async function upload(
     const user = client._me?.users.find((user) => user.id === client._me?.fullUser.id);
     const premium = user && 'premium' in user ? user.premium : false;
     const fileSizeLimitMiB = premium ? 4000 : 2000;
-    const fileSize = source.byteLength;
+    const fileSize = Buffer.byteLength(source);
     if (fileSize === 0) {
       throw new FileErrors.FileUploadZero();
     }
@@ -84,11 +92,11 @@ export async function upload(
     if (fileSize > fileSizeLimitMiB * 1024 * 1024) {
       throw new FileErrors.FileUploadBigger(fileSizeLimitMiB * 1024 * 1024, fileSize);
     }
-    async function worker(session: Session, index: number) {
+    const worker = async (session: Session, index: number) => {
       Logger.debug(`[142] Worker ${index} running`);
       while (true) {
         Logger.debug(`[143] Worker ${index} getting the queue`);
-        let data = await queue.get();
+        const data = await queue.get();
         Logger.debug(`[144] Worker ${index} successfully getting the queue`);
         if (data === null) {
           Logger.debug(`[145] Worker ${index} finished`);
@@ -103,12 +111,12 @@ export async function upload(
           }
         }
       }
-    }
+    };
     const fileTotalParts = Math.ceil(fileSize / partSize);
     const isBig = fileSize > 10 * 1024 * 1024;
     const workersAmount = isBig ? 4 : 1;
     const isMissingPart = fileId !== undefined;
-    fileId = fileId || Buffer.from(crypto.randomBytes(8)).readBigInt64LE();
+    fileId = fileId || Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE();
     const file = new BytesIO(source);
     const md5 =
       !isBig && !isMissingPart ? crypto.createHash('md5').update(source).digest('hex') : '';
@@ -127,8 +135,8 @@ export async function upload(
       await session.start();
       file.seek(partSize * filePart);
       while (true) {
-        let chunk = file.read(partSize);
-        if (!chunk.length) {
+        const chunk = file.read(partSize);
+        if (!Buffer.byteLength(chunk)) {
           break;
         }
         if (isBig) {
@@ -157,15 +165,6 @@ export async function upload(
           progress(Math.min(filePart * partSize, fileSize), fileSize);
         }
       }
-    } catch (error) {
-      Logger.error('[141] Got error when trying to put rpc to queue', error);
-    } finally {
-      for (let _ of workers) {
-        await queue.put(null);
-      }
-      await queue.put(null);
-      await queue.get();
-      await session.stop();
       if (isBig) {
         return new Raw.InputFileBig({
           id: fileId!,
@@ -180,12 +179,22 @@ export async function upload(
           md5Checksum: md5,
         });
       }
+    } catch (error) {
+      Logger.error('[141] Got error when trying to put rpc to queue', error);
+    } finally {
+      for (let _ of workers) {
+        await queue.put(null);
+      }
+      await queue.put(null);
+      await queue.get();
+      await session.stop();
     }
   } finally {
     if (isDeno) {
-      // @ts-ignore
+      // @ts-ignore: deno compatibility
       release();
     } else {
+      // @ts-ignore: node compatibility
       release[1]();
     }
   }
@@ -211,11 +220,11 @@ export async function uploadStream(
   const release = await client._saveFileSemaphore.acquire();
   Logger.debug(`[148] Upload stream started.`);
   try {
-    let resolve;
-    let partSize = 512 * 1024;
+    let resolve: (value?: unknown) => void;
+    const partSize = 512 * 1024;
     let filePart = 0;
     let totalStreamSize = 0;
-    let fileId = Buffer.from(crypto.randomBytes(8)).readBigInt64LE();
+    const fileId = Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE();
     let hasEndedBefore = false;
     const queue = new Queue<TLObject | null>(1);
     const waitUpload = new Promise((res) => {
@@ -224,11 +233,11 @@ export async function uploadStream(
     const user = client._me?.users.find((user) => user.id === client._me?.fullUser.id);
     const premium = user && 'premium' in user ? true : false;
     const fileSizeLimitMiB = premium ? 4000 : 2000;
-    async function worker(session: Session, index: number) {
+    const worker = async (session: Session, index: number) => {
       Logger.debug(`[149] Worker ${index} running`);
       while (true) {
         Logger.debug(`[150] Worker ${index} getting the queue`);
-        let data = await queue.get();
+        const data = await queue.get();
         Logger.debug(`[151] Worker ${index} successfully getting the queue`);
         if (data === null) {
           Logger.debug(`[152] Worker ${index} finished`);
@@ -243,7 +252,7 @@ export async function uploadStream(
           }
         }
       }
-    }
+    };
     const session = new Session(
       client,
       client._storage.dcId,
@@ -260,11 +269,11 @@ export async function uploadStream(
       const uploader = new Writable({
         highWaterMark: 512 * 1024,
         async write(chunk: TypeFileChunk, encoding: BufferEncoding, callback: TypeFileCallback) {
-          totalStreamSize += chunk.length;
+          totalStreamSize += Buffer.byteLength(chunk);
           if (totalStreamSize > fileSizeLimitMiB * 1024 * 1024) {
             throw new FileErrors.FileUploadBigger(fileSizeLimitMiB * 1024 * 1024, totalStreamSize);
           }
-          if (chunk.length < 512 * 1024) {
+          if (Buffer.byteLength(chunk) < 512 * 1024) {
             hasEndedBefore = true;
             await queue.put(
               new Raw.upload.SaveBigFilePart({
@@ -310,6 +319,11 @@ export async function uploadStream(
       });
       source.pipe(uploader);
       await waitUpload;
+      return new Raw.InputFileBig({
+        id: fileId!,
+        parts: Math.ceil(totalStreamSize / partSize),
+        name: fileName ?? 'file.unknown',
+      });
     } catch (error) {
       Logger.error('[155] Got error when trying to put rpc to queue', error);
     } finally {
@@ -319,17 +333,13 @@ export async function uploadStream(
       await queue.put(null);
       await queue.get();
       await session.stop();
-      return new Raw.InputFileBig({
-        id: fileId!,
-        parts: Math.ceil(totalStreamSize / partSize),
-        name: fileName ?? 'file.unknown',
-      });
     }
   } finally {
     if (isDeno) {
-      // @ts-ignore
+      // @ts-ignore: deno compatibility
       release();
     } else {
+      // @ts-ignore: node compatibility
       release[1]();
     }
   }

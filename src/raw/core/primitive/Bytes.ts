@@ -11,31 +11,35 @@
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
 import { bufferToBigint, bigintToBuffer, mod } from '../../../helpers.ts';
-import { Buffer } from '../../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
 
 export class Bytes extends TLObject {
-  static write(value: Buffer): Buffer {
-    let length = value.length;
+  static override write(value: TypeBuffer): TypeBuffer {
+    const length = Buffer.byteLength(value);
     if (length <= 253) {
-      return Buffer.concat([Buffer.from([length]), value, Buffer.alloc(mod(-(length + 1), 4))]);
+      return Buffer.concat([
+        Buffer.from([length]) as unknown as Uint8Array,
+        value as unknown as Uint8Array,
+        Buffer.alloc(mod(-(length + 1), 4)) as unknown as Uint8Array,
+      ]);
     } else {
       return Buffer.concat([
-        Buffer.from([254]),
-        bigintToBuffer(BigInt(length), 3),
-        value,
-        Buffer.alloc(mod(-length, 4)),
+        Buffer.from([254]) as unknown as Uint8Array,
+        bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
+        value as unknown as Uint8Array,
+        Buffer.alloc(mod(-length, 4)) as unknown as Uint8Array,
       ]);
     }
   }
-  static async read(data: BytesIO, ..._args: Array<any>): Promise<Buffer> {
-    let length = data.read(1)[0];
+  static override async read(data: BytesIO, ..._args: Array<any>): Promise<TypeBuffer> {
+    let length = (data.read(1) as unknown as Uint8Array)[0];
     if (length <= 253) {
-      let x = data.read(length);
+      const x = data.read(length);
       data.read(mod(-(length + 1), 4));
       return x;
     } else {
       length = Number(bufferToBigint(data.read(3)));
-      let x = data.read(length);
+      const x = data.read(length);
       data.read(mod(-length, 4));
       return x;
     }

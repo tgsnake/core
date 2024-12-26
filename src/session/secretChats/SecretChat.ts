@@ -10,7 +10,7 @@
 
 import { Raw } from '../../raw/index.ts';
 import { type AbstractSession, SecretChat as TempChat } from '../../storage/index.ts';
-import { Mutex, inspect, crypto, Buffer } from '../../platform.deno.ts';
+import { Mutex, inspect, crypto, Buffer, type TypeBuffer } from '../../platform.deno.ts';
 import { Logger } from '../../Logger.ts';
 import { SecurityCheckMismatch, SecretChatError } from '../../errors/index.ts';
 import { SecretChats } from '../../crypto/index.ts';
@@ -24,7 +24,7 @@ import type { Client } from '../../client/Client.ts';
 // Adapted from:
 // https://github.com/danog/MadelineProto/blob/v8/src/SecretChats/AuthKeyHandler.php
 // https://github.com/painor/telethon-secret-chat/blob/master/telethon_secret_chat/secret_methods.py
-function sha1(data: Buffer): Buffer {
+function sha1(data: TypeBuffer): TypeBuffer {
   const hash = crypto.createHash('sha1');
   hash.update(data);
   return hash.digest();
@@ -35,7 +35,7 @@ export class SecretChat {
   private _dhConfig!: Raw.messages.DhConfig;
   //  private _dhP!: bigint;
   private _mutex!: Mutex;
-  private _tempAuthKey!: Map<bigint, Buffer>;
+  private _tempAuthKey!: Map<bigint, TypeBuffer>;
   private _waiting!: Array<number>;
 
   constructor(storage: AbstractSession, client: Client) {
@@ -83,7 +83,7 @@ export class SecretChat {
     const peer = await this._client.resolvePeer(userId);
     const dh = await this.reqDHConfig();
     const p = await toBigint(dh.p, false);
-    const a = await toBigint(Buffer.from(crypto.randomBytes(256)), false);
+    const a = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
     const gA = bigIntPow(BigInt(dh.g), a, p);
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
@@ -99,7 +99,7 @@ export class SecretChat {
       new Raw.messages.RequestEncryption({
         userId: peer,
         gA: await toBuffer(gA, 256, false),
-        randomId: Buffer.from(crypto.randomBytes(4)).readInt32LE(),
+        randomId: Buffer.from(crypto.randomBytes(4) as unknown as Uint8Array).readInt32LE(),
       }),
     );
     const release = await this._mutex.acquire();
@@ -127,11 +127,11 @@ export class SecretChat {
     }
     const dh = await this.reqDHConfig();
     const p = await toBigint(dh.p, false);
-    const b = await toBigint(Buffer.from(crypto.randomBytes(256)), false);
+    const b = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
     const gA = toBigint(request.gA, false);
     const gB = bigIntPow(BigInt(dh.g), b, p);
     const authKey = await toBuffer(bigIntPow(gA, b, p), 256, false);
-    const fingerprint = sha1(authKey).slice(-8).readBigInt64LE();
+    const fingerprint = sha1(authKey).subarray(-8).readBigInt64LE();
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
@@ -195,7 +195,7 @@ export class SecretChat {
     }
     const a = await toBigint(peer.authKey, false);
     const authKey = await toBuffer(bigIntPow(gAOrB, a, p), 256, false);
-    const fingerprint = sha1(authKey).slice(-8).readBigInt64LE();
+    const fingerprint = sha1(authKey).subarray(-8).readBigInt64LE();
     if (fingerprint !== chat.keyFingerprint) {
       throw new SecretChatError.FingerprintMismatch();
     }
@@ -211,7 +211,7 @@ export class SecretChat {
     } finally {
       release();
     }
-    let index = this._waiting.findIndex((id) => id === chat.id);
+    const index = this._waiting.findIndex((id) => id === chat.id);
     if (index >= 0) {
       this._waiting.splice(index, 1);
     }
@@ -227,11 +227,13 @@ export class SecretChat {
       return this._client.invoke(
         new Raw.messages.SendEncryptedService({
           peer: peer.input,
-          randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+          randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
             new Raw.DecryptedMessageService8({
-              randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+              randomId: Buffer.from(
+                crypto.randomBytes(8) as unknown as Uint8Array,
+              ).readBigInt64LE(),
               randomBytes: crypto.randomBytes(15 + 4 * Math.floor(Math.random() * 2)),
               action: new Raw.DecryptedMessageActionNotifyLayer17({
                 layer: Math.min(peer.layer, Raw.Layer),
@@ -258,7 +260,9 @@ export class SecretChat {
           chatId: chatId,
         }),
       );
-    } catch (error: any) {}
+    } catch (_error: unknown) {
+      // ignore error
+    }
     Logger.debug(`[133] ${chatId} already destroyed`);
     return true;
   }
@@ -276,9 +280,9 @@ export class SecretChat {
     }
     const dh = await this.reqDHConfig();
     const p = await toBigint(dh.p, false);
-    const a = await toBigint(Buffer.from(crypto.randomBytes(256)), false);
+    const a = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
     const gA = bigIntPow(BigInt(dh.g), a, p);
-    let e = Buffer.from(crypto.randomBytes(64)).readBigInt64LE();
+    let e = Buffer.from(crypto.randomBytes(64) as unknown as Uint8Array).readBigInt64LE();
     peer.rekeyStep = 1;
     peer.rekeyExchange = e;
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
@@ -301,11 +305,11 @@ export class SecretChat {
     return this._client.invoke(
       new Raw.messages.SendEncryptedService({
         peer: peer.input,
-        randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+        randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
           new Raw.DecryptedMessageService17({
-            randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+            randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
             action: new Raw.DecryptedMessageActionRequestKey20({
               gA: await toBuffer(gA, 256, false),
               exchangeId: e,
@@ -348,11 +352,11 @@ export class SecretChat {
     }
     const dh = await this.reqDHConfig();
     const p = await toBigint(dh.p, false);
-    const b = await toBigint(Buffer.from(crypto.randomBytes(256)), false);
+    const b = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
     const gA = toBigint(action.gA, false);
     const gB = bigIntPow(BigInt(dh.g), b, p);
     const authKey = await toBuffer(bigIntPow(gA, b, p), 256, false);
-    const fingerprint = sha1(authKey).slice(-8);
+    const fingerprint = sha1(authKey).subarray(-8);
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
@@ -375,11 +379,11 @@ export class SecretChat {
     return this._client.invoke(
       new Raw.messages.SendEncryptedService({
         peer: peer.input,
-        randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+        randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
           new Raw.DecryptedMessageService17({
-            randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+            randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
             action: new Raw.DecryptedMessageActionAcceptKey20({
               gB: await toBuffer(gB, 256, false),
               exchangeId: action.exchangeId,
@@ -417,11 +421,11 @@ export class SecretChat {
     const p = await toBigint(dh.p, false);
     const gB = await toBigint(action.gB, false);
     const authKey = await toBuffer(
-      bigIntPow(gB, await toBigint(this._tempAuthKey.get(action.exchangeId) as Buffer), p),
+      bigIntPow(gB, await toBigint(this._tempAuthKey.get(action.exchangeId) as TypeBuffer), p),
       256,
       false,
     );
-    const fingerprint = sha1(authKey).slice(-8).readBigInt64LE();
+    const fingerprint = sha1(authKey).subarray(-8).readBigInt64LE();
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
     SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
@@ -437,11 +441,13 @@ export class SecretChat {
       await this._client.invoke(
         new Raw.messages.SendEncryptedService({
           peer: peer.input,
-          randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+          randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
             new Raw.DecryptedMessageService17({
-              randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+              randomId: Buffer.from(
+                crypto.randomBytes(8) as unknown as Uint8Array,
+              ).readBigInt64LE(),
               action: new Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
@@ -454,11 +460,11 @@ export class SecretChat {
     const response = await this._client.invoke(
       new Raw.messages.SendEncryptedService({
         peer: peer.input,
-        randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+        randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
           new Raw.DecryptedMessageService17({
-            randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+            randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
             action: new Raw.DecryptedMessageActionCommitKey20({
               exchangeId: action.exchangeId,
               keyFingerprint: action.keyFingerprint,
@@ -496,19 +502,21 @@ export class SecretChat {
     if (peer.rekeyStep !== 2 || !this._tempAuthKey.has(action.exchangeId)) {
       return;
     }
-    const fingerprint = sha1(this._tempAuthKey.get(action.exchangeId) as unknown as Buffer)
-      .slice(-8)
+    const fingerprint = sha1(this._tempAuthKey.get(action.exchangeId) as unknown as TypeBuffer)
+      .subarray(-8)
       .readBigInt64LE();
     if (fingerprint !== action.keyFingerprint) {
       Logger.error(`[124] re-keying ${chatId}: Aborting due mismatched fingerprint`);
       await this._client.invoke(
         new Raw.messages.SendEncryptedService({
           peer: peer.input,
-          randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+          randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
             new Raw.DecryptedMessageService17({
-              randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+              randomId: Buffer.from(
+                crypto.randomBytes(8) as unknown as Uint8Array,
+              ).readBigInt64LE(),
               action: new Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
@@ -522,7 +530,7 @@ export class SecretChat {
     try {
       peer.rekeyStep = 0;
       peer.rekeyExchange = BigInt(0);
-      peer.authKey = this._tempAuthKey.get(action.exchangeId) as unknown as Buffer;
+      peer.authKey = this._tempAuthKey.get(action.exchangeId) as unknown as TypeBuffer;
       peer.timeRekey = 100;
       peer.changed = Date.now() / 1000;
       this._tempAuthKey.delete(action.exchangeId);
@@ -533,11 +541,11 @@ export class SecretChat {
     return this._client.invoke(
       new Raw.messages.SendEncryptedService({
         peer: peer.input,
-        randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+        randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
           new Raw.DecryptedMessageService17({
-            randomId: Buffer.from(crypto.randomBytes(8)).readBigInt64LE(),
+            randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
             action: new Raw.DecryptedMessageActionNoop20(),
           }),
         ),
@@ -638,7 +646,7 @@ export class SecretChat {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -649,6 +657,7 @@ export class SecretChat {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore: Deno custom inspect
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -657,7 +666,7 @@ export class SecretChat {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           if (typeof value === 'bigint') {

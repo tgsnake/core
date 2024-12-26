@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Buffer } from '../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
 import { TCP } from './tcp.ts';
 import type { ProxyInterface } from '../connection.ts';
 
@@ -20,24 +20,26 @@ export class TCPIntermediate extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  override async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
     await super.connect(ip, port, proxy, dcId);
     await super.send(
       Buffer.concat([
-        Buffer.from('ee', 'hex'),
-        Buffer.from('ee', 'hex'),
-        Buffer.from('ee', 'hex'),
-        Buffer.from('ee', 'hex'),
+        Buffer.from('ee', 'hex') as unknown as Uint8Array,
+        Buffer.from('ee', 'hex') as unknown as Uint8Array,
+        Buffer.from('ee', 'hex') as unknown as Uint8Array,
+        Buffer.from('ee', 'hex') as unknown as Uint8Array,
       ]),
     );
   }
-  async send(data: Buffer) {
-    let allocLength = Buffer.alloc(4);
-    allocLength.writeInt32LE(data.length, 0);
-    await super.send(Buffer.concat([allocLength, data]));
+  override async send(data: TypeBuffer) {
+    const allocLength = Buffer.alloc(4);
+    allocLength.writeInt32LE(Buffer.byteLength(data), 0);
+    await super.send(
+      Buffer.concat([allocLength as unknown as Uint8Array, data as unknown as Uint8Array]),
+    );
   }
-  async recv(_length: number = 0) {
-    let length = await super.recv(4);
+  override async recv(_length: number = 0) {
+    const length = await super.recv(4);
     if (!length) return;
     return await super.recv(length.readInt32LE(0));
   }

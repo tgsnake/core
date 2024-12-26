@@ -8,17 +8,17 @@ export class {{ CLASS-NAME }} extends TLObject {
     * Generate the TLObject from buffer. 
     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
   */
-  static async read(_data:BytesIO,..._args:Array<any>) : Promise<Raw.{{ CLASS-NAME-WITH-NAMESPACE }}> {
+  static override async read(_data:BytesIO,..._args:Array<any>) : Promise<Raw.{{ CLASS-NAME-WITH-NAMESPACE }}> {
     {{ READER }}
     return new Raw.{{ CLASS-NAME-WITH-NAMESPACE }}({{ VARIABLE }})
   }
   /**
     * Generate buffer from TLObject.
   */
-  write() : Buffer {
-    let b:BytesIO = new BytesIO()
-    b.write((Primitive.Int.write(this.constructorId,false)) as unknown as Buffer)
+  override write() : TypeBuffer {
+    const b:BytesIO = new BytesIO()
+    b.write((Primitive.Int.write(this.constructorId,false)) as unknown as TypeBuffer)
     {{ WRITER }}
-    return Buffer.from(b.buffer)
+    return Buffer.from(b.buffer as unknown as Uint8Array)
   }
 }

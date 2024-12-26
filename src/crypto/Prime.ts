@@ -35,8 +35,8 @@ export function decompose(pq: bigint) {
   if (pq == BigInt(1)) return pq;
   if (bigIntMod(pq, BigInt(2)) === BigInt(0)) return BigInt(2);
   let y = randBigint(BigInt(1), pq - BigInt(1));
-  let c = randBigint(BigInt(1), pq - BigInt(1));
-  let m = randBigint(BigInt(1), pq - BigInt(1));
+  const c = randBigint(BigInt(1), pq - BigInt(1));
+  const m = randBigint(BigInt(1), pq - BigInt(1));
   let g = BigInt(1);
   let r = BigInt(1);
   let q = BigInt(1);

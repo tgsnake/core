@@ -14,6 +14,7 @@ import * as buffer from 'buffer';
 import stream from 'stream-browserify';
 import aesjs from 'aes-js';
 import bigInt from 'big-integer';
+import process from 'process';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'browserify-zlib';
 export { Logger } from '@tgsnake/log';
@@ -51,6 +52,16 @@ export const SocksClient = {
   },
 };
 export const { Buffer } = buffer;
+export type { Buffer as TypeBuffer } from 'buffer'; // NodeJS compatibility
+export type BufferEncoding =
+  | 'utf-8'
+  | 'utf8'
+  | 'utf-16le'
+  | 'utf16le'
+  | 'latin1'
+  | 'binary'
+  | 'base64'
+  | 'hex'; // NodeJS compatibility;
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility
 export class Readable extends stream.Readable {
@@ -64,4 +75,4 @@ export class Readable extends stream.Readable {
 export const { Writable, Duplex } = stream;
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
-export { crypto, os, bigInt, path, aesjs };
+export { crypto, os, bigInt, path, aesjs, process };

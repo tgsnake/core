@@ -12,7 +12,7 @@ import { Connection } from '../connection/connection.ts';
 import * as AES from '../crypto/Aes.ts';
 import * as Prime from '../crypto/Prime.ts';
 import * as RSA from '../crypto/RSA.ts';
-import { crypto, Buffer } from '../platform.deno.ts';
+import { crypto, Buffer, type TypeBuffer } from '../platform.deno.ts';
 import { SecurityCheckMismatch } from '../errors/index.ts';
 import { TLObject, Primitive, Raw, BytesIO } from '../raw/index.ts';
 import { MsgId } from './internals/MsgId.ts';
@@ -36,12 +36,12 @@ export class Auth {
     this.testMode = testMode;
     this.ipv6 = ipv6;
   }
-  static pack(data: TLObject): Buffer {
+  static pack(data: TLObject): TypeBuffer {
     return Buffer.concat([
-      Buffer.alloc(8),
-      Primitive.Long.write(BigInt(new MsgId().getMsgId())),
-      Primitive.Int.write(data.write().length),
-      data.write(),
+      Buffer.alloc(8) as unknown as Uint8Array,
+      Primitive.Long.write(BigInt(new MsgId().getMsgId())) as unknown as Uint8Array,
+      Primitive.Int.write(Buffer.byteLength(data.write())) as unknown as Uint8Array,
+      data.write() as unknown as Uint8Array,
     ]);
   }
   static async unpack(b: BytesIO) {
@@ -68,15 +68,19 @@ export class Auth {
         await this.connection.connect();
 
         // step 1 - 2
-        let nonce = toBigint(Buffer.from(crypto.randomBytes(16)), false, true);
+        const nonce = toBigint(
+          Buffer.from(crypto.randomBytes(16) as unknown as Uint8Array),
+          false,
+          true,
+        );
         Logger.debug(`[12] Send ResPq: ${nonce}`);
-        let resPq: Raw.ResPQ = await this.invoke(new Raw.ReqPqMulti({ nonce }));
+        const resPq: Raw.ResPQ = await this.invoke(new Raw.ReqPqMulti({ nonce }));
         Logger.debug(`[13] Got ResPq: ${resPq.serverNonce}`);
         Logger.debug(`[14] Server public key fingerprints: ${resPq.serverPublicKeyFingerprints}`);
         let fingerprints;
         if (!resPq.serverPublicKeyFingerprints || !resPq.serverPublicKeyFingerprints.length)
           throw new Error('Public key not found');
-        for (let i of resPq.serverPublicKeyFingerprints) {
+        for (const i of resPq.serverPublicKeyFingerprints) {
           if (RSA.PublicKey.get(BigInt(i))) {
             Logger.debug(`[15] Using fingerprint: ${i}`);
             fingerprints = BigInt(i);
@@ -87,11 +91,11 @@ export class Auth {
         }
 
         // step 3
-        let pq = toBigint(resPq.pq, false);
+        const pq = toBigint(resPq.pq, false);
         Logger.debug(`[17] Start PQ factorization: ${pq}`);
-        let start = Math.floor(Date.now() / 1000);
-        let g = Prime.decompose(pq);
-        let [p, q] = [BigInt(g), BigInt(pq / g)].sort((a: bigint, b: bigint) => {
+        const start = Math.floor(Date.now() / 1000);
+        const g = Prime.decompose(pq);
+        const [p, q] = [BigInt(g), BigInt(pq / g)].sort((a: bigint, b: bigint) => {
           if (a > b) return 1;
           if (a < b) return -1;
           return 0;
@@ -103,9 +107,13 @@ export class Auth {
         );
 
         // step 4
-        let newNonce = toBigint(Buffer.from(crypto.randomBytes(32)), true, true);
-        let pBytes = toBuffer(BigInt(p), 4, false);
-        let qBytes = toBuffer(BigInt(q), 4, false);
+        const newNonce = toBigint(
+          Buffer.from(crypto.randomBytes(32) as unknown as Uint8Array),
+          true,
+          true,
+        );
+        const pBytes = toBuffer(BigInt(p), 4, false);
+        const qBytes = toBuffer(BigInt(q), 4, false);
         let data = new Raw.PQInnerData({
           pq: resPq.pq,
           p: pBytes,
@@ -115,76 +123,87 @@ export class Auth {
           serverNonce: resPq.serverNonce,
         }).write();
         let sha = crypto.createHash('sha1').update(data).digest();
-        let padding = Buffer.from(crypto.randomBytes(mod(-(data.length + sha.length), 255)));
-        let hash = Buffer.concat([sha, data, padding]);
-        let encryptedData = RSA.encrypt(hash, fingerprints);
-        Logger.debug(`[19] Length of encrypted data: ${encryptedData.length}`);
+        let padding = Buffer.from(
+          crypto.randomBytes(
+            mod(-(Buffer.byteLength(data) + Buffer.byteLength(sha)), 255),
+          ) as unknown as Uint8Array,
+        );
+        let hash = Buffer.concat([
+          sha as unknown as Uint8Array,
+          data as unknown as Uint8Array,
+          padding as unknown as Uint8Array,
+        ]);
+        let encryptedData = RSA.encrypt(hash, fingerprints as bigint);
+        Logger.debug(`[19] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`);
         Logger.debug(`[20] Done encrypt data with RSA`);
 
         // Step 5. TODO: Handle "ServerDhParamsFail". Code assumes response is ok
         Logger.debug(`[21] Send ReqDhParams`);
-        let serverDh = await this.invoke(
+        const serverDh = await this.invoke(
           new Raw.ReqDhParams({
             nonce: nonce,
             serverNonce: resPq.serverNonce,
             encryptedData: encryptedData,
             p: pBytes,
             q: qBytes,
-            publicKeyFingerprint: fingerprints,
+            publicKeyFingerprint: fingerprints!,
           }),
         );
-        let tempAesKey = Buffer.concat([
+        const tempAesKey = Buffer.concat([
           crypto
             .createHash('sha1')
             .update(
               Buffer.concat([
-                Primitive.Int256.write(newNonce),
-                Primitive.Int128.write(resPq.serverNonce),
+                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
               ]),
             )
-            .digest(),
+            .digest() as unknown as Uint8Array,
           crypto
             .createHash('sha1')
             .update(
               Buffer.concat([
-                Primitive.Int128.write(resPq.serverNonce),
-                Primitive.Int256.write(newNonce),
-              ]),
-            )
-            .digest()
-            .slice(0, 12),
-        ]);
-        let tempAesIv = Buffer.concat([
-          crypto
-            .createHash('sha1')
-            .update(
-              Buffer.concat([
-                Primitive.Int128.write(resPq.serverNonce),
-                Primitive.Int256.write(newNonce),
+                Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
+                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
               ]),
             )
             .digest()
-            .slice(12),
+            .subarray(0, 12) as unknown as Uint8Array,
+        ]);
+        const tempAesIv = Buffer.concat([
           crypto
             .createHash('sha1')
             .update(
-              Buffer.concat([Primitive.Int256.write(newNonce), Primitive.Int256.write(newNonce)]),
+              Buffer.concat([
+                Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
+                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+              ]),
             )
-            .digest(),
-          Primitive.Int256.write(newNonce).slice(0, 4),
+            .digest()
+            .subarray(12) as unknown as Uint8Array,
+          crypto
+            .createHash('sha1')
+            .update(
+              Buffer.concat([
+                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+              ]),
+            )
+            .digest() as unknown as Uint8Array,
+          Primitive.Int256.write(newNonce).subarray(0, 4) as unknown as Uint8Array,
         ]);
-        let answerWithHash = AES.ige256Decrypt(serverDh.encryptedAnswer, tempAesKey, tempAesIv);
-        let answer = new BytesIO(answerWithHash);
+        const answerWithHash = AES.ige256Decrypt(serverDh.encryptedAnswer, tempAesKey, tempAesIv);
+        const answer = new BytesIO(answerWithHash);
         answer.seek(20, 1); // skip hash
-        let serverDhInnerData = await TLObject.read(answer);
+        const serverDhInnerData = await TLObject.read(answer);
         Logger.debug('[22] Done decrypting answer');
 
-        let dhPrime = toBigint(serverDhInnerData.dhPrime, false);
-        let deltaTime = serverDhInnerData.serverTime - Math.floor(Date.now() / 1000);
+        const dhPrime = toBigint(serverDhInnerData.dhPrime, false);
+        const deltaTime = serverDhInnerData.serverTime - Math.floor(Date.now() / 1000);
         Logger.debug(`[23] Delta time: ${deltaTime}`);
 
         // step 6
-        let b = toBigint(Buffer.from(crypto.randomBytes(256)), false);
+        const b = toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
         const gB = bigIntPow(BigInt(serverDhInnerData.g), b, dhPrime);
         data = new Raw.ClientDhInnerData({
           nonce: resPq.nonce,
@@ -193,13 +212,21 @@ export class Auth {
           gB: toBuffer(gB, 256, false),
         }).write();
         sha = crypto.createHash('sha1').update(data).digest();
-        padding = Buffer.from(crypto.randomBytes(mod(-(data.length + sha.length), 16)));
-        hash = Buffer.concat([sha, data, padding]);
+        padding = Buffer.from(
+          crypto.randomBytes(
+            mod(-(Buffer.byteLength(data) + Buffer.byteLength(sha)), 16),
+          ) as unknown as Uint8Array,
+        );
+        hash = Buffer.concat([
+          sha as unknown as Uint8Array,
+          data as unknown as Uint8Array,
+          padding as unknown as Uint8Array,
+        ]);
         encryptedData = AES.ige256Encrypt(hash, tempAesKey, tempAesIv);
-        Logger.debug(`[24] Length of encrypted data: ${encryptedData.length}`);
+        Logger.debug(`[24] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`);
         Logger.debug(`[25] Send SetClientDhParams`);
 
-        let setClientDhParamsAnswer = await this.invoke(
+        const setClientDhParamsAnswer = await this.invoke(
           new Raw.SetClientDhParams({
             nonce: resPq.nonce,
             serverNonce: resPq.serverNonce,
@@ -209,8 +236,8 @@ export class Auth {
         // TODO: Handle "authKeyAuHash" if the previous step fails
 
         // Step 7; Step 8
-        let gA = toBigint(serverDhInnerData.gA, false);
-        let authKey = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
+        const gA = toBigint(serverDhInnerData.gA, false);
+        const authKey = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
         // Security Check
         SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
         Logger.debug('[26] DH parameters check: OK');
@@ -231,8 +258,13 @@ export class Auth {
         // https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
         SecurityCheckMismatch.check(
           answerWithHash
-            .slice(0, 20)
-            .equals(crypto.createHash('sha1').update(serverDhInnerData.write()).digest()),
+            .subarray(0, 20)
+            .equals(
+              crypto
+                .createHash('sha1')
+                .update(serverDhInnerData.write())
+                .digest() as unknown as Uint8Array,
+            ),
         );
         Logger.debug('[28] SHA1 hash values check: OK');
 
@@ -245,14 +277,14 @@ export class Auth {
         Logger.debug('[29] Nonce fields check: OK');
 
         // Step 9
-        let serverSalt = AES.xor(
-          toBuffer(newNonce, 32, true, true).slice(0, 8),
-          toBuffer(resPq.serverNonce, 16, true, true).slice(0, 8),
+        const serverSalt = AES.xor(
+          toBuffer(newNonce, 32, true, true).subarray(0, 8),
+          toBuffer(resPq.serverNonce, 16, true, true).subarray(0, 8),
         );
         Logger.debug(`[30] Server salt: ${toBigint(serverSalt, true)}`);
         Logger.debug(`[31] Done auth key exchange: ${setClientDhParamsAnswer.className}`);
         return authKey;
-      } catch (error: any) {
+      } catch (error: unknown) {
         Logger.error('[32] Error when trying to make auth key: ', error);
         if (retries > 0) {
           retries--;

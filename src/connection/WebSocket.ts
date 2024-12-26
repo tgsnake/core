@@ -8,7 +8,15 @@
  * it under the terms of the MIT License as published.
  */
 
-import { net, Mutex, SocksClient, isBrowser, inspect, Buffer } from '../platform.deno.ts';
+import {
+  net,
+  Mutex,
+  SocksClient,
+  isBrowser,
+  inspect,
+  Buffer,
+  type TypeBuffer,
+} from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { WSError } from '../errors/index.ts';
 import type { ProxyInterface } from './connection.ts';
@@ -20,9 +28,9 @@ const mutex = new Mutex();
  */
 export class Socket {
   private _client!: WebSocket | net.Socket;
-  private _data!: Buffer;
+  private _data!: TypeBuffer;
   private _read!: boolean | Promise<boolean>;
-  private _promisedReading!: (value?: any) => void;
+  private _promisedReading!: (value?: unknown) => void;
   /**
    * The timeout used to run the function of the {@link net.Socket Socket}. If more than the time has been found, it will return a TimeoutError error.
    */
@@ -47,10 +55,8 @@ export class Socket {
         throw new WSError.ProxyUnsupported();
       }
       if (port === 443) {
-        // @ts-ignore
         this._client = new WebSocket(`wss://${ip.replace('$PORT', String(port))}`, 'binary');
       } else {
-        // @ts-ignore
         this._client = new WebSocket(`ws://${ip.replace('$PORT', String(port))}`, 'binary');
       }
       this._connectionClosed = false;
@@ -62,8 +68,10 @@ export class Socket {
           this.recv();
           resolve(this);
         };
-        (this._client as WebSocket).onerror = (error: any) => {
-          return error.message ? reject(new WSError.WebSocketError(error.message)) : reject(error);
+        (this._client as WebSocket).onerror = (error: Event) => {
+          return 'message' in error
+            ? reject(new WSError.WebSocketError(error.message as string))
+            : reject(error);
         };
         (this._client as WebSocket).onclose = () => {
           if ((this._client as WebSocket).readyState >= 2) {
@@ -71,7 +79,7 @@ export class Socket {
             this._connectionClosed = true;
           }
         };
-        window.addEventListener('offline', this.destroy);
+        globalThis.addEventListener('offline', this.destroy);
       });
     } else {
       if (
@@ -96,14 +104,14 @@ export class Socket {
             port: port,
           },
         });
-        this._client = ws.socket;
+        this._client = ws.socket as unknown as net.Socket;
         (this._client as net.Socket).setTimeout(this.timeout);
         this._connectionClosed = false;
         this._read = new Promise((resolve) => {
           this._promisedReading = resolve;
         }) as unknown as Promise<boolean>;
         return new Promise((resolve, reject) => {
-          (this._client as net.Socket).on('error', (error: any) => {
+          (this._client as net.Socket).on('error', (error: Error) => {
             return error.message
               ? reject(new WSError.WebSocketError(error.message))
               : reject(error);
@@ -129,7 +137,7 @@ export class Socket {
             this.recv();
             resolve(this);
           });
-          (this._client as net.Socket).on('error', (error: any) => {
+          (this._client as net.Socket).on('error', (error: Error) => {
             return error.message
               ? reject(new WSError.WebSocketError(error.message))
               : reject(error);
@@ -150,7 +158,7 @@ export class Socket {
   async destroy() {
     if (this._client && !this._connectionClosed) {
       this._connectionClosed = true;
-      this._read = new Promise((resolve: { (value?: any): void }) => {
+      this._read = new Promise((resolve: { (value?: unknown): void }) => {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
       if (isBrowser) {
@@ -166,26 +174,32 @@ export class Socket {
    * Receive data updates from the server asynchronously.
    * If the client is not connected to the client, it will return an {@link WSError.Disconnected} error.
    */
-  async recv() {
+  recv() {
     if (this._client && !this._connectionClosed) {
       if (isBrowser) {
         (this._client as WebSocket).onmessage = async (data) => {
-          let _data = Buffer.from(await new Response(data.data).arrayBuffer());
+          const _data = Buffer.from(await new Response(data.data).arrayBuffer());
           const release = await mutex.acquire();
           try {
-            Logger.debug(`[3] Receive ${_data.length} bytes data`);
-            this._data = Buffer.concat([this._data, _data]);
+            Logger.debug(`[3] Receive ${Buffer.byteLength(_data)} bytes data`);
+            this._data = Buffer.concat([
+              this._data as unknown as Uint8Array,
+              _data as unknown as Uint8Array,
+            ]);
             if (this._promisedReading) this._promisedReading(true);
           } finally {
             release();
           }
         };
       } else {
-        (this._client as net.Socket).on('data', async (data: Buffer) => {
+        (this._client as net.Socket).on('data', async (data: TypeBuffer) => {
           const release = await mutex.acquire();
           try {
-            Logger.debug(`[3] Receive ${data.length} bytes data`);
-            this._data = Buffer.concat([this._data, data]);
+            Logger.debug(`[3] Receive ${Buffer.byteLength(data)} bytes data`);
+            this._data = Buffer.concat([
+              this._data as unknown as Uint8Array,
+              data as unknown as Uint8Array,
+            ]);
             if (this._promisedReading) this._promisedReading(true);
           } finally {
             release();
@@ -199,16 +213,16 @@ export class Socket {
   /**
    * Send request to the server asynchronously.
    * If the client is not connected to the client, it will return an {@link WSError.Disconnected} error.
-   * @param {Buffer} data - The request will be sent to the server. Data must be a buffer.
+   * @param {TypeBuffer} data - The request will be sent to the server. Data must be a buffer.
    */
-  async send(data: Buffer) {
+  async send(data: TypeBuffer) {
     if (this._client && !this._connectionClosed) {
       const release = await mutex.acquire();
       try {
         if (isBrowser) {
-          (this._client as WebSocket).send(data);
+          (this._client as WebSocket).send(data as unknown as ArrayBufferLike);
         } else {
-          (this._client as net.Socket).write(data);
+          (this._client as net.Socket).write(data as unknown as Uint8Array);
         }
       } finally {
         release();
@@ -230,14 +244,14 @@ export class Socket {
     if (this._connectionClosed) {
       throw new WSError.ReadClosed();
     }
-    let tr = this._data.slice(0, length);
-    this._data = this._data.slice(length);
-    if (this._data.length <= 0) {
-      this._read = new Promise((resolve: { (value?: any): void }) => {
+    const toRead = this._data.subarray(0, length);
+    this._data = this._data.subarray(length);
+    if (Buffer.byteLength(this._data) <= 0) {
+      this._read = new Promise((resolve: { (value?: unknown): void }) => {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
     }
-    return tr;
+    return toRead;
   }
   /**
    * Read data updates from the server asynchronously.
@@ -248,9 +262,9 @@ export class Socket {
     if (this._client && !this._connectionClosed) {
       let data = Buffer.alloc(0);
       while (!this._connectionClosed) {
-        let readed = await this.read(length);
-        data = Buffer.concat([data, readed]);
-        length = length - readed.length;
+        const readed = await this.read(length);
+        data = Buffer.concat([data as unknown as Uint8Array, readed as unknown as Uint8Array]);
+        length = length - Buffer.byteLength(readed);
         if (!length) return data;
       }
     } else {
@@ -263,7 +277,7 @@ export class Socket {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -274,6 +288,7 @@ export class Socket {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -282,7 +297,7 @@ export class Socket {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           if (typeof value === 'bigint') {

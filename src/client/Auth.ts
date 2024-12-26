@@ -47,64 +47,57 @@ export interface SigInUser {
   /**
    * When error BadRequest attempt, what should do.
    */
-  authError?: { (error: Errors.Exceptions.BadRequest.BadRequest): any };
+  authError?: { (error: Errors.Exceptions.BadRequest.BadRequest): void };
 }
 /**
  * Sigin as bot.
  * @param {String} botToken - Bot token from bot father.
  */
-export async function siginBot(botToken: string): Promise<Raw.User | undefined> {
+export async function siginBot(this: Client, botToken: string): Promise<Raw.User | undefined> {
   while (true) {
     let user;
     try {
-      user = await (this as Client).invoke(
+      user = await this.invoke(
         new Raw.auth.ImportBotAuthorization({
           botAuthToken: botToken,
-          apiId: (this as Client)._apiId,
-          apiHash: (this as Client)._apiHash,
+          apiId: this._apiId,
+          apiHash: this._apiHash,
           flags: 0,
         }),
         0,
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Errors.Exceptions.SeeOther.UserMigrate) {
         error as Errors.Exceptions.SeeOther.UserMigrate;
-        await (this as Client)._session.stop();
+        await this._session.stop();
         const [ip, port] = await DataCenter.DataCenter(
           error.value as unknown as number,
-          (this as Client)._testMode,
-          (this as Client)._ipv6,
+          this._testMode,
+          this._ipv6,
           false,
         );
-        const auth = new Auth(
-          error.value as unknown as number,
-          (this as Client)._testMode,
-          (this as Client)._ipv6,
-        );
-        (this as Client)._storage.setAddress(
-          error.value as unknown as number,
-          ip,
-          port,
-          (this as Client)._testMode,
-        );
-        (this as Client)._storage.setApiId((this as Client)._apiId);
-        (this as Client)._storage.setAuthKey(await auth.create(), (this as Client)._storage.dcId);
-        (this as Client)._session = new Session(
+        const auth = new Auth(error.value as unknown as number, this._testMode, this._ipv6);
+        this._storage.setAddress(error.value as unknown as number, ip, port, this._testMode);
+        this._storage.setApiId(this._apiId);
+        this._storage.setAuthKey(await auth.create(), this._storage.dcId);
+        this._session = new Session(
           this,
-          (this as Client)._storage.dcId,
-          (this as Client)._storage.authKey,
-          (this as Client)._storage.testMode,
+          this._storage.dcId,
+          this._storage.authKey,
+          this._storage.testMode,
         );
-        await (this as Client)._session.start();
+        await this._session.start();
       } else {
         throw error;
       }
     } finally {
-      if (user) {
-        await (this as Client)._storage.setUserId(user.user.id);
-        await (this as Client)._storage.setIsBot(true);
-        return user.user;
+      if (user && 'user' in user) {
+        await this._storage.setUserId(user.user.id);
+        await this._storage.setIsBot(true);
       }
+    }
+    if (user && 'user' in user) {
+      return user.user;
     }
   }
 }
@@ -112,7 +105,7 @@ export async function siginBot(botToken: string): Promise<Raw.User | undefined> 
  * Sigin as user.
  * @param {Client} auth - The required parameter to be used for creating account or login.
  */
-export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> {
+export async function siginUser(this: Client, auth: SigInUser): Promise<Raw.User | undefined> {
   let _phoneNumber;
   let _sendCode;
   let _signedIn;
@@ -122,7 +115,7 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
       _phoneNumber = await auth.phoneNumber();
       _sendCode = await sendCode.call(this, _phoneNumber);
       break;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
         Logger.error(error);
         if (auth.authError) {
@@ -135,12 +128,16 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
   }
   Logger.info('[101] The confirmation code has been sent.');
   while (true) {
-    let code = await auth.code();
+    const code = await auth.code();
     try {
-      // @ts-ignore
-      _signedIn = await sigin.call(this, _phoneNumber, _sendCode.phoneCodeHash, code);
+      _signedIn = await sigin.call(
+        this,
+        _phoneNumber,
+        (_sendCode as Raw.auth.SentCode).phoneCodeHash,
+        code,
+      );
       break;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
         Logger.error(error);
         if (auth.authError) {
@@ -161,13 +158,13 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
             } else {
               Logger.info('[102] Look you are forgotten the password');
               if (auth.recoveryCode) {
-                let emailPattern = await sendRecoveryCode.call(this);
+                const emailPattern = await sendRecoveryCode.call(this);
                 Logger.info(`[103] The recovery code has been sent to ${emailPattern}`);
                 while (true) {
-                  let recoveryCode = await auth.recoveryCode();
+                  const recoveryCode = await auth.recoveryCode();
                   try {
                     return await recoverPassword.call(this, recoveryCode);
-                  } catch (error: any) {
+                  } catch (error: unknown) {
                     if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
                       Logger.error(error);
                       if (auth.authError) {
@@ -183,7 +180,7 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
                 break;
               }
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
               Logger.error(error);
               if (auth.authError) {
@@ -208,12 +205,12 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
       _signedUp = await signup.call(
         this,
         _phoneNumber,
-        _sendCode.phoneCodeHash,
+        (_sendCode as Raw.auth.SentCode).phoneCodeHash,
         auth.firstname ? await auth.firstname() : String(Date.now()),
         auth.lastname ? await auth.lastname() : '',
       );
       break;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Errors.Exceptions.BadRequest.BadRequest) {
         Logger.error(error);
         if (auth.authError) {
@@ -226,7 +223,6 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
   }
   if (_signedIn instanceof Raw.help.TermsOfService) {
     Logger.info(`\n${_signedIn.text}\n`);
-    //@ts-ignore
     await acceptTOS.call(this, _signedIn.id.data);
   }
   return _signedUp;
@@ -235,54 +231,45 @@ export async function siginUser(auth: SigInUser): Promise<Raw.User | undefined> 
  * Sending telegram OTP code.
  * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
  */
-export async function sendCode(phoneNumber: string): Promise<Raw.auth.TypeSentCode> {
+export async function sendCode(this: Client, phoneNumber: string): Promise<Raw.auth.TypeSentCode> {
   phoneNumber = phoneNumber.replace(/\+/g, '').trim();
   while (true) {
     try {
-      let r = await (this as Client).invoke(
+      const r = await this.invoke(
         new Raw.auth.SendCode({
           phoneNumber: phoneNumber,
-          apiId: (this as Client)._apiId,
-          apiHash: (this as Client)._apiHash,
+          apiId: this._apiId,
+          apiHash: this._apiHash,
           settings: new Raw.CodeSettings({}),
         }),
         0,
       );
       return r;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (
         error instanceof Errors.Exceptions.SeeOther.NetworkMigrate ||
         error instanceof Errors.Exceptions.SeeOther.PhoneMigrate
       ) {
-        await (this as Client)._session.stop();
+        await this._session.stop();
         const [ip, port] = await DataCenter.DataCenter(
           error.value as unknown as number,
-          (this as Client)._testMode,
-          (this as Client)._ipv6,
+          this._testMode,
+          this._ipv6,
           false,
         );
-        const auth = new Auth(
-          error.value as unknown as number,
-          (this as Client)._testMode,
-          (this as Client)._ipv6,
-        );
-        (this as Client)._storage.setAddress(
-          error.value as unknown as number,
-          ip,
-          port,
-          (this as Client)._testMode,
-        );
-        (this as Client)._storage.setApiId((this as Client)._apiId);
-        (this as Client)._storage.setAuthKey(await auth.create(), (this as Client)._storage.dcId);
-        (this as Client)._session = new Session(
+        const auth = new Auth(error.value as unknown as number, this._testMode, this._ipv6);
+        this._storage.setAddress(error.value as unknown as number, ip, port, this._testMode);
+        this._storage.setApiId(this._apiId);
+        this._storage.setAuthKey(await auth.create(), this._storage.dcId);
+        this._session = new Session(
           this,
-          (this as Client)._storage.dcId,
-          (this as Client)._storage.authKey,
-          (this as Client)._storage.testMode,
+          this._storage.dcId,
+          this._storage.authKey,
+          this._storage.testMode,
         );
-        await (this as Client)._session.start();
+        await this._session.start();
       } else if (error instanceof Errors.ClientError.ClientDisconnected) {
-        await (this as Client).connect();
+        await this.connect();
       } else {
         throw error;
       }
@@ -296,11 +283,12 @@ export async function sendCode(phoneNumber: string): Promise<Raw.auth.TypeSentCo
  * @param {String} phoneCode - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
  */
 export async function sigin(
+  this: Client,
   phoneNumber: string,
   phoneCodeHash: string,
   phoneCode: string,
 ): Promise<Raw.User | Raw.help.TermsOfService | boolean> {
-  let r = await (this as Client).invoke(
+  const r = await this.invoke(
     new Raw.auth.SignIn({
       phoneNumber: phoneNumber.replace(/\+/g, '').trim(),
       phoneCodeHash,
@@ -314,8 +302,8 @@ export async function sigin(
     }
     return false;
   } else {
-    await (this as Client)._storage.setUserId(r.user.id);
-    await (this as Client)._storage.setIsBot(false);
+    await this._storage.setUserId(r.user.id);
+    await this._storage.setIsBot(false);
     return r.user;
   }
 }
@@ -323,16 +311,16 @@ export async function sigin(
  * Recover your password with recovery code and login.
  * @param {String} code - The recovery code has been send in connected email with 2FA.
  */
-export async function recoverPassword(code: string): Promise<Raw.User | undefined> {
-  let r = await (this as Client).invoke(
+export async function recoverPassword(this: Client, code: string): Promise<Raw.User | undefined> {
+  const r = await this.invoke(
     new Raw.auth.RecoverPassword({
       code: code,
     }),
     0,
   );
   if ('user' in r) {
-    await (this as Client)._storage.setUserId(r.user.id);
-    await (this as Client)._storage.setIsBot(false);
+    await this._storage.setUserId(r.user.id);
+    await this._storage.setIsBot(false);
     return r.user;
   }
   return;
@@ -340,27 +328,24 @@ export async function recoverPassword(code: string): Promise<Raw.User | undefine
 /**
  * Send the recovery code to cennected email to reset the 2FA.
  */
-export async function sendRecoveryCode(): Promise<string> {
-  let r = await (this as Client).invoke(new Raw.auth.RequestPasswordRecovery(), 0);
+export async function sendRecoveryCode(this: Client): Promise<string> {
+  const r = await this.invoke(new Raw.auth.RequestPasswordRecovery(), 0);
   return r.emailPattern;
 }
 /**
  * Check the givens password is correct or not.
  * @param {String} password - Password will be check.
  */
-export async function checkPassword(password: string): Promise<Raw.User | undefined> {
-  let r = await (this as Client).invoke(
+export async function checkPassword(this: Client, password: string): Promise<Raw.User | undefined> {
+  const r = await this.invoke(
     new Raw.auth.CheckPassword({
-      password: computePasswordCheck(
-        await (this as Client).invoke(new Raw.account.GetPassword(), 0),
-        password,
-      ),
+      password: computePasswordCheck(await this.invoke(new Raw.account.GetPassword(), 0), password),
     }),
     0,
   );
   if ('user' in r) {
-    await (this as Client)._storage.setUserId(r.user.id);
-    await (this as Client)._storage.setIsBot(false);
+    await this._storage.setUserId(r.user.id);
+    await this._storage.setIsBot(false);
     return r.user;
   }
   return;
@@ -369,8 +354,8 @@ export async function checkPassword(password: string): Promise<Raw.User | undefi
  * Accepting Terms Of Service for creating a account.
  * @param {String} id - TOS Id,The terms of service identifier.
  */
-export async function acceptTOS(id: string): Promise<boolean> {
-  let r = await (this as Client).invoke(
+export async function acceptTOS(this: Client, id: string): Promise<boolean> {
+  const r = await this.invoke(
     new Raw.help.AcceptTermsOfService({
       id: new Raw.DataJSON({
         data: id,
@@ -382,8 +367,8 @@ export async function acceptTOS(id: string): Promise<boolean> {
 /**
  * Get hint of 2FA password.
  */
-export async function getPasswordHint(): Promise<string> {
-  let r = await (this as Client).invoke(new Raw.account.GetPassword(), 0);
+export async function getPasswordHint(this: Client): Promise<string> {
+  const r = await this.invoke(new Raw.account.GetPassword(), 0);
   return r.hint ?? '';
 }
 /**
@@ -394,12 +379,13 @@ export async function getPasswordHint(): Promise<string> {
  * @param {String} lastname - New user lastname.
  */
 export async function signup(
+  this: Client,
   phoneNumber: string,
   phoneCodeHash: string,
   firstname: string,
   lastname: string = '',
 ): Promise<Raw.User | undefined> {
-  let r = await (this as Client).invoke(
+  const r = await this.invoke(
     new Raw.auth.SignUp({
       phoneNumber: phoneNumber.replace(/\+/g, '').trim(),
       phoneCodeHash,
@@ -408,8 +394,8 @@ export async function signup(
     }),
   );
   if ('user' in r) {
-    await (this as Client)._storage.setUserId(r.user.id);
-    await (this as Client)._storage.setIsBot(false);
+    await this._storage.setUserId(r.user.id);
+    await this._storage.setIsBot(false);
     return r.user;
   }
   return;
@@ -417,8 +403,8 @@ export async function signup(
 /**
  * Getting info about self.
  */
-export async function getMe(): Promise<Raw.users.UserFull> {
-  return await (this as Client).invoke(
+export async function getMe(this: Client): Promise<Raw.users.UserFull> {
+  return await this.invoke(
     new Raw.users.GetFullUser({
       id: new Raw.InputUserSelf(),
     }),

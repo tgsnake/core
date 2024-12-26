@@ -12,8 +12,7 @@ import * as TCPs from './TCP/index.ts';
 import { DataCenter } from '../session/index.ts';
 import { sleep } from '../helpers.ts';
 import { Logger } from '../Logger.ts';
-// @ts-ignore
-import { Mutex, isBrowser, inspect, Buffer } from '../platform.deno.ts';
+import { isBrowser, inspect, Buffer, type TypeBuffer } from '../platform.deno.ts';
 import { ClientError } from '../errors/index.ts';
 
 /**
@@ -79,7 +78,7 @@ export interface MtprotoProxyInterface {
   /**
    * Secret of MTProto Proxy, can be encoded as hex string or buffer.
    */
-  secret: string | Buffer;
+  secret: string | TypeBuffer;
 }
 export type ProxyInterface = SocksProxyInterface | MtprotoProxyInterface;
 
@@ -98,7 +97,7 @@ export class Connection {
   /** @ignore */
   private _media!: boolean;
   /** @ignore */
-  private _mode!: TypeTCP;
+  private _mode!: TCP;
   /** @ignore */
   private _address!: [ip: string, port: number];
   /** @ignore */
@@ -114,15 +113,14 @@ export class Connection {
     proxy?: ProxyInterface,
     media: boolean = false,
     mode: TCP = TCP.TCPFull,
-    local: boolean = (isBrowser && window && window.location.protocol !== 'https:') || true,
+    local: boolean = (isBrowser && globalThis && globalThis.location.protocol !== 'https:') || true,
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;
     this._test = test;
     this._proxy = proxy;
     this._media = media;
-    // @ts-ignore
-    this._mode = TCPModes[mode];
+    this._mode = mode;
     this._address = DataCenter.DataCenter(dcId, test, ipv6, media);
     this._local = local;
     this._connected = false;
@@ -138,14 +136,12 @@ export class Connection {
           'port' in this._proxy &&
           'secret' in this._proxy) ||
           isBrowser) &&
-        // @ts-ignore
-        (this._mode !== TCPModes[4] || this._mode !== TCPModes[5])
+        this._mode !== TCP.TCPAbridgedO &&
+        this._mode !== TCP.TCPIntermediateO
       ) {
-        // @ts-ignore
-        this._mode = TCPModes[4];
+        this._mode = TCP.TCPAbridgedO;
       }
-      //@ts-ignore
-      this._protocol = new this._mode();
+      this._protocol = new TCPModes[this._mode]();
       try {
         Logger.debug(`[1] Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`);
         await this._protocol.connect(
@@ -156,7 +152,7 @@ export class Connection {
         );
         this._connected = true;
         break;
-      } catch (error: any) {
+      } catch (error: unknown) {
         Logger.error(`[106] Got error when trying connecting to telegram :`, error);
         this._protocol.close();
         await sleep(2000);
@@ -175,8 +171,8 @@ export class Connection {
     await sleep(10);
     await this._protocol.close();
   }
-  async send(data: Buffer) {
-    Logger.debug(`[2] Sending ${data.length} bytes data.`);
+  async send(data: TypeBuffer) {
+    Logger.debug(`[2] Sending ${Buffer.byteLength(data)} bytes data.`);
     await this._protocol.send(data);
   }
   async recv() {
@@ -191,7 +187,7 @@ export class Connection {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -202,6 +198,7 @@ export class Connection {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -210,7 +207,7 @@ export class Connection {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           if (typeof value === 'bigint') {

@@ -16,2294 +16,2315 @@
 import { RPCError } from '../RpcError.ts';
 
 export class BadRequest extends RPCError {
-  code: number = 400;
-  name: string = 'BAD_REQUEST';
+  override code: number = 400;
+  override name: string = 'BAD_REQUEST';
 }
 export class AboutTooLong extends BadRequest {
-  id: string = 'ABOUT_TOO_LONG';
-  message: string = 'About string too long.';
+  override id: string = 'ABOUT_TOO_LONG';
+  override message: string = 'About string too long.';
 }
 export class AccessTokenExpired extends BadRequest {
-  id: string = 'ACCESS_TOKEN_EXPIRED';
-  message: string = 'Access token expired.';
+  override id: string = 'ACCESS_TOKEN_EXPIRED';
+  override message: string = 'Access token expired.';
 }
 export class AccessTokenInvalid extends BadRequest {
-  id: string = 'ACCESS_TOKEN_INVALID';
-  message: string = 'Access token invalid.';
+  override id: string = 'ACCESS_TOKEN_INVALID';
+  override message: string = 'Access token invalid.';
 }
 export class AddressInvalid extends BadRequest {
-  id: string = 'ADDRESS_INVALID';
-  message: string = 'The specified geopoint address is invalid.';
+  override id: string = 'ADDRESS_INVALID';
+  override message: string = 'The specified geopoint address is invalid.';
 }
 export class AdminsTooMuch extends BadRequest {
-  id: string = 'ADMINS_TOO_MUCH';
-  message: string = 'There are too many admins.';
+  override id: string = 'ADMINS_TOO_MUCH';
+  override message: string = 'There are too many admins.';
 }
 export class AdminIdInvalid extends BadRequest {
-  id: string = 'ADMIN_ID_INVALID';
-  message: string = 'The specified admin ID is invalid.';
+  override id: string = 'ADMIN_ID_INVALID';
+  override message: string = 'The specified admin ID is invalid.';
 }
 export class AdminRankEmojiNotAllowed extends BadRequest {
-  id: string = 'ADMIN_RANK_EMOJI_NOT_ALLOWED';
-  message: string = 'An admin rank cannot contain emojis.';
+  override id: string = 'ADMIN_RANK_EMOJI_NOT_ALLOWED';
+  override message: string = 'An admin rank cannot contain emojis.';
 }
 export class AdminRankInvalid extends BadRequest {
-  id: string = 'ADMIN_RANK_INVALID';
-  message: string = 'The specified admin rank is invalid.';
+  override id: string = 'ADMIN_RANK_INVALID';
+  override message: string = 'The specified admin rank is invalid.';
 }
 export class AdminRightsEmpty extends BadRequest {
-  id: string = 'ADMIN_RIGHTS_EMPTY';
-  message: string =
+  override id: string = 'ADMIN_RIGHTS_EMPTY';
+  override message: string =
     'The chatAdminRights constructor passed in keyboardButtonRequestPeer.peer_type.user_admin_rights has no rights set (i.e. flags is 0).';
 }
 export class AdExpired extends BadRequest {
-  id: string = 'AD_EXPIRED';
-  message: string = 'The ad has expired (too old or not found).';
+  override id: string = 'AD_EXPIRED';
+  override message: string = 'The ad has expired (too old or not found).';
 }
 export class AlbumPhotosTooMany extends BadRequest {
-  id: string = 'ALBUM_PHOTOS_TOO_MANY';
-  message: string = 'You have uploaded too many profile photos, delete some before retrying.';
+  override id: string = 'ALBUM_PHOTOS_TOO_MANY';
+  override message: string =
+    'You have uploaded too many profile photos, delete some before retrying.';
 }
 export class ApiIdInvalid extends BadRequest {
-  id: string = 'API_ID_INVALID';
-  message: string = 'API ID invalid.';
+  override id: string = 'API_ID_INVALID';
+  override message: string = 'API ID invalid.';
 }
 export class ApiIdPublishedFlood extends BadRequest {
-  id: string = 'API_ID_PUBLISHED_FLOOD';
-  message: string = "This API id was published somewhere, you can't use it now.";
+  override id: string = 'API_ID_PUBLISHED_FLOOD';
+  override message: string = "This API id was published somewhere, you can't use it now.";
 }
 export class ArticleTitleEmpty extends BadRequest {
-  id: string = 'ARTICLE_TITLE_EMPTY';
-  message: string = 'The title of the article is empty.';
+  override id: string = 'ARTICLE_TITLE_EMPTY';
+  override message: string = 'The title of the article is empty.';
 }
 export class AudioContentUrlEmpty extends BadRequest {
-  id: string = 'AUDIO_CONTENT_URL_EMPTY';
-  message: string = 'The remote URL specified in the content field is empty.';
+  override id: string = 'AUDIO_CONTENT_URL_EMPTY';
+  override message: string = 'The remote URL specified in the content field is empty.';
 }
 export class AudioTitleEmpty extends BadRequest {
-  id: string = 'AUDIO_TITLE_EMPTY';
-  message: string = 'An empty audio title was provided.';
+  override id: string = 'AUDIO_TITLE_EMPTY';
+  override message: string = 'An empty audio title was provided.';
 }
 export class AuthBytesInvalid extends BadRequest {
-  id: string = 'AUTH_BYTES_INVALID';
-  message: string = 'The provided authorization is invalid.';
+  override id: string = 'AUTH_BYTES_INVALID';
+  override message: string = 'The provided authorization is invalid.';
 }
 export class AuthTokenAlreadyAccepted extends BadRequest {
-  id: string = 'AUTH_TOKEN_ALREADY_ACCEPTED';
-  message: string = 'The specified auth token was already accepted.';
+  override id: string = 'AUTH_TOKEN_ALREADY_ACCEPTED';
+  override message: string = 'The specified auth token was already accepted.';
 }
 export class AuthTokenException extends BadRequest {
-  id: string = 'AUTH_TOKEN_EXCEPTION';
-  message: string = 'An error occurred while importing the auth token.';
+  override id: string = 'AUTH_TOKEN_EXCEPTION';
+  override message: string = 'An error occurred while importing the auth token.';
 }
 export class AuthTokenExpired extends BadRequest {
-  id: string = 'AUTH_TOKEN_EXPIRED';
-  message: string = 'The authorization token has expired.';
+  override id: string = 'AUTH_TOKEN_EXPIRED';
+  override message: string = 'The authorization token has expired.';
 }
 export class AuthTokenInvalid extends BadRequest {
-  id: string = 'AUTH_TOKEN_INVALID';
-  message: string = 'The specified auth token is invalid.';
+  override id: string = 'AUTH_TOKEN_INVALID';
+  override message: string = 'The specified auth token is invalid.';
 }
 export class AuthTokenInvalidx extends BadRequest {
-  id: string = 'AUTH_TOKEN_INVALIDX';
-  message: string = 'The specified auth token is invalid.';
+  override id: string = 'AUTH_TOKEN_INVALIDX';
+  override message: string = 'The specified auth token is invalid.';
 }
 export class AutoarchiveNotAvailable extends BadRequest {
-  id: string = 'AUTOARCHIVE_NOT_AVAILABLE';
-  message: string =
+  override id: string = 'AUTOARCHIVE_NOT_AVAILABLE';
+  override message: string =
     'The autoarchive setting is not available at this time: please check the value of the [autoarchive_setting_available field in client config &raquo;](https://core.telegram.org/api/config#client-configuration) before calling this method.';
 }
 export class BalanceTooLow extends BadRequest {
-  id: string = 'BALANCE_TOO_LOW';
-  message: string =
+  override id: string = 'BALANCE_TOO_LOW';
+  override message: string =
     'The transaction cannot be completed because the current [Telegram Stars balance](https://core.telegram.org/api/stars) is too low.';
 }
 export class BankCardNumberInvalid extends BadRequest {
-  id: string = 'BANK_CARD_NUMBER_INVALID';
-  message: string = 'The specified card number is invalid.';
+  override id: string = 'BANK_CARD_NUMBER_INVALID';
+  override message: string = 'The specified card number is invalid.';
 }
 export class BannedRightsInvalid extends BadRequest {
-  id: string = 'BANNED_RIGHTS_INVALID';
-  message: string = 'You provided some invalid flags in the banned rights.';
+  override id: string = 'BANNED_RIGHTS_INVALID';
+  override message: string = 'You provided some invalid flags in the banned rights.';
 }
 export class BasePortLocInvalid extends BadRequest {
-  id: string = 'BASE_PORT_LOC_INVALID';
-  message: string = 'The base port location is invalid';
+  override id: string = 'BASE_PORT_LOC_INVALID';
+  override message: string = 'The base port location is invalid';
 }
 export class BirthdayInvalid extends BadRequest {
-  id: string = 'BIRTHDAY_INVALID';
-  message: string = 'An invalid age was specified, must be between 0 and 150 years.';
+  override id: string = 'BIRTHDAY_INVALID';
+  override message: string = 'An invalid age was specified, must be between 0 and 150 years.';
 }
 export class BoostsEmpty extends BadRequest {
-  id: string = 'BOOSTS_EMPTY';
-  message: string = 'No boost slots were specified.';
+  override id: string = 'BOOSTS_EMPTY';
+  override message: string = 'No boost slots were specified.';
 }
 export class BoostsRequired extends BadRequest {
-  id: string = 'BOOSTS_REQUIRED';
-  message: string =
+  override id: string = 'BOOSTS_REQUIRED';
+  override message: string =
     'The specified channel must first be [boosted by its users](https://core.telegram.org/api/boost) in order to perform this action.';
 }
 export class BoostNotModified extends BadRequest {
-  id: string = 'BOOST_NOT_MODIFIED';
-  message: string =
+  override id: string = 'BOOST_NOT_MODIFIED';
+  override message: string =
     "You're already [boosting](https://core.telegram.org/api/boost) the specified channel.";
 }
 export class BoostPeerInvalid extends BadRequest {
-  id: string = 'BOOST_PEER_INVALID';
-  message: string = 'The specified `boost_peer` is invalid.';
+  override id: string = 'BOOST_PEER_INVALID';
+  override message: string = 'The specified `boost_peer` is invalid.';
 }
 export class BotsTooMuch extends BadRequest {
-  id: string = 'BOTS_TOO_MUCH';
-  message: string = 'There are too many bots in this chat/channel.';
+  override id: string = 'BOTS_TOO_MUCH';
+  override message: string = 'There are too many bots in this chat/channel.';
 }
 export class BotAlreadyDisabled extends BadRequest {
-  id: string = 'BOT_ALREADY_DISABLED';
-  message: string = 'The connected business bot was already disabled for the specified peer.';
+  override id: string = 'BOT_ALREADY_DISABLED';
+  override message: string =
+    'The connected business bot was already disabled for the specified peer.';
 }
 export class BotAppBotInvalid extends BadRequest {
-  id: string = 'BOT_APP_BOT_INVALID';
-  message: string = 'The bot_id passed in the inputBotAppShortName constructor is invalid.';
+  override id: string = 'BOT_APP_BOT_INVALID';
+  override message: string =
+    'The bot_id passed in the inputBotAppShortName constructor is invalid.';
 }
 export class BotAppInvalid extends BadRequest {
-  id: string = 'BOT_APP_INVALID';
-  message: string = 'The specified bot app is invalid.';
+  override id: string = 'BOT_APP_INVALID';
+  override message: string = 'The specified bot app is invalid.';
 }
 export class BotAppShortnameInvalid extends BadRequest {
-  id: string = 'BOT_APP_SHORTNAME_INVALID';
-  message: string = 'The specified bot app short name is invalid.';
+  override id: string = 'BOT_APP_SHORTNAME_INVALID';
+  override message: string = 'The specified bot app short name is invalid.';
 }
 export class BotBusinessMissing extends BadRequest {
-  id: string = 'BOT_BUSINESS_MISSING';
-  message: string =
+  override id: string = 'BOT_BUSINESS_MISSING';
+  override message: string =
     'The specified bot is not a business bot (the [user](https://core.telegram.org/constructor/user).`bot_business` flag is not set).';
 }
 export class BotChannelsNa extends BadRequest {
-  id: string = 'BOT_CHANNELS_NA';
-  message: string = "Bots can't edit admin privileges.";
+  override id: string = 'BOT_CHANNELS_NA';
+  override message: string = "Bots can't edit admin privileges.";
 }
 export class BotCommandDescriptionInvalid extends BadRequest {
-  id: string = 'BOT_COMMAND_DESCRIPTION_INVALID';
-  message: string = 'The specified command description is invalid.';
+  override id: string = 'BOT_COMMAND_DESCRIPTION_INVALID';
+  override message: string = 'The specified command description is invalid.';
 }
 export class BotCommandInvalid extends BadRequest {
-  id: string = 'BOT_COMMAND_INVALID';
-  message: string = 'The specified command is invalid.';
+  override id: string = 'BOT_COMMAND_INVALID';
+  override message: string = 'The specified command is invalid.';
 }
 export class BotDomainInvalid extends BadRequest {
-  id: string = 'BOT_DOMAIN_INVALID';
-  message: string = 'Bot domain invalid.';
+  override id: string = 'BOT_DOMAIN_INVALID';
+  override message: string = 'Bot domain invalid.';
 }
 export class BotGamesDisabled extends BadRequest {
-  id: string = 'BOT_GAMES_DISABLED';
-  message: string = "Games can't be sent to channels.";
+  override id: string = 'BOT_GAMES_DISABLED';
+  override message: string = "Games can't be sent to channels.";
 }
 export class BotGroupsBlocked extends BadRequest {
-  id: string = 'BOT_GROUPS_BLOCKED';
-  message: string = "This bot can't be added to groups.";
+  override id: string = 'BOT_GROUPS_BLOCKED';
+  override message: string = "This bot can't be added to groups.";
 }
 export class BotInlineDisabled extends BadRequest {
-  id: string = 'BOT_INLINE_DISABLED';
-  message: string = "This bot can't be used in inline mode.";
+  override id: string = 'BOT_INLINE_DISABLED';
+  override message: string = "This bot can't be used in inline mode.";
 }
 export class BotInvalid extends BadRequest {
-  id: string = 'BOT_INVALID';
-  message: string = 'This is not a valid bot.';
+  override id: string = 'BOT_INVALID';
+  override message: string = 'This is not a valid bot.';
 }
 export class BotMethodInvalid extends BadRequest {
-  id: string = 'BOT_METHOD_INVALID';
-  message: string = 'The specified method cannot be used by bots.';
+  override id: string = 'BOT_METHOD_INVALID';
+  override message: string = 'The specified method cannot be used by bots.';
 }
 export class BotMissing extends BadRequest {
-  id: string = 'BOT_MISSING';
-  message: string =
+  override id: string = 'BOT_MISSING';
+  override message: string =
     "Only bots can call this method, please use [@stickers](https://t.me/stickers) if you're a user.";
 }
 export class BotNotConnectedYet extends BadRequest {
-  id: string = 'BOT_NOT_CONNECTED_YET';
-  message: string =
+  override id: string = 'BOT_NOT_CONNECTED_YET';
+  override message: string =
     'No [business bot](https://core.telegram.org/api/business#connected-bots) is connected to the currently logged in user.';
 }
 export class BotOnesideNotAvail extends BadRequest {
-  id: string = 'BOT_ONESIDE_NOT_AVAIL';
-  message: string = "Bots can't pin messages in PM just for themselves.";
+  override id: string = 'BOT_ONESIDE_NOT_AVAIL';
+  override message: string = "Bots can't pin messages in PM just for themselves.";
 }
 export class BotPaymentsDisabled extends BadRequest {
-  id: string = 'BOT_PAYMENTS_DISABLED';
-  message: string = 'Please enable bot payments in botfather before calling this method.';
+  override id: string = 'BOT_PAYMENTS_DISABLED';
+  override message: string = 'Please enable bot payments in botfather before calling this method.';
 }
 export class BotPollsDisabled extends BadRequest {
-  id: string = 'BOT_POLLS_DISABLED';
-  message: string = 'Sending polls by bots has been disabled';
+  override id: string = 'BOT_POLLS_DISABLED';
+  override message: string = 'Sending polls by bots has been disabled';
 }
 export class BotResponseTimeout extends BadRequest {
-  id: string = 'BOT_RESPONSE_TIMEOUT';
-  message: string = 'A timeout occurred while fetching data from the bot.';
+  override id: string = 'BOT_RESPONSE_TIMEOUT';
+  override message: string = 'A timeout occurred while fetching data from the bot.';
 }
 export class BotScoreNotModified extends BadRequest {
-  id: string = 'BOT_SCORE_NOT_MODIFIED';
-  message: string = "The score wasn't modified.";
+  override id: string = 'BOT_SCORE_NOT_MODIFIED';
+  override message: string = "The score wasn't modified.";
 }
 export class BotWebviewDisabled extends BadRequest {
-  id: string = 'BOT_WEBVIEW_DISABLED';
-  message: string =
+  override id: string = 'BOT_WEBVIEW_DISABLED';
+  override message: string =
     'A webview cannot be opened in the specified conditions: emitted for example if `from_bot_menu` or `url` are set and `peer` is not the chat with the bot.';
 }
 export class BroadcastIdInvalid extends BadRequest {
-  id: string = 'BROADCAST_ID_INVALID';
-  message: string = 'Broadcast ID invalid.';
+  override id: string = 'BROADCAST_ID_INVALID';
+  override message: string = 'Broadcast ID invalid.';
 }
 export class BroadcastPublicVotersForbidden extends BadRequest {
-  id: string = 'BROADCAST_PUBLIC_VOTERS_FORBIDDEN';
-  message: string = "You can't forward polls with public voters.";
+  override id: string = 'BROADCAST_PUBLIC_VOTERS_FORBIDDEN';
+  override message: string = "You can't forward polls with public voters.";
 }
 export class BroadcastRequired extends BadRequest {
-  id: string = 'BROADCAST_REQUIRED';
-  message: string =
+  override id: string = 'BROADCAST_REQUIRED';
+  override message: string =
     'This method can only be called on a channel, please use stats.getMegagroupStats for supergroups.';
 }
 export class BusinessPeerInvalid extends BadRequest {
-  id: string = 'BUSINESS_PEER_INVALID';
-  message: string =
+  override id: string = 'BUSINESS_PEER_INVALID';
+  override message: string =
     "Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots).";
 }
 export class BusinessRecipientsEmpty extends BadRequest {
-  id: string = 'BUSINESS_RECIPIENTS_EMPTY';
-  message: string =
+  override id: string = 'BUSINESS_RECIPIENTS_EMPTY';
+  override message: string =
     "You didn't set any flag in inputBusinessBotRecipients, thus the bot cannot work with *any* peer.";
 }
 export class BusinessWorkHoursEmpty extends BadRequest {
-  id: string = 'BUSINESS_WORK_HOURS_EMPTY';
-  message: string = 'No work hours were specified.';
+  override id: string = 'BUSINESS_WORK_HOURS_EMPTY';
+  override message: string = 'No work hours were specified.';
 }
 export class BusinessWorkHoursPeriodInvalid extends BadRequest {
-  id: string = 'BUSINESS_WORK_HOURS_PERIOD_INVALID';
-  message: string =
+  override id: string = 'BUSINESS_WORK_HOURS_PERIOD_INVALID';
+  override message: string =
     'The specified work hours are invalid, see [here &raquo;](https://core.telegram.org/api/business#opening-hours) for the exact requirements.';
 }
 export class ButtonDataInvalid extends BadRequest {
-  id: string = 'BUTTON_DATA_INVALID';
-  message: string = 'The data of one or more of the buttons you provided is invalid.';
+  override id: string = 'BUTTON_DATA_INVALID';
+  override message: string = 'The data of one or more of the buttons you provided is invalid.';
 }
 export class ButtonPosInvalid extends BadRequest {
-  id: string = 'BUTTON_POS_INVALID';
-  message: string =
+  override id: string = 'BUTTON_POS_INVALID';
+  override message: string =
     'The position of one of the keyboard buttons is invalid (i.e. a Game or Pay button not in the first position, and so on...).';
 }
 export class ButtonTextInvalid extends BadRequest {
-  id: string = 'BUTTON_TEXT_INVALID';
-  message: string = 'The specified button text is invalid.';
+  override id: string = 'BUTTON_TEXT_INVALID';
+  override message: string = 'The specified button text is invalid.';
 }
 export class ButtonTypeInvalid extends BadRequest {
-  id: string = 'BUTTON_TYPE_INVALID';
-  message: string = 'The type of one or more of the buttons you provided is invalid.';
+  override id: string = 'BUTTON_TYPE_INVALID';
+  override message: string = 'The type of one or more of the buttons you provided is invalid.';
 }
 export class ButtonUrlInvalid extends BadRequest {
-  id: string = 'BUTTON_URL_INVALID';
-  message: string = 'Button URL invalid.';
+  override id: string = 'BUTTON_URL_INVALID';
+  override message: string = 'Button URL invalid.';
 }
 export class ButtonUserInvalid extends BadRequest {
-  id: string = 'BUTTON_USER_INVALID';
-  message: string = 'The `user_id` passed to inputKeyboardButtonUserProfile is invalid!';
+  override id: string = 'BUTTON_USER_INVALID';
+  override message: string = 'The `user_id` passed to inputKeyboardButtonUserProfile is invalid!';
 }
 export class ButtonUserPrivacyRestricted extends BadRequest {
-  id: string = 'BUTTON_USER_PRIVACY_RESTRICTED';
-  message: string =
+  override id: string = 'BUTTON_USER_PRIVACY_RESTRICTED';
+  override message: string =
     'The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.';
 }
 export class CallAlreadyAccepted extends BadRequest {
-  id: string = 'CALL_ALREADY_ACCEPTED';
-  message: string = 'The call was already accepted.';
+  override id: string = 'CALL_ALREADY_ACCEPTED';
+  override message: string = 'The call was already accepted.';
 }
 export class CallAlreadyDeclined extends BadRequest {
-  id: string = 'CALL_ALREADY_DECLINED';
-  message: string = 'The call was already declined.';
+  override id: string = 'CALL_ALREADY_DECLINED';
+  override message: string = 'The call was already declined.';
 }
 export class CallOccupyFailed extends BadRequest {
-  id: string = 'CALL_OCCUPY_FAILED';
-  message: string = 'The call failed because the user is already making another call.';
+  override id: string = 'CALL_OCCUPY_FAILED';
+  override message: string = 'The call failed because the user is already making another call.';
 }
 export class CallPeerInvalid extends BadRequest {
-  id: string = 'CALL_PEER_INVALID';
-  message: string = 'The provided call peer object is invalid.';
+  override id: string = 'CALL_PEER_INVALID';
+  override message: string = 'The provided call peer object is invalid.';
 }
 export class CallProtocolFlagsInvalid extends BadRequest {
-  id: string = 'CALL_PROTOCOL_FLAGS_INVALID';
-  message: string = 'Call protocol flags invalid.';
+  override id: string = 'CALL_PROTOCOL_FLAGS_INVALID';
+  override message: string = 'Call protocol flags invalid.';
 }
 export class CdnMethodInvalid extends BadRequest {
-  id: string = 'CDN_METHOD_INVALID';
-  message: string = "You can't call this method in a CDN DC.";
+  override id: string = 'CDN_METHOD_INVALID';
+  override message: string = "You can't call this method in a CDN DC.";
 }
 export class ChannelsAdminLocatedTooMuch extends BadRequest {
-  id: string = 'CHANNELS_ADMIN_LOCATED_TOO_MUCH';
-  message: string = 'The user has reached the limit of public geogroups.';
+  override id: string = 'CHANNELS_ADMIN_LOCATED_TOO_MUCH';
+  override message: string = 'The user has reached the limit of public geogroups.';
 }
 export class ChannelsAdminPublicTooMuch extends BadRequest {
-  id: string = 'CHANNELS_ADMIN_PUBLIC_TOO_MUCH';
-  message: string =
+  override id: string = 'CHANNELS_ADMIN_PUBLIC_TOO_MUCH';
+  override message: string =
     "You're admin of too many public channels, make some channels private to change the username of this channel.";
 }
 export class ChannelsTooMuch extends BadRequest {
-  id: string = 'CHANNELS_TOO_MUCH';
-  message: string = 'You have joined too many channels/supergroups.';
+  override id: string = 'CHANNELS_TOO_MUCH';
+  override message: string = 'You have joined too many channels/supergroups.';
 }
 export class ChannelAddInvalid extends BadRequest {
-  id: string = 'CHANNEL_ADD_INVALID';
-  message: string = 'Internal error.';
+  override id: string = 'CHANNEL_ADD_INVALID';
+  override message: string = 'Internal error.';
 }
 export class ChannelBanned extends BadRequest {
-  id: string = 'CHANNEL_BANNED';
-  message: string = 'The channel is banned';
+  override id: string = 'CHANNEL_BANNED';
+  override message: string = 'The channel is banned';
 }
 export class ChannelForumMissing extends BadRequest {
-  id: string = 'CHANNEL_FORUM_MISSING';
-  message: string = 'This supergroup is not a forum.';
+  override id: string = 'CHANNEL_FORUM_MISSING';
+  override message: string = 'This supergroup is not a forum.';
 }
 export class ChannelIdInvalid extends BadRequest {
-  id: string = 'CHANNEL_ID_INVALID';
-  message: string = 'The specified supergroup ID is invalid.';
+  override id: string = 'CHANNEL_ID_INVALID';
+  override message: string = 'The specified supergroup ID is invalid.';
 }
 export class ChannelInvalid extends BadRequest {
-  id: string = 'CHANNEL_INVALID';
-  message: string = 'The provided channel is invalid.';
+  override id: string = 'CHANNEL_INVALID';
+  override message: string = 'The provided channel is invalid.';
 }
 export class ChannelParicipantMissing extends BadRequest {
-  id: string = 'CHANNEL_PARICIPANT_MISSING';
-  message: string = 'The current user is not in the channel.';
+  override id: string = 'CHANNEL_PARICIPANT_MISSING';
+  override message: string = 'The current user is not in the channel.';
 }
 export class ChannelPrivate extends BadRequest {
-  id: string = 'CHANNEL_PRIVATE';
-  message: string = "You haven't joined this channel/supergroup.";
+  override id: string = 'CHANNEL_PRIVATE';
+  override message: string = "You haven't joined this channel/supergroup.";
 }
 export class ChannelTooBig extends BadRequest {
-  id: string = 'CHANNEL_TOO_BIG';
-  message: string = 'This channel has too many participants (>1000) to be deleted.';
+  override id: string = 'CHANNEL_TOO_BIG';
+  override message: string = 'This channel has too many participants (>1000) to be deleted.';
 }
 export class ChannelTooLarge extends BadRequest {
-  id: string = 'CHANNEL_TOO_LARGE';
-  message: string =
+  override id: string = 'CHANNEL_TOO_LARGE';
+  override message: string =
     'Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).';
 }
 export class ChargeAlreadyRefunded extends BadRequest {
-  id: string = 'CHARGE_ALREADY_REFUNDED';
-  message: string = 'The transaction was already refunded.';
+  override id: string = 'CHARGE_ALREADY_REFUNDED';
+  override message: string = 'The transaction was already refunded.';
 }
 export class ChatlinksTooMuch extends BadRequest {
-  id: string = 'CHATLINKS_TOO_MUCH';
-  message: string =
+  override id: string = 'CHATLINKS_TOO_MUCH';
+  override message: string =
     'Too many [business chat links](https://core.telegram.org/api/business#business-chat-links) were created, please delete some older links.';
 }
 export class ChatlinkSlugEmpty extends BadRequest {
-  id: string = 'CHATLINK_SLUG_EMPTY';
-  message: string = 'The specified slug is empty.';
+  override id: string = 'CHATLINK_SLUG_EMPTY';
+  override message: string = 'The specified slug is empty.';
 }
 export class ChatlinkSlugExpired extends BadRequest {
-  id: string = 'CHATLINK_SLUG_EXPIRED';
-  message: string =
+  override id: string = 'CHATLINK_SLUG_EXPIRED';
+  override message: string =
     'The specified [business chat link](https://core.telegram.org/api/business#business-chat-links) has expired.';
 }
 export class ChatlistExcludeInvalid extends BadRequest {
-  id: string = 'CHATLIST_EXCLUDE_INVALID';
-  message: string = 'The specified `exclude_peers` are invalid.';
+  override id: string = 'CHATLIST_EXCLUDE_INVALID';
+  override message: string = 'The specified `exclude_peers` are invalid.';
 }
 export class ChatAboutNotModified extends BadRequest {
-  id: string = 'CHAT_ABOUT_NOT_MODIFIED';
-  message: string = 'About text has not changed.';
+  override id: string = 'CHAT_ABOUT_NOT_MODIFIED';
+  override message: string = 'About text has not changed.';
 }
 export class ChatAboutTooLong extends BadRequest {
-  id: string = 'CHAT_ABOUT_TOO_LONG';
-  message: string = 'Chat about too long.';
+  override id: string = 'CHAT_ABOUT_TOO_LONG';
+  override message: string = 'Chat about too long.';
 }
 export class ChatAdminRequired extends BadRequest {
-  id: string = 'CHAT_ADMIN_REQUIRED';
-  message: string = 'You must be an admin in this chat to do this.';
+  override id: string = 'CHAT_ADMIN_REQUIRED';
+  override message: string = 'You must be an admin in this chat to do this.';
 }
 export class ChatDiscussionUnallowed extends BadRequest {
-  id: string = 'CHAT_DISCUSSION_UNALLOWED';
-  message: string = "You can't enable forum topics in a discussion group linked to a channel.";
+  override id: string = 'CHAT_DISCUSSION_UNALLOWED';
+  override message: string =
+    "You can't enable forum topics in a discussion group linked to a channel.";
 }
 export class ChatForwardsRestricted extends BadRequest {
-  id: string = 'CHAT_FORWARDS_RESTRICTED';
-  message: string = "You can't forward messages from a protected chat.";
+  override id: string = 'CHAT_FORWARDS_RESTRICTED';
+  override message: string = "You can't forward messages from a protected chat.";
 }
 export class ChatIdEmpty extends BadRequest {
-  id: string = 'CHAT_ID_EMPTY';
-  message: string = 'The provided chat ID is empty.';
+  override id: string = 'CHAT_ID_EMPTY';
+  override message: string = 'The provided chat ID is empty.';
 }
 export class ChatIdInvalid extends BadRequest {
-  id: string = 'CHAT_ID_INVALID';
-  message: string = 'The provided chat id is invalid.';
+  override id: string = 'CHAT_ID_INVALID';
+  override message: string = 'The provided chat id is invalid.';
 }
 export class ChatInvalid extends BadRequest {
-  id: string = 'CHAT_INVALID';
-  message: string = 'Invalid chat.';
+  override id: string = 'CHAT_INVALID';
+  override message: string = 'Invalid chat.';
 }
 export class ChatInvitePermanent extends BadRequest {
-  id: string = 'CHAT_INVITE_PERMANENT';
-  message: string = "You can't set an expiration date on permanent invite links.";
+  override id: string = 'CHAT_INVITE_PERMANENT';
+  override message: string = "You can't set an expiration date on permanent invite links.";
 }
 export class ChatLinkExists extends BadRequest {
-  id: string = 'CHAT_LINK_EXISTS';
-  message: string = "The chat is public, you can't hide the history to new users.";
+  override id: string = 'CHAT_LINK_EXISTS';
+  override message: string = "The chat is public, you can't hide the history to new users.";
 }
 export class ChatNotModified extends BadRequest {
-  id: string = 'CHAT_NOT_MODIFIED';
-  message: string =
+  override id: string = 'CHAT_NOT_MODIFIED';
+  override message: string =
     'No changes were made to chat information because the new information you passed is identical to the current information.';
 }
 export class ChatPublicRequired extends BadRequest {
-  id: string = 'CHAT_PUBLIC_REQUIRED';
-  message: string = 'You can only enable join requests in public groups.';
+  override id: string = 'CHAT_PUBLIC_REQUIRED';
+  override message: string = 'You can only enable join requests in public groups.';
 }
 export class ChatRestricted extends BadRequest {
-  id: string = 'CHAT_RESTRICTED';
-  message: string = "You can't send messages in this chat, you were restricted.";
+  override id: string = 'CHAT_RESTRICTED';
+  override message: string = "You can't send messages in this chat, you were restricted.";
 }
 export class ChatRevokeDateUnsupported extends BadRequest {
-  id: string = 'CHAT_REVOKE_DATE_UNSUPPORTED';
-  message: string = '`min_date` and `max_date` are not available for using with non-user peers.';
+  override id: string = 'CHAT_REVOKE_DATE_UNSUPPORTED';
+  override message: string =
+    '`min_date` and `max_date` are not available for using with non-user peers.';
 }
 export class ChatSendInlineForbidden extends BadRequest {
-  id: string = 'CHAT_SEND_INLINE_FORBIDDEN';
-  message: string = "You can't send inline messages in this group.";
+  override id: string = 'CHAT_SEND_INLINE_FORBIDDEN';
+  override message: string = "You can't send inline messages in this group.";
 }
 export class ChatTitleEmpty extends BadRequest {
-  id: string = 'CHAT_TITLE_EMPTY';
-  message: string = 'No chat title provided.';
+  override id: string = 'CHAT_TITLE_EMPTY';
+  override message: string = 'No chat title provided.';
 }
 export class ChatTooBig extends BadRequest {
-  id: string = 'CHAT_TOO_BIG';
-  message: string =
+  override id: string = 'CHAT_TOO_BIG';
+  override message: string =
     'This method is not available for groups with more than `chat_read_mark_size_threshold` members, [see client configuration &raquo;](https://core.telegram.org/api/config#client-configuration).';
 }
 export class CodeEmpty extends BadRequest {
-  id: string = 'CODE_EMPTY';
-  message: string = 'The provided code is empty.';
+  override id: string = 'CODE_EMPTY';
+  override message: string = 'The provided code is empty.';
 }
 export class CodeHashInvalid extends BadRequest {
-  id: string = 'CODE_HASH_INVALID';
-  message: string = 'Code hash invalid.';
+  override id: string = 'CODE_HASH_INVALID';
+  override message: string = 'Code hash invalid.';
 }
 export class CodeInvalid extends BadRequest {
-  id: string = 'CODE_INVALID';
-  message: string = 'Code invalid.';
+  override id: string = 'CODE_INVALID';
+  override message: string = 'Code invalid.';
 }
 export class CollectibleInvalid extends BadRequest {
-  id: string = 'COLLECTIBLE_INVALID';
-  message: string = 'The specified collectible is invalid.';
+  override id: string = 'COLLECTIBLE_INVALID';
+  override message: string = 'The specified collectible is invalid.';
 }
 export class CollectibleNotFound extends BadRequest {
-  id: string = 'COLLECTIBLE_NOT_FOUND';
-  message: string = 'The specified collectible could not be found.';
+  override id: string = 'COLLECTIBLE_NOT_FOUND';
+  override message: string = 'The specified collectible could not be found.';
 }
 export class ColorInvalid extends BadRequest {
-  id: string = 'COLOR_INVALID';
-  message: string = 'The specified color palette ID was invalid.';
+  override id: string = 'COLOR_INVALID';
+  override message: string = 'The specified color palette ID was invalid.';
 }
 export class ConnectionApiIdInvalid extends BadRequest {
-  id: string = 'CONNECTION_API_ID_INVALID';
-  message: string = 'The provided API id is invalid.';
+  override id: string = 'CONNECTION_API_ID_INVALID';
+  override message: string = 'The provided API id is invalid.';
 }
 export class ConnectionAppVersionEmpty extends BadRequest {
-  id: string = 'CONNECTION_APP_VERSION_EMPTY';
-  message: string = 'App version is empty.';
+  override id: string = 'CONNECTION_APP_VERSION_EMPTY';
+  override message: string = 'App version is empty.';
 }
 export class ConnectionDeviceModelEmpty extends BadRequest {
-  id: string = 'CONNECTION_DEVICE_MODEL_EMPTY';
-  message: string = 'The specified device model is empty.';
+  override id: string = 'CONNECTION_DEVICE_MODEL_EMPTY';
+  override message: string = 'The specified device model is empty.';
 }
 export class ConnectionIdInvalid extends BadRequest {
-  id: string = 'CONNECTION_ID_INVALID';
-  message: string = 'The specified connection ID is invalid.';
+  override id: string = 'CONNECTION_ID_INVALID';
+  override message: string = 'The specified connection ID is invalid.';
 }
 export class ConnectionLangPackInvalid extends BadRequest {
-  id: string = 'CONNECTION_LANG_PACK_INVALID';
-  message: string = 'The specified language pack is empty.';
+  override id: string = 'CONNECTION_LANG_PACK_INVALID';
+  override message: string = 'The specified language pack is empty.';
 }
 export class ConnectionLayerInvalid extends BadRequest {
-  id: string = 'CONNECTION_LAYER_INVALID';
-  message: string = 'Layer invalid.';
+  override id: string = 'CONNECTION_LAYER_INVALID';
+  override message: string = 'Layer invalid.';
 }
 export class ConnectionNotInited extends BadRequest {
-  id: string = 'CONNECTION_NOT_INITED';
-  message: string = 'Please initialize the connection using initConnection before making queries.';
+  override id: string = 'CONNECTION_NOT_INITED';
+  override message: string =
+    'Please initialize the connection using initConnection before making queries.';
 }
 export class ConnectionSystemEmpty extends BadRequest {
-  id: string = 'CONNECTION_SYSTEM_EMPTY';
-  message: string = 'The specified system version is empty.';
+  override id: string = 'CONNECTION_SYSTEM_EMPTY';
+  override message: string = 'The specified system version is empty.';
 }
 export class ConnectionSystemLangCodeEmpty extends BadRequest {
-  id: string = 'CONNECTION_SYSTEM_LANG_CODE_EMPTY';
-  message: string = 'The specified system language code is empty.';
+  override id: string = 'CONNECTION_SYSTEM_LANG_CODE_EMPTY';
+  override message: string = 'The specified system language code is empty.';
 }
 export class ContactAddMissing extends BadRequest {
-  id: string = 'CONTACT_ADD_MISSING';
-  message: string = 'Contact to add is missing.';
+  override id: string = 'CONTACT_ADD_MISSING';
+  override message: string = 'Contact to add is missing.';
 }
 export class ContactIdInvalid extends BadRequest {
-  id: string = 'CONTACT_ID_INVALID';
-  message: string = 'The provided contact ID is invalid.';
+  override id: string = 'CONTACT_ID_INVALID';
+  override message: string = 'The provided contact ID is invalid.';
 }
 export class ContactMissing extends BadRequest {
-  id: string = 'CONTACT_MISSING';
-  message: string = 'The specified user is not a contact.';
+  override id: string = 'CONTACT_MISSING';
+  override message: string = 'The specified user is not a contact.';
 }
 export class ContactNameEmpty extends BadRequest {
-  id: string = 'CONTACT_NAME_EMPTY';
-  message: string = 'Contact name empty.';
+  override id: string = 'CONTACT_NAME_EMPTY';
+  override message: string = 'Contact name empty.';
 }
 export class ContactReqMissing extends BadRequest {
-  id: string = 'CONTACT_REQ_MISSING';
-  message: string = 'Missing contact request.';
+  override id: string = 'CONTACT_REQ_MISSING';
+  override message: string = 'Missing contact request.';
 }
 export class CreateCallFailed extends BadRequest {
-  id: string = 'CREATE_CALL_FAILED';
-  message: string = 'An error occurred while creating the call.';
+  override id: string = 'CREATE_CALL_FAILED';
+  override message: string = 'An error occurred while creating the call.';
 }
 export class CurrencyTotalAmountInvalid extends BadRequest {
-  id: string = 'CURRENCY_TOTAL_AMOUNT_INVALID';
-  message: string = 'The total amount of all prices is invalid.';
+  override id: string = 'CURRENCY_TOTAL_AMOUNT_INVALID';
+  override message: string = 'The total amount of all prices is invalid.';
 }
 export class CustomReactionsTooMany extends BadRequest {
-  id: string = 'CUSTOM_REACTIONS_TOO_MANY';
-  message: string = 'Too many custom reactions were specified.';
+  override id: string = 'CUSTOM_REACTIONS_TOO_MANY';
+  override message: string = 'Too many custom reactions were specified.';
 }
 export class DataInvalid extends BadRequest {
-  id: string = 'DATA_INVALID';
-  message: string = 'Encrypted data invalid.';
+  override id: string = 'DATA_INVALID';
+  override message: string = 'Encrypted data invalid.';
 }
 export class DataJsonInvalid extends BadRequest {
-  id: string = 'DATA_JSON_INVALID';
-  message: string = 'The provided JSON data is invalid.';
+  override id: string = 'DATA_JSON_INVALID';
+  override message: string = 'The provided JSON data is invalid.';
 }
 export class DataTooLong extends BadRequest {
-  id: string = 'DATA_TOO_LONG';
-  message: string = 'Data too long.';
+  override id: string = 'DATA_TOO_LONG';
+  override message: string = 'Data too long.';
 }
 export class DateEmpty extends BadRequest {
-  id: string = 'DATE_EMPTY';
-  message: string = 'Date empty.';
+  override id: string = 'DATE_EMPTY';
+  override message: string = 'Date empty.';
 }
 export class DcIdInvalid extends BadRequest {
-  id: string = 'DC_ID_INVALID';
-  message: string = 'The provided DC ID is invalid.';
+  override id: string = 'DC_ID_INVALID';
+  override message: string = 'The provided DC ID is invalid.';
 }
 export class DhGAInvalid extends BadRequest {
-  id: string = 'DH_G_A_INVALID';
-  message: string = 'g_a invalid.';
+  override id: string = 'DH_G_A_INVALID';
+  override message: string = 'g_a invalid.';
 }
 export class DocumentInvalid extends BadRequest {
-  id: string = 'DOCUMENT_INVALID';
-  message: string = 'The specified document is invalid.';
+  override id: string = 'DOCUMENT_INVALID';
+  override message: string = 'The specified document is invalid.';
 }
 export class EmailHashExpired extends BadRequest {
-  id: string = 'EMAIL_HASH_EXPIRED';
-  message: string = 'Email hash expired.';
+  override id: string = 'EMAIL_HASH_EXPIRED';
+  override message: string = 'Email hash expired.';
 }
 export class EmailInvalid extends BadRequest {
-  id: string = 'EMAIL_INVALID';
-  message: string = 'The specified email is invalid.';
+  override id: string = 'EMAIL_INVALID';
+  override message: string = 'The specified email is invalid.';
 }
 export class EmailNotAllowed extends BadRequest {
-  id: string = 'EMAIL_NOT_ALLOWED';
-  message: string = 'The specified email cannot be used to complete the operation.';
+  override id: string = 'EMAIL_NOT_ALLOWED';
+  override message: string = 'The specified email cannot be used to complete the operation.';
 }
 export class EmailNotSetup extends BadRequest {
-  id: string = 'EMAIL_NOT_SETUP';
-  message: string =
+  override id: string = 'EMAIL_NOT_SETUP';
+  override message: string =
     'In order to change the login email with emailVerifyPurposeLoginChange, an existing login email must already be set using emailVerifyPurposeLoginSetup.';
 }
 export class EmailUnconfirmed extends BadRequest {
-  id: string = 'EMAIL_UNCONFIRMED';
-  message: string = 'Email unconfirmed.';
+  override id: string = 'EMAIL_UNCONFIRMED';
+  override message: string = 'Email unconfirmed.';
 }
 export class EmailUnconfirmedX extends BadRequest {
-  id: string = 'EMAIL_UNCONFIRMED_X';
-  message: string =
+  override id: string = 'EMAIL_UNCONFIRMED_X';
+  override message: string =
     "The provided email isn't confirmed, {value} is the length of the verification code that was just sent to the email: use [account.verifyEmail](https://core.telegram.org/method/account.verifyEmail) to enter the received verification code and enable the recovery email.";
 }
 export class EmailVerifyExpired extends BadRequest {
-  id: string = 'EMAIL_VERIFY_EXPIRED';
-  message: string = 'The verification email has expired.';
+  override id: string = 'EMAIL_VERIFY_EXPIRED';
+  override message: string = 'The verification email has expired.';
 }
 export class EmojiInvalid extends BadRequest {
-  id: string = 'EMOJI_INVALID';
-  message: string = 'The specified theme emoji is valid.';
+  override id: string = 'EMOJI_INVALID';
+  override message: string = 'The specified theme emoji is valid.';
 }
 export class EmojiMarkupInvalid extends BadRequest {
-  id: string = 'EMOJI_MARKUP_INVALID';
-  message: string = 'The specified `video_emoji_markup` was invalid.';
+  override id: string = 'EMOJI_MARKUP_INVALID';
+  override message: string = 'The specified `video_emoji_markup` was invalid.';
 }
 export class EmojiNotModified extends BadRequest {
-  id: string = 'EMOJI_NOT_MODIFIED';
-  message: string = "The theme wasn't changed.";
+  override id: string = 'EMOJI_NOT_MODIFIED';
+  override message: string = "The theme wasn't changed.";
 }
 export class EmoticonEmpty extends BadRequest {
-  id: string = 'EMOTICON_EMPTY';
-  message: string = 'The emoji is empty.';
+  override id: string = 'EMOTICON_EMPTY';
+  override message: string = 'The emoji is empty.';
 }
 export class EmoticonInvalid extends BadRequest {
-  id: string = 'EMOTICON_INVALID';
-  message: string = 'The specified emoji is invalid.';
+  override id: string = 'EMOTICON_INVALID';
+  override message: string = 'The specified emoji is invalid.';
 }
 export class EmoticonStickerpackMissing extends BadRequest {
-  id: string = 'EMOTICON_STICKERPACK_MISSING';
-  message: string = 'inputStickerSetDice.emoji cannot be empty.';
+  override id: string = 'EMOTICON_STICKERPACK_MISSING';
+  override message: string = 'inputStickerSetDice.emoji cannot be empty.';
 }
 export class EncryptedMessageInvalid extends BadRequest {
-  id: string = 'ENCRYPTED_MESSAGE_INVALID';
-  message: string = 'Encrypted message invalid.';
+  override id: string = 'ENCRYPTED_MESSAGE_INVALID';
+  override message: string = 'Encrypted message invalid.';
 }
 export class EncryptionAlreadyAccepted extends BadRequest {
-  id: string = 'ENCRYPTION_ALREADY_ACCEPTED';
-  message: string = 'Secret chat already accepted.';
+  override id: string = 'ENCRYPTION_ALREADY_ACCEPTED';
+  override message: string = 'Secret chat already accepted.';
 }
 export class EncryptionAlreadyDeclined extends BadRequest {
-  id: string = 'ENCRYPTION_ALREADY_DECLINED';
-  message: string = 'The secret chat was already declined.';
+  override id: string = 'ENCRYPTION_ALREADY_DECLINED';
+  override message: string = 'The secret chat was already declined.';
 }
 export class EncryptionDeclined extends BadRequest {
-  id: string = 'ENCRYPTION_DECLINED';
-  message: string = 'The secret chat was declined.';
+  override id: string = 'ENCRYPTION_DECLINED';
+  override message: string = 'The secret chat was declined.';
 }
 export class EncryptionIdInvalid extends BadRequest {
-  id: string = 'ENCRYPTION_ID_INVALID';
-  message: string = 'The provided secret chat ID is invalid.';
+  override id: string = 'ENCRYPTION_ID_INVALID';
+  override message: string = 'The provided secret chat ID is invalid.';
 }
 export class EntitiesTooLong extends BadRequest {
-  id: string = 'ENTITIES_TOO_LONG';
-  message: string = 'You provided too many styled message entities.';
+  override id: string = 'ENTITIES_TOO_LONG';
+  override message: string = 'You provided too many styled message entities.';
 }
 export class EntityBoundsInvalid extends BadRequest {
-  id: string = 'ENTITY_BOUNDS_INVALID';
-  message: string =
+  override id: string = 'ENTITY_BOUNDS_INVALID';
+  override message: string =
     'A specified [entity offset or length](https://core.telegram.org/api/entities#entity-length) is invalid, see [here &raquo;](https://core.telegram.org/api/entities#entity-length) for info on how to properly compute the entity offset/length.';
 }
 export class EntityMentionUserInvalid extends BadRequest {
-  id: string = 'ENTITY_MENTION_USER_INVALID';
-  message: string = 'You mentioned an invalid user.';
+  override id: string = 'ENTITY_MENTION_USER_INVALID';
+  override message: string = 'You mentioned an invalid user.';
 }
 export class ErrorTextEmpty extends BadRequest {
-  id: string = 'ERROR_TEXT_EMPTY';
-  message: string = 'The provided error message is empty.';
+  override id: string = 'ERROR_TEXT_EMPTY';
+  override message: string = 'The provided error message is empty.';
 }
 export class ExpireDateInvalid extends BadRequest {
-  id: string = 'EXPIRE_DATE_INVALID';
-  message: string = 'The specified expiration date is invalid.';
+  override id: string = 'EXPIRE_DATE_INVALID';
+  override message: string = 'The specified expiration date is invalid.';
 }
 export class ExportCardInvalid extends BadRequest {
-  id: string = 'EXPORT_CARD_INVALID';
-  message: string = 'Provided card is invalid.';
+  override id: string = 'EXPORT_CARD_INVALID';
+  override message: string = 'Provided card is invalid.';
 }
 export class ExternalUrlInvalid extends BadRequest {
-  id: string = 'EXTERNAL_URL_INVALID';
-  message: string = 'External URL invalid.';
+  override id: string = 'EXTERNAL_URL_INVALID';
+  override message: string = 'External URL invalid.';
 }
 export class FieldNameEmpty extends BadRequest {
-  id: string = 'FIELD_NAME_EMPTY';
-  message: string = 'The field with the name FIELD_NAME is missing';
+  override id: string = 'FIELD_NAME_EMPTY';
+  override message: string = 'The field with the name FIELD_NAME is missing';
 }
 export class FieldNameInvalid extends BadRequest {
-  id: string = 'FIELD_NAME_INVALID';
-  message: string = 'The field with the name FIELD_NAME is invalid';
+  override id: string = 'FIELD_NAME_INVALID';
+  override message: string = 'The field with the name FIELD_NAME is invalid';
 }
 export class FileContentTypeInvalid extends BadRequest {
-  id: string = 'FILE_CONTENT_TYPE_INVALID';
-  message: string = 'File content-type is invalid.';
+  override id: string = 'FILE_CONTENT_TYPE_INVALID';
+  override message: string = 'File content-type is invalid.';
 }
 export class FileEmtpy extends BadRequest {
-  id: string = 'FILE_EMTPY';
-  message: string = 'An empty file was provided.';
+  override id: string = 'FILE_EMTPY';
+  override message: string = 'An empty file was provided.';
 }
 export class FileIdInvalid extends BadRequest {
-  id: string = 'FILE_ID_INVALID';
-  message: string = 'The provided file id is invalid.';
+  override id: string = 'FILE_ID_INVALID';
+  override message: string = 'The provided file id is invalid.';
 }
 export class FileMigrate extends BadRequest {
-  id: string = 'FILE_MIGRATE_X';
-  message: string =
+  override id: string = 'FILE_MIGRATE_X';
+  override message: string =
     'The file currently being accessed is stored in DC {value}, please re-send the query to that DC.';
 }
 export class FilePartsInvalid extends BadRequest {
-  id: string = 'FILE_PARTS_INVALID';
-  message: string = 'The number of file parts is invalid.';
+  override id: string = 'FILE_PARTS_INVALID';
+  override message: string = 'The number of file parts is invalid.';
 }
 export class FilePartEmpty extends BadRequest {
-  id: string = 'FILE_PART_EMPTY';
-  message: string = 'The provided file part is empty.';
+  override id: string = 'FILE_PART_EMPTY';
+  override message: string = 'The provided file part is empty.';
 }
 export class FilePartInvalid extends BadRequest {
-  id: string = 'FILE_PART_INVALID';
-  message: string = 'The file part number is invalid.';
+  override id: string = 'FILE_PART_INVALID';
+  override message: string = 'The file part number is invalid.';
 }
 export class FilePartLengthInvalid extends BadRequest {
-  id: string = 'FILE_PART_LENGTH_INVALID';
-  message: string = 'The length of a file part is invalid.';
+  override id: string = 'FILE_PART_LENGTH_INVALID';
+  override message: string = 'The length of a file part is invalid.';
 }
 export class FilePartSizeChanged extends BadRequest {
-  id: string = 'FILE_PART_SIZE_CHANGED';
-  message: string = 'Provided file part size has changed.';
+  override id: string = 'FILE_PART_SIZE_CHANGED';
+  override message: string = 'Provided file part size has changed.';
 }
 export class FilePartSizeInvalid extends BadRequest {
-  id: string = 'FILE_PART_SIZE_INVALID';
-  message: string = 'The provided file part size is invalid.';
+  override id: string = 'FILE_PART_SIZE_INVALID';
+  override message: string = 'The provided file part size is invalid.';
 }
 export class FilePartTooBig extends BadRequest {
-  id: string = 'FILE_PART_TOO_BIG';
-  message: string = 'The uploaded file part is too big.';
+  override id: string = 'FILE_PART_TOO_BIG';
+  override message: string = 'The uploaded file part is too big.';
 }
 export class FilePartMissing extends BadRequest {
-  id: string = 'FILE_PART_X_MISSING';
-  message: string =
+  override id: string = 'FILE_PART_X_MISSING';
+  override message: string =
     'Part {value} of the file is missing from storage. Try repeating the method call to resave the part.';
 }
 export class FileReferenceAny extends BadRequest {
-  id: string = 'FILE_REFERENCE_*';
-  message: string =
+  override id: string = 'FILE_REFERENCE_*';
+  override message: string =
     'The file reference expired, it [must be refreshed](https://core.telegram.org/api/file_reference).';
 }
 export class FileReferenceEmpty extends BadRequest {
-  id: string = 'FILE_REFERENCE_EMPTY';
-  message: string =
+  override id: string = 'FILE_REFERENCE_EMPTY';
+  override message: string =
     'An empty [file reference](https://core.telegram.org/api/file_reference) was specified.';
 }
 export class FileReferenceExpired extends BadRequest {
-  id: string = 'FILE_REFERENCE_EXPIRED';
-  message: string =
+  override id: string = 'FILE_REFERENCE_EXPIRED';
+  override message: string =
     'File reference expired, it must be refetched as described in [the documentation](https://core.telegram.org/api/file_reference).';
 }
 export class FileReferenceInvalid extends BadRequest {
-  id: string = 'FILE_REFERENCE_INVALID';
-  message: string =
+  override id: string = 'FILE_REFERENCE_INVALID';
+  override message: string =
     'The specified [file reference](https://core.telegram.org/api/file_reference) is invalid.';
 }
 export class FileReferenceXExpired extends BadRequest {
-  id: string = 'FILE_REFERENCE_X_EXPIRED';
-  message: string =
+  override id: string = 'FILE_REFERENCE_X_EXPIRED';
+  override message: string =
     'The file reference of the media file at index {value} in the passed media array expired, it [must be refreshed](https://core.telegram.org/api/file_reference).';
 }
 export class FileReferenceXInvalid extends BadRequest {
-  id: string = 'FILE_REFERENCE_X_INVALID';
-  message: string =
+  override id: string = 'FILE_REFERENCE_X_INVALID';
+  override message: string =
     'The file reference of the media file at index {value} in the passed media array is invalid.';
 }
 export class FileTitleEmpty extends BadRequest {
-  id: string = 'FILE_TITLE_EMPTY';
-  message: string = 'An empty file title was specified.';
+  override id: string = 'FILE_TITLE_EMPTY';
+  override message: string = 'An empty file title was specified.';
 }
 export class FileTokenInvalid extends BadRequest {
-  id: string = 'FILE_TOKEN_INVALID';
-  message: string =
+  override id: string = 'FILE_TOKEN_INVALID';
+  override message: string =
     'The master DC did not accept the `file_token` (e.g., the token has expired). Continue downloading the file from the master DC using upload.getFile.';
 }
 export class FilterIdInvalid extends BadRequest {
-  id: string = 'FILTER_ID_INVALID';
-  message: string = 'The specified filter ID is invalid.';
+  override id: string = 'FILTER_ID_INVALID';
+  override message: string = 'The specified filter ID is invalid.';
 }
 export class FilterIncludeEmpty extends BadRequest {
-  id: string = 'FILTER_INCLUDE_EMPTY';
-  message: string = 'The include_peers vector of the filter is empty.';
+  override id: string = 'FILTER_INCLUDE_EMPTY';
+  override message: string = 'The include_peers vector of the filter is empty.';
 }
 export class FilterNotSupported extends BadRequest {
-  id: string = 'FILTER_NOT_SUPPORTED';
-  message: string = 'The specified filter cannot be used in this context.';
+  override id: string = 'FILTER_NOT_SUPPORTED';
+  override message: string = 'The specified filter cannot be used in this context.';
 }
 export class FilterTitleEmpty extends BadRequest {
-  id: string = 'FILTER_TITLE_EMPTY';
-  message: string = 'The title field of the filter is empty.';
+  override id: string = 'FILTER_TITLE_EMPTY';
+  override message: string = 'The title field of the filter is empty.';
 }
 export class FirstnameInvalid extends BadRequest {
-  id: string = 'FIRSTNAME_INVALID';
-  message: string = 'The first name is invalid.';
+  override id: string = 'FIRSTNAME_INVALID';
+  override message: string = 'The first name is invalid.';
 }
 export class FolderIdEmpty extends BadRequest {
-  id: string = 'FOLDER_ID_EMPTY';
-  message: string = 'An empty folder ID was specified.';
+  override id: string = 'FOLDER_ID_EMPTY';
+  override message: string = 'An empty folder ID was specified.';
 }
 export class FolderIdInvalid extends BadRequest {
-  id: string = 'FOLDER_ID_INVALID';
-  message: string = 'Invalid folder ID.';
+  override id: string = 'FOLDER_ID_INVALID';
+  override message: string = 'Invalid folder ID.';
 }
 export class FormExpired extends BadRequest {
-  id: string = 'FORM_EXPIRED';
-  message: string =
+  override id: string = 'FORM_EXPIRED';
+  override message: string =
     'The form was generated more than 10 minutes ago and has expired, please re-generate it using [payments.getPaymentForm](https://core.telegram.org/method/payments.getPaymentForm) and pass the new `form_id`.';
 }
 export class ForumEnabled extends BadRequest {
-  id: string = 'FORUM_ENABLED';
-  message: string =
+  override id: string = 'FORUM_ENABLED';
+  override message: string =
     "You can't execute the specified action because the group is a [forum](https://core.telegram.org/api/forum), disable forum functionality to continue.";
 }
 export class FreshChangeAdminsForbidden extends BadRequest {
-  id: string = 'FRESH_CHANGE_ADMINS_FORBIDDEN';
-  message: string = "You were just elected admin, you can't add or modify other admins yet.";
+  override id: string = 'FRESH_CHANGE_ADMINS_FORBIDDEN';
+  override message: string =
+    "You were just elected admin, you can't add or modify other admins yet.";
 }
 export class FromMessageBotDisabled extends BadRequest {
-  id: string = 'FROM_MESSAGE_BOT_DISABLED';
-  message: string = "Bots can't use fromMessage min constructors.";
+  override id: string = 'FROM_MESSAGE_BOT_DISABLED';
+  override message: string = "Bots can't use fromMessage min constructors.";
 }
 export class FromPeerInvalid extends BadRequest {
-  id: string = 'FROM_PEER_INVALID';
-  message: string = 'The specified from_id is invalid.';
+  override id: string = 'FROM_PEER_INVALID';
+  override message: string = 'The specified from_id is invalid.';
 }
 export class GameBotInvalid extends BadRequest {
-  id: string = 'GAME_BOT_INVALID';
-  message: string = "Bots can't send another bot's game.";
+  override id: string = 'GAME_BOT_INVALID';
+  override message: string = "Bots can't send another bot's game.";
 }
 export class GeneralModifyIconForbidden extends BadRequest {
-  id: string = 'GENERAL_MODIFY_ICON_FORBIDDEN';
-  message: string = 'You can\'t modify the icon of the "General" topic.';
+  override id: string = 'GENERAL_MODIFY_ICON_FORBIDDEN';
+  override message: string = 'You can\'t modify the icon of the "General" topic.';
 }
 export class GeoPointInvalid extends BadRequest {
-  id: string = 'GEO_POINT_INVALID';
-  message: string = 'Invalid geoposition provided.';
+  override id: string = 'GEO_POINT_INVALID';
+  override message: string = 'Invalid geoposition provided.';
 }
 export class GiftSlugExpired extends BadRequest {
-  id: string = 'GIFT_SLUG_EXPIRED';
-  message: string = 'The specified gift slug has expired.';
+  override id: string = 'GIFT_SLUG_EXPIRED';
+  override message: string = 'The specified gift slug has expired.';
 }
 export class GiftSlugInvalid extends BadRequest {
-  id: string = 'GIFT_SLUG_INVALID';
-  message: string = 'The specified slug is invalid.';
+  override id: string = 'GIFT_SLUG_INVALID';
+  override message: string = 'The specified slug is invalid.';
 }
 export class GifContentTypeInvalid extends BadRequest {
-  id: string = 'GIF_CONTENT_TYPE_INVALID';
-  message: string = 'GIF content-type invalid.';
+  override id: string = 'GIF_CONTENT_TYPE_INVALID';
+  override message: string = 'GIF content-type invalid.';
 }
 export class GifIdInvalid extends BadRequest {
-  id: string = 'GIF_ID_INVALID';
-  message: string = 'The provided GIF ID is invalid.';
+  override id: string = 'GIF_ID_INVALID';
+  override message: string = 'The provided GIF ID is invalid.';
 }
 export class GraphExpiredReload extends BadRequest {
-  id: string = 'GRAPH_EXPIRED_RELOAD';
-  message: string = 'This graph has expired, please obtain a new graph token.';
+  override id: string = 'GRAPH_EXPIRED_RELOAD';
+  override message: string = 'This graph has expired, please obtain a new graph token.';
 }
 export class GraphInvalidReload extends BadRequest {
-  id: string = 'GRAPH_INVALID_RELOAD';
-  message: string =
+  override id: string = 'GRAPH_INVALID_RELOAD';
+  override message: string =
     'Invalid graph token provided, please reload the stats and provide the updated token.';
 }
 export class GraphOutdatedReload extends BadRequest {
-  id: string = 'GRAPH_OUTDATED_RELOAD';
-  message: string =
+  override id: string = 'GRAPH_OUTDATED_RELOAD';
+  override message: string =
     'The graph is outdated, please get a new async token using stats.getBroadcastStats.';
 }
 export class GroupcallAlreadyDiscarded extends BadRequest {
-  id: string = 'GROUPCALL_ALREADY_DISCARDED';
-  message: string = 'The group call was already discarded.';
+  override id: string = 'GROUPCALL_ALREADY_DISCARDED';
+  override message: string = 'The group call was already discarded.';
 }
 export class GroupcallForbidden extends BadRequest {
-  id: string = 'GROUPCALL_FORBIDDEN';
-  message: string = 'The group call has already ended.';
+  override id: string = 'GROUPCALL_FORBIDDEN';
+  override message: string = 'The group call has already ended.';
 }
 export class GroupcallInvalid extends BadRequest {
-  id: string = 'GROUPCALL_INVALID';
-  message: string = 'The specified group call is invalid.';
+  override id: string = 'GROUPCALL_INVALID';
+  override message: string = 'The specified group call is invalid.';
 }
 export class GroupcallJoinMissing extends BadRequest {
-  id: string = 'GROUPCALL_JOIN_MISSING';
-  message: string = "You haven't joined this group call.";
+  override id: string = 'GROUPCALL_JOIN_MISSING';
+  override message: string = "You haven't joined this group call.";
 }
 export class GroupcallNotModified extends BadRequest {
-  id: string = 'GROUPCALL_NOT_MODIFIED';
-  message: string = "Group call settings weren't modified.";
+  override id: string = 'GROUPCALL_NOT_MODIFIED';
+  override message: string = "Group call settings weren't modified.";
 }
 export class GroupcallSsrcDuplicateMuch extends BadRequest {
-  id: string = 'GROUPCALL_SSRC_DUPLICATE_MUCH';
-  message: string = 'The app needs to retry joining the group call with a new SSRC value.';
+  override id: string = 'GROUPCALL_SSRC_DUPLICATE_MUCH';
+  override message: string = 'The app needs to retry joining the group call with a new SSRC value.';
 }
 export class GroupedMediaInvalid extends BadRequest {
-  id: string = 'GROUPED_MEDIA_INVALID';
-  message: string = 'Invalid grouped media.';
+  override id: string = 'GROUPED_MEDIA_INVALID';
+  override message: string = 'Invalid grouped media.';
 }
 export class GroupCallInvalid extends BadRequest {
-  id: string = 'GROUP_CALL_INVALID';
-  message: string = 'The group call is invalid';
+  override id: string = 'GROUP_CALL_INVALID';
+  override message: string = 'The group call is invalid';
 }
 export class HashtagInvalid extends BadRequest {
-  id: string = 'HASHTAG_INVALID';
-  message: string = 'The specified hashtag is invalid.';
+  override id: string = 'HASHTAG_INVALID';
+  override message: string = 'The specified hashtag is invalid.';
 }
 export class HashInvalid extends BadRequest {
-  id: string = 'HASH_INVALID';
-  message: string = 'The provided hash is invalid.';
+  override id: string = 'HASH_INVALID';
+  override message: string = 'The provided hash is invalid.';
 }
 export class HideRequesterMissing extends BadRequest {
-  id: string = 'HIDE_REQUESTER_MISSING';
-  message: string = 'The join request was missing or was already handled.';
+  override id: string = 'HIDE_REQUESTER_MISSING';
+  override message: string = 'The join request was missing or was already handled.';
 }
 export class ImageProcessFailed extends BadRequest {
-  id: string = 'IMAGE_PROCESS_FAILED';
-  message: string = 'Failure while processing image.';
+  override id: string = 'IMAGE_PROCESS_FAILED';
+  override message: string = 'Failure while processing image.';
 }
 export class ImportFileInvalid extends BadRequest {
-  id: string = 'IMPORT_FILE_INVALID';
-  message: string = 'The specified chat export file is invalid.';
+  override id: string = 'IMPORT_FILE_INVALID';
+  override message: string = 'The specified chat export file is invalid.';
 }
 export class ImportFormatDateInvalid extends BadRequest {
-  id: string = 'IMPORT_FORMAT_DATE_INVALID';
-  message: string = 'The date specified in the import file is invalid.';
+  override id: string = 'IMPORT_FORMAT_DATE_INVALID';
+  override message: string = 'The date specified in the import file is invalid.';
 }
 export class ImportFormatUnrecognized extends BadRequest {
-  id: string = 'IMPORT_FORMAT_UNRECOGNIZED';
-  message: string = 'The specified chat export file was exported from an unsupported chat app.';
+  override id: string = 'IMPORT_FORMAT_UNRECOGNIZED';
+  override message: string =
+    'The specified chat export file was exported from an unsupported chat app.';
 }
 export class ImportHistoryLogEmpty extends BadRequest {
-  id: string = 'IMPORT_HISTORY_LOG_EMPTY';
-  message: string = '';
+  override id: string = 'IMPORT_HISTORY_LOG_EMPTY';
+  override message: string = '';
 }
 export class ImportIdInvalid extends BadRequest {
-  id: string = 'IMPORT_ID_INVALID';
-  message: string = 'The specified import ID is invalid.';
+  override id: string = 'IMPORT_ID_INVALID';
+  override message: string = 'The specified import ID is invalid.';
 }
 export class ImportTokenInvalid extends BadRequest {
-  id: string = 'IMPORT_TOKEN_INVALID';
-  message: string = 'The specified token is invalid.';
+  override id: string = 'IMPORT_TOKEN_INVALID';
+  override message: string = 'The specified token is invalid.';
 }
 export class InlineResultExpired extends BadRequest {
-  id: string = 'INLINE_RESULT_EXPIRED';
-  message: string = 'The inline query expired.';
+  override id: string = 'INLINE_RESULT_EXPIRED';
+  override message: string = 'The inline query expired.';
 }
 export class InputChatlistInvalid extends BadRequest {
-  id: string = 'INPUT_CHATLIST_INVALID';
-  message: string = 'The specified folder is invalid.';
+  override id: string = 'INPUT_CHATLIST_INVALID';
+  override message: string = 'The specified folder is invalid.';
 }
 export class InputConstructorInvalid extends BadRequest {
-  id: string = 'INPUT_CONSTRUCTOR_INVALID';
-  message: string = 'The specified TL constructor is invalid.';
+  override id: string = 'INPUT_CONSTRUCTOR_INVALID';
+  override message: string = 'The specified TL constructor is invalid.';
 }
 export class InputFetchError extends BadRequest {
-  id: string = 'INPUT_FETCH_ERROR';
-  message: string = 'An error occurred while parsing the provided TL constructor.';
+  override id: string = 'INPUT_FETCH_ERROR';
+  override message: string = 'An error occurred while parsing the provided TL constructor.';
 }
 export class InputFetchFail extends BadRequest {
-  id: string = 'INPUT_FETCH_FAIL';
-  message: string = 'An error occurred while parsing the provided TL constructor.';
+  override id: string = 'INPUT_FETCH_FAIL';
+  override message: string = 'An error occurred while parsing the provided TL constructor.';
 }
 export class InputFileInvalid extends BadRequest {
-  id: string = 'INPUT_FILE_INVALID';
-  message: string =
+  override id: string = 'INPUT_FILE_INVALID';
+  override message: string =
     'The specified [InputFile](https://core.telegram.org/type/InputFile) is invalid.';
 }
 export class InputFilterInvalid extends BadRequest {
-  id: string = 'INPUT_FILTER_INVALID';
-  message: string = 'The specified filter is invalid.';
+  override id: string = 'INPUT_FILTER_INVALID';
+  override message: string = 'The specified filter is invalid.';
 }
 export class InputLayerInvalid extends BadRequest {
-  id: string = 'INPUT_LAYER_INVALID';
-  message: string = 'The specified layer is invalid.';
+  override id: string = 'INPUT_LAYER_INVALID';
+  override message: string = 'The specified layer is invalid.';
 }
 export class InputMethodInvalid extends BadRequest {
-  id: string = 'INPUT_METHOD_INVALID';
-  message: string = 'The specified method is invalid.';
+  override id: string = 'INPUT_METHOD_INVALID';
+  override message: string = 'The specified method is invalid.';
 }
 export class InputRequestTooLong extends BadRequest {
-  id: string = 'INPUT_REQUEST_TOO_LONG';
-  message: string = 'The request payload is too long.';
+  override id: string = 'INPUT_REQUEST_TOO_LONG';
+  override message: string = 'The request payload is too long.';
 }
 export class InputTextEmpty extends BadRequest {
-  id: string = 'INPUT_TEXT_EMPTY';
-  message: string = 'The specified text is empty.';
+  override id: string = 'INPUT_TEXT_EMPTY';
+  override message: string = 'The specified text is empty.';
 }
 export class InputTextTooLong extends BadRequest {
-  id: string = 'INPUT_TEXT_TOO_LONG';
-  message: string = 'The specified text is too long.';
+  override id: string = 'INPUT_TEXT_TOO_LONG';
+  override message: string = 'The specified text is too long.';
 }
 export class InputUserDeactivated extends BadRequest {
-  id: string = 'INPUT_USER_DEACTIVATED';
-  message: string = 'The specified user was deleted.';
+  override id: string = 'INPUT_USER_DEACTIVATED';
+  override message: string = 'The specified user was deleted.';
 }
 export class InvitesTooMuch extends BadRequest {
-  id: string = 'INVITES_TOO_MUCH';
-  message: string =
+  override id: string = 'INVITES_TOO_MUCH';
+  override message: string =
     'The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](https://core.telegram.org/api/config#chatlist-invites-limit-default) was reached.';
 }
 export class InviteForbiddenWithJoinas extends BadRequest {
-  id: string = 'INVITE_FORBIDDEN_WITH_JOINAS';
-  message: string =
+  override id: string = 'INVITE_FORBIDDEN_WITH_JOINAS';
+  override message: string =
     "If the user has anonymously joined a group call as a channel, they can't invite other users to the group call because that would cause deanonymization, because the invite would be sent using the original user ID, not the anonymized channel ID.";
 }
 export class InviteHashEmpty extends BadRequest {
-  id: string = 'INVITE_HASH_EMPTY';
-  message: string = 'The invite hash is empty.';
+  override id: string = 'INVITE_HASH_EMPTY';
+  override message: string = 'The invite hash is empty.';
 }
 export class InviteHashExpired extends BadRequest {
-  id: string = 'INVITE_HASH_EXPIRED';
-  message: string = 'The invite link has expired.';
+  override id: string = 'INVITE_HASH_EXPIRED';
+  override message: string = 'The invite link has expired.';
 }
 export class InviteHashInvalid extends BadRequest {
-  id: string = 'INVITE_HASH_INVALID';
-  message: string = 'The invite hash is invalid.';
+  override id: string = 'INVITE_HASH_INVALID';
+  override message: string = 'The invite hash is invalid.';
 }
 export class InviteRequestSent extends BadRequest {
-  id: string = 'INVITE_REQUEST_SENT';
-  message: string = 'You have successfully requested to join this chat or channel.';
+  override id: string = 'INVITE_REQUEST_SENT';
+  override message: string = 'You have successfully requested to join this chat or channel.';
 }
 export class InviteRevokedMissing extends BadRequest {
-  id: string = 'INVITE_REVOKED_MISSING';
-  message: string = 'The specified invite link was already revoked or is invalid.';
+  override id: string = 'INVITE_REVOKED_MISSING';
+  override message: string = 'The specified invite link was already revoked or is invalid.';
 }
 export class InviteSlugEmpty extends BadRequest {
-  id: string = 'INVITE_SLUG_EMPTY';
-  message: string = 'The specified invite slug is empty.';
+  override id: string = 'INVITE_SLUG_EMPTY';
+  override message: string = 'The specified invite slug is empty.';
 }
 export class InviteSlugExpired extends BadRequest {
-  id: string = 'INVITE_SLUG_EXPIRED';
-  message: string = 'The specified chat folder link has expired.';
+  override id: string = 'INVITE_SLUG_EXPIRED';
+  override message: string = 'The specified chat folder link has expired.';
 }
 export class InvoicePayloadInvalid extends BadRequest {
-  id: string = 'INVOICE_PAYLOAD_INVALID';
-  message: string = 'The specified invoice payload is invalid.';
+  override id: string = 'INVOICE_PAYLOAD_INVALID';
+  override message: string = 'The specified invoice payload is invalid.';
 }
 export class JoinAsPeerInvalid extends BadRequest {
-  id: string = 'JOIN_AS_PEER_INVALID';
-  message: string = 'The specified peer cannot be used to join a group call.';
+  override id: string = 'JOIN_AS_PEER_INVALID';
+  override message: string = 'The specified peer cannot be used to join a group call.';
 }
 export class LanguageInvalid extends BadRequest {
-  id: string = 'LANGUAGE_INVALID';
-  message: string = 'The specified lang_code is invalid.';
+  override id: string = 'LANGUAGE_INVALID';
+  override message: string = 'The specified lang_code is invalid.';
 }
 export class LangCodeInvalid extends BadRequest {
-  id: string = 'LANG_CODE_INVALID';
-  message: string = 'The specified language code is invalid.';
+  override id: string = 'LANG_CODE_INVALID';
+  override message: string = 'The specified language code is invalid.';
 }
 export class LangCodeNotSupported extends BadRequest {
-  id: string = 'LANG_CODE_NOT_SUPPORTED';
-  message: string = 'The specified language code is not supported.';
+  override id: string = 'LANG_CODE_NOT_SUPPORTED';
+  override message: string = 'The specified language code is not supported.';
 }
 export class LangPackInvalid extends BadRequest {
-  id: string = 'LANG_PACK_INVALID';
-  message: string = 'The provided language pack is invalid.';
+  override id: string = 'LANG_PACK_INVALID';
+  override message: string = 'The provided language pack is invalid.';
 }
 export class LastnameInvalid extends BadRequest {
-  id: string = 'LASTNAME_INVALID';
-  message: string = 'The last name is invalid.';
+  override id: string = 'LASTNAME_INVALID';
+  override message: string = 'The last name is invalid.';
 }
 export class LimitInvalid extends BadRequest {
-  id: string = 'LIMIT_INVALID';
-  message: string = 'The provided limit is invalid.';
+  override id: string = 'LIMIT_INVALID';
+  override message: string = 'The provided limit is invalid.';
 }
 export class LinkNotModified extends BadRequest {
-  id: string = 'LINK_NOT_MODIFIED';
-  message: string = 'Discussion link not modified.';
+  override id: string = 'LINK_NOT_MODIFIED';
+  override message: string = 'Discussion link not modified.';
 }
 export class LocationInvalid extends BadRequest {
-  id: string = 'LOCATION_INVALID';
-  message: string = 'The provided location is invalid.';
+  override id: string = 'LOCATION_INVALID';
+  override message: string = 'The provided location is invalid.';
 }
 export class MaxDateInvalid extends BadRequest {
-  id: string = 'MAX_DATE_INVALID';
-  message: string = 'The specified maximum date is invalid.';
+  override id: string = 'MAX_DATE_INVALID';
+  override message: string = 'The specified maximum date is invalid.';
 }
 export class MaxIdInvalid extends BadRequest {
-  id: string = 'MAX_ID_INVALID';
-  message: string = 'The provided max ID is invalid.';
+  override id: string = 'MAX_ID_INVALID';
+  override message: string = 'The provided max ID is invalid.';
 }
 export class MaxQtsInvalid extends BadRequest {
-  id: string = 'MAX_QTS_INVALID';
-  message: string = 'The specified max_qts is invalid.';
+  override id: string = 'MAX_QTS_INVALID';
+  override message: string = 'The specified max_qts is invalid.';
 }
 export class Md5ChecksumInvalid extends BadRequest {
-  id: string = 'MD5_CHECKSUM_INVALID';
-  message: string = 'The MD5 checksums do not match.';
+  override id: string = 'MD5_CHECKSUM_INVALID';
+  override message: string = 'The MD5 checksums do not match.';
 }
 export class MediaCaptionTooLong extends BadRequest {
-  id: string = 'MEDIA_CAPTION_TOO_LONG';
-  message: string = 'The caption is too long.';
+  override id: string = 'MEDIA_CAPTION_TOO_LONG';
+  override message: string = 'The caption is too long.';
 }
 export class MediaEmpty extends BadRequest {
-  id: string = 'MEDIA_EMPTY';
-  message: string = 'The provided media object is invalid.';
+  override id: string = 'MEDIA_EMPTY';
+  override message: string = 'The provided media object is invalid.';
 }
 export class MediaFileInvalid extends BadRequest {
-  id: string = 'MEDIA_FILE_INVALID';
-  message: string = 'The specified media file is invalid.';
+  override id: string = 'MEDIA_FILE_INVALID';
+  override message: string = 'The specified media file is invalid.';
 }
 export class MediaGroupedInvalid extends BadRequest {
-  id: string = 'MEDIA_GROUPED_INVALID';
-  message: string = 'You tried to send media of different types in an album.';
+  override id: string = 'MEDIA_GROUPED_INVALID';
+  override message: string = 'You tried to send media of different types in an album.';
 }
 export class MediaInvalid extends BadRequest {
-  id: string = 'MEDIA_INVALID';
-  message: string = 'Media invalid.';
+  override id: string = 'MEDIA_INVALID';
+  override message: string = 'Media invalid.';
 }
 export class MediaNewInvalid extends BadRequest {
-  id: string = 'MEDIA_NEW_INVALID';
-  message: string = 'The new media is invalid.';
+  override id: string = 'MEDIA_NEW_INVALID';
+  override message: string = 'The new media is invalid.';
 }
 export class MediaPrevInvalid extends BadRequest {
-  id: string = 'MEDIA_PREV_INVALID';
-  message: string = 'Previous media invalid.';
+  override id: string = 'MEDIA_PREV_INVALID';
+  override message: string = 'Previous media invalid.';
 }
 export class MediaTtlInvalid extends BadRequest {
-  id: string = 'MEDIA_TTL_INVALID';
-  message: string = 'The specified media TTL is invalid.';
+  override id: string = 'MEDIA_TTL_INVALID';
+  override message: string = 'The specified media TTL is invalid.';
 }
 export class MediaTypeInvalid extends BadRequest {
-  id: string = 'MEDIA_TYPE_INVALID';
-  message: string = 'The specified media type cannot be used in stories.';
+  override id: string = 'MEDIA_TYPE_INVALID';
+  override message: string = 'The specified media type cannot be used in stories.';
 }
 export class MediaVideoStoryMissing extends BadRequest {
-  id: string = 'MEDIA_VIDEO_STORY_MISSING';
-  message: string =
+  override id: string = 'MEDIA_VIDEO_STORY_MISSING';
+  override message: string =
     'A non-story video cannot be repubblished as a story (emitted when trying to resend a non-story video as a story using inputDocument).';
 }
 export class MegagroupGeoRequired extends BadRequest {
-  id: string = 'MEGAGROUP_GEO_REQUIRED';
-  message: string = 'This method can only be invoked on a geogroup.';
+  override id: string = 'MEGAGROUP_GEO_REQUIRED';
+  override message: string = 'This method can only be invoked on a geogroup.';
 }
 export class MegagroupIdInvalid extends BadRequest {
-  id: string = 'MEGAGROUP_ID_INVALID';
-  message: string = 'Invalid supergroup ID.';
+  override id: string = 'MEGAGROUP_ID_INVALID';
+  override message: string = 'Invalid supergroup ID.';
 }
 export class MegagroupPrehistoryHidden extends BadRequest {
-  id: string = 'MEGAGROUP_PREHISTORY_HIDDEN';
-  message: string = "Group with hidden history for new members can't be set as discussion groups.";
+  override id: string = 'MEGAGROUP_PREHISTORY_HIDDEN';
+  override message: string =
+    "Group with hidden history for new members can't be set as discussion groups.";
 }
 export class MegagroupRequired extends BadRequest {
-  id: string = 'MEGAGROUP_REQUIRED';
-  message: string = 'You can only use this method on a supergroup.';
+  override id: string = 'MEGAGROUP_REQUIRED';
+  override message: string = 'You can only use this method on a supergroup.';
 }
 export class MessageEditTimeExpired extends BadRequest {
-  id: string = 'MESSAGE_EDIT_TIME_EXPIRED';
-  message: string =
+  override id: string = 'MESSAGE_EDIT_TIME_EXPIRED';
+  override message: string =
     "You can't edit this message anymore, too much time has passed since its creation.";
 }
 export class MessageEmpty extends BadRequest {
-  id: string = 'MESSAGE_EMPTY';
-  message: string = 'The provided message is empty.';
+  override id: string = 'MESSAGE_EMPTY';
+  override message: string = 'The provided message is empty.';
 }
 export class MessageIdsEmpty extends BadRequest {
-  id: string = 'MESSAGE_IDS_EMPTY';
-  message: string = 'No message ids were provided.';
+  override id: string = 'MESSAGE_IDS_EMPTY';
+  override message: string = 'No message ids were provided.';
 }
 export class MessageIdInvalid extends BadRequest {
-  id: string = 'MESSAGE_ID_INVALID';
-  message: string = 'The provided message id is invalid.';
+  override id: string = 'MESSAGE_ID_INVALID';
+  override message: string = 'The provided message id is invalid.';
 }
 export class MessageNotModified extends BadRequest {
-  id: string = 'MESSAGE_NOT_MODIFIED';
-  message: string =
+  override id: string = 'MESSAGE_NOT_MODIFIED';
+  override message: string =
     "The provided message data is identical to the previous message data, the message wasn't modified.";
 }
 export class MessageNotReadYet extends BadRequest {
-  id: string = 'MESSAGE_NOT_READ_YET';
-  message: string = "The specified message wasn't read yet.";
+  override id: string = 'MESSAGE_NOT_READ_YET';
+  override message: string = "The specified message wasn't read yet.";
 }
 export class MessagePollClosed extends BadRequest {
-  id: string = 'MESSAGE_POLL_CLOSED';
-  message: string = 'Poll closed.';
+  override id: string = 'MESSAGE_POLL_CLOSED';
+  override message: string = 'Poll closed.';
 }
 export class MessageTooLong extends BadRequest {
-  id: string = 'MESSAGE_TOO_LONG';
-  message: string = 'The provided message is too long.';
+  override id: string = 'MESSAGE_TOO_LONG';
+  override message: string = 'The provided message is too long.';
 }
 export class MessageTooOld extends BadRequest {
-  id: string = 'MESSAGE_TOO_OLD';
-  message: string = 'The message is too old, the requested information is not available.';
+  override id: string = 'MESSAGE_TOO_OLD';
+  override message: string = 'The message is too old, the requested information is not available.';
 }
 export class MethodInvalid extends BadRequest {
-  id: string = 'METHOD_INVALID';
-  message: string = 'The specified method is invalid.';
+  override id: string = 'METHOD_INVALID';
+  override message: string = 'The specified method is invalid.';
 }
 export class MinDateInvalid extends BadRequest {
-  id: string = 'MIN_DATE_INVALID';
-  message: string = 'The specified minimum date is invalid.';
+  override id: string = 'MIN_DATE_INVALID';
+  override message: string = 'The specified minimum date is invalid.';
 }
 export class MsgIdInvalid extends BadRequest {
-  id: string = 'MSG_ID_INVALID';
-  message: string = 'Invalid message ID provided.';
+  override id: string = 'MSG_ID_INVALID';
+  override message: string = 'Invalid message ID provided.';
 }
 export class MsgTooOld extends BadRequest {
-  id: string = 'MSG_TOO_OLD';
-  message: string =
+  override id: string = 'MSG_TOO_OLD';
+  override message: string =
     '[`chat_read_mark_expire_period` seconds](https://core.telegram.org/api/config#chat-read-mark-expire-period) have passed since the message was sent, read receipts were deleted.';
 }
 export class MsgWaitFailed extends BadRequest {
-  id: string = 'MSG_WAIT_FAILED';
-  message: string = 'A waiting call returned an error.';
+  override id: string = 'MSG_WAIT_FAILED';
+  override message: string = 'A waiting call returned an error.';
 }
 export class MultiMediaTooLong extends BadRequest {
-  id: string = 'MULTI_MEDIA_TOO_LONG';
-  message: string = 'Too many media files for album.';
+  override id: string = 'MULTI_MEDIA_TOO_LONG';
+  override message: string = 'Too many media files for album.';
 }
 export class NewSaltInvalid extends BadRequest {
-  id: string = 'NEW_SALT_INVALID';
-  message: string = 'The new salt is invalid.';
+  override id: string = 'NEW_SALT_INVALID';
+  override message: string = 'The new salt is invalid.';
 }
 export class NewSettingsEmpty extends BadRequest {
-  id: string = 'NEW_SETTINGS_EMPTY';
-  message: string =
+  override id: string = 'NEW_SETTINGS_EMPTY';
+  override message: string =
     'No password is set on the current account, and no new password was specified in `new_settings`.';
 }
 export class NewSettingsInvalid extends BadRequest {
-  id: string = 'NEW_SETTINGS_INVALID';
-  message: string = 'The new password settings are invalid.';
+  override id: string = 'NEW_SETTINGS_INVALID';
+  override message: string = 'The new password settings are invalid.';
 }
 export class NextOffsetInvalid extends BadRequest {
-  id: string = 'NEXT_OFFSET_INVALID';
-  message: string = 'The specified offset is longer than 64 bytes.';
+  override id: string = 'NEXT_OFFSET_INVALID';
+  override message: string = 'The specified offset is longer than 64 bytes.';
 }
 export class NotEligible extends BadRequest {
-  id: string = 'NOT_ELIGIBLE';
-  message: string = 'The current user is not eligible to join the Peer-to-Peer Login Program.';
+  override id: string = 'NOT_ELIGIBLE';
+  override message: string =
+    'The current user is not eligible to join the Peer-to-Peer Login Program.';
 }
 export class NotJoined extends BadRequest {
-  id: string = 'NOT_JOINED';
-  message: string = "The current user hasn't joined the Peer-to-Peer Login Program.";
+  override id: string = 'NOT_JOINED';
+  override message: string = "The current user hasn't joined the Peer-to-Peer Login Program.";
 }
 export class OffsetInvalid extends BadRequest {
-  id: string = 'OFFSET_INVALID';
-  message: string = 'The provided offset is invalid.';
+  override id: string = 'OFFSET_INVALID';
+  override message: string = 'The provided offset is invalid.';
 }
 export class OffsetPeerIdInvalid extends BadRequest {
-  id: string = 'OFFSET_PEER_ID_INVALID';
-  message: string = 'The provided offset peer is invalid.';
+  override id: string = 'OFFSET_PEER_ID_INVALID';
+  override message: string = 'The provided offset peer is invalid.';
 }
 export class OptionsTooMuch extends BadRequest {
-  id: string = 'OPTIONS_TOO_MUCH';
-  message: string = 'Too many options provided.';
+  override id: string = 'OPTIONS_TOO_MUCH';
+  override message: string = 'Too many options provided.';
 }
 export class OptionInvalid extends BadRequest {
-  id: string = 'OPTION_INVALID';
-  message: string = 'Invalid option selected.';
+  override id: string = 'OPTION_INVALID';
+  override message: string = 'Invalid option selected.';
 }
 export class OrderInvalid extends BadRequest {
-  id: string = 'ORDER_INVALID';
-  message: string = 'The specified username order is invalid.';
+  override id: string = 'ORDER_INVALID';
+  override message: string = 'The specified username order is invalid.';
 }
 export class PackShortNameInvalid extends BadRequest {
-  id: string = 'PACK_SHORT_NAME_INVALID';
-  message: string = 'Short pack name invalid.';
+  override id: string = 'PACK_SHORT_NAME_INVALID';
+  override message: string = 'Short pack name invalid.';
 }
 export class PackShortNameOccupied extends BadRequest {
-  id: string = 'PACK_SHORT_NAME_OCCUPIED';
-  message: string = 'A stickerpack with this name already exists.';
+  override id: string = 'PACK_SHORT_NAME_OCCUPIED';
+  override message: string = 'A stickerpack with this name already exists.';
 }
 export class PackTitleInvalid extends BadRequest {
-  id: string = 'PACK_TITLE_INVALID';
-  message: string = 'The stickerpack title is invalid.';
+  override id: string = 'PACK_TITLE_INVALID';
+  override message: string = 'The stickerpack title is invalid.';
 }
 export class ParticipantsTooFew extends BadRequest {
-  id: string = 'PARTICIPANTS_TOO_FEW';
-  message: string = 'Not enough participants.';
+  override id: string = 'PARTICIPANTS_TOO_FEW';
+  override message: string = 'Not enough participants.';
 }
 export class ParticipantIdInvalid extends BadRequest {
-  id: string = 'PARTICIPANT_ID_INVALID';
-  message: string = 'The specified participant ID is invalid.';
+  override id: string = 'PARTICIPANT_ID_INVALID';
+  override message: string = 'The specified participant ID is invalid.';
 }
 export class ParticipantJoinMissing extends BadRequest {
-  id: string = 'PARTICIPANT_JOIN_MISSING';
-  message: string =
+  override id: string = 'PARTICIPANT_JOIN_MISSING';
+  override message: string =
     "Trying to enable a presentation, when the user hasn't joined the Video Chat with [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).";
 }
 export class ParticipantVersionOutdated extends BadRequest {
-  id: string = 'PARTICIPANT_VERSION_OUTDATED';
-  message: string =
+  override id: string = 'PARTICIPANT_VERSION_OUTDATED';
+  override message: string =
     'The other participant does not use an up to date telegram client with support for calls.';
 }
 export class PasswordEmpty extends BadRequest {
-  id: string = 'PASSWORD_EMPTY';
-  message: string = 'The provided password is empty.';
+  override id: string = 'PASSWORD_EMPTY';
+  override message: string = 'The provided password is empty.';
 }
 export class PasswordHashInvalid extends BadRequest {
-  id: string = 'PASSWORD_HASH_INVALID';
-  message: string = 'The provided password hash is invalid.';
+  override id: string = 'PASSWORD_HASH_INVALID';
+  override message: string = 'The provided password hash is invalid.';
 }
 export class PasswordMissing extends BadRequest {
-  id: string = 'PASSWORD_MISSING';
-  message: string =
+  override id: string = 'PASSWORD_MISSING';
+  override message: string =
     'You must [enable 2FA](https://core.telegram.org/api/srp) before executing this operation.';
 }
 export class PasswordRecoveryExpired extends BadRequest {
-  id: string = 'PASSWORD_RECOVERY_EXPIRED';
-  message: string = 'The recovery code has expired.';
+  override id: string = 'PASSWORD_RECOVERY_EXPIRED';
+  override message: string = 'The recovery code has expired.';
 }
 export class PasswordRecoveryNa extends BadRequest {
-  id: string = 'PASSWORD_RECOVERY_NA';
-  message: string = "No email was set, can't recover password via email.";
+  override id: string = 'PASSWORD_RECOVERY_NA';
+  override message: string = "No email was set, can't recover password via email.";
 }
 export class PasswordRequired extends BadRequest {
-  id: string = 'PASSWORD_REQUIRED';
-  message: string =
+  override id: string = 'PASSWORD_REQUIRED';
+  override message: string =
     'A [2FA password](https://core.telegram.org/api/srp) must be configured to use Telegram Passport.';
 }
 export class PasswordTooFresh extends BadRequest {
-  id: string = 'PASSWORD_TOO_FRESH_X';
-  message: string =
+  override id: string = 'PASSWORD_TOO_FRESH_X';
+  override message: string =
     'The password was modified less than 24 hours ago, try again in {value} seconds.';
 }
 export class PaymentProviderInvalid extends BadRequest {
-  id: string = 'PAYMENT_PROVIDER_INVALID';
-  message: string = 'The specified payment provider is invalid.';
+  override id: string = 'PAYMENT_PROVIDER_INVALID';
+  override message: string = 'The specified payment provider is invalid.';
 }
 export class PeersListEmpty extends BadRequest {
-  id: string = 'PEERS_LIST_EMPTY';
-  message: string = 'The specified list of peers is empty.';
+  override id: string = 'PEERS_LIST_EMPTY';
+  override message: string = 'The specified list of peers is empty.';
 }
 export class PeerFlood extends BadRequest {
-  id: string = 'PEER_FLOOD';
-  message: string =
+  override id: string = 'PEER_FLOOD';
+  override message: string =
     'The current account is spamreported, you cannot execute this action, check @spambot for more info.';
 }
 export class PeerHistoryEmpty extends BadRequest {
-  id: string = 'PEER_HISTORY_EMPTY';
-  message: string = "You can't pin an empty chat with a user.";
+  override id: string = 'PEER_HISTORY_EMPTY';
+  override message: string = "You can't pin an empty chat with a user.";
 }
 export class PeerIdInvalid extends BadRequest {
-  id: string = 'PEER_ID_INVALID';
-  message: string = 'The provided peer id is invalid.';
+  override id: string = 'PEER_ID_INVALID';
+  override message: string = 'The provided peer id is invalid.';
 }
 export class PeerIdNotSupported extends BadRequest {
-  id: string = 'PEER_ID_NOT_SUPPORTED';
-  message: string = 'The provided peer ID is not supported.';
+  override id: string = 'PEER_ID_NOT_SUPPORTED';
+  override message: string = 'The provided peer ID is not supported.';
 }
 export class PersistentTimestampEmpty extends BadRequest {
-  id: string = 'PERSISTENT_TIMESTAMP_EMPTY';
-  message: string = 'Persistent timestamp empty.';
+  override id: string = 'PERSISTENT_TIMESTAMP_EMPTY';
+  override message: string = 'Persistent timestamp empty.';
 }
 export class PersistentTimestampInvalid extends BadRequest {
-  id: string = 'PERSISTENT_TIMESTAMP_INVALID';
-  message: string = 'Persistent timestamp invalid.';
+  override id: string = 'PERSISTENT_TIMESTAMP_INVALID';
+  override message: string = 'Persistent timestamp invalid.';
 }
 export class PhoneCodeEmpty extends BadRequest {
-  id: string = 'PHONE_CODE_EMPTY';
-  message: string = 'phone_code is missing.';
+  override id: string = 'PHONE_CODE_EMPTY';
+  override message: string = 'phone_code is missing.';
 }
 export class PhoneCodeExpired extends BadRequest {
-  id: string = 'PHONE_CODE_EXPIRED';
-  message: string = 'The phone code you provided has expired.';
+  override id: string = 'PHONE_CODE_EXPIRED';
+  override message: string = 'The phone code you provided has expired.';
 }
 export class PhoneCodeHashEmpty extends BadRequest {
-  id: string = 'PHONE_CODE_HASH_EMPTY';
-  message: string = 'phone_code_hash is missing.';
+  override id: string = 'PHONE_CODE_HASH_EMPTY';
+  override message: string = 'phone_code_hash is missing.';
 }
 export class PhoneCodeInvalid extends BadRequest {
-  id: string = 'PHONE_CODE_INVALID';
-  message: string = 'The provided phone code is invalid.';
+  override id: string = 'PHONE_CODE_INVALID';
+  override message: string = 'The provided phone code is invalid.';
 }
 export class PhoneHashExpired extends BadRequest {
-  id: string = 'PHONE_HASH_EXPIRED';
-  message: string = 'An invalid or expired `phone_code_hash` was provided.';
+  override id: string = 'PHONE_HASH_EXPIRED';
+  override message: string = 'An invalid or expired `phone_code_hash` was provided.';
 }
 export class PhoneNotOccupied extends BadRequest {
-  id: string = 'PHONE_NOT_OCCUPIED';
-  message: string = 'No user is associated to the specified phone number.';
+  override id: string = 'PHONE_NOT_OCCUPIED';
+  override message: string = 'No user is associated to the specified phone number.';
 }
 export class PhoneNumberAppSignupForbidden extends BadRequest {
-  id: string = 'PHONE_NUMBER_APP_SIGNUP_FORBIDDEN';
-  message: string = "You can't sign up using this app.";
+  override id: string = 'PHONE_NUMBER_APP_SIGNUP_FORBIDDEN';
+  override message: string = "You can't sign up using this app.";
 }
 export class PhoneNumberBanned extends BadRequest {
-  id: string = 'PHONE_NUMBER_BANNED';
-  message: string = 'The provided phone number is banned from telegram.';
+  override id: string = 'PHONE_NUMBER_BANNED';
+  override message: string = 'The provided phone number is banned from telegram.';
 }
 export class PhoneNumberFlood extends BadRequest {
-  id: string = 'PHONE_NUMBER_FLOOD';
-  message: string = 'You asked for the code too many times.';
+  override id: string = 'PHONE_NUMBER_FLOOD';
+  override message: string = 'You asked for the code too many times.';
 }
 export class PhoneNumberInvalid extends BadRequest {
-  id: string = 'PHONE_NUMBER_INVALID';
-  message: string = 'The phone number is invalid.';
+  override id: string = 'PHONE_NUMBER_INVALID';
+  override message: string = 'The phone number is invalid.';
 }
 export class PhoneNumberOccupied extends BadRequest {
-  id: string = 'PHONE_NUMBER_OCCUPIED';
-  message: string = 'The phone number is already in use.';
+  override id: string = 'PHONE_NUMBER_OCCUPIED';
+  override message: string = 'The phone number is already in use.';
 }
 export class PhoneNumberUnoccupied extends BadRequest {
-  id: string = 'PHONE_NUMBER_UNOCCUPIED';
-  message: string = 'The phone number is not yet being used.';
+  override id: string = 'PHONE_NUMBER_UNOCCUPIED';
+  override message: string = 'The phone number is not yet being used.';
 }
 export class PhonePasswordProtected extends BadRequest {
-  id: string = 'PHONE_PASSWORD_PROTECTED';
-  message: string = 'This phone is password protected.';
+  override id: string = 'PHONE_PASSWORD_PROTECTED';
+  override message: string = 'This phone is password protected.';
 }
 export class PhotoContentTypeInvalid extends BadRequest {
-  id: string = 'PHOTO_CONTENT_TYPE_INVALID';
-  message: string = 'Photo mime-type invalid.';
+  override id: string = 'PHOTO_CONTENT_TYPE_INVALID';
+  override message: string = 'Photo mime-type invalid.';
 }
 export class PhotoContentUrlEmpty extends BadRequest {
-  id: string = 'PHOTO_CONTENT_URL_EMPTY';
-  message: string = 'Photo URL invalid.';
+  override id: string = 'PHOTO_CONTENT_URL_EMPTY';
+  override message: string = 'Photo URL invalid.';
 }
 export class PhotoCropFileMissing extends BadRequest {
-  id: string = 'PHOTO_CROP_FILE_MISSING';
-  message: string = 'Photo crop file missing.';
+  override id: string = 'PHOTO_CROP_FILE_MISSING';
+  override message: string = 'Photo crop file missing.';
 }
 export class PhotoCropSizeSmall extends BadRequest {
-  id: string = 'PHOTO_CROP_SIZE_SMALL';
-  message: string = 'Photo is too small.';
+  override id: string = 'PHOTO_CROP_SIZE_SMALL';
+  override message: string = 'Photo is too small.';
 }
 export class PhotoExtInvalid extends BadRequest {
-  id: string = 'PHOTO_EXT_INVALID';
-  message: string = 'The extension of the photo is invalid.';
+  override id: string = 'PHOTO_EXT_INVALID';
+  override message: string = 'The extension of the photo is invalid.';
 }
 export class PhotoFileMissing extends BadRequest {
-  id: string = 'PHOTO_FILE_MISSING';
-  message: string = 'Profile photo file missing.';
+  override id: string = 'PHOTO_FILE_MISSING';
+  override message: string = 'Profile photo file missing.';
 }
 export class PhotoIdInvalid extends BadRequest {
-  id: string = 'PHOTO_ID_INVALID';
-  message: string = 'Photo ID invalid.';
+  override id: string = 'PHOTO_ID_INVALID';
+  override message: string = 'Photo ID invalid.';
 }
 export class PhotoInvalid extends BadRequest {
-  id: string = 'PHOTO_INVALID';
-  message: string = 'Photo invalid.';
+  override id: string = 'PHOTO_INVALID';
+  override message: string = 'Photo invalid.';
 }
 export class PhotoInvalidDimensions extends BadRequest {
-  id: string = 'PHOTO_INVALID_DIMENSIONS';
-  message: string = 'The photo dimensions are invalid.';
+  override id: string = 'PHOTO_INVALID_DIMENSIONS';
+  override message: string = 'The photo dimensions are invalid.';
 }
 export class PhotoSaveFileInvalid extends BadRequest {
-  id: string = 'PHOTO_SAVE_FILE_INVALID';
-  message: string = 'Internal issues, try again later.';
+  override id: string = 'PHOTO_SAVE_FILE_INVALID';
+  override message: string = 'Internal issues, try again later.';
 }
 export class PhotoThumbUrlEmpty extends BadRequest {
-  id: string = 'PHOTO_THUMB_URL_EMPTY';
-  message: string = 'Photo thumbnail URL is empty.';
+  override id: string = 'PHOTO_THUMB_URL_EMPTY';
+  override message: string = 'Photo thumbnail URL is empty.';
 }
 export class PhotoThumbUrlInvalid extends BadRequest {
-  id: string = 'PHOTO_THUMB_URL_INVALID';
-  message: string = 'The photo thumb URL is invalid';
+  override id: string = 'PHOTO_THUMB_URL_INVALID';
+  override message: string = 'The photo thumb URL is invalid';
 }
 export class PinnedDialogsTooMuch extends BadRequest {
-  id: string = 'PINNED_DIALOGS_TOO_MUCH';
-  message: string = 'Too many pinned dialogs.';
+  override id: string = 'PINNED_DIALOGS_TOO_MUCH';
+  override message: string = 'Too many pinned dialogs.';
 }
 export class PinRestricted extends BadRequest {
-  id: string = 'PIN_RESTRICTED';
-  message: string = "You can't pin messages.";
+  override id: string = 'PIN_RESTRICTED';
+  override message: string = "You can't pin messages.";
 }
 export class PollAnswersInvalid extends BadRequest {
-  id: string = 'POLL_ANSWERS_INVALID';
-  message: string = 'Invalid poll answers were provided.';
+  override id: string = 'POLL_ANSWERS_INVALID';
+  override message: string = 'Invalid poll answers were provided.';
 }
 export class PollAnswerInvalid extends BadRequest {
-  id: string = 'POLL_ANSWER_INVALID';
-  message: string = 'One of the poll answers is not acceptable.';
+  override id: string = 'POLL_ANSWER_INVALID';
+  override message: string = 'One of the poll answers is not acceptable.';
 }
 export class PollOptionDuplicate extends BadRequest {
-  id: string = 'POLL_OPTION_DUPLICATE';
-  message: string = 'Duplicate poll options provided.';
+  override id: string = 'POLL_OPTION_DUPLICATE';
+  override message: string = 'Duplicate poll options provided.';
 }
 export class PollOptionInvalid extends BadRequest {
-  id: string = 'POLL_OPTION_INVALID';
-  message: string = 'Invalid poll option provided.';
+  override id: string = 'POLL_OPTION_INVALID';
+  override message: string = 'Invalid poll option provided.';
 }
 export class PollQuestionInvalid extends BadRequest {
-  id: string = 'POLL_QUESTION_INVALID';
-  message: string = 'One of the poll questions is not acceptable.';
+  override id: string = 'POLL_QUESTION_INVALID';
+  override message: string = 'One of the poll questions is not acceptable.';
 }
 export class PollUnsupported extends BadRequest {
-  id: string = 'POLL_UNSUPPORTED';
-  message: string = 'This layer does not support polls in the invoked method';
+  override id: string = 'POLL_UNSUPPORTED';
+  override message: string = 'This layer does not support polls in the invoked method';
 }
 export class PollVoteRequired extends BadRequest {
-  id: string = 'POLL_VOTE_REQUIRED';
-  message: string = 'Cast a vote in the poll before calling this method';
+  override id: string = 'POLL_VOTE_REQUIRED';
+  override message: string = 'Cast a vote in the poll before calling this method';
 }
 export class PremiumAccountRequired extends BadRequest {
-  id: string = 'PREMIUM_ACCOUNT_REQUIRED';
-  message: string = 'A premium account is required to execute this action.';
+  override id: string = 'PREMIUM_ACCOUNT_REQUIRED';
+  override message: string = 'A premium account is required to execute this action.';
 }
 export class PrivacyKeyInvalid extends BadRequest {
-  id: string = 'PRIVACY_KEY_INVALID';
-  message: string = 'The privacy key is invalid.';
+  override id: string = 'PRIVACY_KEY_INVALID';
+  override message: string = 'The privacy key is invalid.';
 }
 export class PrivacyTooLong extends BadRequest {
-  id: string = 'PRIVACY_TOO_LONG';
-  message: string = 'Too many privacy rules were specified, the current limit is 1000.';
+  override id: string = 'PRIVACY_TOO_LONG';
+  override message: string = 'Too many privacy rules were specified, the current limit is 1000.';
 }
 export class PrivacyValueInvalid extends BadRequest {
-  id: string = 'PRIVACY_VALUE_INVALID';
-  message: string = 'The specified privacy rule combination is invalid.';
+  override id: string = 'PRIVACY_VALUE_INVALID';
+  override message: string = 'The specified privacy rule combination is invalid.';
 }
 export class PublicKeyRequired extends BadRequest {
-  id: string = 'PUBLIC_KEY_REQUIRED';
-  message: string = 'A public key is required.';
+  override id: string = 'PUBLIC_KEY_REQUIRED';
+  override message: string = 'A public key is required.';
 }
 export class QueryIdEmpty extends BadRequest {
-  id: string = 'QUERY_ID_EMPTY';
-  message: string = 'The query ID is empty.';
+  override id: string = 'QUERY_ID_EMPTY';
+  override message: string = 'The query ID is empty.';
 }
 export class QueryIdInvalid extends BadRequest {
-  id: string = 'QUERY_ID_INVALID';
-  message: string = 'The query ID is invalid.';
+  override id: string = 'QUERY_ID_INVALID';
+  override message: string = 'The query ID is invalid.';
 }
 export class QueryTooShort extends BadRequest {
-  id: string = 'QUERY_TOO_SHORT';
-  message: string = 'The query string is too short.';
+  override id: string = 'QUERY_TOO_SHORT';
+  override message: string = 'The query string is too short.';
 }
 export class QuickRepliesTooMuch extends BadRequest {
-  id: string = 'QUICK_REPLIES_TOO_MUCH';
-  message: string =
+  override id: string = 'QUICK_REPLIES_TOO_MUCH';
+  override message: string =
     'A maximum of [appConfig.`quick_replies_limit`](https://core.telegram.org/api/config#quick-replies-limit) shortcuts may be created, the limit was reached.';
 }
 export class QuizAnswerMissing extends BadRequest {
-  id: string = 'QUIZ_ANSWER_MISSING';
-  message: string =
+  override id: string = 'QUIZ_ANSWER_MISSING';
+  override message: string =
     'You can forward a quiz while hiding the original author only after choosing an option in the quiz.';
 }
 export class QuizCorrectAnswersEmpty extends BadRequest {
-  id: string = 'QUIZ_CORRECT_ANSWERS_EMPTY';
-  message: string = 'No correct quiz answer was specified.';
+  override id: string = 'QUIZ_CORRECT_ANSWERS_EMPTY';
+  override message: string = 'No correct quiz answer was specified.';
 }
 export class QuizCorrectAnswersTooMuch extends BadRequest {
-  id: string = 'QUIZ_CORRECT_ANSWERS_TOO_MUCH';
-  message: string =
+  override id: string = 'QUIZ_CORRECT_ANSWERS_TOO_MUCH';
+  override message: string =
     'You specified too many correct answers in a quiz, quizzes can only have one right answer!';
 }
 export class QuizCorrectAnswerInvalid extends BadRequest {
-  id: string = 'QUIZ_CORRECT_ANSWER_INVALID';
-  message: string = 'An invalid value was provided to the correct_answers field.';
+  override id: string = 'QUIZ_CORRECT_ANSWER_INVALID';
+  override message: string = 'An invalid value was provided to the correct_answers field.';
 }
 export class QuizMultipleInvalid extends BadRequest {
-  id: string = 'QUIZ_MULTIPLE_INVALID';
-  message: string = "Quizzes can't have the multiple_choice flag set!";
+  override id: string = 'QUIZ_MULTIPLE_INVALID';
+  override message: string = "Quizzes can't have the multiple_choice flag set!";
 }
 export class QuoteTextInvalid extends BadRequest {
-  id: string = 'QUOTE_TEXT_INVALID';
-  message: string = 'The specified `reply_to`.`quote_text` field is invalid.';
+  override id: string = 'QUOTE_TEXT_INVALID';
+  override message: string = 'The specified `reply_to`.`quote_text` field is invalid.';
 }
 export class RaiseHandForbidden extends BadRequest {
-  id: string = 'RAISE_HAND_FORBIDDEN';
-  message: string = 'You cannot raise your hand.';
+  override id: string = 'RAISE_HAND_FORBIDDEN';
+  override message: string = 'You cannot raise your hand.';
 }
 export class RandomIdEmpty extends BadRequest {
-  id: string = 'RANDOM_ID_EMPTY';
-  message: string = 'Random ID empty.';
+  override id: string = 'RANDOM_ID_EMPTY';
+  override message: string = 'Random ID empty.';
 }
 export class RandomIdInvalid extends BadRequest {
-  id: string = 'RANDOM_ID_INVALID';
-  message: string = 'A provided random ID is invalid.';
+  override id: string = 'RANDOM_ID_INVALID';
+  override message: string = 'A provided random ID is invalid.';
 }
 export class RandomLengthInvalid extends BadRequest {
-  id: string = 'RANDOM_LENGTH_INVALID';
-  message: string = 'Random length invalid.';
+  override id: string = 'RANDOM_LENGTH_INVALID';
+  override message: string = 'Random length invalid.';
 }
 export class RangesInvalid extends BadRequest {
-  id: string = 'RANGES_INVALID';
-  message: string = 'Invalid range provided.';
+  override id: string = 'RANGES_INVALID';
+  override message: string = 'Invalid range provided.';
 }
 export class ReactionsTooMany extends BadRequest {
-  id: string = 'REACTIONS_TOO_MANY';
-  message: string =
+  override id: string = 'REACTIONS_TOO_MANY';
+  override message: string =
     "The message already has exactly `reactions_uniq_max` reaction emojis, you can't react with a new emoji, see [the docs for more info &raquo;](https://core.telegram.org/api/config#client-configuration).";
 }
 export class ReactionEmpty extends BadRequest {
-  id: string = 'REACTION_EMPTY';
-  message: string = 'Empty reaction provided.';
+  override id: string = 'REACTION_EMPTY';
+  override message: string = 'Empty reaction provided.';
 }
 export class ReactionInvalid extends BadRequest {
-  id: string = 'REACTION_INVALID';
-  message: string = 'The specified reaction is invalid.';
+  override id: string = 'REACTION_INVALID';
+  override message: string = 'The specified reaction is invalid.';
 }
 export class ReceiptEmpty extends BadRequest {
-  id: string = 'RECEIPT_EMPTY';
-  message: string = 'The specified receipt is empty.';
+  override id: string = 'RECEIPT_EMPTY';
+  override message: string = 'The specified receipt is empty.';
 }
 export class ReflectorNotAvailable extends BadRequest {
-  id: string = 'REFLECTOR_NOT_AVAILABLE';
-  message: string = 'The call reflector is not available';
+  override id: string = 'REFLECTOR_NOT_AVAILABLE';
+  override message: string = 'The call reflector is not available';
 }
 export class ReplyMarkupBuyEmpty extends BadRequest {
-  id: string = 'REPLY_MARKUP_BUY_EMPTY';
-  message: string = 'Reply markup for buy button empty.';
+  override id: string = 'REPLY_MARKUP_BUY_EMPTY';
+  override message: string = 'Reply markup for buy button empty.';
 }
 export class ReplyMarkupGameEmpty extends BadRequest {
-  id: string = 'REPLY_MARKUP_GAME_EMPTY';
-  message: string =
+  override id: string = 'REPLY_MARKUP_GAME_EMPTY';
+  override message: string =
     "A game message is being edited, but the newly provided keyboard doesn't have a keyboardButtonGame button.";
 }
 export class ReplyMarkupInvalid extends BadRequest {
-  id: string = 'REPLY_MARKUP_INVALID';
-  message: string = 'The provided reply markup is invalid.';
+  override id: string = 'REPLY_MARKUP_INVALID';
+  override message: string = 'The provided reply markup is invalid.';
 }
 export class ReplyMarkupTooLong extends BadRequest {
-  id: string = 'REPLY_MARKUP_TOO_LONG';
-  message: string = 'The specified reply_markup is too long.';
+  override id: string = 'REPLY_MARKUP_TOO_LONG';
+  override message: string = 'The specified reply_markup is too long.';
 }
 export class ReplyMessagesTooMuch extends BadRequest {
-  id: string = 'REPLY_MESSAGES_TOO_MUCH';
-  message: string =
+  override id: string = 'REPLY_MESSAGES_TOO_MUCH';
+  override message: string =
     'Each shortcut can contain a maximum of [appConfig.`quick_reply_messages_limit`](https://core.telegram.org/api/config#quick-reply-messages-limit) messages, the limit was reached.';
 }
 export class ReplyMessageIdInvalid extends BadRequest {
-  id: string = 'REPLY_MESSAGE_ID_INVALID';
-  message: string = 'The specified reply-to message ID is invalid.';
+  override id: string = 'REPLY_MESSAGE_ID_INVALID';
+  override message: string = 'The specified reply-to message ID is invalid.';
 }
 export class ReplyToInvalid extends BadRequest {
-  id: string = 'REPLY_TO_INVALID';
-  message: string = 'The specified `reply_to` field is invalid.';
+  override id: string = 'REPLY_TO_INVALID';
+  override message: string = 'The specified `reply_to` field is invalid.';
 }
 export class ReplyToUserInvalid extends BadRequest {
-  id: string = 'REPLY_TO_USER_INVALID';
-  message: string = 'The replied-to user is invalid.';
+  override id: string = 'REPLY_TO_USER_INVALID';
+  override message: string = 'The replied-to user is invalid.';
 }
 export class RequestTokenInvalid extends BadRequest {
-  id: string = 'REQUEST_TOKEN_INVALID';
-  message: string =
+  override id: string = 'REQUEST_TOKEN_INVALID';
+  override message: string =
     'The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.';
 }
 export class ResetRequestMissing extends BadRequest {
-  id: string = 'RESET_REQUEST_MISSING';
-  message: string = 'No password reset is in progress.';
+  override id: string = 'RESET_REQUEST_MISSING';
+  override message: string = 'No password reset is in progress.';
 }
 export class ResultsTooMuch extends BadRequest {
-  id: string = 'RESULTS_TOO_MUCH';
-  message: string = 'Too many results were provided.';
+  override id: string = 'RESULTS_TOO_MUCH';
+  override message: string = 'Too many results were provided.';
 }
 export class ResultIdDuplicate extends BadRequest {
-  id: string = 'RESULT_ID_DUPLICATE';
-  message: string = 'You provided a duplicate result ID.';
+  override id: string = 'RESULT_ID_DUPLICATE';
+  override message: string = 'You provided a duplicate result ID.';
 }
 export class ResultIdEmpty extends BadRequest {
-  id: string = 'RESULT_ID_EMPTY';
-  message: string = 'Result ID empty.';
+  override id: string = 'RESULT_ID_EMPTY';
+  override message: string = 'Result ID empty.';
 }
 export class ResultIdInvalid extends BadRequest {
-  id: string = 'RESULT_ID_INVALID';
-  message: string = 'One of the specified result IDs is invalid.';
+  override id: string = 'RESULT_ID_INVALID';
+  override message: string = 'One of the specified result IDs is invalid.';
 }
 export class ResultTypeInvalid extends BadRequest {
-  id: string = 'RESULT_TYPE_INVALID';
-  message: string = 'Result type invalid.';
+  override id: string = 'RESULT_TYPE_INVALID';
+  override message: string = 'Result type invalid.';
 }
 export class RevoteNotAllowed extends BadRequest {
-  id: string = 'REVOTE_NOT_ALLOWED';
-  message: string = 'You cannot change your vote.';
+  override id: string = 'REVOTE_NOT_ALLOWED';
+  override message: string = 'You cannot change your vote.';
 }
 export class RightsNotModified extends BadRequest {
-  id: string = 'RIGHTS_NOT_MODIFIED';
-  message: string = 'The new admin rights are equal to the old rights, no change was made.';
+  override id: string = 'RIGHTS_NOT_MODIFIED';
+  override message: string =
+    'The new admin rights are equal to the old rights, no change was made.';
 }
 export class RingtoneInvalid extends BadRequest {
-  id: string = 'RINGTONE_INVALID';
-  message: string = 'The specified ringtone is invalid.';
+  override id: string = 'RINGTONE_INVALID';
+  override message: string = 'The specified ringtone is invalid.';
 }
 export class RingtoneMimeInvalid extends BadRequest {
-  id: string = 'RINGTONE_MIME_INVALID';
-  message: string = 'The MIME type for the ringtone is invalid.';
+  override id: string = 'RINGTONE_MIME_INVALID';
+  override message: string = 'The MIME type for the ringtone is invalid.';
 }
 export class RsaDecryptFailed extends BadRequest {
-  id: string = 'RSA_DECRYPT_FAILED';
-  message: string = 'Internal RSA decryption failed.';
+  override id: string = 'RSA_DECRYPT_FAILED';
+  override message: string = 'Internal RSA decryption failed.';
 }
 export class ScheduleBotNotAllowed extends BadRequest {
-  id: string = 'SCHEDULE_BOT_NOT_ALLOWED';
-  message: string = 'Bots cannot schedule messages.';
+  override id: string = 'SCHEDULE_BOT_NOT_ALLOWED';
+  override message: string = 'Bots cannot schedule messages.';
 }
 export class ScheduleDateInvalid extends BadRequest {
-  id: string = 'SCHEDULE_DATE_INVALID';
-  message: string = 'Invalid schedule date provided.';
+  override id: string = 'SCHEDULE_DATE_INVALID';
+  override message: string = 'Invalid schedule date provided.';
 }
 export class ScheduleDateTooLate extends BadRequest {
-  id: string = 'SCHEDULE_DATE_TOO_LATE';
-  message: string = "You can't schedule a message this far in the future.";
+  override id: string = 'SCHEDULE_DATE_TOO_LATE';
+  override message: string = "You can't schedule a message this far in the future.";
 }
 export class ScheduleStatusPrivate extends BadRequest {
-  id: string = 'SCHEDULE_STATUS_PRIVATE';
-  message: string =
+  override id: string = 'SCHEDULE_STATUS_PRIVATE';
+  override message: string =
     "Can't schedule until user is online, if the user's last seen timestamp is hidden by their privacy settings.";
 }
 export class ScheduleTooMuch extends BadRequest {
-  id: string = 'SCHEDULE_TOO_MUCH';
-  message: string = 'There are too many scheduled messages.';
+  override id: string = 'SCHEDULE_TOO_MUCH';
+  override message: string = 'There are too many scheduled messages.';
 }
 export class ScoreInvalid extends BadRequest {
-  id: string = 'SCORE_INVALID';
-  message: string = 'The specified game score is invalid.';
+  override id: string = 'SCORE_INVALID';
+  override message: string = 'The specified game score is invalid.';
 }
 export class SearchQueryEmpty extends BadRequest {
-  id: string = 'SEARCH_QUERY_EMPTY';
-  message: string = 'The search query is empty.';
+  override id: string = 'SEARCH_QUERY_EMPTY';
+  override message: string = 'The search query is empty.';
 }
 export class SearchWithLinkNotSupported extends BadRequest {
-  id: string = 'SEARCH_WITH_LINK_NOT_SUPPORTED';
-  message: string = 'You cannot provide a search query and an invite link at the same time.';
+  override id: string = 'SEARCH_WITH_LINK_NOT_SUPPORTED';
+  override message: string =
+    'You cannot provide a search query and an invite link at the same time.';
 }
 export class SecondsInvalid extends BadRequest {
-  id: string = 'SECONDS_INVALID';
-  message: string = 'Invalid duration provided.';
+  override id: string = 'SECONDS_INVALID';
+  override message: string = 'Invalid duration provided.';
 }
 export class SecureSecretRequired extends BadRequest {
-  id: string = 'SECURE_SECRET_REQUIRED';
-  message: string = 'A secure secret is required.';
+  override id: string = 'SECURE_SECRET_REQUIRED';
+  override message: string = 'A secure secret is required.';
 }
 export class SendAsPeerInvalid extends BadRequest {
-  id: string = 'SEND_AS_PEER_INVALID';
-  message: string = "You can't send messages as the specified peer.";
+  override id: string = 'SEND_AS_PEER_INVALID';
+  override message: string = "You can't send messages as the specified peer.";
 }
 export class SendMessageMediaInvalid extends BadRequest {
-  id: string = 'SEND_MESSAGE_MEDIA_INVALID';
-  message: string = 'Invalid media provided.';
+  override id: string = 'SEND_MESSAGE_MEDIA_INVALID';
+  override message: string = 'Invalid media provided.';
 }
 export class SendMessageTypeInvalid extends BadRequest {
-  id: string = 'SEND_MESSAGE_TYPE_INVALID';
-  message: string = 'The message type is invalid.';
+  override id: string = 'SEND_MESSAGE_TYPE_INVALID';
+  override message: string = 'The message type is invalid.';
 }
 export class SessionTooFresh extends BadRequest {
-  id: string = 'SESSION_TOO_FRESH_X';
-  message: string =
+  override id: string = 'SESSION_TOO_FRESH_X';
+  override message: string =
     'This session was created less than 24 hours ago, try again in {value} seconds.';
 }
 export class SettingsInvalid extends BadRequest {
-  id: string = 'SETTINGS_INVALID';
-  message: string = 'Invalid settings were provided.';
+  override id: string = 'SETTINGS_INVALID';
+  override message: string = 'Invalid settings were provided.';
 }
 export class Sha256HashInvalid extends BadRequest {
-  id: string = 'SHA256_HASH_INVALID';
-  message: string = 'The provided SHA256 hash is invalid.';
+  override id: string = 'SHA256_HASH_INVALID';
+  override message: string = 'The provided SHA256 hash is invalid.';
 }
 export class ShortcutInvalid extends BadRequest {
-  id: string = 'SHORTCUT_INVALID';
-  message: string = 'The specified shortcut is invalid.';
+  override id: string = 'SHORTCUT_INVALID';
+  override message: string = 'The specified shortcut is invalid.';
 }
 export class ShortnameOccupyFailed extends BadRequest {
-  id: string = 'SHORTNAME_OCCUPY_FAILED';
-  message: string =
+  override id: string = 'SHORTNAME_OCCUPY_FAILED';
+  override message: string =
     'An error occurred when trying to register the short-name used for the sticker pack. Try a different name';
 }
 export class ShortNameInvalid extends BadRequest {
-  id: string = 'SHORT_NAME_INVALID';
-  message: string = 'The specified short name is invalid.';
+  override id: string = 'SHORT_NAME_INVALID';
+  override message: string = 'The specified short name is invalid.';
 }
 export class ShortNameOccupied extends BadRequest {
-  id: string = 'SHORT_NAME_OCCUPIED';
-  message: string = 'The specified short name is already in use.';
+  override id: string = 'SHORT_NAME_OCCUPIED';
+  override message: string = 'The specified short name is already in use.';
 }
 export class SlotsEmpty extends BadRequest {
-  id: string = 'SLOTS_EMPTY';
-  message: string = 'The specified slot list is empty.';
+  override id: string = 'SLOTS_EMPTY';
+  override message: string = 'The specified slot list is empty.';
 }
 export class SlowmodeMultiMsgsDisabled extends BadRequest {
-  id: string = 'SLOWMODE_MULTI_MSGS_DISABLED';
-  message: string = 'Slowmode is enabled, you cannot forward multiple messages to this group.';
+  override id: string = 'SLOWMODE_MULTI_MSGS_DISABLED';
+  override message: string =
+    'Slowmode is enabled, you cannot forward multiple messages to this group.';
 }
 export class SlugInvalid extends BadRequest {
-  id: string = 'SLUG_INVALID';
-  message: string = 'The specified invoice slug is invalid.';
+  override id: string = 'SLUG_INVALID';
+  override message: string = 'The specified invoice slug is invalid.';
 }
 export class SmsjobIdInvalid extends BadRequest {
-  id: string = 'SMSJOB_ID_INVALID';
-  message: string = 'The specified job ID is invalid.';
+  override id: string = 'SMSJOB_ID_INVALID';
+  override message: string = 'The specified job ID is invalid.';
 }
 export class SmsCodeCreateFailed extends BadRequest {
-  id: string = 'SMS_CODE_CREATE_FAILED';
-  message: string = 'An error occurred while creating the SMS code.';
+  override id: string = 'SMS_CODE_CREATE_FAILED';
+  override message: string = 'An error occurred while creating the SMS code.';
 }
 export class SrpIdInvalid extends BadRequest {
-  id: string = 'SRP_ID_INVALID';
-  message: string = 'Invalid SRP ID provided.';
+  override id: string = 'SRP_ID_INVALID';
+  override message: string = 'Invalid SRP ID provided.';
 }
 export class SrpPasswordChanged extends BadRequest {
-  id: string = 'SRP_PASSWORD_CHANGED';
-  message: string = 'Password has changed.';
+  override id: string = 'SRP_PASSWORD_CHANGED';
+  override message: string = 'Password has changed.';
 }
 export class StartParamEmpty extends BadRequest {
-  id: string = 'START_PARAM_EMPTY';
-  message: string = 'The start parameter is empty.';
+  override id: string = 'START_PARAM_EMPTY';
+  override message: string = 'The start parameter is empty.';
 }
 export class StartParamInvalid extends BadRequest {
-  id: string = 'START_PARAM_INVALID';
-  message: string = 'Start parameter invalid.';
+  override id: string = 'START_PARAM_INVALID';
+  override message: string = 'Start parameter invalid.';
 }
 export class StartParamTooLong extends BadRequest {
-  id: string = 'START_PARAM_TOO_LONG';
-  message: string = 'Start parameter is too long.';
+  override id: string = 'START_PARAM_TOO_LONG';
+  override message: string = 'Start parameter is too long.';
 }
 export class StickerpackStickersTooMuch extends BadRequest {
-  id: string = 'STICKERPACK_STICKERS_TOO_MUCH';
-  message: string = "There are too many stickers in this stickerpack, you can't add any more.";
+  override id: string = 'STICKERPACK_STICKERS_TOO_MUCH';
+  override message: string =
+    "There are too many stickers in this stickerpack, you can't add any more.";
 }
 export class StickersetInvalid extends BadRequest {
-  id: string = 'STICKERSET_INVALID';
-  message: string = 'The provided sticker set is invalid.';
+  override id: string = 'STICKERSET_INVALID';
+  override message: string = 'The provided sticker set is invalid.';
 }
 export class StickersetNotModified extends BadRequest {
-  id: string = 'STICKERSET_NOT_MODIFIED';
-  message: string = 'The passed stickerset information is equal to the current information.';
+  override id: string = 'STICKERSET_NOT_MODIFIED';
+  override message: string =
+    'The passed stickerset information is equal to the current information.';
 }
 export class StickersEmpty extends BadRequest {
-  id: string = 'STICKERS_EMPTY';
-  message: string = 'No sticker provided.';
+  override id: string = 'STICKERS_EMPTY';
+  override message: string = 'No sticker provided.';
 }
 export class StickersTooMuch extends BadRequest {
-  id: string = 'STICKERS_TOO_MUCH';
-  message: string = "There are too many stickers in this stickerpack, you can't add any more.";
+  override id: string = 'STICKERS_TOO_MUCH';
+  override message: string =
+    "There are too many stickers in this stickerpack, you can't add any more.";
 }
 export class StickerDocumentInvalid extends BadRequest {
-  id: string = 'STICKER_DOCUMENT_INVALID';
-  message: string = 'The specified sticker document is invalid.';
+  override id: string = 'STICKER_DOCUMENT_INVALID';
+  override message: string = 'The specified sticker document is invalid.';
 }
 export class StickerEmojiInvalid extends BadRequest {
-  id: string = 'STICKER_EMOJI_INVALID';
-  message: string = 'Sticker emoji invalid.';
+  override id: string = 'STICKER_EMOJI_INVALID';
+  override message: string = 'Sticker emoji invalid.';
 }
 export class StickerFileInvalid extends BadRequest {
-  id: string = 'STICKER_FILE_INVALID';
-  message: string = 'Sticker file invalid.';
+  override id: string = 'STICKER_FILE_INVALID';
+  override message: string = 'Sticker file invalid.';
 }
 export class StickerGifDimensions extends BadRequest {
-  id: string = 'STICKER_GIF_DIMENSIONS';
-  message: string = 'The specified video sticker has invalid dimensions.';
+  override id: string = 'STICKER_GIF_DIMENSIONS';
+  override message: string = 'The specified video sticker has invalid dimensions.';
 }
 export class StickerIdInvalid extends BadRequest {
-  id: string = 'STICKER_ID_INVALID';
-  message: string = 'The provided sticker ID is invalid.';
+  override id: string = 'STICKER_ID_INVALID';
+  override message: string = 'The provided sticker ID is invalid.';
 }
 export class StickerInvalid extends BadRequest {
-  id: string = 'STICKER_INVALID';
-  message: string = 'The provided sticker is invalid.';
+  override id: string = 'STICKER_INVALID';
+  override message: string = 'The provided sticker is invalid.';
 }
 export class StickerMimeInvalid extends BadRequest {
-  id: string = 'STICKER_MIME_INVALID';
-  message: string = 'The specified sticker MIME type is invalid.';
+  override id: string = 'STICKER_MIME_INVALID';
+  override message: string = 'The specified sticker MIME type is invalid.';
 }
 export class StickerPngDimensions extends BadRequest {
-  id: string = 'STICKER_PNG_DIMENSIONS';
-  message: string = 'Sticker png dimensions invalid.';
+  override id: string = 'STICKER_PNG_DIMENSIONS';
+  override message: string = 'Sticker png dimensions invalid.';
 }
 export class StickerPngNopng extends BadRequest {
-  id: string = 'STICKER_PNG_NOPNG';
-  message: string = 'One of the specified stickers is not a valid PNG file.';
+  override id: string = 'STICKER_PNG_NOPNG';
+  override message: string = 'One of the specified stickers is not a valid PNG file.';
 }
 export class StickerTgsNodoc extends BadRequest {
-  id: string = 'STICKER_TGS_NODOC';
-  message: string = 'You must send the animated sticker as a document.';
+  override id: string = 'STICKER_TGS_NODOC';
+  override message: string = 'You must send the animated sticker as a document.';
 }
 export class StickerTgsNotgs extends BadRequest {
-  id: string = 'STICKER_TGS_NOTGS';
-  message: string = 'Invalid TGS sticker provided.';
+  override id: string = 'STICKER_TGS_NOTGS';
+  override message: string = 'Invalid TGS sticker provided.';
 }
 export class StickerThumbPngNopng extends BadRequest {
-  id: string = 'STICKER_THUMB_PNG_NOPNG';
-  message: string = 'Incorrect stickerset thumb file provided, PNG / WEBP expected.';
+  override id: string = 'STICKER_THUMB_PNG_NOPNG';
+  override message: string = 'Incorrect stickerset thumb file provided, PNG / WEBP expected.';
 }
 export class StickerThumbTgsNotgs extends BadRequest {
-  id: string = 'STICKER_THUMB_TGS_NOTGS';
-  message: string = 'Incorrect stickerset TGS thumb file provided.';
+  override id: string = 'STICKER_THUMB_TGS_NOTGS';
+  override message: string = 'Incorrect stickerset TGS thumb file provided.';
 }
 export class StickerVideoBig extends BadRequest {
-  id: string = 'STICKER_VIDEO_BIG';
-  message: string = 'The specified video sticker is too big.';
+  override id: string = 'STICKER_VIDEO_BIG';
+  override message: string = 'The specified video sticker is too big.';
 }
 export class StickerVideoNodoc extends BadRequest {
-  id: string = 'STICKER_VIDEO_NODOC';
-  message: string = 'You must send the video sticker as a document.';
+  override id: string = 'STICKER_VIDEO_NODOC';
+  override message: string = 'You must send the video sticker as a document.';
 }
 export class StickerVideoNowebm extends BadRequest {
-  id: string = 'STICKER_VIDEO_NOWEBM';
-  message: string = 'The specified video sticker is not in webm format.';
+  override id: string = 'STICKER_VIDEO_NOWEBM';
+  override message: string = 'The specified video sticker is not in webm format.';
 }
 export class StoriesNeverCreated extends BadRequest {
-  id: string = 'STORIES_NEVER_CREATED';
-  message: string = "This peer hasn't ever posted any stories.";
+  override id: string = 'STORIES_NEVER_CREATED';
+  override message: string = "This peer hasn't ever posted any stories.";
 }
 export class StoriesTooMuch extends BadRequest {
-  id: string = 'STORIES_TOO_MUCH';
-  message: string =
+  override id: string = 'STORIES_TOO_MUCH';
+  override message: string =
     'You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](https://core.telegram.org/api/premium) subscription, delete an active story, or wait for the oldest story to expire.';
 }
 export class StoryIdEmpty extends BadRequest {
-  id: string = 'STORY_ID_EMPTY';
-  message: string = 'You specified no story IDs.';
+  override id: string = 'STORY_ID_EMPTY';
+  override message: string = 'You specified no story IDs.';
 }
 export class StoryIdInvalid extends BadRequest {
-  id: string = 'STORY_ID_INVALID';
-  message: string = 'The specified story ID is invalid.';
+  override id: string = 'STORY_ID_INVALID';
+  override message: string = 'The specified story ID is invalid.';
 }
 export class StoryNotModified extends BadRequest {
-  id: string = 'STORY_NOT_MODIFIED';
-  message: string =
+  override id: string = 'STORY_NOT_MODIFIED';
+  override message: string =
     "The new story information you passed is equal to the previous story information, thus it wasn't modified.";
 }
 export class StoryPeriodInvalid extends BadRequest {
-  id: string = 'STORY_PERIOD_INVALID';
-  message: string = 'The specified story period is invalid for this account.';
+  override id: string = 'STORY_PERIOD_INVALID';
+  override message: string = 'The specified story period is invalid for this account.';
 }
 export class StorySendFloodMonthly extends BadRequest {
-  id: string = 'STORY_SEND_FLOOD_MONTHLY_X';
-  message: string =
+  override id: string = 'STORY_SEND_FLOOD_MONTHLY_X';
+  override message: string =
     "You've hit the monthly story limit as specified by the [`stories_sent_monthly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-monthly-limit-default): wait for the specified number of seconds before posting a new story.";
 }
 export class StorySendFloodWeekly extends BadRequest {
-  id: string = 'STORY_SEND_FLOOD_WEEKLY_X';
-  message: string =
+  override id: string = 'STORY_SEND_FLOOD_WEEKLY_X';
+  override message: string =
     "You've hit the weekly story limit as specified by the [`stories_sent_weekly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-weekly-limit-default): wait for the specified number of seconds before posting a new story.";
 }
 export class SwitchPmTextEmpty extends BadRequest {
-  id: string = 'SWITCH_PM_TEXT_EMPTY';
-  message: string = 'The switch_pm.text field was empty.';
+  override id: string = 'SWITCH_PM_TEXT_EMPTY';
+  override message: string = 'The switch_pm.text field was empty.';
 }
 export class SwitchWebviewUrlInvalid extends BadRequest {
-  id: string = 'SWITCH_WEBVIEW_URL_INVALID';
-  message: string = 'The URL specified in switch_webview.url is invalid!';
+  override id: string = 'SWITCH_WEBVIEW_URL_INVALID';
+  override message: string = 'The URL specified in switch_webview.url is invalid!';
 }
 export class TakeoutInvalid extends BadRequest {
-  id: string = 'TAKEOUT_INVALID';
-  message: string = 'The specified takeout ID is invalid.';
+  override id: string = 'TAKEOUT_INVALID';
+  override message: string = 'The specified takeout ID is invalid.';
 }
 export class TakeoutRequired extends BadRequest {
-  id: string = 'TAKEOUT_REQUIRED';
-  message: string =
+  override id: string = 'TAKEOUT_REQUIRED';
+  override message: string =
     'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).';
 }
 export class TaskAlreadyExists extends BadRequest {
-  id: string = 'TASK_ALREADY_EXISTS';
-  message: string = 'An email reset was already requested.';
+  override id: string = 'TASK_ALREADY_EXISTS';
+  override message: string = 'An email reset was already requested.';
 }
 export class TempAuthKeyAlreadyBound extends BadRequest {
-  id: string = 'TEMP_AUTH_KEY_ALREADY_BOUND';
-  message: string = 'The passed temporary key is already bound to another **perm_auth_key_id**.';
+  override id: string = 'TEMP_AUTH_KEY_ALREADY_BOUND';
+  override message: string =
+    'The passed temporary key is already bound to another **perm_auth_key_id**.';
 }
 export class TempAuthKeyEmpty extends BadRequest {
-  id: string = 'TEMP_AUTH_KEY_EMPTY';
-  message: string = 'No temporary auth key provided.';
+  override id: string = 'TEMP_AUTH_KEY_EMPTY';
+  override message: string = 'No temporary auth key provided.';
 }
 export class ThemeFileInvalid extends BadRequest {
-  id: string = 'THEME_FILE_INVALID';
-  message: string = 'Invalid theme file provided.';
+  override id: string = 'THEME_FILE_INVALID';
+  override message: string = 'Invalid theme file provided.';
 }
 export class ThemeFormatInvalid extends BadRequest {
-  id: string = 'THEME_FORMAT_INVALID';
-  message: string = 'Invalid theme format provided.';
+  override id: string = 'THEME_FORMAT_INVALID';
+  override message: string = 'Invalid theme format provided.';
 }
 export class ThemeInvalid extends BadRequest {
-  id: string = 'THEME_INVALID';
-  message: string = 'Invalid theme provided.';
+  override id: string = 'THEME_INVALID';
+  override message: string = 'Invalid theme provided.';
 }
 export class ThemeMimeInvalid extends BadRequest {
-  id: string = 'THEME_MIME_INVALID';
-  message: string = "The theme's MIME type is invalid.";
+  override id: string = 'THEME_MIME_INVALID';
+  override message: string = "The theme's MIME type is invalid.";
 }
 export class ThemeTitleInvalid extends BadRequest {
-  id: string = 'THEME_TITLE_INVALID';
-  message: string = 'The specified theme title is invalid.';
+  override id: string = 'THEME_TITLE_INVALID';
+  override message: string = 'The specified theme title is invalid.';
 }
 export class TimezoneInvalid extends BadRequest {
-  id: string = 'TIMEZONE_INVALID';
-  message: string = 'The specified timezone does not exist.';
+  override id: string = 'TIMEZONE_INVALID';
+  override message: string = 'The specified timezone does not exist.';
 }
 export class TitleInvalid extends BadRequest {
-  id: string = 'TITLE_INVALID';
-  message: string = 'The specified stickerpack title is invalid.';
+  override id: string = 'TITLE_INVALID';
+  override message: string = 'The specified stickerpack title is invalid.';
 }
 export class TmpPasswordDisabled extends BadRequest {
-  id: string = 'TMP_PASSWORD_DISABLED';
-  message: string = 'The temporary password is disabled.';
+  override id: string = 'TMP_PASSWORD_DISABLED';
+  override message: string = 'The temporary password is disabled.';
 }
 export class TmpPasswordInvalid extends BadRequest {
-  id: string = 'TMP_PASSWORD_INVALID';
-  message: string = 'The passed tmp_password is invalid.';
+  override id: string = 'TMP_PASSWORD_INVALID';
+  override message: string = 'The passed tmp_password is invalid.';
 }
 export class TokenEmpty extends BadRequest {
-  id: string = 'TOKEN_EMPTY';
-  message: string = 'The specified token is empty.';
+  override id: string = 'TOKEN_EMPTY';
+  override message: string = 'The specified token is empty.';
 }
 export class TokenInvalid extends BadRequest {
-  id: string = 'TOKEN_INVALID';
-  message: string = 'The provided token is invalid.';
+  override id: string = 'TOKEN_INVALID';
+  override message: string = 'The provided token is invalid.';
 }
 export class TokenTypeInvalid extends BadRequest {
-  id: string = 'TOKEN_TYPE_INVALID';
-  message: string = 'The specified token type is invalid.';
+  override id: string = 'TOKEN_TYPE_INVALID';
+  override message: string = 'The specified token type is invalid.';
 }
 export class TopicsEmpty extends BadRequest {
-  id: string = 'TOPICS_EMPTY';
-  message: string = 'You specified no topic IDs.';
+  override id: string = 'TOPICS_EMPTY';
+  override message: string = 'You specified no topic IDs.';
 }
 export class TopicClosed extends BadRequest {
-  id: string = 'TOPIC_CLOSED';
-  message: string = "This topic was closed, you can't send messages to it anymore.";
+  override id: string = 'TOPIC_CLOSED';
+  override message: string = "This topic was closed, you can't send messages to it anymore.";
 }
 export class TopicCloseSeparately extends BadRequest {
-  id: string = 'TOPIC_CLOSE_SEPARATELY';
-  message: string = 'The `close` flag cannot be provided together with any of the other flags.';
+  override id: string = 'TOPIC_CLOSE_SEPARATELY';
+  override message: string =
+    'The `close` flag cannot be provided together with any of the other flags.';
 }
 export class TopicDeleted extends BadRequest {
-  id: string = 'TOPIC_DELETED';
-  message: string = 'The specified topic was deleted.';
+  override id: string = 'TOPIC_DELETED';
+  override message: string = 'The specified topic was deleted.';
 }
 export class TopicHideSeparately extends BadRequest {
-  id: string = 'TOPIC_HIDE_SEPARATELY';
-  message: string = 'The `hide` flag cannot be provided together with any of the other flags.';
+  override id: string = 'TOPIC_HIDE_SEPARATELY';
+  override message: string =
+    'The `hide` flag cannot be provided together with any of the other flags.';
 }
 export class TopicIdInvalid extends BadRequest {
-  id: string = 'TOPIC_ID_INVALID';
-  message: string = 'The specified topic ID is invalid.';
+  override id: string = 'TOPIC_ID_INVALID';
+  override message: string = 'The specified topic ID is invalid.';
 }
 export class TopicNotModified extends BadRequest {
-  id: string = 'TOPIC_NOT_MODIFIED';
-  message: string =
+  override id: string = 'TOPIC_NOT_MODIFIED';
+  override message: string =
     'The updated topic info is equal to the current topic info, nothing was changed.';
 }
 export class TopicTitleEmpty extends BadRequest {
-  id: string = 'TOPIC_TITLE_EMPTY';
-  message: string = 'The specified topic title is empty.';
+  override id: string = 'TOPIC_TITLE_EMPTY';
+  override message: string = 'The specified topic title is empty.';
 }
 export class ToLangInvalid extends BadRequest {
-  id: string = 'TO_LANG_INVALID';
-  message: string = 'The specified destination language is invalid.';
+  override id: string = 'TO_LANG_INVALID';
+  override message: string = 'The specified destination language is invalid.';
 }
 export class TranscriptionFailed extends BadRequest {
-  id: string = 'TRANSCRIPTION_FAILED';
-  message: string = 'Audio transcription failed.';
+  override id: string = 'TRANSCRIPTION_FAILED';
+  override message: string = 'Audio transcription failed.';
 }
 export class TranslateReqQuotaExceeded extends BadRequest {
-  id: string = 'TRANSLATE_REQ_QUOTA_EXCEEDED';
-  message: string =
+  override id: string = 'TRANSLATE_REQ_QUOTA_EXCEEDED';
+  override message: string =
     'Translation is currently unavailable due to a temporary server-side lack of resources.';
 }
 export class TtlDaysInvalid extends BadRequest {
-  id: string = 'TTL_DAYS_INVALID';
-  message: string = 'The provided TTL is invalid.';
+  override id: string = 'TTL_DAYS_INVALID';
+  override message: string = 'The provided TTL is invalid.';
 }
 export class TtlMediaInvalid extends BadRequest {
-  id: string = 'TTL_MEDIA_INVALID';
-  message: string = 'Invalid media Time To Live was provided.';
+  override id: string = 'TTL_MEDIA_INVALID';
+  override message: string = 'Invalid media Time To Live was provided.';
 }
 export class TtlPeriodInvalid extends BadRequest {
-  id: string = 'TTL_PERIOD_INVALID';
-  message: string = 'The specified TTL period is invalid.';
+  override id: string = 'TTL_PERIOD_INVALID';
+  override message: string = 'The specified TTL period is invalid.';
 }
 export class TypesEmpty extends BadRequest {
-  id: string = 'TYPES_EMPTY';
-  message: string = 'No top peer type was provided.';
+  override id: string = 'TYPES_EMPTY';
+  override message: string = 'No top peer type was provided.';
 }
 export class TypeConstructorInvalid extends BadRequest {
-  id: string = 'TYPE_CONSTRUCTOR_INVALID';
-  message: string = 'The type constructor is invalid';
+  override id: string = 'TYPE_CONSTRUCTOR_INVALID';
+  override message: string = 'The type constructor is invalid';
 }
 export class UntilDateInvalid extends BadRequest {
-  id: string = 'UNTIL_DATE_INVALID';
-  message: string = 'Invalid until date provided.';
+  override id: string = 'UNTIL_DATE_INVALID';
+  override message: string = 'Invalid until date provided.';
 }
 export class UrlInvalid extends BadRequest {
-  id: string = 'URL_INVALID';
-  message: string = 'Invalid URL provided.';
+  override id: string = 'URL_INVALID';
+  override message: string = 'Invalid URL provided.';
 }
 export class UsageLimitInvalid extends BadRequest {
-  id: string = 'USAGE_LIMIT_INVALID';
-  message: string = 'The specified usage limit is invalid.';
+  override id: string = 'USAGE_LIMIT_INVALID';
+  override message: string = 'The specified usage limit is invalid.';
 }
 export class UsernamesActiveTooMuch extends BadRequest {
-  id: string = 'USERNAMES_ACTIVE_TOO_MUCH';
-  message: string = 'The maximum number of active usernames was reached.';
+  override id: string = 'USERNAMES_ACTIVE_TOO_MUCH';
+  override message: string = 'The maximum number of active usernames was reached.';
 }
 export class UsernameInvalid extends BadRequest {
-  id: string = 'USERNAME_INVALID';
-  message: string = 'The provided username is not valid.';
+  override id: string = 'USERNAME_INVALID';
+  override message: string = 'The provided username is not valid.';
 }
 export class UsernameNotModified extends BadRequest {
-  id: string = 'USERNAME_NOT_MODIFIED';
-  message: string = 'The username was not modified.';
+  override id: string = 'USERNAME_NOT_MODIFIED';
+  override message: string = 'The username was not modified.';
 }
 export class UsernameNotOccupied extends BadRequest {
-  id: string = 'USERNAME_NOT_OCCUPIED';
-  message: string = 'The provided username is not occupied.';
+  override id: string = 'USERNAME_NOT_OCCUPIED';
+  override message: string = 'The provided username is not occupied.';
 }
 export class UsernameOccupied extends BadRequest {
-  id: string = 'USERNAME_OCCUPIED';
-  message: string = 'The provided username is already occupied.';
+  override id: string = 'USERNAME_OCCUPIED';
+  override message: string = 'The provided username is already occupied.';
 }
 export class UsernamePurchaseAvailable extends BadRequest {
-  id: string = 'USERNAME_PURCHASE_AVAILABLE';
-  message: string = 'The specified username can be purchased on https://fragment.com.';
+  override id: string = 'USERNAME_PURCHASE_AVAILABLE';
+  override message: string = 'The specified username can be purchased on https://fragment.com.';
 }
 export class UserpicUploadRequired extends BadRequest {
-  id: string = 'USERPIC_UPLOAD_REQUIRED';
-  message: string = 'You must have a profile picture to publish your geolocation.';
+  override id: string = 'USERPIC_UPLOAD_REQUIRED';
+  override message: string = 'You must have a profile picture to publish your geolocation.';
 }
 export class UsersTooFew extends BadRequest {
-  id: string = 'USERS_TOO_FEW';
-  message: string = 'Not enough users (to create a chat, for example).';
+  override id: string = 'USERS_TOO_FEW';
+  override message: string = 'Not enough users (to create a chat, for example).';
 }
 export class UsersTooMuch extends BadRequest {
-  id: string = 'USERS_TOO_MUCH';
-  message: string =
+  override id: string = 'USERS_TOO_MUCH';
+  override message: string =
     'The maximum number of users has been exceeded (to create a chat, for example).';
 }
 export class UserAdminInvalid extends BadRequest {
-  id: string = 'USER_ADMIN_INVALID';
-  message: string = "You're not an admin.";
+  override id: string = 'USER_ADMIN_INVALID';
+  override message: string = "You're not an admin.";
 }
 export class UserAlreadyInvited extends BadRequest {
-  id: string = 'USER_ALREADY_INVITED';
-  message: string = 'You have already invited this user.';
+  override id: string = 'USER_ALREADY_INVITED';
+  override message: string = 'You have already invited this user.';
 }
 export class UserAlreadyParticipant extends BadRequest {
-  id: string = 'USER_ALREADY_PARTICIPANT';
-  message: string = 'The user is already in the group.';
+  override id: string = 'USER_ALREADY_PARTICIPANT';
+  override message: string = 'The user is already in the group.';
 }
 export class UserBannedInChannel extends BadRequest {
-  id: string = 'USER_BANNED_IN_CHANNEL';
-  message: string = "You're banned from sending messages in supergroups/channels.";
+  override id: string = 'USER_BANNED_IN_CHANNEL';
+  override message: string = "You're banned from sending messages in supergroups/channels.";
 }
 export class UserBlocked extends BadRequest {
-  id: string = 'USER_BLOCKED';
-  message: string = 'User blocked.';
+  override id: string = 'USER_BLOCKED';
+  override message: string = 'User blocked.';
 }
 export class UserBot extends BadRequest {
-  id: string = 'USER_BOT';
-  message: string = 'Bots can only be admins in channels.';
+  override id: string = 'USER_BOT';
+  override message: string = 'Bots can only be admins in channels.';
 }
 export class UserBotInvalid extends BadRequest {
-  id: string = 'USER_BOT_INVALID';
-  message: string =
+  override id: string = 'USER_BOT_INVALID';
+  override message: string =
     'User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.';
 }
 export class UserBotRequired extends BadRequest {
-  id: string = 'USER_BOT_REQUIRED';
-  message: string = 'This method can only be called by a bot.';
+  override id: string = 'USER_BOT_REQUIRED';
+  override message: string = 'This method can only be called by a bot.';
 }
 export class UserChannelsTooMuch extends BadRequest {
-  id: string = 'USER_CHANNELS_TOO_MUCH';
-  message: string =
+  override id: string = 'USER_CHANNELS_TOO_MUCH';
+  override message: string =
     'One of the users you tried to add is already in too many channels/supergroups.';
 }
 export class UserCreator extends BadRequest {
-  id: string = 'USER_CREATOR';
-  message: string =
+  override id: string = 'USER_CREATOR';
+  override message: string =
     "For channels.editAdmin: you've tried to edit the admin rights of the owner, but you're not the owner; for channels.leaveChannel: you can't leave this channel, because you're its creator.";
 }
 export class UserIdInvalid extends BadRequest {
-  id: string = 'USER_ID_INVALID';
-  message: string = 'The provided user ID is invalid.';
+  override id: string = 'USER_ID_INVALID';
+  override message: string = 'The provided user ID is invalid.';
 }
 export class UserInvalid extends BadRequest {
-  id: string = 'USER_INVALID';
-  message: string = 'Invalid user provided.';
+  override id: string = 'USER_INVALID';
+  override message: string = 'Invalid user provided.';
 }
 export class UserIsBlocked extends BadRequest {
-  id: string = 'USER_IS_BLOCKED';
-  message: string = 'You were blocked by this user.';
+  override id: string = 'USER_IS_BLOCKED';
+  override message: string = 'You were blocked by this user.';
 }
 export class UserIsBot extends BadRequest {
-  id: string = 'USER_IS_BOT';
-  message: string = "Bots can't send messages to other bots.";
+  override id: string = 'USER_IS_BOT';
+  override message: string = "Bots can't send messages to other bots.";
 }
 export class UserKicked extends BadRequest {
-  id: string = 'USER_KICKED';
-  message: string = 'This user was kicked from this supergroup/channel.';
+  override id: string = 'USER_KICKED';
+  override message: string = 'This user was kicked from this supergroup/channel.';
 }
 export class UserNotMutualContact extends BadRequest {
-  id: string = 'USER_NOT_MUTUAL_CONTACT';
-  message: string = 'The provided user is not a mutual contact.';
+  override id: string = 'USER_NOT_MUTUAL_CONTACT';
+  override message: string = 'The provided user is not a mutual contact.';
 }
 export class UserNotParticipant extends BadRequest {
-  id: string = 'USER_NOT_PARTICIPANT';
-  message: string = "You're not a member of this supergroup/channel.";
+  override id: string = 'USER_NOT_PARTICIPANT';
+  override message: string = "You're not a member of this supergroup/channel.";
 }
 export class UserPublicMissing extends BadRequest {
-  id: string = 'USER_PUBLIC_MISSING';
-  message: string = 'Cannot generate a link to stories posted by a peer without a username.';
+  override id: string = 'USER_PUBLIC_MISSING';
+  override message: string =
+    'Cannot generate a link to stories posted by a peer without a username.';
 }
 export class UserVolumeInvalid extends BadRequest {
-  id: string = 'USER_VOLUME_INVALID';
-  message: string = 'The specified user volume is invalid.';
+  override id: string = 'USER_VOLUME_INVALID';
+  override message: string = 'The specified user volume is invalid.';
 }
 export class VenueIdInvalid extends BadRequest {
-  id: string = 'VENUE_ID_INVALID';
-  message: string = 'The specified venue ID is invalid.';
+  override id: string = 'VENUE_ID_INVALID';
+  override message: string = 'The specified venue ID is invalid.';
 }
 export class VideoContentTypeInvalid extends BadRequest {
-  id: string = 'VIDEO_CONTENT_TYPE_INVALID';
-  message: string = "The video's content type is invalid.";
+  override id: string = 'VIDEO_CONTENT_TYPE_INVALID';
+  override message: string = "The video's content type is invalid.";
 }
 export class VideoFileInvalid extends BadRequest {
-  id: string = 'VIDEO_FILE_INVALID';
-  message: string = 'The specified video file is invalid.';
+  override id: string = 'VIDEO_FILE_INVALID';
+  override message: string = 'The specified video file is invalid.';
 }
 export class VideoPauseForbidden extends BadRequest {
-  id: string = 'VIDEO_PAUSE_FORBIDDEN';
-  message: string = 'You cannot pause the video stream.';
+  override id: string = 'VIDEO_PAUSE_FORBIDDEN';
+  override message: string = 'You cannot pause the video stream.';
 }
 export class VideoStopForbidden extends BadRequest {
-  id: string = 'VIDEO_STOP_FORBIDDEN';
-  message: string = 'You cannot stop the video stream.';
+  override id: string = 'VIDEO_STOP_FORBIDDEN';
+  override message: string = 'You cannot stop the video stream.';
 }
 export class VideoTitleEmpty extends BadRequest {
-  id: string = 'VIDEO_TITLE_EMPTY';
-  message: string = 'The specified video title is empty.';
+  override id: string = 'VIDEO_TITLE_EMPTY';
+  override message: string = 'The specified video title is empty.';
 }
 export class VoiceMessagesForbidden extends BadRequest {
-  id: string = 'VOICE_MESSAGES_FORBIDDEN';
-  message: string = "This user's privacy settings forbid you from sending voice messages.";
+  override id: string = 'VOICE_MESSAGES_FORBIDDEN';
+  override message: string = "This user's privacy settings forbid you from sending voice messages.";
 }
 export class VolumeLocNotFound extends BadRequest {
-  id: string = 'VOLUME_LOC_NOT_FOUND';
-  message: string = "The volume location can't be found";
+  override id: string = 'VOLUME_LOC_NOT_FOUND';
+  override message: string = "The volume location can't be found";
 }
 export class WallpaperFileInvalid extends BadRequest {
-  id: string = 'WALLPAPER_FILE_INVALID';
-  message: string = 'The specified wallpaper file is invalid.';
+  override id: string = 'WALLPAPER_FILE_INVALID';
+  override message: string = 'The specified wallpaper file is invalid.';
 }
 export class WallpaperInvalid extends BadRequest {
-  id: string = 'WALLPAPER_INVALID';
-  message: string = 'The specified wallpaper is invalid.';
+  override id: string = 'WALLPAPER_INVALID';
+  override message: string = 'The specified wallpaper is invalid.';
 }
 export class WallpaperMimeInvalid extends BadRequest {
-  id: string = 'WALLPAPER_MIME_INVALID';
-  message: string = 'The specified wallpaper MIME type is invalid.';
+  override id: string = 'WALLPAPER_MIME_INVALID';
+  override message: string = 'The specified wallpaper MIME type is invalid.';
 }
 export class WallpaperNotFound extends BadRequest {
-  id: string = 'WALLPAPER_NOT_FOUND';
-  message: string = 'The specified wallpaper could not be found.';
+  override id: string = 'WALLPAPER_NOT_FOUND';
+  override message: string = 'The specified wallpaper could not be found.';
 }
 export class WcConvertUrlInvalid extends BadRequest {
-  id: string = 'WC_CONVERT_URL_INVALID';
-  message: string = 'WC convert URL invalid.';
+  override id: string = 'WC_CONVERT_URL_INVALID';
+  override message: string = 'WC convert URL invalid.';
 }
 export class WebdocumentInvalid extends BadRequest {
-  id: string = 'WEBDOCUMENT_INVALID';
-  message: string = 'Invalid webdocument URL provided.';
+  override id: string = 'WEBDOCUMENT_INVALID';
+  override message: string = 'Invalid webdocument URL provided.';
 }
 export class WebdocumentMimeInvalid extends BadRequest {
-  id: string = 'WEBDOCUMENT_MIME_INVALID';
-  message: string = 'Invalid webdocument mime type provided.';
+  override id: string = 'WEBDOCUMENT_MIME_INVALID';
+  override message: string = 'Invalid webdocument mime type provided.';
 }
 export class WebdocumentSizeTooBig extends BadRequest {
-  id: string = 'WEBDOCUMENT_SIZE_TOO_BIG';
-  message: string = 'Webdocument is too big!';
+  override id: string = 'WEBDOCUMENT_SIZE_TOO_BIG';
+  override message: string = 'Webdocument is too big!';
 }
 export class WebdocumentUrlEmpty extends BadRequest {
-  id: string = 'WEBDOCUMENT_URL_EMPTY';
-  message: string = 'The passed web document URL is empty.';
+  override id: string = 'WEBDOCUMENT_URL_EMPTY';
+  override message: string = 'The passed web document URL is empty.';
 }
 export class WebdocumentUrlInvalid extends BadRequest {
-  id: string = 'WEBDOCUMENT_URL_INVALID';
-  message: string = 'The specified webdocument URL is invalid.';
+  override id: string = 'WEBDOCUMENT_URL_INVALID';
+  override message: string = 'The specified webdocument URL is invalid.';
 }
 export class WebpageCurlFailed extends BadRequest {
-  id: string = 'WEBPAGE_CURL_FAILED';
-  message: string = 'Failure while fetching the webpage with cURL.';
+  override id: string = 'WEBPAGE_CURL_FAILED';
+  override message: string = 'Failure while fetching the webpage with cURL.';
 }
 export class WebpageMediaEmpty extends BadRequest {
-  id: string = 'WEBPAGE_MEDIA_EMPTY';
-  message: string = 'Webpage media empty.';
+  override id: string = 'WEBPAGE_MEDIA_EMPTY';
+  override message: string = 'Webpage media empty.';
 }
 export class WebpageNotFound extends BadRequest {
-  id: string = 'WEBPAGE_NOT_FOUND';
-  message: string = 'A preview for the specified webpage `url` could not be generated.';
+  override id: string = 'WEBPAGE_NOT_FOUND';
+  override message: string = 'A preview for the specified webpage `url` could not be generated.';
 }
 export class WebpageUrlInvalid extends BadRequest {
-  id: string = 'WEBPAGE_URL_INVALID';
-  message: string = 'The specified webpage `url` is invalid.';
+  override id: string = 'WEBPAGE_URL_INVALID';
+  override message: string = 'The specified webpage `url` is invalid.';
 }
 export class WebpushAuthInvalid extends BadRequest {
-  id: string = 'WEBPUSH_AUTH_INVALID';
-  message: string = 'The specified web push authentication secret is invalid.';
+  override id: string = 'WEBPUSH_AUTH_INVALID';
+  override message: string = 'The specified web push authentication secret is invalid.';
 }
 export class WebpushKeyInvalid extends BadRequest {
-  id: string = 'WEBPUSH_KEY_INVALID';
-  message: string = 'The specified web push elliptic curve Diffie-Hellman public key is invalid.';
+  override id: string = 'WEBPUSH_KEY_INVALID';
+  override message: string =
+    'The specified web push elliptic curve Diffie-Hellman public key is invalid.';
 }
 export class WebpushTokenInvalid extends BadRequest {
-  id: string = 'WEBPUSH_TOKEN_INVALID';
-  message: string = 'The specified web push token is invalid.';
+  override id: string = 'WEBPUSH_TOKEN_INVALID';
+  override message: string = 'The specified web push token is invalid.';
 }
 export class YouBlockedUser extends BadRequest {
-  id: string = 'YOU_BLOCKED_USER';
-  message: string = 'You blocked this user.';
+  override id: string = 'YOU_BLOCKED_USER';
+  override message: string = 'You blocked this user.';
 }

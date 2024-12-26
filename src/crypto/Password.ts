@@ -8,22 +8,23 @@
  * it under the terms of the MIT License as published.
  */
 import { Raw } from '../raw/index.ts';
-import { crypto, Buffer } from '../platform.deno.ts';
+import { crypto, Buffer, type TypeBuffer } from '../platform.deno.ts';
 import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers.ts';
 
 /**
  * Create a sha256 hash.
  */
-function sha256(data: Buffer) {
+function sha256(data: TypeBuffer) {
   return crypto.createHash('sha256').update(data).digest();
 }
 /**
  * Xor the buffer A with B.
  */
-export function xor(a: Buffer, b: Buffer) {
-  const length = Math.min(a.length, b.length);
+export function xor(a: TypeBuffer, b: TypeBuffer) {
+  const length = Math.min(Buffer.byteLength(a), Buffer.byteLength(b));
   for (let i = 0; i < length; i++) {
-    a[i] = a[i] ^ b[i];
+    (a as unknown as Uint8Array)[i] =
+      (a as unknown as Uint8Array)[i] ^ (b as unknown as Uint8Array)[i];
   }
   return a;
 }
@@ -36,15 +37,29 @@ export function xor(a: Buffer, b: Buffer) {
 export function computePasswordHash(
   algo: Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
   password: string,
-): Buffer {
-  // @ts-ignore
-  let hash1 = sha256(Buffer.concat([algo.salt1, Buffer.from(password, 'utf8'), algo.salt1]));
-  // @ts-ignore
-  let hash2 = sha256(Buffer.concat([algo.salt2, hash1, algo.salt2]));
-  // @ts-ignore
-  let hash3 = crypto.pbkdf2Sync(hash2, algo.salt1, 100000, 64, 'sha512');
-  // @ts-ignore
-  return sha256(Buffer.concat([algo.salt2, hash3, algo.salt2]));
+): TypeBuffer {
+  const hash1 = sha256(
+    Buffer.concat([
+      algo.salt1 as unknown as Uint8Array,
+      Buffer.from(password, 'utf8') as unknown as Uint8Array,
+      algo.salt1 as unknown as Uint8Array,
+    ]),
+  );
+  const hash2 = sha256(
+    Buffer.concat([
+      algo.salt2 as unknown as Uint8Array,
+      hash1 as unknown as Uint8Array,
+      algo.salt2 as unknown as Uint8Array,
+    ]),
+  );
+  const hash3 = crypto.pbkdf2Sync(hash2, algo.salt1, 100000, 64, 'sha512');
+  return sha256(
+    Buffer.concat([
+      algo.salt2 as unknown as Uint8Array,
+      hash3 as unknown as Uint8Array,
+      algo.salt2 as unknown as Uint8Array,
+    ]),
+  );
 }
 /**
  * Check the plain password with current password.
@@ -55,25 +70,23 @@ export function computePasswordCheck(
   r: Raw.account.Password,
   password: string,
 ): Raw.InputCheckPasswordSRP {
-  let algo = r.currentAlgo as Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow;
-  // @ts-ignore
-  let pBytes = algo.p;
-  let p = btoi(pBytes);
-  // @ts-ignore
-  let g = algo.g;
-  let gBytes = itob(BigInt(g));
-  // @ts-ignore
-  let BBytes = r.srpB;
-  // @ts-ignore
-  let B = btoi(BBytes);
-  // @ts-ignore
-  let srpId = r.srpId;
-  let xBytes = computePasswordHash(algo, password);
-  let x = btoi(xBytes);
-  let gX = bigIntPow(BigInt(g), x, p);
-  let kBytes = sha256(Buffer.concat([pBytes, gBytes]));
-  let k = btoi(kBytes);
-  let kGX = bigIntMod(k * gX, p);
+  const algo =
+    r.currentAlgo as Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow;
+  const pBytes = algo.p;
+  const p = btoi(pBytes);
+  const g = algo.g;
+  const gBytes = itob(BigInt(g));
+  const BBytes = r.srpB;
+  const B = btoi(BBytes!);
+  const srpId = r.srpId;
+  const xBytes = computePasswordHash(algo, password);
+  const x = btoi(xBytes);
+  const gX = bigIntPow(BigInt(g), x, p);
+  const kBytes = sha256(
+    Buffer.concat([pBytes as unknown as Uint8Array, gBytes as unknown as Uint8Array]),
+  );
+  const k = btoi(kBytes);
+  const kGX = bigIntMod(k * gX, p);
   let aBytes;
   let a;
   let A;
@@ -84,43 +97,44 @@ export function computePasswordCheck(
     a = btoi(aBytes);
     A = bigIntPow(BigInt(g), a, p);
     ABytes = itob(A);
-    u = btoi(sha256(Buffer.concat([ABytes, BBytes])));
+    u = btoi(
+      sha256(Buffer.concat([ABytes as unknown as Uint8Array, BBytes as unknown as Uint8Array])),
+    );
     if (u > BigInt(0)) break;
   }
-  let gB = bigIntMod(B - kGX, p);
-  let uX = u * x;
-  let aUX = a + uX;
-  let S = bigIntPow(gB, aUX, p);
-  let SBytes = itob(S);
-  let KBytes = sha256(SBytes);
-  let M1Bytes = sha256(
+  const gB = bigIntMod(B - kGX, p);
+  const uX = u * x;
+  const aUX = a + uX;
+  const S = bigIntPow(gB, aUX, p);
+  const SBytes = itob(S);
+  const KBytes = sha256(SBytes);
+  const M1Bytes = sha256(
     Buffer.concat([
-      xor(sha256(pBytes), sha256(gBytes)),
-      sha256(algo.salt1),
-      sha256(algo.salt2),
-      ABytes,
-      BBytes,
-      KBytes,
+      xor(sha256(pBytes), sha256(gBytes)) as unknown as Uint8Array,
+      sha256(algo.salt1) as unknown as Uint8Array,
+      sha256(algo.salt2) as unknown as Uint8Array,
+      ABytes as unknown as Uint8Array,
+      BBytes as unknown as Uint8Array,
+      KBytes as unknown as Uint8Array,
     ]),
   );
   return new Raw.InputCheckPasswordSRP({
-    // @ts-ignore
-    srpId,
+    srpId: srpId!,
     a: ABytes,
     m1: M1Bytes,
   });
 }
 /**
  * Make a Big number from buffer.
- * @param {Buffer} b - Buffer will be converted to big number.
+ * @param {TypeBuffer} b - Buffer will be converted to big number.
  */
-function btoi(b: Buffer): bigint {
+function btoi(b: TypeBuffer): bigint {
   return bufferToBigint(b, false);
 }
 /**
  * Make a large bytes from big number.
  * @param {BigInt} i - Big Number will be converted to large bytes.
  */
-function itob(i: bigint): Buffer {
+function itob(i: bigint): TypeBuffer {
   return bigintToBuffer(i, 256, false);
 }

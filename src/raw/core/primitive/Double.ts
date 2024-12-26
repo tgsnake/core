@@ -10,11 +10,11 @@
 
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
-import { Buffer } from '../../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
 
 export class Double extends TLObject {
-  static write(value: number, little: boolean = true): Buffer {
-    let buffer = Buffer.alloc(8);
+  static override write(value: number, little: boolean = true): TypeBuffer {
+    const buffer = Buffer.alloc(8);
     if (little) {
       buffer.writeDoubleLE(value);
     } else {
@@ -22,7 +22,7 @@ export class Double extends TLObject {
     }
     return buffer;
   }
-  static async read(data: BytesIO, little: boolean = true): Promise<number> {
+  static override async read(data: BytesIO, little: boolean = true): Promise<number> {
     if (little) {
       return data.readDoubleLE();
     }

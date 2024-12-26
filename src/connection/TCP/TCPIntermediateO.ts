@@ -10,7 +10,7 @@
 
 import { TCP } from './tcp.ts';
 import { includesBuffer, sliceBuffer } from '../../helpers.ts';
-import { crypto, Buffer } from '../../platform.deno.ts';
+import { crypto, Buffer, type TypeBuffer } from '../../platform.deno.ts';
 import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
 import { Primitive } from '../../raw/core/index.ts';
 import type { ProxyInterface } from '../connection.ts';
@@ -22,7 +22,7 @@ import type { ProxyInterface } from '../connection.ts';
  */
 export class TCPIntermediateO extends TCP {
   /** @hidden */
-  private _reserved!: Array<Buffer>;
+  private _reserved!: Array<TypeBuffer>;
   /** @hidden */
   private _encryptor!: CtrCipherFn;
   /** @hidden */
@@ -37,75 +37,115 @@ export class TCPIntermediateO extends TCP {
       Buffer.from('eeeeeeee', 'hex'),
     ];
   }
-  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  override async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
     await super.connect(ip, port, proxy, dcId);
     let nonce;
     if (proxy && 'secret' in proxy && 'port' in proxy && 'server' in proxy && dcId) {
       let secret =
         typeof proxy.secret === 'string'
           ? Buffer.from(proxy.secret, 'hex')
-          : Buffer.from(proxy.secret);
-      secret = secret.length === 17 && secret[0] === 0xdd ? secret.slice(1) : secret;
+          : Buffer.from(proxy.secret as unknown as Uint8Array);
+      secret =
+        Buffer.byteLength(secret) === 17 && (secret as unknown as Uint8Array)[0] === 0xdd
+          ? secret.subarray(1)
+          : secret;
       while (true) {
         nonce = crypto.randomBytes(64);
         if (
-          !Buffer.from([nonce[0]]).equals(Buffer.from('ef', 'hex')) &&
+          !Buffer.from([(nonce as unknown as Uint8Array)[0]]).equals(
+            Buffer.from('ef', 'hex') as unknown as Uint8Array,
+          ) &&
           !includesBuffer(this._reserved, nonce) &&
-          !nonce.slice(4, 8).equals(Buffer.alloc(4))
+          !nonce.subarray(4, 8).equals(Buffer.alloc(4) as unknown as Uint8Array)
         ) {
-          nonce[56] = nonce[57] = nonce[58] = nonce[59] = 0xee;
+          (nonce as unknown as Uint8Array)[56] =
+            (nonce as unknown as Uint8Array)[57] =
+            (nonce as unknown as Uint8Array)[58] =
+            (nonce as unknown as Uint8Array)[59] =
+              0xee;
           break;
         }
       }
-      let temp = sliceBuffer(nonce, 55, 7, -1);
-      const encryptionKey = sha256(Buffer.concat([nonce.slice(8, 40), secret]));
-      const encryptionIv = nonce.slice(40, 56);
-      const decryptionKey = temp.slice(0, 32);
-      const decryptionIv = sha256(Buffer.concat([temp.slice(32, 48), secret]));
+      const temp: TypeBuffer = sliceBuffer(nonce, 55, 7, -1);
+      const encryptionKey = sha256(
+        Buffer.concat([
+          nonce.subarray(8, 40) as unknown as Uint8Array,
+          secret as unknown as Uint8Array,
+        ]),
+      );
+      const encryptionIv = nonce.subarray(40, 56);
+      const decryptionKey = temp.subarray(0, 32);
+      const decryptionIv = sha256(
+        Buffer.concat([
+          temp.subarray(32, 48) as unknown as Uint8Array,
+          secret as unknown as Uint8Array,
+        ]),
+      );
       this._encryptor = ctr256Cipher(encryptionKey, encryptionIv);
       this._decryptor = ctr256Cipher(decryptionKey, decryptionIv);
       const _dcId = Buffer.alloc(2);
       _dcId.writeInt8(dcId, 0);
-      nonce = Buffer.concat([nonce.slice(0, 60), _dcId, nonce.slice(62)]);
-      nonce = Buffer.concat([nonce.slice(0, 56), this._encryptor(nonce).slice(56, 64)]);
+      nonce = Buffer.concat([
+        nonce.subarray(0, 60) as unknown as Uint8Array,
+        _dcId as unknown as Uint8Array,
+        nonce.subarray(62) as unknown as Uint8Array,
+      ]);
+      nonce = Buffer.concat([
+        nonce.subarray(0, 56) as unknown as Uint8Array,
+        this._encryptor(nonce).subarray(56, 64) as unknown as Uint8Array,
+      ]);
     } else {
       while (true) {
         nonce = crypto.randomBytes(64);
         if (
-          !Buffer.from([nonce[0]]).equals(Buffer.from('ef', 'hex')) &&
+          !Buffer.from([(nonce as unknown as Uint8Array)[0]]).equals(
+            Buffer.from('ef', 'hex') as unknown as Uint8Array,
+          ) &&
           !includesBuffer(this._reserved, nonce) &&
-          !nonce.slice(4, 8).equals(Buffer.alloc(4))
+          !nonce.subarray(4, 8).equals(Buffer.alloc(4) as unknown as Uint8Array)
         ) {
-          nonce[56] = nonce[57] = nonce[58] = nonce[59] = 0xee;
+          (nonce as unknown as Uint8Array)[56] =
+            (nonce as unknown as Uint8Array)[57] =
+            (nonce as unknown as Uint8Array)[58] =
+            (nonce as unknown as Uint8Array)[59] =
+              0xee;
           break;
         }
       }
-      let temp = sliceBuffer(nonce, 55, 7, -1);
-      const encryptionKey = nonce.slice(8, 40);
-      const encryptionIv = nonce.slice(40, 56);
-      const decryptionKey = temp.slice(0, 32);
-      const decryptionIv = temp.slice(32, 48);
+      const temp: TypeBuffer = sliceBuffer(nonce, 55, 7, -1);
+      const encryptionKey = nonce.subarray(8, 40);
+      const encryptionIv = nonce.subarray(40, 56);
+      const decryptionKey = temp.subarray(0, 32);
+      const decryptionIv = temp.subarray(32, 48);
       this._encryptor = ctr256Cipher(encryptionKey, encryptionIv);
       this._decryptor = ctr256Cipher(decryptionKey, decryptionIv);
-      nonce = Buffer.concat([nonce.slice(0, 56), this._encryptor(nonce).slice(56, 64)]);
+      nonce = Buffer.concat([
+        nonce.subarray(0, 56) as unknown as Uint8Array,
+        this._encryptor(nonce).subarray(56, 64) as unknown as Uint8Array,
+      ]);
     }
     await super.send(nonce);
   }
-  async send(data: Buffer) {
-    let payload = this._encryptor(Buffer.concat([Primitive.Int.write(data.length), data]));
+  override async send(data: TypeBuffer) {
+    const payload = this._encryptor(
+      Buffer.concat([
+        Primitive.Int.write(Buffer.byteLength(data)) as unknown as Uint8Array,
+        data as unknown as Uint8Array,
+      ]),
+    );
     return await super.send(payload);
   }
-  async recv(_length: number = 0) {
-    let length = await super.recv(4);
+  override async recv(_length: number = 0) {
+    const length = await super.recv(4);
     if (!length) return;
-    length = this._decryptor(length);
-    let data = await super.recv(length.readInt32LE(0));
+    (length as TypeBuffer) = this._decryptor(length);
+    const data = await super.recv(length.readInt32LE(0));
     if (!data) return;
     return this._decryptor(data);
   }
 }
 
-function sha256(data: Buffer): Buffer {
+function sha256(data: TypeBuffer): TypeBuffer {
   const hash = crypto.createHash('sha256');
   hash.update(data);
   return hash.digest();

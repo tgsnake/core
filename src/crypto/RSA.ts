@@ -13,7 +13,7 @@ import {
   bigintToBuffer as toBuffer,
   bufferToBigint as toBigint,
 } from '../helpers.ts';
-import { Buffer } from '../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../platform.deno.ts';
 
 const PublicKey = new Map<
   bigint,
@@ -188,11 +188,13 @@ PublicKey.set(BigInt('2685959930972952888'), {
   e: BigInt('0x010001'),
 });
 
-export function encrypt(data: Buffer, fingerprint: bigint) {
+export function encrypt(data: TypeBuffer, fingerprint: bigint) {
   const key = PublicKey.get(fingerprint);
   if (key == undefined) {
     throw new Error(`unknown fingerprint ${fingerprint}n`);
   }
-  return Buffer.from(toBuffer(pow(toBigint(data, false), key.e, key.m), 256, false));
+  return Buffer.from(
+    toBuffer(pow(toBigint(data, false), key.e, key.m), 256, false) as unknown as Uint8Array,
+  );
 }
 export { PublicKey };

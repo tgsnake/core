@@ -12,7 +12,7 @@ import { BytesIO } from './BytesIO.ts';
 import { TLObject } from './TLObject.ts';
 import * as Primitive from './primitive/index.ts';
 import { Message } from './Message.ts';
-import { Buffer } from '../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
 
 export class MsgContainer extends TLObject {
   static ID: number = 0x73f1f8dc;
@@ -23,21 +23,21 @@ export class MsgContainer extends TLObject {
     this.className = 'MsgContainer';
     this.messages = messages;
   }
-  static async read(data: BytesIO, ..._args: Array<any>): Promise<MsgContainer> {
+  static override async read(data: BytesIO, ..._args: Array<any>): Promise<MsgContainer> {
     const count = await Primitive.Int.read(data);
-    let messages: Array<Message> = [];
+    const messages: Array<Message> = [];
     for (let i = 0; i < count; i++) {
       messages.push(await Message.read(data));
     }
     return new MsgContainer(messages);
   }
-  write(): Buffer {
-    let b = new BytesIO();
-    b.write(Primitive.Int.write(MsgContainer.ID, false));
-    b.write(Primitive.Int.write(this.messages.length));
-    for (let message of this.messages) {
-      b.write(message.write());
+  override write(): TypeBuffer {
+    const bytes = new BytesIO();
+    bytes.write(Primitive.Int.write(MsgContainer.ID, false));
+    bytes.write(Primitive.Int.write(this.messages.length));
+    for (const message of this.messages) {
+      bytes.write(message.write());
     }
-    return Buffer.from(b.buffer);
+    return Buffer.from(bytes.buffer as unknown as Uint8Array);
   }
 }

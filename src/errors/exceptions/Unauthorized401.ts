@@ -16,44 +16,45 @@
 import { RPCError } from '../RpcError.ts';
 
 export class Unauthorized extends RPCError {
-  code: number = 401;
-  name: string = 'UNAUTHORIZED';
+  override code: number = 401;
+  override name: string = 'UNAUTHORIZED';
 }
 export class ActiveUserRequired extends Unauthorized {
-  id: string = 'ACTIVE_USER_REQUIRED';
-  message: string = 'The method is only available to already activated users';
+  override id: string = 'ACTIVE_USER_REQUIRED';
+  override message: string = 'The method is only available to already activated users';
 }
 export class AuthKeyInvalid extends Unauthorized {
-  id: string = 'AUTH_KEY_INVALID';
-  message: string = 'The specified auth key is invalid.';
+  override id: string = 'AUTH_KEY_INVALID';
+  override message: string = 'The specified auth key is invalid.';
 }
 export class AuthKeyPermEmpty extends Unauthorized {
-  id: string = 'AUTH_KEY_PERM_EMPTY';
-  message: string =
+  override id: string = 'AUTH_KEY_PERM_EMPTY';
+  override message: string =
     'The method is unavailable for temporary authorization keys, not bound to a permanent authorization key.';
 }
 export class AuthKeyUnregistered extends Unauthorized {
-  id: string = 'AUTH_KEY_UNREGISTERED';
-  message: string =
+  override id: string = 'AUTH_KEY_UNREGISTERED';
+  override message: string =
     'The specified authorization key is not registered in the system (for example, a PFS temporary key has expired).';
 }
 export class SessionExpired extends Unauthorized {
-  id: string = 'SESSION_EXPIRED';
-  message: string = 'The session has expired.';
+  override id: string = 'SESSION_EXPIRED';
+  override message: string = 'The session has expired.';
 }
 export class SessionPasswordNeeded extends Unauthorized {
-  id: string = 'SESSION_PASSWORD_NEEDED';
-  message: string = '2FA is enabled, use a password to login.';
+  override id: string = 'SESSION_PASSWORD_NEEDED';
+  override message: string = '2FA is enabled, use a password to login.';
 }
 export class SessionRevoked extends Unauthorized {
-  id: string = 'SESSION_REVOKED';
-  message: string = 'The session was revoked by the user.';
+  override id: string = 'SESSION_REVOKED';
+  override message: string = 'The session was revoked by the user.';
 }
 export class UserDeactivated extends Unauthorized {
-  id: string = 'USER_DEACTIVATED';
-  message: string = 'The current account was deleted by the user.';
+  override id: string = 'USER_DEACTIVATED';
+  override message: string = 'The current account was deleted by the user.';
 }
 export class UserDeactivatedBan extends Unauthorized {
-  id: string = 'USER_DEACTIVATED_BAN';
-  message: string = "The current account was deleted and banned by Telegram's antispam system.";
+  override id: string = 'USER_DEACTIVATED_BAN';
+  override message: string =
+    "The current account was deleted and banned by Telegram's antispam system.";
 }

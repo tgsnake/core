@@ -11,13 +11,13 @@
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
 import { Bytes } from './Bytes.ts';
-import { Buffer } from '../../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
 
 export class String extends TLObject {
-  static write(value: string): Buffer {
-    return Bytes.write(Buffer.from(value, 'utf8')) as unknown as Buffer;
+  static override write(value: string): TypeBuffer {
+    return Bytes.write(Buffer.from(value, 'utf8')) as unknown as TypeBuffer;
   }
-  static async read(data: BytesIO, ..._args: Array<any>): Promise<string> {
+  static override async read(data: BytesIO, ..._args: Array<any>): Promise<string> {
     return (await Bytes.read(data)).toString('utf8');
   }
 }

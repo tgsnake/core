@@ -45,6 +45,7 @@ export class UpdateSecretChatMessage extends TLObject {
           randomId: update.message.randomId,
           chatId: update.message.chatId,
           date: update.message.date,
+          // @ts-ignore: TS doesn't know that decrypted is a DecryptedMessageService
           message: decrypted!,
         }),
         qts: update.qts,
@@ -57,6 +58,7 @@ export class UpdateSecretChatMessage extends TLObject {
         chatId: update.message.chatId,
         date: update.message.date,
         file: update.message.file,
+        // @ts-ignore: TS doesn't know that decrypted is a DecryptedMessage
         message: decrypted!,
       }),
       qts: update.qts,

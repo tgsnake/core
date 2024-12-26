@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, Mutex, inspect, Buffer } from '../platform.deno.ts';
+import { crypto, Mutex, inspect, Buffer, type TypeBuffer } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { Connection, ProxyInterface } from '../connection/connection.ts';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw/index.ts';
@@ -41,17 +41,17 @@ export class Session {
   PING_INTERVAL: number = 5000;
 
   private _dcId!: number;
-  private _authKey!: Buffer;
+  private _authKey!: TypeBuffer;
   private _testMode!: boolean;
   private _proxy?: ProxyInterface;
   private _isMedia!: boolean;
   private _isCdn!: boolean;
-  private _authKeyId!: Buffer;
+  private _authKeyId!: TypeBuffer;
   private _connection!: Connection;
   private _pingTask!: any;
   private _client!: Client;
 
-  private _sessionId: Buffer = Buffer.from(crypto.randomBytes(8));
+  private _sessionId: TypeBuffer = Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array);
   private _msgFactory: { (body: TLObject, msgId: MsgId): Message } = MsgFactory();
   private _msgId: MsgId = new MsgId();
   private _salt: bigint = BigInt(0);
@@ -66,7 +66,7 @@ export class Session {
   constructor(
     client: Client,
     dcId: number,
-    authKey: Buffer,
+    authKey: TypeBuffer,
     testMode: boolean,
     proxy?: ProxyInterface,
     isMedia: boolean = false,
@@ -79,24 +79,24 @@ export class Session {
     this._proxy = proxy;
     this._isMedia = isMedia;
     this._isCdn = isCdn;
-    this._authKeyId = crypto.createHash('sha1').update(this._authKey).digest().slice(-8);
+    this._authKeyId = crypto.createHash('sha1').update(this._authKey).digest().subarray(-8);
     this.MAX_RETRIES = client._maxRetries ?? 5;
   }
 
-  private async _handlePacket(packet: Buffer) {
-    Logger.debug(`[33] Unpacking ${packet.length} bytes packet.`);
+  private async _handlePacket(packet: TypeBuffer) {
+    Logger.debug(`[33] Unpacking ${Buffer.byteLength(packet)} bytes packet.`);
     try {
-      let data = await Mtproto.unpack(
+      const data = await Mtproto.unpack(
         new BytesIO(packet),
         this._sessionId,
         this._authKey,
         this._authKeyId,
         this._storedMsgId,
       );
-      let message = data.body instanceof MsgContainer ? data.body.messages : [data];
+      const message = data.body instanceof MsgContainer ? data.body.messages : [data];
       Logger.debug(`[34] Reveive ${message.length} data.`);
 
-      for (let msg of message) {
+      for (const msg of message) {
         if (msg.seqNo % 2 === 0) {
           Logger.debug(`[35] Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
           this._msgId.setServerTime(msg.msgId / BigInt(2 ** 32));
@@ -147,7 +147,7 @@ export class Session {
         }
 
         if (msgId !== undefined) {
-          let promises = this._results.get(BigInt(msgId));
+          const promises = this._results.get(BigInt(msgId));
           if (promises !== undefined) {
             Logger.debug(
               `[44] Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`,
@@ -167,7 +167,7 @@ export class Session {
           );
           Logger.debug(`[46] Clearing all pending acks`);
           this._pendingAcks.clear();
-        } catch (error: any) {
+        } catch (error: unknown) {
           if (!(error instanceof Errors.TimeoutError)) {
             Logger.debug(`[47] Clearing all pending acks`);
             this._pendingAcks.clear();
@@ -175,10 +175,10 @@ export class Session {
           Logger.error(`[48] Got error when sending pending acks:`, error);
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Errors.SecurityCheckMismatch) {
         Logger.error(
-          `[49] Invalid to unpack ${packet.length} bytes packet cause: ${
+          `[49] Invalid to unpack ${Buffer.byteLength(packet)} bytes packet cause: ${
             error.description ?? error.message
           }`,
         );
@@ -192,8 +192,8 @@ export class Session {
     waitResponse: boolean = true,
     timeout: number = this.WAIT_TIMEOUT,
   ): Promise<TLObject | undefined> {
-    let msg = await this._msgFactory(data, this._msgId);
-    let msgId = msg.msgId;
+    const msg = await this._msgFactory(data, this._msgId);
+    const msgId = msg.msgId;
     if (waitResponse) {
       this._results.set(BigInt(msgId), new Results());
     }
@@ -202,14 +202,17 @@ export class Session {
       return;
     }
     Logger.debug(
-      `[50] Sending msg id ${msgId} (${data.className}), has ${msg.write().length} bytes message.`,
+      `[50] Sending msg id ${msgId} (${data.className}), has ${Buffer.byteLength(msg.write())} bytes message.`,
     );
-    let payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
+    const payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
-      Logger.debug(`[51] Sending ${payload.length} bytes payload.`);
+      Logger.debug(`[51] Sending ${Buffer.byteLength(payload)} bytes payload.`);
       await this._connection.send(payload);
-    } catch (error: any) {
-      Logger.error(`[52] Got error when trying to send ${payload.length} bytes payload:`, error);
+    } catch (error: unknown) {
+      Logger.error(
+        `[52] Got error when trying to send ${Buffer.byteLength(payload)} bytes payload:`,
+        error,
+      );
       if (
         error instanceof Errors.WSError.ReadClosed ||
         error instanceof Errors.WSError.Disconnected ||
@@ -219,22 +222,22 @@ export class Session {
         if (this._client._maxReconnectRetries) {
           return this.retriesReconnect();
         } else {
-          await this.restart();
+          this.restart();
         }
         return;
       }
-      let promises = this._results.get(BigInt(msgId));
+      const promises = this._results.get(BigInt(msgId));
       if (promises) {
         promises.reject(error);
       }
     }
-    let promises = this._results.get(BigInt(msgId));
+    const promises = this._results.get(BigInt(msgId));
     if (waitResponse && promises !== undefined) {
       let response;
       try {
         response = await this._task.run(promises.value, timeout);
         // response = await promises.value
-      } catch (error: any) {
+      } catch (error: unknown) {
         Logger.error(`[53] Got error when waiting response:`, error);
       }
       if (response) {
@@ -270,7 +273,7 @@ export class Session {
       }
     }
   }
-  private async _pingWorker() {
+  private _pingWorker() {
     const ping = async () => {
       try {
         if (!this._isConnected) return; // kill the ping worker when client is disconnected
@@ -282,7 +285,7 @@ export class Session {
           }),
           false,
         );
-      } catch (error: any) {
+      } catch (error: unknown) {
         Logger.error(`[56] Get error when trying ping to telegram :`, error);
       }
       return this._pingWorker();
@@ -300,8 +303,8 @@ export class Session {
       }
       if (!waiting) {
         try {
-          let packet = await this._connection.recv();
-          if (packet !== undefined && packet.length !== 4) {
+          const packet = await this._connection.recv();
+          if (packet !== undefined && Buffer.byteLength(packet) !== 4) {
             waiting = true; // block the network task until previous task is done
             const release = await this._mutex.acquire();
             try {
@@ -318,7 +321,7 @@ export class Session {
               return this.restart();
             }
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           Logger.error('[139] Network worker error:', error);
           if (!this._isConnected) {
             break;
@@ -339,7 +342,7 @@ export class Session {
   /**
    * When client connection to Telegram server interrupted, it will try to reconnecting until reach maxReconnectRetries.
    */
-  async retriesReconnect(retries = this._client._maxReconnectRetries) {
+  async retriesReconnect(retries = this._client._maxReconnectRetries): Promise<any> {
     try {
       Logger.info('[136] Reconnecting to Telegram Server.');
       Logger.debug('[137] Stop ping task.');
@@ -353,7 +356,7 @@ export class Session {
         this._isConnected = true;
         this._pingWorker();
         if (!this._client._storage.isBot && this._client._takeout) {
-          let takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
+          const takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
           this._client._takeoutId = (takeout as Raw.account.TypeTakeout).id;
         }
         await this.invoke(new Raw.updates.GetState());
@@ -402,7 +405,9 @@ export class Session {
       Logger.debug(`[61] Restarting client`);
       this.stop();
       this.start();
-    } catch (error) {}
+    } catch (_error) {
+      // pass
+    }
   }
   /**
    * Send data to the telegram server as an executable function.
@@ -450,7 +455,7 @@ export class Session {
           Logger.error(`[64] Got error when trying invoking ${className}:`, error);
           if (error instanceof Errors.Exceptions.Flood.FloodWait) {
             error as Errors.Exceptions.Flood.FloodWait;
-            let amount = error.value ?? 2000; // if undefined, make it as 2s
+            const amount = Number(error.value ?? 2000); // if undefined, make it as 2s
             // @ts-ignore
             if (amount > sleepThreshold >= 0) {
               throw error;
@@ -458,7 +463,7 @@ export class Session {
             Logger.info(
               `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`,
             );
-            await sleep(amount);
+            await sleep(amount as number);
           } else {
             if (!retries) {
               throw error;
@@ -577,7 +582,7 @@ export class Session {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -588,6 +593,7 @@ export class Session {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore: deno compatibility
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -596,7 +602,7 @@ export class Session {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           if (typeof value === 'bigint') {

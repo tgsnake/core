@@ -7,57 +7,13 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { inspect } from '../platform.deno.ts';
+import { BaseError } from './Base.ts';
 
-export class FileError extends Error {
-  message!: string;
-  description?: string;
+export class FileError extends BaseError {
   constructor(message: string, description?: string) {
     super();
     this.message = message;
     this.description = description;
-  }
-  /** @ignore */
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_') && value !== undefined && value !== null) {
-          toPrint[key] = value;
-        }
-      }
-    }
-    Object.setPrototypeOf(toPrint, {
-      stack: this.stack,
-    });
-    return toPrint;
-  }
-  /** @ignore */
-  [Symbol.for('Deno.customInspect')](): string {
-    return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
-  }
-  /** @ignore */
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
-      _: this.constructor.name,
-      stack: this.stack,
-    };
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-        if (!key.startsWith('_') && value !== undefined && value !== null) {
-          toPrint[key] = typeof value === 'bigint' ? String(value) : value;
-        }
-      }
-    }
-    return toPrint;
-  }
-  /** @ignore */
-  toString(): string {
-    return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }
 
@@ -66,7 +22,18 @@ export class FileUploadZero extends FileError {
     super("Can't upload file when it zero bytes.", 'Provided file has zero bytes (0 B) file size.');
   }
 }
+/**
+ * Represents an error that occurs when a file upload exceeds the allowed size limit.
+ *
+ * @extends {FileError}
+ */
 export class FileUploadBigger extends FileError {
+  /**
+   * Creates an instance of FileUploadBigger.
+   *
+   * @param {number} limit - The maximum allowed file size in bytes.
+   * @param {number} size - The actual size of the uploaded file in bytes.
+   */
   constructor(limit: number, size: number) {
     super(
       `File greater than ${limit} B.`,

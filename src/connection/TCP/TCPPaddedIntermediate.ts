@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Buffer } from '../../platform.deno.ts';
+import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
 import { TCP } from './tcp.ts';
 import type { ProxyInterface } from '../connection.ts';
 
@@ -20,28 +20,33 @@ export class TCPPaddedIntermediate extends TCP {
   constructor() {
     super();
   }
-  async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  override async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
     await super.connect(ip, port, proxy, dcId);
     await super.send(
       Buffer.concat([
-        Buffer.from('dd', 'hex'),
-        Buffer.from('dd', 'hex'),
-        Buffer.from('dd', 'hex'),
-        Buffer.from('dd', 'hex'),
+        Buffer.from('dd', 'hex') as unknown as Uint8Array,
+        Buffer.from('dd', 'hex') as unknown as Uint8Array,
+        Buffer.from('dd', 'hex') as unknown as Uint8Array,
+        Buffer.from('dd', 'hex') as unknown as Uint8Array,
       ]),
     );
   }
-  async send(data: Buffer) {
-    data = Buffer.concat([data, Buffer.alloc(data.length % 4)]);
-    let allocLength = Buffer.alloc(4);
-    allocLength.writeInt32LE(data.length, 0);
-    await super.send(Buffer.concat([allocLength, data]));
+  override async send(data: TypeBuffer) {
+    data = Buffer.concat([
+      data as unknown as Uint8Array,
+      Buffer.alloc(Buffer.byteLength(data) % 4) as unknown as Uint8Array,
+    ]);
+    const allocLength = Buffer.alloc(4);
+    allocLength.writeInt32LE(Buffer.byteLength(data), 0);
+    await super.send(
+      Buffer.concat([allocLength as unknown as Uint8Array, data as unknown as Uint8Array]),
+    );
   }
-  async recv(_length: number = 0) {
-    let length = await super.recv(4);
+  override async recv(_length: number = 0) {
+    const length = await super.recv(4);
     if (!length) return;
-    let data = await super.recv(length.readInt32LE(0));
+    const data = await super.recv(length.readInt32LE(0));
     if (!data) return;
-    return data.slice(0, data.length - (data.length % 4));
+    return data.subarray(0, Buffer.byteLength(data) - (Buffer.byteLength(data) % 4));
   }
 }

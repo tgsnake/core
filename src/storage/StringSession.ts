@@ -24,7 +24,7 @@ export class StringSession extends BaseSession {
     super();
     if (session.length) {
       Logger.debug(`[81] Starting parsing string session, length is: ${session.length}`);
-      let start = Math.floor(Date.now() / 1000);
+      const start = Math.floor(Date.now() / 1000);
       // Telethon or gramjs string session
       if (session[0] === '1') {
         Logger.debug(
@@ -37,7 +37,7 @@ export class StringSession extends BaseSession {
         Logger.debug(`[84] Found dcId: ${this._dcId}.`);
         if (session.length === 352) {
           const ipv4 = bytes.read(4);
-          this._ip = `${ipv4[0]}.${ipv4[1]}.${ipv4[2]}.${ipv4[3]}`;
+          this._ip = `${(ipv4 as unknown as Uint8Array)[0]}.${(ipv4 as unknown as Uint8Array)[1]}.${(ipv4 as unknown as Uint8Array)[2]}.${(ipv4 as unknown as Uint8Array)[3]}`;
           Logger.debug(`[85] Found ip: ${this._ip}.`);
         } else {
           const serverAddressLen = bytes.read(2).readInt16BE();
@@ -60,25 +60,25 @@ export class StringSession extends BaseSession {
         this._port = bytes.read(2).readInt16BE();
         Logger.debug(`[88] Found port: ${this._port}.`);
         this._authKey = bytes.read();
-        Logger.debug(`[89] Found authKey: ${this._authKey.length} bytes.`);
+        Logger.debug(`[89] Found authKey: ${Buffer.byteLength(this._authKey)} bytes.`);
       } else {
         const bytes = Buffer.from(base64urlTobase64(session), 'base64');
         // Pyrogram (the old version of string session doesn't supported) or tgsnake string session.
         // The length of bytes must be 271
-        if (bytes.length === 271) {
+        if (Buffer.byteLength(bytes) === 271) {
           Logger.debug(
             `[90] The string session look like pyrogram or tgsnake string session, start parsing.`,
           );
-          Logger.debug(`[91] String session have a ${bytes.length} bytes`);
+          Logger.debug(`[91] String session have a ${Buffer.byteLength(bytes)} bytes`);
           this._dcId = bytes.readUInt8(0); // 1
           Logger.debug(`[92] Found dcId: ${this._dcId}.`);
           this._apiId = bytes.readUInt32LE(1); // 5
           Logger.debug(`[93] Found apiId: ${this._apiId}.`);
           this._testMode = bytes.readUInt8(5) ? true : false; // 6
           Logger.debug(`[94] Found testMode: ${this._testMode}.`);
-          this._authKey = bytes.slice(6, 262); // 262
-          Logger.debug(`[95] Found authKey: ${this._authKey.length} bytes.`);
-          this._userId = BigInt(`0x${bytes.slice(262, 270).toString('hex')}`); // 270
+          this._authKey = bytes.subarray(6, 262); // 262
+          Logger.debug(`[95] Found authKey: ${Buffer.byteLength(this._authKey)} bytes.`);
+          this._userId = BigInt(`0x${bytes.subarray(262, 270).toString('hex')}`); // 270
           Logger.debug(`[96] Found userId: ${this._userId}.`);
           this._isBot = bytes.readUInt8(270) ? true : false; // 271
           Logger.debug(`[97] Found isBot: ${this._isBot}.`);
@@ -87,7 +87,7 @@ export class StringSession extends BaseSession {
           );
         } else {
           Logger.error(
-            `[99] Can't parsing ${bytes.length} bytes of string session, we only supported string session from telethon,gramjs,tgsnake, and pyrogram (latest version, old version doesn't supported)`,
+            `[99] Can't parsing ${Buffer.byteLength(bytes)} bytes of string session, we only supported string session from telethon,gramjs,tgsnake, and pyrogram (latest version, old version doesn't supported)`,
           );
           throw new Error(`Invalid String Session`);
         }

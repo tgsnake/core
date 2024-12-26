@@ -285,7 +285,7 @@ function start(source, template) {
               writerFlag.join('\n'),
               `    b.write((Primitive.Int.write(${parseArgName(
                 argName,
-              )})) as unknown as Buffer);\n`,
+              )})) as unknown as TypeBuffer);\n`,
             ].join('\n');
             writerString += writerFlag;
             readerString += `\n    // @ts-ignore\n    let ${parseArgName(argName)} = await Primitive.Int.read(_data);`;
@@ -307,7 +307,7 @@ function start(source, template) {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
               writerString += `      b.write((Primitive.${Uppercase(
                 flagType.trim(),
-              )}.write(this.${argName})) as unknown as Buffer);`;
+              )}.write(this.${argName})) as unknown as TypeBuffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = (flags${
                 flagNumber ?? ''
@@ -321,7 +321,7 @@ function start(source, template) {
                 VECTOR_CORE_TYPES.has(vectorType.trim())
                   ? `,Primitive.${Uppercase(vectorType.trim())}`
                   : ''
-              })) as unknown as Buffer);`;
+              })) as unknown as TypeBuffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = (flags${
                 flagNumber ?? ''
@@ -332,7 +332,7 @@ function start(source, template) {
               }) : [];`;
             } else {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
-              writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
+              writerString += `      b.write(this.${argName}.write() as unknown as TypeBuffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = (flags${
                 flagNumber ?? ''
@@ -349,7 +349,7 @@ function start(source, template) {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
               writerString += `      b.write((Primitive.${Uppercase(
                 argType.trim(),
-              )}.write(this.${argName})) as unknown as Buffer);`;
+              )}.write(this.${argName})) as unknown as TypeBuffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = await Primitive.${Uppercase(
                 argType.trim(),
@@ -361,7 +361,7 @@ function start(source, template) {
                 VECTOR_CORE_TYPES.has(vectorType.trim())
                   ? `,Primitive.${Uppercase(vectorType.trim())}`
                   : ''
-              })) as unknown as Buffer);`;
+              })) as unknown as TypeBuffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(_data${
                 VECTOR_CORE_TYPES.has(vectorType.trim())
@@ -370,7 +370,7 @@ function start(source, template) {
               });`;
             } else {
               writerString += `\n    if(this.${argName} !== undefined){\n`;
-              writerString += `      b.write(this.${argName}.write() as unknown as Buffer);`;
+              writerString += `      b.write(this.${argName}.write() as unknown as TypeBuffer);`;
               writerString += `\n    }`;
               readerString += `\n    let ${parseArgName(argName)} = await TLObject.read(_data);`;
             }

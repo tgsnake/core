@@ -12,7 +12,7 @@ import { Logger } from '../Logger.ts';
 import { AbstractSession } from './Abstract.ts';
 import { Raw } from '../raw/index.ts';
 import { getChannelId } from '../helpers.ts';
-import { inspect, Buffer } from '../platform.deno.ts';
+import { inspect, Buffer, type TypeBuffer } from '../platform.deno.ts';
 import type { SecretChat } from './SecretChat.ts';
 
 /**
@@ -57,7 +57,7 @@ export class BaseSession extends AbstractSession {
     [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >();
   protected _secretChats: Map<number, SecretChat> = new Map<number, SecretChat>();
-  protected _authKey!: Buffer;
+  protected _authKey!: TypeBuffer;
   protected _testMode: boolean = false;
   protected _apiId!: number;
   protected _userId!: bigint;
@@ -65,23 +65,23 @@ export class BaseSession extends AbstractSession {
   constructor() {
     super();
   }
-  async setAddress(dcId: number, ip: string, port: number, testMode: boolean) {
+  setAddress(dcId: number, ip: string, port: number, testMode: boolean) {
     this._dcId = dcId ?? 2;
     this._ip = ip;
     this._port = port ?? 443;
     this._testMode = testMode;
   }
-  async setAuthKey(authKey: Buffer, dcId: number) {
+  setAuthKey(authKey: TypeBuffer, dcId: number) {
     if (dcId !== this._dcId) return;
     this._authKey = authKey;
   }
-  async setApiId(apiId: number) {
+  setApiId(apiId: number) {
     this._apiId = apiId;
   }
-  async setIsBot(isbot: boolean) {
+  setIsBot(isbot: boolean) {
     this._isBot = isbot;
   }
-  async setUserId(userId: bigint) {
+  setUserId(userId: bigint) {
     this._userId = userId;
   }
   get authKey() {
@@ -117,8 +117,8 @@ export class BaseSession extends AbstractSession {
   async load() {}
   async delete() {}
   async save() {}
-  async updatePts(_pts, _date) {}
-  async getPts() {
+  async updatePts(_pts: number, _date: number) {}
+  async getPts(): Promise<[pts: number, date: number]> {
     const res: [pts: number, date: number] = [0, 0];
     return res;
   }
@@ -199,14 +199,20 @@ export class BaseSession extends AbstractSession {
     bytes.writeUInt8(this._dcId, 0); // 1
     bytes.writeUInt32LE(this._apiId, 1); // 5
     bytes.writeUInt8(this._testMode ? 1 : 0, 5); // 6
-    bytes = Buffer.concat([bytes, this._authKey]); // 262
-    bytes = Buffer.concat([bytes, packLong(this._userId)]); // 270
-    bytes = Buffer.concat([bytes, Buffer.alloc(1)]);
+    bytes = Buffer.concat([bytes as unknown as Uint8Array, this._authKey as unknown as Uint8Array]); // 262
+    bytes = Buffer.concat([
+      bytes as unknown as Uint8Array,
+      packLong(this._userId) as unknown as Uint8Array,
+    ]); // 270
+    bytes = Buffer.concat([
+      bytes as unknown as Uint8Array,
+      Buffer.alloc(1) as unknown as Uint8Array,
+    ]);
     bytes.writeUInt8(this._isBot ? 1 : 0, 270); // 271
-    Logger.debug(`[80] Exporting ${bytes.length} bytes of session`);
+    Logger.debug(`[80] Exporting ${Buffer.byteLength(bytes)} bytes of session`);
     try {
       return bytes.toString('base64url').replace(/=+$/g, '');
-    } catch (error) {
+    } catch (_error) {
       return bytes.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
     }
   }
@@ -216,7 +222,7 @@ export class BaseSession extends AbstractSession {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           toPrint[key] = value;
@@ -227,6 +233,7 @@ export class BaseSession extends AbstractSession {
   }
   /** @ignore */
   [Symbol.for('Deno.customInspect')](): string {
+    // @ts-ignore: Deno custom inspect
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
@@ -235,7 +242,7 @@ export class BaseSession extends AbstractSession {
       _: this.constructor.name,
     };
     for (const key in this) {
-      if (this.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
         const value = this[key];
         if (!key.startsWith('_') && value !== undefined && value !== null) {
           if (typeof value === 'bigint') {

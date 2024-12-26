@@ -9,7 +9,7 @@
  */
 
 export { Raw } from './Raw.ts';
-export { Object } from './All.ts';
+export { AllTLObject } from './All.ts';
 export {
   BytesIO,
   Primitive,

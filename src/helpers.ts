@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { bigInt, Buffer } from './platform.deno.ts';
+import { bigInt, Buffer, type TypeBuffer } from './platform.deno.ts';
 // https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
 export function bigintToBuffer(
   int: bigint,
@@ -29,63 +29,69 @@ export function bigintToBuffer(
     isBellow = true;
     int = int * BigInt(-1);
   }
-  let hex = int.toString(16).padStart(padding * 2, '0');
+  const hex = int.toString(16).padStart(padding * 2, '0');
   let buffer = Buffer.from(hex, 'hex');
   if (litte) buffer = buffer.reverse();
   if (isBellow && signed) {
     if (litte) {
       let isReminder = false;
-      if (buffer[0]) buffer[0] -= 1;
-      for (let b = 0; b < buffer.length; b++) {
-        if (!buffer[b]) {
+      if ((buffer as unknown as Uint8Array)[0]) (buffer as unknown as Uint8Array)[0] -= 1;
+      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
+        if (!(buffer as unknown as Uint8Array)[b]) {
           isReminder = true;
           continue;
         }
         if (isReminder) {
-          buffer[b] -= 1;
+          (buffer as unknown as Uint8Array)[b] -= 1;
           isReminder = false;
         }
-        buffer[b] = 255 - buffer[b];
+        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
       }
     } else {
-      buffer[buffer.length - 1] = 256 - buffer[buffer.length - 1];
-      for (let b = 0; b < buffer.length; b++) {
-        buffer[b] = 255 - buffer[b];
+      (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1] =
+        256 - (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1];
+      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
+        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
       }
     }
   }
   return buffer;
 }
-export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
-  for (let buff of array) {
-    if (buff.equals(buffer)) {
+export function includesBuffer(array: Array<TypeBuffer>, buffer: TypeBuffer) {
+  for (const buff of array) {
+    if (buff.equals(buffer as unknown as Uint8Array)) {
       return true;
     }
   }
   return false;
 }
 // https://t.me/butthxforward/85
-export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1) {
-  let slc = buffer.slice(start, stop);
+export function sliceBuffer(buffer: TypeBuffer, start: number, stop: number, step: number = 1) {
+  let slc = buffer.subarray(start, stop);
   let res = slc;
   if (step === 0) {
     throw new Error('slice step cannot be zero.');
   }
   if (step < 0) {
-    slc = Buffer.from(buffer.slice(stop - step, start - step)).reverse();
+    slc = Buffer.from(
+      buffer.subarray(stop - step, start - step) as unknown as Uint8Array,
+    ).reverse();
     res = slc;
     step = -step;
   }
   if (step > 1) {
     res = Buffer.alloc(0);
     let i = 0;
-    for (let buff of slc) {
+    for (const buff of slc as unknown as Uint8Array) {
       i++;
       if (i >= step) {
         i = 0;
       }
       if (i === 1) {
-        res = Buffer.concat([res, Buffer.from([buff])]);
+        res = Buffer.concat([
+          res as unknown as Uint8Array,
+          Buffer.from([buff]) as unknown as Uint8Array,
+        ]);
       }
     }
   }
@@ -93,36 +99,41 @@ export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: n
 }
 // https://stackoverflow.com/questions/18638900/javascript-crc32/18639999#18639999
 export function makeCRCTable() {
-  var c;
-  var crcTable: Array<any> = [];
-  for (var n = 0; n < 256; n++) {
+  let c;
+  const crcTable: Array<any> = [];
+  for (let n = 0; n < 256; n++) {
     c = n;
-    for (var k = 0; k < 8; k++) {
+    for (let k = 0; k < 8; k++) {
       c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
     }
     crcTable[n] = c;
   }
   return crcTable;
 }
-export function crc32(str: Buffer | string) {
-  str = Buffer.isBuffer(str) ? Buffer.from(str) : str;
-  var crcTable = makeCRCTable();
-  var crc = -1;
-  for (var i = 0; i < str.length; i++) {
-    const bytes: number = Number(str[i]);
+export function crc32(str: TypeBuffer | string) {
+  str = Buffer.isBuffer(str) ? Buffer.from(str as unknown as Uint8Array) : str;
+  const crcTable = makeCRCTable();
+  const length = Buffer.isBuffer(str) ? Buffer.byteLength(str) : str.length;
+  let crc = -1;
+  for (let i = 0; i < length; i++) {
+    const bytes: number = Number((str as unknown as Uint8Array)[i]);
     crc = (crc >>> 8) ^ crcTable[(crc ^ bytes) & 0xff];
   }
   return (crc ^ -1) >>> 0;
 }
-export function sleep(ms) {
+export function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
-export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: boolean = false) {
-  let length = buffer.length;
-  let value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
-  let _bigint = bigInt(value, 16);
+export function bufferToBigint(
+  buffer: TypeBuffer,
+  little: boolean = true,
+  signed: boolean = false,
+) {
+  const length = Buffer.byteLength(buffer);
+  const value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
+  const _bigint = bigInt(value, 16);
   let bigint = BigInt(String(_bigint));
   if (signed && Math.floor(bigint.toString(2).length / 8) >= length) {
     bigint = bigint - bigIntPow(BigInt(2), BigInt(length * 8));
@@ -137,8 +148,8 @@ export function bigIntMod(n: bigint, m: bigint): bigint {
   return ((n % m) + m) % m;
 }
 export function range(start: number, stop: number, step: number = 1): Array<number> {
-  let temp: Array<number> = [];
-  let results: Array<number> = [];
+  const temp: Array<number> = [];
+  const results: Array<number> = [];
   if (step === 0) {
     throw new Error('step cannot be zero');
   }
@@ -185,8 +196,8 @@ export function range(start: number, stop: number, step: number = 1): Array<numb
   return temp;
 }
 export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Array<bigint> {
-  let temp: Array<bigint> = [];
-  let results: Array<bigint> = [];
+  const temp: Array<bigint> = [];
+  const results: Array<bigint> = [];
   if (step === 0) {
     throw new Error('step cannot be zero');
   }
@@ -198,7 +209,7 @@ export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Arra
       step = -step;
       if (step > 1) {
         let i = 0;
-        for (let num of temp) {
+        for (const num of temp) {
           i++;
           if (i >= step) {
             i = 0;
@@ -219,7 +230,7 @@ export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Arra
   }
   if (step > 1) {
     let i = 0;
-    for (let num of temp) {
+    for (const num of temp) {
       i++;
       if (i >= step) {
         i = 0;
