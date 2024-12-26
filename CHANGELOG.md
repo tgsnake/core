@@ -1,4 +1,14 @@
- <a name="1.13.10"></a>
+ <a name="1.13.11"></a>
+
+## [1.13.11](https://github.com/tgsnake/core/compare/1.13.10...1.13.11)
+
+> 2024-11-01
+
+### Change
+
+- Update CHANGELOG.md - Update TLSchema  ### Update
+
+- version to 1.13.11   <a name="1.13.10"></a>
 
 ## [1.13.10](https://github.com/tgsnake/core/compare/1.13.9...1.13.10)
 

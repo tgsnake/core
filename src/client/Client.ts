@@ -117,11 +117,7 @@ export interface ClientOptions {
  * @param {ClientOptions} [clientOptions] - Options for initializing the client.
  *
  * @property {number} _apiId - The API ID.
- * @property {string} _apiHash - The API hash.
  * @property {AbstractSession} _storage - The session storage.
- * @property {boolean} _testMode - Indicates if the client is in test mode.
- * @property {ProxyInterface} [_proxy] - The proxy settings.
- * @property {boolean} _ipv6 - Indicates if IPv6 is enabled.
  * @property {string} _deviceModel - The device model.
  * @property {string} _systemVersion - The system version.
  * @property {string} _appVersion - The application version.
