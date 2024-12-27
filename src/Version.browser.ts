@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import packages from '../package.json' assert { type: 'json' };
+import packages from '../package.json' with { type: 'json' };
 
 export const version: string = packages.version;
 export const isBeta: boolean = packages.isBeta;
