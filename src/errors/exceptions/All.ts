@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2024 butthx <https://github.com/butthx>
+ * Copyright (C) 2025 butthx <https://github.com/butthx>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -14,14 +14,8 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-export type TypeExceptions = {
-  [code: number]: {
-    [module: string]: string;
-  };
-};
-
 const count = 706;
-const Exceptions: TypeExceptions = {
+const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
     FILE_MIGRATE_X: 'SeeOther.FileMigrate',
