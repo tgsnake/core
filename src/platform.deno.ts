@@ -11,19 +11,14 @@ import * as crypto from 'node:crypto';
 import * as net from 'node:net';
 import * as os from 'node:os';
 import * as path from 'node:path';
-import * as buffer from 'node:buffer';
-import process from 'node:process';
 import aesjs from 'https://cdn.skypack.dev/aes-js?dts';
-export const { inspect } = Deno;
+export { Buffer } from 'node:buffer'; // NodeJS compatibility
 export { gzipSync, gunzipSync } from 'node:zlib';
 export { Readable, Writable, Duplex } from 'node:stream';
 export { Logger } from 'https://deno.land/x/tgsnake_log/src/index.ts';
 export { default as bigInt } from 'https://cdn.skypack.dev/big-integer@v1.6.52?dts';
 export { SocksClient } from 'https://deno.land/x/deno_socks@v2.8.3/mod.ts';
 export { Mutex, Semaphore } from 'https://deno.land/x/semaphore@v1.1.2/mod.ts';
-export { crypto, net, os, path, aesjs, process };
-export const { Buffer } = buffer; // NodeJS compatibility
-export type { Buffer as TypeBuffer } from 'node:buffer'; // NodeJS compatibility
 export type BufferEncoding =
   | 'utf-8'
   | 'utf8'
@@ -33,7 +28,12 @@ export type BufferEncoding =
   | 'binary'
   | 'base64'
   | 'hex'; // NodeJS compatibility
+export const sysprc = {
+  exit: Deno.exit,
+};
+export const { inspect } = Deno;
 export const isDeno = 'Deno' in globalThis; // Deno compatibility
 export const isBun = 'Bun' in globalThis; // Bun compatibility
 export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
+export { crypto, net, os, path, aesjs };

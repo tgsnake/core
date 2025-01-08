@@ -10,11 +10,11 @@
 
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
-import { type TypeBuffer, Buffer } from '../../../platform.deno.ts';
+import { Buffer } from '../../../platform.deno.ts';
 export class BoolFalse extends TLObject {
   static ID: number = 0xbc799737;
   static value: boolean = false;
-  static override write(): TypeBuffer {
+  static override write(): Buffer {
     const buff = Buffer.alloc(4);
     buff.writeUInt32LE(BoolFalse.ID);
     return buff;
@@ -26,7 +26,7 @@ export class BoolFalse extends TLObject {
 export class BoolTrue extends BoolFalse {
   static override ID: number = 0x997275b5;
   static override value: boolean = true;
-  static override write(): TypeBuffer {
+  static override write(): Buffer {
     const buff = Buffer.alloc(4);
     buff.writeUInt32LE(BoolTrue.ID);
     return buff;
@@ -37,7 +37,7 @@ export class BoolTrue extends BoolFalse {
 }
 export class Bool extends TLObject {
   override className: string = 'Bool';
-  static override write(value: boolean): TypeBuffer {
+  static override write(value: boolean): Buffer {
     return value ? BoolTrue.write() : BoolFalse.write();
   }
   static override async read(data: BytesIO, ..._arg: Array<any>): Promise<boolean> {

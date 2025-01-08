@@ -12,7 +12,7 @@ import { BytesIO } from './BytesIO.ts';
 import { TLObject } from './TLObject.ts';
 import * as Primitive from './primitive/index.ts';
 import { Message } from './Message.ts';
-import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Buffer } from '../../platform.deno.ts';
 
 export class MsgContainer extends TLObject {
   static ID: number = 0x73f1f8dc;
@@ -31,7 +31,7 @@ export class MsgContainer extends TLObject {
     }
     return new MsgContainer(messages);
   }
-  override write(): TypeBuffer {
+  override write(): Buffer {
     const bytes = new BytesIO();
     bytes.write(Primitive.Int.write(MsgContainer.ID, false));
     bytes.write(Primitive.Int.write(this.messages.length));

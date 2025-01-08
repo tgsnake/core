@@ -13,7 +13,6 @@ import {
   type Readable,
   Buffer,
   Writable,
-  type TypeBuffer,
   type BufferEncoding,
 } from '../platform.deno.ts';
 import { type Client } from '../client/Client.ts';
@@ -32,7 +31,7 @@ export interface SaveFileParams {
   /**
    * Buffer of the file you want to upload to the telegram server.
    */
-  source: TypeBuffer;
+  source: Buffer;
   /**
    * The file name which will be uploaded to the telegram server. Default is file.unknown.
    */
@@ -71,7 +70,7 @@ export interface SaveFileStreamParams {
  */
 export async function upload(
   client: Client,
-  source: TypeBuffer,
+  source: Buffer,
   fileName?: string,
   fileId?: bigint,
   filePart: number = 0,

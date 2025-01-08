@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { bigInt, Buffer, type TypeBuffer } from './platform.deno.ts';
+import { bigInt, Buffer } from './platform.deno.ts';
 // https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
 export function bigintToBuffer(
   int: bigint,
@@ -57,7 +57,7 @@ export function bigintToBuffer(
   }
   return buffer;
 }
-export function includesBuffer(array: Array<TypeBuffer>, buffer: TypeBuffer) {
+export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
   for (const buff of array) {
     if (buff.equals(buffer as unknown as Uint8Array)) {
       return true;
@@ -66,7 +66,7 @@ export function includesBuffer(array: Array<TypeBuffer>, buffer: TypeBuffer) {
   return false;
 }
 // https://t.me/butthxforward/85
-export function sliceBuffer(buffer: TypeBuffer, start: number, stop: number, step: number = 1) {
+export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1) {
   let slc = buffer.subarray(start, stop);
   let res = slc;
   if (step === 0) {
@@ -110,7 +110,7 @@ export function makeCRCTable() {
   }
   return crcTable;
 }
-export function crc32(str: TypeBuffer | string) {
+export function crc32(str: Buffer | string) {
   str = Buffer.isBuffer(str) ? Buffer.from(str as unknown as Uint8Array) : str;
   const crcTable = makeCRCTable();
   const length = Buffer.isBuffer(str) ? Buffer.byteLength(str) : str.length;
@@ -126,11 +126,7 @@ export function sleep(ms: number) {
     setTimeout(resolve, ms);
   });
 }
-export function bufferToBigint(
-  buffer: TypeBuffer,
-  little: boolean = true,
-  signed: boolean = false,
-) {
+export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: boolean = false) {
   const length = Buffer.byteLength(buffer);
   const value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
   const _bigint = bigInt(value, 16);

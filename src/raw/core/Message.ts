@@ -11,7 +11,7 @@
 import { BytesIO } from './BytesIO.ts';
 import { TLObject } from './TLObject.ts';
 import * as Primitive from './primitive/index.ts';
-import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Buffer } from '../../platform.deno.ts';
 
 function toBytes(value: bigint) {
   const bytesArray: Array<number> = [];
@@ -44,7 +44,7 @@ export class Message extends TLObject {
     const body = data.read(length);
     return new Message(await TLObject.read(new BytesIO(body)), msgId, seqNo, length);
   }
-  override write(): TypeBuffer {
+  override write(): Buffer {
     const bytes = new BytesIO();
     bytes.write(toBytes(this.msgId));
     bytes.write(Primitive.Int.write(this.seqNo));

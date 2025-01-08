@@ -11,7 +11,7 @@
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
 import { bufferToBigint as toBigint } from '../../../helpers.ts';
-import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
+import { Buffer } from '../../../platform.deno.ts';
 
 export class Int extends TLObject {
   static SIZE: number = 4;
@@ -19,7 +19,7 @@ export class Int extends TLObject {
     value: number | bigint,
     signed: boolean = true,
     little: boolean = true,
-  ): TypeBuffer {
+  ): Buffer {
     const buffer = Buffer.alloc(Int.SIZE);
     if (signed) {
       if (little) {
@@ -80,7 +80,7 @@ export class Long extends TLObject {
       }
     }
   }
-  static override write(value: bigint, signed: boolean = true, little: boolean = true): TypeBuffer {
+  static override write(value: bigint, signed: boolean = true, little: boolean = true): Buffer {
     const buffer = Buffer.alloc(Long.SIZE);
     if (signed) {
       if (little) {
@@ -108,11 +108,7 @@ export class Int128 extends Long {
   ): Promise<bigint> {
     return toBigint(data.read(size), little, signed);
   }
-  static override write(
-    value: bigint,
-    _signed: boolean = true,
-    _little: boolean = true,
-  ): TypeBuffer {
+  static override write(value: bigint, _signed: boolean = true, _little: boolean = true): Buffer {
     const bytesArray: Array<number> = [];
     for (let i = 0; i < Int128.SIZE; i++) {
       let shift = value >> BigInt(Long.SIZE * i);
@@ -132,11 +128,7 @@ export class Int256 extends Long {
   ): Promise<bigint> {
     return Int128.read(data, signed, little, size);
   }
-  static override write(
-    value: bigint,
-    _signed: boolean = true,
-    _little: boolean = true,
-  ): TypeBuffer {
+  static override write(value: bigint, _signed: boolean = true, _little: boolean = true): Buffer {
     const bytesArray: Array<number> = [];
     for (let i = 0; i < Int256.SIZE; i++) {
       let shift = value >> BigInt(Long.SIZE * i);

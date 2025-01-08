@@ -8,15 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import {
-  net,
-  Mutex,
-  SocksClient,
-  isBrowser,
-  inspect,
-  Buffer,
-  type TypeBuffer,
-} from '../platform.deno.ts';
+import { net, Mutex, SocksClient, isBrowser, inspect, Buffer } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { WSError } from '../errors/index.ts';
 import type { ProxyInterface } from './connection.ts';
@@ -28,7 +20,7 @@ const mutex = new Mutex();
  */
 export class Socket {
   private _client!: WebSocket | net.Socket;
-  private _data!: TypeBuffer;
+  private _data!: Buffer;
   private _read!: boolean | Promise<boolean>;
   private _promisedReading!: (value?: unknown) => void;
   /**
@@ -192,7 +184,7 @@ export class Socket {
           }
         };
       } else {
-        (this._client as net.Socket).on('data', async (data: TypeBuffer) => {
+        (this._client as net.Socket).on('data', async (data: Buffer) => {
           const release = await mutex.acquire();
           try {
             Logger.debug(`[3] Receive ${Buffer.byteLength(data)} bytes data`);
@@ -213,9 +205,9 @@ export class Socket {
   /**
    * Send request to the server asynchronously.
    * If the client is not connected to the client, it will return an {@link WSError.Disconnected} error.
-   * @param {TypeBuffer} data - The request will be sent to the server. Data must be a buffer.
+   * @param {Buffer} data - The request will be sent to the server. Data must be a buffer.
    */
-  async send(data: TypeBuffer) {
+  async send(data: Buffer) {
     if (this._client && !this._connectionClosed) {
       const release = await mutex.acquire();
       try {

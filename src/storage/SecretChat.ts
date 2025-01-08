@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { inspect, Mutex, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { inspect, Mutex, Buffer } from '../platform.deno.ts';
 import { Raw } from '../raw/index.ts';
 import { type AbstractSession } from './Abstract.ts';
 
@@ -19,7 +19,7 @@ export class SecretChat {
   created!: number;
   changed!: number;
   isAdmin!: boolean;
-  authKey!: TypeBuffer;
+  authKey!: Buffer;
   mtproto!: number;
   layer!: number;
   inSeqNo!: number;
@@ -39,7 +39,7 @@ export class SecretChat {
     id: number;
     accessHash: bigint;
     isAdmin: boolean;
-    authKey: TypeBuffer;
+    authKey: Buffer;
   }) {
     this.id = id;
     this.accessHash = accessHash;
@@ -79,7 +79,7 @@ export class SecretChat {
       id: number;
       accessHash: bigint;
       isAdmin: boolean;
-      authKey: TypeBuffer;
+      authKey: Buffer;
     },
   ): SecretChat {
     const tempChat = new SecretChat(params);

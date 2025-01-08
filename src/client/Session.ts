@@ -14,7 +14,7 @@ import { Logger } from '../Logger.ts';
 import * as Errors from '../errors/index.ts';
 import * as _Auth from './Auth.ts';
 import * as Version from '../Version.deno.ts';
-import { process } from '../platform.deno.ts';
+import { sysprc } from '../platform.deno.ts';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
  */
@@ -104,7 +104,7 @@ export async function logout(this: Client): Promise<any> {
   await (this as Client).invoke(new Raw.auth.LogOut());
   await (this as Client)._storage.delete();
   Logger.info(`[105] Logged out.`);
-  return process.exit(0); // kill the process
+  return sysprc.exit(0); // kill the process
 }
 /**
  * Exporting current session to string.

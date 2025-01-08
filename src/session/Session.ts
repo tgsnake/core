@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, Mutex, inspect, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { crypto, Mutex, inspect, Buffer } from '../platform.deno.ts';
 import { Logger } from '../Logger.ts';
 import { Connection, ProxyInterface } from '../connection/connection.ts';
 import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw/index.ts';
@@ -41,17 +41,17 @@ export class Session {
   PING_INTERVAL: number = 5000;
 
   private _dcId!: number;
-  private _authKey!: TypeBuffer;
+  private _authKey!: Buffer;
   private _testMode!: boolean;
   private _proxy?: ProxyInterface;
   private _isMedia!: boolean;
   private _isCdn!: boolean;
-  private _authKeyId!: TypeBuffer;
+  private _authKeyId!: Buffer;
   private _connection!: Connection;
   private _pingTask!: any;
   private _client!: Client;
 
-  private _sessionId: TypeBuffer = Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array);
+  private _sessionId: Buffer = Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array);
   private _msgFactory: { (body: TLObject, msgId: MsgId): Message } = MsgFactory();
   private _msgId: MsgId = new MsgId();
   private _salt: bigint = BigInt(0);
@@ -66,7 +66,7 @@ export class Session {
   constructor(
     client: Client,
     dcId: number,
-    authKey: TypeBuffer,
+    authKey: Buffer,
     testMode: boolean,
     proxy?: ProxyInterface,
     isMedia: boolean = false,
@@ -83,7 +83,7 @@ export class Session {
     this.MAX_RETRIES = client._maxRetries ?? 5;
   }
 
-  private async _handlePacket(packet: TypeBuffer) {
+  private async _handlePacket(packet: Buffer) {
     Logger.debug(`[33] Unpacking ${Buffer.byteLength(packet)} bytes packet.`);
     try {
       const data = await Mtproto.unpack(

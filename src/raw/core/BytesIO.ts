@@ -7,12 +7,12 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Buffer } from '../../platform.deno.ts';
 
 export class BytesIO {
-  private _buffer!: TypeBuffer;
+  private _buffer!: Buffer;
   private _post!: number;
-  constructor(buffer: TypeBuffer = Buffer.alloc(0)) {
+  constructor(buffer: Buffer = Buffer.alloc(0)) {
     this._post = 0;
     this._buffer = buffer;
     return this;
@@ -53,7 +53,7 @@ export class BytesIO {
     return this._buffer.toString(...args);
   }
   // read
-  read(length?: number): TypeBuffer {
+  read(length?: number): Buffer {
     if (length === undefined) {
       const results = this._buffer.subarray(this._post);
       this.seek(Buffer.byteLength(results), 1);
@@ -127,7 +127,7 @@ export class BytesIO {
     return results;
   }
   // write
-  write(data: TypeBuffer): BytesIO {
+  write(data: Buffer): BytesIO {
     this._buffer = Buffer.concat([
       this._buffer as unknown as Uint8Array,
       data as unknown as Uint8Array,
@@ -141,14 +141,14 @@ export class BytesIO {
   static from(input: any, encode?: any): BytesIO {
     return new BytesIO(Buffer.from(input, encode));
   }
-  static concat(data: Array<TypeBuffer>): BytesIO {
+  static concat(data: Array<Buffer>): BytesIO {
     return new BytesIO(Buffer.concat(data as unknown as Array<Uint8Array>));
   }
   // getters
   get length(): number {
     return Buffer.byteLength(this._buffer);
   }
-  get buffer(): TypeBuffer {
+  get buffer(): Buffer {
     return this._buffer;
   }
   get post(): number {

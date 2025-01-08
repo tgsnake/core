@@ -11,7 +11,7 @@
 import { Raw } from '../raw/index.ts';
 import { type SecretChat } from './SecretChat.ts';
 // @ts-ignore
-import { type TypeBuffer } from '../platform.deno.ts';
+import { type Buffer } from '../platform.deno.ts';
 
 type MaybePromise<T> = T | Promise<T>;
 
@@ -46,7 +46,7 @@ export abstract class AbstractSession {
   /**
    * Bytes Authkey for user login.
    */
-  protected abstract _authKey: TypeBuffer;
+  protected abstract _authKey: Buffer;
   /**
    * If set, it make user login in test telegram server.
    */
@@ -82,7 +82,7 @@ export abstract class AbstractSession {
    * @param {Buffer} authKey
    * @param {Number} dcId
    */
-  abstract setAuthKey(authKey: TypeBuffer, dcId: number): MaybePromise<void>;
+  abstract setAuthKey(authKey: Buffer, dcId: number): MaybePromise<void>;
   /**
    * Set apiId, got it from my.telegram.org.
    * @param {Number} apiId
@@ -101,7 +101,7 @@ export abstract class AbstractSession {
   /**
    * Return the current AuthKey
    */
-  abstract get authKey(): TypeBuffer;
+  abstract get authKey(): Buffer;
   /**
    * Return type of user, is bot or not.
    */

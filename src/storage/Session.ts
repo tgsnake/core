@@ -12,7 +12,7 @@ import { Logger } from '../Logger.ts';
 import { AbstractSession } from './Abstract.ts';
 import { Raw } from '../raw/index.ts';
 import { getChannelId } from '../helpers.ts';
-import { inspect, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { inspect, Buffer } from '../platform.deno.ts';
 import type { SecretChat } from './SecretChat.ts';
 
 /**
@@ -57,7 +57,7 @@ export class BaseSession extends AbstractSession {
     [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >();
   protected _secretChats: Map<number, SecretChat> = new Map<number, SecretChat>();
-  protected _authKey!: TypeBuffer;
+  protected _authKey!: Buffer;
   protected _testMode: boolean = false;
   protected _apiId!: number;
   protected _userId!: bigint;
@@ -71,7 +71,7 @@ export class BaseSession extends AbstractSession {
     this._port = port ?? 443;
     this._testMode = testMode;
   }
-  setAuthKey(authKey: TypeBuffer, dcId: number) {
+  setAuthKey(authKey: Buffer, dcId: number) {
     if (dcId !== this._dcId) return;
     this._authKey = authKey;
   }

@@ -10,7 +10,7 @@
 
 import { TCP } from './tcp.ts';
 import { includesBuffer, sliceBuffer } from '../../helpers.ts';
-import { crypto, Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { crypto, Buffer } from '../../platform.deno.ts';
 import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
 import { Primitive } from '../../raw/core/index.ts';
 import type { ProxyInterface } from '../connection.ts';
@@ -22,7 +22,7 @@ import type { ProxyInterface } from '../connection.ts';
  */
 export class TCPIntermediateO extends TCP {
   /** @hidden */
-  private _reserved!: Array<TypeBuffer>;
+  private _reserved!: Array<Buffer>;
   /** @hidden */
   private _encryptor!: CtrCipherFn;
   /** @hidden */
@@ -66,7 +66,7 @@ export class TCPIntermediateO extends TCP {
           break;
         }
       }
-      const temp: TypeBuffer = sliceBuffer(nonce, 55, 7, -1);
+      const temp: Buffer = sliceBuffer(nonce, 55, 7, -1);
       const encryptionKey = sha256(
         Buffer.concat([
           nonce.subarray(8, 40) as unknown as Uint8Array,
@@ -112,7 +112,7 @@ export class TCPIntermediateO extends TCP {
           break;
         }
       }
-      const temp: TypeBuffer = sliceBuffer(nonce, 55, 7, -1);
+      const temp: Buffer = sliceBuffer(nonce, 55, 7, -1);
       const encryptionKey = nonce.subarray(8, 40);
       const encryptionIv = nonce.subarray(40, 56);
       const decryptionKey = temp.subarray(0, 32);
@@ -126,7 +126,7 @@ export class TCPIntermediateO extends TCP {
     }
     await super.send(nonce);
   }
-  override async send(data: TypeBuffer) {
+  override async send(data: Buffer) {
     const payload = this._encryptor(
       Buffer.concat([
         Primitive.Int.write(Buffer.byteLength(data)) as unknown as Uint8Array,
@@ -136,16 +136,16 @@ export class TCPIntermediateO extends TCP {
     return await super.send(payload);
   }
   override async recv(_length: number = 0) {
-    const length = await super.recv(4);
+    let length = await super.recv(4);
     if (!length) return;
-    (length as TypeBuffer) = this._decryptor(length);
+    length = this._decryptor(length);
     const data = await super.recv(length.readInt32LE(0));
     if (!data) return;
     return this._decryptor(data);
   }
 }
 
-function sha256(data: TypeBuffer): TypeBuffer {
+function sha256(data: Buffer): Buffer {
   const hash = crypto.createHash('sha256');
   hash.update(data);
   return hash.digest();

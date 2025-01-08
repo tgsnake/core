@@ -10,10 +10,10 @@
 
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
-import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
+import { Buffer } from '../../../platform.deno.ts';
 
 export class Double extends TLObject {
-  static override write(value: number, little: boolean = true): TypeBuffer {
+  static override write(value: number, little: boolean = true): Buffer {
     const buffer = Buffer.alloc(8);
     if (little) {
       buffer.writeDoubleLE(value);

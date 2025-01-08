@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Buffer } from '../../platform.deno.ts';
 import { TCP } from './tcp.ts';
 import { bigintToBuffer } from '../../helpers.ts';
 import type { ProxyInterface } from '../connection.ts';
@@ -25,10 +25,10 @@ export class TCPAbridged extends TCP {
     await super.connect(ip, port, proxy, dcId);
     return await super.send(Buffer.from('ef', 'hex'));
   }
-  override async send(data: TypeBuffer) {
+  override async send(data: Buffer) {
     const length = Math.round(Buffer.byteLength(data) / 4);
     if (length <= 126) {
-      const mark: TypeBuffer = Buffer.from([length]);
+      const mark: Buffer = Buffer.from([length]);
       return await super.send(
         Buffer.concat([mark as unknown as Uint8Array, data as unknown as Uint8Array]),
       );

@@ -12,7 +12,7 @@ import * as TCPs from './TCP/index.ts';
 import { DataCenter } from '../session/index.ts';
 import { sleep } from '../helpers.ts';
 import { Logger } from '../Logger.ts';
-import { isBrowser, inspect, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { isBrowser, inspect, Buffer } from '../platform.deno.ts';
 import { ClientError } from '../errors/index.ts';
 
 /**
@@ -78,7 +78,7 @@ export interface MtprotoProxyInterface {
   /**
    * Secret of MTProto Proxy, can be encoded as hex string or buffer.
    */
-  secret: string | TypeBuffer;
+  secret: string | Buffer;
 }
 export type ProxyInterface = SocksProxyInterface | MtprotoProxyInterface;
 
@@ -171,7 +171,7 @@ export class Connection {
     await sleep(10);
     await this._protocol.close();
   }
-  async send(data: TypeBuffer) {
+  async send(data: Buffer) {
     Logger.debug(`[2] Sending ${Buffer.byteLength(data)} bytes data.`);
     await this._protocol.send(data);
   }

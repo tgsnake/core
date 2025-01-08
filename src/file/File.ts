@@ -7,10 +7,10 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Duplex, inspect, Buffer, type TypeBuffer, type BufferEncoding } from '../platform.deno.ts';
+import { Duplex, inspect, Buffer, type BufferEncoding } from '../platform.deno.ts';
 import { BytesIO } from '../raw/index.ts';
 
-export type TypeFileChunk = TypeBuffer | ArrayBufferView | DataView | string | null | any;
+export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
 export type TypeFileCallback = (error?: any) => void;
 /**
  * @class
@@ -41,7 +41,7 @@ export class File extends Duplex {
    * @param {Number} length - Length of chunk
    */
   // @ts-ignore: doesn't need to be implemented on browser but need on other platform
-  _read(length?: number): TypeBuffer | null {
+  _read(length?: number): Buffer | null {
     if (length) {
       if (this._bytes.length > 0) {
         const bytes = this._bytes.read(length as number);

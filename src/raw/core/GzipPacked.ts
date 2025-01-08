@@ -11,7 +11,7 @@
 import { BytesIO } from './BytesIO.ts';
 import { TLObject } from './TLObject.ts';
 import * as Primitive from './primitive/index.ts';
-import { gzipSync, gunzipSync, Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { gzipSync, gunzipSync, Buffer } from '../../platform.deno.ts';
 
 export class GzipPacked extends TLObject {
   static ID: number = 0x3072cfa1;
@@ -27,7 +27,7 @@ export class GzipPacked extends TLObject {
       new BytesIO(gunzipSync(await Primitive.Bytes.read(data))),
     )) as unknown as GzipPacked;
   }
-  override write(): TypeBuffer {
+  override write(): Buffer {
     const bytes = new BytesIO();
     bytes.write(Primitive.Int.write(GzipPacked.ID, false));
     bytes.write(Primitive.Bytes.write(gzipSync(this.packedData.write())));

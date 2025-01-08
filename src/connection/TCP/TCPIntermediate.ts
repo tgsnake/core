@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Buffer } from '../../platform.deno.ts';
 import { TCP } from './tcp.ts';
 import type { ProxyInterface } from '../connection.ts';
 
@@ -31,7 +31,7 @@ export class TCPIntermediate extends TCP {
       ]),
     );
   }
-  override async send(data: TypeBuffer) {
+  override async send(data: Buffer) {
     const allocLength = Buffer.alloc(4);
     allocLength.writeInt32LE(Buffer.byteLength(data), 0);
     await super.send(

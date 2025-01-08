@@ -11,10 +11,10 @@
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
 import { bufferToBigint, bigintToBuffer, mod } from '../../../helpers.ts';
-import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
+import { Buffer } from '../../../platform.deno.ts';
 
 export class Bytes extends TLObject {
-  static override write(value: TypeBuffer): TypeBuffer {
+  static override write(value: Buffer): Buffer {
     const length = Buffer.byteLength(value);
     if (length <= 253) {
       return Buffer.concat([
@@ -31,7 +31,7 @@ export class Bytes extends TLObject {
       ]);
     }
   }
-  static override async read(data: BytesIO, ..._args: Array<any>): Promise<TypeBuffer> {
+  static override async read(data: BytesIO, ..._args: Array<any>): Promise<Buffer> {
     let length = (data.read(1) as unknown as Uint8Array)[0];
     if (length <= 253) {
       const x = data.read(length);

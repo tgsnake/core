@@ -12,7 +12,7 @@ import { Connection } from '../connection/connection.ts';
 import * as AES from '../crypto/Aes.ts';
 import * as Prime from '../crypto/Prime.ts';
 import * as RSA from '../crypto/RSA.ts';
-import { crypto, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { crypto, Buffer } from '../platform.deno.ts';
 import { SecurityCheckMismatch } from '../errors/index.ts';
 import { TLObject, Primitive, Raw, BytesIO } from '../raw/index.ts';
 import { MsgId } from './internals/MsgId.ts';
@@ -36,7 +36,7 @@ export class Auth {
     this.testMode = testMode;
     this.ipv6 = ipv6;
   }
-  static pack(data: TLObject): TypeBuffer {
+  static pack(data: TLObject): Buffer {
     return Buffer.concat([
       Buffer.alloc(8) as unknown as Uint8Array,
       Primitive.Long.write(BigInt(new MsgId().getMsgId())) as unknown as Uint8Array,

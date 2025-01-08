@@ -10,7 +10,7 @@
 
 import { Raw } from '../../raw/index.ts';
 import { type AbstractSession, SecretChat as TempChat } from '../../storage/index.ts';
-import { Mutex, inspect, crypto, Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Mutex, inspect, crypto, Buffer } from '../../platform.deno.ts';
 import { Logger } from '../../Logger.ts';
 import { SecurityCheckMismatch, SecretChatError } from '../../errors/index.ts';
 import { SecretChats } from '../../crypto/index.ts';
@@ -24,7 +24,7 @@ import type { Client } from '../../client/Client.ts';
 // Adapted from:
 // https://github.com/danog/MadelineProto/blob/v8/src/SecretChats/AuthKeyHandler.php
 // https://github.com/painor/telethon-secret-chat/blob/master/telethon_secret_chat/secret_methods.py
-function sha1(data: TypeBuffer): TypeBuffer {
+function sha1(data: Buffer): Buffer {
   const hash = crypto.createHash('sha1');
   hash.update(data);
   return hash.digest();
@@ -35,7 +35,7 @@ export class SecretChat {
   private _dhConfig!: Raw.messages.DhConfig;
   //  private _dhP!: bigint;
   private _mutex!: Mutex;
-  private _tempAuthKey!: Map<bigint, TypeBuffer>;
+  private _tempAuthKey!: Map<bigint, Buffer>;
   private _waiting!: Array<number>;
 
   constructor(storage: AbstractSession, client: Client) {
@@ -421,7 +421,7 @@ export class SecretChat {
     const p = await toBigint(dh.p, false);
     const gB = await toBigint(action.gB, false);
     const authKey = await toBuffer(
-      bigIntPow(gB, await toBigint(this._tempAuthKey.get(action.exchangeId) as TypeBuffer), p),
+      bigIntPow(gB, await toBigint(this._tempAuthKey.get(action.exchangeId) as Buffer), p),
       256,
       false,
     );
@@ -502,7 +502,7 @@ export class SecretChat {
     if (peer.rekeyStep !== 2 || !this._tempAuthKey.has(action.exchangeId)) {
       return;
     }
-    const fingerprint = sha1(this._tempAuthKey.get(action.exchangeId) as unknown as TypeBuffer)
+    const fingerprint = sha1(this._tempAuthKey.get(action.exchangeId) as unknown as Buffer)
       .subarray(-8)
       .readBigInt64LE();
     if (fingerprint !== action.keyFingerprint) {
@@ -530,7 +530,7 @@ export class SecretChat {
     try {
       peer.rekeyStep = 0;
       peer.rekeyExchange = BigInt(0);
-      peer.authKey = this._tempAuthKey.get(action.exchangeId) as unknown as TypeBuffer;
+      peer.authKey = this._tempAuthKey.get(action.exchangeId) as unknown as Buffer;
       peer.timeRekey = 100;
       peer.changed = Date.now() / 1000;
       this._tempAuthKey.delete(action.exchangeId);

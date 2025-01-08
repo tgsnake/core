@@ -8,19 +8,19 @@
  * it under the terms of the MIT License as published.
  */
 import { Raw } from '../raw/index.ts';
-import { crypto, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { crypto, Buffer } from '../platform.deno.ts';
 import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers.ts';
 
 /**
  * Create a sha256 hash.
  */
-function sha256(data: TypeBuffer) {
+function sha256(data: Buffer) {
   return crypto.createHash('sha256').update(data).digest();
 }
 /**
  * Xor the buffer A with B.
  */
-export function xor(a: TypeBuffer, b: TypeBuffer) {
+export function xor(a: Buffer, b: Buffer) {
   const length = Math.min(Buffer.byteLength(a), Buffer.byteLength(b));
   for (let i = 0; i < length; i++) {
     (a as unknown as Uint8Array)[i] =
@@ -37,7 +37,7 @@ export function xor(a: TypeBuffer, b: TypeBuffer) {
 export function computePasswordHash(
   algo: Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
   password: string,
-): TypeBuffer {
+): Buffer {
   const hash1 = sha256(
     Buffer.concat([
       algo.salt1 as unknown as Uint8Array,
@@ -126,15 +126,15 @@ export function computePasswordCheck(
 }
 /**
  * Make a Big number from buffer.
- * @param {TypeBuffer} b - Buffer will be converted to big number.
+ * @param {Buffer} b - Buffer will be converted to big number.
  */
-function btoi(b: TypeBuffer): bigint {
+function btoi(b: Buffer): bigint {
   return bufferToBigint(b, false);
 }
 /**
  * Make a large bytes from big number.
  * @param {BigInt} i - Big Number will be converted to large bytes.
  */
-function itob(i: bigint): TypeBuffer {
+function itob(i: bigint): Buffer {
   return bigintToBuffer(i, 256, false);
 }

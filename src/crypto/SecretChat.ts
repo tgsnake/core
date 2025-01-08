@@ -7,19 +7,19 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { crypto, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { crypto, Buffer } from '../platform.deno.ts';
 import { SecurityCheckMismatch, SecretChatError } from '../errors/index.ts';
 import { BytesIO, TLObject } from '../raw/index.ts';
 import { mod } from '../helpers.ts';
 import { ige256Encrypt, ige256Decrypt } from './Aes.ts';
 import { Raw } from '../raw/index.ts';
 
-function sha256(data: TypeBuffer): TypeBuffer {
+function sha256(data: Buffer): Buffer {
   const hash = crypto.createHash('sha256');
   hash.update(data);
   return hash.digest();
 }
-function sha1(data: TypeBuffer): TypeBuffer {
+function sha1(data: Buffer): Buffer {
   const hash = crypto.createHash('sha1');
   hash.update(data);
   return hash.digest();
@@ -28,11 +28,11 @@ function sha1(data: TypeBuffer): TypeBuffer {
  * Create aesKey and aesIv
  */
 export function kdf(
-  sharedKey: TypeBuffer,
-  msgKey: TypeBuffer,
+  sharedKey: Buffer,
+  msgKey: Buffer,
   isAdmin: boolean,
   v1: boolean = false,
-): Array<TypeBuffer> {
+): Array<Buffer> {
   // https://corefork.telegram.org/api/end-to-end#serialization-and-encryption-of-outgoing-messages
   const x = isAdmin ? 0 : 8;
   if (v1) {
@@ -104,13 +104,13 @@ export function kdf(
 
 export function pack(
   message: Raw.TypeDecryptedMessage,
-  sharedKey: TypeBuffer,
+  sharedKey: Buffer,
   inSeqNo: number,
   outSeqNo: number,
   isAdmin: boolean,
   layer: number,
   mtproto: number = 2,
-): TypeBuffer {
+): Buffer {
   let msg: Raw.DecryptedMessageLayer17 | Raw.TypeDecryptedMessage = message;
   if (layer > 8) {
     msg = new Raw.DecryptedMessageLayer17({
@@ -154,7 +154,7 @@ export function pack(
 
 export async function unpack(
   message: Raw.TypeEncryptedMessage,
-  sharedKey: TypeBuffer,
+  sharedKey: Buffer,
   isAdmin: boolean,
   mtproto: number = 2,
 ): Promise<Raw.TypeDecryptedMessage> {
@@ -170,7 +170,7 @@ export async function unpack(
     mtproto === 1 ? kdf(sharedKey, msgKey, isAdmin, true) : kdf(sharedKey, msgKey, !isAdmin, false);
   const decryptedMsg = new BytesIO(ige256Decrypt(encryptedMsg, aesKey, aesIv));
   const msgLength = decryptedMsg.readUInt32LE();
-  const payload: TypeBuffer = decryptedMsg.read();
+  const payload: Buffer = decryptedMsg.read();
   const padding = payload.subarray(msgLength);
   const msgKeyLarge = sha256(
     Buffer.concat([

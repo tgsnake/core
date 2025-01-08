@@ -11,14 +11,14 @@
 import { TLObject } from '../TLObject.ts';
 import { BytesIO } from '../BytesIO.ts';
 import { Int, Long } from './Int.ts';
-import { Buffer, type TypeBuffer } from '../../../platform.deno.ts';
+import { Buffer } from '../../../platform.deno.ts';
 
 export class Vector extends TLObject {
   static ID: number = 0x1cb5c415;
-  static override write(value: Array<any>, tl?: any): TypeBuffer {
+  static override write(value: Array<any>, tl?: any): Buffer {
     const bytes = new BytesIO();
-    bytes.write(Int.write(Vector.ID, false) as unknown as TypeBuffer);
-    bytes.write(Int.write(value.length) as unknown as TypeBuffer);
+    bytes.write(Int.write(Vector.ID, false) as unknown as Buffer);
+    bytes.write(Int.write(value.length) as unknown as Buffer);
     for (const i of value) {
       if (tl) {
         bytes.write(tl.write(i));

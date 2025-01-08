@@ -23,7 +23,7 @@ interface ExceptionModuleIndexSignature {
   Flood: typeof AllExceptions.Flood;
   InternalServerError: typeof AllExceptions.InternalServerError;
   ServiceUnavailable: typeof AllExceptions.ServiceUnavailable;
-  [key: string]: any;
+  [key: string]: { [key: string]: typeof RPCError };
 }
 
 function getModule(name: string) {
@@ -98,12 +98,12 @@ export class RPCError extends Error {
     if (regexMatch) {
       value = regexMatch[0].replace(/\_/g, '');
     }
-    if (!(id in Exceptions[code])) {
+    if (!(id in Exceptions[code as keyof typeof Exceptions])) {
       // try to replace the last word with asterisk (*)
       // example: FILE_REFERENCE_*
       id = id.split('_').splice(-1, 1, '*').join('_');
-      if (!(id in Exceptions[code])) {
-        const modules = getModule(Exceptions[code]['_']);
+      if (!(id in Exceptions[code as keyof typeof Exceptions])) {
+        const modules = getModule(Exceptions[code as keyof typeof Exceptions]['_']);
         const _module = new modules(value, name, true, isSigned);
         _module.message = `[${code} ${message}]`;
         _module.id = message.replace(/\_\d+/gm, '_X');
@@ -111,14 +111,16 @@ export class RPCError extends Error {
         throw _module;
       }
     }
-    const modules = await getModule(Exceptions[code][id]);
+    const modules = await getModule(
+      (Exceptions[code as keyof typeof Exceptions] as { [key: string]: string })[id],
+    );
     const _module = new modules(value, name, false, isSigned);
     _module._format();
     throw _module;
   }
   /** @ignore */
-  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
+  [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: unknown } {
+    const toPrint: { [key: string]: unknown } = {
       _: this.constructor.name,
     };
     for (const key in this) {
@@ -140,8 +142,8 @@ export class RPCError extends Error {
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
   /** @ignore */
-  toJSON(): { [key: string]: any } {
-    const toPrint: { [key: string]: any } = {
+  toJSON(): { [key: string]: unknown } {
+    const toPrint: { [key: string]: unknown } = {
       _: this.constructor.name,
       stack: this.stack,
     };

@@ -11,7 +11,7 @@
 import { AllTLObject } from '../All.ts';
 import { BytesIO } from './BytesIO.ts';
 import { Logger } from '../../Logger.ts';
-import { inspect, Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { inspect, Buffer } from '../../platform.deno.ts';
 import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.ts';
 
 interface RawIndexSignature {
@@ -77,13 +77,13 @@ export class TLObject {
     const _class = getModule(AllTLObject[id as unknown as keyof typeof AllTLObject]);
     return await _class.read(data, ...args);
   }
-  static write(..._args: Array<any>): TypeBuffer {
+  static write(..._args: Array<any>): Buffer {
     return Buffer.alloc(0);
   }
   read(data: BytesIO, ...args: Array<any>): Promise<any> {
     return this.cls.read(data, ...args);
   }
-  write(...args: Array<any>): TypeBuffer {
+  write(...args: Array<any>): Buffer {
     return this.cls.write(...args);
   }
   /** @ignore */

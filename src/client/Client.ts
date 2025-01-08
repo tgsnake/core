@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { os, inspect, Semaphore, isBrowser, type TypeBuffer } from '../platform.deno.ts';
+import { os, inspect, Semaphore, isBrowser, Buffer } from '../platform.deno.ts';
 import * as Errors from '../errors/index.ts';
 import {
   Raw,
@@ -687,18 +687,18 @@ export class Client {
    * Downloading file asynchronous.
    * This function will be return Buffer.
    */
-  async download({ file, dcId, limit, offset }: Files.DownloadParam): Promise<TypeBuffer> {
+  async download({ file, dcId, limit, offset }: Files.DownloadParam): Promise<Buffer> {
     const pipe = new Files.File();
     const stream = await Files.downloadStream(this, file, dcId, limit || 0, offset || BigInt(0));
-    let resolve: (value: TypeBuffer) => void;
-    const promise = new Promise<TypeBuffer>((res) => {
+    let resolve: (value: Buffer) => void;
+    const promise = new Promise<Buffer>((res) => {
       resolve = res;
     });
     pipe.on('finish', () => {
-      return resolve(pipe.bytes.buffer as unknown as TypeBuffer);
+      return resolve(pipe.bytes.buffer as unknown as Buffer);
     });
     stream.pipe(pipe);
-    return promise as unknown as Promise<TypeBuffer>;
+    return promise as unknown as Promise<Buffer>;
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {

@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { crypto, Buffer, type TypeBuffer } from '../platform.deno.ts';
+import { crypto, Buffer } from '../platform.deno.ts';
 import { SecurityCheckMismatch } from '../errors/index.ts';
 import { Message, BytesIO } from '../raw/index.ts';
 import { MsgId } from '../session/internals/MsgId.ts';
@@ -18,12 +18,12 @@ import { Logger } from '../Logger.ts';
 
 const STORED_MSG_IDS_MAX_SIZE = 1000 * 2;
 
-function sha256(data: TypeBuffer): TypeBuffer {
+function sha256(data: Buffer): Buffer {
   const hash = crypto.createHash('sha256');
   hash.update(data);
   return hash.digest();
 }
-function toBytes(value: bigint): TypeBuffer {
+function toBytes(value: bigint): Buffer {
   const bytesArray: Array<number> = [];
   for (let i = 0; i < 8; i++) {
     let shift = value >> BigInt(8 * i);
@@ -36,7 +36,7 @@ function toBytes(value: bigint): TypeBuffer {
 /**
  * Encrypt content with kdf
  */
-export function kdf(authKey: TypeBuffer, msgKey: TypeBuffer, outgoing: boolean): Array<TypeBuffer> {
+export function kdf(authKey: Buffer, msgKey: Buffer, outgoing: boolean): Array<Buffer> {
   // https://core.telegram.org/mtproto/description#defining-aes-key-and-initialization-vector
   const x = outgoing ? 0 : 8;
   const sha256A = sha256(
@@ -69,10 +69,10 @@ export function kdf(authKey: TypeBuffer, msgKey: TypeBuffer, outgoing: boolean):
 export function pack(
   message: Message,
   salt: bigint,
-  sessionId: TypeBuffer,
-  authKey: TypeBuffer,
-  authKeyId: TypeBuffer,
-): TypeBuffer {
+  sessionId: Buffer,
+  authKey: Buffer,
+  authKeyId: Buffer,
+): Buffer {
   const data = Buffer.concat([
     Buffer.concat([
       toBytes(salt) as unknown as Uint8Array,
@@ -107,9 +107,9 @@ export function pack(
  */
 export async function unpack(
   b: BytesIO,
-  sessionId: TypeBuffer,
-  authKey: TypeBuffer,
-  authKeyId: TypeBuffer,
+  sessionId: Buffer,
+  authKey: Buffer,
+  authKeyId: Buffer,
   storedMsgId: Array<bigint>,
 ): Promise<Message> {
   SecurityCheckMismatch.check(

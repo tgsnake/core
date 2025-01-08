@@ -9,7 +9,7 @@
  */
 
 import { Socket } from '../WebSocket.ts';
-import { Mutex, inspect, Buffer, type TypeBuffer } from '../../platform.deno.ts';
+import { Mutex, inspect, Buffer } from '../../platform.deno.ts';
 import { Timeout } from '../../Timeout.ts';
 import { sleep } from '../../helpers.ts';
 import type { ProxyInterface } from '../connection.ts';
@@ -59,9 +59,9 @@ export class TCP {
   /**
    * Send requests to telegram using websocket. The message must be of bytes supported by telegram for the message to be valid.
    * see {@link https://core.telegram.org/mtproto/mtproto-transports transport}
-   * @param {TypeBuffer} data - message to be sent to telegram server. The message must be encrypted according to what is explained on the Telegram website.
+   * @param {Buffer} data - message to be sent to telegram server. The message must be encrypted according to what is explained on the Telegram website.
    */
-  async send(data: TypeBuffer) {
+  async send(data: Buffer) {
     const release = await this._mutex.acquire();
     try {
       await this._socks.send(data);
@@ -74,7 +74,7 @@ export class TCP {
    * @param {Number} length - How many bytes to receive.
    */
   async recv(length: number = 0) {
-    let data: TypeBuffer = Buffer.alloc(0);
+    let data: Buffer = Buffer.alloc(0);
     while (Buffer.byteLength(data) < length) {
       const chunk = await this._task.run(
         this._socks.read(length - Buffer.byteLength(data)),
