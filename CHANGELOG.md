@@ -1,4 +1,20 @@
- <a name="1.13.11"></a>
+ <a name="1.13.12"></a>
+
+## [1.13.12](https://github.com/tgsnake/core/compare/1.13.11...1.13.12)
+
+> 2024-12-27
+
+### Add
+
+- better jsdoc - better jsdoc  ### Change
+
+- Update CHANGELOG.md - Update TLSchema - Update CHANGELOG.md - Update TLSchema - Update TLSchema  ### Fix
+
+- browser support  ### Fixed
+
+- typing error  ### Remove
+
+- override on File.ts   <a name="1.13.11"></a>
 
 ## [1.13.11](https://github.com/tgsnake/core/compare/1.13.10...1.13.11)
 
