@@ -1,4 +1,14 @@
- <a name="1.13.12"></a>
+ <a name="1.13.13"></a>
+
+## [1.13.13](https://github.com/tgsnake/core/compare/1.13.12...1.13.13)
+
+> 2025-01-08
+
+### Change
+
+- Update CHANGELOG.md - TypeBuffer to Buffer - update license year - sync errors - Update TLSchema - Update TLSchema  ### Fix
+
+- 'npm:ip-address[@9](https://github.com/9).0.5' in the node_modules directory error.   <a name="1.13.12"></a>
 
 ## [1.13.12](https://github.com/tgsnake/core/compare/1.13.11...1.13.12)
 
