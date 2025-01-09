@@ -23,15 +23,24 @@ export async function loadSession(this: Client): Promise<void> {
   // without authkey, that mean the session is fresh.
   if (!(this as Client)._storage.authKey) {
     const [ip, port] = await DataCenter.DataCenter(
-      2,
+      (this as Client)._defaultDcId,
       (this as Client)._testMode,
       (this as Client)._ipv6,
       false,
     );
-    const auth = new Auth(2, (this as Client)._testMode, (this as Client)._ipv6);
-    (this as Client)._storage.setAddress(2, ip, port, (this as Client)._testMode);
+    const auth = new Auth(
+      (this as Client)._defaultDcId,
+      (this as Client)._testMode,
+      (this as Client)._ipv6,
+    );
+    (this as Client)._storage.setAddress(
+      (this as Client)._defaultDcId,
+      ip,
+      port,
+      (this as Client)._testMode,
+    );
     (this as Client)._storage.setApiId((this as Client)._apiId);
-    (this as Client)._storage.setAuthKey(await auth.create(), 2);
+    (this as Client)._storage.setAuthKey(await auth.create(), (this as Client)._defaultDcId);
   }
   // migrate from old string session
   if (!(this as Client)._storage.apiId) {

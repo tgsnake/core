@@ -104,6 +104,10 @@ export interface ClientOptions {
    * Default is 3
    */
   maxReconnectRetries?: number;
+  /**
+   * Default DC ID to to use for connecting to Telegram.
+   */
+  defaultDCId?: number;
 }
 
 /**
@@ -130,6 +134,7 @@ export interface ClientOptions {
  * @property {boolean} _noUpdates - Indicates if updates are disabled.
  * @property {bigint} _takeoutId - The takeout ID.
  * @property {string} _dcId - The data center ID.
+ * @property {number} _defaultDcId - The default data center ID.
  * @property {Session} _session - The session.
  * @property {boolean} _isConnected - Indicates if the client is connected.
  * @property {number} _connectionMode - The connection mode.
@@ -232,6 +237,7 @@ export class Client {
   _noUpdates!: boolean;
   _takeoutId!: bigint;
   _dcId!: string;
+  _defaultDcId!: number;
   _session!: Session;
   _isConnected!: boolean;
   _connectionMode!: number;
@@ -287,6 +293,7 @@ export class Client {
     this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._maxReconnectRetries = clientOptions?.maxReconnectRetries || 3;
+    this._defaultDcId = clientOptions?.defaultDCId || 2;
   }
   /**
    * Exporting current session to string.
