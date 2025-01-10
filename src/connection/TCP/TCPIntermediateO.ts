@@ -9,7 +9,7 @@
  */
 
 import { TCP } from './tcp.ts';
-import { includesBuffer, sliceBuffer } from '../../helpers.ts';
+import { includesBuffer, normalizeSecretString, sliceBuffer } from '../../helpers.ts';
 import { crypto, Buffer } from '../../platform.deno.ts';
 import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
 import { Primitive } from '../../raw/core/index.ts';
@@ -43,7 +43,7 @@ export class TCPIntermediateO extends TCP {
     if (proxy && 'secret' in proxy && 'port' in proxy && 'server' in proxy && dcId) {
       let secret =
         typeof proxy.secret === 'string'
-          ? Buffer.from(proxy.secret, 'hex')
+          ? normalizeSecretString(proxy.secret)
           : Buffer.from(proxy.secret as unknown as Uint8Array);
       secret =
         Buffer.byteLength(secret) === 17 && (secret as unknown as Uint8Array)[0] === 0xdd
@@ -74,13 +74,13 @@ export class TCPIntermediateO extends TCP {
         ]),
       );
       const encryptionIv = nonce.subarray(40, 56);
-      const decryptionKey = temp.subarray(0, 32);
       const decryptionIv = sha256(
         Buffer.concat([
-          temp.subarray(32, 48) as unknown as Uint8Array,
+          temp.subarray(0, 32) as unknown as Uint8Array,
           secret as unknown as Uint8Array,
         ]),
       );
+      const decryptionKey = temp.subarray(32, 48);
       this._encryptor = ctr256Cipher(encryptionKey, encryptionIv);
       this._decryptor = ctr256Cipher(decryptionKey, decryptionIv);
       const _dcId = Buffer.alloc(2);

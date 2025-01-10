@@ -10,7 +10,7 @@
 
 import * as TCPs from './TCP/index.ts';
 import { DataCenter } from '../session/index.ts';
-import { sleep } from '../helpers.ts';
+import { sleep, normalizeSecretString } from '../helpers.ts';
 import { Logger } from '../Logger.ts';
 import { isBrowser, inspect, Buffer } from '../platform.deno.ts';
 import { ClientError } from '../errors/index.ts';
@@ -139,7 +139,21 @@ export class Connection {
         this._mode !== TCP.TCPAbridgedO &&
         this._mode !== TCP.TCPIntermediateO
       ) {
-        this._mode = TCP.TCPAbridgedO;
+        if (
+          this._proxy &&
+          'server' in this._proxy &&
+          'port' in this._proxy &&
+          'secret' in this._proxy
+        ) {
+          const secret = normalizeSecretString(this._proxy.secret as string);
+          if (secret[0] === 0xdd) {
+            this._mode = TCP.TCPIntermediateO;
+          } else {
+            this._mode = TCP.TCPAbridgedO;
+          }
+        } else {
+          this._mode = TCP.TCPAbridgedO;
+        }
       }
       this._protocol = new TCPModes[this._mode]();
       try {

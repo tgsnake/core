@@ -339,3 +339,14 @@ export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint) {
 
   return lowBigInt + randomDifference;
 }
+export function normalizeSecretString(secret: string) {
+  // https://github.com/LonamiWebs/Telethon/blob/494b20db2dc9f1a0d88f9ac0e84717789416cc20/telethon/network/connection/tcpmtproxy.py#L136
+  if (secret.slice(0, 2) === 'dd' || secret.slice(0, 2) === 'ee') {
+    secret = secret.slice(2);
+  }
+  // check if string hex or base64
+  if (/^[0-9a-fA-F]+$/.test(secret)) {
+    return Buffer.from(secret, 'hex')
+  }
+  return Buffer.from(secret, 'base64').subarray(0, 16);
+}
