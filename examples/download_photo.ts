@@ -10,7 +10,7 @@ async function listenNewMessageGroup(event: Raw.TypeUpdates) {
           if (media.photo instanceof Raw.Photo) {
             const photo: Raw.Photo = media.photo;
             const file = new Files.File();
-            const stream = await client.downloadStream(update.message.peerId, {
+            const stream = await client.downloadStream({
               file: new Raw.InputPhotoFileLocation({
                 id: photo.id,
                 accessHash: photo.accessHash,
