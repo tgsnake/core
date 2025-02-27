@@ -1,4 +1,14 @@
- <a name="1.13.13"></a>
+ <a name="1.13.14"></a>
+
+## [1.13.14](https://github.com/tgsnake/core/compare/1.13.13...1.13.14)
+
+> 2025-01-09
+
+### Add
+
+- defaultDCId options  ### Change
+
+- Update CHANGELOG.md - add nodeModulesDir in deno.json   <a name="1.13.13"></a>
 
 ## [1.13.13](https://github.com/tgsnake/core/compare/1.13.12...1.13.13)
 
