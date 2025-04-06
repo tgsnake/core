@@ -464,6 +464,42 @@ export class Session {
               `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`,
             );
             await sleep(amount as number);
+          } else if (
+            (error instanceof Errors.Exceptions.SeeOther.FileMigrate ||
+              error instanceof Errors.Exceptions.SeeOther.StatsMigrate ||
+              error instanceof Errors.Exceptions.SeeOther.NetworkMigrate) &&
+            typeof error.value !== 'undefined'
+          ) {
+            Logger.error(
+              `[156] Got error when trying invoking ${className}: ${error.message}. Try to reconnecting.`,
+            );
+            const exportedAuthKey: Raw.auth.ExportedAuthorization = (await this.invoke(
+              new Raw.auth.ExportAuthorization({ dcId: error.value as unknown as number }),
+            )) as Raw.auth.ExportedAuthorization;
+            const newSession = new Session(
+              this._client,
+              error.value as unknown as number,
+              exportedAuthKey.bytes,
+              this._testMode,
+              this._proxy,
+              this._isMedia,
+              this._isCdn,
+            );
+            Logger.debug(`[157] Reconnecting to telegram server`);
+            await newSession.start(async (session) => {
+              Logger.debug(`[159] Importing auth key`);
+              await session.invoke(
+                new Raw.auth.ImportAuthorization({
+                  id: exportedAuthKey.id,
+                  bytes: exportedAuthKey.bytes,
+                }),
+              );
+            });
+            Logger.debug(`[160] Session imported, resend the query`);
+            const result = await newSession.invoke(data, retries, timeout, sleepThreshold);
+            Logger.debug(`[161] Closing session in DC${error.value}`);
+            await newSession.stop();
+            return result;
           } else {
             if (!retries) {
               throw error;
@@ -496,7 +532,7 @@ export class Session {
    * Start a connection to the telegram server.
    * This function will continue to loop if it fails to connect to the Telegram server.
    */
-  async start() {
+  async start(middleware: { (session: Session): any } = () => true) {
     while (true) {
       this._connection = new Connection(
         this._dcId,
@@ -512,6 +548,8 @@ export class Session {
         Logger.debug(`[68] Connecting to telegram server`);
         await this._connection.connect();
         this._networkWorker();
+        Logger.debug(`[158] Running middleware before init connection`);
+        await middleware(this);
         await this.initConnection();
         Logger.info(`[69] Session initialized: Layer ${Raw.Layer}`);
         Logger.info(`[70] Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
