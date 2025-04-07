@@ -1,11 +1,11 @@
 /**
- * tgsnake - Telegram MTProto framework for nodejs.
- * Copyright (C) 2025 butthx <https://github.com/butthx>
+ * tgsnake - Telegram MTProto library for javascript or typescript.
+ * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
- * it under the terms of the MIT License as published.
+ * it under the terms of the GPL v3 License as published.
  */
 const fs = require('fs');
 const path = require('path');
@@ -25,6 +25,7 @@ function parseDate(source) {
 function start(route) {
   let dir = fs.readdirSync(route);
   for (let file of dir) {
+    if (['COPYING', 'COPYING.lesser', '.git'].includes(file)) continue;
     let info = fs.lstatSync(path.join(route, file));
     if (info.isDirectory()) {
       start(path.join(route, file));

@@ -83,6 +83,6 @@ $ yarn build:error
 - This framework is porting of pyrogram for connecting to telegram server. I have dedicated 2 months of my time to complete this framework from scratch. Research after research I do to improve this framework. So big thanks for pyrogram for the source, without that source code, this framework maybe unavailable.
 - For more questions, ask on telegram group ([@tgsnake](https://t.me/tgsnake)) or open github issue.
 
-## MIT License
+## GPL v3 License
 
 Build with ♥️ by [tgsnake dev](https://t.me/tgsnakechat).
