@@ -537,7 +537,7 @@ export class Session {
    * Start a connection to the telegram server.
    * This function will continue to loop if it fails to connect to the Telegram server.
    */
-  async start(middleware: { (session: Session): any } = () => true) {
+  async start() {
     while (true) {
       this._connection = new Connection(
         this._dcId,
