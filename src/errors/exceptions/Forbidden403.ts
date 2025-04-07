@@ -106,6 +106,10 @@ export class ChatSendVoicesForbidden extends Forbidden {
   override id: string = 'CHAT_SEND_VOICES_FORBIDDEN';
   override message: string = "You can't send voice recordings in this chat.";
 }
+export class ChatTypeInvalid extends Forbidden {
+  override id: string = 'CHAT_TYPE_INVALID';
+  override message: string = 'The specified user type is invalid.';
+}
 export class ChatWriteForbidden extends Forbidden {
   override id: string = 'CHAT_WRITE_FORBIDDEN';
   override message: string = "You can't write in this chat.";
@@ -145,6 +149,10 @@ export class ParticipantJoinMissing extends Forbidden {
   override id: string = 'PARTICIPANT_JOIN_MISSING';
   override message: string =
     "Trying to enable a presentation, when the user hasn't joined the Video Chat with [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).";
+}
+export class PeerIdInvalid extends Forbidden {
+  override id: string = 'PEER_ID_INVALID';
+  override message: string = 'The provided peer id is invalid.';
 }
 export class PollVoteRequired extends Forbidden {
   override id: string = 'POLL_VOTE_REQUIRED';

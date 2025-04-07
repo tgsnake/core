@@ -218,7 +218,7 @@
     "code": 400,
     "msg": "BOOST_NOT_MODIFIED",
     "desc": "You're already [boosting](https://core.telegram.org/api/boost) the specified channel.",
-    "affected": ["stories.ApplyBoost", "stories.CanApplyBoost"]
+    "affected": ["Messages", "stories.ApplyBoost", "stories.CanApplyBoost"]
   },
   {
     "code": 400,
@@ -242,7 +242,7 @@
     "code": 400,
     "msg": "BOT_APP_BOT_INVALID",
     "desc": "The bot_id passed in the inputBotAppShortName constructor is invalid.",
-    "affected": ["messages.GetBotApp"]
+    "affected": ["messages.GetBotApp", "messages.RequestAppWebView"]
   },
   {
     "code": 400,
@@ -314,15 +314,21 @@
       "bots.AddPreviewMedia",
       "bots.AllowSendMessage",
       "bots.CanSendMessage",
+      "bots.CheckDownloadFileParams",
       "bots.DeletePreviewMedia",
       "bots.EditPreviewMedia",
       "bots.GetBotInfo",
+      "bots.GetBotRecommendations",
       "bots.GetPreviewInfo",
       "bots.GetPreviewMedias",
       "bots.InvokeWebViewCustomMethod",
       "bots.ReorderPreviewMedias",
       "bots.ReorderUsernames",
+      "bots.SetBotInfo",
+      "bots.SetCustomVerification",
+      "bots.ToggleUserEmojiStatusPermission",
       "bots.ToggleUsername",
+      "bots.UpdateStarRefProgram",
       "messages.EditMessage",
       "messages.GetAttachMenuBot",
       "messages.GetInlineBotResults",
@@ -336,6 +342,12 @@
       "messages.ToggleBotInAttachMenu",
       "photos.UploadProfilePhoto"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "BOT_INVOICE_INVALID",
+    "desc": "The specified invoice is invalid.",
+    "affected": ["payments.GetPaymentForm", "payments.SendStarsForm"]
   },
   {
     "code": 400,
@@ -413,7 +425,18 @@
     "code": 400,
     "msg": "BUSINESS_PEER_INVALID",
     "desc": "Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots).",
-    "affected": ["messages.SendMessage"]
+    "affected": [
+      "messages.SendMedia",
+      "messages.SendMessage",
+      "messages.SendMultiMedia",
+      "messages.SetTyping"
+    ]
+  },
+  {
+    "code": 400,
+    "msg": "BUSINESS_PEER_USAGE_MISSING",
+    "desc": "You cannot send a message to a user through a [business connection](https://core.telegram.org/api/business#connected-bots) if the user hasn't recently contacted us.",
+    "affected": ["messages.SendMessage", "messages.SetTyping"]
   },
   {
     "code": 400,
@@ -435,6 +458,12 @@
   },
   {
     "code": 400,
+    "msg": "BUTTON_COPY_TEXT_INVALID",
+    "desc": "The specified [keyboardButtonCopy](https://core.telegram.org/constructor/keyboardButtonCopy).`copy_text` is invalid.",
+    "affected": ["messages.EditMessage", "messages.SendMedia", "messages.SendMessage"]
+  },
+  {
+    "code": 400,
     "msg": "BUTTON_DATA_INVALID",
     "desc": "The data of one or more of the buttons you provided is invalid.",
     "affected": [
@@ -444,6 +473,12 @@
       "messages.SendMessage",
       "messages.SetInlineBotResults"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "BUTTON_ID_INVALID",
+    "desc": "The specified button ID is invalid.",
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 400,
@@ -582,6 +617,7 @@
     "desc": "This supergroup is not a forum.",
     "affected": [
       "channels.CreateForumTopic",
+      "channels.DeleteTopicHistory",
       "channels.EditForumTopic",
       "channels.GetForumTopics",
       "channels.GetForumTopicsByID"
@@ -598,6 +634,7 @@
     "msg": "CHANNEL_INVALID",
     "desc": "The provided channel is invalid.",
     "affected": [
+      "account.GetNotifySettings",
       "account.UpdateNotifySettings",
       "channels.CheckUsername",
       "channels.ClickSponsoredMessage",
@@ -663,6 +700,7 @@
       "channels.UpdateUsername",
       "channels.ViewSponsoredMessage",
       "chatlists.EditExportedInvite",
+      "chatlists.ExportChatlistInvite",
       "messages.EditChatAbout",
       "messages.EditMessage",
       "messages.ExportChatInvite",
@@ -692,6 +730,7 @@
       "messages.SendVote",
       "messages.SetTyping",
       "messages.UploadMedia",
+      "premium.GetBoostsStatus",
       "stats.GetBroadcastRevenueStats",
       "stats.GetBroadcastRevenueTransactions",
       "stats.GetBroadcastStats",
@@ -720,6 +759,7 @@
     "msg": "CHANNEL_PRIVATE",
     "desc": "You haven't joined this channel/supergroup.",
     "affected": [
+      "account.GetNotifySettings",
       "account.ReportPeer",
       "account.UpdateNotifySettings",
       "channels.CheckUsername",
@@ -753,6 +793,7 @@
       "channels.ToggleUsername",
       "channels.UpdateUsername",
       "channels.ViewSponsoredMessage",
+      "chatlists.ExportChatlistInvite",
       "contacts.AddContact",
       "contacts.Block",
       "contacts.Unblock",
@@ -850,6 +891,12 @@
   },
   {
     "code": 400,
+    "msg": "CHATLISTS_TOO_MUCH",
+    "desc": "You have created too many folder links, hitting the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [limits &raquo;](https://core.telegram.org/api/config#chatlist-invites-limit-default).",
+    "affected": ["chatlists.ExportChatlistInvite"]
+  },
+  {
+    "code": 400,
     "msg": "CHATLIST_EXCLUDE_INVALID",
     "desc": "The specified `exclude_peers` are invalid.",
     "affected": ["messages.UpdateDialogFilter"]
@@ -893,12 +940,14 @@
       "channels.ToggleInvites",
       "channels.ToggleJoinRequest",
       "channels.ToggleJoinToSend",
+      "channels.ToggleParticipantsHidden",
       "channels.TogglePreHistoryHidden",
       "channels.ToggleSignatures",
       "channels.ToggleSlowMode",
       "channels.ToggleUsername",
       "channels.UpdatePinnedMessage",
       "channels.UpdateUsername",
+      "chatlists.ExportChatlistInvite",
       "messages.AddChatUser",
       "messages.CheckHistoryImportPeer",
       "messages.DeleteChat",
@@ -1047,6 +1096,12 @@
     "msg": "CHAT_LINK_EXISTS",
     "desc": "The chat is public, you can't hide the history to new users.",
     "affected": ["channels.TogglePreHistoryHidden"]
+  },
+  {
+    "code": 400,
+    "msg": "CHAT_MEMBER_ADD_FAILED",
+    "desc": "Could not add participants.",
+    "affected": ["channels.InviteToChannel"]
   },
   {
     "code": 400,
@@ -1508,6 +1563,12 @@
   },
   {
     "code": 400,
+    "msg": "EXTENDED_MEDIA_AMOUNT_INVALID",
+    "desc": "The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.",
+    "affected": ["messages.SendMedia"]
+  },
+  {
+    "code": 400,
     "msg": "EXTERNAL_URL_INVALID",
     "desc": "External URL invalid.",
     "affected": ["messages.SendMedia"]
@@ -1600,6 +1661,12 @@
   },
   {
     "code": 400,
+    "msg": "FILE_PART_TOO_SMALL",
+    "desc": "The size of the uploaded file part is too small, please see the documentation for the allowed sizes.",
+    "affected": ["upload.SaveBigFilePart"]
+  },
+  {
+    "code": 400,
     "msg": "FILE_PART_X_MISSING",
     "desc": "Part {value} of the file is missing from storage. Try repeating the method call to resave the part.",
     "affected": []
@@ -1614,7 +1681,7 @@
     "code": 400,
     "msg": "FILE_REFERENCE_EMPTY",
     "desc": "An empty [file reference](https://core.telegram.org/api/file_reference) was specified.",
-    "affected": ["messages.SendMedia"]
+    "affected": ["messages.SendMedia", "upload.GetFile"]
   },
   {
     "code": 400,
@@ -1732,6 +1799,18 @@
   },
   {
     "code": 400,
+    "msg": "FORM_ID_EMPTY",
+    "desc": "The specified form ID is empty.",
+    "affected": ["payments.SendStarsForm"]
+  },
+  {
+    "code": 400,
+    "msg": "FORM_UNSUPPORTED",
+    "desc": "Please update your client.",
+    "affected": ["payments.SendStarsForm"]
+  },
+  {
+    "code": 400,
     "msg": "FORUM_ENABLED",
     "desc": "You can't execute the specified action because the group is a [forum](https://core.telegram.org/api/forum), disable forum functionality to continue.",
     "affected": ["channels.ConvertToGigagroup", "channels.TogglePreHistoryHidden"]
@@ -1818,7 +1897,7 @@
     "code": 400,
     "msg": "GROUPCALL_ALREADY_DISCARDED",
     "desc": "The group call was already discarded.",
-    "affected": ["phone.DiscardGroupCall", "phone.DiscardGroupCallRequest"]
+    "affected": ["phone.CreateGroupCall", "phone.DiscardGroupCall", "phone.DiscardGroupCallRequest"]
   },
   {
     "code": 400,
@@ -1897,6 +1976,18 @@
     "msg": "HIDE_REQUESTER_MISSING",
     "desc": "The join request was missing or was already handled.",
     "affected": ["messages.HideAllChatJoinRequests", "messages.HideChatJoinRequest"]
+  },
+  {
+    "code": 400,
+    "msg": "ID_EXPIRED",
+    "desc": "The passed prepared inline message ID has expired.",
+    "affected": ["messages.GetPreparedInlineMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "ID_INVALID",
+    "desc": "The passed ID is invalid.",
+    "affected": ["messages.GetPreparedInlineMessage"]
   },
   {
     "code": 400,
@@ -2000,6 +2091,12 @@
   },
   {
     "code": 400,
+    "msg": "INPUT_PEERS_EMPTY",
+    "desc": "The specified peer array is empty.",
+    "affected": ["messages.GetPeerDialogs"]
+  },
+  {
+    "code": 400,
     "msg": "INPUT_REQUEST_TOO_LONG",
     "desc": "The request payload is too long.",
     "affected": []
@@ -2028,6 +2125,7 @@
       "contacts.Block",
       "messages.AddChatUser",
       "messages.CreateChat",
+      "messages.DeleteChatUser",
       "messages.EditMessage",
       "messages.ForwardMessages",
       "messages.GetInlineBotResults",
@@ -2114,15 +2212,22 @@
     "desc": "The specified chat folder link has expired.",
     "affected": [
       "chatlists.CheckChatlistInvite",
+      "chatlists.DeleteExportedInvite",
       "chatlists.EditExportedInvite",
       "chatlists.JoinChatlistInvite"
     ]
   },
   {
     "code": 400,
+    "msg": "INVITE_SLUG_INVALID",
+    "desc": "The specified invitation slug is invalid.",
+    "affected": ["chatlists.DeleteExportedInvite"]
+  },
+  {
+    "code": 400,
     "msg": "INVOICE_PAYLOAD_INVALID",
     "desc": "The specified invoice payload is invalid.",
-    "affected": ["payments.ExportInvoice"]
+    "affected": ["messages.SendMedia", "payments.ExportInvoice"]
   },
   {
     "code": 400,
@@ -2254,6 +2359,7 @@
       "messages.EditMessage",
       "messages.SendMedia",
       "messages.SendMultiMedia",
+      "messages.UploadImportedMedia",
       "messages.UploadMedia",
       "payments.ExportInvoice"
     ]
@@ -2356,15 +2462,21 @@
       "messages.GetMessagesReadParticipants",
       "messages.GetOutboxReadDate",
       "messages.GetPollResults",
+      "messages.SendBotRequestedPeer",
+      "messages.SendPaidReaction",
       "messages.SendReaction",
       "messages.SendScheduledMessages",
       "messages.SendVote",
       "messages.SetGameScore",
       "messages.SetInlineGameScore",
       "messages.UpdatePinnedMessage",
+      "payments.ConvertStarGift",
       "payments.GetPaymentForm",
       "payments.GetPaymentReceipt",
+      "payments.SaveStarGift",
       "payments.SendPaymentForm",
+      "payments.TransferStarGift",
+      "payments.UpgradeStarGift",
       "payments.ValidateRequestedInfo",
       "stats.GetMessagePublicForwards",
       "stats.GetMessageStats"
@@ -2446,6 +2558,7 @@
       "contacts.AddContact",
       "contacts.Block",
       "contacts.BlockFromReplies",
+      "contacts.DeleteContacts",
       "contacts.Unblock",
       "help.GetConfig",
       "messages.AddChatUser",
@@ -2478,6 +2591,7 @@
       "messages.SendInlineBotResult",
       "messages.SendMedia",
       "messages.SendMessage",
+      "messages.SendMultiMedia",
       "messages.SendReaction",
       "messages.SendVote",
       "messages.SetTyping",
@@ -2646,6 +2760,7 @@
     "msg": "PASSWORD_HASH_INVALID",
     "desc": "The provided password hash is invalid.",
     "affected": [
+      "account.DeleteAccount",
       "account.GetPasswordSettings",
       "account.GetTmpPassword",
       "account.UpdatePasswordSettings",
@@ -2731,6 +2846,7 @@
       "account.ToggleConnectedBotPaused",
       "account.UpdateNotifySettings",
       "bots.SetBotCommands",
+      "bots.SetCustomVerification",
       "channels.CheckUsername",
       "channels.EditAdmin",
       "channels.EditBanned",
@@ -2803,6 +2919,7 @@
       "messages.ReadReactions",
       "messages.ReorderPinnedDialogs",
       "messages.Report",
+      "messages.ReportMessagesDelivery",
       "messages.ReportReaction",
       "messages.ReportSpam",
       "messages.RequestWebView",
@@ -2828,6 +2945,7 @@
       "messages.StartBot",
       "messages.ToggleDialogPin",
       "messages.ToggleNoForwards",
+      "messages.TogglePaidReactionPrivacy",
       "messages.TogglePeerTranslations",
       "messages.ToggleSavedDialogPin",
       "messages.TranscribeAudio",
@@ -2836,11 +2954,15 @@
       "messages.UpdateDialogFilter",
       "messages.UpdatePinnedMessage",
       "messages.UploadMedia",
+      "payments.ChangeStarsSubscription",
+      "payments.FulfillStarsSubscription",
+      "payments.GetConnectedStarRefBot",
       "payments.GetGiveawayInfo",
       "payments.GetPaymentForm",
       "payments.GetStarsRevenueAdsAccountUrl",
       "payments.GetStarsRevenueStats",
       "payments.GetStarsStatus",
+      "payments.GetStarsSubscriptions",
       "payments.GetStarsTransactions",
       "payments.GetStarsTransactionsByID",
       "payments.LaunchPrepaidGiveaway",
@@ -2855,6 +2977,8 @@
       "premium.GetBoostsList",
       "premium.GetBoostsStatus",
       "premium.GetUserBoosts",
+      "stats.GetBroadcastRevenueStats",
+      "stats.GetBroadcastRevenueTransactions",
       "stats.GetMessagePublicForwards",
       "stats.GetMessageStats",
       "stats.GetStoryPublicForwards",
@@ -2892,6 +3016,12 @@
     "msg": "PEER_ID_NOT_SUPPORTED",
     "desc": "The provided peer ID is not supported.",
     "affected": ["messages.Search"]
+  },
+  {
+    "code": 400,
+    "msg": "PEER_TYPES_INVALID",
+    "desc": "The passed [keyboardButtonSwitchInline](https://core.telegram.org/constructor/keyboardButtonSwitchInline).`peer_types` field is invalid.",
+    "affected": ["messages.EditMessage", "messages.SetInlineBotResults"]
   },
   {
     "code": 400,
@@ -3060,7 +3190,7 @@
     "code": 400,
     "msg": "PHOTO_FILE_MISSING",
     "desc": "Profile photo file missing.",
-    "affected": ["photos.UploadProfilePhoto"]
+    "affected": ["channels.EditPhoto", "photos.UploadProfilePhoto"]
   },
   {
     "code": 400,
@@ -3169,6 +3299,12 @@
       "stories.CanSendStory",
       "stories.SendStory"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "PRICING_CHAT_INVALID",
+    "desc": "The pricing for the [subscription](https://core.telegram.org/api/subscriptions) is invalid, the maximum price is specified in the [`stars_subscription_amount_max` config key &raquo;](https://core.telegram.org/api/config#stars-subscription-amount-max).",
+    "affected": ["messages.ExportChatInvite"]
   },
   {
     "code": 400,
@@ -3382,7 +3518,7 @@
     "code": 400,
     "msg": "REPLY_TO_INVALID",
     "desc": "The specified `reply_to` field is invalid.",
-    "affected": ["messages.SendMessage"]
+    "affected": ["messages.SendMessage", "messages.SendMultiMedia"]
   },
   {
     "code": 400,
@@ -3424,7 +3560,11 @@
     "code": 400,
     "msg": "RESULT_ID_INVALID",
     "desc": "One of the specified result IDs is invalid.",
-    "affected": ["messages.SendInlineBotResult", "messages.SetInlineBotResults"]
+    "affected": [
+      "messages.SavePreparedInlineMessage",
+      "messages.SendInlineBotResult",
+      "messages.SetInlineBotResults"
+    ]
   },
   {
     "code": 400,
@@ -3568,7 +3708,11 @@
     "code": 400,
     "msg": "SESSION_TOO_FRESH_X",
     "desc": "This session was created less than 24 hours ago, try again in {value} seconds.",
-    "affected": ["channels.EditCreator"]
+    "affected": [
+      "channels.EditCreator",
+      "payments.GetStarsRevenueWithdrawalUrl",
+      "stats.GetBroadcastRevenueWithdrawalUrl"
+    ]
   },
   {
     "code": 400,
@@ -3643,6 +3787,12 @@
   },
   {
     "code": 400,
+    "msg": "SRP_A_INVALID",
+    "desc": "The specified inputCheckPasswordSRP.A value is invalid.",
+    "affected": ["account.GetTmpPassword"]
+  },
+  {
+    "code": 400,
     "msg": "SRP_ID_INVALID",
     "desc": "Invalid SRP ID provided.",
     "affected": ["account.UpdatePasswordSettings", "auth.CheckPassword", "channels.EditCreator"]
@@ -3652,6 +3802,54 @@
     "msg": "SRP_PASSWORD_CHANGED",
     "desc": "Password has changed.",
     "affected": ["account.UpdatePasswordSettings", "auth.CheckPassword"]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_INVALID",
+    "desc": "The passed [inputInvoiceStarGift](https://core.telegram.org/constructor/inputInvoiceStarGift) is invalid.",
+    "affected": ["payments.GetPaymentForm"]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_USAGE_LIMITED",
+    "desc": "The gift is sold out.",
+    "affected": ["payments.SendStarsForm"]
+  },
+  {
+    "code": 400,
+    "msg": "STARREF_AWAITING_END",
+    "desc": "The previous referral program was terminated less than 24 hours ago: further changes can be made after the date specified in userFull.starref_program.end_date.",
+    "affected": ["bots.UpdateStarRefProgram"]
+  },
+  {
+    "code": 400,
+    "msg": "STARREF_HASH_REVOKED",
+    "desc": "The specified affiliate link was already revoked.",
+    "affected": ["payments.EditConnectedStarRefBot"]
+  },
+  {
+    "code": 400,
+    "msg": "STARREF_PERMILLE_INVALID",
+    "desc": "The specified commission_permille is invalid: the minimum and maximum values for this parameter are contained in the [starref_min_commission_permille](https://core.telegram.org/api/config#starref-min-commission-permille) and [starref_max_commission_permille](https://core.telegram.org/api/config#starref-max-commission-permille) client configuration parameters.",
+    "affected": ["bots.UpdateStarRefProgram"]
+  },
+  {
+    "code": 400,
+    "msg": "STARREF_PERMILLE_TOO_LOW",
+    "desc": "The specified commission_permille is too low: the minimum and maximum values for this parameter are contained in the [starref_min_commission_permille](https://core.telegram.org/api/config#starref-min-commission-permille) and [starref_max_commission_permille](https://core.telegram.org/api/config#starref-max-commission-permille) client configuration parameters.",
+    "affected": ["bots.UpdateStarRefProgram"]
+  },
+  {
+    "code": 400,
+    "msg": "STARS_INVOICE_INVALID",
+    "desc": "The specified Telegram Star invoice is invalid.",
+    "affected": ["messages.SendMedia", "payments.ExportInvoice"]
+  },
+  {
+    "code": 400,
+    "msg": "STARS_PAYMENT_REQUIRED",
+    "desc": "To import this chat invite link, you must first [pay for the associated Telegram Star subscription &raquo;](https://core.telegram.org/api/subscriptions#channel-subscriptions).",
+    "affected": ["messages.ImportChatInvite"]
   },
   {
     "code": 400,
@@ -3814,7 +4012,7 @@
     "code": 400,
     "msg": "STORIES_NEVER_CREATED",
     "desc": "This peer hasn't ever posted any stories.",
-    "affected": ["stories.GetStoriesByID", "stories.ReadStories"]
+    "affected": ["stats.GetStoryStats", "stories.GetStoriesByID", "stories.ReadStories"]
   },
   {
     "code": 400,
@@ -3874,6 +4072,18 @@
   },
   {
     "code": 400,
+    "msg": "SUBSCRIPTION_EXPORT_MISSING",
+    "desc": "You cannot send a [bot subscription invoice](https://core.telegram.org/api/subscriptions#bot-subscriptions) directly, you may only create invoice links using [payments.exportInvoice](https://core.telegram.org/method/payments.exportInvoice).",
+    "affected": ["messages.SendMedia"]
+  },
+  {
+    "code": 400,
+    "msg": "SUBSCRIPTION_PERIOD_INVALID",
+    "desc": "The specified subscription_pricing.period is invalid.",
+    "affected": ["messages.ExportChatInvite"]
+  },
+  {
+    "code": 400,
     "msg": "SWITCH_PM_TEXT_EMPTY",
     "desc": "The switch_pm.text field was empty.",
     "affected": ["messages.SetInlineBotResults"]
@@ -3888,7 +4098,7 @@
     "code": 400,
     "msg": "TAKEOUT_INVALID",
     "desc": "The specified takeout ID is invalid.",
-    "affected": ["contacts.GetSaved", "messages.GetHistory"]
+    "affected": ["contacts.GetSaved", "messages.GetDialogs", "messages.GetHistory"]
   },
   {
     "code": 400,
@@ -3916,6 +4126,12 @@
   },
   {
     "code": 400,
+    "msg": "TERMS_URL_INVALID",
+    "desc": "The specified [invoice](https://core.telegram.org/constructor/invoice).`terms_url` is invalid.",
+    "affected": ["messages.SendMedia"]
+  },
+  {
+    "code": 400,
     "msg": "THEME_FILE_INVALID",
     "desc": "Invalid theme file provided.",
     "affected": ["account.UploadTheme"]
@@ -3937,6 +4153,12 @@
     "msg": "THEME_MIME_INVALID",
     "desc": "The theme's MIME type is invalid.",
     "affected": ["account.CreateTheme", "account.UploadTheme"]
+  },
+  {
+    "code": 400,
+    "msg": "THEME_PARAMS_INVALID",
+    "desc": "The specified `theme_params` field is invalid.",
+    "affected": ["messages.RequestWebView"]
   },
   {
     "code": 400,
@@ -3966,7 +4188,7 @@
     "code": 400,
     "msg": "TMP_PASSWORD_INVALID",
     "desc": "The passed tmp_password is invalid.",
-    "affected": []
+    "affected": ["payments.SendPaymentForm"]
   },
   {
     "code": 400,
@@ -4059,6 +4281,12 @@
   },
   {
     "code": 400,
+    "msg": "TRANSACTION_ID_INVALID",
+    "desc": "The specified transaction ID is invalid.",
+    "affected": ["payments.GetStarsTransactionsByID"]
+  },
+  {
+    "code": 400,
     "msg": "TRANSCRIPTION_FAILED",
     "desc": "Audio transcription failed.",
     "affected": ["messages.TranscribeAudio"]
@@ -4116,6 +4344,7 @@
     "desc": "Invalid URL provided.",
     "affected": [
       "messages.RequestSimpleWebView",
+      "messages.RequestWebView",
       "messages.SetBotCallbackAnswer",
       "messages.SetInlineBotResults"
     ]
@@ -4300,9 +4529,11 @@
       "bots.SetBotCommands",
       "bots.SetBotGroupDefaultAdminRights",
       "bots.SetBotMenuButton",
+      "bots.UpdateUserEmojiStatus",
       "help.SetBotUpdatesStatus",
       "messages.GetGameHighScores",
       "messages.GetInlineGameHighScores",
+      "messages.SavePreparedInlineMessage",
       "messages.SendWebViewResultMessage",
       "messages.SetBotCallbackAnswer",
       "messages.SetBotPrecheckoutResults",
@@ -4333,11 +4564,18 @@
   },
   {
     "code": 400,
+    "msg": "USER_GIFT_UNAVAILABLE",
+    "desc": "Gifts are not available in the current region ([stars_gifts_enabled](https://core.telegram.org/api/config#stars-gifts-enabled) is equal to false).",
+    "affected": ["payments.GetStarsGiftOptions"]
+  },
+  {
+    "code": 400,
     "msg": "USER_ID_INVALID",
     "desc": "The provided user ID is invalid.",
     "affected": [
       "auth.ImportAuthorization",
       "bots.SetBotCommands",
+      "bots.UpdateUserEmojiStatus",
       "channels.DeleteUserHistory",
       "channels.EditAdmin",
       "channels.EditBanned",
@@ -4352,8 +4590,14 @@
       "messages.HideChatJoinRequest",
       "messages.ReportReaction",
       "messages.RequestEncryption",
+      "messages.SavePreparedInlineMessage",
       "messages.Search",
+      "payments.BotCancelStarsSubscription",
+      "payments.ConvertStarGift",
+      "payments.GetStarsGiftOptions",
+      "payments.GetUserStarGifts",
       "payments.RefundStarsCharge",
+      "payments.SaveStarGift",
       "phone.RequestCall",
       "photos.GetUserPhotos",
       "photos.UploadContactProfilePhoto",
@@ -4446,7 +4690,7 @@
     "code": 400,
     "msg": "VIDEO_CONTENT_TYPE_INVALID",
     "desc": "The video's content type is invalid.",
-    "affected": ["messages.SendMedia"]
+    "affected": ["messages.SendMedia", "messages.SetInlineBotResults"]
   },
   {
     "code": 400,
@@ -4476,7 +4720,7 @@
     "code": 400,
     "msg": "VOICE_MESSAGES_FORBIDDEN",
     "desc": "This user's privacy settings forbid you from sending voice messages.",
-    "affected": ["messages.SendInlineBotResult", "messages.SendMedia"]
+    "affected": ["messages.SendInlineBotResult", "messages.SendMedia", "messages.UploadMedia"]
   },
   {
     "code": 400,
@@ -4530,7 +4774,7 @@
     "code": 400,
     "msg": "WEBDOCUMENT_MIME_INVALID",
     "desc": "Invalid webdocument mime type provided.",
-    "affected": ["messages.SendMedia", "messages.SetInlineBotResults"]
+    "affected": ["messages.SendMedia", "messages.SetInlineBotResults", "payments.ExportInvoice"]
   },
   {
     "code": 400,
@@ -4542,7 +4786,7 @@
     "code": 400,
     "msg": "WEBDOCUMENT_URL_EMPTY",
     "desc": "The passed web document URL is empty.",
-    "affected": []
+    "affected": ["payments.ExportInvoice"]
   },
   {
     "code": 400,
@@ -4830,6 +5074,12 @@
   },
   {
     "code": 403,
+    "msg": "CHAT_TYPE_INVALID",
+    "desc": "The specified user type is invalid.",
+    "affected": ["phone.InviteToGroupCall"]
+  },
+  {
+    "code": 403,
     "msg": "CHAT_WRITE_FORBIDDEN",
     "desc": "You can't write in this chat.",
     "affected": [
@@ -4872,6 +5122,7 @@
       "messages.StartBot",
       "messages.UpdatePinnedMessage",
       "messages.UploadMedia",
+      "payments.GetStarsRevenueAdsAccountUrl",
       "updates.GetChannelDifference",
       "updates.GetDifference"
     ]
@@ -4939,6 +5190,12 @@
   },
   {
     "code": 403,
+    "msg": "PEER_ID_INVALID",
+    "desc": "The provided peer id is invalid.",
+    "affected": ["payments.GetSuggestedStarRefBots"]
+  },
+  {
+    "code": 403,
     "msg": "POLL_VOTE_REQUIRED",
     "desc": "Cast a vote in the poll before calling this method.",
     "affected": ["messages.GetPollVotes"]
@@ -4959,6 +5216,7 @@
       "messages.ForwardMessages",
       "messages.ReorderQuickReplies",
       "messages.SendMedia",
+      "messages.SendMessage",
       "messages.SendQuickReplyMessages",
       "messages.SendReaction",
       "messages.ToggleDialogFilterTags",
@@ -5086,6 +5344,12 @@
     "msg": "YOUR_PRIVACY_RESTRICTED",
     "desc": "You cannot fetch the read date of this message because you have disallowed other users to do so for *your* messages; to fix, allow other users to see *your* exact last online date OR purchase a [Telegram Premium](https://core.telegram.org/api/premium) subscription.",
     "affected": ["messages.GetOutboxReadDate"]
+  },
+  {
+    "code": 404,
+    "msg": "PEER_ID_INVALID",
+    "desc": "The provided peer id is invalid.",
+    "affected": ["messages.SendMessage"]
   },
   {
     "code": 406,
@@ -5361,9 +5625,21 @@
   },
   {
     "code": 500,
+    "msg": "AUTH_KEY_UNSYNCHRONIZED",
+    "desc": "Internal error, please repeat the method call.",
+    "affected": ["auth.CheckPassword"]
+  },
+  {
+    "code": 500,
     "msg": "AUTH_RESTART",
     "desc": "Restart the authorization process.",
     "affected": ["auth.SendCode", "auth.SignIn"]
+  },
+  {
+    "code": 500,
+    "msg": "AUTH_RESTART_X",
+    "desc": "Internal error (debug info {value}), please repeat the method call.",
+    "affected": ["auth.SendCode"]
   },
   {
     "code": 500,
@@ -5623,6 +5899,12 @@
     "msg": "STORE_INVALID_SCALAR_TYPE",
     "desc": "Telegram is having internal problems. Please try again later",
     "affected": []
+  },
+  {
+    "code": 500,
+    "msg": "TRANSLATE_REQ_FAILED",
+    "desc": "Translation failed, please try again later.",
+    "affected": ["messages.TranslateText"]
   },
   {
     "code": 500,

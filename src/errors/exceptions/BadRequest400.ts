@@ -212,6 +212,10 @@ export class BotInvalid extends BadRequest {
   override id: string = 'BOT_INVALID';
   override message: string = 'This is not a valid bot.';
 }
+export class BotInvoiceInvalid extends BadRequest {
+  override id: string = 'BOT_INVOICE_INVALID';
+  override message: string = 'The specified invoice is invalid.';
+}
 export class BotMethodInvalid extends BadRequest {
   override id: string = 'BOT_METHOD_INVALID';
   override message: string = 'The specified method cannot be used by bots.';
@@ -269,6 +273,11 @@ export class BusinessPeerInvalid extends BadRequest {
   override message: string =
     "Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots).";
 }
+export class BusinessPeerUsageMissing extends BadRequest {
+  override id: string = 'BUSINESS_PEER_USAGE_MISSING';
+  override message: string =
+    "You cannot send a message to a user through a [business connection](https://core.telegram.org/api/business#connected-bots) if the user hasn't recently contacted us.";
+}
 export class BusinessRecipientsEmpty extends BadRequest {
   override id: string = 'BUSINESS_RECIPIENTS_EMPTY';
   override message: string =
@@ -283,9 +292,18 @@ export class BusinessWorkHoursPeriodInvalid extends BadRequest {
   override message: string =
     'The specified work hours are invalid, see [here &raquo;](https://core.telegram.org/api/business#opening-hours) for the exact requirements.';
 }
+export class ButtonCopyTextInvalid extends BadRequest {
+  override id: string = 'BUTTON_COPY_TEXT_INVALID';
+  override message: string =
+    'The specified [keyboardButtonCopy](https://core.telegram.org/constructor/keyboardButtonCopy).`copy_text` is invalid.';
+}
 export class ButtonDataInvalid extends BadRequest {
   override id: string = 'BUTTON_DATA_INVALID';
   override message: string = 'The data of one or more of the buttons you provided is invalid.';
+}
+export class ButtonIdInvalid extends BadRequest {
+  override id: string = 'BUTTON_ID_INVALID';
+  override message: string = 'The specified button ID is invalid.';
 }
 export class ButtonPosInvalid extends BadRequest {
   override id: string = 'BUTTON_POS_INVALID';
@@ -405,6 +423,11 @@ export class ChatlinkSlugExpired extends BadRequest {
   override message: string =
     'The specified [business chat link](https://core.telegram.org/api/business#business-chat-links) has expired.';
 }
+export class ChatlistsTooMuch extends BadRequest {
+  override id: string = 'CHATLISTS_TOO_MUCH';
+  override message: string =
+    'You have created too many folder links, hitting the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [limits &raquo;](https://core.telegram.org/api/config#chatlist-invites-limit-default).';
+}
 export class ChatlistExcludeInvalid extends BadRequest {
   override id: string = 'CHATLIST_EXCLUDE_INVALID';
   override message: string = 'The specified `exclude_peers` are invalid.';
@@ -449,6 +472,10 @@ export class ChatInvitePermanent extends BadRequest {
 export class ChatLinkExists extends BadRequest {
   override id: string = 'CHAT_LINK_EXISTS';
   override message: string = "The chat is public, you can't hide the history to new users.";
+}
+export class ChatMemberAddFailed extends BadRequest {
+  override id: string = 'CHAT_MEMBER_ADD_FAILED';
+  override message: string = 'Could not add participants.';
 }
 export class ChatNotModified extends BadRequest {
   override id: string = 'CHAT_NOT_MODIFIED';
@@ -701,6 +728,11 @@ export class ExportCardInvalid extends BadRequest {
   override id: string = 'EXPORT_CARD_INVALID';
   override message: string = 'Provided card is invalid.';
 }
+export class ExtendedMediaAmountInvalid extends BadRequest {
+  override id: string = 'EXTENDED_MEDIA_AMOUNT_INVALID';
+  override message: string =
+    'The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.';
+}
 export class ExternalUrlInvalid extends BadRequest {
   override id: string = 'EXTERNAL_URL_INVALID';
   override message: string = 'External URL invalid.';
@@ -757,6 +789,11 @@ export class FilePartSizeInvalid extends BadRequest {
 export class FilePartTooBig extends BadRequest {
   override id: string = 'FILE_PART_TOO_BIG';
   override message: string = 'The uploaded file part is too big.';
+}
+export class FilePartTooSmall extends BadRequest {
+  override id: string = 'FILE_PART_TOO_SMALL';
+  override message: string =
+    'The size of the uploaded file part is too small, please see the documentation for the allowed sizes.';
 }
 export class FilePartMissing extends BadRequest {
   override id: string = 'FILE_PART_X_MISSING';
@@ -834,6 +871,14 @@ export class FormExpired extends BadRequest {
   override id: string = 'FORM_EXPIRED';
   override message: string =
     'The form was generated more than 10 minutes ago and has expired, please re-generate it using [payments.getPaymentForm](https://core.telegram.org/method/payments.getPaymentForm) and pass the new `form_id`.';
+}
+export class FormIdEmpty extends BadRequest {
+  override id: string = 'FORM_ID_EMPTY';
+  override message: string = 'The specified form ID is empty.';
+}
+export class FormUnsupported extends BadRequest {
+  override id: string = 'FORM_UNSUPPORTED';
+  override message: string = 'Please update your client.';
 }
 export class ForumEnabled extends BadRequest {
   override id: string = 'FORUM_ENABLED';
@@ -939,6 +984,14 @@ export class HideRequesterMissing extends BadRequest {
   override id: string = 'HIDE_REQUESTER_MISSING';
   override message: string = 'The join request was missing or was already handled.';
 }
+export class IdExpired extends BadRequest {
+  override id: string = 'ID_EXPIRED';
+  override message: string = 'The passed prepared inline message ID has expired.';
+}
+export class IdInvalid extends BadRequest {
+  override id: string = 'ID_INVALID';
+  override message: string = 'The passed ID is invalid.';
+}
 export class ImageProcessFailed extends BadRequest {
   override id: string = 'IMAGE_PROCESS_FAILED';
   override message: string = 'Failure while processing image.';
@@ -1005,6 +1058,10 @@ export class InputMethodInvalid extends BadRequest {
   override id: string = 'INPUT_METHOD_INVALID';
   override message: string = 'The specified method is invalid.';
 }
+export class InputPeersEmpty extends BadRequest {
+  override id: string = 'INPUT_PEERS_EMPTY';
+  override message: string = 'The specified peer array is empty.';
+}
 export class InputRequestTooLong extends BadRequest {
   override id: string = 'INPUT_REQUEST_TOO_LONG';
   override message: string = 'The request payload is too long.';
@@ -1058,6 +1115,10 @@ export class InviteSlugEmpty extends BadRequest {
 export class InviteSlugExpired extends BadRequest {
   override id: string = 'INVITE_SLUG_EXPIRED';
   override message: string = 'The specified chat folder link has expired.';
+}
+export class InviteSlugInvalid extends BadRequest {
+  override id: string = 'INVITE_SLUG_INVALID';
+  override message: string = 'The specified invitation slug is invalid.';
 }
 export class InvoicePayloadInvalid extends BadRequest {
   override id: string = 'INVOICE_PAYLOAD_INVALID';
@@ -1368,6 +1429,11 @@ export class PeerIdNotSupported extends BadRequest {
   override id: string = 'PEER_ID_NOT_SUPPORTED';
   override message: string = 'The provided peer ID is not supported.';
 }
+export class PeerTypesInvalid extends BadRequest {
+  override id: string = 'PEER_TYPES_INVALID';
+  override message: string =
+    'The passed [keyboardButtonSwitchInline](https://core.telegram.org/constructor/keyboardButtonSwitchInline).`peer_types` field is invalid.';
+}
 export class PersistentTimestampEmpty extends BadRequest {
   override id: string = 'PERSISTENT_TIMESTAMP_EMPTY';
   override message: string = 'Persistent timestamp empty.';
@@ -1515,6 +1581,11 @@ export class PollVoteRequired extends BadRequest {
 export class PremiumAccountRequired extends BadRequest {
   override id: string = 'PREMIUM_ACCOUNT_REQUIRED';
   override message: string = 'A premium account is required to execute this action.';
+}
+export class PricingChatInvalid extends BadRequest {
+  override id: string = 'PRICING_CHAT_INVALID';
+  override message: string =
+    'The pricing for the [subscription](https://core.telegram.org/api/subscriptions) is invalid, the maximum price is specified in the [`stars_subscription_amount_max` config key &raquo;](https://core.telegram.org/api/config#stars-subscription-amount-max).';
 }
 export class PrivacyKeyInvalid extends BadRequest {
   override id: string = 'PRIVACY_KEY_INVALID';
@@ -1805,6 +1876,10 @@ export class SmsCodeCreateFailed extends BadRequest {
   override id: string = 'SMS_CODE_CREATE_FAILED';
   override message: string = 'An error occurred while creating the SMS code.';
 }
+export class SrpAInvalid extends BadRequest {
+  override id: string = 'SRP_A_INVALID';
+  override message: string = 'The specified inputCheckPasswordSRP.A value is invalid.';
+}
 export class SrpIdInvalid extends BadRequest {
   override id: string = 'SRP_ID_INVALID';
   override message: string = 'Invalid SRP ID provided.';
@@ -1812,6 +1887,43 @@ export class SrpIdInvalid extends BadRequest {
 export class SrpPasswordChanged extends BadRequest {
   override id: string = 'SRP_PASSWORD_CHANGED';
   override message: string = 'Password has changed.';
+}
+export class StargiftInvalid extends BadRequest {
+  override id: string = 'STARGIFT_INVALID';
+  override message: string =
+    'The passed [inputInvoiceStarGift](https://core.telegram.org/constructor/inputInvoiceStarGift) is invalid.';
+}
+export class StargiftUsageLimited extends BadRequest {
+  override id: string = 'STARGIFT_USAGE_LIMITED';
+  override message: string = 'The gift is sold out.';
+}
+export class StarrefAwaitingEnd extends BadRequest {
+  override id: string = 'STARREF_AWAITING_END';
+  override message: string =
+    'The previous referral program was terminated less than 24 hours ago: further changes can be made after the date specified in userFull.starref_program.end_date.';
+}
+export class StarrefHashRevoked extends BadRequest {
+  override id: string = 'STARREF_HASH_REVOKED';
+  override message: string = 'The specified affiliate link was already revoked.';
+}
+export class StarrefPermilleInvalid extends BadRequest {
+  override id: string = 'STARREF_PERMILLE_INVALID';
+  override message: string =
+    'The specified commission_permille is invalid: the minimum and maximum values for this parameter are contained in the [starref_min_commission_permille](https://core.telegram.org/api/config#starref-min-commission-permille) and [starref_max_commission_permille](https://core.telegram.org/api/config#starref-max-commission-permille) client configuration parameters.';
+}
+export class StarrefPermilleTooLow extends BadRequest {
+  override id: string = 'STARREF_PERMILLE_TOO_LOW';
+  override message: string =
+    'The specified commission_permille is too low: the minimum and maximum values for this parameter are contained in the [starref_min_commission_permille](https://core.telegram.org/api/config#starref-min-commission-permille) and [starref_max_commission_permille](https://core.telegram.org/api/config#starref-max-commission-permille) client configuration parameters.';
+}
+export class StarsInvoiceInvalid extends BadRequest {
+  override id: string = 'STARS_INVOICE_INVALID';
+  override message: string = 'The specified Telegram Star invoice is invalid.';
+}
+export class StarsPaymentRequired extends BadRequest {
+  override id: string = 'STARS_PAYMENT_REQUIRED';
+  override message: string =
+    'To import this chat invite link, you must first [pay for the associated Telegram Star subscription &raquo;](https://core.telegram.org/api/subscriptions#channel-subscriptions).';
 }
 export class StartParamEmpty extends BadRequest {
   override id: string = 'START_PARAM_EMPTY';
@@ -1948,6 +2060,15 @@ export class StorySendFloodWeekly extends BadRequest {
   override message: string =
     "You've hit the weekly story limit as specified by the [`stories_sent_weekly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-weekly-limit-default): wait for the specified number of seconds before posting a new story.";
 }
+export class SubscriptionExportMissing extends BadRequest {
+  override id: string = 'SUBSCRIPTION_EXPORT_MISSING';
+  override message: string =
+    'You cannot send a [bot subscription invoice](https://core.telegram.org/api/subscriptions#bot-subscriptions) directly, you may only create invoice links using [payments.exportInvoice](https://core.telegram.org/method/payments.exportInvoice).';
+}
+export class SubscriptionPeriodInvalid extends BadRequest {
+  override id: string = 'SUBSCRIPTION_PERIOD_INVALID';
+  override message: string = 'The specified subscription_pricing.period is invalid.';
+}
 export class SwitchPmTextEmpty extends BadRequest {
   override id: string = 'SWITCH_PM_TEXT_EMPTY';
   override message: string = 'The switch_pm.text field was empty.';
@@ -1978,6 +2099,11 @@ export class TempAuthKeyEmpty extends BadRequest {
   override id: string = 'TEMP_AUTH_KEY_EMPTY';
   override message: string = 'No temporary auth key provided.';
 }
+export class TermsUrlInvalid extends BadRequest {
+  override id: string = 'TERMS_URL_INVALID';
+  override message: string =
+    'The specified [invoice](https://core.telegram.org/constructor/invoice).`terms_url` is invalid.';
+}
 export class ThemeFileInvalid extends BadRequest {
   override id: string = 'THEME_FILE_INVALID';
   override message: string = 'Invalid theme file provided.';
@@ -1993,6 +2119,10 @@ export class ThemeInvalid extends BadRequest {
 export class ThemeMimeInvalid extends BadRequest {
   override id: string = 'THEME_MIME_INVALID';
   override message: string = "The theme's MIME type is invalid.";
+}
+export class ThemeParamsInvalid extends BadRequest {
+  override id: string = 'THEME_PARAMS_INVALID';
+  override message: string = 'The specified `theme_params` field is invalid.';
 }
 export class ThemeTitleInvalid extends BadRequest {
   override id: string = 'THEME_TITLE_INVALID';
@@ -2064,6 +2194,10 @@ export class TopicTitleEmpty extends BadRequest {
 export class ToLangInvalid extends BadRequest {
   override id: string = 'TO_LANG_INVALID';
   override message: string = 'The specified destination language is invalid.';
+}
+export class TransactionIdInvalid extends BadRequest {
+  override id: string = 'TRANSACTION_ID_INVALID';
+  override message: string = 'The specified transaction ID is invalid.';
 }
 export class TranscriptionFailed extends BadRequest {
   override id: string = 'TRANSCRIPTION_FAILED';
@@ -2185,6 +2319,11 @@ export class UserCreator extends BadRequest {
   override id: string = 'USER_CREATOR';
   override message: string =
     "For channels.editAdmin: you've tried to edit the admin rights of the owner, but you're not the owner; for channels.leaveChannel: you can't leave this channel, because you're its creator.";
+}
+export class UserGiftUnavailable extends BadRequest {
+  override id: string = 'USER_GIFT_UNAVAILABLE';
+  override message: string =
+    'Gifts are not available in the current region ([stars_gifts_enabled](https://core.telegram.org/api/config#stars-gifts-enabled) is equal to false).';
 }
 export class UserIdInvalid extends BadRequest {
   override id: string = 'USER_ID_INVALID';

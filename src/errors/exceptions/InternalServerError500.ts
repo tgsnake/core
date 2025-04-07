@@ -24,9 +24,17 @@ export class ApiCallError extends InternalServerError {
   override message: string =
     'API call error due to Telegram having internal problems. Please try again later';
 }
+export class AuthKeyUnsynchronized extends InternalServerError {
+  override id: string = 'AUTH_KEY_UNSYNCHRONIZED';
+  override message: string = 'Internal error, please repeat the method call.';
+}
 export class AuthRestart extends InternalServerError {
   override id: string = 'AUTH_RESTART';
   override message: string = 'Restart the authorization process.';
+}
+export class AuthRestartX extends InternalServerError {
+  override id: string = 'AUTH_RESTART_X';
+  override message: string = 'Internal error (debug info {value}), please repeat the method call.';
 }
 export class CallOccupyFailed extends InternalServerError {
   override id: string = 'CALL_OCCUPY_FAILED';
@@ -220,6 +228,10 @@ export class StorageCheckFailed extends InternalServerError {
 export class StoreInvalidScalarType extends InternalServerError {
   override id: string = 'STORE_INVALID_SCALAR_TYPE';
   override message: string = 'Telegram is having internal problems. Please try again later';
+}
+export class TranslateReqFailed extends InternalServerError {
+  override id: string = 'TRANSLATE_REQ_FAILED';
+  override message: string = 'Translation failed, please try again later.';
 }
 export class UnknownMethod extends InternalServerError {
   override id: string = 'UNKNOWN_METHOD';
