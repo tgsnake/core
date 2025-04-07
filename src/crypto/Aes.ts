@@ -143,7 +143,7 @@ function ige(data: Buffer, key: Buffer, iv: Buffer, encrypt: boolean): Buffer {
 function ctr(key: Buffer, iv: Buffer, state: Buffer = Buffer.alloc(1)) {
   const cipher = AES(Buffer.from(key as unknown as Uint8Array));
   const _iv = Buffer.from(iv as unknown as Uint8Array);
-  let chunk = Buffer.from(cipher.encrypt(iv) as unknown as Uint8Array);
+  let chunk: Buffer = Buffer.from(cipher.encrypt(iv) as unknown as Uint8Array);
   return {
     update: (data: Buffer) => {
       const out = Buffer.from(data as unknown as Uint8Array);

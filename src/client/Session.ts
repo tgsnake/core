@@ -104,6 +104,7 @@ export async function start(
   await (this as Client).invoke(new Raw.updates.GetState());
   const me = await _Auth.getMe.call(this);
   (this as Client)._me = me;
+  Logger.log(`[161] Logined as (${me.fullUser.id})`);
   return me;
 }
 /**

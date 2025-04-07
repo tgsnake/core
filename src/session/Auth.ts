@@ -133,7 +133,7 @@ export class Auth {
           data as unknown as Uint8Array,
           padding as unknown as Uint8Array,
         ]);
-        let encryptedData = RSA.encrypt(hash, fingerprints as bigint);
+        let encryptedData: Buffer = RSA.encrypt(hash, fingerprints as bigint);
         Logger.debug(`[19] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`);
         Logger.debug(`[20] Done encrypt data with RSA`);
 
@@ -237,7 +237,7 @@ export class Auth {
 
         // Step 7; Step 8
         const gA = toBigint(serverDhInnerData.gA, false);
-        const authKey = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
+        const authKey: Buffer = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
         // Security Check
         SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
         Logger.debug('[26] DH parameters check: OK');

@@ -346,7 +346,7 @@ export function normalizeSecretString(secret: string) {
   }
   // check if string hex or base64
   if (/^[0-9a-fA-F]+$/.test(secret)) {
-    return Buffer.from(secret, 'hex')
+    return Buffer.from(secret, 'hex');
   }
   return Buffer.from(secret, 'base64').subarray(0, 16);
 }

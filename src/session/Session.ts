@@ -19,6 +19,7 @@ import { MsgFactory } from './internals/MsgFactory.ts';
 import { sleep } from '../helpers.ts';
 import { Timeout } from '../Timeout.ts';
 import type { Client } from '../client/Client.ts';
+import { Auth } from './Auth.ts';
 
 export class Results {
   value!: Promise<unknown>;
@@ -476,28 +477,32 @@ export class Session {
             const exportedAuthKey: Raw.auth.ExportedAuthorization = (await this.invoke(
               new Raw.auth.ExportAuthorization({ dcId: error.value as unknown as number }),
             )) as Raw.auth.ExportedAuthorization;
+            const newAuthKey: Buffer = await new Auth(
+              error.value as unknown as number,
+              this._testMode,
+              this._client._ipv6,
+            ).create();
             const newSession = new Session(
               this._client,
               error.value as unknown as number,
-              exportedAuthKey.bytes,
+              newAuthKey,
               this._testMode,
               this._proxy,
               this._isMedia,
               this._isCdn,
             );
             Logger.debug(`[157] Reconnecting to telegram server`);
-            await newSession.start(async (session) => {
-              Logger.debug(`[159] Importing auth key`);
-              await session.invoke(
-                new Raw.auth.ImportAuthorization({
-                  id: exportedAuthKey.id,
-                  bytes: exportedAuthKey.bytes,
-                }),
-              );
-            });
-            Logger.debug(`[160] Session imported, resend the query`);
+            await newSession.start();
+            Logger.debug(`[158] Importing auth key`);
+            await newSession.invoke(
+              new Raw.auth.ImportAuthorization({
+                id: exportedAuthKey.id,
+                bytes: exportedAuthKey.bytes,
+              }),
+            );
+            Logger.debug(`[159] Session imported, resend the query`);
             const result = await newSession.invoke(data, retries, timeout, sleepThreshold);
-            Logger.debug(`[161] Closing session in DC${error.value}`);
+            Logger.debug(`[160] Closing session in DC${error.value}`);
             await newSession.stop();
             return result;
           } else {
@@ -548,8 +553,6 @@ export class Session {
         Logger.debug(`[68] Connecting to telegram server`);
         await this._connection.connect();
         this._networkWorker();
-        Logger.debug(`[158] Running middleware before init connection`);
-        await middleware(this);
         await this.initConnection();
         Logger.info(`[69] Session initialized: Layer ${Raw.Layer}`);
         Logger.info(`[70] Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
