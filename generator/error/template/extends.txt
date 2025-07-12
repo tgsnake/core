@@ -1,4 +1,0 @@
-export class {{ CONSTRUCTOR-NAME }} extends {{ PARENT-NAME }} {
-  override id:string = {{ ID }}
-  override message:string = {{ MESSAGE }}
-}
