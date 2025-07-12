@@ -1,4 +1,22 @@
- <a name="1.13.14"></a>
+ <a name="1.13.15"></a>
+
+## [1.13.15](https://github.com/tgsnake/core/compare/1.13.14...1.13.15)
+
+> 2025-04-07
+
+### Add
+
+- automatic handle Y_MIGRATE_X error  ### Change
+
+- package description - package.json - license to GPL v3 - license - trying to fix mtproxy - Update TLSchema - Update TLSchema - Update CHANGELOG.md - Update TLSchema - Update TLSchema  ### Fix
+
+- automatic switch dc when got Y_MIGRATE_X error  ### Remove
+
+- the middleware on session.start  ### Sync
+
+- sync error refference with latest Telegram database  ### Pull Requests
+
+- Merge pull request [#10](https://github.com/tgsnake/core/issues/10) from Jobians/patch-1   <a name="1.13.14"></a>
 
 ## [1.13.14](https://github.com/tgsnake/core/compare/1.13.13...1.13.14)
 
