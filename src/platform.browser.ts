@@ -17,8 +17,12 @@ import process from 'process';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'browserify-zlib';
 export { Logger } from '@tgsnake/log';
+export { BytesIO } from '@tgsnake/bytesio';
+export * as Skema from '@tgsnake/skema';
 export { Mutex, Semaphore } from 'async-mutex';
-export { Buffer } from 'buffer'; // NodeJS compatibility
+export { Buffer } from 'buffer';
+// Other platform compatibility
+// After this line, we will provide some compatibility for Deno, Bun, and Browser so that the same code can run in both environments without modification.
 export type BufferEncoding =
   | 'utf-8'
   | 'utf8'
@@ -28,10 +32,11 @@ export type BufferEncoding =
   | 'binary'
   | 'base64'
   | 'hex'; // NodeJS compatibility;
-export const isDeno = 'Deno' in globalThis; // Deno compatibility
-export const isBun = 'Bun' in globalThis; // Bun compatibility
+const isDeno = 'Deno' in globalThis; // Deno compatibility
+const isBun = 'Bun' in globalThis; // Bun compatibility
+const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 export const { Writable, Duplex } = stream;
-export const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
+
 export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
 // node compatibility
 export const SocksClient = {
@@ -47,30 +52,29 @@ export class Readable extends stream.Readable {
     return super.pipe(destination, options);
   }
 }
-export namespace net {
-  export class Socket {
-    destroyed!: boolean;
-    constructor(..._args: Array<any>) {
-      throw new Error('not implemented');
-    }
-    connect(..._args: Array<any>): any {
-      throw new Error('not implemented');
-    }
-    on(..._args: Array<any>): any {
-      throw new Error('not implemented');
-    }
-    unref(..._args: Array<any>): any {
-      throw new Error('not implemented');
-    }
-    destroy(..._args: Array<any>): any {
-      throw new Error('not implemented');
-    }
-    setTimeout(..._args: Array<any>): any {
-      throw new Error('not implemented');
-    }
-    write(..._args: Array<any>): any {
-      throw new Error('not implemented');
-    }
+class Socket {
+  destroyed!: boolean;
+  constructor(..._args: Array<any>) {
+    throw new Error('not implemented');
+  }
+  connect(..._args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  on(..._args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  unref(..._args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  destroy(..._args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  setTimeout(..._args: Array<any>): any {
+    throw new Error('not implemented');
+  }
+  write(..._args: Array<any>): any {
+    throw new Error('not implemented');
   }
 }
+export const net = { Socket };
 export { crypto, os, bigInt, path, aesjs, process as sysprc };

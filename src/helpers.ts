@@ -8,55 +8,8 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigInt, Buffer } from './platform.deno.ts';
-// https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
-export function bigintToBuffer(
-  int: bigint,
-  padding: number,
-  litte: boolean = true,
-  signed: boolean = false,
-) {
-  const bigintLength = int.toString(2).length;
-  const bytes = Math.ceil(bigintLength / 8);
-  if (padding < bytes) {
-    throw new Error("Too big, Can't convert it to buffer with that padding.");
-  }
-  if (!signed && int < BigInt(0)) {
-    throw new Error('Too small, can convert it when unsigned.');
-  }
-  let isBellow = false;
-  if (int < BigInt(0)) {
-    isBellow = true;
-    int = int * BigInt(-1);
-  }
-  const hex = int.toString(16).padStart(padding * 2, '0');
-  let buffer = Buffer.from(hex, 'hex');
-  if (litte) buffer = buffer.reverse();
-  if (isBellow && signed) {
-    if (litte) {
-      let isReminder = false;
-      if ((buffer as unknown as Uint8Array)[0]) (buffer as unknown as Uint8Array)[0] -= 1;
-      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
-        if (!(buffer as unknown as Uint8Array)[b]) {
-          isReminder = true;
-          continue;
-        }
-        if (isReminder) {
-          (buffer as unknown as Uint8Array)[b] -= 1;
-          isReminder = false;
-        }
-        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
-      }
-    } else {
-      (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1] =
-        256 - (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1];
-      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
-        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
-      }
-    }
-  }
-  return buffer;
-}
+import { bigInt, Buffer, Skema } from './platform.deno.ts';
+
 export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
   for (const buff of array) {
     if (buff.equals(buffer as unknown as Uint8Array)) {
@@ -125,23 +78,6 @@ export function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-}
-export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: boolean = false) {
-  const length = Buffer.byteLength(buffer);
-  const value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
-  const _bigint = bigInt(value, 16);
-  let bigint = BigInt(String(_bigint));
-  if (signed && Math.floor(bigint.toString(2).length / 8) >= length) {
-    bigint = bigint - bigIntPow(BigInt(2), BigInt(length * 8));
-  }
-  return BigInt(bigint);
-}
-// https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
-export function mod(n: number, m: number): number {
-  return ((n % m) + m) % m;
-}
-export function bigIntMod(n: bigint, m: bigint): bigint {
-  return ((n % m) + m) % m;
 }
 export function range(start: number, stop: number, step: number = 1): Array<number> {
   const temp: Array<number> = [];
@@ -249,24 +185,9 @@ export function randBigint(min: bigint, max: bigint) {
 export function pow(x: number, y: number, z?: number) {
   let result = Math.pow(x, y);
   if (z !== undefined) {
-    return mod(result, z);
+    return Skema.mod(result, z);
   }
   return result;
-}
-export function bigIntPow(x: bigint, y: bigint, z?: bigint) {
-  if (z === undefined) {
-    return x ** y;
-  } else {
-    let result = BigInt(1);
-    while (y > BigInt(0)) {
-      if (bigIntMod(y, BigInt(2)) === BigInt(1)) {
-        result = bigIntMod(result * x, z);
-      }
-      y = y >> BigInt(1);
-      x = bigIntMod(x * x, z);
-    }
-    return result;
-  }
 }
 // https://stackoverflow.com/a/64953280/16600138
 const bigMath = {
