@@ -3,11 +3,6 @@
   "version": "1.13.15",
   "description": "Pure Telegram MTProto library for Javascript or Typescript.",
   "main": "./lib/src/index.js",
-  "devDependencies": {
-    "@types/node": "22.14.0",
-    "deno2node": "1.15.0",
-    "prettier": "3.5.3"
-  },
   "scripts": {
     "build": "deno2node tsconfig.json",
     "build:license": "node ./generator/license",
@@ -25,21 +20,31 @@
   "repository": "https://github.com/tgsnake/core",
   "author": "butthx",
   "files": [
-    "lib/**/**"
+    "dist/**/**"
   ],
   "license": "(GPL-3.0 OR LGPL-3.0)",
   "engineStrict": true,
   "engines": {
     "node": ">=12.0.0",
     "npm": ">=6.0.0",
-    "yarn": ">=1.0.0"
+    "yarn": ">=1.0.0",
+    "deno": ">=1.0.0",
+    "bun": ">=1.0.0"
   },
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.12.0",
   "dependencies": {
+    "@tgsnake/bytesio": "^1.0.0",
     "@tgsnake/log": "latest",
+    "@tgsnake/skema": "^1.9.0",
     "async-mutex": "0.5.0",
     "big-integer": "1.6.52",
-    "socks": "2.8.4"
+    "socks": "2.8.7"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.9",
+    "@types/node": "25.3.0",
+    "deno2node": "1.16.0",
+    "prettier": "3.8.1"
   },
   "isBeta": false,
   "isPrivate": false
