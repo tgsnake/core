@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import packages from '../package.json';
+import packages from '../package.json' with { type: 'json' };
 
 export const version = packages.version;
 export const isBeta = packages.isBeta;

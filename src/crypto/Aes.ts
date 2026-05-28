@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,9 +8,9 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { crypto, aesjs, Buffer, where } from '../platform.deno.ts';
-import { Logger } from '../Logger.ts';
-import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers.ts';
+import { crypto, aesjs, Buffer, platform, Skema } from '@/deps.js';
+import { Logger } from '@/Logger.js';
+import { range } from '@/helpers.js';
 
 /**
  * Encrypt content with AES-256-IGE mode.
@@ -19,8 +19,8 @@ import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } fr
  * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`[4] Encrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
-  const pad = mod(Buffer.byteLength(data), 16);
+  Logger.debug(`[1.crypto.Aes] Encrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
+  const pad = Skema.mod(Buffer.byteLength(data), 16);
   if (pad) {
     data = Buffer.concat([
       data as unknown as Uint8Array,
@@ -36,7 +36,7 @@ export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
  * @param {Buffer} iv - Initial Vector for decrypting content.
  */
 export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`[5] Decrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
+  Logger.debug(`[2.crypto.Aes] Decrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
   return ige(data, key, iv, false);
 }
 /**
@@ -50,26 +50,32 @@ export type CtrCipherFn = (data: Buffer) => Buffer;
  * @param {Buffer} iv - Initial Vector for encrypting content.
  */
 export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
-  if (where === 'Browser') {
+  if (platform === 'Browser') {
     const cipher = new aesjs.ModeOfOperation.ctr(
       key,
       new aesjs.Counter(Uint8Array.from(iv as unknown as Uint8Array)),
     );
     return (data: Buffer) => {
-      Logger.debug(`[140] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`);
+      Logger.debug(
+        `[3.crypto.Aes] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`,
+      );
       return Buffer.from(cipher.encrypt(data));
     };
   }
   try {
     const cipher = crypto.createCipheriv('AES-256-CTR', key, iv);
     return (data: Buffer) => {
-      Logger.debug(`[140] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`);
+      Logger.debug(
+        `[4.crypto.Aes] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`,
+      );
       return Buffer.from(cipher.update(data) as unknown as Uint8Array);
     };
   } catch (_error) {
     const cipher = ctr(key, iv);
     return (data: Buffer) => {
-      Logger.debug(`[140] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`);
+      Logger.debug(
+        `[5.crypto.Aes] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`,
+      );
       return Buffer.from(cipher.update(data) as unknown as Uint8Array);
     };
   }
@@ -78,14 +84,18 @@ export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
  * Xor the A bytes with B bytes.
  */
 export function xor(a: Buffer, b: Buffer) {
-  return toBuffer(BigInt(toBigint(a, false) ^ toBigint(b, false)), Buffer.byteLength(a), false);
+  return Skema.bigintToBuffer(
+    BigInt(Skema.bufferToBigint(a, false) ^ Skema.bufferToBigint(b, false)),
+    Buffer.byteLength(a),
+    false,
+  );
 }
 /**
  * Make AES encryption without Initial Vector.
  */
 export function AES(key: Buffer) {
   const iv = Buffer.alloc(0);
-  if (where === 'Browser' || where === 'Deno') {
+  if (platform === 'Browser' || platform === 'Deno') {
     const cipher = new aesjs.ModeOfOperation.ecb(key);
     return {
       encrypt(data: Buffer): Buffer {

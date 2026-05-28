@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigInt, Buffer, Skema } from './platform.deno.ts';
+import { bigInt, Buffer, Skema } from '@/deps.js';
 
 export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
   for (const buff of array) {

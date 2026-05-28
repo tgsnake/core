@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,18 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Raw } from '../../raw/index.ts';
-import { type AbstractSession, SecretChat as TempChat } from '../../storage/index.ts';
-import { Mutex, inspect, crypto, Buffer } from '../../platform.deno.ts';
-import { Logger } from '../../Logger.ts';
-import { SecurityCheckMismatch, SecretChatError } from '../../errors/index.ts';
-import { SecretChats } from '../../crypto/index.ts';
-import {
-  bufferToBigint as toBigint,
-  bigintToBuffer as toBuffer,
-  bigIntPow,
-} from '../../helpers.ts';
-import type { Client } from '../../client/Client.ts';
+import { type AbstractSession, SecretChat as TempChat } from '@/storage/index.js';
+import { Mutex, inspect, crypto, Buffer, Skema } from '@/deps.js';
+import { Logger } from '@/Logger.js';
+import { SecretChats } from '@/crypto/index.js';
+import type { Client } from '@/client/Client.js';
 
 // Adapted from:
 // https://github.com/danog/MadelineProto/blob/v8/src/SecretChats/AuthKeyHandler.php
@@ -32,7 +25,7 @@ function sha1(data: Buffer): Buffer {
 export class SecretChat {
   private _storage!: AbstractSession;
   private _client!: Client;
-  private _dhConfig!: Raw.messages.DhConfig;
+  private _dhConfig!: Skema.Raw.messages.DhConfig;
   //  private _dhP!: bigint;
   private _mutex!: Mutex;
   private _tempAuthKey!: Map<bigint, Buffer>;
@@ -55,17 +48,17 @@ export class SecretChat {
     try {
       let version = 0;
       if (this._dhConfig) {
-        if (this._dhConfig instanceof Raw.messages.DhConfig) {
-          version = (this._dhConfig as Raw.messages.DhConfig).version;
+        if (this._dhConfig instanceof Skema.Raw.messages.DhConfig) {
+          version = (this._dhConfig as Skema.Raw.messages.DhConfig).version;
         }
       }
       const dh = await this._client.invoke(
-        new Raw.messages.GetDhConfig({
+        new Skema.Raw.messages.GetDhConfig({
           randomLength: 0,
           version: version,
         }),
       );
-      if (dh instanceof Raw.messages.DhConfigNotModified) {
+      if (dh instanceof Skema.Raw.messages.DhConfigNotModified) {
         return this._dhConfig;
       }
       this._dhConfig = dh;
@@ -79,26 +72,29 @@ export class SecretChat {
    * @param {BigInt | String} userId - UserId will be sent the request for secret chat.
    */
   async start(userId: bigint | string) {
-    Logger.debug(`[127] starting secret chat for ${userId}`);
+    Logger.debug(`[1.session.secretChats.SecretChat] starting secret chat for ${userId}`);
     const peer = await this._client.resolvePeer(userId);
     const dh = await this.reqDHConfig();
-    const p = await toBigint(dh.p, false);
-    const a = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
-    const gA = bigIntPow(BigInt(dh.g), a, p);
+    const p = await Skema.bufferToBigint(dh.p, false);
+    const a = await Skema.bufferToBigint(
+      Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array),
+      false,
+    );
+    const gA = Skema.bigIntPow(BigInt(dh.g), a, p);
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
       'gA must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
       'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    Logger.debug('[111] gA validation: OK');
+    Logger.debug('[2.session.secretChats.SecretChat] gA validation: OK');
     const res = await this._client.invoke(
-      new Raw.messages.RequestEncryption({
+      new Skema.Raw.messages.RequestEncryption({
         userId: peer,
-        gA: await toBuffer(gA, 256, false),
+        gA: await Skema.bigintToBuffer(gA, 256, false),
         randomId: Buffer.from(crypto.randomBytes(4) as unknown as Uint8Array).readInt32LE(),
       }),
     );
@@ -107,7 +103,7 @@ export class SecretChat {
       await TempChat.save(this._storage, {
         id: res.id,
         accessHash: BigInt(0),
-        authKey: await toBuffer(a, 256, false),
+        authKey: await Skema.bigintToBuffer(a, 256, false),
         isAdmin: false, // set false in here, because we not finished to create the secret chat.
       });
     } finally {
@@ -120,36 +116,39 @@ export class SecretChat {
    * Accepting a request for secret chat.
    * https://core.telegram.org/api/end-to-end#accepting-a-request
    */
-  async accept(request: Raw.EncryptedChatRequested) {
-    Logger.debug(`[125] accepting secret chat from ${request.id}`);
+  async accept(request: Skema.Raw.EncryptedChatRequested) {
+    Logger.debug(`[3.session.secretChats.SecretChat] accepting secret chat from ${request.id}`);
     if (request.id === 0) {
-      throw new SecretChatError.AlreadyAccepted();
+      throw new Skema.SecretChatError.AlreadyAccepted();
     }
     const dh = await this.reqDHConfig();
-    const p = await toBigint(dh.p, false);
-    const b = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
-    const gA = toBigint(request.gA, false);
-    const gB = bigIntPow(BigInt(dh.g), b, p);
-    const authKey = await toBuffer(bigIntPow(gA, b, p), 256, false);
+    const p = await Skema.bufferToBigint(dh.p, false);
+    const b = await Skema.bufferToBigint(
+      Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array),
+      false,
+    );
+    const gA = Skema.bufferToBigint(request.gA, false);
+    const gB = Skema.bigIntPow(BigInt(dh.g), b, p);
+    const authKey = await Skema.bigintToBuffer(Skema.bigIntPow(gA, b, p), 256, false);
     const fingerprint = sha1(authKey).subarray(-8).readBigInt64LE();
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
       'gA must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
       'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
       'gB must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gB && gB < p - BigInt(2) ** BigInt(2048 - 64),
       'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    Logger.debug('[126] gA and gB validation: OK');
+    Logger.debug('[4.session.secretChats.SecretChat] gA and gB validation: OK');
     const release = await this._mutex.acquire();
     try {
       await TempChat.save(this._storage, {
@@ -162,42 +161,42 @@ export class SecretChat {
       release();
     }
     const res = await this._client.invoke(
-      new Raw.messages.AcceptEncryption({
-        peer: new Raw.InputEncryptedChat({
+      new Skema.Raw.messages.AcceptEncryption({
+        peer: new Skema.Raw.InputEncryptedChat({
           chatId: request.id,
           accessHash: request.accessHash,
         }),
-        gB: await toBuffer(gB, 256, false),
+        gB: await Skema.bigintToBuffer(gB, 256, false),
         keyFingerprint: fingerprint,
       }),
     );
     await this.notifyLayer(request.id);
     return res;
   }
-  async finish(chat: Raw.EncryptedChat) {
-    Logger.debug(`[129] finishing creating secret chat ${chat.id}`);
+  async finish(chat: Skema.Raw.EncryptedChat) {
+    Logger.debug(`[5.session.secretChats.SecretChat] finishing creating secret chat ${chat.id}`);
     const dh = await this.reqDHConfig();
-    const p = await toBigint(dh.p, false);
-    const gAOrB = await toBigint(chat.gAOrB, false);
+    const p = await Skema.bufferToBigint(dh.p, false);
+    const gAOrB = await Skema.bufferToBigint(chat.gAOrB, false);
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gAOrB && gAOrB < p - BigInt(1),
       'gAOrB must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gAOrB && gAOrB < p - BigInt(2) ** BigInt(2048 - 64),
       'gAOrB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    Logger.debug('[128] gAOrB validation: OK');
+    Logger.debug('[6.session.secretChats.SecretChat] gAOrB validation: OK');
     const peer = await this._storage.getSecretChatById(chat.id);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chat.id);
+      throw new Skema.SecretChatError.ChatNotFound(chat.id);
     }
-    const a = await toBigint(peer.authKey, false);
-    const authKey = await toBuffer(bigIntPow(gAOrB, a, p), 256, false);
+    const a = await Skema.bufferToBigint(peer.authKey, false);
+    const authKey = await Skema.bigintToBuffer(Skema.bigIntPow(gAOrB, a, p), 256, false);
     const fingerprint = sha1(authKey).subarray(-8).readBigInt64LE();
     if (fingerprint !== chat.keyFingerprint) {
-      throw new SecretChatError.FingerprintMismatch();
+      throw new Skema.SecretChatError.FingerprintMismatch();
     }
     const release = await this._mutex.acquire();
     try {
@@ -218,25 +217,25 @@ export class SecretChat {
     return this.notifyLayer(chat.id);
   }
   async notifyLayer(chatId: number) {
-    Logger.debug(`[130] notify layer for ${chatId}`);
+    Logger.debug(`[7.session.secretChats.SecretChat] notify layer for ${chatId}`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chatId);
+      throw new Skema.SecretChatError.ChatNotFound(chatId);
     }
     if (peer.layer !== 8) {
       return this._client.invoke(
-        new Raw.messages.SendEncryptedService({
+        new Skema.Raw.messages.SendEncryptedService({
           peer: peer.input,
           randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
-            new Raw.DecryptedMessageService8({
+            new Skema.Raw.DecryptedMessageService8({
               randomId: Buffer.from(
                 crypto.randomBytes(8) as unknown as Uint8Array,
               ).readBigInt64LE(),
               randomBytes: crypto.randomBytes(15 + 4 * Math.floor(Math.random() * 2)),
-              action: new Raw.DecryptedMessageActionNotifyLayer17({
-                layer: Math.min(peer.layer, Raw.Layer),
+              action: new Skema.Raw.DecryptedMessageActionNotifyLayer17({
+                layer: Math.min(peer.layer, Skema.Raw.Layer),
               }),
             }),
           ),
@@ -246,24 +245,24 @@ export class SecretChat {
     return;
   }
   async destroy(chatId: number) {
-    Logger.debug(`[131] destroying secret chat ${chatId}`);
+    Logger.debug(`[8.session.secretChats.SecretChat] destroying secret chat ${chatId}`);
     const release = await this._mutex.acquire();
     try {
       await this._storage.removeSecretChatById(chatId);
     } finally {
       release();
     }
-    Logger.debug(`[132] ${chatId} was removed from session`);
+    Logger.debug(`[9.session.secretChats.SecretChat] ${chatId} was removed from session`);
     try {
       await this._client.invoke(
-        new Raw.messages.DiscardEncryption({
+        new Skema.Raw.messages.DiscardEncryption({
           chatId: chatId,
         }),
       );
     } catch (_error: unknown) {
       // ignore error
     }
-    Logger.debug(`[133] ${chatId} already destroyed`);
+    Logger.debug(`[10.session.secretChats.SecretChat] ${chatId} already destroyed`);
     return true;
   }
   // Perfect Forward Secrecy : https://corefork.telegram.org/api/end-to-end/pfs
@@ -273,45 +272,48 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be request re-keying
    */
   async rekeying(chatId: number) {
-    Logger.debug(`[114] re-keying ${chatId}: initiator`);
+    Logger.debug(`[11.session.secretChats.SecretChat] re-keying ${chatId}: initiator`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chatId);
+      throw new Skema.SecretChatError.ChatNotFound(chatId);
     }
     const dh = await this.reqDHConfig();
-    const p = await toBigint(dh.p, false);
-    const a = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
-    const gA = bigIntPow(BigInt(dh.g), a, p);
+    const p = await Skema.bufferToBigint(dh.p, false);
+    const a = await Skema.bufferToBigint(
+      Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array),
+      false,
+    );
+    const gA = Skema.bigIntPow(BigInt(dh.g), a, p);
     let e = Buffer.from(crypto.randomBytes(64) as unknown as Uint8Array).readBigInt64LE();
     peer.rekeyStep = 1;
     peer.rekeyExchange = e;
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gA && gA < p - BigInt(1),
       'gA must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
       'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    Logger.debug('[115] gA validation: OK');
+    Logger.debug('[12.session.secretChats.SecretChat] gA validation: OK');
     const release = await this._mutex.acquire();
     try {
       await peer.update(this._storage); // keep it sync!
-      this._tempAuthKey.set(e, await toBuffer(a, 256, false));
+      this._tempAuthKey.set(e, await Skema.bigintToBuffer(a, 256, false));
     } finally {
       release();
     }
     return this._client.invoke(
-      new Raw.messages.SendEncryptedService({
+      new Skema.Raw.messages.SendEncryptedService({
         peer: peer.input,
         randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.DecryptedMessageService17({
+          new Skema.Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
-            action: new Raw.DecryptedMessageActionRequestKey20({
-              gA: await toBuffer(gA, 256, false),
+            action: new Skema.Raw.DecryptedMessageActionRequestKey20({
+              gA: await Skema.bigintToBuffer(gA, 256, false),
               exchangeId: e,
             }),
           }),
@@ -325,20 +327,24 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be accept re-keying
    * @param {Raw.DecryptedMessageActionRequestKey20} - An action used to accept and create new authKey.
    */
-  async acceptRekeying(chatId: number, action: Raw.DecryptedMessageActionRequestKey20) {
-    Logger.debug(`[116] re-keying ${chatId}: accepting`);
+  async acceptRekeying(chatId: number, action: Skema.Raw.DecryptedMessageActionRequestKey20) {
+    Logger.debug(`[13.session.secretChats.SecretChat] re-keying ${chatId}: accepting`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chatId);
+      throw new Skema.SecretChatError.ChatNotFound(chatId);
     }
     // https://core.telegram.org/api/end-to-end/pfs#concurrent-re-keying
     if (peer.rekeyStep) {
       if (peer.rekeyExchange > action.exchangeId) {
-        Logger.info(`[117] Aborting rekeying: received exchangeId smaller than our exchangeId`);
+        Logger.info(
+          `[14.session.secretChats.SecretChat] Aborting rekeying: received exchangeId smaller than our exchangeId`,
+        );
         return;
       }
       if (peer.rekeyExchange === action.exchangeId) {
-        Logger.info(`[118] Aborting rekeying: received exchangeId equal with our exchangeId`);
+        Logger.info(
+          `[15.session.secretChats.SecretChat] Aborting rekeying: received exchangeId equal with our exchangeId`,
+        );
         const release = await this._mutex.acquire();
         try {
           peer.rekeyStep = 0;
@@ -351,22 +357,25 @@ export class SecretChat {
       }
     }
     const dh = await this.reqDHConfig();
-    const p = await toBigint(dh.p, false);
-    const b = await toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
-    const gA = toBigint(action.gA, false);
-    const gB = bigIntPow(BigInt(dh.g), b, p);
-    const authKey = await toBuffer(bigIntPow(gA, b, p), 256, false);
+    const p = await Skema.bufferToBigint(dh.p, false);
+    const b = await Skema.bufferToBigint(
+      Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array),
+      false,
+    );
+    const gA = Skema.bufferToBigint(action.gA, false);
+    const gB = Skema.bigIntPow(BigInt(dh.g), b, p);
+    const authKey = await Skema.bigintToBuffer(Skema.bigIntPow(gA, b, p), 256, false);
     const fingerprint = sha1(authKey).subarray(-8);
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
       'gB must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gB && gB < p - BigInt(2) ** BigInt(2048 - 64),
       'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    Logger.debug('[119] gB validation: OK');
+    Logger.debug('[16.session.secretChats.SecretChat] gB validation: OK');
     const release = await this._mutex.acquire();
     try {
       this._tempAuthKey.set(action.exchangeId, authKey);
@@ -377,15 +386,15 @@ export class SecretChat {
       release();
     }
     return this._client.invoke(
-      new Raw.messages.SendEncryptedService({
+      new Skema.Raw.messages.SendEncryptedService({
         peer: peer.input,
         randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.DecryptedMessageService17({
+          new Skema.Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
-            action: new Raw.DecryptedMessageActionAcceptKey20({
-              gB: await toBuffer(gB, 256, false),
+            action: new Skema.Raw.DecryptedMessageActionAcceptKey20({
+              gB: await Skema.bigintToBuffer(gB, 256, false),
               exchangeId: action.exchangeId,
               keyFingerprint: fingerprint.readBigInt64LE(),
             }),
@@ -400,11 +409,11 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be changed the auth key.
    * @param {Raw.DecryptedMessageActionRequestKey20} action - An action used to commit the new authKey.
    */
-  async commitRekeying(chatId: number, action: Raw.DecryptedMessageActionAcceptKey20) {
-    Logger.debug(`[120] re-keying ${chatId}: commiting`);
+  async commitRekeying(chatId: number, action: Skema.Raw.DecryptedMessageActionAcceptKey20) {
+    Logger.debug(`[17.session.secretChats.SecretChat] re-keying ${chatId}: commiting`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chatId);
+      throw new Skema.SecretChatError.ChatNotFound(chatId);
     }
     if (peer.rekeyStep !== 1 || !this._tempAuthKey.has(action.exchangeId)) {
       const release = await this._mutex.acquire();
@@ -418,54 +427,60 @@ export class SecretChat {
       return;
     }
     const dh = await this.reqDHConfig();
-    const p = await toBigint(dh.p, false);
-    const gB = await toBigint(action.gB, false);
-    const authKey = await toBuffer(
-      bigIntPow(gB, await toBigint(this._tempAuthKey.get(action.exchangeId) as Buffer), p),
+    const p = await Skema.bufferToBigint(dh.p, false);
+    const gB = await Skema.bufferToBigint(action.gB, false);
+    const authKey = await Skema.bigintToBuffer(
+      Skema.bigIntPow(
+        gB,
+        await Skema.bufferToBigint(this._tempAuthKey.get(action.exchangeId) as Buffer),
+        p,
+      ),
       256,
       false,
     );
     const fingerprint = sha1(authKey).subarray(-8).readBigInt64LE();
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
       'gB must be greater than one and smaller than p-1',
     );
-    SecurityCheckMismatch.check(
+    Skema.SecurityCheckMismatch.check(
       BigInt(2) ** BigInt(2048 - 64) < gB && gB < p - BigInt(2) ** BigInt(2048 - 64),
       'gB must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
     );
-    Logger.debug('[121] gB validation: OK');
+    Logger.debug('[18.session.secretChats.SecretChat] gB validation: OK');
     if (fingerprint !== action.keyFingerprint) {
-      Logger.error(`[122] re-keying ${chatId}: Aborting due mismatched fingerprint`);
+      Logger.error(
+        `[19.session.secretChats.SecretChat] re-keying ${chatId}: Aborting due mismatched fingerprint`,
+      );
       await this._client.invoke(
-        new Raw.messages.SendEncryptedService({
+        new Skema.Raw.messages.SendEncryptedService({
           peer: peer.input,
           randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
-            new Raw.DecryptedMessageService17({
+            new Skema.Raw.DecryptedMessageService17({
               randomId: Buffer.from(
                 crypto.randomBytes(8) as unknown as Uint8Array,
               ).readBigInt64LE(),
-              action: new Raw.DecryptedMessageActionAbortKey20({
+              action: new Skema.Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
             }),
           ),
         }),
       );
-      throw new SecretChatError.FingerprintMismatch();
+      throw new Skema.SecretChatError.FingerprintMismatch();
     }
     const response = await this._client.invoke(
-      new Raw.messages.SendEncryptedService({
+      new Skema.Raw.messages.SendEncryptedService({
         peer: peer.input,
         randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.DecryptedMessageService17({
+          new Skema.Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
-            action: new Raw.DecryptedMessageActionCommitKey20({
+            action: new Skema.Raw.DecryptedMessageActionCommitKey20({
               exchangeId: action.exchangeId,
               keyFingerprint: action.keyFingerprint,
             }),
@@ -493,11 +508,11 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be Completing the re-keying.
    * @param {Raw.DecryptedMessageActionCommitKey20} action - An action used to completed re-keying.
    */
-  async finalRekeying(chatId: number, action: Raw.DecryptedMessageActionCommitKey20) {
-    Logger.debug(`[123] re-keying ${chatId}: finishing`);
+  async finalRekeying(chatId: number, action: Skema.Raw.DecryptedMessageActionCommitKey20) {
+    Logger.debug(`[20.session.secretChats.SecretChat] re-keying ${chatId}: finishing`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chatId);
+      throw new Skema.SecretChatError.ChatNotFound(chatId);
     }
     if (peer.rekeyStep !== 2 || !this._tempAuthKey.has(action.exchangeId)) {
       return;
@@ -506,25 +521,27 @@ export class SecretChat {
       .subarray(-8)
       .readBigInt64LE();
     if (fingerprint !== action.keyFingerprint) {
-      Logger.error(`[124] re-keying ${chatId}: Aborting due mismatched fingerprint`);
+      Logger.error(
+        `[21.session.secretChats.SecretChat] re-keying ${chatId}: Aborting due mismatched fingerprint`,
+      );
       await this._client.invoke(
-        new Raw.messages.SendEncryptedService({
+        new Skema.Raw.messages.SendEncryptedService({
           peer: peer.input,
           randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
           data: await this.encrypt(
             chatId,
-            new Raw.DecryptedMessageService17({
+            new Skema.Raw.DecryptedMessageService17({
               randomId: Buffer.from(
                 crypto.randomBytes(8) as unknown as Uint8Array,
               ).readBigInt64LE(),
-              action: new Raw.DecryptedMessageActionAbortKey20({
+              action: new Skema.Raw.DecryptedMessageActionAbortKey20({
                 exchangeId: action.exchangeId,
               }),
             }),
           ),
         }),
       );
-      throw new SecretChatError.FingerprintMismatch();
+      throw new Skema.SecretChatError.FingerprintMismatch();
     }
     const release = await this._mutex.acquire();
     try {
@@ -539,14 +556,14 @@ export class SecretChat {
       release();
     }
     return this._client.invoke(
-      new Raw.messages.SendEncryptedService({
+      new Skema.Raw.messages.SendEncryptedService({
         peer: peer.input,
         randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
         data: await this.encrypt(
           chatId,
-          new Raw.DecryptedMessageService17({
+          new Skema.Raw.DecryptedMessageService17({
             randomId: Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array).readBigInt64LE(),
-            action: new Raw.DecryptedMessageActionNoop20(),
+            action: new Skema.Raw.DecryptedMessageActionNoop20(),
           }),
         ),
       }),
@@ -555,36 +572,40 @@ export class SecretChat {
   /**
    * Decrypt encrypted message
    */
-  async decrypt(message: Raw.TypeEncryptedMessage) {
+  async decrypt(message: Skema.Raw.TypeEncryptedMessage) {
     let decrypted;
     if (!this._waiting.includes(message.chatId)) {
       const peer = await this._storage.getSecretChatById(message.chatId);
       if (!peer) {
-        throw new SecretChatError.ChatNotFound(message.chatId);
+        throw new Skema.SecretChatError.ChatNotFound(message.chatId);
       }
       if (peer.mtproto === 2) {
         try {
           decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
         } catch (error) {
-          if (error instanceof SecretChatError.FingerprintMismatch) {
+          if (error instanceof Skema.SecretChatError.FingerprintMismatch) {
             await this.destroy(message.chatId);
             throw error;
           }
           decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 1);
           peer.mtproto = 1;
-          Logger.debug(`[112] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`);
+          Logger.debug(
+            `[22.session.secretChats.SecretChat] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`,
+          );
         }
       } else {
         try {
           decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, peer.mtproto);
         } catch (error) {
-          if (error instanceof SecretChatError.FingerprintMismatch) {
+          if (error instanceof Skema.SecretChatError.FingerprintMismatch) {
             await this.destroy(message.chatId);
             throw error;
           }
           decrypted = await SecretChats.unpack(message, peer.authKey, peer.isAdmin, 2);
           peer.mtproto = 2;
-          Logger.debug(`[113] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`);
+          Logger.debug(
+            `[23.session.secretChats.SecretChat] Switch MTProto version for ${message.chatId} to ${peer.mtproto}`,
+          );
         }
       }
       const release = await this._mutex.acquire();
@@ -606,10 +627,10 @@ export class SecretChat {
   /**
    * Encrypt decrypted message
    */
-  async encrypt(chatId: number, message: Raw.TypeDecryptedMessage) {
+  async encrypt(chatId: number, message: Skema.Raw.TypeDecryptedMessage) {
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
-      throw new SecretChatError.ChatNotFound(chatId);
+      throw new Skema.SecretChatError.ChatNotFound(chatId);
     }
     const release = await this._mutex.acquire();
     const inSeqNo = peer.inSeqNo * 2 + peer.inSeqNoX;

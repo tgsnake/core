@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,12 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import * as TCPs from './TCP/index.ts';
-import { DataCenter } from '../session/index.ts';
-import { sleep, normalizeSecretString } from '../helpers.ts';
-import { Logger } from '../Logger.ts';
-import { isBrowser, inspect, Buffer } from '../platform.deno.ts';
-import { ClientError } from '../errors/index.ts';
+import * as TCPs from '@/connection/TCP/index.js';
+import { DataCenter } from '@/session/index.js';
+import { sleep, normalizeSecretString } from '@/helpers.js';
+import { Logger } from '@/Logger.js';
+import { platform, inspect, Buffer, Skema } from '@/deps.js';
 
 /**
  * Several TCP models are available.
@@ -113,7 +112,10 @@ export class Connection {
     proxy?: ProxyInterface,
     media: boolean = false,
     mode: TCP = TCP.TCPFull,
-    local: boolean = (isBrowser && globalThis && globalThis.location.protocol !== 'https:') || true,
+    local: boolean = (platform === 'Browser' &&
+      globalThis &&
+      globalThis.location.protocol !== 'https:') ||
+      true,
   ) {
     this.maxRetries = 3;
     this._dcId = dcId;
@@ -127,7 +129,7 @@ export class Connection {
   }
   async connect() {
     if (this._protocol && this._connected) {
-      throw new ClientError.ClientReady();
+      throw new Skema.ClientError.ClientReady();
     }
     for (let i = 0; i < this.maxRetries; i++) {
       if (
@@ -135,7 +137,7 @@ export class Connection {
           'server' in this._proxy &&
           'port' in this._proxy &&
           'secret' in this._proxy) ||
-          isBrowser) &&
+          platform === 'Browser') &&
         this._mode !== TCP.TCPAbridgedO &&
         this._mode !== TCP.TCPIntermediateO
       ) {
@@ -157,41 +159,46 @@ export class Connection {
       }
       this._protocol = new TCPModes[this._mode]();
       try {
-        Logger.debug(`[1] Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`);
+        Logger.debug(
+          `[1.connection.connection] Connecting to DC${this._dcId} with ${this._protocol.constructor.name}`,
+        );
         await this._protocol.connect(
           this._address[0],
-          isBrowser ? (this._local ? 80 : this._address[1]) : this._address[1],
+          platform === 'Browser' ? (this._local ? 80 : this._address[1]) : this._address[1],
           this._proxy,
           this._dcId + (this._test ? 10000 : 0) * (this._media ? -1 : 1),
         );
         this._connected = true;
         break;
       } catch (error: unknown) {
-        Logger.error(`[106] Got error when trying connecting to telegram :`, error);
+        Logger.error(
+          `[2.connection.connection] Got error when trying connecting to telegram :`,
+          error,
+        );
         this._protocol.close();
         await sleep(2000);
       }
     }
     if (!this._connected) {
-      throw new ClientError.ClientFailed();
+      throw new Skema.ClientError.ClientFailed();
     }
     return this._connected;
   }
   async close() {
     if (!this._protocol || !this._connected) {
-      throw new ClientError.ClientNotReady();
+      throw new Skema.ClientError.ClientNotReady();
     }
     this._connected = false;
     await sleep(10);
     await this._protocol.close();
   }
   async send(data: Buffer) {
-    Logger.debug(`[2] Sending ${Buffer.byteLength(data)} bytes data.`);
+    Logger.debug(`[3.connection.connection] Sending ${Buffer.byteLength(data)} bytes data.`);
     await this._protocol.send(data);
   }
   async recv() {
     if (!this._connected) {
-      throw new ClientError.ClientDisconnected();
+      throw new Skema.ClientError.ClientDisconnected();
     }
     return await this._protocol.recv();
   }

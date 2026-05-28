@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,10 +8,8 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Raw } from '../raw/index.ts';
-import { type SecretChat } from './SecretChat.ts';
-// @ts-ignore
-import { type Buffer } from '../platform.deno.ts';
+import { type SecretChat } from '@/storage/SecretChat.js';
+import { type Buffer, Skema } from '@/deps.js';
 
 type MaybePromise<T> = T | Promise<T>;
 
@@ -180,21 +178,27 @@ export abstract class AbstractSession {
    */
   abstract getPeerById(
     id: bigint,
-  ): MaybePromise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
+  ): MaybePromise<
+    Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
+  >;
   /**
    * Get peer by their given username from cache.
    * @param {string} username - Username will be search on cache.
    */
   abstract getPeerByUsername(
     username: string,
-  ): MaybePromise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
+  ): MaybePromise<
+    Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
+  >;
   /**
    * Get peer by their given phone number from cache.
    * @param {string} phoneNumber - Phone number will be search on cache.
    */
   abstract getPeerByPhoneNumber(
     phoneNumber: string,
-  ): MaybePromise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | undefined>;
+  ): MaybePromise<
+    Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
+  >;
   /**
    * Remove secret chat by id.
    * @param {number} id - secret chat id which will removed.

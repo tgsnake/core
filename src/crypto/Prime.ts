@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,7 +8,8 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigMath, bigIntMod, randBigint, bigIntPow } from '../helpers.ts';
+import { bigMath, randBigint } from '@/helpers.js';
+import { Skema } from '@/deps.js';
 
 const CURRENT_DH_PRIME = BigInt(
   '0x' +
@@ -24,7 +25,7 @@ const CURRENT_DH_PRIME = BigInt(
 // Recursive variant
 export function gcd(a: bigint, b: bigint): bigint {
   while (b) {
-    const c = bigIntMod(a, b);
+    const c = Skema.bigIntMod(a, b);
     a = b;
     b = c;
   }
@@ -33,7 +34,7 @@ export function gcd(a: bigint, b: bigint): bigint {
 export function decompose(pq: bigint) {
   // https://comeoncodeon.wordpress.com/2010/09/18/pollard-rho-brent-integer-factorization/
   if (pq == BigInt(1)) return pq;
-  if (bigIntMod(pq, BigInt(2)) === BigInt(0)) return BigInt(2);
+  if (Skema.bigIntMod(pq, BigInt(2)) === BigInt(0)) return BigInt(2);
   let y = randBigint(BigInt(1), pq - BigInt(1));
   const c = randBigint(BigInt(1), pq - BigInt(1));
   const m = randBigint(BigInt(1), pq - BigInt(1));
@@ -45,14 +46,14 @@ export function decompose(pq: bigint) {
   while (g === BigInt(1)) {
     x = y;
     for (let i = 0; BigInt(i) < r; i++) {
-      y = bigIntMod(bigIntPow(y, BigInt(2), pq) + c, pq);
+      y = Skema.bigIntMod(Skema.bigIntPow(y, BigInt(2), pq) + c, pq);
     }
     let k = BigInt(0);
     while (k < r && g === BigInt(1)) {
       ys = y;
       for (let i = 0; BigInt(i) < bigMath.min(m, r - k); i++) {
-        y = bigIntMod(bigIntPow(y, BigInt(2), pq) + c, pq);
-        q = q * bigIntMod(bigMath.abs(BigInt(x - y)), pq);
+        y = Skema.bigIntMod(Skema.bigIntPow(y, BigInt(2), pq) + c, pq);
+        q = q * Skema.bigIntMod(bigMath.abs(BigInt(x - y)), pq);
       }
       g = gcd(q, pq);
       k += m;
@@ -60,7 +61,7 @@ export function decompose(pq: bigint) {
     r *= BigInt(2);
     if (g === pq) {
       while (true) {
-        ys = bigIntMod(bigIntPow(ys, BigInt(2), pq) + c, pq);
+        ys = Skema.bigIntMod(Skema.bigIntPow(ys, BigInt(2), pq) + c, pq);
         g = gcd(bigMath.abs(BigInt(x - ys)), pq);
         if (g > BigInt(1)) break;
       }

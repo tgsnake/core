@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -52,7 +52,7 @@ async function emit() {
         if (module !== undefined) {
           if (/^\.\.?\//.test(module)) {
             statement.setModuleSpecifier(
-              module.replace(/\.[jt]sx?$/i, '.js').replace(/\.(deno|node)\.js$/i, '.browser.js'),
+              module.replace(/\.[jt]sx?$/i, '.js').replace(/deps\.js$/i, 'deps.browser.js'),
             );
           }
         }

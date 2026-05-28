@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,11 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Socket } from '../WebSocket.ts';
-import { Mutex, inspect, Buffer } from '../../platform.deno.ts';
-import { Timeout } from '../../Timeout.ts';
-import { sleep } from '../../helpers.ts';
-import type { ProxyInterface } from '../connection.ts';
+import { Socket } from '@/connection/WebSocket.js';
+import { Mutex, inspect, Buffer } from '@/deps.js';
+import { Timeout } from '@/Timeout.js';
+import { sleep } from '@/helpers.js';
+import type { ProxyInterface } from '@/connection/connection.js';
 
 /**
  * @class TCP

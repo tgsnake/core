@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,12 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import {
-  bigIntPow as pow,
-  bigintToBuffer as toBuffer,
-  bufferToBigint as toBigint,
-} from '../helpers.ts';
-import { Buffer } from '../platform.deno.ts';
+import { Buffer, Skema } from '@/deps.js';
 
 const PublicKey = new Map<
   bigint,
@@ -194,7 +189,11 @@ export function encrypt(data: Buffer, fingerprint: bigint) {
     throw new Error(`unknown fingerprint ${fingerprint}n`);
   }
   return Buffer.from(
-    toBuffer(pow(toBigint(data, false), key.e, key.m), 256, false) as unknown as Uint8Array,
+    Skema.bigintToBuffer(
+      Skema.bigIntPow(Skema.bufferToBigint(data, false), key.e, key.m),
+      256,
+      false,
+    ) as unknown as Uint8Array,
   );
 }
 export { PublicKey };

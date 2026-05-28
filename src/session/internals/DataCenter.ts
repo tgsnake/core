@@ -1,13 +1,13 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { isBrowser } from '../../platform.deno.ts';
+import { platform } from '@/deps.js';
 
 export const DCTest = {
   1: '149.154.175.10',
@@ -57,7 +57,7 @@ export function DataCenter(
   media: boolean,
 ): [ip: string, port: number] {
   // @ts-ignore: browser compatibility
-  if (isBrowser) {
+  if (platform === 'Browser') {
     return [
       `${WebDC[dcId as keyof typeof WebDC] as string}:$PORT/apiws${testMode ? '_test' : ''}`,
       443,

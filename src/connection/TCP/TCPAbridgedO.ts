@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,16 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { TCP } from './tcp.ts';
-import {
-  includesBuffer,
-  sliceBuffer,
-  bigintToBuffer,
-  normalizeSecretString,
-} from '../../helpers.ts';
-import { crypto, Buffer } from '../../platform.deno.ts';
-import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
-import type { ProxyInterface } from '../connection.ts';
+import { TCP } from '@/connection/TCP/tcp.js';
+import { includesBuffer, sliceBuffer, normalizeSecretString } from '@/helpers.js';
+import { crypto, Buffer, Skema } from '@/deps.js';
+import { ctr256Cipher, type CtrCipherFn } from '@/crypto/Aes.js';
+import type { ProxyInterface } from '@/connection/connection.js';
 
 /**
  * @class TCPAbridgedO
@@ -147,7 +142,7 @@ export class TCPAbridgedO extends TCP {
           Buffer.concat([
             Buffer.concat([
               Buffer.from('7f', 'hex') as unknown as Uint8Array,
-              bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
+              Skema.bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
             ]) as unknown as Uint8Array,
             data as unknown as Uint8Array,
           ]),

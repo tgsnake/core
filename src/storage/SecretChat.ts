@@ -1,15 +1,14 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { inspect, Mutex, Buffer } from '../platform.deno.ts';
-import { Raw } from '../raw/index.ts';
-import { type AbstractSession } from './Abstract.ts';
+import { inspect, Mutex, Buffer, Skema } from '@/deps.js';
+import { type AbstractSession } from '@/storage/Abstract.js';
 
 export class SecretChat {
   id!: number;
@@ -48,7 +47,7 @@ export class SecretChat {
     this.created = Date.now() / 1000;
     this.changed = 0;
     this.mtproto = 2;
-    this.layer = Raw.Layer;
+    this.layer = Skema.Raw.Layer;
     this.ttl = 0;
     this.timeRekey = 100; // 100 messages
     this.outSeqNoX = isAdmin ? 1 : 0;
@@ -98,7 +97,7 @@ export class SecretChat {
    * Get the InputEncryptedChat from SecretChat class
    */
   get input() {
-    return new Raw.InputEncryptedChat({
+    return new Skema.Raw.InputEncryptedChat({
       chatId: this.id,
       accessHash: this.accessHash,
     });

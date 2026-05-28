@@ -1,25 +1,23 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { File } from './File.ts';
-import { Raw } from '../raw/index.ts';
-import { Session, Auth } from '../session/index.ts';
-import { bigMath, bigintToBuffer } from '../helpers.ts';
-import { Exceptions, CDNFileHashMismatch } from '../errors/index.ts';
-import { AES } from '../crypto/index.ts';
-import { crypto, Buffer, isDeno } from '../platform.deno.ts';
-import { type Client } from '../client/Client.ts';
+import { File } from '@/file/File.js';
+import { Session, Auth } from '@/session/index.js';
+import { bigMath } from '@/helpers.js';
+import { AES } from '@/crypto/index.js';
+import { crypto, Buffer, platform, Skema } from '@/deps.js';
+import { type Client } from '@/client/Client.js';
 
 export async function handleDownload(
   client: Client,
   file: File,
-  location: Raw.TypeInputFileLocation,
+  location: Skema.Raw.TypeInputFileLocation,
   dcId: number,
   limit: number,
   offset: bigint,
@@ -42,16 +40,18 @@ export async function handleDownload(
   try {
     await session.start();
     if (dcId !== client._storage.dcId) {
-      const exportedAuth = await client.invoke(new Raw.auth.ExportAuthorization({ dcId: dcId }));
+      const exportedAuth = await client.invoke(
+        new Skema.Raw.auth.ExportAuthorization({ dcId: dcId }),
+      );
       await session.invoke(
-        new Raw.auth.ImportAuthorization({
+        new Skema.Raw.auth.ImportAuthorization({
           id: exportedAuth.id,
           bytes: exportedAuth.bytes,
         }),
       );
     }
     let r = await session.invoke(
-      new Raw.upload.GetFile({
+      new Skema.Raw.upload.GetFile({
         location: location,
         offset: offsetBytes,
         limit: chunkSize,
@@ -60,9 +60,9 @@ export async function handleDownload(
       session.WAIT_TIMEOUT,
       30000,
     );
-    if (r instanceof Raw.upload.File) {
+    if (r instanceof Skema.Raw.upload.File) {
       while (true) {
-        const chunk = (r as Raw.upload.File).bytes;
+        const chunk = (r as Skema.Raw.upload.File).bytes;
         file.push(chunk);
         current++;
         offsetBytes += BigInt(chunkSize);
@@ -70,7 +70,7 @@ export async function handleDownload(
           break;
         }
         r = await session.invoke(
-          new Raw.upload.GetFile({
+          new Skema.Raw.upload.GetFile({
             location: location,
             offset: offsetBytes,
             limit: chunkSize,
@@ -80,7 +80,7 @@ export async function handleDownload(
           30000,
         );
       }
-    } else if (r instanceof Raw.upload.FileCdnRedirect) {
+    } else if (r instanceof Skema.Raw.upload.FileCdnRedirect) {
       const cdnSession = new Session(
         client,
         dcId,
@@ -94,53 +94,53 @@ export async function handleDownload(
       );
       try {
         while (true) {
-          const r2: Raw.upload.File = (await cdnSession.invoke(
-            new Raw.upload.GetCdnFile({
-              fileToken: (r as Raw.upload.FileCdnRedirect).fileToken,
+          const r2: Skema.Raw.upload.File = (await cdnSession.invoke(
+            new Skema.Raw.upload.GetCdnFile({
+              fileToken: (r as Skema.Raw.upload.FileCdnRedirect).fileToken,
               offset: offsetBytes,
               limit: chunkSize,
             }),
             session.MAX_RETRIES,
             session.WAIT_TIMEOUT,
             30000,
-          )) as unknown as Raw.upload.File;
-          if (r2 instanceof Raw.upload.CdnFileReuploadNeeded) {
+          )) as unknown as Skema.Raw.upload.File;
+          if (r2 instanceof Skema.Raw.upload.CdnFileReuploadNeeded) {
             try {
               await session.invoke(
-                new Raw.upload.ReuploadCdnFile({
-                  fileToken: (r as Raw.upload.FileCdnRedirect).fileToken,
-                  requestToken: (r2 as Raw.upload.CdnFileReuploadNeeded).requestToken,
+                new Skema.Raw.upload.ReuploadCdnFile({
+                  fileToken: (r as Skema.Raw.upload.FileCdnRedirect).fileToken,
+                  requestToken: (r2 as Skema.Raw.upload.CdnFileReuploadNeeded).requestToken,
                 }),
               );
             } catch (error) {
-              if (error instanceof Exceptions.BadRequest.VolumeLocNotFound) {
+              if (error instanceof Skema.Exceptions.BadRequest.VolumeLocNotFound) {
                 break;
               }
             }
           }
           const chunk = r2.bytes;
           const decryptedChunk = await AES.ctr256Cipher(
-            (r as Raw.upload.FileCdnRedirect).encryptionKey,
+            (r as Skema.Raw.upload.FileCdnRedirect).encryptionKey,
             Buffer.concat([
-              (r as Raw.upload.FileCdnRedirect).encryptionIv.subarray(
+              (r as Skema.Raw.upload.FileCdnRedirect).encryptionIv.subarray(
                 0,
                 -4,
               ) as unknown as Uint8Array,
-              bigintToBuffer(offsetBytes / BigInt(16), 4, false) as unknown as Uint8Array,
+              Skema.bigintToBuffer(offsetBytes / BigInt(16), 4, false) as unknown as Uint8Array,
             ]),
           )(chunk);
-          const hashes: Array<Raw.FileHash> = (await session.invoke(
-            new Raw.upload.GetCdnFileHashes({
-              fileToken: (r as Raw.upload.FileCdnRedirect).fileToken,
+          const hashes: Array<Skema.Raw.FileHash> = (await session.invoke(
+            new Skema.Raw.upload.GetCdnFileHashes({
+              fileToken: (r as Skema.Raw.upload.FileCdnRedirect).fileToken,
               offset: offsetBytes,
             }),
-          )) as unknown as Array<Raw.FileHash>;
+          )) as unknown as Array<Skema.Raw.FileHash>;
           for (let i = 0; i < hashes.length; i++) {
-            const hash: Raw.FileHash = hashes[i];
+            const hash: Skema.Raw.FileHash = hashes[i];
             const hashChunk = decryptedChunk.subarray(hash.limit * i, hash.limit * (i + 1));
             const chash = crypto.createHash('sha256');
             chash.update(hashChunk);
-            CDNFileHashMismatch.check(
+            Skema.CDNFileHashMismatch.check(
               chash.digest('hex') === hash.hash.toString('hex'),
               `CDN file hash mismatch when downloading cdn file`,
             );
@@ -158,7 +158,7 @@ export async function handleDownload(
   } finally {
     await session.stop();
     file.push(null);
-    if (isDeno) {
+    if (platform === 'Deno') {
       // @ts-ignore: deno compatibility
       release();
     } else {
@@ -170,7 +170,7 @@ export async function handleDownload(
 
 export function downloadStream(
   client: Client,
-  location: Raw.TypeInputFileLocation,
+  location: Skema.Raw.TypeInputFileLocation,
   dcId: number,
   limit: number = 0,
   offset: bigint = BigInt(0),
@@ -184,7 +184,7 @@ export interface DownloadParam {
   /**
    * File location will be downloaded.
    */
-  file: Raw.TypeInputFileLocation;
+  file: Skema.Raw.TypeInputFileLocation;
   /**
    * DC id where the file is stored.
    */

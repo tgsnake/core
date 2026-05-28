@@ -1,11 +1,17 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
+ */
+
+/**
+ * This file is responsible for providing the necessary dependencies for the tgsnake library. It imports and exports various modules and libraries that are used throughout the codebase, ensuring compatibility across different platforms such as Node.js, Deno, Bun, and browsers. By centralizing these imports and exports, we can maintain a clean and organized codebase while also making it easier to manage dependencies and ensure that the library works seamlessly in various environments.
+ * The dependencies include core Node.js modules like crypto, net, os, and path, as well as third-party libraries such as aes-js for encryption, big-integer for handling large integers, and SocksClient for proxy support. Additionally, it provides compatibility for different platforms by checking the global environment and exporting the appropriate modules and functions accordingly.
+ * Overall, this file serves as a crucial part of the tgsnake library, ensuring that all necessary dependencies are properly imported and exported for use throughout the codebase while maintaining cross-platform compatibility.
  */
 import * as crypto from 'node:crypto';
 import * as net from 'node:net';
@@ -14,7 +20,7 @@ import * as path from 'node:path';
 import process from 'node:process';
 import bigInt from 'big-integer';
 import { Buffer } from 'node:buffer';
-export { inspect } from 'node:util';
+import { inspect as nodeInspect } from 'node:util';
 export { gzipSync, gunzipSync } from 'node:zlib';
 export { Readable, Writable, Duplex } from 'node:stream';
 // NPM Dependencies
@@ -28,17 +34,12 @@ export { Mutex, Semaphore } from 'async-mutex';
 const isDeno = 'Deno' in globalThis;
 const isBun = 'Bun' in globalThis;
 const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
-export const where = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
-export type BufferEncoding =
-  | 'utf-8'
-  | 'utf8'
-  | 'utf-16le'
-  | 'utf16le'
-  | 'latin1'
-  | 'binary'
-  | 'base64'
-  | 'hex'; // NodeJS compatibility
-// Deno compatibility
+export const platform = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' : 'Node';
+export const sysprc = {
+  exit: isDeno ? globalThis.Deno.exit : process.exit, // Deno compatibility, use Deno.exit if available, otherwise use Node's process.exit
+};
+export const { inspect } = isDeno ? globalThis.Deno : nodeInspect; // Deno compatibility, use Deno.inspect if available, otherwise use Node's util.inspect
+// Browser compatibility
 // AES-CTR and AES-ECB are not supported in Deno, so we provide dummy implementations to prevent errors.
 class ecb {
   constructor(..._args: Array<any>) {
@@ -74,5 +75,6 @@ const ModeOfOperation = {
 export const aesjs = {
   ModeOfOperation,
   Counter,
-}; // Deno compatibility
-export { crypto, net, os, bigInt, path, process as sysprc, Buffer };
+};
+
+export { crypto, net, os, bigInt, path, Buffer };

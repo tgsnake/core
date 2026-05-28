@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,10 +8,10 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export { TCP } from './tcp.ts';
-export { TCPAbridged } from './TCPAbridged.ts';
-export { TCPAbridgedO } from './TCPAbridgedO.ts';
-export { TCPFull } from './TCPFull.ts';
-export { TCPIntermediate } from './TCPIntermediate.ts';
-export { TCPIntermediateO } from './TCPIntermediateO.ts';
-export { TCPPaddedIntermediate } from './TCPPaddedIntermediate.ts';
+export { TCP } from '@/connection/TCP/tcp.js';
+export { TCPAbridged } from '@/connection/TCP/TCPAbridged.js';
+export { TCPAbridgedO } from '@/connection/TCP/TCPAbridgedO.js';
+export { TCPFull } from '@/connection/TCP/TCPFull.js';
+export { TCPIntermediate } from '@/connection/TCP/TCPIntermediate.js';
+export { TCPIntermediateO } from '@/connection/TCP/TCPIntermediateO.js';
+export { TCPPaddedIntermediate } from '@/connection/TCP/TCPPaddedIntermediate.js';
