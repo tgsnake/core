@@ -8,11 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import * as TCPs from '@/connection/TCP/index.js';
-import { DataCenter } from '@/session/index.js';
-import { sleep, normalizeSecretString } from '@/helpers.js';
-import { Logger } from '@/Logger.js';
-import { platform, inspect, Buffer, Skema } from '@/deps.js';
+import * as TCPs from './TCP/index.js';
+import { DataCenter } from '../session/index.js';
+import { sleep, normalizeSecretString } from '../helpers.js';
+import { Logger } from '../Logger.js';
+import { platform, inspect, Buffer, Skema } from '../deps.js';
 
 /**
  * Several TCP models are available.

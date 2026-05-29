@@ -8,11 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Socket } from '@/connection/WebSocket.js';
-import { Mutex, inspect, Buffer } from '@/deps.js';
-import { Timeout } from '@/Timeout.js';
-import { sleep } from '@/helpers.js';
-import type { ProxyInterface } from '@/connection/connection.js';
+import { Socket } from '../WebSocket.js';
+import { Mutex, inspect, Buffer } from '../../deps.js';
+import { Timeout } from '../../Timeout.js';
+import { sleep } from '../../helpers.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCP

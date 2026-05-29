@@ -7,17 +7,17 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { os, inspect, Semaphore, platform, Buffer, Skema } from '@/deps.js';
-import { AbstractSession } from '@/storage/index.js';
-import { SecretChat } from '@/session/secretChats/index.js';
-import { TCP } from '@/connection/connection.js';
-import * as _Session from '@/client/Session.js';
-import * as _Auth from '@/client/Auth.js';
-import * as Version from '@/Version.js';
-import * as helpers from '@/helpers.js';
-import * as Files from '@/file/index.js';
-import type { ProxyInterface } from '@/connection/connection.js';
-import type { Session } from '@/session/index.js';
+import { os, inspect, Semaphore, platform, Buffer, Skema } from '../deps.js';
+import { AbstractSession } from '../storage/index.js';
+import { SecretChat } from '../session/secretChats/index.js';
+import { TCP } from '../connection/connection.js';
+import * as _Session from './Session.js';
+import * as _Auth from './Auth.js';
+import * as Version from '../Version.js';
+import * as helpers from '../helpers.js';
+import * as Files from '../file/index.js';
+import type { ProxyInterface } from '../connection/connection.js';
+import type { Session } from '../session/index.js';
 
 export interface ClientOptions {
   /**

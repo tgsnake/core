@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Logger } from '@/deps.js';
+import { Logger } from './deps.js';
 const log = new Logger({
   name: '@tgsnake/core',
   level: ['debug'],

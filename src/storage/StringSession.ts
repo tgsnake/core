@@ -8,10 +8,10 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Logger } from '@/Logger.js';
-import { BaseSession } from '@/storage/Session.js';
-import { base64urlTobase64 } from '@/helpers.js';
-import { Buffer, BytesIO } from '@/deps.js';
+import { Logger } from '../Logger.js';
+import { BaseSession } from './Session.js';
+import { base64urlTobase64 } from '../helpers.js';
+import { Buffer, BytesIO } from '../deps.js';
 
 /**
  * @class StringSession

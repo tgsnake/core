@@ -8,9 +8,9 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { crypto, aesjs, Buffer, platform, Skema } from '@/deps.js';
-import { Logger } from '@/Logger.js';
-import { range } from '@/helpers.js';
+import { crypto, aesjs, Buffer, platform, Skema } from '../deps.js';
+import { Logger } from '../Logger.js';
+import { range } from '../helpers.js';
 
 /**
  * Encrypt content with AES-256-IGE mode.

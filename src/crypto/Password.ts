@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { crypto, Buffer, Skema } from '@/deps.js';
+import { crypto, Buffer, Skema } from '../deps.js';
 
 /**
  * Create a sha256 hash.

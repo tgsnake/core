@@ -8,11 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Logger } from '@/Logger.js';
-import { AbstractSession } from '@/storage/Abstract.js';
-import { getChannelId } from '@/helpers.js';
-import { inspect, Buffer, Skema } from '@/deps.js';
-import type { SecretChat } from '@/storage/SecretChat.js';
+import { Logger } from '../Logger.js';
+import { AbstractSession } from './Abstract.js';
+import { getChannelId } from '../helpers.js';
+import { inspect, Buffer, Skema } from '../deps.js';
+import type { SecretChat } from './SecretChat.js';
 
 /**
  * Get a valid InputPeer from the available data session.

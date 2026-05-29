@@ -7,12 +7,12 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import type { Client } from '@/client/Client.js';
-import { Auth, Session, DataCenter } from '@/session/index.js';
-import { Logger } from '@/Logger.js';
-import * as _Auth from '@/client/Auth.js';
-import * as Version from '@/Version.js';
-import { sysprc, Skema } from '@/deps.js';
+import type { Client } from './Client.js';
+import { Auth, Session, DataCenter } from '../session/index.js';
+import { Logger } from '../Logger.js';
+import * as _Auth from './Auth.js';
+import * as Version from '../Version.js';
+import { sysprc, Skema } from '../deps.js';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
  */

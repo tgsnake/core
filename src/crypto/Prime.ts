@@ -8,8 +8,8 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigMath, randBigint } from '@/helpers.js';
-import { Skema } from '@/deps.js';
+import { bigMath, randBigint } from '../helpers.js';
+import { Skema } from '../deps.js';
 
 const CURRENT_DH_PRIME = BigInt(
   '0x' +

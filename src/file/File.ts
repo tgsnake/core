@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { Duplex, inspect, Buffer, BytesIO } from '@/deps.js';
+import { Duplex, inspect, Buffer, BytesIO } from '../deps.js';
 
 export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
 export type TypeFileCallback = (error?: any) => void;

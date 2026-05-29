@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigInt, Buffer, Skema } from '@/deps.js';
+import { bigInt, Buffer, Skema } from './deps.js';
 
 export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
   for (const buff of array) {

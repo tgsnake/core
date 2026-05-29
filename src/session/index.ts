@@ -8,10 +8,10 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import * as DataCenter from '@/session/internals/DataCenter.js';
-export { SeqNo } from '@/session/internals/SeqNo.js';
+import * as DataCenter from './internals/DataCenter.js';
+export { SeqNo } from './internals/SeqNo.js';
 export { DataCenter };
-export { Auth } from '@/session/Auth.js';
-export { Session, Results } from '@/session/Session.js';
-export { MsgFactory } from '@/session/internals/MsgFactory.js';
-export { MsgId } from '@/session/internals/MsgId.js';
+export { Auth } from './Auth.js';
+export { Session, Results } from './Session.js';
+export { MsgFactory } from './internals/MsgFactory.js';
+export { MsgId } from './internals/MsgId.js';

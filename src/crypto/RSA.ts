@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Buffer, Skema } from '@/deps.js';
+import { Buffer, Skema } from '../deps.js';
 
 const PublicKey = new Map<
   bigint,

@@ -8,10 +8,10 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { crypto, Buffer, Skema, BytesIO } from '@/deps.js';
-import { MsgId } from '@/session/internals/MsgId.js';
-import { ige256Encrypt, ige256Decrypt } from '@/crypto/Aes.js';
-import { Logger } from '@/Logger.js';
+import { crypto, Buffer, Skema, BytesIO } from '../deps.js';
+import { MsgId } from '../session/internals/MsgId.js';
+import { ige256Encrypt, ige256Decrypt } from './Aes.js';
+import { Logger } from '../Logger.js';
 
 const STORED_MSG_IDS_MAX_SIZE = 1000 * 2;
 

@@ -8,6 +8,6 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export * as Client from '@/client/Client.js';
-export * as Auth from '@/client/Auth.js';
-export * as Session from '@/client/Session.js';
+export * as Client from './Client.js';
+export * as Auth from './Auth.js';
+export * as Session from './Session.js';

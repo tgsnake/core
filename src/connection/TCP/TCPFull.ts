@@ -7,10 +7,10 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { Buffer } from '@/deps.js';
-import { TCP } from '@/connection/TCP/tcp.js';
-import { crc32 } from '@/helpers.js';
-import type { ProxyInterface } from '@/connection/connection.js';
+import { Buffer } from '../../deps.js';
+import { TCP } from './tcp.js';
+import { crc32 } from '../../helpers.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCPFull

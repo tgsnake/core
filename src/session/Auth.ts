@@ -8,14 +8,14 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Connection } from '@/connection/connection.js';
-import * as AES from '@/crypto/Aes.js';
-import * as Prime from '@/crypto/Prime.js';
-import * as RSA from '@/crypto/RSA.js';
-import { crypto, Buffer, BytesIO, Skema } from '@/deps.js';
-import { MsgId } from '@/session/internals/MsgId.js';
-import { sleep } from '@/helpers.js';
-import { Logger } from '@/Logger.js';
+import { Connection } from '../connection/connection.js';
+import * as AES from '../crypto/Aes.js';
+import * as Prime from '../crypto/Prime.js';
+import * as RSA from '../crypto/RSA.js';
+import { crypto, Buffer, BytesIO, Skema } from '../deps.js';
+import { MsgId } from './internals/MsgId.js';
+import { sleep } from '../helpers.js';
+import { Logger } from '../Logger.js';
 
 export class Auth {
   MAX_RETRIES: number = 5;

@@ -8,9 +8,9 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { net, Mutex, SocksClient, platform, inspect, Buffer, Skema } from '@/deps.js';
-import { Logger } from '@/Logger.js';
-import type { ProxyInterface } from '@/connection/connection.js';
+import { net, Mutex, SocksClient, platform, inspect, Buffer, Skema } from '../deps.js';
+import { Logger } from '../Logger.js';
+import type { ProxyInterface } from './connection.js';
 
 const mutex = new Mutex();
 

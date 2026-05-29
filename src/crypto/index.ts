@@ -8,9 +8,9 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export * as Mtproto from '@/crypto/Mtproto.js';
-export * as Prime from '@/crypto/Prime.js';
-export * as RSA from '@/crypto/RSA.js';
-export * as Password from '@/crypto/Password.js';
-export * as AES from '@/crypto/Aes.js';
-export * as SecretChats from '@/crypto/SecretChat.js';
+export * as Mtproto from './Mtproto.js';
+export * as Prime from './Prime.js';
+export * as RSA from './RSA.js';
+export * as Password from './Password.js';
+export * as AES from './Aes.js';
+export * as SecretChats from './SecretChat.js';

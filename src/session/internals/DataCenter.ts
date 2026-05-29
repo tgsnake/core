@@ -7,7 +7,7 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { platform } from '@/deps.js';
+import { platform } from '../../deps.js';
 
 export const DCTest = {
   1: '149.154.175.10',

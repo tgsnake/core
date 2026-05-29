@@ -7,8 +7,8 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { inspect, Mutex, Buffer, Skema } from '@/deps.js';
-import { type AbstractSession } from '@/storage/Abstract.js';
+import { inspect, Mutex, Buffer, Skema } from '../deps.js';
+import { type AbstractSession } from './Abstract.js';
 
 export class SecretChat {
   id!: number;

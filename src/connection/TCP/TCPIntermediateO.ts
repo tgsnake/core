@@ -8,11 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { TCP } from '@/connection/TCP/tcp.js';
-import { includesBuffer, normalizeSecretString, sliceBuffer } from '@/helpers.js';
-import { crypto, Buffer, Skema } from '@/deps.js';
-import { ctr256Cipher, type CtrCipherFn } from '@/crypto/Aes.js';
-import type { ProxyInterface } from '@/connection/connection.js';
+import { TCP } from './tcp.js';
+import { includesBuffer, normalizeSecretString, sliceBuffer } from '../../helpers.js';
+import { crypto, Buffer, Skema } from '../../deps.js';
+import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCPIntermediateO

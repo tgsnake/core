@@ -7,11 +7,11 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import type { Client } from '@/client/Client.js';
-import { Session, Auth, DataCenter } from '@/session/index.js';
-import { computePasswordCheck } from '@/crypto/Password.js';
-import { Logger } from '@/Logger.js';
-import { Skema } from '@/deps.js';
+import type { Client } from './Client.js';
+import { Session, Auth, DataCenter } from '../session/index.js';
+import { computePasswordCheck } from '../crypto/Password.js';
+import { Logger } from '../Logger.js';
+import { Skema } from '../deps.js';
 export interface SigInBot {
   /**
    * Bot token from bot father.

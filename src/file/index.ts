@@ -8,12 +8,12 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export { File } from '@/file/File.js';
+export { File } from './File.js';
 export {
   upload,
   uploadStream,
   type Progress,
   type SaveFileParams,
   type SaveFileStreamParams,
-} from '@/file/Upload.js';
-export { handleDownload, downloadStream, type DownloadParam } from '@/file/Download.js';
+} from './Upload.js';
+export { handleDownload, downloadStream, type DownloadParam } from './Download.js';

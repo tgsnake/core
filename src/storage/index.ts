@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export { AbstractSession } from '@/storage/Abstract.js';
-export { BaseSession, getInputPeer } from '@/storage/Session.js';
-export { StringSession } from '@/storage/StringSession.js';
-export { SecretChat } from '@/storage/SecretChat.js';
+export { AbstractSession } from './Abstract.js';
+export { BaseSession, getInputPeer } from './Session.js';
+export { StringSession } from './StringSession.js';
+export { SecretChat } from './SecretChat.js';

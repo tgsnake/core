@@ -8,10 +8,10 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export { TCP } from '@/connection/TCP/tcp.js';
-export { TCPAbridged } from '@/connection/TCP/TCPAbridged.js';
-export { TCPAbridgedO } from '@/connection/TCP/TCPAbridgedO.js';
-export { TCPFull } from '@/connection/TCP/TCPFull.js';
-export { TCPIntermediate } from '@/connection/TCP/TCPIntermediate.js';
-export { TCPIntermediateO } from '@/connection/TCP/TCPIntermediateO.js';
-export { TCPPaddedIntermediate } from '@/connection/TCP/TCPPaddedIntermediate.js';
+export { TCP } from './tcp.js';
+export { TCPAbridged } from './TCPAbridged.js';
+export { TCPAbridgedO } from './TCPAbridgedO.js';
+export { TCPFull } from './TCPFull.js';
+export { TCPIntermediate } from './TCPIntermediate.js';
+export { TCPIntermediateO } from './TCPIntermediateO.js';
+export { TCPPaddedIntermediate } from './TCPPaddedIntermediate.js';

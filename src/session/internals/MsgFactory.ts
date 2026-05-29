@@ -8,9 +8,9 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { SeqNo } from '@/session/internals/SeqNo.js';
-import { MsgId } from '@/session/internals/MsgId.js';
-import { Buffer, Skema } from '@/deps.js';
+import { SeqNo } from './SeqNo.js';
+import { MsgId } from './MsgId.js';
+import { Buffer, Skema } from '../../deps.js';
 
 export function MsgFactory() {
   const seqNo = new SeqNo();

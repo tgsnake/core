@@ -8,16 +8,16 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { crypto, Mutex, inspect, Buffer, Skema, BytesIO } from '@/deps.js';
-import { Logger } from '@/Logger.js';
-import { Connection, ProxyInterface } from '@/connection/connection.js';
-import * as Mtproto from '@/crypto/Mtproto.js';
-import { MsgId } from '@/session/internals/MsgId.js';
-import { MsgFactory } from '@/session/internals/MsgFactory.js';
-import { sleep } from '@/helpers.js';
-import { Timeout } from '@/Timeout.js';
-import type { Client } from '@/client/Client.js';
-import { Auth } from '@/session/Auth.js';
+import { crypto, Mutex, inspect, Buffer, Skema, BytesIO } from '../deps.js';
+import { Logger } from '../Logger.js';
+import { Connection, ProxyInterface } from '../connection/connection.js';
+import * as Mtproto from '../crypto/Mtproto.js';
+import { MsgId } from './internals/MsgId.js';
+import { MsgFactory } from './internals/MsgFactory.js';
+import { sleep } from '../helpers.js';
+import { Timeout } from '../Timeout.js';
+import type { Client } from '../client/Client.js';
+import { Auth } from './Auth.js';
 
 export class Results {
   value!: Promise<unknown>;

@@ -8,4 +8,4 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-export { SecretChat } from '@/session/secretChats/SecretChat.js';
+export { SecretChat } from './SecretChat.js';

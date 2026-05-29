@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import * as TCP from '@/connection/TCP/index.js';
-export * as Connections from '@/connection/connection.js';
-export { Socket } from '@/connection/WebSocket.js';
+import * as TCP from './TCP/index.js';
+export * as Connections from './connection.js';
+export { Socket } from './WebSocket.js';
 export { TCP };

@@ -8,11 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { type AbstractSession, SecretChat as TempChat } from '@/storage/index.js';
-import { Mutex, inspect, crypto, Buffer, Skema } from '@/deps.js';
-import { Logger } from '@/Logger.js';
-import { SecretChats } from '@/crypto/index.js';
-import type { Client } from '@/client/Client.js';
+import { type AbstractSession, SecretChat as TempChat } from '../../storage/index.js';
+import { Mutex, inspect, crypto, Buffer, Skema } from '../../deps.js';
+import { Logger } from '../../Logger.js';
+import { SecretChats } from '../../crypto/index.js';
+import type { Client } from '../../client/Client.js';
 
 // Adapted from:
 // https://github.com/danog/MadelineProto/blob/v8/src/SecretChats/AuthKeyHandler.php

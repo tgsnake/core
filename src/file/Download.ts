@@ -7,12 +7,12 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { File } from '@/file/File.js';
-import { Session, Auth } from '@/session/index.js';
-import { bigMath } from '@/helpers.js';
-import { AES } from '@/crypto/index.js';
-import { crypto, Buffer, platform, Skema } from '@/deps.js';
-import { type Client } from '@/client/Client.js';
+import { File } from './File.js';
+import { Session, Auth } from '../session/index.js';
+import { bigMath } from '../helpers.js';
+import { AES } from '../crypto/index.js';
+import { crypto, Buffer, platform, Skema } from '../deps.js';
+import { type Client } from '../client/Client.js';
 
 export async function handleDownload(
   client: Client,

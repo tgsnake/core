@@ -7,12 +7,12 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { crypto, platform, Skema, BytesIO, Buffer, Writable, type Readable } from '@/deps.js';
-import { type Client } from '@/client/Client.js';
-import { File, type TypeFileCallback, type TypeFileChunk } from '@/file/File.js';
-import { Queue } from '@/Queue.js';
-import { Session } from '@/session/index.js';
-import { Logger } from '@/Logger.js';
+import { crypto, platform, Skema, BytesIO, Buffer, Writable, type Readable } from '../deps.js';
+import { type Client } from '../client/Client.js';
+import { File, type TypeFileCallback, type TypeFileChunk } from './File.js';
+import { Queue } from '../Queue.js';
+import { Session } from '../session/index.js';
+import { Logger } from '../Logger.js';
 /**
  * @param {Number} current - Current total chunks.
  * @param {Number} total - The total of all chunks of the complete file.
