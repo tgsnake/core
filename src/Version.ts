@@ -10,9 +10,32 @@
 
 import packages from '../package.json' with { type: 'json' };
 
+/**
+ * The current version of the `@tgsnake/core` library, read from `package.json`.
+ */
 export const version = packages.version;
+
+/**
+ * Indicates if the current version is a Beta release.
+ */
 export const isBeta = packages.isBeta;
+
+/**
+ * Indicates if the current version is a Private release.
+ */
 export const isPrivate = packages.isPrivate;
+
+/**
+ * Resolves the type of the current library build release.
+ *
+ * Possible return values are:
+ * - `'Private Beta'`
+ * - `'Beta'`
+ * - `'Private Stable'`
+ * - `'Stable'`
+ *
+ * @returns {string} The release type string.
+ */
 export function getType() {
   if (isBeta) {
     if (isPrivate) {

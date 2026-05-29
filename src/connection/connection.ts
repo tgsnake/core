@@ -15,7 +15,7 @@ import { Logger } from '../Logger.js';
 import { platform, inspect, Buffer, Skema } from '../deps.js';
 
 /**
- * Several TCP models are available.
+ * A dictionary mapping connection modes to their corresponding TCP protocol implementation classes.
  */
 export const TCPModes = {
   0: TCPs.TCPFull,
@@ -26,6 +26,9 @@ export const TCPModes = {
   5: TCPs.TCPIntermediateO,
 };
 
+/**
+ * Type representing any supported TCP protocol implementation.
+ */
 export type TypeTCP =
   | TCPs.TCPFull
   | TCPs.TCPAbridged
@@ -34,77 +37,116 @@ export type TypeTCP =
   | TCPs.TCPIntermediateO
   | TCPs.TCPPaddedIntermediate;
 
+/**
+ * Enumeration representing all available TCP connection modes.
+ */
 export enum TCP {
+  /** Unabridged MTProto protocol with full 12-byte header, CRC32 checks, and length padding. */
   TCPFull = 0,
+  /** Abridged MTProto protocol with a compact 1-byte or 4-byte header. */
   TCPAbridged = 1,
+  /** Intermediate MTProto protocol with a constant 4-byte header. */
   TCPIntermediate = 2,
+  /** Padded intermediate MTProto protocol with randomized padding to deter traffic analysis. */
   TCPPaddedIntermediate = 3,
+  /** Obfuscated abridged MTProto protocol using random keys to encrypt the stream. */
   TCPAbridgedO = 4,
+  /** Obfuscated intermediate MTProto protocol. */
   TCPIntermediateO = 5,
 }
 
+/**
+ * Interface detailing configuration parameters for a Socks (Socks4 or Socks5) proxy connection.
+ */
 export interface SocksProxyInterface {
   /**
-   * IP destination for socks proxy.
+   * The destination hostname or IP address of the Socks proxy server.
    */
   hostname: string;
   /**
-   * Port destination for socks proxy.
+   * The destination port of the Socks proxy server.
    */
   port: number;
   /**
-   * Socks version. It should be 4 or 5. It marks using Socks4 or Socks5.
+   * The Socks protocol version. Must be `4` (Socks4) or `5` (Socks5).
    */
   socks: 4 | 5;
   /**
-   * If the proxy uses authentication, enter this using the authentication username.
+   * The optional authentication username.
    */
   username?: string;
   /**
-   * If the proxy uses authentication, enter this using the authentication password of given username.
+   * The optional authentication password of the corresponding username.
    */
   password?: string;
 }
+
+/**
+ * Interface detailing configuration parameters for an MTProto proxy connection.
+ */
 export interface MtprotoProxyInterface {
   /**
-   * Destination hostname or server for connecting MTProto Proxy server.
+   * The server hostname or IP address of the MTProto proxy.
    */
   server: string;
   /**
-   * Destination port for connecting to MTProto Proxy server.
+   * The server port of the MTProto proxy.
    */
   port: number;
   /**
-   * Secret of MTProto Proxy, can be encoded as hex string or buffer.
+   * The authentication secret key of the MTProto proxy (hex string or Buffer representation).
    */
   secret: string | Buffer;
 }
+
+/**
+ * Type combining all proxy interfaces supported by the MTProto client connection layer.
+ */
 export type ProxyInterface = SocksProxyInterface | MtprotoProxyInterface;
 
+/**
+ * Main Connection manager class responsible for establishing TCP sockets to Telegram.
+ *
+ * Manages protocol negotiation, proxy wrappers (Socks & MTProto obfuscated modes),
+ * and reconnection attempt policies.
+ */
 export class Connection {
   /**
-   * Limitations of attempts that must be made to connect to the telegram data center server using the available TCP Modes.
-   * If it exceeds the specified amount, it will return an @link {ClientError.ClientFailed} error.
+   * Maximum allowed attempts to establish connection with a Telegram DC.
+   *
+   * Exceeding this limit throws a `ClientFailed` error.
    */
   maxRetries!: number;
-  /** @ignore */
+  /** The target data center ID. */
   private _dcId!: number;
-  /** @ignore */
+  /** Indicates if the client is connecting to Telegram test servers. */
   private _test!: boolean;
-  /** @ignore */
+  /** The proxy configuration if active. */
   private _proxy?: ProxyInterface;
-  /** @ignore */
+  /** Indicates if this connection is designated specifically for media downloads/uploads. */
   private _media!: boolean;
-  /** @ignore */
+  /** The active TCP connection mode mode. */
   private _mode!: TCP;
-  /** @ignore */
+  /** The resolved IP address and port array. */
   private _address!: [ip: string, port: number];
-  /** @ignore */
+  /** The active protocol instance wrapper. */
   private _protocol!: TypeTCP;
-  /** @ignore */
+  /** Indicates if the socket is currently connected. */
   private _connected!: boolean;
-  /** @ignore */
+  /** Indicates if connection is using Deno/Node local deployment configurations. */
   private _local!: boolean;
+
+  /**
+   * Creates a Connection instance.
+   *
+   * @param {number} dcId - Target Telegram DC ID.
+   * @param {boolean} test - If `true`, connects to Telegram test servers.
+   * @param {boolean} ipv6 - If `true`, resolves target address as IPv6.
+   * @param {ProxyInterface} [proxy] - Optional proxy configuration wrapper.
+   * @param {boolean} [media=false] - If `true`, establishes connection designated for media operations.
+   * @param {TCP} [mode=TCP.TCPFull] - The default TCP protocol wrapper mode.
+   * @param {boolean} [local] - Browser platform parameter configuring secured vs unsecured WebSocket protocols.
+   */
   constructor(
     dcId: number,
     test: boolean,
@@ -127,6 +169,17 @@ export class Connection {
     this._local = local;
     this._connected = false;
   }
+
+  /**
+   * Asynchronously initiates the TCP connection to the resolved Telegram address.
+   *
+   * If a proxy or web browser environment is detected, it automatically negotiates
+   * fallback to obfuscated modes (TCPAbridgedO/TCPIntermediateO) to dodge DPI/firewalls.
+   *
+   * @returns {Promise<boolean>} Resolves to `true` when connection establishes successfully.
+   * @throws {ClientReady} Thrown if connection is already established.
+   * @throws {ClientFailed} Thrown if connection cannot be established after max retries.
+   */
   async connect() {
     if (this._protocol && this._connected) {
       throw new Skema.ClientError.ClientReady();
@@ -184,6 +237,13 @@ export class Connection {
     }
     return this._connected;
   }
+
+  /**
+   * Closes the active TCP socket and destroys connection state.
+   *
+   * @returns {Promise<void>}
+   * @throws {ClientNotReady} Thrown if Connection is not active/ready to close.
+   */
   async close() {
     if (!this._protocol || !this._connected) {
       throw new Skema.ClientError.ClientNotReady();
@@ -192,10 +252,24 @@ export class Connection {
     await sleep(10);
     await this._protocol.close();
   }
+
+  /**
+   * Sends raw binary payload data over the active TCP stream.
+   *
+   * @param {Buffer} data - The binary buffer data payload.
+   * @returns {Promise<void>}
+   */
   async send(data: Buffer) {
     Logger.debug(`[3.connection.connection] Sending ${Buffer.byteLength(data)} bytes data.`);
     await this._protocol.send(data);
   }
+
+  /**
+   * Asynchronously waits and receives a raw binary message frame from the active TCP stream.
+   *
+   * @returns {Promise<Buffer>} The received buffer frame.
+   * @throws {ClientDisconnected} Thrown if called while connection is disconnected.
+   */
   async recv() {
     if (!this._connected) {
       throw new Skema.ClientError.ClientDisconnected();

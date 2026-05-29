@@ -15,29 +15,40 @@ import { sleep } from '../../helpers.js';
 import type { ProxyInterface } from '../connection.js';
 
 /**
- * @class TCP
- * This class is for connecting to telegram server.
- * This class will use {@link WebSocket} class to connecting to telegram server.
- * You can extend this class to make the MTProto transport (see {@link https://core.telegram.org/mtproto/mtproto-transports transport})
+ * Base TCP connection wrapper layer.
+ *
+ * Provides network interface orchestration by leveraging the underlying `Socket` class.
+ * This class can be extended to construct concrete custom MTProto transport protocols
+ * (e.g. TCPAbridged, TCPIntermediate, etc.) described by the Telegram MTProto Transport specification.
+ *
+ * @see {@link https://core.telegram.org/mtproto/mtproto-transports Telegram MTProto Transports}
  */
 export class TCP {
-  /** @hidden */
+  /** The internal Promise-based Socket connection instance. */
   private _socks!: Socket;
-  /** @hidden */
+  /** Internal Timeout helper managing task expiration. */
   private _task!: Timeout;
-  /** @hidden */
+  /** A Mutex semaphore ensuring thread-safe write execution. */
   private _mutex: Mutex = new Mutex();
+  /** Indicates if the TCP socket stream is connected. */
   connected!: boolean;
+
+  /**
+   * Initializes a new TCP socket adapter instance.
+   */
   constructor() {
     this._task = new Timeout();
     this._socks = new Socket(10 * 1000);
   }
+
   /**
-   * connect to telegram server.
-   * @param {String} ip - Telegram data center IP.
-   * @param {Number} port - Port for connecting to telegram data center.
-   * @param {ProxyInterface | undefined} proxy - Connect to telegram via socks proxy. This only applies on platforms other than browsers.
-   * @param {Number | undefined} _dcId - Data center for connecting to MTProxy.
+   * Establishes a TCP socket channel to the specified Telegram server.
+   *
+   * @param {string} ip - Target Telegram data center IP address or hostname.
+   * @param {number} port - Remote target port.
+   * @param {ProxyInterface} [proxy] - Optional proxy configuration settings.
+   * @param {number} [_dcId] - Data center index configuration used primarily for MTProxy handshakes.
+   * @returns {Promise<void>}
    */
   async connect(ip: string, port: number, proxy?: ProxyInterface, _dcId?: number) {
     const release = await this._mutex.acquire();
@@ -47,8 +58,11 @@ export class TCP {
       release();
     }
   }
+
   /**
-   * Disconnect from telegram data center.
+   * Tears down the active network connection, resets timeout queues, and closes socket streams.
+   *
+   * @returns {Promise<boolean | undefined>}
    */
   async close() {
     await this._task.clear(); // clear all timeout process
@@ -56,10 +70,14 @@ export class TCP {
     if (!this._socks) return;
     return await this._socks.destroy(); // destroy socket
   }
+
   /**
-   * Send requests to telegram using websocket. The message must be of bytes supported by telegram for the message to be valid.
-   * see {@link https://core.telegram.org/mtproto/mtproto-transports transport}
-   * @param {Buffer} data - message to be sent to telegram server. The message must be encrypted according to what is explained on the Telegram website.
+   * Sends binary buffer requests across the established socket interface.
+   *
+   * Thread-safe; serialization is guarded internally by a Mutex.
+   *
+   * @param {Buffer} data - Binary buffer payload to transmit.
+   * @returns {Promise<void>}
    */
   async send(data: Buffer) {
     const release = await this._mutex.acquire();
@@ -69,9 +87,12 @@ export class TCP {
       release();
     }
   }
+
   /**
-   * Receive response or update from telegram.
-   * @param {Number} length - How many bytes to receive.
+   * Pulls a guaranteed amount of bytes from the received stream buffer queue.
+   *
+   * @param {number} [length=0] - Exact number of bytes to retrieve.
+   * @returns {Promise<Buffer | undefined>} The requested data chunk, or `undefined` if disconnected.
    */
   async recv(length: number = 0) {
     let data: Buffer = Buffer.alloc(0);

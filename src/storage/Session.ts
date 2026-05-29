@@ -20,6 +20,17 @@ import type { SecretChat } from './SecretChat.js';
  * @param {BigInt} accessHash - access hash of user or channel or group or bot which will be changed to a valid InputPeer.
  * @param {Boolean} type - Type of InputPeer to be assigned. The type must be `user` or `bot` or `group` or `channel` or `supergroup`
  */
+/**
+ * Converts raw entity identifiers into standard, structured Telegram `InputPeer` class instances.
+ *
+ * Maps IDs and access hashes depending on the peer's resolved entity type.
+ *
+ * @param {bigint} id - The unique user or chat identifier.
+ * @param {bigint} accessHash - The entity's associated access hash.
+ * @param {string} type - The entity type, must be user, bot, group, channel, or supergroup.
+ * @returns {InputPeerUser | InputPeerChat | InputPeerChannel} The structured InputPeer TL object.
+ * @throws {Error} Thrown if type is unrecognized.
+ */
 export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
   if (type === 'bot' || type === 'user') {
     return new Skema.Raw.InputPeerUser({
@@ -41,13 +52,19 @@ export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
 }
 
 /**
- * @class BaseSession
- * A class that is the parent of all existing session classes.Any session class can extend this class to get all the functionality it needs.
+ * Serves as the concrete base implementation driver for Session storage engines.
+ *
+ * Provides runtime cache lookups for peers and secret chats, portable string serialization formats,
+ * and session state migration triggers.
  */
 export class BaseSession extends AbstractSession {
+  /** The target Telegram network IP address. */
   protected _ip!: string;
+  /** The target Telegram network DC ID. Default is 2. */
   protected _dcId: number = 2;
+  /** The target Telegram network port number. */
   protected _port!: number;
+  /** Inner map cache for active peer details. */
   protected _peers: Map<
     bigint,
     [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
@@ -55,12 +72,22 @@ export class BaseSession extends AbstractSession {
     bigint,
     [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >();
+  /** Inner map cache for secret chats. */
   protected _secretChats: Map<number, SecretChat> = new Map<number, SecretChat>();
+  /** The cryptographic authorization key. */
   protected _authKey!: Buffer;
+  /** Connects to Telegram test environments when set to `true`. */
   protected _testMode: boolean = false;
+  /** The developer's application API ID. */
   protected _apiId!: number;
+  /** The authorized entity User/Bot ID. */
   protected _userId!: bigint;
+  /** Indicates if the active entity is a bot. */
   protected _isBot!: boolean;
+
+  /**
+   * Initializes a BaseSession instance.
+   */
   constructor() {
     super();
   }

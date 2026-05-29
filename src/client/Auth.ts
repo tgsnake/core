@@ -12,45 +12,71 @@ import { Session, Auth, DataCenter } from '../session/index.js';
 import { computePasswordCheck } from '../crypto/Password.js';
 import { Logger } from '../Logger.js';
 import { Skema } from '../deps.js';
+/**
+ * Authentication configuration interface for signing in as a Bot.
+ */
 export interface SigInBot {
   /**
-   * Bot token from bot father.
+   * The bot token generated via Telegram's BotFather.
+   * Can be a raw string or a Promise resolving to a string.
    */
   botToken: string | Promise<string>;
 }
+
+/**
+ * Authentication configuration interface for signing in as a User.
+ */
 export interface SigInUser {
   /**
-   * The phone number for login as user.
+   * Asynchronous callback returning the user's phone number in international format.
    */
   phoneNumber: { (): Promise<string> };
+
   /**
-   * The 2FA password.
+   * Optional asynchronous callback returning the 2-step verification (2FA) password.
+   *
+   * @param {string} hint - The password hint configured by the user on Telegram.
    */
   password?: { (hint: string): Promise<string> };
+
   /**
-   * Fill client when you forgot 2FA password, it will be automatic send recovery code to connected email.
+   * Optional asynchronous callback returning the recovery code if the user forgot their 2FA password.
+   * Invoking this will automatically trigger sending the recovery code to the associated email.
    */
   recoveryCode?: { (): Promise<string> };
+
   /**
-   * The OTP code.
+   * Asynchronous callback returning the one-time registration/login code (OTP) received from Telegram.
    */
   code: { (): Promise<string> };
+
   /**
-   * Firstname to be used for created account.
+   * Optional asynchronous callback returning the first name to be used if registering a new account.
    */
   firstname?: { (): Promise<string> };
+
   /**
-   * Lastname to be used for created account.
+   * Optional asynchronous callback returning the last name to be used if registering a new account.
    */
   lastname?: { (): Promise<string> };
+
   /**
-   * When error BadRequest attempt, what should do.
+   * Optional error callback triggered when a `BadRequest` error occurs during authorization.
+   *
+   * @param {Skema.Exceptions.BadRequest.BadRequest} error - The encountered error instance.
    */
   authError?: { (error: Skema.Exceptions.BadRequest.BadRequest): void };
 }
+
 /**
- * Sigin as bot.
- * @param {String} botToken - Bot token from bot father.
+ * Signs in the client as a Telegram bot using a bot token.
+ *
+ * Automatically handles data center migration if the bot's account is located on another DC.
+ *
+ * @this Client
+ * @param {string} botToken - The bot token obtained from Telegram's BotFather.
+ * @returns {Promise<Skema.Raw.User | undefined>} The authenticated bot user object, or `undefined` on failure.
+ * @throws {Error} Propagates any unexpected RPC errors during initialization.
  */
 export async function siginBot(
   this: Client,
@@ -103,9 +129,19 @@ export async function siginBot(
     }
   }
 }
+
 /**
- * Sigin as user.
- * @param {Client} auth - The required parameter to be used for creating account or login.
+ * Signs in the client as a Telegram user.
+ *
+ * Coordinates the full user authorization flow:
+ * 1. Requests the phone number and sends the OTP code.
+ * 2. Asks for the verification code.
+ * 3. Handles 2FA passwords, password recovery flows, and new account signup as necessary.
+ *
+ * @this Client
+ * @param {SigInUser} auth - The user credential retrieval callbacks.
+ * @returns {Promise<Skema.Raw.User | undefined>} The authenticated user object, or `undefined` on failure.
+ * @throws {Error} Thrown if 2FA password is required but the `password` callback is missing.
  */
 export async function siginUser(
   this: Client,
@@ -229,15 +265,22 @@ export async function siginUser(
       }
     }
   }
-  if (_signedIn instanceof Skema.Raw.help.TermsOfService) {
+  if (_signedIn && _signedIn instanceof Skema.Raw.help.TermsOfService) {
     Logger.info(`[9.client.Auth] \n${_signedIn.text}\n`);
     await acceptTOS.call(this, _signedIn.id.data);
   }
   return _signedUp;
 }
+
 /**
- * Sending telegram OTP code.
- * @param {String} phoneNumber - The phone number will be using to receive a OTP code.
+ * Sends a verification code (OTP) to the specified phone number.
+ *
+ * Automatically handles data center redirection if the phone number belongs to a different DC.
+ *
+ * @this Client
+ * @param {string} phoneNumber - The phone number to receive the OTP code in international format.
+ * @returns {Promise<Skema.Raw.auth.TypeSentCode>} Information about the sent code.
+ * @throws {Error} Propagates standard Telegram RPC errors.
  */
 export async function sendCode(
   this: Client,
@@ -290,11 +333,15 @@ export async function sendCode(
     }
   }
 }
+
 /**
- * Authorize a user in Telegram with a valid confirmation code.
- * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
- * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
- * @param {String} phoneCode - The valid confirmation code you received (either as Telegram message or as SMS in your phone number).
+ * Authorizes a user in Telegram using a valid confirmation code.
+ *
+ * @this Client
+ * @param {string} phoneNumber - The user's phone number in international format.
+ * @param {string} phoneCodeHash - The phone code hash returned by `sendCode`.
+ * @param {string} phoneCode - The confirmation OTP code received by the user.
+ * @returns {Promise<Skema.Raw.User | Skema.Raw.help.TermsOfService | boolean>} Resolves to user object, TermsOfService if sign-up is required with TOS, or false.
  */
 export async function sigin(
   this: Client,
@@ -321,9 +368,13 @@ export async function sigin(
     return r.user;
   }
 }
+
 /**
- * Recover your password with recovery code and login.
- * @param {String} code - The recovery code has been send in connected email with 2FA.
+ * Recovers a 2FA-locked account using a recovery code sent to the configured email.
+ *
+ * @this Client
+ * @param {string} code - The recovery code received in the user's email.
+ * @returns {Promise<Skema.Raw.User | undefined>} The authenticated user object, or `undefined` if recovery fails.
  */
 export async function recoverPassword(
   this: Client,
@@ -342,16 +393,24 @@ export async function recoverPassword(
   }
   return;
 }
+
 /**
- * Send the recovery code to cennected email to reset the 2FA.
+ * Requests sending a recovery code to the associated 2FA email pattern.
+ *
+ * @this Client
+ * @returns {Promise<string>} The email pattern to which the recovery code was sent.
  */
 export async function sendRecoveryCode(this: Client): Promise<string> {
   const r = await this.invoke(new Skema.Raw.auth.RequestPasswordRecovery(), 0);
   return r.emailPattern;
 }
+
 /**
- * Check the givens password is correct or not.
- * @param {String} password - Password will be check.
+ * Submits the 2-step verification (2FA) password to log in.
+ *
+ * @this Client
+ * @param {string} password - The raw 2FA password to submit.
+ * @returns {Promise<Skema.Raw.User | undefined>} The authenticated user object, or `undefined` if verification fails.
  */
 export async function checkPassword(
   this: Client,
@@ -373,9 +432,13 @@ export async function checkPassword(
   }
   return;
 }
+
 /**
- * Accepting Terms Of Service for creating a account.
- * @param {String} id - TOS Id,The terms of service identifier.
+ * Accepts the Telegram Terms of Service required during account creation.
+ *
+ * @this Client
+ * @param {string} id - The unique Terms of Service identifier.
+ * @returns {Promise<boolean>} Resolves to `true` if accepted successfully.
  */
 export async function acceptTOS(this: Client, id: string): Promise<boolean> {
   const r = await this.invoke(
@@ -387,19 +450,27 @@ export async function acceptTOS(this: Client, id: string): Promise<boolean> {
   );
   return Boolean(r);
 }
+
 /**
- * Get hint of 2FA password.
+ * Retrieves the configured hint for the 2-step verification (2FA) password.
+ *
+ * @this Client
+ * @returns {Promise<string>} The password hint, or an empty string if none exists.
  */
 export async function getPasswordHint(this: Client): Promise<string> {
   const r = await this.invoke(new Skema.Raw.account.GetPassword(), 0);
   return r.hint ?? '';
 }
+
 /**
- * Sigin and create a new fresh account.
- * @param {String} phoneNumber - Phone number in international format (includes the country prefix).
- * @param {String} phoneCodeHash - Code identifier taken from the result of sendCode.
- * @param {String} firstname - New user firstname.
- * @param {String} lastname - New user lastname.
+ * Registers a new user account with Telegram.
+ *
+ * @this Client
+ * @param {string} phoneNumber - The user's phone number in international format.
+ * @param {string} phoneCodeHash - The phone code hash returned by `sendCode`.
+ * @param {string} firstname - The first name for the new account.
+ * @param {string} [lastname=''] - The optional last name for the new account.
+ * @returns {Promise<Skema.Raw.User | undefined>} The newly registered user object, or `undefined` if signup fails.
  */
 export async function signup(
   this: Client,
@@ -423,8 +494,12 @@ export async function signup(
   }
   return;
 }
+
 /**
- * Getting info about self.
+ * Fetches the full profile details of the current authorized user.
+ *
+ * @this Client
+ * @returns {Promise<Skema.Raw.users.UserFull>} Full user profile details.
  */
 export async function getMe(this: Client): Promise<Skema.Raw.users.UserFull> {
   return await this.invoke(

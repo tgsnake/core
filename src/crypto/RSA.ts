@@ -183,6 +183,16 @@ PublicKey.set(BigInt('2685959930972952888'), {
   e: BigInt('0x010001'),
 });
 
+/**
+ * Encrypts a binary buffer payload using Telegram's RSA public key matching the fingerprint.
+ *
+ * Typically utilized during MTProto authentication key exchange handshakes.
+ *
+ * @param {Buffer} data - Binary buffer payload to encrypt.
+ * @param {bigint} fingerprint - Unique public key fingerprint ID.
+ * @returns {Buffer} Encrypted binary data buffer.
+ * @throws {Error} Thrown if public key fingerprint is not found.
+ */
 export function encrypt(data: Buffer, fingerprint: bigint) {
   const key = PublicKey.get(fingerprint);
   if (key == undefined) {
@@ -196,4 +206,8 @@ export function encrypt(data: Buffer, fingerprint: bigint) {
     ) as unknown as Uint8Array,
   );
 }
+
+/**
+ * Storage map containing standard Telegram and CDN RSA public keys indexed by fingerprint.
+ */
 export { PublicKey };

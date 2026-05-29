@@ -14,11 +14,20 @@ import { base64urlTobase64 } from '../helpers.js';
 import { Buffer, BytesIO } from '../deps.js';
 
 /**
- * @class StringSession
- * Convert valid base64 string to telegram session.
- * This class supports several session strings from popular frameworks. Such as Telethon, Pyrogram, and GramJS.
+ * persistence driver class that deserializes and imports a portable Base64 session string.
+ *
+ * Supports parsing session string formats from popular libraries such as:
+ * - Telethon / GramJS (formats beginning with '1')
+ * - Pyrogram (latest versions)
+ * - native `@tgsnake/core` session formats (length of 271 bytes)
  */
 export class StringSession extends BaseSession {
+  /**
+   * Parses and creates a Session from a serialized Base64 session string.
+   *
+   * @param {string} session - The serialized session string to import.
+   * @throws {Error} Thrown if the string format is unrecognized or corrupted.
+   */
   constructor(session: string) {
     super();
     if (session.length) {

@@ -31,7 +31,15 @@ function toBytes(value: bigint): Buffer {
 }
 
 /**
- * Encrypt content with kdf
+ * Generates AES encryption keys and initialization vectors using Key Derivation Function (KDF).
+ *
+ * Complies with the official Telegram MTProto key derivation guidelines.
+ *
+ * @see {@link https://core.telegram.org/mtproto/description#defining-aes-key-and-initialization-vector MTProto Key Derivation}
+ * @param {Buffer} authKey - The full authorization key buffer.
+ * @param {Buffer} msgKey - The 16-byte message key buffer.
+ * @param {boolean} outgoing - If `true`, derives keys for outgoing traffic; otherwise for incoming.
+ * @returns {Array<Buffer>} A 2-element array containing the derived [aesKey, aesIv] buffers.
  */
 export function kdf(authKey: Buffer, msgKey: Buffer, outgoing: boolean): Array<Buffer> {
   // https://core.telegram.org/mtproto/description#defining-aes-key-and-initialization-vector
@@ -60,8 +68,23 @@ export function kdf(authKey: Buffer, msgKey: Buffer, outgoing: boolean): Array<B
   ]);
   return [aesKey, aesIv];
 }
+
 /**
- * Pack content with valid Telegram Message structure
+ * Packages a TL message object into a fully encrypted MTProto network frame.
+ *
+ * Steps involved:
+ * 1. Combines salt, session ID, and serializes the message.
+ * 2. Computes random padding bytes (from 12 up to 1024 bytes) for security.
+ * 3. Derives `msgKey` via SHA-256 hash.
+ * 4. Derives AES key/IV using KDF.
+ * 5. Encrypts the payload with AES-256-IGE and prepends auth key identifier.
+ *
+ * @param {Skema.Message} message - The TL message instance to serialize.
+ * @param {bigint} salt - Data center session salt.
+ * @param {Buffer} sessionId - The 8-byte session ID buffer.
+ * @param {Buffer} authKey - The authorization key.
+ * @param {Buffer} authKeyId - The 8-byte authorization key identifier.
+ * @returns {Buffer} The fully packaged, encrypted, and padded network binary payload.
  */
 export function pack(
   message: Skema.Message,
@@ -101,8 +124,25 @@ export function pack(
     ) as unknown as Uint8Array,
   ]);
 }
+
 /**
- * Unpack Telegram Message to TLobject.
+ * Unpacks an encrypted MTProto network binary frame back into a TL Message object.
+ *
+ * Runs a rigorous set of MTProto security checks on:
+ * - Auth Key ID matching
+ * - SHA-256 msgKey hash alignment
+ * - Session ID matching
+ * - Padding length limits (12 to 1024 bytes)
+ * - Message ID odd/even parity and temporal validity ranges (-300s to +30s)
+ *
+ * @see {@link https://core.telegram.org/mtproto/security_guidelines Telegram MTProto Security Guidelines}
+ * @param {BytesIO} b - Read-oriented Byte stream containing the network frame.
+ * @param {Buffer} sessionId - The 8-byte target session ID buffer.
+ * @param {Buffer} authKey - The authorization key.
+ * @param {Buffer} authKeyId - The 8-byte target authorization key identifier.
+ * @param {Array<bigint>} storedMsgId - An array accumulating processed message IDs to block replay attacks.
+ * @returns {Promise<Skema.Message>} The successfully decrypted and checked TL Message.
+ * @throws {SecurityCheckMismatch} Thrown if any security integrity checks fail.
  */
 export async function unpack(
   b: BytesIO,

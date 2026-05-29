@@ -16,6 +16,15 @@ import { sysprc, Skema } from '../deps.js';
 /**
  * Load the session, client is used to keep you logged in if you already have an active session.
  */
+/**
+ * Loads the active session from the session storage.
+ *
+ * If the storage contains no auth key (fresh session), this will automatically
+ * coordinate generating a new key on the default data center.
+ *
+ * @this Client
+ * @returns {Promise<void>}
+ */
 export async function loadSession(this: Client): Promise<void> {
   await (this as Client)._storage.load();
   // without authkey, that mean the session is fresh.
@@ -53,9 +62,14 @@ export async function loadSession(this: Client): Promise<void> {
     );
   }
 }
+
 /**
- * Connecting client to telegram server.<br/>
- * You can't receive any updates if you not call getMe after connected.
+ * Connects the client to the Telegram server.
+ *
+ * Establishes the network connection session but does not trigger login or start update polling.
+ *
+ * @this Client
+ * @returns {Promise<void>}
  */
 export async function connect(this: Client): Promise<void> {
   if (!(this as Client)._isConnected) {
@@ -74,8 +88,16 @@ export async function connect(this: Client): Promise<void> {
     (this as Client)._isConnected = true;
   }
 }
+
 /**
- * Starting telegram client.
+ * Connects and starts the Telegram client.
+ *
+ * Automatically performs authorization using the provided bot token or user credentials if no active session is stored.
+ *
+ * @this Client
+ * @param {SigInBot | SigInUser} [auth] - The optional authentication bot or user credentials.
+ * @returns {Promise<Skema.Raw.users.UserFull>} Information about the logged-in user or bot.
+ * @throws {AuthKeyMissing} Thrown if no authorization key is available.
  */
 export async function start(
   this: Client,
@@ -105,8 +127,12 @@ export async function start(
   Logger.log(`[3.client.Session] Logined as (${me.fullUser.id})`);
   return me;
 }
+
 /**
- * Logout and kill the client.
+ * Logs out the current user/bot session, deletes local storage credentials, and halts execution.
+ *
+ * @this Client
+ * @returns {Promise<any>}
  */
 export async function logout(this: Client): Promise<any> {
   await (this as Client).invoke(new Skema.Raw.auth.LogOut());
@@ -114,8 +140,12 @@ export async function logout(this: Client): Promise<any> {
   Logger.info(`[4.client.Session] Logged out.`);
   return sysprc.exit(0); // kill the process
 }
+
 /**
- * Exporting current session to string.
+ * Exports the active session credentials into a serialized string representation.
+ *
+ * @this Client
+ * @returns {Promise<string>} The serialized string session representation.
  */
 export async function exportSession(this: Client): Promise<string> {
   if (!(this as Client)._storage.userId) {
@@ -126,13 +156,19 @@ export async function exportSession(this: Client): Promise<string> {
   }
   return (this as Client)._storage.exportString();
 }
+
 /**
- * Sending request to telegram. <br/>
- * Only telegram method can be invoked.
- * @param {TLObject} query - Raw class from telegram method.
- * @param {Number} retries - Max retries for invoking. default is same with ClientInterface.maxRetries or 5.
- * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
- * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is ClientInterface.sleepTreshold or 10s.
+ * Sends a TL method request to the Telegram server.
+ *
+ * Automatically applies modifications based on takeout or `noUpdates` client configurations.
+ *
+ * @this Client
+ * @param {Skema.TLObject} query - The raw method TL object request.
+ * @param {number} retries - Maximum retry count upon connection interruptions.
+ * @param {number} timeout - Maximum timeout limit in milliseconds.
+ * @param {number} sleepTreshold - Flood wait sleep threshold limit in milliseconds.
+ * @returns {Promise<Skema.TLObject>} The returned response TL object.
+ * @throws {ClientDisconnected} Thrown if invoked while the client is not connected.
  */
 export async function invoke(
   this: Client,

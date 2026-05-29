@@ -14,60 +14,43 @@ import { type Buffer, Skema } from '../deps.js';
 type MaybePromise<T> = T | Promise<T>;
 
 /**
- * @class AbstractSession
- * Schema of a valid session. Creating a class session must extend this class so that the class is valid.
+ * Represents the interface contract and base schema for session persistence.
+ *
+ * Any custom backend storage driver (e.g. StringSession, MemorySession, SQLSession)
+ * must extend this class to ensure API compatibility within the `@tgsnake/core` library.
  */
 export abstract class AbstractSession {
-  /**
-   * Telegram Server IP address.
-   */
+  /** Telegram Server IP address. */
   protected abstract _ip: string;
-  /**
-   * DcId where the user connected.
-   */
+  /** Data center ID configured for this session. */
   protected abstract _dcId: number;
-  /**
-   * Required port for create connection to telegram server.
-   */
+  /** Port required to establish a TCP socket. */
   protected abstract _port: number;
-  /**
-   * Collective peers.
-   */
+  /** Cache holding resolved peer details indexed by ID. */
   protected abstract _peers: Map<
     bigint,
     [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >;
-  /**
-   * Collective of secret chat.
-   */
+  /** Cache holding resolved secret chat records. */
   protected abstract _secretChats: Map<number, SecretChat>;
-  /**
-   * Bytes Authkey for user login.
-   */
+  /** The raw cryptographic authorization key. */
   protected abstract _authKey: Buffer;
-  /**
-   * If set, it make user login in test telegram server.
-   */
+  /** Indicates if session runs on Telegram's test environment. */
   protected abstract _testMode: boolean;
-  /**
-   * The user appId, got it from my.telegram.org.
-   */
+  /** The developer's unique Telegram API ID. */
   protected abstract _apiId: number;
-  /**
-   * Id of current logined user.
-   */
+  /** The unique Telegram User ID of the logged-in entity. */
   protected abstract _userId: bigint;
-  /**
-   * User is bot or not.
-   */
+  /** Indicates if the logged-in entity is a bot. */
   protected abstract _isBot: boolean;
+
   /**
-   * Sets the information of the data center address, port, and test mode.<br/>
-   * The library should connect to, as well as the data center ID.
-   * @param {Number} dcId
-   * @param {String} ip
-   * @param {Number} port
-   * @param {Boolean} testMode
+   * Sets the core data center network coordinate parameters.
+   *
+   * @param {number} dcId - The target Telegram DC ID.
+   * @param {string} ip - The target IP address or domain.
+   * @param {number} port - The target port number.
+   * @param {boolean} testMode - Connects to testing environment when set to `true`.
    */
   abstract setAddress(
     dcId: number,
@@ -75,147 +58,196 @@ export abstract class AbstractSession {
     port: number,
     testMode: boolean,
   ): MaybePromise<void>;
+
   /**
-   * Set user AuthKey.
-   * @param {Buffer} authKey
-   * @param {Number} dcId
+   * Configures the authorization key.
+   *
+   * @param {Buffer} authKey - Cryptographic authentication key buffer.
+   * @param {number} dcId - Association data center index.
    */
   abstract setAuthKey(authKey: Buffer, dcId: number): MaybePromise<void>;
+
   /**
-   * Set apiId, got it from my.telegram.org.
-   * @param {Number} apiId
+   * Sets the API ID.
+   *
+   * @param {number} apiId - The application API ID.
    */
   abstract setApiId(apiId: number): MaybePromise<void>;
+
   /**
-   * Set the user type, is bot or not.
-   * @param {Boolean} isbot
+   * Defines whether the authorized entity is a bot.
+   *
+   * @param {boolean} isbot - Set `true` if authorized as bot.
    */
   abstract setIsBot(isbot: boolean): MaybePromise<void>;
+
   /**
-   * Set the id of logined user.
-   * @param {BigInt} userId
+   * Sets the current logged-in User/Bot ID.
+   *
+   * @param {bigint} userId - The unique user identifier.
    */
   abstract setUserId(userId: bigint): MaybePromise<void>;
+
   /**
-   * Return the current AuthKey
+   * Retrieves the current cryptographic authentication key.
    */
   abstract get authKey(): Buffer;
+
   /**
-   * Return type of user, is bot or not.
+   * Indicates if the active entity is a Telegram bot.
    */
   abstract get isBot(): boolean;
+
   /**
-   * Return user is login on test server or not.
+   * Indicates if the session connects to test server targets.
    */
   abstract get testMode(): boolean;
+
   /**
-   * Return the current logined user id.
+   * Gets the authorized user identifier.
    */
   abstract get userId(): bigint;
+
   /**
-   * Return api id which is using by user.
+   * Gets the active application API ID.
    */
   abstract get apiId(): number;
+
   /**
-   * Return Dc Id where the user connected.
+   * Gets the target connection DC ID.
    */
   abstract get dcId(): number;
+
   /**
-   * Return port for connecting to telegram server.
+   * Gets the target network port.
    */
   abstract get port(): number;
+
   /**
-   * Return IP address for connecting to telegram server.
+   * Gets the target network IP address.
    */
   abstract get ip(): string;
+
   /**
-   * Return cache of peers.
+   * Gets the active cache map holding peer records.
    */
   abstract get peers(): Map<
     bigint,
     [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
   >;
-  abstract get secretChats(): Map<number, SecretChat>;
+
   /**
-   * Load the session
+   * Gets the active cache map holding secret chat wrappers.
+   */
+  abstract get secretChats(): Map<number, SecretChat>;
+
+  /**
+   * Loads the session credentials from the underlying backend storage.
    */
   abstract load(): MaybePromise<void>;
+
   /**
-   * Delete the session from storage
+   * Purges the session credentials from the storage backend.
    */
   abstract delete(): MaybePromise<void>;
+
   /**
-   * Save the session to storage
+   * Saves the session state to the persistence layer.
    */
   abstract save(): MaybePromise<void>;
+
   /**
-   * Move session from instance to another instance.
-   * @param {object} session - Another instance which will be migrated there.
+   * Copies and migrates session credentials to another session target driver instance.
+   *
+   * @param {AbstractSession} session - The target session instance.
    */
   abstract move(session: AbstractSession): MaybePromise<void>;
+
   /**
-   * Save peer into cache.
-   * @param {Array} peers - Collection of peers will be saved to cache.
+   * Updates multiple cached peer coordinates within the persistence record.
+   *
+   * @param {Array<[bigint, bigint, string, Array<string>?, string?]>} peers - Array of peer tuples.
    */
   abstract updatePeers(
     peers: Array<
       [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
     >,
   ): MaybePromise<void>;
+
   /**
-   * Save secret chat into cache.
-   * @param {array} chats - Collection of secret chats will be saved to cache.
+   * Updates cached secret chat instances.
+   *
+   * @param {Array<SecretChat>} chats - Collection of active secret chats.
    */
   abstract updateSecretChats(chats: Array<SecretChat>): MaybePromise<void>;
+
   /**
-   * Get the input secret chat or secret chat info with given id.
-   * @param {number} id - Chat Id which will be used to find input secret chat or secret chat object.
+   * Resolves a cached secret chat wrapper by its identifier.
+   *
+   * @param {number} id - Target secret chat ID.
+   * @returns {MaybePromise<SecretChat | undefined>} Resolves to secret chat instance if found.
    */
   abstract getSecretChatById(id: number): MaybePromise<SecretChat | undefined>;
+
   /**
-   * Get peer by their given id from cache.
-   * @param {bigint} id - User id will be search on cache.
+   * Resolves cached peer input entities using their ID coordinates.
+   *
+   * @param {bigint} id - Target user, group, or channel ID.
+   * @returns {MaybePromise<InputPeerUser | InputPeerChat | InputPeerChannel | undefined>} Resolves to correct InputPeer wrapper.
    */
   abstract getPeerById(
     id: bigint,
   ): MaybePromise<
     Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
   >;
+
   /**
-   * Get peer by their given username from cache.
-   * @param {string} username - Username will be search on cache.
+   * Resolves cached peer input entities using their username handle.
+   *
+   * @param {string} username - Target handle.
+   * @returns {MaybePromise<InputPeerUser | InputPeerChat | InputPeerChannel | undefined>}
    */
   abstract getPeerByUsername(
     username: string,
   ): MaybePromise<
     Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
   >;
+
   /**
-   * Get peer by their given phone number from cache.
-   * @param {string} phoneNumber - Phone number will be search on cache.
+   * Resolves cached peer input entities using their phone number identifier.
+   *
+   * @param {string} phoneNumber - Target phone number.
+   * @returns {MaybePromise<InputPeerUser | InputPeerChat | InputPeerChannel | undefined>}
    */
   abstract getPeerByPhoneNumber(
     phoneNumber: string,
   ): MaybePromise<
     Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
   >;
+
   /**
-   * Remove secret chat by id.
-   * @param {number} id - secret chat id which will removed.
+   * Removes secret chat caching from the persistence record.
+   *
+   * @param {number} id - Target secret chat ID.
+   * @returns {MaybePromise<boolean>} Resolves to `true` when successfully deleted.
    */
   abstract removeSecretChatById(id: number): MaybePromise<boolean>;
+
   /**
-   * Update the pts state.
-   * @param {number} pts - pts state.
-   * @param {number} date - pts date.
+   * Synchronizes the session update stream PTS state checkpoints.
+   *
+   * @param {number} pts - Current PTS.
+   * @param {number} date - Checkpoint timestamp.
    */
   abstract updatePts(pts: number, date: number): MaybePromise<void>;
+
   /**
-   * Get saved pts state
+   * Fetches the persisted PTS stream checkpoints.
    */
   abstract getPts(): Promise<[pts: number, date: number]>;
+
   /**
-   * Export session to valid string.
+   * Serializes the active session details into a portable string format.
    */
   abstract exportString(): string;
   /** @hidden */
