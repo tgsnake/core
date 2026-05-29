@@ -38,7 +38,7 @@ export const platform = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' 
 export const sysprc = {
   exit: isDeno ? globalThis.Deno.exit : process.exit, // Deno compatibility, use Deno.exit if available, otherwise use Node's process.exit
 };
-export const { inspect } = isDeno ? globalThis.Deno : nodeInspect; // Deno compatibility, use Deno.inspect if available, otherwise use Node's util.inspect
+export const inspect = isDeno ? globalThis.Deno.inspect : nodeInspect; // Deno compatibility, use Deno.inspect if available, otherwise use Node's util.inspect
 // Browser compatibility
 // AES-CTR and AES-ECB are not supported in Deno, so we provide dummy implementations to prevent errors.
 class ecb {
