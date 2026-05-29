@@ -21,5 +21,8 @@ export * as Versions from './Version.js';
 export * as Helpers from './helpers.js';
 export * as Timeouts from './Timeout.js';
 export * as Loggers from './Logger.js';
-// exporting some important types
+// backward compatibility
+// We will keep these exports for backward compatibility.
 export { Raw } from '@tgsnake/skema';
+export * as Raws from '@tgsnake/skema/dist/raw/index.js';
+export * as Errors from '@tgsnake/skema/dist/errors/index.js';
