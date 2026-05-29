@@ -2,8 +2,9 @@
   "name": "@tgsnake/core",
   "version": "2.0.0",
   "description": "Pure Telegram MTProto library for Javascript or Typescript.",
-  "main": "./lib/src/index.js",
+  "main": "./dist/mod.js",
   "type": "module",
+  "types": "./dist/mod.d.ts",
   "scripts": {
     "build": "tsc",
     "build:license": "node ./generator/license",

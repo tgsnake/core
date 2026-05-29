@@ -7,4 +7,4 @@
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-export * from './src/index.ts';
+export * from './src/index.js';

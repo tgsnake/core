@@ -21,3 +21,5 @@ export * as Versions from './Version.js';
 export * as Helpers from './helpers.js';
 export * as Timeouts from './Timeout.js';
 export * as Loggers from './Logger.js';
+// exporting some important types
+export { Raw } from '@tgsnake/skema';
