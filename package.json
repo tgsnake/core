@@ -37,16 +37,19 @@
   "dependencies": {
     "@tgsnake/bytesio": "^1.0.0",
     "@tgsnake/log": "^1.6.4",
-    "@tgsnake/skema": "^1.13.0",
     "async-mutex": "^0.5.0",
     "big-integer": "^1.6.52",
     "socks": "^2.8.9"
   },
   "devDependencies": {
+    "@tgsnake/skema": "^1.13.0",
     "@types/bun": "^1.3.14",
     "@types/node": "^25.9.1",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@tgsnake/skema": "^1.13.0"
   },
   "isBeta": false,
   "isPrivate": false

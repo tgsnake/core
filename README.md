@@ -1,88 +1,155 @@
-# tgsnake core
+# @tgsnake/core v2.0.0 🐍
 
-<center>  
-  <b>Layer 207</b>  
-</center>
-   
----   
-  
-Pure Telegram MTProto framework for Javascript or Typescript.
+[![License](https://img.shields.io/badge/License-GPL%20v3%20%2F%20LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/) [![Telegram Group](https://img.shields.io/badge/Telegram-Group-blue.svg?logo=telegram)](https://t.me/tgsnake)
 
-⚡ Using less dependencies to make it fast.  
-🔓 Open Source, you can contribute to make this framework better.  
-🗒️ Using Pure Telegram Raw Api, all JSON object is pure from telegram, nothing has changed at all. So that it makes it easier for you to learn the [telegram schema](https://core.telegram.org/schema) docs.  
-🦕 Deno Support.
+Pure, high-performance Telegram MTProto framework for **Node.js, Deno, and Bun** in Javascript and Typescript.
 
-## Example use
+---
+
+> [!IMPORTANT]
+>
+> ### ⚠️ v2.0.0 Breaking Changes Notice
+>
+> **tgsnake core has undergone a major architectural upgrade in v2.0.0.**
+>
+> - **Outsourced TL Schema & Raw APIs:** The internal generators, TL Schema mappings, and raw generated objects (formerly `src/raw` and `src/errors`) have been completely decoupled and moved to the external module [`@tgsnake/skema`](https://github.com/tgsnake/skema). This dramatically reduces the package footprint and install times.
+> - **Native ESM:** The library is now configured as `"type": "module"`. All local relative source code imports must append the `.js` extension (e.g., `import { Client } from './client/Client.js'`).
+> - **Main Entry Point:** The package main export has moved from `./lib/src/index.js` to `./dist/mod.js`.
+> - **Runtime & Node Versions:** Minimum Node.js version is now **>= 22.0.0**. Formal support has been added for **Deno (>= 1.0.0)** and **Bun (>= 1.0.0)**.
+> - **Backward Compatibility Re-exports:** To prevent breaking existing code, the core `Raw`, `Raws`, and `Errors` modules are re-exported directly from `@tgsnake/skema` through the `@tgsnake/core` package entry point.
+
+---
+
+## ⚡ Features
+
+- **Ultra-lightweight:** Minimal external dependencies to guarantee maximum execution speed.
+- **Multi-Runtime Support:** Runs out of the box on **Node.js (>=22)**, **Deno**, and **Bun**.
+- **Pure Telegram API:** Raw TL schema objects are directly exposed without arbitrary abstractions.
+- **Secret Chats:** Fully supports creating, accepting, and handling end-to-end encrypted Telegram Secret Chats.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Installation
+
+Install `@tgsnake/core` along with its required peer-dependency `@tgsnake/skema`:
+
+```bash
+# Using Yarn (Recommended)
+$ yarn add @tgsnake/core @tgsnake/skema
+
+# Using NPM
+$ npm install @tgsnake/core @tgsnake/skema
+
+# Using Bun
+$ bun add @tgsnake/core @tgsnake/skema
+```
+
+For **Deno**, you can import directly from npm:
 
 ```typescript
-import { Client, Raw, Storages } from '@tgsnake/core';
-process.env.LOGLEVEL = 'debug'; // set log level, see @tgsnake/log for more information.
+import { Client } from 'npm:@tgsnake/core';
+```
+
+> [!NOTE] The JSR version will be published soon, so you can use the JSR version for deno.
+
+---
+
+### 2. Usage Example
+
+Here is a complete, modern example illustrating how to start a client session, register handlers, and listen to incoming updates:
+
+```typescript
+import { Client, Storages } from '@tgsnake/core';
+import { Raw } from '@tgsnake/skema';
+
+// Set Loglevel (see @tgsnake/log)
+process.env.LOGLEVEL = 'debug';
+
+const apiId = 123456; // Your API ID from my.telegram.org
+const apiHash = 'your_api_hash'; // Your API Hash from my.telegram.org
+
 const client = new Client(
-  // you can fill with Telethon or Pyrogram string session.
+  // Supports Pyrogram, Telethon, or tgsnake base64 String Sessions
   new Storages.StringSession(''),
   apiHash,
   apiId,
 );
-// handle update
+
+// Register a callback update handler
 client.addHandler((update) => {
-  console.log(update);
+  console.log('Received raw update:', update);
 });
 
-// if you already pass the string session, don't fill any arguments in start function, leave it empty.
+// Start the client connection
 client.start({
-  botToken: '', // if you want login as bot, you can login as user too.
-  /* Remove "botToken" if you want to login as user.
-  phoneNumber : async () => {}, // Phone number with international phone code (include plus sign (+)) will be used to login, the return of function must be a string.
-  code : async () => {}, // OTP code, the return of function must be a string.
-  password : async () => {}, // if you account has 2FA, the return of function must be a string.
-  authError : async (error) => {} // when error BadRequest attempt, this function will be running.
+  botToken: 'YOUR_BOT_TOKEN', // Supply botToken to log in as a bot
+  /* 
+  // Or uncomment below to log in as a standard user:
+  phoneNumber: async () => '+1234567890',
+  code: async () => {
+    // Prompt or return OTP code received from Telegram
+    return '12345';
+  },
+  password: async (hint) => {
+    // If account has 2FA enabled
+    return 'your_2fa_password';
+  },
+  authError: (error) => {
+    console.error('Auth error encountered:', error);
+  }
   */
 });
 ```
 
-### Exporting Session.
+---
 
-For exporting string session, use `client.exportSession()`. It will be return `Promise<string>`.
+### 3. Exporting Sessions
+
+You can serialize and export your active connection credentials to a portable Base64-url string session for future authentications:
 
 ```typescript
-const exported = await client.exportSession();
+const sessionString = await client.exportSession();
+console.log('Your session string:', sessionString);
 ```
 
 ---
 
-## Development Guidelines
+## 🛠️ Development Guidelines
 
-- Cloning Repository
+To contribute or develop on the `@tgsnake/core` repository locally:
+
+### 1. Clone the repository
 
 ```bash
 $ git clone https://github.com/tgsnake/core
+$ cd core
 ```
 
-- Installing Dependencies
-
-> Required to use yarn!
+### 2. Install dependencies (Yarn v4 required)
 
 ```bash
 $ yarn install
 ```
 
-- Building TLSchema and Error class
+### 3. Build the source files
 
 ```bash
-$ yarn build:api
-$ yarn build:error
+# Compiles typescript into the /dist folder
+$ yarn build
 ```
-
-- Testing your app! Create `test` folder and you can create `index.js` file for testing the app. This folder will automatically ignored and not pushing to GitHub.
 
 ---
 
-## Notes
+## 🤝 Support and Community
 
-- This framework is porting of pyrogram for connecting to telegram server. I have dedicated 2 months of my time to complete this framework from scratch. Research after research I do to improve this framework. So big thanks for pyrogram for the source, without that source code, this framework maybe unavailable.
-- For more questions, ask on telegram group ([@tgsnake](https://t.me/tgsnake)) or open github issue.
+- **Telegram Group Support:** [@tgsnake](https://t.me/tgsnake)
+- **Discussion Chat:** [@tgsnakechat](https://t.me/tgsnakechat)
+- **Bugs & Features:** Open an issue on our [GitHub repository](https://github.com/tgsnake/core/issues)
 
-## GPL v3 License
+## 📄 License
 
-Build with ♥️ by [tgsnake dev](https://t.me/tgsnakechat).
+This project is licensed under the dual **GPL v3 or LGPL v3** License.
+
+Built with ♥️ by the **tgsnake** team.
