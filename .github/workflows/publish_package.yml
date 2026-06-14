@@ -1,0 +1,82 @@
+name: Publish Package
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+jobs:
+  node-build:
+    name: Publishing package for NodeJs and Bun
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: yarn config set enableImmutableInstalls false
+      - run: yarn install
+      - run: yarn build
+      - run: npm publish --tag latest --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  browser-build:
+    name: Publishing package for Browser
+    needs: node-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: yarn config set enableImmutableInstalls false
+      - run: yarn install
+      - run: yarn add aes-js browserify-zlib buffer crypto-browserify events os-browserify path-browserify util stream-browserify process @tgsnake/bytesio@browser @tgsnake/log@browser
+      - run: yarn add --dev @tgsnake/skema@browser
+      - run: yarn add --peer @tgsnake/skema@browser
+      - run: node ./generator/build_browser/index.js
+      - run: yarn install
+      - run: yarn build
+      - run: npm publish --tag browser --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  jsr-build:
+    name: Publishing package for JSR
+    needs: node-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2.x'
+      - run: deno install
+      - run: git add deno.lock
+      - run: |
+          git commit -m "chore: Update deno.lock" || echo "No changes to commit"
+      - run: npx jsr publish
+  github-build:
+    name: Publishing package to GitHub Packages
+    needs: node-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@tgsnake'
+      - run: yarn install
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

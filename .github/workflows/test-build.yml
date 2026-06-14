@@ -1,5 +1,4 @@
-name: Testing Build Package
-
+name: Testing Package
 on:
   workflow_dispatch:
   pull_request:
@@ -14,8 +13,8 @@ jobs:
     name: Building package for NodeJs and Bun
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '22.x'
       - run: yarn config set enableImmutableInstalls false
@@ -25,12 +24,27 @@ jobs:
     name: Building package for Browser
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '22.x'
       - run: yarn config set enableImmutableInstalls false
       - run: yarn install
-      - run: yarn add aes-js browserify-zlib buffer crypto-browserify events os-browserify path-browserify util stream-browserify process
+      - run: yarn add aes-js browserify-zlib buffer crypto-browserify events os-browserify path-browserify util stream-browserify process @tgsnake/bytesio@browser @tgsnake/log@browser
+      - run: yarn add --dev @tgsnake/skema@browser
+      - run: yarn add --peer @tgsnake/skema@browser
       - run: node ./generator/build_browser/index.js
       - run: yarn build
+  jsr-build:
+    name: Building package for JSR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2.x'
+      - run: deno install
+      - run: npx jsr publish --dry-run --allow-dirty

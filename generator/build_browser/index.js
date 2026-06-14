@@ -27,9 +27,6 @@ function buildForBrowser() {
   console.log('Changing package.json for browser...');
   const file = fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8');
   const json = JSON.parse(file);
-  json.main = './browser/mod.js';
-  json.files = ['browser/**/**'];
-  json.type = 'module';
   json.version = `${json.version}-browser.0`;
   fs.writeFileSync(path.join(process.cwd(), 'package.json'), JSON.stringify(json, null, 2));
   console.log('package.json changed for browser successfully!');

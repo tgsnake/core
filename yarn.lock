@@ -5,10 +5,10 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"@tgsnake/bytesio@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@tgsnake/bytesio@npm:1.0.0"
-  checksum: 10c0/b9acbfaa7c231597f0a52e6cf6f311a5e76660408964842a4df2e4dd664906fa8e88d69bdd9fce0e115c6e849303c5e9844fde7ee53d0f3619e648847e9b2f64
+"@tgsnake/bytesio@npm:^2.0.0, @tgsnake/bytesio@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@tgsnake/bytesio@npm:2.0.1"
+  checksum: 10c0/f904cb3785d583ebab33c74275557414187b8f53d5205a1d8a1b70e2933bcad935ec42b5d4fd3d8056e35becf02d61705942d3aa30ced9884cd15c296cc14dd8
   languageName: node
   linkType: hard
 
@@ -16,14 +16,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tgsnake/core@workspace:."
   dependencies:
-    "@tgsnake/bytesio": "npm:^1.0.0"
-    "@tgsnake/log": "npm:^1.6.4"
-    "@tgsnake/skema": "npm:^1.13.0"
+    "@tgsnake/bytesio": "npm:^2.0.1"
+    "@tgsnake/log": "npm:^2.0.1"
+    "@tgsnake/skema": "npm:^2.0.0"
     "@types/bun": "npm:^1.3.14"
-    "@types/node": "npm:^25.9.1"
+    "@types/node": "npm:^25.9.3"
     async-mutex: "npm:^0.5.0"
     big-integer: "npm:^1.6.52"
-    prettier: "npm:^3.8.3"
+    prettier: "npm:^3.8.4"
     socks: "npm:^2.8.9"
     typescript: "npm:^6.0.3"
   peerDependencies:
@@ -31,23 +31,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tgsnake/log@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@tgsnake/log@npm:1.6.4"
+"@tgsnake/log@npm:^2.0.0, @tgsnake/log@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@tgsnake/log@npm:2.0.1"
   dependencies:
-    chalk: "npm:4.1.2"
-  checksum: 10c0/f5afd8607721c136e0cbe55b3e5a20341f6898ea0cdd8e947576ee8253b4afb41452faa2aa9db95e45da73f2cb699497af6401dd994bb549990b1fd9294e4fc3
+    chalk: "npm:^5.6.2"
+    color-convert: "npm:^3.1.3"
+  checksum: 10c0/baf04400033760c3babb0ff96914f665d511dd13ce09f16ceccf87cd1cd15dccbe3fc25d76c61490e5532e2bc6e0c304a058fef37b481fcc6b5db2dbaaaa990e
   languageName: node
   linkType: hard
 
-"@tgsnake/skema@npm:^1.13.0":
-  version: 1.13.0
-  resolution: "@tgsnake/skema@npm:1.13.0"
+"@tgsnake/skema@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@tgsnake/skema@npm:2.0.0"
   dependencies:
-    "@tgsnake/bytesio": "npm:^1.0.0"
-    "@tgsnake/log": "npm:^1.6.4"
+    "@tgsnake/bytesio": "npm:^2.0.0"
+    "@tgsnake/log": "npm:^2.0.0"
     big-integer: "npm:^1.6.52"
-  checksum: 10c0/b2d3e931cd7abc33f2785ae326312b85077d6981d1b5fc62d88cc3cceefbf980ccbbc6443aff55b0572e44383ebb45b2d73faed0f98353cf9c0682129ab2b362
+  checksum: 10c0/de9b53495a75e55cfb6372e6fbf5119b57c974013967b08f08dff4fafc56efbbfa3b5e460e8185d1830b38cb311abc12d4daf3ea7aa76d8635bc5a21d82e75d4
   languageName: node
   linkType: hard
 
@@ -69,21 +70,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^25.9.1":
-  version: 25.9.1
-  resolution: "@types/node@npm:25.9.1"
+"@types/node@npm:^25.9.3":
+  version: 25.9.3
+  resolution: "@types/node@npm:25.9.3"
   dependencies:
     undici-types: "npm:>=7.24.0 <7.24.7"
-  checksum: 10c0/9a04682842bebbcf21a1779dfeab9aa733d7bd7bbc0a0edb641ab3a9a3d43eac543225acf669c334f458f1956443ebc072bc3c72840c543b8b356cab5c82d456
-  languageName: node
-  linkType: hard
-
-"ansi-styles@npm:^4.1.0":
-  version: 4.3.0
-  resolution: "ansi-styles@npm:4.3.0"
-  dependencies:
-    color-convert: "npm:^2.0.1"
-  checksum: 10c0/895a23929da416f2bd3de7e9cb4eabd340949328ab85ddd6e484a637d8f6820d485f53933446f5291c3b760cbc488beb8e88573dd0f9c7daf83dccc8fe81b041
+  checksum: 10c0/72d3aece9d42c2c641bcd3f3cb2dc2828b4bd384dfcbd910c404b8859a68bd69d50c4769ce7defd4ff5e049768e23e615f09407ea2cbbb5f44b90d75a7c6b8ca
   languageName: node
   linkType: hard
 
@@ -112,36 +104,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:4.1.2":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
+"chalk@npm:^5.6.2":
+  version: 5.6.2
+  resolution: "chalk@npm:5.6.2"
+  checksum: 10c0/99a4b0f0e7991796b1e7e3f52dceb9137cae2a9dfc8fc0784a550dc4c558e15ab32ed70b14b21b52beb2679b4892b41a0aa44249bcb996f01e125d58477c6976
+  languageName: node
+  linkType: hard
+
+"color-convert@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "color-convert@npm:3.1.3"
   dependencies:
-    ansi-styles: "npm:^4.1.0"
-    supports-color: "npm:^7.1.0"
-  checksum: 10c0/4a3fef5cc34975c898ffe77141450f679721df9dde00f6c304353fa9c8b571929123b26a0e4617bde5018977eb655b31970c297b91b63ee83bb82aeb04666880
+    color-name: "npm:^2.0.0"
+  checksum: 10c0/427648b442c6ea6dab5ba03f4962201ee59f128c80b25d5a0f7d9aab0ef52519a9db8a9bb3cf40b73f86eb19b5ca6aeb0ab930665f3d14973ce776d7d0448a15
   languageName: node
   linkType: hard
 
-"color-convert@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "color-convert@npm:2.0.1"
-  dependencies:
-    color-name: "npm:~1.1.4"
-  checksum: 10c0/37e1150172f2e311fe1b2df62c6293a342ee7380da7b9cfdba67ea539909afbd74da27033208d01d6d5cfc65ee7868a22e18d7e7648e004425441c0f8a15a7d7
-  languageName: node
-  linkType: hard
-
-"color-name@npm:~1.1.4":
-  version: 1.1.4
-  resolution: "color-name@npm:1.1.4"
-  checksum: 10c0/a1a3f914156960902f46f7f56bc62effc6c94e84b2cae157a526b1c1f74b677a47ec602bf68a61abfa2b42d15b7c5651c6dbe72a43af720bc588dff885b10f95
-  languageName: node
-  linkType: hard
-
-"has-flag@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "has-flag@npm:4.0.0"
-  checksum: 10c0/2e789c61b7888d66993e14e8331449e525ef42aac53c627cc53d1c3334e768bcb6abdc4f5f0de1478a25beec6f0bd62c7549058b7ac53e924040d4f301f02fd1
+"color-name@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "color-name@npm:2.1.0"
+  checksum: 10c0/9c953caba99557fce472232ded438c56b902c569cb15d66fcfbdf6374206126eef52ab66459f3984d4074b4aa8ab95e6f4b31a8e4f228dea57d0afecf94281fa
   languageName: node
   linkType: hard
 
@@ -152,12 +134,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.8.3":
-  version: 3.8.3
-  resolution: "prettier@npm:3.8.3"
+"prettier@npm:^3.8.4":
+  version: 3.8.4
+  resolution: "prettier@npm:3.8.4"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/754816fd7593eb80f6376d7476d463e832c38a12f32775a82683adb6e35b772b1f484d65f19401507b983a8c8a7cd5a4a9f12006bd56491e8f35503473f77473
+  checksum: 10c0/b90a0cbe75b88ac0af9c13fe0f359bd19926fabccd88483227b21f71f0c1cc42da056fc1ac3a361e665577c568371d5ccfb2c62c31c8a1186f8d1bd531a063e9
   languageName: node
   linkType: hard
 
@@ -175,15 +157,6 @@ __metadata:
     ip-address: "npm:^10.1.1"
     smart-buffer: "npm:^4.2.0"
   checksum: 10c0/2d4350c31142b0931eb1758825b426bcbf4bfb5eed682ca48bc46dc9e7d1930ec366ea574ad49fc6c1fd9e9e17ce243be0ef13e31fc4b0319d9093f1fb19743c
-  languageName: node
-  linkType: hard
-
-"supports-color@npm:^7.1.0":
-  version: 7.2.0
-  resolution: "supports-color@npm:7.2.0"
-  dependencies:
-    has-flag: "npm:^4.0.0"
-  checksum: 10c0/afb4c88521b8b136b5f5f95160c98dee7243dc79d5432db7efc27efb219385bbc7d9427398e43dd6cc730a0f87d5085ce1652af7efbe391327bc0a7d0f7fc124
   languageName: node
   linkType: hard
 

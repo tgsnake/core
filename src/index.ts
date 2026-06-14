@@ -24,5 +24,5 @@ export * as Loggers from './Logger.js';
 // backward compatibility
 // We will keep these exports for backward compatibility.
 export { Raw } from '@tgsnake/skema';
-export * as Raws from '@tgsnake/skema/dist/raw/index.js';
-export * as Errors from '@tgsnake/skema/dist/errors/index.js';
+export * as Raws from '@tgsnake/skema/dist/src/raw/index.js';
+export * as Errors from '@tgsnake/skema/dist/src/errors/index.js';

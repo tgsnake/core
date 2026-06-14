@@ -1,0 +1,10 @@
+{
+  "name": "@tgsnake/core",
+  "version": "2.0.0",
+  "exports": "./mod.ts",
+  "license": "MIT",
+  "publish": {
+    "include": ["mod.ts", "src/**/**", "README.md", "LICENSE", "package.json", "yarn.lock"],
+    "exclude": ["test/**/**", "dist/**/**"]
+  }
+}

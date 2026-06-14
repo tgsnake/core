@@ -36,7 +36,7 @@ export class TCPAbridged extends TCP {
         Buffer.concat([
           Buffer.concat([
             Buffer.from('7f', 'hex') as unknown as Uint8Array,
-            Skema.Primitive.BigInt.write(BigInt(length), 3) as unknown as Uint8Array,
+            Skema.bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
           ]) as unknown as Uint8Array,
           data as unknown as Uint8Array,
         ]),
