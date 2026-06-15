@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,19 +8,23 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { crypto, aesjs, Buffer, where } from '../platform.deno.ts';
-import { Logger } from '../Logger.ts';
-import { range, mod, bigintToBuffer as toBuffer, bufferToBigint as toBigint } from '../helpers.ts';
+import { crypto, aesjs, Buffer, platform, Skema } from '../deps.js';
+import { Logger } from '../Logger.js';
+import { range } from '../helpers.js';
 
 /**
- * Encrypt content with AES-256-IGE mode.
- * @param {Buffer} data - Content will be encrypted.
- * @param {Buffer} key - Key for encrypting content.
- * @param {Buffer} iv - Initial Vector for encrypting content.
+ * Encrypts a binary payload buffer using the AES-256-IGE symmetric cipher mode.
+ *
+ * Automatically applies padding (adds random trailing bytes) to align the data length to 16-byte blocks.
+ *
+ * @param {Buffer} data - Binary buffer payload to encrypt.
+ * @param {Buffer} key - 32-byte secret encryption key.
+ * @param {Buffer} iv - 32-byte initial vector.
+ * @returns {Buffer} The encrypted payload buffer.
  */
 export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`[4] Encrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
-  const pad = mod(Buffer.byteLength(data), 16);
+  Logger.debug(`[1.crypto.Aes] Encrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
+  const pad = Skema.mod(Buffer.byteLength(data), 16);
   if (pad) {
     data = Buffer.concat([
       data as unknown as Uint8Array,
@@ -29,63 +33,93 @@ export function ige256Encrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
   }
   return ige(data, key, iv, true);
 }
+
 /**
- * Decrypt content with AES-256-IGE mode.
- * @param {Buffer} data - Content will be decrypting.
- * @param {Buffer} key - Key for decrypting content.
- * @param {Buffer} iv - Initial Vector for decrypting content.
+ * Decrypts an AES-256-IGE encrypted binary buffer payload.
+ *
+ * @param {Buffer} data - The encrypted binary buffer payload.
+ * @param {Buffer} key - 32-byte secret encryption key.
+ * @param {Buffer} iv - 32-byte initial vector.
+ * @returns {Buffer} The decrypted payload buffer.
  */
 export function ige256Decrypt(data: Buffer, key: Buffer, iv: Buffer): Buffer {
-  Logger.debug(`[5] Decrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
+  Logger.debug(`[2.crypto.Aes] Decrypting ${Buffer.byteLength(data)} bytes data with AES-256-IGE`);
   return ige(data, key, iv, false);
 }
+
 /**
- * Functions for encryption or decryption content.
- * @param {Buffer} data - Content to be encrypted or decrypted.
+ * Interface definition for AES CTR cipher execution functions.
  */
 export type CtrCipherFn = (data: Buffer) => Buffer;
+
 /**
- * Encrypt or decrypt content with AES-256-CTR mode.
- * @param {Buffer} key - Key for encrypting content.
- * @param {Buffer} iv - Initial Vector for encrypting content.
+ * Creates and returns an execution function to encrypt or decrypt data streams using the AES-256-CTR cipher.
+ *
+ * Unifies NodeJS crypto utilities, browser-friendly JS implementations, and Deno fallbacks.
+ *
+ * @param {Buffer} key - The 32-byte key buffer.
+ * @param {Buffer} iv - The 16-byte initial vector buffer.
+ * @returns {CtrCipherFn} The cipher execution function.
  */
 export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
-  if (where === 'Browser') {
+  if (platform === 'Browser') {
     const cipher = new aesjs.ModeOfOperation.ctr(
       key,
       new aesjs.Counter(Uint8Array.from(iv as unknown as Uint8Array)),
     );
     return (data: Buffer) => {
-      Logger.debug(`[140] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`);
+      Logger.debug(
+        `[3.crypto.Aes] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`,
+      );
       return Buffer.from(cipher.encrypt(data));
     };
   }
   try {
     const cipher = crypto.createCipheriv('AES-256-CTR', key, iv);
     return (data: Buffer) => {
-      Logger.debug(`[140] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`);
+      Logger.debug(
+        `[4.crypto.Aes] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`,
+      );
       return Buffer.from(cipher.update(data) as unknown as Uint8Array);
     };
   } catch (_error) {
     const cipher = ctr(key, iv);
     return (data: Buffer) => {
-      Logger.debug(`[140] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`);
+      Logger.debug(
+        `[5.crypto.Aes] Cryptograph ${Buffer.byteLength(data)} bytes data with AES-256-CTR`,
+      );
       return Buffer.from(cipher.update(data) as unknown as Uint8Array);
     };
   }
 }
+
 /**
- * Xor the A bytes with B bytes.
+ * Computes the bitwise XOR operation between two byte buffers.
+ *
+ * @param {Buffer} a - First byte buffer operand.
+ * @param {Buffer} b - Second byte buffer operand.
+ * @returns {Buffer} The resulting byte buffer product.
  */
-export function xor(a: Buffer, b: Buffer) {
-  return toBuffer(BigInt(toBigint(a, false) ^ toBigint(b, false)), Buffer.byteLength(a), false);
+export function xor(a: Buffer, b: Buffer): Buffer {
+  return Skema.bigintToBuffer(
+    BigInt(Skema.bufferToBigint(a, false) ^ Skema.bufferToBigint(b, false)),
+    Buffer.byteLength(a),
+    false,
+  ) as unknown as Buffer;
 }
+
 /**
- * Make AES encryption without Initial Vector.
+ * Wraps low-level AES symmetric encryption/decryption routines (ECB mode).
+ *
+ * @param {Buffer} key - 32-byte secret key buffer.
+ * @returns {{ encrypt(data: Buffer): Buffer, decrypt(data: Buffer): Buffer }} Symmetric cipher handler options.
  */
-export function AES(key: Buffer) {
+export function AES(key: Buffer): {
+  encrypt(data: Buffer): Buffer;
+  decrypt(data: Buffer): Buffer;
+} {
   const iv = Buffer.alloc(0);
-  if (where === 'Browser' || where === 'Deno') {
+  if (platform === 'Browser' || platform === 'Deno') {
     const cipher = new aesjs.ModeOfOperation.ecb(key);
     return {
       encrypt(data: Buffer): Buffer {

@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,12 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { TCP } from './tcp.ts';
-import { includesBuffer, normalizeSecretString, sliceBuffer } from '../../helpers.ts';
-import { crypto, Buffer } from '../../platform.deno.ts';
-import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
-import { Primitive } from '../../raw/core/index.ts';
-import type { ProxyInterface } from '../connection.ts';
+import { TCP } from './tcp.js';
+import { includesBuffer, normalizeSecretString, sliceBuffer } from '../../helpers.js';
+import { crypto, Buffer, Skema } from '../../deps.js';
+import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCPIntermediateO
@@ -126,16 +125,16 @@ export class TCPIntermediateO extends TCP {
     }
     await super.send(nonce);
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const payload = this._encryptor(
       Buffer.concat([
-        Primitive.Int.write(Buffer.byteLength(data)) as unknown as Uint8Array,
+        Skema.Primitive.Int.write(Buffer.byteLength(data)) as unknown as Uint8Array,
         data as unknown as Uint8Array,
       ]),
     );
     return await super.send(payload);
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(4);
     if (!length) return;
     length = this._decryptor(length);

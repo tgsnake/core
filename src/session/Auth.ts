@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,22 +8,14 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Connection } from '../connection/connection.ts';
-import * as AES from '../crypto/Aes.ts';
-import * as Prime from '../crypto/Prime.ts';
-import * as RSA from '../crypto/RSA.ts';
-import { crypto, Buffer } from '../platform.deno.ts';
-import { SecurityCheckMismatch } from '../errors/index.ts';
-import { TLObject, Primitive, Raw, BytesIO } from '../raw/index.ts';
-import { MsgId } from './internals/MsgId.ts';
-import {
-  sleep,
-  mod,
-  bufferToBigint as toBigint,
-  bigintToBuffer as toBuffer,
-  bigIntPow,
-} from '../helpers.ts';
-import { Logger } from '../Logger.ts';
+import { Connection } from '../connection/connection.js';
+import * as AES from '../crypto/Aes.js';
+import * as Prime from '../crypto/Prime.js';
+import * as RSA from '../crypto/RSA.js';
+import { crypto, Buffer, BytesIO, Skema } from '../deps.js';
+import { MsgId } from './internals/MsgId.js';
+import { sleep } from '../helpers.js';
+import { Logger } from '../Logger.js';
 
 export class Auth {
   MAX_RETRIES: number = 5;
@@ -36,25 +28,25 @@ export class Auth {
     this.testMode = testMode;
     this.ipv6 = ipv6;
   }
-  static pack(data: TLObject): Buffer {
+  static pack(data: Skema.TLObject): Buffer {
     return Buffer.concat([
       Buffer.alloc(8) as unknown as Uint8Array,
-      Primitive.Long.write(BigInt(new MsgId().getMsgId())) as unknown as Uint8Array,
-      Primitive.Int.write(Buffer.byteLength(data.write())) as unknown as Uint8Array,
+      Skema.Primitive.Long.write(BigInt(new MsgId().getMsgId())) as unknown as Uint8Array,
+      Skema.Primitive.Int.write(Buffer.byteLength(data.write())) as unknown as Uint8Array,
       data.write() as unknown as Uint8Array,
     ]);
   }
-  static async unpack(b: BytesIO) {
+  static async unpack(b: BytesIO): Promise<Skema.TLObject> {
     b.seek(20, 1); // Skip auth_key_id (8), message_id (8) and message_length (4)
-    return await TLObject.read(b);
+    return await Skema.TLObject.read(b);
   }
-  async invoke(data: TLObject) {
+  async invoke(data: Skema.TLObject): Promise<Skema.TLObject> {
     const content = Auth.pack(data);
     await this.connection.send(content);
     const response = new BytesIO(await this.connection.recv());
     return await Auth.unpack(response);
   }
-  async create() {
+  async create(): Promise<Buffer> {
     // https://core.telegram.org/mtproto/auth_key
     // https://core.telegram.org/mtproto/samples-auth_key
     let retries = this.MAX_RETRIES;
@@ -64,35 +56,39 @@ export class Auth {
       // using TCPIntermediate
       this.connection = new Connection(this.dcId, this.testMode, this.ipv6);
       try {
-        Logger.debug(`[11] Start creating a new auth key on DC${this.dcId}`);
+        Logger.debug(`[1.session.Auth] Start creating a new auth key on DC${this.dcId}`);
         await this.connection.connect();
 
         // step 1 - 2
-        const nonce = toBigint(
+        const nonce = Skema.bufferToBigint(
           Buffer.from(crypto.randomBytes(16) as unknown as Uint8Array),
           false,
           true,
         );
-        Logger.debug(`[12] Send ResPq: ${nonce}`);
-        const resPq: Raw.ResPQ = await this.invoke(new Raw.ReqPqMulti({ nonce }));
-        Logger.debug(`[13] Got ResPq: ${resPq.serverNonce}`);
-        Logger.debug(`[14] Server public key fingerprints: ${resPq.serverPublicKeyFingerprints}`);
+        Logger.debug(`[2.session.Auth] Send ResPq: ${nonce}`);
+        const resPq: Skema.Raw.ResPQ = (await this.invoke(
+          new Skema.Raw.ReqPqMulti({ nonce }),
+        )) as Skema.Raw.ResPQ;
+        Logger.debug(`[3.session.Auth] Got ResPq: ${resPq.serverNonce}`);
+        Logger.debug(
+          `[4.session.Auth] Server public key fingerprints: ${resPq.serverPublicKeyFingerprints}`,
+        );
         let fingerprints;
         if (!resPq.serverPublicKeyFingerprints || !resPq.serverPublicKeyFingerprints.length)
           throw new Error('Public key not found');
         for (const i of resPq.serverPublicKeyFingerprints) {
           if (RSA.PublicKey.get(BigInt(i))) {
-            Logger.debug(`[15] Using fingerprint: ${i}`);
+            Logger.debug(`[5.session.Auth] Using fingerprint: ${i}`);
             fingerprints = BigInt(i);
             break;
           } else {
-            Logger.debug(`[16] Fingerprint unknown: ${i}`);
+            Logger.debug(`[6.session.Auth] Fingerprint unknown: ${i}`);
           }
         }
 
         // step 3
-        const pq = toBigint(resPq.pq, false);
-        Logger.debug(`[17] Start PQ factorization: ${pq}`);
+        const pq = Skema.bufferToBigint(resPq.pq, false, true);
+        Logger.debug(`[7.session.Auth] Start PQ factorization: ${pq}`);
         const start = Math.floor(Date.now() / 1000);
         const g = Prime.decompose(pq);
         const [p, q] = [BigInt(g), BigInt(pq / g)].sort((a: bigint, b: bigint) => {
@@ -101,20 +97,20 @@ export class Auth {
           return 0;
         });
         Logger.debug(
-          `[18] Done PQ factorization (${Math.round(
+          `[8.session.Auth] Done PQ factorization (${Math.round(
             Math.floor(Date.now() / 1000) - start,
           )}s): ${p} ${q}`,
         );
 
         // step 4
-        const newNonce = toBigint(
+        const newNonce = Skema.bufferToBigint(
           Buffer.from(crypto.randomBytes(32) as unknown as Uint8Array),
           true,
           true,
         );
-        const pBytes = toBuffer(BigInt(p), 4, false);
-        const qBytes = toBuffer(BigInt(q), 4, false);
-        let data = new Raw.PQInnerData({
+        const pBytes = Skema.bigintToBuffer(BigInt(p), 4, false);
+        const qBytes = Skema.bigintToBuffer(BigInt(q), 4, false);
+        let data = new Skema.Raw.PQInnerData({
           pq: resPq.pq,
           p: pBytes,
           q: qBytes,
@@ -125,7 +121,7 @@ export class Auth {
         let sha = crypto.createHash('sha1').update(data).digest();
         let padding = Buffer.from(
           crypto.randomBytes(
-            mod(-(Buffer.byteLength(data) + Buffer.byteLength(sha)), 255),
+            Skema.mod(-(Buffer.byteLength(data) + Buffer.byteLength(sha)), 255),
           ) as unknown as Uint8Array,
         );
         let hash = Buffer.concat([
@@ -134,13 +130,15 @@ export class Auth {
           padding as unknown as Uint8Array,
         ]);
         let encryptedData: Buffer = RSA.encrypt(hash, fingerprints as bigint);
-        Logger.debug(`[19] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`);
-        Logger.debug(`[20] Done encrypt data with RSA`);
+        Logger.debug(
+          `[9.session.Auth] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`,
+        );
+        Logger.debug(`[10.session.Auth] Done encrypt data with RSA`);
 
         // Step 5. TODO: Handle "ServerDhParamsFail". Code assumes response is ok
-        Logger.debug(`[21] Send ReqDhParams`);
-        const serverDh = await this.invoke(
-          new Raw.ReqDhParams({
+        Logger.debug(`[11.session.Auth] Send ReqDhParams`);
+        const serverDh: Skema.Raw.ServerDhParamsOk = (await this.invoke(
+          new Skema.Raw.ReqDhParams({
             nonce: nonce,
             serverNonce: resPq.serverNonce,
             encryptedData: encryptedData,
@@ -148,14 +146,14 @@ export class Auth {
             q: qBytes,
             publicKeyFingerprint: fingerprints!,
           }),
-        );
+        )) as Skema.Raw.ServerDhParamsOk;
         const tempAesKey = Buffer.concat([
           crypto
             .createHash('sha1')
             .update(
               Buffer.concat([
-                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
-                Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
               ]),
             )
             .digest() as unknown as Uint8Array,
@@ -163,8 +161,8 @@ export class Auth {
             .createHash('sha1')
             .update(
               Buffer.concat([
-                Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
-                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int256.write(newNonce) as unknown as Uint8Array,
               ]),
             )
             .digest()
@@ -175,8 +173,8 @@ export class Auth {
             .createHash('sha1')
             .update(
               Buffer.concat([
-                Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
-                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int128.write(resPq.serverNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int256.write(newNonce) as unknown as Uint8Array,
               ]),
             )
             .digest()
@@ -185,36 +183,39 @@ export class Auth {
             .createHash('sha1')
             .update(
               Buffer.concat([
-                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
-                Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int256.write(newNonce) as unknown as Uint8Array,
+                Skema.Primitive.Int256.write(newNonce) as unknown as Uint8Array,
               ]),
             )
             .digest() as unknown as Uint8Array,
-          Primitive.Int256.write(newNonce).subarray(0, 4) as unknown as Uint8Array,
+          Skema.Primitive.Int256.write(newNonce).subarray(0, 4) as unknown as Uint8Array,
         ]);
         const answerWithHash = AES.ige256Decrypt(serverDh.encryptedAnswer, tempAesKey, tempAesIv);
         const answer = new BytesIO(answerWithHash);
         answer.seek(20, 1); // skip hash
-        const serverDhInnerData = await TLObject.read(answer);
-        Logger.debug('[22] Done decrypting answer');
+        const serverDhInnerData: Skema.Raw.ServerDhInnerData = await Skema.TLObject.read(answer);
+        Logger.debug('[12.session.Auth] Done decrypting answer');
 
-        const dhPrime = toBigint(serverDhInnerData.dhPrime, false);
+        const dhPrime = Skema.bufferToBigint(serverDhInnerData.dhPrime, false);
         const deltaTime = serverDhInnerData.serverTime - Math.floor(Date.now() / 1000);
-        Logger.debug(`[23] Delta time: ${deltaTime}`);
+        Logger.debug(`[13.session.Auth] Delta time: ${deltaTime}`);
 
         // step 6
-        const b = toBigint(Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array), false);
-        const gB = bigIntPow(BigInt(serverDhInnerData.g), b, dhPrime);
-        data = new Raw.ClientDhInnerData({
+        const b = Skema.bufferToBigint(
+          Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array),
+          false,
+        );
+        const gB = Skema.bigIntPow(BigInt(serverDhInnerData.g), b, dhPrime);
+        data = new Skema.Raw.ClientDhInnerData({
           nonce: resPq.nonce,
           serverNonce: resPq.serverNonce,
           retryId: BigInt(0),
-          gB: toBuffer(gB, 256, false),
+          gB: Skema.bigintToBuffer(gB, 256, false),
         }).write();
         sha = crypto.createHash('sha1').update(data).digest();
         padding = Buffer.from(
           crypto.randomBytes(
-            mod(-(Buffer.byteLength(data) + Buffer.byteLength(sha)), 16),
+            Skema.mod(-(Buffer.byteLength(data) + Buffer.byteLength(sha)), 16),
           ) as unknown as Uint8Array,
         );
         hash = Buffer.concat([
@@ -223,40 +224,42 @@ export class Auth {
           padding as unknown as Uint8Array,
         ]);
         encryptedData = AES.ige256Encrypt(hash, tempAesKey, tempAesIv);
-        Logger.debug(`[24] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`);
-        Logger.debug(`[25] Send SetClientDhParams`);
+        Logger.debug(
+          `[14.session.Auth] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`,
+        );
+        Logger.debug(`[15.session.Auth] Send SetClientDhParams`);
 
-        const setClientDhParamsAnswer = await this.invoke(
-          new Raw.SetClientDhParams({
+        const setClientDhParamsAnswer: Skema.Raw.TypeSetClientDhParamsAnswer = (await this.invoke(
+          new Skema.Raw.SetClientDhParams({
             nonce: resPq.nonce,
             serverNonce: resPq.serverNonce,
             encryptedData: encryptedData,
           }),
-        );
+        )) as Skema.Raw.TypeSetClientDhParamsAnswer;
         // TODO: Handle "authKeyAuHash" if the previous step fails
 
         // Step 7; Step 8
-        const gA = toBigint(serverDhInnerData.gA, false);
-        const authKey: Buffer = toBuffer(bigIntPow(gA, b, dhPrime), 256, false);
+        const gA = Skema.bufferToBigint(serverDhInnerData.gA, false);
+        const authKey: Buffer = Skema.bigintToBuffer(Skema.bigIntPow(gA, b, dhPrime), 256, false);
         // Security Check
-        SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
-        Logger.debug('[26] DH parameters check: OK');
+        Skema.SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
+        Logger.debug('[16.session.Auth] DH parameters check: OK');
 
         // https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
         // TSError : Operator '<' cannot be applied to types 'boolean' and 'bigint'.
-        SecurityCheckMismatch.check(BigInt(1) < g && g < dhPrime - BigInt(1));
-        SecurityCheckMismatch.check(BigInt(1) < gA && gA < dhPrime - BigInt(1));
-        SecurityCheckMismatch.check(BigInt(1) < gB && gB < dhPrime - BigInt(1));
-        SecurityCheckMismatch.check(
+        Skema.SecurityCheckMismatch.check(BigInt(1) < g && g < dhPrime - BigInt(1));
+        Skema.SecurityCheckMismatch.check(BigInt(1) < gA && gA < dhPrime - BigInt(1));
+        Skema.SecurityCheckMismatch.check(BigInt(1) < gB && gB < dhPrime - BigInt(1));
+        Skema.SecurityCheckMismatch.check(
           BigInt(2) ** BigInt(2048 - 64) < gA && gA < dhPrime - BigInt(2) ** BigInt(2048 - 64),
         );
-        SecurityCheckMismatch.check(
+        Skema.SecurityCheckMismatch.check(
           BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64),
         );
-        Logger.debug('[27] gA and gB validation: OK');
+        Logger.debug('[17.session.Auth] gA and gB validation: OK');
 
         // https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
-        SecurityCheckMismatch.check(
+        Skema.SecurityCheckMismatch.check(
           answerWithHash
             .subarray(0, 20)
             .equals(
@@ -266,26 +269,30 @@ export class Auth {
                 .digest() as unknown as Uint8Array,
             ),
         );
-        Logger.debug('[28] SHA1 hash values check: OK');
+        Logger.debug('[18.session.Auth] SHA1 hash values check: OK');
 
         //https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
-        SecurityCheckMismatch.check(nonce === resPq.nonce);
-        SecurityCheckMismatch.check(resPq.nonce === serverDh.nonce);
-        SecurityCheckMismatch.check(resPq.serverNonce === serverDh.serverNonce);
-        SecurityCheckMismatch.check(resPq.nonce === setClientDhParamsAnswer.nonce);
-        SecurityCheckMismatch.check(resPq.serverNonce === setClientDhParamsAnswer.serverNonce);
-        Logger.debug('[29] Nonce fields check: OK');
+        Skema.SecurityCheckMismatch.check(nonce === resPq.nonce);
+        Skema.SecurityCheckMismatch.check(resPq.nonce === serverDh.nonce);
+        Skema.SecurityCheckMismatch.check(resPq.serverNonce === serverDh.serverNonce);
+        Skema.SecurityCheckMismatch.check(resPq.nonce === setClientDhParamsAnswer.nonce);
+        Skema.SecurityCheckMismatch.check(
+          resPq.serverNonce === setClientDhParamsAnswer.serverNonce,
+        );
+        Logger.debug('[19.session.Auth] Nonce fields check: OK');
 
         // Step 9
         const serverSalt = AES.xor(
-          toBuffer(newNonce, 32, true, true).subarray(0, 8),
-          toBuffer(resPq.serverNonce, 16, true, true).subarray(0, 8),
+          Skema.bigintToBuffer(newNonce, 32, true, true).subarray(0, 8),
+          Skema.bigintToBuffer(resPq.serverNonce, 16, true, true).subarray(0, 8),
         );
-        Logger.debug(`[30] Server salt: ${toBigint(serverSalt, true)}`);
-        Logger.debug(`[31] Done auth key exchange: ${setClientDhParamsAnswer.className}`);
+        Logger.debug(`[20.session.Auth] Server salt: ${Skema.bufferToBigint(serverSalt, true)}`);
+        Logger.debug(
+          `[21.session.Auth] Done auth key exchange: ${setClientDhParamsAnswer.className}`,
+        );
         return authKey;
       } catch (error: unknown) {
-        Logger.error('[32] Error when trying to make auth key: ', error);
+        Logger.error('[22.session.Auth] Error when trying to make auth key: ', error);
         if (retries > 0) {
           retries--;
         } else {

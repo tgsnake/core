@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,56 +8,9 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigInt, Buffer } from './platform.deno.ts';
-// https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
-export function bigintToBuffer(
-  int: bigint,
-  padding: number,
-  litte: boolean = true,
-  signed: boolean = false,
-) {
-  const bigintLength = int.toString(2).length;
-  const bytes = Math.ceil(bigintLength / 8);
-  if (padding < bytes) {
-    throw new Error("Too big, Can't convert it to buffer with that padding.");
-  }
-  if (!signed && int < BigInt(0)) {
-    throw new Error('Too small, can convert it when unsigned.');
-  }
-  let isBellow = false;
-  if (int < BigInt(0)) {
-    isBellow = true;
-    int = int * BigInt(-1);
-  }
-  const hex = int.toString(16).padStart(padding * 2, '0');
-  let buffer = Buffer.from(hex, 'hex');
-  if (litte) buffer = buffer.reverse();
-  if (isBellow && signed) {
-    if (litte) {
-      let isReminder = false;
-      if ((buffer as unknown as Uint8Array)[0]) (buffer as unknown as Uint8Array)[0] -= 1;
-      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
-        if (!(buffer as unknown as Uint8Array)[b]) {
-          isReminder = true;
-          continue;
-        }
-        if (isReminder) {
-          (buffer as unknown as Uint8Array)[b] -= 1;
-          isReminder = false;
-        }
-        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
-      }
-    } else {
-      (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1] =
-        256 - (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1];
-      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
-        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
-      }
-    }
-  }
-  return buffer;
-}
-export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
+import { bigInt, Buffer, Skema } from './deps.js';
+
+export function includesBuffer(array: Array<Buffer>, buffer: Buffer): boolean {
   for (const buff of array) {
     if (buff.equals(buffer as unknown as Uint8Array)) {
       return true;
@@ -66,7 +19,7 @@ export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
   return false;
 }
 // https://t.me/butthxforward/85
-export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1) {
+export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1): Buffer {
   let slc = buffer.subarray(start, stop);
   let res = slc;
   if (step === 0) {
@@ -98,7 +51,7 @@ export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: n
   return res;
 }
 // https://stackoverflow.com/questions/18638900/javascript-crc32/18639999#18639999
-export function makeCRCTable() {
+export function makeCRCTable(): Array<number> {
   let c;
   const crcTable: Array<any> = [];
   for (let n = 0; n < 256; n++) {
@@ -110,7 +63,7 @@ export function makeCRCTable() {
   }
   return crcTable;
 }
-export function crc32(str: Buffer | string) {
+export function crc32(str: Buffer | string): number {
   str = Buffer.isBuffer(str) ? Buffer.from(str as unknown as Uint8Array) : str;
   const crcTable = makeCRCTable();
   const length = Buffer.isBuffer(str) ? Buffer.byteLength(str) : str.length;
@@ -121,27 +74,10 @@ export function crc32(str: Buffer | string) {
   }
   return (crc ^ -1) >>> 0;
 }
-export function sleep(ms: number) {
+export function sleep(ms: number): Promise<unknown> {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-}
-export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: boolean = false) {
-  const length = Buffer.byteLength(buffer);
-  const value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
-  const _bigint = bigInt(value, 16);
-  let bigint = BigInt(String(_bigint));
-  if (signed && Math.floor(bigint.toString(2).length / 8) >= length) {
-    bigint = bigint - bigIntPow(BigInt(2), BigInt(length * 8));
-  }
-  return BigInt(bigint);
-}
-// https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
-export function mod(n: number, m: number): number {
-  return ((n % m) + m) % m;
-}
-export function bigIntMod(n: bigint, m: bigint): bigint {
-  return ((n % m) + m) % m;
 }
 export function range(start: number, stop: number, step: number = 1): Array<number> {
   const temp: Array<number> = [];
@@ -239,73 +175,61 @@ export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Arra
   }
   return temp;
 }
-export function randint(min: number, max: number) {
+export function randint(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
-export function randBigint(min: bigint, max: bigint) {
+export function randBigint(min: bigint, max: bigint): bigint {
   //@ts-ignore
   return bigInt.randBetween(min, max).value;
 }
-export function pow(x: number, y: number, z?: number) {
+export function pow(x: number, y: number, z?: number): number {
   let result = Math.pow(x, y);
   if (z !== undefined) {
-    return mod(result, z);
+    return Skema.mod(result, z);
   }
   return result;
 }
-export function bigIntPow(x: bigint, y: bigint, z?: bigint) {
-  if (z === undefined) {
-    return x ** y;
-  } else {
-    let result = BigInt(1);
-    while (y > BigInt(0)) {
-      if (bigIntMod(y, BigInt(2)) === BigInt(1)) {
-        result = bigIntMod(result * x, z);
-      }
-      y = y >> BigInt(1);
-      x = bigIntMod(x * x, z);
-    }
-    return result;
-  }
-}
 // https://stackoverflow.com/a/64953280/16600138
-const bigMath = {
-  abs(x: bigint) {
+const bigMath: {
+  abs(x: bigint): bigint;
+  sign(x: bigint): bigint;
+  pow(base: bigint, exponent: bigint): bigint;
+  min(value: bigint, ...values: Array<bigint>): bigint;
+  max(value: bigint, ...values: Array<bigint>): bigint;
+} = {
+  abs(x: bigint): bigint {
     return x < BigInt(0) ? -x : x;
   },
-  sign(x: bigint) {
+  sign(x: bigint): bigint {
     if (x === BigInt(0)) return BigInt(0);
     return x < BigInt(0) ? -BigInt(1) : BigInt(1);
   },
-  pow(base: bigint, exponent: bigint) {
+  pow(base: bigint, exponent: bigint): bigint {
     return base ** exponent;
   },
-  min(value: bigint, ...values: Array<bigint>) {
+  min(value: bigint, ...values: Array<bigint>): bigint {
     for (const v of values) if (v < value) value = v;
     return value;
   },
-  max(value: bigint, ...values: Array<bigint>) {
+  max(value: bigint, ...values: Array<bigint>): bigint {
     for (const v of values) if (v > value) value = v;
     return value;
   },
 };
 export { bigMath };
-export const MIN_CHANNEL_ID = BigInt(-1002147483647);
-export const MAX_CHANNEL_ID = BigInt(-1000000000000);
-export const MIN_CHAT_ID = BigInt(-2147483647);
-export const MAX_USER_ID_OLD = BigInt(2147483647);
-export const MAX_USER_ID = BigInt(999999999999);
-export function getChannelId(id: bigint) {
+export const MIN_CHANNEL_ID: bigint = BigInt(-1002147483647);
+export const MAX_CHANNEL_ID: bigint = BigInt(-1000000000000);
+export const MIN_CHAT_ID: bigint = BigInt(-2147483647);
+export const MAX_USER_ID_OLD: bigint = BigInt(2147483647);
+export const MAX_USER_ID: bigint = BigInt(999999999999);
+export function getChannelId(id: bigint): bigint {
   return MAX_CHANNEL_ID - id;
 }
-export function getPeerType(id: bigint) {
+export function getPeerType(id: bigint): string | undefined {
   if (id < BigInt(0)) {
-    // @ts-ignore
     if (MIN_CHAT_ID <= id) return 'chat';
-    // @ts-ignore
-    if (MIN_CHANNEL_ID <= id < MAX_CHANNEL_ID) return 'channel';
-    // @ts-ignore
-  } else if (BigInt(0) < id <= MAX_USER_ID) {
+    if (MIN_CHANNEL_ID <= id && id < MAX_CHANNEL_ID) return 'channel';
+  } else if (BigInt(0) < id && id <= MAX_USER_ID) {
     return 'user';
   } else {
     throw new Error(`PeerId Invalid: ${id}`);
@@ -322,7 +246,7 @@ export function base64urlTobase64(text: string): string {
 }
 
 // https://devimalplanet.com/how-to-generate-random-number-in-range-javascript#generate-random-bigint-between-low-and-high
-export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint) {
+export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint): bigint {
   if (lowBigInt >= highBigInt) {
     throw new Error('lowBigInt must be smaller than highBigInt');
   }
@@ -339,7 +263,7 @@ export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint) {
 
   return lowBigInt + randomDifference;
 }
-export function normalizeSecretString(secret: string) {
+export function normalizeSecretString(secret: string): Buffer {
   // https://github.com/LonamiWebs/Telethon/blob/494b20db2dc9f1a0d88f9ac0e84717789416cc20/telethon/network/connection/tcpmtproxy.py#L136
   if (secret.slice(0, 2) === 'dd' || secret.slice(0, 2) === 'ee') {
     secret = secret.slice(2);
@@ -348,5 +272,5 @@ export function normalizeSecretString(secret: string) {
   if (/^[0-9a-fA-F]+$/.test(secret)) {
     return Buffer.from(secret, 'hex');
   }
-  return Buffer.from(secret, 'base64').subarray(0, 16);
+  return Buffer.from(secret, 'base64').subarray(0, 16) as Buffer;
 }

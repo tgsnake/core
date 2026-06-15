@@ -1,16 +1,16 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { Buffer } from '../../platform.deno.ts';
-import { TCP } from './tcp.ts';
-import { crc32 } from '../../helpers.ts';
-import type { ProxyInterface } from '../connection.ts';
+import { Buffer } from '../../deps.js';
+import { TCP } from './tcp.js';
+import { crc32 } from '../../helpers.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCPFull
@@ -27,7 +27,7 @@ export class TCPFull extends TCP {
     await super.connect(ip, port, proxy, dcId);
     this._seq = 0;
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const allocSum = Buffer.alloc(8);
     allocSum.writeInt32LE(Buffer.byteLength(data) + 12, 0);
     allocSum.writeInt32LE(this._seq, 4);
@@ -39,7 +39,7 @@ export class TCPFull extends TCP {
     this._seq += 1;
     await super.send(data);
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);
     if (!length) return;
     let packet = await super.recv(length.readInt32LE(0) - 4);

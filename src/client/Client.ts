@@ -1,30 +1,23 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { os, inspect, Semaphore, isBrowser, Buffer } from '../platform.deno.ts';
-import * as Errors from '../errors/index.ts';
-import {
-  Raw,
-  UpdateSecretChatMessage,
-  SecretChatMessageService,
-  SecretChatMessage,
-} from '../raw/index.ts';
-import { AbstractSession } from '../storage/index.ts';
-import { SecretChat } from '../session/secretChats/index.ts';
-import { TCP } from '../connection/connection.ts';
-import * as _Session from './Session.ts';
-import * as _Auth from './Auth.ts';
-import * as Version from '../Version.deno.ts';
-import * as helpers from '../helpers.ts';
-import * as Files from '../file/index.ts';
-import type { ProxyInterface } from '../connection/connection.ts';
-import type { Session } from '../session/index.ts';
+import { os, inspect, Semaphore, platform, Buffer, Skema } from '../deps.js';
+import { AbstractSession } from '../storage/index.js';
+import { SecretChat } from '../session/secretChats/index.js';
+import { TCP } from '../connection/connection.js';
+import * as _Session from './Session.js';
+import * as _Auth from './Auth.js';
+import * as Version from '../Version.js';
+import * as helpers from '../helpers.js';
+import * as Files from '../file/index.js';
+import type { ProxyInterface } from '../connection/connection.js';
+import type { Session } from '../session/index.js';
 
 export interface ClientOptions {
   /**
@@ -246,8 +239,8 @@ export class Client {
   _getFileSemaphore!: Semaphore;
   _saveFileSemaphore!: Semaphore;
   _maxReconnectRetries!: number;
-  _me?: Raw.users.UserFull;
-  private _handler: Array<{ (update: Raw.TypeUpdates): void }> = [];
+  _me?: Skema.Raw.users.UserFull;
+  private _handler: Array<{ (update: Skema.Raw.TypeUpdates): void }> = [];
   /**
    * Client Constructor.
    * @param {AbstractSession} session - What the session will be used for login to telegram.
@@ -278,7 +271,7 @@ export class Client {
           : `Deno unknown`
         : os.release().toString());
     this._appVersion = clientOptions?.appVersion ?? Version.version;
-    this._systemLangCode = clientOptions?.systemLangCode ?? 'en';
+    this._systemLangCode = clientOptions?.systemLangCode ?? 'en-US';
     this._langCode = clientOptions?.langCode ?? this._systemLangCode;
     this._sleepTreshold = clientOptions?.sleepTreshold ?? 10000;
     this._maxRetries = clientOptions?.maxRetries ?? 5;
@@ -288,7 +281,7 @@ export class Client {
     this._connectionMode = clientOptions?.tcp ?? TCP.TCPFull;
     this._local =
       clientOptions?.local ??
-      ((isBrowser && globalThis && globalThis.location.protocol !== 'https:') || true);
+      ((platform === 'Browser' && globalThis && globalThis.location.protocol !== 'https:') || true);
     this._secretChat = new SecretChat(session, this);
     this._getFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
     this._saveFileSemaphore = new Semaphore(clientOptions?.maxConcurrentTransmissions || 1);
@@ -309,7 +302,7 @@ export class Client {
    * @param {Number} timeout - How long to wait for the function to finish. default is 15s.
    * @param {Number} sleepTreshold - Sleep treshold when you got flood wait. default is clientOptions.sleepTreshold or 10s.
    */
-  invoke<T extends Raw.TypesTLRequest>(
+  invoke<T extends Skema.Raw.TypesTLRequest>(
     query: T,
     retries: number = this._maxRetries,
     timeout: number = 15000,
@@ -326,42 +319,48 @@ export class Client {
   /**
    * Starting telegram client.
    */
-  start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Raw.users.UserFull> {
+  start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Skema.Raw.users.UserFull> {
     return _Session.start.call(this, auth);
   }
   /**
    * Connecting to telegram server without login request.
    */
-  connect() {
+  connect(): Promise<void> {
     return _Session.connect.call(this);
   }
   /**
    * Handling new updates from telegram.
    */
-  async handleUpdate(update: Raw.TypeUpdates): Promise<Raw.TypeUpdates> {
+  async handleUpdate(update: Skema.Raw.TypeUpdates): Promise<Skema.Raw.TypeUpdates> {
     if (!this._noUpdates) {
       await this.fetchPeers('users' in update ? update.users : []);
       await this.fetchPeers('chats' in update ? update.chats : []);
-      if (update instanceof Raw.Updates) {
-        const parsed: Array<Raw.TypeUpdate> = [];
+      if (update instanceof Skema.Raw.Updates) {
+        const parsed: Array<Skema.Raw.TypeUpdate> = [];
         for (const up of update.updates) {
-          if (up instanceof Raw.UpdateEncryption) {
-            if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChat) {
-              await this._secretChat.finish((up as Raw.UpdateEncryption).chat as Raw.EncryptedChat);
+          if (up instanceof Skema.Raw.UpdateEncryption) {
+            if ((up as Skema.Raw.UpdateEncryption).chat instanceof Skema.Raw.EncryptedChat) {
+              await this._secretChat.finish(
+                (up as Skema.Raw.UpdateEncryption).chat as Skema.Raw.EncryptedChat,
+              );
             }
-            if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatDiscarded) {
+            if (
+              (up as Skema.Raw.UpdateEncryption).chat instanceof Skema.Raw.EncryptedChatDiscarded
+            ) {
               await this._storage.removeSecretChatById(
-                ((up as Raw.UpdateEncryption).chat as Raw.EncryptedChatDiscarded).id,
+                ((up as Skema.Raw.UpdateEncryption).chat as Skema.Raw.EncryptedChatDiscarded).id,
               );
             }
-            if ((up as Raw.UpdateEncryption).chat instanceof Raw.EncryptedChatRequested) {
+            if (
+              (up as Skema.Raw.UpdateEncryption).chat instanceof Skema.Raw.EncryptedChatRequested
+            ) {
               await this._secretChat.accept(
-                (up as Raw.UpdateEncryption).chat as Raw.EncryptedChatRequested,
+                (up as Skema.Raw.UpdateEncryption).chat as Skema.Raw.EncryptedChatRequested,
               );
             }
-          } else if (up instanceof Raw.UpdateNewEncryptedMessage) {
+          } else if (up instanceof Skema.Raw.UpdateNewEncryptedMessage) {
             const modUpdate = await this._handleSecretChatUpdate(
-              up as Raw.UpdateNewEncryptedMessage,
+              up as Skema.Raw.UpdateNewEncryptedMessage,
             );
             if (modUpdate) {
               parsed.push(modUpdate);
@@ -378,46 +377,46 @@ export class Client {
     }
     return update;
   }
-  private async _handleSecretChatUpdate(update: Raw.UpdateNewEncryptedMessage) {
-    const modUpdate = await UpdateSecretChatMessage.generate(update, this._secretChat);
-    if (modUpdate.message instanceof SecretChatMessageService) {
-      const msg = (modUpdate.message as SecretChatMessageService).message;
+  private async _handleSecretChatUpdate(update: Skema.Raw.UpdateNewEncryptedMessage) {
+    const modUpdate = await Skema.UpdateSecretChatMessage.generate(update, this._secretChat);
+    if (modUpdate.message instanceof Skema.SecretChatMessageService) {
+      const msg = (modUpdate.message as Skema.SecretChatMessageService).message;
       if (msg && 'action' in msg) {
         const action = msg.action;
-        if (action instanceof Raw.DecryptedMessageActionRequestKey20) {
+        if (action instanceof Skema.Raw.DecryptedMessageActionRequestKey20) {
           await this._secretChat.acceptRekeying(
             modUpdate.message.chatId,
-            action as Raw.DecryptedMessageActionRequestKey20,
+            action as Skema.Raw.DecryptedMessageActionRequestKey20,
           );
           return false;
         }
-        if (action instanceof Raw.DecryptedMessageActionAcceptKey20) {
+        if (action instanceof Skema.Raw.DecryptedMessageActionAcceptKey20) {
           await this._secretChat.commitRekeying(
             modUpdate.message.chatId,
-            action as Raw.DecryptedMessageActionAcceptKey20,
+            action as Skema.Raw.DecryptedMessageActionAcceptKey20,
           );
           return false;
         }
-        if (action instanceof Raw.DecryptedMessageActionCommitKey20) {
+        if (action instanceof Skema.Raw.DecryptedMessageActionCommitKey20) {
           await this._secretChat.finalRekeying(
             modUpdate.message.chatId,
-            action as Raw.DecryptedMessageActionCommitKey20,
+            action as Skema.Raw.DecryptedMessageActionCommitKey20,
           );
           return false;
         }
-        if (action instanceof Raw.DecryptedMessageActionNoop20) {
+        if (action instanceof Skema.Raw.DecryptedMessageActionNoop20) {
           return false;
         }
-        if (action instanceof Raw.DecryptedMessageActionNotifyLayer17) {
+        if (action instanceof Skema.Raw.DecryptedMessageActionNotifyLayer17) {
           const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
           if (peer) {
-            peer.layer = (action as Raw.DecryptedMessageActionNotifyLayer17).layer;
-            if ((action as Raw.DecryptedMessageActionNotifyLayer17).layer < 73) {
+            peer.layer = (action as Skema.Raw.DecryptedMessageActionNotifyLayer17).layer;
+            if ((action as Skema.Raw.DecryptedMessageActionNotifyLayer17).layer < 73) {
               peer.mtproto = 1;
             }
             await peer.update(this._storage);
             if (
-              (action as Raw.DecryptedMessageActionNotifyLayer17).layer >= 17 &&
+              (action as Skema.Raw.DecryptedMessageActionNotifyLayer17).layer >= 17 &&
               Date.now() / 1000 - peer.created > 15
             ) {
               await this._secretChat.notifyLayer(modUpdate.message.chatId);
@@ -425,28 +424,28 @@ export class Client {
           }
           return false;
         }
-        if (action instanceof Raw.DecryptedMessageActionSetMessageTTL8) {
+        if (action instanceof Skema.Raw.DecryptedMessageActionSetMessageTTL8) {
           const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
           if (peer) {
-            peer.ttl = (action as Raw.DecryptedMessageActionSetMessageTTL8).ttlSeconds;
+            peer.ttl = (action as Skema.Raw.DecryptedMessageActionSetMessageTTL8).ttlSeconds;
             await peer.update(this._storage);
           }
           return false;
         }
       }
     }
-    if (modUpdate.message instanceof SecretChatMessage) {
-      const msg = (modUpdate.message as SecretChatMessage).message;
-      if (msg instanceof Raw.DecryptedMessageLayer17) {
+    if (modUpdate.message instanceof Skema.SecretChatMessage) {
+      const msg = (modUpdate.message as Skema.SecretChatMessage).message;
+      if (msg instanceof Skema.Raw.DecryptedMessageLayer17) {
         const peer = await this._storage.getSecretChatById(modUpdate.message.chatId);
         if (peer) {
           peer.inSeqNo += 1;
-          if ((msg as Raw.DecryptedMessageLayer17).layer >= 17) {
-            peer.layer = (msg as Raw.DecryptedMessageLayer17).layer;
+          if ((msg as Skema.Raw.DecryptedMessageLayer17).layer >= 17) {
+            peer.layer = (msg as Skema.Raw.DecryptedMessageLayer17).layer;
           }
           await peer.update(this._storage);
           if (
-            (msg as Raw.DecryptedMessageLayer17).layer >= 17 &&
+            (msg as Skema.Raw.DecryptedMessageLayer17).layer >= 17 &&
             Date.now() / 1000 - peer.created > 15
           ) {
             await this._secretChat.notifyLayer(modUpdate.message.chatId);
@@ -459,14 +458,14 @@ export class Client {
   /**
    * Add handler when update coming.
    */
-  addHandler(callback: { (update: Raw.TypeUpdates): void }): undefined {
+  addHandler(callback: { (update: Skema.Raw.TypeUpdates): void }): undefined {
     this._handler.push(callback);
   }
   /**
    * Fetch the peer into session.
    * @param {Array} peers - Peers will be fetched.
    */
-  async fetchPeers(peers: Array<Raw.TypeUser | Raw.TypeChat>): Promise<boolean> {
+  async fetchPeers(peers: Array<Skema.Raw.TypeUser | Skema.Raw.TypeChat>): Promise<boolean> {
     let isMin = false;
     const parsedPeers: Array<
       [id: bigint, accessHash: bigint, type: string, username?: Array<string>, phoneNumber?: string]
@@ -477,8 +476,8 @@ export class Client {
         isMin = true;
         continue;
       }
-      if (peer instanceof Raw.User) {
-        peer as Raw.User;
+      if (peer instanceof Skema.Raw.User) {
+        peer as Skema.Raw.User;
         parsedPeers.push([
           peer.id,
           peer.accessHash ?? BigInt(0),
@@ -490,9 +489,9 @@ export class Client {
               : undefined,
           peer.phone ? peer.phone : undefined,
         ]);
-      } else if (peer instanceof Raw.Chat || peer instanceof Raw.ChatForbidden) {
+      } else if (peer instanceof Skema.Raw.Chat || peer instanceof Skema.Raw.ChatForbidden) {
         parsedPeers.push([BigInt(-peer.id), BigInt(0), 'group', undefined, undefined]);
-      } else if (peer instanceof Raw.Channel || peer instanceof Raw.ChannelForbidden) {
+      } else if (peer instanceof Skema.Raw.Channel || peer instanceof Skema.Raw.ChannelForbidden) {
         parsedPeers.push([
           helpers.getChannelId(peer.id),
           peer.accessHash ?? BigInt(0),
@@ -514,9 +513,14 @@ export class Client {
    */
   async resolvePeer(
     peerId: bigint | string,
-  ): Promise<Raw.InputPeerUser | Raw.InputPeerChat | Raw.InputPeerChannel | Raw.InputUserSelf> {
+  ): Promise<
+    | Skema.Raw.InputPeerUser
+    | Skema.Raw.InputPeerChat
+    | Skema.Raw.InputPeerChannel
+    | Skema.Raw.InputUserSelf
+  > {
     if (!this._isConnected) {
-      throw new Errors.ClientError.ClientDisconnected();
+      throw new Skema.ClientError.ClientDisconnected();
     }
     if (typeof peerId === 'bigint') {
       peerId as bigint;
@@ -528,9 +532,9 @@ export class Client {
         if (type === 'user') {
           await this.fetchPeers(
             await this.invoke(
-              new Raw.users.GetUsers({
+              new Skema.Raw.users.GetUsers({
                 id: [
-                  new Raw.InputUser({
+                  new Skema.Raw.InputUser({
                     userId: peerId,
                     accessHash: BigInt(0),
                   }),
@@ -540,15 +544,15 @@ export class Client {
           );
         } else if (type === 'chat') {
           await this.invoke(
-            new Raw.messages.GetChats({
+            new Skema.Raw.messages.GetChats({
               id: [-peerId],
             }),
           );
         } else {
           await this.invoke(
-            new Raw.channels.GetChannels({
+            new Skema.Raw.channels.GetChannels({
               id: [
-                new Raw.InputChannel({
+                new Skema.Raw.InputChannel({
                   channelId: helpers.getChannelId(peerId),
                   accessHash: BigInt(0),
                 }),
@@ -558,14 +562,14 @@ export class Client {
         }
         peer = await this._storage.getPeerById(peerId);
         if (!peer) {
-          throw new Errors.Exceptions.BadRequest.PeerIdInvalid();
+          throw new Skema.Exceptions.BadRequest.PeerIdInvalid();
         }
         return peer;
       }
     } else if (typeof peerId === 'string') {
       peerId as string;
       if (peerId === 'self' || peerId === 'me') {
-        return new Raw.InputUserSelf();
+        return new Skema.Raw.InputUserSelf();
       }
       let peer;
       if (peerId.includes('@')) {
@@ -574,7 +578,7 @@ export class Client {
           return peer;
         } else {
           await this.invoke(
-            new Raw.contacts.ResolveUsername({
+            new Skema.Raw.contacts.ResolveUsername({
               username: peerId.replace('@', '').trim(),
             }),
           );
@@ -582,7 +586,7 @@ export class Client {
           if (peer) {
             return peer;
           } else {
-            throw new Errors.Exceptions.BadRequest.PeerIdInvalid();
+            throw new Skema.Exceptions.BadRequest.PeerIdInvalid();
           }
         }
       } else if (!Number.isNaN(peerId)) {
@@ -594,9 +598,9 @@ export class Client {
           if (type === 'user') {
             await this.fetchPeers(
               await this.invoke(
-                new Raw.users.GetUsers({
+                new Skema.Raw.users.GetUsers({
                   id: [
-                    new Raw.InputUser({
+                    new Skema.Raw.InputUser({
                       userId: BigInt(peerId),
                       accessHash: BigInt(0),
                     }),
@@ -606,15 +610,15 @@ export class Client {
             );
           } else if (type === 'chat') {
             await this.invoke(
-              new Raw.messages.GetChats({
+              new Skema.Raw.messages.GetChats({
                 id: [-BigInt(peerId)],
               }),
             );
           } else {
             await this.invoke(
-              new Raw.channels.GetChannels({
+              new Skema.Raw.channels.GetChannels({
                 id: [
-                  new Raw.InputChannel({
+                  new Skema.Raw.InputChannel({
                     channelId: helpers.getChannelId(BigInt(peerId)),
                     accessHash: BigInt(0),
                   }),
@@ -624,7 +628,7 @@ export class Client {
           }
           peer = await this._storage.getPeerById(BigInt(peerId));
           if (!peer) {
-            throw new Errors.Exceptions.BadRequest.PeerIdInvalid();
+            throw new Skema.Exceptions.BadRequest.PeerIdInvalid();
           }
           return peer;
         }
@@ -633,18 +637,18 @@ export class Client {
         if (peer) {
           return peer;
         } else {
-          throw new Errors.Exceptions.BadRequest.PeerIdInvalid();
+          throw new Skema.Exceptions.BadRequest.PeerIdInvalid();
         }
       }
     } else {
-      throw new Errors.Exceptions.BadRequest.PeerIdInvalid();
+      throw new Skema.Exceptions.BadRequest.PeerIdInvalid();
     }
   }
   /**
    * Start a secret chat.
    * @param { BigInt | String } chatId - Participant id or interlocutor id that you want to transfer to the secret chat.
    */
-  startSecretChat(chatId: bigint | string) {
+  startSecretChat(chatId: bigint | string): Promise<Skema.TLObject> {
     return this._secretChat.start(chatId);
   }
   /**
@@ -652,7 +656,7 @@ export class Client {
    * Secret chats that have been created will be destroyed and closed, so they can no longer be used to send secret messages.
    * @param {Number} chatId - The id of the secret chat that you want to close.
    */
-  destroySecretChat(chatId: number) {
+  destroySecretChat(chatId: number): Promise<boolean> {
     return this._secretChat.destroy(chatId);
   }
   /**
@@ -665,7 +669,7 @@ export class Client {
     fileId,
     filePart,
     progress,
-  }: Files.SaveFileParams): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
+  }: Files.SaveFileParams): Promise<Skema.Raw.InputFile | Skema.Raw.InputFileBig | undefined> {
     return Files.upload(this, source, fileName, fileId, filePart, progress);
   }
   /**
@@ -678,7 +682,9 @@ export class Client {
     source,
     fileName,
     progress,
-  }: Files.SaveFileStreamParams): Promise<Raw.InputFile | Raw.InputFileBig | undefined> {
+  }: Files.SaveFileStreamParams): Promise<
+    Skema.Raw.InputFile | Skema.Raw.InputFileBig | undefined
+  > {
     return Files.uploadStream(this, source, fileName, progress);
   }
   /**

@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,18 +8,16 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { crypto, Mutex, inspect, Buffer } from '../platform.deno.ts';
-import { Logger } from '../Logger.ts';
-import { Connection, ProxyInterface } from '../connection/connection.ts';
-import { Raw, BytesIO, TLObject, MsgContainer, Message } from '../raw/index.ts';
-import * as Mtproto from '../crypto/Mtproto.ts';
-import * as Errors from '../errors/index.ts';
-import { MsgId } from './internals/MsgId.ts';
-import { MsgFactory } from './internals/MsgFactory.ts';
-import { sleep } from '../helpers.ts';
-import { Timeout } from '../Timeout.ts';
-import type { Client } from '../client/Client.ts';
-import { Auth } from './Auth.ts';
+import { crypto, Mutex, inspect, Buffer, Skema, BytesIO } from '../deps.js';
+import { Logger } from '../Logger.js';
+import { Connection, ProxyInterface } from '../connection/connection.js';
+import * as Mtproto from '../crypto/Mtproto.js';
+import { MsgId } from './internals/MsgId.js';
+import { MsgFactory } from './internals/MsgFactory.js';
+import { sleep } from '../helpers.js';
+import { Timeout } from '../Timeout.js';
+import type { Client } from '../client/Client.js';
+import { Auth } from './Auth.js';
 
 export class Results {
   value!: Promise<unknown>;
@@ -53,7 +51,7 @@ export class Session {
   private _client!: Client;
 
   private _sessionId: Buffer = Buffer.from(crypto.randomBytes(8) as unknown as Uint8Array);
-  private _msgFactory: { (body: TLObject, msgId: MsgId): Message } = MsgFactory();
+  private _msgFactory: { (body: Skema.TLObject, msgId: MsgId): Skema.Message } = MsgFactory();
   private _msgId: MsgId = new MsgId();
   private _salt: bigint = BigInt(0);
   private _storedMsgId: Array<bigint> = [];
@@ -85,7 +83,7 @@ export class Session {
   }
 
   private async _handlePacket(packet: Buffer) {
-    Logger.debug(`[33] Unpacking ${Buffer.byteLength(packet)} bytes packet.`);
+    Logger.debug(`[1.session.Session] Unpacking ${Buffer.byteLength(packet)} bytes packet.`);
     try {
       const data = await Mtproto.unpack(
         new BytesIO(packet),
@@ -94,56 +92,67 @@ export class Session {
         this._authKeyId,
         this._storedMsgId,
       );
-      const message = data.body instanceof MsgContainer ? data.body.messages : [data];
-      Logger.debug(`[34] Reveive ${message.length} data.`);
+      const message = data.body instanceof Skema.MsgContainer ? data.body.messages : [data];
+      Logger.debug(`[2.session.Session] Reveive ${message.length} data.`);
 
       for (const msg of message) {
         if (msg.seqNo % 2 === 0) {
-          Logger.debug(`[35] Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
+          Logger.debug(`[3.session.Session] Setting server time: ${msg.msgId / BigInt(2 ** 32)}.`);
           this._msgId.setServerTime(msg.msgId / BigInt(2 ** 32));
         } else {
           if (this._pendingAcks.has(msg.msgId)) {
-            Logger.debug(`[36] Skiping pending acks msg id: ${msg.msgId}.`);
+            Logger.debug(`[4.session.Session] Skiping pending acks msg id: ${msg.msgId}.`);
             continue;
           } else {
-            Logger.debug(`[37] Add msg id ${msg.msgId} to pending acks.`);
+            Logger.debug(`[5.session.Session] Add msg id ${msg.msgId} to pending acks.`);
             this._pendingAcks.add(msg.msgId);
           }
         }
-        if (msg.body instanceof Raw.MsgDetailedInfo || msg.body instanceof Raw.MsgNewDetailedInfo) {
+        if (
+          msg.body instanceof Skema.Raw.MsgDetailedInfo ||
+          msg.body instanceof Skema.Raw.MsgNewDetailedInfo
+        ) {
           Logger.debug(
-            `[38] Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`,
+            `[6.session.Session] Got ${msg.body.constructor.name} and adding to pending acks: ${msg.body.answerMsgId}.`,
           );
           this._pendingAcks.add(msg.body.answerMsgId);
           continue;
         }
-        if (msg.body instanceof Raw.NewSessionCreated) {
-          Logger.debug(`[39] Got ${msg.body.constructor.name} and skiping.`);
+        if (msg.body instanceof Skema.Raw.NewSessionCreated) {
+          Logger.debug(`[7.session.Session] Got ${msg.body.constructor.name} and skiping.`);
           continue;
         }
         let msgId;
-        if (msg.body instanceof Raw.BadMsgNotification || msg.body instanceof Raw.BadServerSalt) {
+        if (
+          msg.body instanceof Skema.Raw.BadMsgNotification ||
+          msg.body instanceof Skema.Raw.BadServerSalt
+        ) {
           Logger.debug(
-            `[40] Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`,
+            `[8.session.Session] Got ${msg.body.constructor.name} and msg id is: ${msg.body.badMsgId}.`,
           );
           msgId = msg.body.badMsgId;
-          if (msg.body instanceof Raw.BadServerSalt) {
-            this._salt = (msg.body as Raw.BadServerSalt).newServerSalt;
+          if (msg.body instanceof Skema.Raw.BadServerSalt) {
+            this._salt = (msg.body as Skema.Raw.BadServerSalt).newServerSalt;
           }
-        } else if (msg.body instanceof Raw.FutureSalts || msg.body instanceof Raw.RpcResult) {
+        } else if (
+          msg.body instanceof Skema.Raw.FutureSalts ||
+          msg.body instanceof Skema.Raw.RpcResult
+        ) {
           Logger.debug(
-            `[41] Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`,
+            `[9.session.Session] Got ${msg.body.constructor.name} and msg id is: ${msg.body.reqMsgId}.`,
           );
           msgId = msg.body.reqMsgId;
-          if (msg.body instanceof Raw.RpcResult) {
-            msg.body as Raw.RpcResult;
+          if (msg.body instanceof Skema.Raw.RpcResult) {
+            msg.body as Skema.Raw.RpcResult;
             msg.body = msg.body.result;
           }
-        } else if (msg.body instanceof Raw.Pong) {
-          Logger.debug(`[42] Got ${msg.body.constructor.name} and msg id is: ${msg.body.msgId}.`);
+        } else if (msg.body instanceof Skema.Raw.Pong) {
+          Logger.debug(
+            `[10.session.Session] Got ${msg.body.constructor.name} and msg id is: ${msg.body.msgId}.`,
+          );
           msgId = msg.body.msgId;
         } else {
-          Logger.debug(`[43] Handling update ${msg.body.constructor.name}.`);
+          Logger.debug(`[11.session.Session] Handling update ${msg.body.constructor.name}.`);
           this._client.handleUpdate(msg.body);
         }
 
@@ -151,36 +160,36 @@ export class Session {
           const promises = this._results.get(BigInt(msgId));
           if (promises !== undefined) {
             Logger.debug(
-              `[44] Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`,
+              `[12.session.Session] Setting results of msg id ${msgId} with ${msg.body.constructor.name}.`,
             );
             promises.resolve(msg.body);
           }
         }
       }
       if (this._pendingAcks.size >= this.ACKS_THRESHOLD) {
-        Logger.debug(`[45] Sending ${this._pendingAcks.size} pending aks.`);
+        Logger.debug(`[13.session.Session] Sending ${this._pendingAcks.size} pending aks.`);
         try {
           await this._send(
-            new Raw.MsgsAck({
+            new Skema.Raw.MsgsAck({
               msgIds: Array.from(this._pendingAcks),
             }),
             false,
           );
-          Logger.debug(`[46] Clearing all pending acks`);
+          Logger.debug(`[14.session.Session] Clearing all pending acks`);
           this._pendingAcks.clear();
         } catch (error: unknown) {
-          if (!(error instanceof Errors.TimeoutError)) {
-            Logger.debug(`[47] Clearing all pending acks`);
+          if (!(error instanceof Skema.TimeoutError)) {
+            Logger.debug(`[15.session.Session] Clearing all pending acks`);
             this._pendingAcks.clear();
           }
-          Logger.error(`[48] Got error when sending pending acks:`, error);
+          Logger.error(`[16.session.Session] Got error when sending pending acks:`, error);
         }
       }
     } catch (error: unknown) {
-      if (error instanceof Errors.SecurityCheckMismatch) {
+      if (error instanceof Skema.SecurityCheckMismatch) {
         Logger.error(
-          `[49] Invalid to unpack ${Buffer.byteLength(packet)} bytes packet cause: ${
-            error.description ?? error.message
+          `[17.session.Session] Invalid to unpack ${Buffer.byteLength(packet)} bytes packet cause: ${
+            (error as Skema.SecurityCheckMismatch).description ?? (error as Error).message
           }`,
         );
         return await this.stop();
@@ -189,37 +198,39 @@ export class Session {
     }
   }
   private async _send(
-    data: TLObject,
+    data: Skema.TLObject,
     waitResponse: boolean = true,
     timeout: number = this.WAIT_TIMEOUT,
-  ): Promise<TLObject | undefined> {
+  ): Promise<Skema.TLObject | undefined> {
     const msg = await this._msgFactory(data, this._msgId);
     const msgId = msg.msgId;
     if (waitResponse) {
       this._results.set(BigInt(msgId), new Results());
     }
     if (msgId === undefined) {
-      Logger.error(`[107] Can't send request ${data.className} when msgId is undefined.`);
+      Logger.error(
+        `[18.session.Session] Can't send request ${data.className} when msgId is undefined.`,
+      );
       return;
     }
     Logger.debug(
-      `[50] Sending msg id ${msgId} (${data.className}), has ${Buffer.byteLength(msg.write())} bytes message.`,
+      `[19.session.Session] Sending msg id ${msgId} (${data.className}), has ${Buffer.byteLength(msg.write())} bytes message.`,
     );
     const payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
-      Logger.debug(`[51] Sending ${Buffer.byteLength(payload)} bytes payload.`);
+      Logger.debug(`[20.session.Session] Sending ${Buffer.byteLength(payload)} bytes payload.`);
       await this._connection.send(payload);
     } catch (error: unknown) {
       Logger.error(
-        `[52] Got error when trying to send ${Buffer.byteLength(payload)} bytes payload:`,
+        `[21.session.Session] Got error when trying to send ${Buffer.byteLength(payload)} bytes payload:`,
         error,
       );
       if (
-        error instanceof Errors.WSError.ReadClosed ||
-        error instanceof Errors.WSError.Disconnected ||
-        error instanceof Errors.ClientError.ClientDisconnected
+        error instanceof Skema.WSError.ReadClosed ||
+        error instanceof Skema.WSError.Disconnected ||
+        error instanceof Skema.ClientError.ClientDisconnected
       ) {
-        Logger.debug(`[108] Restarting client due to disconnected`);
+        Logger.debug(`[22.session.Session] Restarting client due to disconnected`);
         if (this._client._maxReconnectRetries) {
           return this.retriesReconnect();
         } else {
@@ -239,30 +250,32 @@ export class Session {
         response = await this._task.run(promises.value, timeout);
         // response = await promises.value
       } catch (error: unknown) {
-        Logger.error(`[53] Got error when waiting response:`, error);
+        Logger.error(`[23.session.Session] Got error when waiting response:`, error);
       }
       if (response) {
         this._results.delete(BigInt(msgId));
-        Logger.debug(`[54] Got response from msg id ${msgId}: ${response.constructor.name}`);
-        if (response instanceof Raw.RpcError) {
+        Logger.debug(
+          `[24.session.Session] Got response from msg id ${msgId}: ${response.constructor.name}`,
+        );
+        if (response instanceof Skema.Raw.RpcError) {
           // response as Raw.RpcError;
           if (
-            data instanceof Raw.InvokeWithoutUpdates ||
-            data instanceof Raw.InvokeWithTakeout ||
-            data instanceof Raw.InvokeWithTakeout ||
-            data instanceof Raw.InvokeWithBusinessConnection ||
-            data instanceof Raw.InvokeWithGooglePlayIntegrity ||
-            data instanceof Raw.InvokeWithApnsSecret ||
-            data instanceof Raw.InvokeWithMessagesRange
+            data instanceof Skema.Raw.InvokeWithoutUpdates ||
+            data instanceof Skema.Raw.InvokeWithTakeout ||
+            data instanceof Skema.Raw.InvokeWithTakeout ||
+            data instanceof Skema.Raw.InvokeWithBusinessConnection ||
+            data instanceof Skema.Raw.InvokeWithGooglePlayIntegrity ||
+            data instanceof Skema.Raw.InvokeWithApnsSecret ||
+            data instanceof Skema.Raw.InvokeWithMessagesRange
           ) {
             //@ts-ignore
             data = data.query;
           }
-          await Errors.RPCError.raise(response, data);
-        } else if (response instanceof Raw.BadMsgNotification) {
+          await Skema.RPCError.raise(response, data);
+        } else if (response instanceof Skema.Raw.BadMsgNotification) {
           // response as Raw.BadMsgNotification;
-          throw new Errors.BadMsgNotification(response.errorCode);
-        } else if (response instanceof Raw.BadServerSalt) {
+          throw new Skema.BadMsgNotification(response.errorCode);
+        } else if (response instanceof Skema.Raw.BadServerSalt) {
           // response as Raw.BadServerSalt;
           this._salt = response.newServerSalt;
           return await this._send(data, waitResponse, timeout);
@@ -270,7 +283,7 @@ export class Session {
           return response;
         }
       } else {
-        throw new Errors.TimeoutError(timeout);
+        throw new Skema.TimeoutError(timeout);
       }
     }
   }
@@ -278,16 +291,16 @@ export class Session {
     const ping = async () => {
       try {
         if (!this._isConnected) return; // kill the ping worker when client is disconnected
-        Logger.debug(`[55] Ping to telegram server.`);
+        Logger.debug(`[25.session.Session] Ping to telegram server.`);
         await this._send(
-          new Raw.PingDelayDisconnect({
+          new Skema.Raw.PingDelayDisconnect({
             pingId: BigInt(0),
             disconnectDelay: this.WAIT_TIMEOUT + 10000,
           }),
           false,
         );
       } catch (error: unknown) {
-        Logger.error(`[56] Get error when trying ping to telegram :`, error);
+        Logger.error(`[26.session.Session] Get error when trying ping to telegram :`, error);
       }
       return this._pingWorker();
     };
@@ -295,11 +308,11 @@ export class Session {
     return this._pingTask;
   }
   private async _networkWorker() {
-    Logger.debug(`[57] Network worker started.`);
+    Logger.debug(`[27.session.Session] Network worker started.`);
     let waiting = false;
     while (true) {
       if (!this._networkTask) {
-        Logger.debug(`[58] Network worker ended`);
+        Logger.debug(`[28.session.Session] Network worker ended`);
         return;
       }
       if (!waiting) {
@@ -316,20 +329,20 @@ export class Session {
             waiting = false; // unblock the network task
           } else {
             if (packet) {
-              Logger.warning(`[59] Server sent "${packet.readInt32LE(0)}"`);
+              Logger.warning(`[29.session.Session] Server sent "${packet.readInt32LE(0)}"`);
             }
             if (this._isConnected) {
               return this.restart();
             }
           }
         } catch (error: unknown) {
-          Logger.error('[139] Network worker error:', error);
+          Logger.error('[30.session.Session] Network worker error:', error);
           if (!this._isConnected) {
             break;
           } else if (
-            (error instanceof Errors.WSError.ReadClosed ||
-              error instanceof Errors.WSError.Disconnected ||
-              error instanceof Errors.ClientError.ClientDisconnected) &&
+            (error instanceof Skema.WSError.ReadClosed ||
+              error instanceof Skema.WSError.Disconnected ||
+              error instanceof Skema.ClientError.ClientDisconnected) &&
             this._client._maxReconnectRetries
           ) {
             return this.retriesReconnect(); // disable networkWorker and try to reconnecting
@@ -345,8 +358,8 @@ export class Session {
    */
   async retriesReconnect(retries = this._client._maxReconnectRetries): Promise<any> {
     try {
-      Logger.info('[136] Reconnecting to Telegram Server.');
-      Logger.debug('[137] Stop ping task.');
+      Logger.info('[31.session.Session] Reconnecting to Telegram Server.');
+      Logger.debug('[32.session.Session] Stop ping task.');
       clearTimeout(this._pingTask);
       this._isConnected = false; // disable invoke method when client is disconnected
       await this._connection.close().catch(() => {}); // force close current connection.
@@ -357,21 +370,21 @@ export class Session {
         this._isConnected = true;
         this._pingWorker();
         if (!this._client._storage.isBot && this._client._takeout) {
-          const takeout = await this.invoke(new Raw.account.InitTakeoutSession({}));
-          this._client._takeoutId = (takeout as Raw.account.TypeTakeout).id;
+          const takeout = await this.invoke(new Skema.Raw.account.InitTakeoutSession({}));
+          this._client._takeoutId = (takeout as Skema.Raw.account.TypeTakeout).id;
         }
-        await this.invoke(new Raw.updates.GetState());
+        await this.invoke(new Skema.Raw.updates.GetState());
         const me = await this.invoke(
-          new Raw.users.GetFullUser({
-            id: new Raw.InputUserSelf(),
+          new Skema.Raw.users.GetFullUser({
+            id: new Skema.Raw.InputUserSelf(),
           }),
         );
-        this._client._me = me as Raw.users.UserFull;
+        this._client._me = me as Skema.Raw.users.UserFull;
         return me;
       }
     } catch (e) {
       Logger.error(
-        `[138] Got error when trying to reconnecting to Telegram Server, retries ${retries}:`,
+        `[33.session.Session] Got error when trying to reconnecting to Telegram Server, retries ${retries}:`,
         e,
       );
       if (!retries) {
@@ -393,7 +406,7 @@ export class Session {
       await this._connection.close().catch(() => {});
       this._results.clear();
       this._task.clear();
-      Logger.info(`[60] Session stopped.`);
+      Logger.info(`[34.session.Session] Session stopped.`);
     } finally {
       release();
     }
@@ -403,7 +416,7 @@ export class Session {
    */
   restart() {
     try {
-      Logger.debug(`[61] Restarting client`);
+      Logger.debug(`[35.session.Session] Restarting client`);
       this.stop();
       this.start();
     } catch (_error) {
@@ -414,30 +427,30 @@ export class Session {
    * Send data to the telegram server as an executable function.
    */
   async invoke(
-    data: TLObject,
+    data: Skema.TLObject,
     retries: number = this.MAX_RETRIES,
     timeout: number = this.WAIT_TIMEOUT,
     sleepThreshold: number = this.SLEEP_THRESHOLD,
-  ): Promise<TLObject> {
+  ): Promise<Skema.TLObject> {
     Logger.debug(
-      `[62] Invoking ${data.className} with parameters: ${retries} retries, ${timeout}ms timeout, ${sleepThreshold}ms sleep threshold.`,
+      `[36.session.Session] Invoking ${data.className} with parameters: ${retries} retries, ${timeout}ms timeout, ${sleepThreshold}ms sleep threshold.`,
     );
     if (!this._isConnected) {
-      Logger.error(`[63] Can't sending request when client is unconnected.`);
-      throw new Errors.ClientError.ClientDisconnected();
+      Logger.error(`[37.session.Session] Can't sending request when client is unconnected.`);
+      throw new Skema.ClientError.ClientDisconnected();
     }
     if (data.classType !== 'functions') {
-      throw new Errors.NotAFunctionClass(data.className);
+      throw new Skema.NotAFunctionClass(data.className);
     }
     let className = data.className;
     if (
-      data instanceof Raw.InvokeWithLayer ||
-      data instanceof Raw.InvokeWithoutUpdates ||
-      data instanceof Raw.InvokeWithTakeout ||
-      data instanceof Raw.InvokeWithBusinessConnection ||
-      data instanceof Raw.InvokeWithGooglePlayIntegrity ||
-      data instanceof Raw.InvokeWithApnsSecret ||
-      data instanceof Raw.InvokeWithMessagesRange
+      data instanceof Skema.Raw.InvokeWithLayer ||
+      data instanceof Skema.Raw.InvokeWithoutUpdates ||
+      data instanceof Skema.Raw.InvokeWithTakeout ||
+      data instanceof Skema.Raw.InvokeWithBusinessConnection ||
+      data instanceof Skema.Raw.InvokeWithGooglePlayIntegrity ||
+      data instanceof Skema.Raw.InvokeWithApnsSecret ||
+      data instanceof Skema.Raw.InvokeWithMessagesRange
     ) {
       // @ts-ignore
       className = data.query.className;
@@ -453,30 +466,30 @@ export class Session {
           }
           await sleep(1000);
         } catch (error: any) {
-          Logger.error(`[64] Got error when trying invoking ${className}:`, error);
-          if (error instanceof Errors.Exceptions.Flood.FloodWait) {
-            error as Errors.Exceptions.Flood.FloodWait;
+          Logger.error(`[38.session.Session] Got error when trying invoking ${className}:`, error);
+          if (error instanceof Skema.Exceptions.Flood.FloodWait) {
+            error as Skema.Exceptions.Flood.FloodWait;
             const amount = Number(error.value ?? 2000); // if undefined, make it as 2s
             // @ts-ignore
             if (amount > sleepThreshold >= 0) {
               throw error;
             }
             Logger.info(
-              `[65] Waiting for ${amount} seconds before continuing (caused by ${className})`,
+              `[39.session.Session] Waiting for ${amount} seconds before continuing (caused by ${className})`,
             );
             await sleep(amount as number);
           } else if (
-            (error instanceof Errors.Exceptions.SeeOther.FileMigrate ||
-              error instanceof Errors.Exceptions.SeeOther.StatsMigrate ||
-              error instanceof Errors.Exceptions.SeeOther.NetworkMigrate) &&
+            (error instanceof Skema.Exceptions.SeeOther.FileMigrate ||
+              error instanceof Skema.Exceptions.SeeOther.StatsMigrate ||
+              error instanceof Skema.Exceptions.SeeOther.NetworkMigrate) &&
             typeof error.value !== 'undefined'
           ) {
             Logger.error(
-              `[156] Got error when trying invoking ${className}: ${error.message}. Try to reconnecting.`,
+              `[40.session.Session] Got error when trying invoking ${className}: ${error.message}. Try to reconnecting.`,
             );
-            const exportedAuthKey: Raw.auth.ExportedAuthorization = (await this.invoke(
-              new Raw.auth.ExportAuthorization({ dcId: error.value as unknown as number }),
-            )) as Raw.auth.ExportedAuthorization;
+            const exportedAuthKey: Skema.Raw.auth.ExportedAuthorization = (await this.invoke(
+              new Skema.Raw.auth.ExportAuthorization({ dcId: error.value as unknown as number }),
+            )) as Skema.Raw.auth.ExportedAuthorization;
             const newAuthKey: Buffer = await new Auth(
               error.value as unknown as number,
               this._testMode,
@@ -491,18 +504,18 @@ export class Session {
               this._isMedia,
               this._isCdn,
             );
-            Logger.debug(`[157] Reconnecting to telegram server`);
+            Logger.debug(`[41.session.Session] Reconnecting to telegram server`);
             await newSession.start();
-            Logger.debug(`[158] Importing auth key`);
+            Logger.debug(`[42.session.Session] Importing auth key`);
             await newSession.invoke(
-              new Raw.auth.ImportAuthorization({
+              new Skema.Raw.auth.ImportAuthorization({
                 id: exportedAuthKey.id,
                 bytes: exportedAuthKey.bytes,
               }),
             );
-            Logger.debug(`[159] Session imported, resend the query`);
+            Logger.debug(`[43.session.Session] Session imported, resend the query`);
             const result = await newSession.invoke(data, retries, timeout, sleepThreshold);
-            Logger.debug(`[160] Closing session in DC${error.value}`);
+            Logger.debug(`[44.session.Session] Closing session in DC${error.value}`);
             await newSession.stop();
             return result;
           } else {
@@ -511,13 +524,13 @@ export class Session {
             }
             if (retries < 2) {
               Logger.info(
-                `[66] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
+                `[45.session.Session] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
                   error.message
                 }`,
               );
             } else {
               Logger.info(
-                `[67] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
+                `[46.session.Session] [${this.MAX_RETRIES - retries + 1}] Retrying "${className}" due to ${
                   error.message
                 }`,
                 error,
@@ -529,7 +542,7 @@ export class Session {
         }
       } else {
         // break loop when client is unconnected
-        throw new Errors.ClientError.ClientDisconnected();
+        throw new Skema.ClientError.ClientDisconnected();
       }
     }
   }
@@ -550,25 +563,27 @@ export class Session {
       );
       this._networkTask = true;
       try {
-        Logger.debug(`[68] Connecting to telegram server`);
+        Logger.debug(`[47.session.Session] Connecting to telegram server`);
         await this._connection.connect();
         this._networkWorker();
         await this.initConnection();
-        Logger.info(`[69] Session initialized: Layer ${Raw.Layer}`);
-        Logger.info(`[70] Device: ${this._client._deviceModel} - ${this._client._appVersion}`);
+        Logger.info(`[48.session.Session] Session initialized: Layer ${Skema.Raw.Layer}`);
         Logger.info(
-          `[71] System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`,
+          `[49.session.Session] Device: ${this._client._deviceModel} - ${this._client._appVersion}`,
         );
-        Logger.info(`[135] Getting Update State`);
+        Logger.info(
+          `[50.session.Session] System: ${this._client._systemVersion} (${this._client._langCode.toUpperCase()})`,
+        );
+        Logger.info(`[51.session.Session] Getting Update State`);
         this._pingWorker();
         this._isConnected = true;
-        Logger.info('[72] Session Started');
+        Logger.info('[52.session.Session] Session Started');
         break;
       } catch (error) {
-        if (error instanceof Errors.Exceptions.NotAcceptable.AuthKeyDuplicated) {
+        if (error instanceof Skema.Exceptions.NotAcceptable.AuthKeyDuplicated) {
           await this.stop();
           throw error;
-        } else if (error instanceof Errors.TimeoutError || error instanceof Errors.RPCError) {
+        } else if (error instanceof Skema.TimeoutError || error instanceof Skema.RPCError) {
           await sleep(1000);
           await this.stop();
         } else {
@@ -580,9 +595,9 @@ export class Session {
   /**
    * Initiation of connection. Call the ping function and send the layer information used by the client to the telegram server.
    */
-  async initConnection() {
+  async initConnection(): Promise<Skema.TLObject> {
     const ping = await this._send(
-      new Raw.Ping({
+      new Skema.Raw.Ping({
         pingId: BigInt(0),
       }),
       true,
@@ -590,9 +605,9 @@ export class Session {
     );
     if (!this._isCdn) {
       const initData = await this._send(
-        new Raw.InvokeWithLayer({
-          layer: Raw.Layer,
-          query: new Raw.InitConnection({
+        new Skema.Raw.InvokeWithLayer({
+          layer: Skema.Raw.Layer,
+          query: new Skema.Raw.InitConnection({
             apiId: this._client._apiId,
             appVersion: this._client._appVersion,
             deviceModel: this._client._deviceModel,
@@ -600,22 +615,25 @@ export class Session {
             systemLangCode: this._client._systemLangCode,
             langCode: this._client._langCode,
             langPack: '',
-            query: new Raw.help.GetConfig(),
+            query: new Skema.Raw.help.GetConfig(),
             proxy:
               this._proxy &&
               'secret' in this._proxy &&
               'port' in this._proxy &&
               'server' in this._proxy
-                ? new Raw.InputClientProxy({ address: this._proxy.server, port: this._proxy.port })
+                ? new Skema.Raw.InputClientProxy({
+                    address: this._proxy.server,
+                    port: this._proxy.port,
+                  })
                 : undefined,
           }),
         }),
         true,
         this.START_TIMEOUT,
       );
-      return initData;
+      return initData!;
     }
-    return ping;
+    return ping!;
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {

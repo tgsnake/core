@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,22 +8,21 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { SeqNo } from './SeqNo.ts';
-import { MsgId } from './MsgId.ts';
-import { Raw, Message, MsgContainer, TLObject } from '../../raw/index.ts';
-import { Buffer } from '../../platform.deno.ts';
+import { SeqNo } from './SeqNo.js';
+import { MsgId } from './MsgId.js';
+import { Buffer, Skema } from '../../deps.js';
 
-export function MsgFactory() {
+export function MsgFactory(): (body: Skema.TLObject, msgId: MsgId) => Skema.Message {
   const seqNo = new SeqNo();
-  const notRelatedContent = (content: TLObject) => {
-    if (content instanceof Raw.Ping) return true;
-    if (content instanceof Raw.HttpWait) return true;
-    if (content instanceof Raw.MsgsAck) return true;
-    if (content instanceof MsgContainer) return true;
+  const notRelatedContent = (content: Skema.TLObject) => {
+    if (content instanceof Skema.Raw.Ping) return true;
+    if (content instanceof Skema.Raw.HttpWait) return true;
+    if (content instanceof Skema.Raw.MsgsAck) return true;
+    if (content instanceof Skema.MsgContainer) return true;
     return false;
   };
-  return (body: TLObject, msgId: MsgId) => {
-    return new Message(
+  return (body: Skema.TLObject, msgId: MsgId) => {
+    return new Skema.Message(
       body,
       BigInt(msgId.getMsgId()),
       seqNo.getSeqNo(!notRelatedContent(body)),

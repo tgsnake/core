@@ -1,15 +1,12 @@
 {
   "name": "@tgsnake/core",
-  "version": "1.13.15",
+  "version": "2.0.0",
   "description": "Pure Telegram MTProto library for Javascript or Typescript.",
-  "main": "./lib/src/index.js",
-  "devDependencies": {
-    "@types/node": "22.14.0",
-    "deno2node": "1.15.0",
-    "prettier": "3.5.3"
-  },
+  "main": "./dist/mod.js",
+  "type": "module",
+  "types": "./dist/mod.d.ts",
   "scripts": {
-    "build": "deno2node tsconfig.json",
+    "build": "tsc",
     "build:license": "node ./generator/license",
     "build:chglog": "node ./generator/chglog",
     "prepare": "yarn build",
@@ -25,21 +22,34 @@
   "repository": "https://github.com/tgsnake/core",
   "author": "butthx",
   "files": [
-    "lib/**/**"
+    "dist/**/**"
   ],
   "license": "(GPL-3.0 OR LGPL-3.0)",
   "engineStrict": true,
   "engines": {
-    "node": ">=12.0.0",
+    "node": ">=22.0.0",
     "npm": ">=6.0.0",
-    "yarn": ">=1.0.0"
+    "yarn": ">=1.0.0",
+    "deno": ">=1.0.0",
+    "bun": ">=1.0.0"
   },
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.15.0",
   "dependencies": {
-    "@tgsnake/log": "latest",
-    "async-mutex": "0.5.0",
-    "big-integer": "1.6.52",
-    "socks": "2.8.4"
+    "@tgsnake/bytesio": "^2.0.1",
+    "@tgsnake/log": "^2.0.1",
+    "async-mutex": "^0.5.0",
+    "big-integer": "^1.6.52",
+    "socks": "^2.8.9"
+  },
+  "devDependencies": {
+    "@tgsnake/skema": "^2.0.0",
+    "@types/bun": "^1.3.14",
+    "@types/node": "^25.9.3",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@tgsnake/skema": "^2.0.0"
   },
   "isBeta": false,
   "isPrivate": false

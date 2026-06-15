@@ -1,14 +1,13 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { Duplex, inspect, Buffer, type BufferEncoding } from '../platform.deno.ts';
-import { BytesIO } from '../raw/index.ts';
+import { Duplex, inspect, Buffer, BytesIO } from '../deps.js';
 
 export type TypeFileChunk = Buffer | ArrayBufferView | DataView | string | null | any;
 export type TypeFileCallback = (error?: any) => void;
@@ -75,7 +74,7 @@ export class File extends Duplex {
    * Internal Use: Browser compatibility!
    */
   // @ts-ignore: doesn't need to be implemented on browser but need on other platform
-  pipe(destination: any, options?: { end?: boolean }) {
+  pipe(destination: any, options?: { end?: boolean }): any {
     return super.pipe(destination, options);
   }
   get bytes(): BytesIO {
@@ -114,7 +113,7 @@ export class File extends Duplex {
     return toPrint;
   }
   // @ts-ignore: doesn't need to be implemented on browser but need on other platform
-  toString() {
+  toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }
