@@ -125,7 +125,7 @@ export class TCPIntermediateO extends TCP {
     }
     await super.send(nonce);
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const payload = this._encryptor(
       Buffer.concat([
         Skema.Primitive.Int.write(Buffer.byteLength(data)) as unknown as Uint8Array,
@@ -134,7 +134,7 @@ export class TCPIntermediateO extends TCP {
     );
     return await super.send(payload);
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(4);
     if (!length) return;
     length = this._decryptor(length);

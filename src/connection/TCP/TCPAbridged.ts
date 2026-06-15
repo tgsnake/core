@@ -20,11 +20,16 @@ export class TCPAbridged extends TCP {
   constructor() {
     super();
   }
-  override async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  override async connect(
+    ip: string,
+    port: number,
+    proxy?: ProxyInterface,
+    dcId?: number,
+  ): Promise<void> {
     await super.connect(ip, port, proxy, dcId);
     return await super.send(Buffer.from('ef', 'hex'));
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const length = Math.round(Buffer.byteLength(data) / 4);
     if (length <= 126) {
       const mark: Buffer = Buffer.from([length]);
@@ -43,7 +48,7 @@ export class TCPAbridged extends TCP {
       );
     }
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(1);
     if (!length) return;
     if (length.equals(Buffer.from('7f', 'hex') as unknown as Uint8Array)) {

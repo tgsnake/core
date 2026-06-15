@@ -100,12 +100,12 @@ export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
  * @param {Buffer} b - Second byte buffer operand.
  * @returns {Buffer} The resulting byte buffer product.
  */
-export function xor(a: Buffer, b: Buffer) {
+export function xor(a: Buffer, b: Buffer): Buffer {
   return Skema.bigintToBuffer(
     BigInt(Skema.bufferToBigint(a, false) ^ Skema.bufferToBigint(b, false)),
     Buffer.byteLength(a),
     false,
-  );
+  ) as unknown as Buffer;
 }
 
 /**
@@ -114,7 +114,10 @@ export function xor(a: Buffer, b: Buffer) {
  * @param {Buffer} key - 32-byte secret key buffer.
  * @returns {{ encrypt(data: Buffer): Buffer, decrypt(data: Buffer): Buffer }} Symmetric cipher handler options.
  */
-export function AES(key: Buffer) {
+export function AES(key: Buffer): {
+  encrypt(data: Buffer): Buffer;
+  decrypt(data: Buffer): Buffer;
+} {
   const iv = Buffer.alloc(0);
   if (platform === 'Browser' || platform === 'Deno') {
     const cipher = new aesjs.ModeOfOperation.ecb(key);

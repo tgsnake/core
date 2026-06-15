@@ -64,7 +64,7 @@ export class TCP {
    *
    * @returns {Promise<boolean | undefined>}
    */
-  async close() {
+  async close(): Promise<boolean | undefined> {
     await this._task.clear(); // clear all timeout process
     await sleep(1);
     if (!this._socks) return;
@@ -94,7 +94,7 @@ export class TCP {
    * @param {number} [length=0] - Exact number of bytes to retrieve.
    * @returns {Promise<Buffer | undefined>} The requested data chunk, or `undefined` if disconnected.
    */
-  async recv(length: number = 0) {
+  async recv(length: number = 0): Promise<Buffer | undefined> {
     let data: Buffer = Buffer.alloc(0);
     while (Buffer.byteLength(data) < length) {
       const chunk = await this._task.run(

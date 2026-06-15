@@ -58,7 +58,7 @@ export class SecretChat {
    * Update this secret chat in session.
    * @param {AbstractSession} storage - Secret chat object will be saved to session
    */
-  async update(storage: AbstractSession) {
+  async update(storage: AbstractSession): Promise<boolean> {
     const release = await this._mutex.acquire();
     try {
       storage.updateSecretChats([this]);
@@ -96,7 +96,7 @@ export class SecretChat {
   /**
    * Get the InputEncryptedChat from SecretChat class
    */
-  get input() {
+  get input(): Skema.Raw.InputEncryptedChat {
     return new Skema.Raw.InputEncryptedChat({
       chatId: this.id,
       accessHash: this.accessHash,

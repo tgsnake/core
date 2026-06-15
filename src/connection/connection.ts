@@ -180,7 +180,7 @@ export class Connection {
    * @throws {ClientReady} Thrown if connection is already established.
    * @throws {ClientFailed} Thrown if connection cannot be established after max retries.
    */
-  async connect() {
+  async connect(): Promise<boolean> {
     if (this._protocol && this._connected) {
       throw new Skema.ClientError.ClientReady();
     }
@@ -267,10 +267,10 @@ export class Connection {
   /**
    * Asynchronously waits and receives a raw binary message frame from the active TCP stream.
    *
-   * @returns {Promise<Buffer>} The received buffer frame.
+   * @returns {Promise<Buffer|undefined>} The received buffer frame.
    * @throws {ClientDisconnected} Thrown if called while connection is disconnected.
    */
-  async recv() {
+  async recv(): Promise<Buffer | undefined> {
     if (!this._connected) {
       throw new Skema.ClientError.ClientDisconnected();
     }

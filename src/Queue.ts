@@ -57,7 +57,7 @@ export class Queue<T> {
    * @param {T} value - The item to be inserted into the queue.
    * @returns {Promise<void>} A promise that resolves when the item has been successfully added.
    */
-  async put(value: T) {
+  async put(value: T): Promise<void> {
     if (this.full) await this._possiblePut;
     this._queues.push(value);
     this._resolveGet(true);
@@ -74,7 +74,7 @@ export class Queue<T> {
    *
    * @returns {Promise<T>} A promise resolving to the item removed from the queue.
    */
-  async get() {
+  async get(): Promise<T> {
     if (this.empty) await this._possibleGet;
     const value = this._queues.shift();
     this._resolvePut(true);
@@ -91,7 +91,7 @@ export class Queue<T> {
    *
    * @returns {boolean} `true` if the queue size has reached or exceeded `maxsize`; otherwise `false`.
    */
-  get full() {
+  get full(): boolean {
     return this.maxsize <= 0 ? false : this.size >= this.maxsize;
   }
 
@@ -100,7 +100,7 @@ export class Queue<T> {
    *
    * @returns {number} The current size of the queue.
    */
-  get size() {
+  get size(): number {
     return this._queues.length;
   }
 
@@ -109,7 +109,7 @@ export class Queue<T> {
    *
    * @returns {boolean} `true` if the queue has no elements; otherwise `false`.
    */
-  get empty() {
+  get empty(): boolean {
     return !this.size;
   }
 
@@ -118,7 +118,7 @@ export class Queue<T> {
    *
    * @returns {number} The maximum size of the queue.
    */
-  get maxsize() {
+  get maxsize(): number {
     return this._maxsize;
   }
 }

@@ -31,7 +31,7 @@ export class File extends Duplex {
    * @param {Function} next - Next function, this will be called when done write chunk.
    */
   // @ts-ignore: doesn't need to be implemented on browser but need on other platform
-  _write(chunk: TypeFileChunk, encoding, next: TypeFileCallback): void {
+  _write(chunk: TypeFileChunk, encoding: BufferEncoding, next: TypeFileCallback): void {
     this._bytes.write(Buffer.from(chunk, encoding));
     return next();
   }
@@ -74,7 +74,7 @@ export class File extends Duplex {
    * Internal Use: Browser compatibility!
    */
   // @ts-ignore: doesn't need to be implemented on browser but need on other platform
-  pipe(destination: any, options?: { end?: boolean }) {
+  pipe(destination: any, options?: { end?: boolean }): any {
     return super.pipe(destination, options);
   }
   get bytes(): BytesIO {
@@ -113,7 +113,7 @@ export class File extends Duplex {
     return toPrint;
   }
   // @ts-ignore: doesn't need to be implemented on browser but need on other platform
-  toString() {
+  toString(): string {
     return `[constructor of ${this.constructor.name}] ${JSON.stringify(this, null, 2)}`;
   }
 }

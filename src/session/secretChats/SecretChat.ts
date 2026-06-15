@@ -71,7 +71,7 @@ export class SecretChat {
    * Send a request to specific user to start the secret chat.
    * @param {BigInt | String} userId - UserId will be sent the request for secret chat.
    */
-  async start(userId: bigint | string) {
+  async start(userId: bigint | string): Promise<Skema.TLObject> {
     Logger.debug(`[1.session.secretChats.SecretChat] starting secret chat for ${userId}`);
     const peer = await this._client.resolvePeer(userId);
     const dh = await this.reqDHConfig();
@@ -116,7 +116,7 @@ export class SecretChat {
    * Accepting a request for secret chat.
    * https://core.telegram.org/api/end-to-end#accepting-a-request
    */
-  async accept(request: Skema.Raw.EncryptedChatRequested) {
+  async accept(request: Skema.Raw.EncryptedChatRequested): Promise<Skema.TLObject> {
     Logger.debug(`[3.session.secretChats.SecretChat] accepting secret chat from ${request.id}`);
     if (request.id === 0) {
       throw new Skema.SecretChatError.AlreadyAccepted();
@@ -173,7 +173,7 @@ export class SecretChat {
     await this.notifyLayer(request.id);
     return res;
   }
-  async finish(chat: Skema.Raw.EncryptedChat) {
+  async finish(chat: Skema.Raw.EncryptedChat): Promise<any> {
     Logger.debug(`[5.session.secretChats.SecretChat] finishing creating secret chat ${chat.id}`);
     const dh = await this.reqDHConfig();
     const p = await Skema.bufferToBigint(dh.p, false);
@@ -216,7 +216,7 @@ export class SecretChat {
     }
     return this.notifyLayer(chat.id);
   }
-  async notifyLayer(chatId: number) {
+  async notifyLayer(chatId: number): Promise<any> {
     Logger.debug(`[7.session.secretChats.SecretChat] notify layer for ${chatId}`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -244,7 +244,7 @@ export class SecretChat {
     }
     return;
   }
-  async destroy(chatId: number) {
+  async destroy(chatId: number): Promise<boolean> {
     Logger.debug(`[8.session.secretChats.SecretChat] destroying secret chat ${chatId}`);
     const release = await this._mutex.acquire();
     try {
@@ -271,7 +271,7 @@ export class SecretChat {
    * https://core.telegram.org/api/end-to-end/pfs#1-decryptedmessageactionrequestkey
    * @param {Number} chatId - Secret chat id which will be request re-keying
    */
-  async rekeying(chatId: number) {
+  async rekeying(chatId: number): Promise<Skema.TLObject> {
     Logger.debug(`[11.session.secretChats.SecretChat] re-keying ${chatId}: initiator`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -327,7 +327,10 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be accept re-keying
    * @param {Raw.DecryptedMessageActionRequestKey20} - An action used to accept and create new authKey.
    */
-  async acceptRekeying(chatId: number, action: Skema.Raw.DecryptedMessageActionRequestKey20) {
+  async acceptRekeying(
+    chatId: number,
+    action: Skema.Raw.DecryptedMessageActionRequestKey20,
+  ): Promise<any> {
     Logger.debug(`[13.session.secretChats.SecretChat] re-keying ${chatId}: accepting`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -409,7 +412,10 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be changed the auth key.
    * @param {Raw.DecryptedMessageActionRequestKey20} action - An action used to commit the new authKey.
    */
-  async commitRekeying(chatId: number, action: Skema.Raw.DecryptedMessageActionAcceptKey20) {
+  async commitRekeying(
+    chatId: number,
+    action: Skema.Raw.DecryptedMessageActionAcceptKey20,
+  ): Promise<any> {
     Logger.debug(`[17.session.secretChats.SecretChat] re-keying ${chatId}: commiting`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -508,7 +514,10 @@ export class SecretChat {
    * @param {Number} chatId - Secret chat id which will be Completing the re-keying.
    * @param {Raw.DecryptedMessageActionCommitKey20} action - An action used to completed re-keying.
    */
-  async finalRekeying(chatId: number, action: Skema.Raw.DecryptedMessageActionCommitKey20) {
+  async finalRekeying(
+    chatId: number,
+    action: Skema.Raw.DecryptedMessageActionCommitKey20,
+  ): Promise<any> {
     Logger.debug(`[20.session.secretChats.SecretChat] re-keying ${chatId}: finishing`);
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
@@ -572,7 +581,7 @@ export class SecretChat {
   /**
    * Decrypt encrypted message
    */
-  async decrypt(message: Skema.Raw.TypeEncryptedMessage) {
+  async decrypt(message: Skema.Raw.TypeEncryptedMessage): Promise<any> {
     let decrypted;
     if (!this._waiting.includes(message.chatId)) {
       const peer = await this._storage.getSecretChatById(message.chatId);
@@ -627,7 +636,7 @@ export class SecretChat {
   /**
    * Encrypt decrypted message
    */
-  async encrypt(chatId: number, message: Skema.Raw.TypeDecryptedMessage) {
+  async encrypt(chatId: number, message: Skema.Raw.TypeDecryptedMessage): Promise<Buffer> {
     const peer = await this._storage.getSecretChatById(chatId);
     if (!peer) {
       throw new Skema.SecretChatError.ChatNotFound(chatId);

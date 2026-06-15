@@ -20,7 +20,12 @@ export class TCPPaddedIntermediate extends TCP {
   constructor() {
     super();
   }
-  override async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  override async connect(
+    ip: string,
+    port: number,
+    proxy?: ProxyInterface,
+    dcId?: number,
+  ): Promise<void> {
     await super.connect(ip, port, proxy, dcId);
     await super.send(
       Buffer.concat([
@@ -31,7 +36,7 @@ export class TCPPaddedIntermediate extends TCP {
       ]),
     );
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     data = Buffer.concat([
       data as unknown as Uint8Array,
       Buffer.alloc(Buffer.byteLength(data) % 4) as unknown as Uint8Array,
@@ -42,7 +47,7 @@ export class TCPPaddedIntermediate extends TCP {
       Buffer.concat([allocLength as unknown as Uint8Array, data as unknown as Uint8Array]),
     );
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);
     if (!length) return;
     const data = await super.recv(length.readInt32LE(0));

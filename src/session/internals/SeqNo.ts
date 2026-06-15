@@ -15,7 +15,7 @@ export class SeqNo {
     this.contentRMsgSend = 0;
     this.seqNo = 0;
   }
-  getSeqNo(isContentRelated: boolean) {
+  getSeqNo(isContentRelated: boolean): number {
     this.seqNo = this.contentRMsgSend * 2 + (isContentRelated ? 1 : 0);
     if (isContentRelated) this.contentRMsgSend += 1;
     return this.seqNo;

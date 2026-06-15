@@ -36,7 +36,7 @@ export const isPrivate = packages.isPrivate;
  *
  * @returns {string} The release type string.
  */
-export function getType() {
+export function getType(): string {
   if (isBeta) {
     if (isPrivate) {
       return 'Private Beta';

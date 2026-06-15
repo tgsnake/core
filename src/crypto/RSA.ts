@@ -10,7 +10,13 @@
 
 import { Buffer, Skema } from '../deps.js';
 
-const PublicKey = new Map<
+const PublicKey: Map<
+  bigint,
+  {
+    m: bigint;
+    e: bigint;
+  }
+> = new Map<
   bigint,
   {
     m: bigint;
@@ -193,7 +199,7 @@ PublicKey.set(BigInt('2685959930972952888'), {
  * @returns {Buffer} Encrypted binary data buffer.
  * @throws {Error} Thrown if public key fingerprint is not found.
  */
-export function encrypt(data: Buffer, fingerprint: bigint) {
+export function encrypt(data: Buffer, fingerprint: bigint): Buffer {
   const key = PublicKey.get(fingerprint);
   if (key == undefined) {
     throw new Error(`unknown fingerprint ${fingerprint}n`);

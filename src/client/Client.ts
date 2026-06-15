@@ -325,7 +325,7 @@ export class Client {
   /**
    * Connecting to telegram server without login request.
    */
-  connect() {
+  connect(): Promise<void> {
     return _Session.connect.call(this);
   }
   /**
@@ -648,7 +648,7 @@ export class Client {
    * Start a secret chat.
    * @param { BigInt | String } chatId - Participant id or interlocutor id that you want to transfer to the secret chat.
    */
-  startSecretChat(chatId: bigint | string) {
+  startSecretChat(chatId: bigint | string): Promise<Skema.TLObject> {
     return this._secretChat.start(chatId);
   }
   /**
@@ -656,7 +656,7 @@ export class Client {
    * Secret chats that have been created will be destroyed and closed, so they can no longer be used to send secret messages.
    * @param {Number} chatId - The id of the secret chat that you want to close.
    */
-  destroySecretChat(chatId: number) {
+  destroySecretChat(chatId: number): Promise<boolean> {
     return this._secretChat.destroy(chatId);
   }
   /**

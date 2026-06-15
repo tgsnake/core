@@ -12,7 +12,7 @@ import { SeqNo } from './SeqNo.js';
 import { MsgId } from './MsgId.js';
 import { Buffer, Skema } from '../../deps.js';
 
-export function MsgFactory() {
+export function MsgFactory(): (body: Skema.TLObject, msgId: MsgId) => Skema.Message {
   const seqNo = new SeqNo();
   const notRelatedContent = (content: Skema.TLObject) => {
     if (content instanceof Skema.Raw.Ping) return true;

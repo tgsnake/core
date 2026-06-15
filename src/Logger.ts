@@ -14,7 +14,7 @@ import { Logger } from './deps.js';
  * Pre-configured `Logger` instance for `@tgsnake/core` framework logs.
  * By default, this is configured with the namespace `@tgsnake/core` and the `'debug'` log level.
  */
-const log = new Logger({
+const log: Logger = new Logger({
   name: '@tgsnake/core',
   level: ['debug'],
 });

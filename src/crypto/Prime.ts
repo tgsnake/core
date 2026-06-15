@@ -11,7 +11,7 @@
 import { bigMath, randBigint } from '../helpers.js';
 import { Skema } from '../deps.js';
 
-const CURRENT_DH_PRIME = BigInt(
+const CURRENT_DH_PRIME: bigint = BigInt(
   '0x' +
     'C71CAEB9C6B1C9048E6C522F70F13F73980D40238E3E21C14934D037563D930F' +
     '48198A0AA7C14058229493D22530F4DBFA336F6E0AC925139543AED44CCE7C37' +
@@ -31,7 +31,7 @@ export function gcd(a: bigint, b: bigint): bigint {
   }
   return a;
 }
-export function decompose(pq: bigint) {
+export function decompose(pq: bigint): bigint {
   // https://comeoncodeon.wordpress.com/2010/09/18/pollard-rho-brent-integer-factorization/
   if (pq == BigInt(1)) return pq;
   if (Skema.bigIntMod(pq, BigInt(2)) === BigInt(0)) return BigInt(2);

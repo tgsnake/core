@@ -64,7 +64,7 @@ export class Socket {
    * @throws {ProxyUnsupported} Thrown if browser platform attempts SOCKS proxy configurations.
    * @throws {WebSocketError} Thrown if network connection fails.
    */
-  async connect(ip: string, port: number, proxy?: ProxyInterface) {
+  async connect(ip: string, port: number, proxy?: ProxyInterface): Promise<this> {
     if (platform === 'Browser') {
       if (proxy && !('server' in proxy && 'port' in proxy && 'secret' in proxy)) {
         throw new Skema.WSError.ProxyUnsupported();
@@ -173,7 +173,7 @@ export class Socket {
    *
    * @returns {Promise<boolean>} Resolves to `true` when connection is successfully shut down.
    */
-  async destroy() {
+  async destroy(): Promise<boolean> {
     if (this._client && !this._connectionClosed) {
       this._connectionClosed = true;
       this._read = new Promise((resolve: { (value?: unknown): void }) => {
@@ -265,7 +265,7 @@ export class Socket {
    * @returns {Promise<Buffer>} The sliced binary buffer payload.
    * @throws {ReadClosed} Thrown if the stream read channels close during operation.
    */
-  async read(length: number) {
+  async read(length: number): Promise<Buffer> {
     if (this._connectionClosed) {
       throw new Skema.WSError.ReadClosed();
     }
@@ -290,7 +290,7 @@ export class Socket {
    * @returns {Promise<Buffer>} The accumulated binary buffer payload.
    * @throws {ReadClosed} Thrown if the connection is terminated before satisfying the byte length.
    */
-  async reading(length: number) {
+  async reading(length: number): Promise<Buffer> {
     if (this._client && !this._connectionClosed) {
       let data = Buffer.alloc(0);
       while (!this._connectionClosed) {
@@ -299,6 +299,8 @@ export class Socket {
         length = length - Buffer.byteLength(readed);
         if (!length) return data;
       }
+      // if connection closed before reading the required length, throw error
+      throw new Skema.WSError.ReadClosed();
     } else {
       throw new Skema.WSError.ReadClosed();
     }

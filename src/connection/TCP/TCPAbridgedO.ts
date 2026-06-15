@@ -125,7 +125,7 @@ export class TCPAbridgedO extends TCP {
     }
     await super.send(nonce);
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const length = Math.round(Buffer.byteLength(data) / 4);
     if (length <= 126) {
       return await super.send(
@@ -150,7 +150,7 @@ export class TCPAbridgedO extends TCP {
       );
     }
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(1);
     if (!length) return;
     length = Buffer.from(this._decryptor(length) as unknown as Uint8Array);

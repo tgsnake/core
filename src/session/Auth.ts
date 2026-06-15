@@ -36,17 +36,17 @@ export class Auth {
       data.write() as unknown as Uint8Array,
     ]);
   }
-  static async unpack(b: BytesIO) {
+  static async unpack(b: BytesIO): Promise<Skema.TLObject> {
     b.seek(20, 1); // Skip auth_key_id (8), message_id (8) and message_length (4)
     return await Skema.TLObject.read(b);
   }
-  async invoke(data: Skema.TLObject) {
+  async invoke(data: Skema.TLObject): Promise<Skema.TLObject> {
     const content = Auth.pack(data);
     await this.connection.send(content);
     const response = new BytesIO(await this.connection.recv());
     return await Auth.unpack(response);
   }
-  async create() {
+  async create(): Promise<Buffer> {
     // https://core.telegram.org/mtproto/auth_key
     // https://core.telegram.org/mtproto/samples-auth_key
     let retries = this.MAX_RETRIES;
@@ -66,7 +66,9 @@ export class Auth {
           true,
         );
         Logger.debug(`[2.session.Auth] Send ResPq: ${nonce}`);
-        const resPq: Skema.Raw.ResPQ = await this.invoke(new Skema.Raw.ReqPqMulti({ nonce }));
+        const resPq: Skema.Raw.ResPQ = (await this.invoke(
+          new Skema.Raw.ReqPqMulti({ nonce }),
+        )) as Skema.Raw.ResPQ;
         Logger.debug(`[3.session.Auth] Got ResPq: ${resPq.serverNonce}`);
         Logger.debug(
           `[4.session.Auth] Server public key fingerprints: ${resPq.serverPublicKeyFingerprints}`,
@@ -135,7 +137,7 @@ export class Auth {
 
         // Step 5. TODO: Handle "ServerDhParamsFail". Code assumes response is ok
         Logger.debug(`[11.session.Auth] Send ReqDhParams`);
-        const serverDh = await this.invoke(
+        const serverDh: Skema.Raw.ServerDhParamsOk = (await this.invoke(
           new Skema.Raw.ReqDhParams({
             nonce: nonce,
             serverNonce: resPq.serverNonce,
@@ -144,7 +146,7 @@ export class Auth {
             q: qBytes,
             publicKeyFingerprint: fingerprints!,
           }),
-        );
+        )) as Skema.Raw.ServerDhParamsOk;
         const tempAesKey = Buffer.concat([
           crypto
             .createHash('sha1')
@@ -191,7 +193,7 @@ export class Auth {
         const answerWithHash = AES.ige256Decrypt(serverDh.encryptedAnswer, tempAesKey, tempAesIv);
         const answer = new BytesIO(answerWithHash);
         answer.seek(20, 1); // skip hash
-        const serverDhInnerData = await Skema.TLObject.read(answer);
+        const serverDhInnerData: Skema.Raw.ServerDhInnerData = await Skema.TLObject.read(answer);
         Logger.debug('[12.session.Auth] Done decrypting answer');
 
         const dhPrime = Skema.bufferToBigint(serverDhInnerData.dhPrime, false);
@@ -227,13 +229,13 @@ export class Auth {
         );
         Logger.debug(`[15.session.Auth] Send SetClientDhParams`);
 
-        const setClientDhParamsAnswer = await this.invoke(
+        const setClientDhParamsAnswer: Skema.Raw.TypeSetClientDhParamsAnswer = (await this.invoke(
           new Skema.Raw.SetClientDhParams({
             nonce: resPq.nonce,
             serverNonce: resPq.serverNonce,
             encryptedData: encryptedData,
           }),
-        );
+        )) as Skema.Raw.TypeSetClientDhParamsAnswer;
         // TODO: Handle "authKeyAuHash" if the previous step fails
 
         // Step 7; Step 8

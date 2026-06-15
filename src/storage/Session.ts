@@ -31,7 +31,11 @@ import type { SecretChat } from './SecretChat.js';
  * @returns {InputPeerUser | InputPeerChat | InputPeerChannel} The structured InputPeer TL object.
  * @throws {Error} Thrown if type is unrecognized.
  */
-export function getInputPeer(id: bigint, accessHash: bigint, type: string) {
+export function getInputPeer(
+  id: bigint,
+  accessHash: bigint,
+  type: string,
+): Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel {
   if (type === 'bot' || type === 'user') {
     return new Skema.Raw.InputPeerUser({
       userId: id,
@@ -110,34 +114,34 @@ export class BaseSession extends AbstractSession {
   setUserId(userId: bigint) {
     this._userId = userId;
   }
-  get authKey() {
+  get authKey(): Buffer {
     return this._authKey;
   }
-  get isBot() {
+  get isBot(): boolean {
     return this._isBot;
   }
-  get testMode() {
+  get testMode(): boolean {
     return this._testMode;
   }
-  get userId() {
+  get userId(): bigint {
     return this._userId;
   }
-  get apiId() {
+  get apiId(): number {
     return this._apiId;
   }
-  get dcId() {
+  get dcId(): number {
     return this._dcId;
   }
-  get port() {
+  get port(): number {
     return this._port;
   }
-  get ip() {
+  get ip(): string {
     return this._ip;
   }
-  get peers() {
+  get peers(): Map<bigint, any> {
     return this._peers;
   }
-  get secretChats() {
+  get secretChats(): Map<number, SecretChat> {
     return this._secretChats;
   }
   async load() {}
@@ -181,21 +185,29 @@ export class BaseSession extends AbstractSession {
       this._secretChats.set(chat.id, chat);
     }
   }
-  async getSecretChatById(id: number) {
+  async getSecretChatById(id: number): Promise<SecretChat | undefined> {
     Logger.debug(`[6.storage.Session] Getting secret chat by id: ${id}`);
     let chat = this._secretChats.get(id);
     if (chat) {
       return chat;
     }
   }
-  async getPeerById(id: bigint) {
+  async getPeerById(
+    id: bigint,
+  ): Promise<
+    Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
+  > {
     Logger.debug(`[7.storage.Session] Getting peer by id: ${id}`);
     let peer = this._peers.get(id);
     if (peer) {
       return getInputPeer(peer[0], peer[1], peer[2]);
     }
   }
-  async getPeerByUsername(username: string) {
+  async getPeerByUsername(
+    username: string,
+  ): Promise<
+    Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
+  > {
     Logger.debug(`[8.storage.Session] Getting peer by username: ${username}`);
     for (let [, peer] of this._peers) {
       if (peer[3]) {
@@ -205,7 +217,11 @@ export class BaseSession extends AbstractSession {
       }
     }
   }
-  async getPeerByPhoneNumber(phoneNumber: string) {
+  async getPeerByPhoneNumber(
+    phoneNumber: string,
+  ): Promise<
+    Skema.Raw.InputPeerUser | Skema.Raw.InputPeerChat | Skema.Raw.InputPeerChannel | undefined
+  > {
     Logger.debug(`[9.storage.Session] Getting peer by phone number: ${phoneNumber}`);
     for (let [, peer] of this._peers) {
       if (peer[4] && peer[4] === phoneNumber) {
@@ -213,13 +229,13 @@ export class BaseSession extends AbstractSession {
       }
     }
   }
-  async removeSecretChatById(id: number) {
+  async removeSecretChatById(id: number): Promise<boolean> {
     if (this._secretChats.has(id)) {
       this._secretChats.delete(id);
     }
     return true;
   }
-  exportString() {
+  exportString(): string {
     // >BI?256sQ?
     let bytes = Buffer.alloc(6);
     bytes.writeUInt8(this._dcId, 0); // 1

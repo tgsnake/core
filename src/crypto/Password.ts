@@ -18,7 +18,7 @@ function sha256(data: Buffer) {
 /**
  * Xor the buffer A with B.
  */
-export function xor(a: Buffer, b: Buffer) {
+export function xor(a: Buffer, b: Buffer): Buffer {
   const length = Math.min(Buffer.byteLength(a), Buffer.byteLength(b));
   for (let i = 0; i < length; i++) {
     (a as unknown as Uint8Array)[i] =

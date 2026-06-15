@@ -10,7 +10,7 @@
 
 import { bigInt, Buffer, Skema } from './deps.js';
 
-export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
+export function includesBuffer(array: Array<Buffer>, buffer: Buffer): boolean {
   for (const buff of array) {
     if (buff.equals(buffer as unknown as Uint8Array)) {
       return true;
@@ -19,7 +19,7 @@ export function includesBuffer(array: Array<Buffer>, buffer: Buffer) {
   return false;
 }
 // https://t.me/butthxforward/85
-export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1) {
+export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1): Buffer {
   let slc = buffer.subarray(start, stop);
   let res = slc;
   if (step === 0) {
@@ -51,7 +51,7 @@ export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: n
   return res;
 }
 // https://stackoverflow.com/questions/18638900/javascript-crc32/18639999#18639999
-export function makeCRCTable() {
+export function makeCRCTable(): Array<number> {
   let c;
   const crcTable: Array<any> = [];
   for (let n = 0; n < 256; n++) {
@@ -63,7 +63,7 @@ export function makeCRCTable() {
   }
   return crcTable;
 }
-export function crc32(str: Buffer | string) {
+export function crc32(str: Buffer | string): number {
   str = Buffer.isBuffer(str) ? Buffer.from(str as unknown as Uint8Array) : str;
   const crcTable = makeCRCTable();
   const length = Buffer.isBuffer(str) ? Buffer.byteLength(str) : str.length;
@@ -74,7 +74,7 @@ export function crc32(str: Buffer | string) {
   }
   return (crc ^ -1) >>> 0;
 }
-export function sleep(ms: number) {
+export function sleep(ms: number): Promise<unknown> {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
@@ -175,14 +175,14 @@ export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Arra
   }
   return temp;
 }
-export function randint(min: number, max: number) {
+export function randint(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
-export function randBigint(min: bigint, max: bigint) {
+export function randBigint(min: bigint, max: bigint): bigint {
   //@ts-ignore
   return bigInt.randBetween(min, max).value;
 }
-export function pow(x: number, y: number, z?: number) {
+export function pow(x: number, y: number, z?: number): number {
   let result = Math.pow(x, y);
   if (z !== undefined) {
     return Skema.mod(result, z);
@@ -190,43 +190,46 @@ export function pow(x: number, y: number, z?: number) {
   return result;
 }
 // https://stackoverflow.com/a/64953280/16600138
-const bigMath = {
-  abs(x: bigint) {
+const bigMath: {
+  abs(x: bigint): bigint;
+  sign(x: bigint): bigint;
+  pow(base: bigint, exponent: bigint): bigint;
+  min(value: bigint, ...values: Array<bigint>): bigint;
+  max(value: bigint, ...values: Array<bigint>): bigint;
+} = {
+  abs(x: bigint): bigint {
     return x < BigInt(0) ? -x : x;
   },
-  sign(x: bigint) {
+  sign(x: bigint): bigint {
     if (x === BigInt(0)) return BigInt(0);
     return x < BigInt(0) ? -BigInt(1) : BigInt(1);
   },
-  pow(base: bigint, exponent: bigint) {
+  pow(base: bigint, exponent: bigint): bigint {
     return base ** exponent;
   },
-  min(value: bigint, ...values: Array<bigint>) {
+  min(value: bigint, ...values: Array<bigint>): bigint {
     for (const v of values) if (v < value) value = v;
     return value;
   },
-  max(value: bigint, ...values: Array<bigint>) {
+  max(value: bigint, ...values: Array<bigint>): bigint {
     for (const v of values) if (v > value) value = v;
     return value;
   },
 };
 export { bigMath };
-export const MIN_CHANNEL_ID = BigInt(-1002147483647);
-export const MAX_CHANNEL_ID = BigInt(-1000000000000);
-export const MIN_CHAT_ID = BigInt(-2147483647);
-export const MAX_USER_ID_OLD = BigInt(2147483647);
-export const MAX_USER_ID = BigInt(999999999999);
-export function getChannelId(id: bigint) {
+export const MIN_CHANNEL_ID: bigint = BigInt(-1002147483647);
+export const MAX_CHANNEL_ID: bigint = BigInt(-1000000000000);
+export const MIN_CHAT_ID: bigint = BigInt(-2147483647);
+export const MAX_USER_ID_OLD: bigint = BigInt(2147483647);
+export const MAX_USER_ID: bigint = BigInt(999999999999);
+export function getChannelId(id: bigint): bigint {
   return MAX_CHANNEL_ID - id;
 }
-export function getPeerType(id: bigint) {
+export function getPeerType(id: bigint): string | undefined {
   if (id < BigInt(0)) {
-    // @ts-ignore
     if (MIN_CHAT_ID <= id) return 'chat';
-    // @ts-ignore
-    if (MIN_CHANNEL_ID <= id < MAX_CHANNEL_ID) return 'channel';
-    // @ts-ignore
-  } else if (BigInt(0) < id <= MAX_USER_ID) {
+    if (MIN_CHANNEL_ID <= id && id < MAX_CHANNEL_ID) return 'channel';
+  } else if (BigInt(0) < id && id <= MAX_USER_ID) {
     return 'user';
   } else {
     throw new Error(`PeerId Invalid: ${id}`);
@@ -243,7 +246,7 @@ export function base64urlTobase64(text: string): string {
 }
 
 // https://devimalplanet.com/how-to-generate-random-number-in-range-javascript#generate-random-bigint-between-low-and-high
-export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint) {
+export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint): bigint {
   if (lowBigInt >= highBigInt) {
     throw new Error('lowBigInt must be smaller than highBigInt');
   }
@@ -260,7 +263,7 @@ export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint) {
 
   return lowBigInt + randomDifference;
 }
-export function normalizeSecretString(secret: string) {
+export function normalizeSecretString(secret: string): Buffer {
   // https://github.com/LonamiWebs/Telethon/blob/494b20db2dc9f1a0d88f9ac0e84717789416cc20/telethon/network/connection/tcpmtproxy.py#L136
   if (secret.slice(0, 2) === 'dd' || secret.slice(0, 2) === 'ee') {
     secret = secret.slice(2);
@@ -269,5 +272,5 @@ export function normalizeSecretString(secret: string) {
   if (/^[0-9a-fA-F]+$/.test(secret)) {
     return Buffer.from(secret, 'hex');
   }
-  return Buffer.from(secret, 'base64').subarray(0, 16);
+  return Buffer.from(secret, 'base64').subarray(0, 16) as Buffer;
 }

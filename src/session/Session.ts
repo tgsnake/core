@@ -595,7 +595,7 @@ export class Session {
   /**
    * Initiation of connection. Call the ping function and send the layer information used by the client to the telegram server.
    */
-  async initConnection() {
+  async initConnection(): Promise<Skema.TLObject> {
     const ping = await this._send(
       new Skema.Raw.Ping({
         pingId: BigInt(0),
@@ -631,9 +631,9 @@ export class Session {
         true,
         this.START_TIMEOUT,
       );
-      return initData;
+      return initData!;
     }
-    return ping;
+    return ping!;
   }
   /** @ignore */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {

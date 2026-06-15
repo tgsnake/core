@@ -51,7 +51,7 @@ export class Timeout {
    * @returns {Promise<any>} A promise that resolves with the task's result or rejects upon timeout/failure.
    * @throws {TimeoutError} Thrown if the timeout is reached and no `onTimeout` handler is specified.
    */
-  run(task: Promise<any>, time: number, onTimeout?: OnTimeout) {
+  run(task: Promise<any>, time: number, onTimeout?: OnTimeout): Promise<any> {
     if (time === Infinity) return task;
     return new Promise((res, rej) => {
       let index = this._task.length;
@@ -79,7 +79,7 @@ export class Timeout {
   /**
    * Cancels and clears all active timeout timers currently managed by this instance.
    */
-  clear() {
+  clear(): void {
     for (let i = 0; i < this._task.length; i++) {
       let task = this._task[i];
       if (!task._destroyed) {
