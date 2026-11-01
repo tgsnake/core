@@ -306,8 +306,7 @@ export async function sendCode(
       ) {
         await this._session.stop();
         const typedError = error as
-          | Skema.Exceptions.SeeOther.NetworkMigrate
-          | Skema.Exceptions.SeeOther.PhoneMigrate;
+          Skema.Exceptions.SeeOther.NetworkMigrate | Skema.Exceptions.SeeOther.PhoneMigrate;
         const [ip, port] = await DataCenter.DataCenter(
           typedError.value as unknown as number,
           this._testMode,

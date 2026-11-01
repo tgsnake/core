@@ -1,6 +1,8 @@
 import readline from 'node:readline';
 import { Client, Storages } from '../dist/mod.js';
 
+process.env.LOGLEVEL = 'error';
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
