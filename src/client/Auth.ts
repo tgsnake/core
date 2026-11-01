@@ -52,11 +52,13 @@ export interface SigInUser {
 
   /**
    * Optional asynchronous callback returning the first name to be used if registering a new account.
+   * @deprecated since Telegram registration now only can be done with official app, this parameter is no longer used and will be removed in future versions.
    */
   firstname?: { (): Promise<string> };
 
   /**
    * Optional asynchronous callback returning the last name to be used if registering a new account.
+   * @deprecated since Telegram registration now only can be done with official app, this parameter is no longer used and will be removed in future versions.
    */
   lastname?: { (): Promise<string> };
 
@@ -136,7 +138,7 @@ export async function siginBot(
  * Coordinates the full user authorization flow:
  * 1. Requests the phone number and sends the OTP code.
  * 2. Asks for the verification code.
- * 3. Handles 2FA passwords, password recovery flows, and new account signup as necessary.
+ * 3. Handles 2FA passwords, password recovery flows.
  *
  * @this Client
  * @param {SigInUser} auth - The user credential retrieval callbacks.
@@ -150,7 +152,8 @@ export async function siginUser(
   let _phoneNumber;
   let _sendCode;
   let _signedIn;
-  let _signedUp;
+  //  @deprecated since Telegram registration now only can be done with official app, no longer used.
+  //  let _signedUp;
   while (true) {
     try {
       _phoneNumber = await auth.phoneNumber();
@@ -241,35 +244,37 @@ export async function siginUser(
       }
     }
   }
-  if (_signedIn && _signedIn instanceof Skema.Raw.User) {
-    return _signedIn;
-  }
-  while (true) {
-    try {
-      _signedUp = await signup.call(
-        this,
-        _phoneNumber,
-        (_sendCode as Skema.Raw.auth.SentCode).phoneCodeHash,
-        auth.firstname ? await auth.firstname() : String(Date.now()),
-        auth.lastname ? await auth.lastname() : '',
-      );
-      break;
-    } catch (error: unknown) {
-      if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
-        Logger.error(`[8.client.Auth] Got error when trying to sign up:`, error);
-        if (auth.authError) {
-          await auth.authError(error);
-        }
-      } else {
-        throw error;
-      }
-    }
-  }
+  //  @deprecated since Telegram registration now only can be done with official app, no longer used.
+  // while (true) {
+  //   try {
+  //     _signedUp = await signup.call(
+  //       this,
+  //       _phoneNumber,
+  //       (_sendCode as Skema.Raw.auth.SentCode).phoneCodeHash,
+  //       auth.firstname ? await auth.firstname() : String(Date.now()),
+  //       auth.lastname ? await auth.lastname() : '',
+  //     );
+  //     break;
+  //   } catch (error: unknown) {
+  //     if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
+  //       Logger.error(`[8.client.Auth] Got error when trying to sign up:`, error);
+  //       if (auth.authError) {
+  //         await auth.authError(error);
+  //       }
+  //     } else {
+  //       throw error;
+  //     }
+  //   }
+  // }
   if (_signedIn && _signedIn instanceof Skema.Raw.help.TermsOfService) {
     Logger.info(`[9.client.Auth] \n${_signedIn.text}\n`);
     await acceptTOS.call(this, _signedIn.id.data);
   }
-  return _signedUp;
+  //  @deprecated since Telegram registration now only can be done with official app, no longer used.
+  // return _signedUp;
+  if (_signedIn && _signedIn instanceof Skema.Raw.User) {
+    return _signedIn;
+  }
 }
 
 /**
@@ -341,6 +346,7 @@ export async function sendCode(
  * @param {string} phoneCodeHash - The phone code hash returned by `sendCode`.
  * @param {string} phoneCode - The confirmation OTP code received by the user.
  * @returns {Promise<Skema.Raw.User | Skema.Raw.help.TermsOfService | boolean>} Resolves to user object, TermsOfService if sign-up is required with TOS, or false.
+ * @deprecated since Telegram registration now only can be done with official app, this function is no longer used and will be removed in future versions.
  */
 export async function sigin(
   this: Client,
@@ -470,6 +476,7 @@ export async function getPasswordHint(this: Client): Promise<string> {
  * @param {string} firstname - The first name for the new account.
  * @param {string} [lastname=''] - The optional last name for the new account.
  * @returns {Promise<Skema.Raw.User | undefined>} The newly registered user object, or `undefined` if signup fails.
+ * @deprecated since Telegram registration now only can be done with official app, this function is no longer used and will be removed in future versions.
  */
 export async function signup(
   this: Client,
