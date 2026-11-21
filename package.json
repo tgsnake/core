@@ -35,17 +35,17 @@
   },
   "packageManager": "yarn@4.18.1",
   "dependencies": {
-    "@tgsnake/bytesio": "^2.0.1",
+    "@tgsnake/bytesio": "^2.1.0",
     "@tgsnake/log": "^2.0.1",
     "async-mutex": "^0.5.0",
     "big-integer": "^1.6.52",
-    "socks": "^2.8.10"
+    "socks": "^2.8.11"
   },
   "devDependencies": {
-    "@tgsnake/skema": "^2.7.0",
-    "@types/bun": "^1.4.4",
+    "@tgsnake/skema": "^2.9.0",
+    "@types/bun": "^1.4.5",
     "@types/node": "^26.6.6",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {

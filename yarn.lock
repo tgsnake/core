@@ -5,10 +5,10 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"@tgsnake/bytesio@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@tgsnake/bytesio@npm:2.0.1"
-  checksum: 10c0/f904cb3785d583ebab33c74275557414187b8f53d5205a1d8a1b70e2933bcad935ec42b5d4fd3d8056e35becf02d61705942d3aa30ced9884cd15c296cc14dd8
+"@tgsnake/bytesio@npm:^2.0.1, @tgsnake/bytesio@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@tgsnake/bytesio@npm:2.1.0"
+  checksum: 10c0/5ae311a69b7bbdd4775a3e0e08e1327a6829545048f1babfe04baa7a4575aa32bb38f42023d894b2bdead2adc3e3d4c5ad1a94fd9ebe18a98caedcc51dc4df5f
   languageName: node
   linkType: hard
 
@@ -16,15 +16,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tgsnake/core@workspace:."
   dependencies:
-    "@tgsnake/bytesio": "npm:^2.0.1"
+    "@tgsnake/bytesio": "npm:^2.1.0"
     "@tgsnake/log": "npm:^2.0.1"
-    "@tgsnake/skema": "npm:^2.7.0"
-    "@types/bun": "npm:^1.4.4"
+    "@tgsnake/skema": "npm:^2.9.0"
+    "@types/bun": "npm:^1.4.5"
     "@types/node": "npm:^26.6.6"
     async-mutex: "npm:^0.5.0"
     big-integer: "npm:^1.6.52"
-    prettier: "npm:^3.9.10"
-    socks: "npm:^2.8.10"
+    prettier: "npm:^3.10.1"
+    socks: "npm:^2.8.11"
     typescript: "npm:^7.0.2"
   peerDependencies:
     "@tgsnake/skema": ^2.0.0
@@ -41,23 +41,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tgsnake/skema@npm:^2.7.0":
-  version: 2.7.0
-  resolution: "@tgsnake/skema@npm:2.7.0"
+"@tgsnake/skema@npm:^2.9.0":
+  version: 2.9.0
+  resolution: "@tgsnake/skema@npm:2.9.0"
   dependencies:
     "@tgsnake/bytesio": "npm:^2.0.1"
     "@tgsnake/log": "npm:^2.0.1"
     big-integer: "npm:^1.6.52"
-  checksum: 10c0/d579c7d4e6310cf39132b938cd90cd742700d645714ccee9bb2735c4b1bb37cf814dbad760fa958cd2469e355e9d5c6408e26376843d67a7608c9d90ee1829f4
+  checksum: 10c0/c831540e666b8decef823b2f84403a4130e3f20b4748056c6b6f97047c218cfd9e10cf77ac49e9309876fc844abd34907217ae5a3790ff386e81a5992534ce77
   languageName: node
   linkType: hard
 
-"@types/bun@npm:^1.4.4":
-  version: 1.4.4
-  resolution: "@types/bun@npm:1.4.4"
+"@types/bun@npm:^1.4.5":
+  version: 1.4.5
+  resolution: "@types/bun@npm:1.4.5"
   dependencies:
-    bun-types: "npm:1.4.4"
-  checksum: 10c0/3b9a54dcae27fc4d31dc8df6ef7448e9c0c5a6b23de3e7f3aa17700548660bb9e4b061c399a66f56fe055879652d151e245cfaa4911f096bd7d4f8ae69baa6cb
+    bun-types: "npm:1.4.5"
+  checksum: 10c0/6960d6a1da5e860940986de21a5da779e22601f2bc2575126c6cf7039ece6f4aa107bd3a078ae97c650cfeba62c070759648c6c855a0baabf838307803936255
   languageName: node
   linkType: hard
 
@@ -235,13 +235,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bun-types@npm:1.4.4":
-  version: 1.4.4
-  resolution: "bun-types@npm:1.4.4"
+"bun-types@npm:1.4.5":
+  version: 1.4.5
+  resolution: "bun-types@npm:1.4.5"
   dependencies:
     "@types/node": "npm:*"
     undici-types: "npm:*"
-  checksum: 10c0/f8d201a731bf50138c05f73e5e9e19187801841a2fab310c7da8f02a17feb832ec37926f03fda345d16a3526cc3c7dfba01284102a3e62e00c5f995aa6b7d91b
+  checksum: 10c0/62684ad58b34e8d41c00d53bdf6989f14a11e8be25eea0d2793705b688994a9d02916648613d9d5d53b5a8841b73ee584db41f213112b9828763e788998303d8
   languageName: node
   linkType: hard
 
@@ -275,12 +275,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.9.10":
-  version: 3.9.10
-  resolution: "prettier@npm:3.9.10"
+"prettier@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "prettier@npm:3.10.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/0b3531593aa6fb36ac6baf629cb058bda472c59a6938774f931fe55283a07c62e6f56e621b043a82d8a3e21fc284c08c34f9e539fc70072635f79b7bae1a1067
+  checksum: 10c0/e8c03ea575a30e15afa75a3700e94609050502980d7c906374aea4cf623eef4dce0816100126207e675cc1ed54b7dfce60f02dbee8d61ec27dc69ce5df6c3723
   languageName: node
   linkType: hard
 
@@ -291,13 +291,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socks@npm:^2.8.10":
-  version: 2.8.10
-  resolution: "socks@npm:2.8.10"
+"socks@npm:^2.8.11":
+  version: 2.8.11
+  resolution: "socks@npm:2.8.11"
   dependencies:
     ip-address: "npm:^10.1.1"
     smart-buffer: "npm:^4.2.0"
-  checksum: 10c0/9ac7f4329ed064585975206d9582119a1f168b249dd6119a939f839e0ea7a590d4fdccff9a4112f13b478177207959096f70224f021eaeb3ce69bc8129f80ef4
+  checksum: 10c0/75de6ed9a204fec5481862cbcf3660e4821cdb48a2850056b426425ae6fdd07f1e7880093e56e927100e36df7b5368a69a25c771f911f4e4349c6ed690049075
   languageName: node
   linkType: hard
 
