@@ -19,6 +19,21 @@ import * as Files from '../file/index.js';
 import type { ProxyInterface } from '../connection/connection.js';
 import type { Session } from '../session/index.js';
 
+/**
+ * The handler callback function for handling the incoming update from Telegram.
+ */
+export type UpdateHandlerCallback = (update: Skema.Raw.TypeUpdates) => void | Promise<void>;
+export interface UpdateHandlerDispose {
+  /**
+   * The dispose function for dropping the update handler callback. It will return true on success.
+   */
+  (): boolean;
+  /**
+   * The id of update handler callback function located. This id can be used for dropping the handler using removeHandler function.S
+   */
+  id: number;
+}
+
 export interface ClientOptions {
   /**
    * Connect to telegram using MTProto proxy or Socks proxy.
@@ -165,7 +180,11 @@ export interface ClientOptions {
  *
  * @method addHandler - Adds a handler for updates.
  * @param {Function} callback - The update handler.
- * @returns {undefined}
+ * @returns {UpdateHandlerDispose} A dispose function with an `id` property to remove the handler.
+ *
+ * @method removeHandler - Removes a handler for updates by callback reference or handler ID.
+ * @param {Function | number} handler - The update handler callback or handler ID.
+ * @returns {boolean} True if a handler was found and removed, false otherwise.
  *
  * @method fetchPeers - Fetches peers into the session.
  * @param {Array<Raw.TypeUser | Raw.TypeChat>} peers - The peers to fetch.
@@ -240,7 +259,8 @@ export class Client {
   _saveFileSemaphore!: Semaphore;
   _maxReconnectRetries!: number;
   _me?: Skema.Raw.users.UserFull;
-  private _handler: Array<{ (update: Skema.Raw.TypeUpdates): void }> = [];
+  private _handler: Array<{ id: number; callback: UpdateHandlerCallback }> = [];
+  private _nextHandlerId: number = 0;
   /**
    * Client Constructor.
    * @param {AbstractSession} session - What the session will be used for login to telegram.
@@ -371,8 +391,8 @@ export class Client {
         }
         update.updates = parsed;
       }
-      this._handler.forEach((callback) => {
-        return callback(update);
+      this._handler.forEach((handler) => {
+        return handler.callback(update);
       });
     }
     return update;
@@ -457,9 +477,37 @@ export class Client {
   }
   /**
    * Add handler when update coming.
+   * @param {UpdateHandlerCallback} callback - Handler callback function.
+   * @returns {UpdateHandlerDispose} A dispose function with an `id` property to remove the handler.
    */
-  addHandler(callback: { (update: Skema.Raw.TypeUpdates): void }): undefined {
-    this._handler.push(callback);
+  addHandler(callback: UpdateHandlerCallback): UpdateHandlerDispose {
+    const id = ++this._nextHandlerId;
+    this._handler.push({ id, callback });
+    const dispose: UpdateHandlerDispose = Object.assign(
+      () => {
+        return this.removeHandler(id);
+      },
+      { id },
+    );
+    return dispose;
+  }
+  /**
+   * Remove handler by callback reference or handler ID.
+   * @param {UpdateHandlerCallback | number} handler - The update handler callback or handler ID to remove.
+   * @returns {boolean} True if handler was found and removed, false otherwise.
+   */
+  removeHandler(handler: UpdateHandlerCallback | number): boolean {
+    const index = this._handler.findIndex((item) => {
+      if (typeof handler === 'number') {
+        return item.id === handler;
+      }
+      return item.callback === handler;
+    });
+    if (index !== -1) {
+      this._handler.splice(index, 1);
+      return true;
+    }
+    return false;
   }
   /**
    * Fetch the peer into session.
