@@ -38,7 +38,6 @@
     "@tgsnake/bytesio": "^2.1.0",
     "@tgsnake/log": "^2.0.1",
     "async-mutex": "^0.5.0",
-    "big-integer": "^1.6.52",
     "socks": "^2.8.11"
   },
   "devDependencies": {

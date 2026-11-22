@@ -91,7 +91,12 @@ export class Session {
         this._authKey,
         this._authKeyId,
         this._storedMsgId,
+        this._msgId,
       );
+      if (!data) {
+        Logger.debug(`[2.session.Session] Message ignored.`);
+        return;
+      }
       const message = data.body instanceof Skema.MsgContainer ? data.body.messages : [data];
       Logger.debug(`[2.session.Session] Reveive ${message.length} data.`);
 
@@ -470,8 +475,7 @@ export class Session {
           if (error instanceof Skema.Exceptions.Flood.FloodWait) {
             error as Skema.Exceptions.Flood.FloodWait;
             const amount = Number(error.value ?? 2000); // if undefined, make it as 2s
-            // @ts-ignore
-            if (amount > sleepThreshold >= 0) {
+            if (sleepThreshold >= 0 && amount > sleepThreshold) {
               throw error;
             }
             Logger.info(

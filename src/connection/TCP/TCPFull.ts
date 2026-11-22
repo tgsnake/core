@@ -42,7 +42,12 @@ export class TCPFull extends TCP {
   override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);
     if (!length) return;
-    let packet = await super.recv(length.readInt32LE(0) - 4);
+    const len = length.readInt32LE(0);
+    if (len < 0) return length;
+    if (len < 12 || len > 16 * 1024 * 1024) {
+      throw new Error(`Invalid transport frame length: ${len}`);
+    }
+    let packet = await super.recv(len - 4);
     if (!packet) return;
     packet = Buffer.concat([length as unknown as Uint8Array, packet as unknown as Uint8Array]);
     const checksum = packet.subarray(-4);

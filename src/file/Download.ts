@@ -9,7 +9,7 @@
  */
 import { File } from './File.js';
 import { Session, Auth } from '../session/index.js';
-import { bigMath } from '../helpers.js';
+import { bigMath, timingSafeEqual } from '../helpers.js';
 import { AES } from '../crypto/index.js';
 import { crypto, Buffer, platform, Skema } from '../deps.js';
 import { type Client } from '../client/Client.js';
@@ -119,7 +119,7 @@ export async function handleDownload(
             }
           }
           const chunk = r2.bytes;
-          const decryptedChunk = await AES.ctr256Cipher(
+          const decryptedChunk = AES.ctr256Cipher(
             (r as Skema.Raw.upload.FileCdnRedirect).encryptionKey,
             Buffer.concat([
               (r as Skema.Raw.upload.FileCdnRedirect).encryptionIv.subarray(
@@ -135,13 +135,20 @@ export async function handleDownload(
               offset: offsetBytes,
             }),
           )) as unknown as Array<Skema.Raw.FileHash>;
+          if (!hashes || !Array.isArray(hashes) || hashes.length === 0) {
+            throw new Skema.CDNFileHashMismatch('No hashes received for CDN file verification');
+          }
           for (let i = 0; i < hashes.length; i++) {
             const hash: Skema.Raw.FileHash = hashes[i];
-            const hashChunk = decryptedChunk.subarray(hash.limit * i, hash.limit * (i + 1));
+            const partOffset = Number(BigInt(hash.offset) - offsetBytes);
+            const hashChunk =
+              partOffset >= 0 && partOffset + hash.limit <= Buffer.byteLength(decryptedChunk)
+                ? decryptedChunk.subarray(partOffset, partOffset + hash.limit)
+                : decryptedChunk.subarray(hash.limit * i, hash.limit * (i + 1));
             const chash = crypto.createHash('sha256');
             chash.update(hashChunk);
             Skema.CDNFileHashMismatch.check(
-              chash.digest('hex') === hash.hash.toString('hex'),
+              timingSafeEqual(chash.digest(), Buffer.from(hash.hash)),
               `CDN file hash mismatch when downloading cdn file`,
             );
           }

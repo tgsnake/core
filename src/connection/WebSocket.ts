@@ -12,8 +12,6 @@ import { net, Mutex, SocksClient, platform, inspect, Buffer, Skema } from '../de
 import { Logger } from '../Logger.js';
 import type { ProxyInterface } from './connection.js';
 
-const mutex = new Mutex();
-
 /**
  * A promised wrapper around node TCP network sockets (`net.Socket`) and browser WebSocket connections.
  *
@@ -29,7 +27,7 @@ export class Socket {
   private _read!: boolean | Promise<boolean>;
   /** Resolver function to notify waiting read queues of new buffer data packets. */
   private _promisedReading!: (value?: unknown) => void;
-
+  private _mutex!: Mutex;
   /**
    * The connection timeout in milliseconds.
    */
@@ -49,6 +47,7 @@ export class Socket {
     this._data = Buffer.alloc(0);
     this._connectionClosed = true;
     this.timeout = timeout;
+    this._mutex = new Mutex();
   }
 
   /**
@@ -199,7 +198,7 @@ export class Socket {
       if (platform === 'Browser') {
         (this._client as WebSocket).onmessage = async (data) => {
           const _data = Buffer.from(await new Response(data.data).arrayBuffer());
-          const release = await mutex.acquire();
+          const release = await this._mutex.acquire();
           try {
             Logger.debug(`[1.connection.WebSocket] Receive ${Buffer.byteLength(_data)} bytes data`);
             this._data = Buffer.concat([
@@ -213,7 +212,7 @@ export class Socket {
         };
       } else {
         (this._client as net.Socket).on('data', async (data: Buffer) => {
-          const release = await mutex.acquire();
+          const release = await this._mutex.acquire();
           try {
             Logger.debug(`[2.connection.WebSocket] Receive ${Buffer.byteLength(data)} bytes data`);
             this._data = Buffer.concat([
@@ -240,7 +239,7 @@ export class Socket {
    */
   async send(data: Buffer) {
     if (this._client && !this._connectionClosed) {
-      const release = await mutex.acquire();
+      const release = await this._mutex.acquire();
       try {
         if (platform === 'Browser') {
           (this._client as WebSocket).send(data as unknown as BufferSource);

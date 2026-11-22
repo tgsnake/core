@@ -12,6 +12,7 @@ import { crypto, Buffer, Skema, BytesIO } from '../deps.js';
 import { MsgId } from '../session/internals/MsgId.js';
 import { ige256Encrypt, ige256Decrypt } from './Aes.js';
 import { Logger } from '../Logger.js';
+import { timingSafeEqual } from '../helpers.js';
 
 const STORED_MSG_IDS_MAX_SIZE = 1000 * 2;
 
@@ -150,9 +151,10 @@ export async function unpack(
   authKey: Buffer,
   authKeyId: Buffer,
   storedMsgId: Array<bigint>,
-): Promise<Skema.Message> {
+  sessionMsgId?: MsgId,
+): Promise<Skema.Message | undefined> {
   Skema.SecurityCheckMismatch.check(
-    b.read(8).equals(authKeyId as unknown as Uint8Array),
+    timingSafeEqual(b.read(8), authKeyId),
     'Provided auth key id is not equal with expected one.',
   );
   const msgKey = b.read(16);
@@ -167,33 +169,26 @@ export async function unpack(
     ]),
   );
   Skema.SecurityCheckMismatch.check(
-    msgKey.equals(hash.subarray(8, 24) as unknown as Uint8Array),
+    timingSafeEqual(msgKey, hash.subarray(8, 24)),
     'Provided msg key is not equal with expected one',
   );
   const data = new BytesIO(decrypted);
   data.read(8); // salt
   // https://core.telegram.org/mtproto/security_guidelines#checking-session-id
   Skema.SecurityCheckMismatch.check(
-    Buffer.from(data.read(8) as unknown as Uint8Array).equals(sessionId as unknown as Uint8Array),
+    timingSafeEqual(Buffer.from(data.read(8) as unknown as Uint8Array), sessionId),
     'Provided session id is not equal with expected one.',
   );
   const message = await Skema.Message.read(new BytesIO(data.buffer.subarray(16))).catch((error) => {
     Logger.error(error);
-    // I'm not sure about this, because we don't have a KeyError, so keep this as console.log until we know the error structure.
-    /*if(error.args[0] === 0) throw new Error("Received empty data. Check your internet connection.")
-    let left = Buffer.from(data.read()).toString("hex")
-    //@ts-ignore 
-    left = range(0,hex.length,64).map(i => left.slice(i,i+64))
-    //@ts-ignore
-    left = left.map((left) => range(0,left.length,8).map((i) => left.slice(i,i+8)))
-    //@ts-ignore
-    left = left.map((left) => left.join(" ")).join("\n")
-    throw new Error(`The server sent an unknown constructor: ${Buffer.from(error.args[0]).toString("hex")}\n${left}`)*/
   });
+  if (!message) {
+    throw new Skema.SecurityCheckMismatch('Failed to deserialize message payload');
+  }
   // https://core.telegram.org/mtproto/security_guidelines#checking-message-length
   data.seek(32); // Get to the payload, skip salt (8) + session_id (8) + msg_id (8) + seq_no (4) + length (4)
   const payload = data.read();
-  const padding = payload.subarray(message!.length);
+  const padding = payload.subarray(message.length);
   Skema.SecurityCheckMismatch.check(
     Buffer.byteLength(padding) >= 12 && Buffer.byteLength(padding) <= 1024,
     'Payload padding is lower than 12 or bigger than 1024',
@@ -204,7 +199,7 @@ export async function unpack(
   );
   // https://core.telegram.org/mtproto/security_guidelines#checking-msg-id
   Skema.SecurityCheckMismatch.check(
-    Skema.bigIntMod(message!.msgId, BigInt(2)) !== BigInt(0),
+    Skema.bigIntMod(message.msgId, BigInt(2)) !== BigInt(0),
     'Mod of msgId with 2 is not equal with zero',
   );
   if (storedMsgId.length > STORED_MSG_IDS_MAX_SIZE) {
@@ -212,29 +207,39 @@ export async function unpack(
   }
   if (storedMsgId.length) {
     // Ignored message: msg_id is lower than all of the stored values
-    if (message!.msgId < storedMsgId[0]) {
-      throw new Skema.SecurityCheckMismatch('Msg id is lower than all of the stored values');
+    if (message.msgId < storedMsgId[0]) {
+      Logger.warning(
+        `[1.crypto.Mtproto] Ignored message: msg_id (${message.msgId}) is lower than all stored values (${storedMsgId[0]})`,
+      );
+      return;
     }
     // Ignored message: msg_id is equal to any of the stored values
-    if (storedMsgId.includes(message!.msgId)) {
-      throw new Skema.SecurityCheckMismatch('Msg id is equal to any of the stored values');
+    if (storedMsgId.includes(message.msgId)) {
+      Logger.warning(`[2.crypto.Mtproto] Ignored message: duplicate msg_id (${message.msgId})`);
+      return;
     }
-    const msgId = new MsgId();
-    const timeDiff = BigInt(message!.msgId - msgId.getMsgId()) / BigInt(2 ** 32);
+    const msgId = sessionMsgId ?? new MsgId();
+    const timeDiff = BigInt(message.msgId - msgId.getMsgId()) / BigInt(2 ** 32);
     // Ignored message: msg_id belongs over 30 seconds in the future
     if (timeDiff > BigInt(30)) {
-      throw new Skema.SecurityCheckMismatch('Msg id belongs over 30 seconds in the future');
+      Logger.warning(
+        `[3.crypto.Mtproto] Ignored message: msg_id belongs over 30 seconds in the future (diff: ${timeDiff})`,
+      );
+      return;
     }
     // Ignored message: msg_id belongs over 300 seconds in the past
     if (timeDiff < BigInt(-300)) {
-      throw new Skema.SecurityCheckMismatch('Msg id belongs over 300 seconds in the past');
+      Logger.warning(
+        `[4.crypto.Mtproto] Ignored message: msg_id belongs over 300 seconds in the past (diff: ${timeDiff})`,
+      );
+      return;
     }
   }
-  storedMsgId.push(message!.msgId);
+  storedMsgId.push(message.msgId);
   storedMsgId.sort((a, b) => {
     if (a > b) return 1;
     if (a < b) return -1;
     return 0;
   });
-  return message!;
+  return message;
 }

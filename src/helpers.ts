@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { bigInt, Buffer, Skema } from './deps.js';
+import { Buffer, crypto, Skema } from './deps.js';
 
 export function includesBuffer(array: Array<Buffer>, buffer: Buffer): boolean {
   for (const buff of array) {
@@ -178,9 +178,22 @@ export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Arra
 export function randint(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+export function timingSafeEqual(a: Buffer, b: Buffer): boolean {
+  if (Buffer.byteLength(a) !== Buffer.byteLength(b)) {
+    return false;
+  }
+  if (crypto && typeof crypto.timingSafeEqual === 'function') {
+    return crypto.timingSafeEqual(a, b);
+  }
+  let out = 0;
+  for (let i = 0; i < Buffer.byteLength(a); i++) {
+    out |= (a as unknown as Uint8Array)[i] ^ (b as unknown as Uint8Array)[i];
+  }
+  return out === 0;
+}
 export function randBigint(min: bigint, max: bigint): bigint {
-  //@ts-ignore
-  return bigInt.randBetween(min, max).value;
+  if (min >= max) return min;
+  return generateRandomBigInt(min, max + BigInt(1));
 }
 export function pow(x: number, y: number, z?: number): number {
   let result = Math.pow(x, y);
@@ -245,23 +258,20 @@ export function base64urlTobase64(text: string): string {
     .replace(/_/g, '/');
 }
 
-// https://devimalplanet.com/how-to-generate-random-number-in-range-javascript#generate-random-bigint-between-low-and-high
 export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint): bigint {
   if (lowBigInt >= highBigInt) {
     throw new Error('lowBigInt must be smaller than highBigInt');
   }
   const difference = highBigInt - lowBigInt;
-  const differenceLength = difference.toString().length;
-  let multiplier = '';
-  while (multiplier.length < differenceLength) {
-    multiplier += Math.random().toString().split('.')[1];
-  }
-  multiplier = multiplier.slice(0, differenceLength);
-  const divisor = '1' + '0'.repeat(differenceLength);
+  const hex = difference.toString(16);
+  const byteLength = Math.ceil(hex.length / 2);
+  let rand: bigint;
+  do {
+    const bytes = crypto.randomBytes(byteLength);
+    rand = Skema.bufferToBigint(Buffer.from(bytes as unknown as Uint8Array), false);
+  } while (rand >= difference);
 
-  const randomDifference = (difference * BigInt(multiplier)) / BigInt(divisor);
-
-  return lowBigInt + randomDifference;
+  return lowBigInt + rand;
 }
 export function normalizeSecretString(secret: string): Buffer {
   // https://github.com/LonamiWebs/Telethon/blob/494b20db2dc9f1a0d88f9ac0e84717789416cc20/telethon/network/connection/tcpmtproxy.py#L136

@@ -18,7 +18,6 @@ import * as net from 'node:net';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import process from 'node:process';
-import bigInt from 'big-integer';
 import { Buffer } from 'node:buffer';
 import { inspect as nodeInspect } from 'node:util';
 export { gzipSync, gunzipSync } from 'node:zlib';
@@ -77,4 +76,4 @@ export const aesjs = {
   Counter,
 };
 
-export { crypto, net, os, bigInt, path, Buffer };
+export { crypto, net, os, path, Buffer };

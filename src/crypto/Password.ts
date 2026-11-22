@@ -8,6 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 import { crypto, Buffer, Skema } from '../deps.js';
+import * as Prime from './Prime.js';
 
 /**
  * Create a sha256 hash.
@@ -68,14 +69,30 @@ export function computePasswordCheck(
   r: Skema.Raw.account.Password,
   password: string,
 ): Skema.Raw.InputCheckPasswordSRP {
-  const algo =
-    r.currentAlgo as Skema.Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow;
+  if (
+    !(
+      r.currentAlgo instanceof
+      Skema.Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow
+    )
+  ) {
+    throw new Skema.SecurityCheckMismatch('Unsupported password KDF algorithm');
+  }
+  const algo = r.currentAlgo;
   const pBytes = algo.p;
   const p = btoi(pBytes);
+  Skema.SecurityCheckMismatch.check(p === Prime.CURRENT_DH_PRIME, 'SRP p is invalid');
   const g = algo.g;
+  Skema.SecurityCheckMismatch.check(
+    BigInt(g) >= BigInt(2) && BigInt(g) <= BigInt(7) && BigInt(g) < p - BigInt(1),
+    'SRP g is invalid',
+  );
+  if (!r.srpB) {
+    throw new Skema.SecurityCheckMismatch('Missing SRP B value');
+  }
   const gBytes = itob(BigInt(g));
   const BBytes = r.srpB;
-  const B = btoi(BBytes!);
+  const B = btoi(BBytes);
+  Skema.SecurityCheckMismatch.check(BigInt(1) < B && B < p - BigInt(1), 'SRP B is out of bounds');
   const srpId = r.srpId;
   const xBytes = computePasswordHash(algo, password);
   const x = btoi(xBytes);
@@ -100,7 +117,13 @@ export function computePasswordCheck(
     );
     if (u > BigInt(0)) break;
   }
+  Skema.SecurityCheckMismatch.check(BigInt(1) < A && A < p - BigInt(1), 'SRP A is invalid');
+  Skema.SecurityCheckMismatch.check(
+    BigInt(2) ** BigInt(2048 - 64) < A && A < p - BigInt(2) ** BigInt(2048 - 64),
+    'SRP A is out of bounds',
+  );
   const gB = Skema.bigIntMod(B - kGX, p);
+  Skema.SecurityCheckMismatch.check(gB > BigInt(1) && gB < p - BigInt(1), 'SRP gB is invalid');
   const uX = u * x;
   const aUX = a + uX;
   const S = Skema.bigIntPow(gB, aUX, p);

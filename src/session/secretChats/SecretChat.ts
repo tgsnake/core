@@ -11,7 +11,7 @@
 import { type AbstractSession, SecretChat as TempChat } from '../../storage/index.js';
 import { Mutex, inspect, crypto, Buffer, Skema } from '../../deps.js';
 import { Logger } from '../../Logger.js';
-import { SecretChats } from '../../crypto/index.js';
+import { SecretChats, Prime } from '../../crypto/index.js';
 import type { Client } from '../../client/Client.js';
 
 // Adapted from:
@@ -61,6 +61,13 @@ export class SecretChat {
       if (dh instanceof Skema.Raw.messages.DhConfigNotModified) {
         return this._dhConfig;
       }
+      const p = Skema.bufferToBigint(dh.p, false);
+      Skema.SecurityCheckMismatch.check(p === Prime.CURRENT_DH_PRIME, 'DH prime p is invalid');
+      const g = BigInt(dh.g);
+      Skema.SecurityCheckMismatch.check(
+        g >= BigInt(2) && g <= BigInt(7) && g < p - BigInt(1),
+        'DH generator g is invalid',
+      );
       this._dhConfig = dh;
       return dh;
     } finally {
@@ -370,6 +377,14 @@ export class SecretChat {
     const authKey = await Skema.bigintToBuffer(Skema.bigIntPow(gA, b, p), 256, false);
     const fingerprint = sha1(authKey).subarray(-8);
     // https://corefork.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
+    Skema.SecurityCheckMismatch.check(
+      BigInt(1) < gA && gA < p - BigInt(1),
+      'gA must be greater than one and smaller than p-1',
+    );
+    Skema.SecurityCheckMismatch.check(
+      BigInt(2) ** BigInt(2048 - 64) < gA && gA < p - BigInt(2) ** BigInt(2048 - 64),
+      'gA must be greater than 2^{2048 - 64} and smaller than p-2^{2048 -64}',
+    );
     Skema.SecurityCheckMismatch.check(
       BigInt(1) < gB && gB < p - BigInt(1),
       'gB must be greater than one and smaller than p-1',

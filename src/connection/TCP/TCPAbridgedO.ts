@@ -158,22 +158,23 @@ export class TCPAbridgedO extends TCP {
       length = await super.recv(3);
       if (!length) return;
       length = Buffer.from(this._decryptor(length) as unknown as Uint8Array);
-      return Buffer.from(
-        this._decryptor(
-          (await super.recv(
-            Buffer.concat([
-              length as unknown as Uint8Array,
-              Buffer.alloc(1) as unknown as Uint8Array,
-            ]).readInt32LE(0) * 4,
-          )) as unknown as Buffer,
-        ) as unknown as Uint8Array,
-      );
+      const len =
+        Buffer.concat([
+          length as unknown as Uint8Array,
+          Buffer.alloc(1) as unknown as Uint8Array,
+        ]).readInt32LE(0) * 4;
+      if (len <= 0 || len > 16 * 1024 * 1024) {
+        throw new Error(`Invalid transport frame length: ${len}`);
+      }
+      const data = await super.recv(len);
+      if (!data) return;
+      return Buffer.from(this._decryptor(data) as unknown as Uint8Array);
     }
-    return Buffer.from(
-      this._decryptor(
-        (await super.recv((length as unknown as Uint8Array)[0] * 4)) as Buffer,
-      ) as unknown as Uint8Array,
-    );
+    const len = (length as unknown as Uint8Array)[0] * 4;
+    if (len <= 0) return;
+    const data = await super.recv(len);
+    if (!data) return;
+    return Buffer.from(this._decryptor(data) as unknown as Uint8Array);
   }
 }
 

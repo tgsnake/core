@@ -9,6 +9,7 @@
  */
 import { crypto, Buffer, Skema, BytesIO } from '../deps.js';
 import { ige256Encrypt, ige256Decrypt } from './Aes.js';
+import { timingSafeEqual } from '../helpers.js';
 
 function sha256(data: Buffer): Buffer {
   const hash = crypto.createHash('sha256');
@@ -184,7 +185,7 @@ export async function unpack(
       ? sha1(decryptedMsg.buffer.subarray(0, 4 + msgLength)).subarray(-16)
       : msgKeyLarge.subarray(8, 8 + 16);
   Skema.SecurityCheckMismatch.check(
-    msgKey.equals(clientMsgKey as unknown as Uint8Array),
+    timingSafeEqual(msgKey, clientMsgKey),
     'Given message key is not equal with client side',
   );
   Skema.SecurityCheckMismatch.check(

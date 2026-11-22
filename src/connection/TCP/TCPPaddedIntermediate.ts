@@ -50,7 +50,12 @@ export class TCPPaddedIntermediate extends TCP {
   override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);
     if (!length) return;
-    const data = await super.recv(length.readInt32LE(0));
+    const len = length.readInt32LE(0);
+    if (len < 0) return length;
+    if (len === 0 || len > 16 * 1024 * 1024) {
+      throw new Error(`Invalid transport frame length: ${len}`);
+    }
+    const data = await super.recv(len);
     if (!data) return;
     return data.subarray(0, Buffer.byteLength(data) - (Buffer.byteLength(data) % 4));
   }

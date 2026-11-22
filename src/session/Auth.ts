@@ -14,7 +14,7 @@ import * as Prime from '../crypto/Prime.js';
 import * as RSA from '../crypto/RSA.js';
 import { crypto, Buffer, BytesIO, Skema } from '../deps.js';
 import { MsgId } from './internals/MsgId.js';
-import { sleep } from '../helpers.js';
+import { sleep, timingSafeEqual } from '../helpers.js';
 import { Logger } from '../Logger.js';
 
 export class Auth {
@@ -90,8 +90,8 @@ export class Auth {
         const pq = Skema.bufferToBigint(resPq.pq, false, true);
         Logger.debug(`[7.session.Auth] Start PQ factorization: ${pq}`);
         const start = Math.floor(Date.now() / 1000);
-        const g = Prime.decompose(pq);
-        const [p, q] = [BigInt(g), BigInt(pq / g)].sort((a: bigint, b: bigint) => {
+        const factor = Prime.decompose(pq);
+        const [p, q] = [BigInt(factor), BigInt(pq / factor)].sort((a: bigint, b: bigint) => {
           if (a > b) return 1;
           if (a < b) return -1;
           return 0;
@@ -196,16 +196,58 @@ export class Auth {
         const serverDhInnerData: Skema.Raw.ServerDhInnerData = await Skema.TLObject.read(answer);
         Logger.debug('[12.session.Auth] Done decrypting answer');
 
+        // https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
+        const expectedSha1 = crypto.createHash('sha1').update(serverDhInnerData.write()).digest();
+        Skema.SecurityCheckMismatch.check(
+          timingSafeEqual(answerWithHash.subarray(0, 20), expectedSha1),
+          'SHA1 hash values check failed for ServerDhInnerData',
+        );
+        Logger.debug('[13.session.Auth] SHA1 hash values check: OK');
+
         const dhPrime = Skema.bufferToBigint(serverDhInnerData.dhPrime, false);
+        // Security Check
+        Skema.SecurityCheckMismatch.check(
+          dhPrime === Prime.CURRENT_DH_PRIME,
+          'dhPrime does not match expected DH prime',
+        );
+        Logger.debug('[14.session.Auth] DH parameters check: OK');
+
+        // https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
+        const dhG = BigInt(serverDhInnerData.g);
+        Skema.SecurityCheckMismatch.check(
+          dhG >= BigInt(2) && dhG <= BigInt(7) && dhG < dhPrime - BigInt(1),
+          'g is not a valid generator',
+        );
+
+        const gA = Skema.bufferToBigint(serverDhInnerData.gA, false);
+        Skema.SecurityCheckMismatch.check(
+          BigInt(1) < gA && gA < dhPrime - BigInt(1),
+          'gA must be greater than 1 and less than dhPrime - 1',
+        );
+        Skema.SecurityCheckMismatch.check(
+          BigInt(2) ** BigInt(2048 - 64) < gA && gA < dhPrime - BigInt(2) ** BigInt(2048 - 64),
+          'gA is out of bounds',
+        );
+
         const deltaTime = serverDhInnerData.serverTime - Math.floor(Date.now() / 1000);
-        Logger.debug(`[13.session.Auth] Delta time: ${deltaTime}`);
+        Logger.debug(`[15.session.Auth] Delta time: ${deltaTime}`);
 
         // step 6
         const b = Skema.bufferToBigint(
           Buffer.from(crypto.randomBytes(256) as unknown as Uint8Array),
           false,
         );
-        const gB = Skema.bigIntPow(BigInt(serverDhInnerData.g), b, dhPrime);
+        const gB = Skema.bigIntPow(dhG, b, dhPrime);
+        Skema.SecurityCheckMismatch.check(
+          BigInt(1) < gB && gB < dhPrime - BigInt(1),
+          'gB must be greater than 1 and less than dhPrime - 1',
+        );
+        Skema.SecurityCheckMismatch.check(
+          BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64),
+          'gB is out of bounds',
+        );
+        Logger.debug('[16.session.Auth] gA and gB validation: OK');
+
         data = new Skema.Raw.ClientDhInnerData({
           nonce: resPq.nonce,
           serverNonce: resPq.serverNonce,
@@ -225,9 +267,9 @@ export class Auth {
         ]);
         encryptedData = AES.ige256Encrypt(hash, tempAesKey, tempAesIv);
         Logger.debug(
-          `[14.session.Auth] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`,
+          `[17.session.Auth] Length of encrypted data: ${Buffer.byteLength(encryptedData)}`,
         );
-        Logger.debug(`[15.session.Auth] Send SetClientDhParams`);
+        Logger.debug(`[18.session.Auth] Send SetClientDhParams`);
 
         const setClientDhParamsAnswer: Skema.Raw.TypeSetClientDhParamsAnswer = (await this.invoke(
           new Skema.Raw.SetClientDhParams({
@@ -239,37 +281,7 @@ export class Auth {
         // TODO: Handle "authKeyAuHash" if the previous step fails
 
         // Step 7; Step 8
-        const gA = Skema.bufferToBigint(serverDhInnerData.gA, false);
         const authKey: Buffer = Skema.bigintToBuffer(Skema.bigIntPow(gA, b, dhPrime), 256, false);
-        // Security Check
-        Skema.SecurityCheckMismatch.check(dhPrime === Prime.CURRENT_DH_PRIME);
-        Logger.debug('[16.session.Auth] DH parameters check: OK');
-
-        // https://core.telegram.org/mtproto/security_guidelines#g-a-and-g-b-validation
-        // TSError : Operator '<' cannot be applied to types 'boolean' and 'bigint'.
-        Skema.SecurityCheckMismatch.check(BigInt(1) < g && g < dhPrime - BigInt(1));
-        Skema.SecurityCheckMismatch.check(BigInt(1) < gA && gA < dhPrime - BigInt(1));
-        Skema.SecurityCheckMismatch.check(BigInt(1) < gB && gB < dhPrime - BigInt(1));
-        Skema.SecurityCheckMismatch.check(
-          BigInt(2) ** BigInt(2048 - 64) < gA && gA < dhPrime - BigInt(2) ** BigInt(2048 - 64),
-        );
-        Skema.SecurityCheckMismatch.check(
-          BigInt(2) ** BigInt(2048 - 64) < gB && gB < dhPrime - BigInt(2) ** BigInt(2048 - 64),
-        );
-        Logger.debug('[17.session.Auth] gA and gB validation: OK');
-
-        // https://core.telegram.org/mtproto/security_guidelines#checking-sha1-hash-values
-        Skema.SecurityCheckMismatch.check(
-          answerWithHash
-            .subarray(0, 20)
-            .equals(
-              crypto
-                .createHash('sha1')
-                .update(serverDhInnerData.write())
-                .digest() as unknown as Uint8Array,
-            ),
-        );
-        Logger.debug('[18.session.Auth] SHA1 hash values check: OK');
 
         //https://core.telegram.org/mtproto/security_guidelines#checking-nonce-server-nonce-and-new-nonce-fields
         Skema.SecurityCheckMismatch.check(nonce === resPq.nonce);

@@ -19,7 +19,6 @@ import * as os from 'os-browserify';
 import * as path from 'path-browserify';
 import stream from 'stream-browserify';
 import aesjs from 'aes-js';
-import bigInt from 'big-integer';
 import process from 'process';
 export { inspect } from 'util';
 export { gzipSync, gunzipSync } from 'browserify-zlib';
@@ -74,4 +73,3 @@ class Socket {
 }
 export const net = { Socket };
 export const { Writable, Duplex } = stream;
-export { crypto, os, bigInt, path, aesjs };

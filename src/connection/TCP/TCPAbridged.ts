@@ -54,13 +54,18 @@ export class TCPAbridged extends TCP {
     if (length.equals(Buffer.from('7f', 'hex') as unknown as Uint8Array)) {
       length = await super.recv(3);
       if (!length) return;
-      return await super.recv(
+      const len =
         Buffer.concat([
           length as unknown as Uint8Array,
           Buffer.alloc(1) as unknown as Uint8Array,
-        ]).readInt32LE(0) * 4,
-      );
+        ]).readInt32LE(0) * 4;
+      if (len <= 0 || len > 16 * 1024 * 1024) {
+        throw new Error(`Invalid transport frame length: ${len}`);
+      }
+      return await super.recv(len);
     }
-    return await super.recv(((length as unknown as Uint8Array)[0] as number) * 4);
+    const len = ((length as unknown as Uint8Array)[0] as number) * 4;
+    if (len <= 0) return;
+    return await super.recv(len);
   }
 }
