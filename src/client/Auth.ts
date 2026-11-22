@@ -30,44 +30,77 @@ export interface SigInUser {
   /**
    * Asynchronous callback returning the user's phone number in international format.
    */
-  phoneNumber: { (): Promise<string> };
+  phoneNumber: { (): string | Promise<string> };
 
   /**
    * Optional asynchronous callback returning the 2-step verification (2FA) password.
    *
    * @param {string} hint - The password hint configured by the user on Telegram.
    */
-  password?: { (hint: string): Promise<string> };
+  password?: { (hint: string): string | Promise<string> };
 
   /**
    * Optional asynchronous callback returning the recovery code if the user forgot their 2FA password.
    * Invoking this will automatically trigger sending the recovery code to the associated email.
    */
-  recoveryCode?: { (): Promise<string> };
+  recoveryCode?: { (): string | Promise<string> };
 
   /**
    * Asynchronous callback returning the one-time registration/login code (OTP) received from Telegram.
    */
-  code: { (): Promise<string> };
+  code: { (): string | Promise<string> };
 
   /**
    * Optional asynchronous callback returning the first name to be used if registering a new account.
    * @deprecated since Telegram registration now only can be done with official app, this parameter is no longer used and will be removed in future versions.
    */
-  firstname?: { (): Promise<string> };
+  firstname?: { (): string | Promise<string> };
 
   /**
    * Optional asynchronous callback returning the last name to be used if registering a new account.
    * @deprecated since Telegram registration now only can be done with official app, this parameter is no longer used and will be removed in future versions.
    */
-  lastname?: { (): Promise<string> };
+  lastname?: { (): string | Promise<string> };
 
   /**
    * Optional error callback triggered when a `BadRequest` error occurs during authorization.
    *
    * @param {Skema.Exceptions.BadRequest.BadRequest} error - The encountered error instance.
    */
-  authError?: { (error: Skema.Exceptions.BadRequest.BadRequest): void };
+  authError?: { (error: Skema.Exceptions.BadRequest.BadRequest): void | Promise<void> };
+}
+/**
+ * Authentication configuration interface for signing using generated QR Code.
+ */
+export interface SignInWithQRCode {
+  /**
+   * The callback function for generating the QR Code.
+   * @param {string} token - The encoded base64url auth token and embedded as Telegram deep link for generating the QR Code.
+   * @param {number} expires - The expiration date of QR Code in milliseconds.
+   */
+  qrHandler: { (token: string, expires: number): void | Promise<void> };
+  /**
+   * The optional list of already logged-in user IDs, to prevent logging in twice with the same user.
+   */
+  exceptIds?: Array<bigint>;
+  /**
+   * Optional asynchronous callback returning the 2-step verification (2FA) password.
+   *
+   * @param {string} hint - The password hint configured by the user on Telegram.
+   */
+  password?: { (hint: string): string | Promise<string> };
+
+  /**
+   * Optional asynchronous callback returning the recovery code if the user forgot their 2FA password.
+   * Invoking this will automatically trigger sending the recovery code to the associated email.
+   */
+  recoveryCode?: { (): string | Promise<string> };
+  /**
+   * Optional error callback triggered when a `BadRequest` error occurs during authorization.
+   *
+   * @param {Skema.Exceptions.BadRequest.BadRequest} error - The encountered error instance.
+   */
+  authError?: { (error: Skema.Exceptions.BadRequest.BadRequest): void | Promise<void> };
 }
 
 /**
@@ -100,7 +133,7 @@ export async function siginBot(
       if (error instanceof Skema.Exceptions.SeeOther.UserMigrate) {
         const typedError = error as Skema.Exceptions.SeeOther.UserMigrate;
         await this._session.stop();
-        const [ip, port] = await DataCenter.DataCenter(
+        const [ip, port] = DataCenter.DataCenter(
           typedError.value as unknown as number,
           this._testMode,
           this._ipv6,
@@ -149,9 +182,9 @@ export async function siginUser(
   this: Client,
   auth: SigInUser,
 ): Promise<Skema.Raw.User | undefined> {
-  let _phoneNumber;
-  let _sendCode;
-  let _signedIn;
+  let _phoneNumber: string;
+  let _sendCode: Skema.Raw.auth.TypeSentCode;
+  let _signedIn: Skema.Raw.User | Skema.Raw.help.TermsOfService | boolean;
   //  @deprecated since Telegram registration now only can be done with official app, no longer used.
   //  let _signedUp;
   while (true) {
@@ -312,7 +345,7 @@ export async function sendCode(
         await this._session.stop();
         const typedError = error as
           Skema.Exceptions.SeeOther.NetworkMigrate | Skema.Exceptions.SeeOther.PhoneMigrate;
-        const [ip, port] = await DataCenter.DataCenter(
+        const [ip, port] = DataCenter.DataCenter(
           typedError.value as unknown as number,
           this._testMode,
           this._ipv6,
@@ -346,7 +379,6 @@ export async function sendCode(
  * @param {string} phoneCodeHash - The phone code hash returned by `sendCode`.
  * @param {string} phoneCode - The confirmation OTP code received by the user.
  * @returns {Promise<Skema.Raw.User | Skema.Raw.help.TermsOfService | boolean>} Resolves to user object, TermsOfService if sign-up is required with TOS, or false.
- * @deprecated since Telegram registration now only can be done with official app, this function is no longer used and will be removed in future versions.
  */
 export async function sigin(
   this: Client,
@@ -513,4 +545,180 @@ export async function getMe(this: Client): Promise<Skema.Raw.users.UserFull> {
       id: new Skema.Raw.InputUserSelf(),
     }),
   );
+}
+
+export async function signInWithQRCode(
+  this: Client,
+  auth: SignInWithQRCode,
+): Promise<Skema.Raw.User | undefined> {
+  let timeoutId;
+  let resolvePromise: { (value: Skema.Raw.User | undefined): void };
+  let rejectPromise: { (error: unknown): void };
+  let promisedResult: Promise<Skema.Raw.User | undefined> = new Promise((res, rej) => {
+    resolvePromise = res;
+    rejectPromise = rej;
+  });
+  const loopCall = async () => {
+    try {
+      const { token, expires } = (await this.invoke(
+        new Skema.Raw.auth.ExportLoginToken({
+          apiHash: this._apiHash,
+          apiId: this._apiId,
+          exceptIds: auth.exceptIds || [],
+        }),
+        0,
+      )) as Skema.Raw.auth.LoginToken;
+      const deltaMs = expires * 1000 - Date.now();
+      const authToken = token.toString('base64url');
+      auth.qrHandler(`tg://login?token=${authToken}`, deltaMs);
+      timeoutId = setTimeout(loopCall, deltaMs);
+    } catch (error: unknown) {
+      Logger.error(`[10.client.Auth] Got error when signInWithQRCode:`, error);
+      if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
+        if (auth.authError) {
+          auth.authError(error as Skema.Exceptions.BadRequest.BadRequest);
+        } else {
+          if (timeoutId) {
+            timeoutId = clearTimeout(timeoutId);
+          }
+          rejectPromise(error);
+        }
+      } else {
+        if (timeoutId) {
+          timeoutId = clearTimeout(timeoutId);
+        }
+        rejectPromise(error);
+      }
+    }
+  };
+  const handleUpdate = async (update: Skema.Raw.TypeUpdates) => {
+    if (update instanceof Skema.Raw.UpdateShort) {
+      if (update.update instanceof Skema.Raw.UpdateLoginToken) {
+        if (timeoutId) {
+          timeoutId = clearTimeout(timeoutId);
+        }
+        try {
+          const res = await this.invoke(
+            new Skema.Raw.auth.ExportLoginToken({
+              apiHash: this._apiHash,
+              apiId: this._apiId,
+              exceptIds: auth.exceptIds || [],
+            }),
+            0,
+          );
+          if (res instanceof Skema.Raw.auth.LoginTokenMigrateTo) {
+            await this._session.stop();
+            const [ip, port] = DataCenter.DataCenter(res.dcId, this._testMode, this._ipv6, false);
+            const auth = new Auth(res.dcId, this._testMode, this._ipv6);
+            this._storage.setAddress(res.dcId, ip, port, this._testMode);
+            this._storage.setApiId(this._apiId);
+            this._storage.setAuthKey(await auth.create(), this._storage.dcId);
+            this._session = new Session(
+              this,
+              this._storage.dcId,
+              this._storage.authKey,
+              this._storage.testMode,
+            );
+            await this._session.start();
+            const migrated = await this.invoke(
+              new Skema.Raw.auth.ImportLoginToken({
+                token: res.token,
+              }),
+            );
+            if (migrated instanceof Skema.Raw.auth.LoginTokenSuccess) {
+              if (migrated.authorization instanceof Skema.Raw.auth.Authorization) {
+                resolvePromise(migrated.authorization.user);
+              }
+              if (migrated.authorization instanceof Skema.Raw.auth.AuthorizationSignUpRequired) {
+                throw new Error("An account with this phone number doesn't exist on telegram");
+              }
+            }
+          }
+          if (res instanceof Skema.Raw.auth.LoginTokenSuccess) {
+            if (res.authorization instanceof Skema.Raw.auth.Authorization) {
+              resolvePromise(res.authorization.user);
+            }
+            if (res.authorization instanceof Skema.Raw.auth.AuthorizationSignUpRequired) {
+              throw new Error("An account with this phone number doesn't exist on telegram");
+            }
+          }
+        } catch (error: unknown) {
+          if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
+            Logger.error(`[11.client.Auth] Got error when trying to sign in:`, error);
+            if (auth.authError) {
+              await auth.authError(error);
+            }
+          } else if (error instanceof Skema.Exceptions.Unauthorized.SessionPasswordNeeded) {
+            let trying = 1;
+            while (true) {
+              try {
+                if (trying <= 3) {
+                  if (!auth.password) {
+                    throw new Error('2FA password required');
+                  }
+                  resolvePromise(
+                    await checkPassword.call(
+                      this,
+                      await auth.password(await getPasswordHint.call(this)),
+                    ),
+                  );
+                  break;
+                } else {
+                  Logger.info('[12.client.Auth] Look you are forgotten the password');
+                  if (auth.recoveryCode) {
+                    const emailPattern = await sendRecoveryCode.call(this);
+                    Logger.info(
+                      `[13.client.Auth] The recovery code has been sent to ${emailPattern}`,
+                    );
+                    while (true) {
+                      const recoveryCode = await auth.recoveryCode();
+                      try {
+                        resolvePromise(await recoverPassword.call(this, recoveryCode));
+                        break;
+                      } catch (error: unknown) {
+                        if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
+                          Logger.error(
+                            `[14.client.Auth] Got error when trying to recover password:`,
+                            error,
+                          );
+                          if (auth.authError) {
+                            await auth.authError(error);
+                          }
+                        } else {
+                          throw error;
+                        }
+                      }
+                    }
+                  } else {
+                    // do something soon
+                    break;
+                  }
+                }
+              } catch (error) {
+                if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
+                  Logger.error(
+                    `[15.client.Auth] Got error when trying to recover password:`,
+                    error,
+                  );
+                  if (auth.authError) {
+                    await auth.authError(error);
+                  }
+                  trying++;
+                } else {
+                  throw error;
+                }
+              }
+            }
+          } else {
+            throw error;
+          }
+        }
+      }
+    }
+  };
+  const dispose = this.addHandler(handleUpdate);
+  loopCall();
+  await promisedResult;
+  dispose();
+  return await promisedResult;
 }

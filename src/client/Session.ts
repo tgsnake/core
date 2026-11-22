@@ -29,7 +29,7 @@ export async function loadSession(this: Client): Promise<void> {
   await (this as Client)._storage.load();
   // without authkey, that mean the session is fresh.
   if (!(this as Client)._storage.authKey) {
-    const [ip, port] = await DataCenter.DataCenter(
+    const [ip, port] = DataCenter.DataCenter(
       (this as Client)._defaultDcId,
       (this as Client)._testMode,
       (this as Client)._ipv6,
@@ -101,15 +101,20 @@ export async function connect(this: Client): Promise<void> {
  */
 export async function start(
   this: Client,
-  auth?: _Auth.SigInBot | _Auth.SigInUser,
+  auth?: _Auth.SigInBot | _Auth.SigInUser | _Auth.SignInWithQRCode,
 ): Promise<Skema.Raw.users.UserFull> {
   await connect.call(this);
   if ((this as Client)._storage.userId === undefined) {
     if (auth) {
-      if ((auth as _Auth.SigInBot).botToken) {
+      if ('botToken' in auth) {
         await _Auth.siginBot.call(this, await (auth as _Auth.SigInBot).botToken);
+      } else if ('qrHandler' in auth) {
+        await _Auth.signInWithQRCode.call(this, auth as _Auth.SignInWithQRCode);
+      } else if ('phoneNumber' in auth) {
+        await _Auth.siginUser.call(this, auth as _Auth.SigInUser);
       } else {
-        await _Auth.siginUser.call(this, { ...(auth as _Auth.SigInUser) });
+        // soon wiil be replaced with base error of Skema
+        throw new Error('Unknown authorization method');
       }
     }
   }

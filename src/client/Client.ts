@@ -339,7 +339,9 @@ export class Client {
   /**
    * Starting telegram client.
    */
-  start(auth?: _Auth.SigInBot | _Auth.SigInUser): Promise<Skema.Raw.users.UserFull> {
+  start(
+    auth?: _Auth.SigInBot | _Auth.SigInUser | _Auth.SignInWithQRCode,
+  ): Promise<Skema.Raw.users.UserFull> {
     return _Session.start.call(this, auth);
   }
   /**
