@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,16 +8,11 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { TCP } from './tcp.ts';
-import {
-  includesBuffer,
-  sliceBuffer,
-  bigintToBuffer,
-  normalizeSecretString,
-} from '../../helpers.ts';
-import { crypto, Buffer } from '../../platform.deno.ts';
-import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.ts';
-import type { ProxyInterface } from '../connection.ts';
+import { TCP } from './tcp.js';
+import { includesBuffer, sliceBuffer, normalizeSecretString } from '../../helpers.js';
+import { crypto, Buffer, Skema } from '../../deps.js';
+import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCPAbridgedO
@@ -130,7 +125,7 @@ export class TCPAbridgedO extends TCP {
     }
     await super.send(nonce);
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const length = Math.round(Buffer.byteLength(data) / 4);
     if (length <= 126) {
       return await super.send(
@@ -147,7 +142,7 @@ export class TCPAbridgedO extends TCP {
           Buffer.concat([
             Buffer.concat([
               Buffer.from('7f', 'hex') as unknown as Uint8Array,
-              bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
+              Skema.bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
             ]) as unknown as Uint8Array,
             data as unknown as Uint8Array,
           ]),
@@ -155,7 +150,7 @@ export class TCPAbridgedO extends TCP {
       );
     }
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(1);
     if (!length) return;
     length = Buffer.from(this._decryptor(length) as unknown as Uint8Array);
@@ -163,22 +158,23 @@ export class TCPAbridgedO extends TCP {
       length = await super.recv(3);
       if (!length) return;
       length = Buffer.from(this._decryptor(length) as unknown as Uint8Array);
-      return Buffer.from(
-        this._decryptor(
-          (await super.recv(
-            Buffer.concat([
-              length as unknown as Uint8Array,
-              Buffer.alloc(1) as unknown as Uint8Array,
-            ]).readInt32LE(0) * 4,
-          )) as unknown as Buffer,
-        ) as unknown as Uint8Array,
-      );
+      const len =
+        Buffer.concat([
+          length as unknown as Uint8Array,
+          Buffer.alloc(1) as unknown as Uint8Array,
+        ]).readInt32LE(0) * 4;
+      if (len <= 0 || len > 16 * 1024 * 1024) {
+        throw new Error(`Invalid transport frame length: ${len}`);
+      }
+      const data = await super.recv(len);
+      if (!data) return;
+      return Buffer.from(this._decryptor(data) as unknown as Uint8Array);
     }
-    return Buffer.from(
-      this._decryptor(
-        (await super.recv((length as unknown as Uint8Array)[0] * 4)) as Buffer,
-      ) as unknown as Uint8Array,
-    );
+    const len = (length as unknown as Uint8Array)[0] * 4;
+    if (len <= 0) return;
+    const data = await super.recv(len);
+    if (!data) return;
+    return Buffer.from(this._decryptor(data) as unknown as Uint8Array);
   }
 }
 

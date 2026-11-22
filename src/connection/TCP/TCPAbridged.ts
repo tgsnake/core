@@ -1,16 +1,15 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { Buffer } from '../../platform.deno.ts';
-import { TCP } from './tcp.ts';
-import { bigintToBuffer } from '../../helpers.ts';
-import type { ProxyInterface } from '../connection.ts';
+import { Buffer, Skema } from '../../deps.js';
+import { TCP } from './tcp.js';
+import type { ProxyInterface } from '../connection.js';
 
 /**
  * @class TCPAbridged
@@ -21,11 +20,16 @@ export class TCPAbridged extends TCP {
   constructor() {
     super();
   }
-  override async connect(ip: string, port: number, proxy?: ProxyInterface, dcId?: number) {
+  override async connect(
+    ip: string,
+    port: number,
+    proxy?: ProxyInterface,
+    dcId?: number,
+  ): Promise<void> {
     await super.connect(ip, port, proxy, dcId);
     return await super.send(Buffer.from('ef', 'hex'));
   }
-  override async send(data: Buffer) {
+  override async send(data: Buffer): Promise<void> {
     const length = Math.round(Buffer.byteLength(data) / 4);
     if (length <= 126) {
       const mark: Buffer = Buffer.from([length]);
@@ -37,26 +41,31 @@ export class TCPAbridged extends TCP {
         Buffer.concat([
           Buffer.concat([
             Buffer.from('7f', 'hex') as unknown as Uint8Array,
-            bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
+            Skema.bigintToBuffer(BigInt(length), 3) as unknown as Uint8Array,
           ]) as unknown as Uint8Array,
           data as unknown as Uint8Array,
         ]),
       );
     }
   }
-  override async recv(_length: number = 0) {
+  override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(1);
     if (!length) return;
     if (length.equals(Buffer.from('7f', 'hex') as unknown as Uint8Array)) {
       length = await super.recv(3);
       if (!length) return;
-      return await super.recv(
+      const len =
         Buffer.concat([
           length as unknown as Uint8Array,
           Buffer.alloc(1) as unknown as Uint8Array,
-        ]).readInt32LE(0) * 4,
-      );
+        ]).readInt32LE(0) * 4;
+      if (len <= 0 || len > 16 * 1024 * 1024) {
+        throw new Error(`Invalid transport frame length: ${len}`);
+      }
+      return await super.recv(len);
     }
-    return await super.recv(((length as unknown as Uint8Array)[0] as number) * 4);
+    const len = ((length as unknown as Uint8Array)[0] as number) * 4;
+    if (len <= 0) return;
+    return await super.recv(len);
   }
 }

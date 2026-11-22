@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,14 +8,15 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import {
-  bigIntPow as pow,
-  bigintToBuffer as toBuffer,
-  bufferToBigint as toBigint,
-} from '../helpers.ts';
-import { Buffer } from '../platform.deno.ts';
+import { Buffer, Skema } from '../deps.js';
 
-const PublicKey = new Map<
+const PublicKey: Map<
+  bigint,
+  {
+    m: bigint;
+    e: bigint;
+  }
+> = new Map<
   bigint,
   {
     m: bigint;
@@ -188,13 +189,31 @@ PublicKey.set(BigInt('2685959930972952888'), {
   e: BigInt('0x010001'),
 });
 
-export function encrypt(data: Buffer, fingerprint: bigint) {
+/**
+ * Encrypts a binary buffer payload using Telegram's RSA public key matching the fingerprint.
+ *
+ * Typically utilized during MTProto authentication key exchange handshakes.
+ *
+ * @param {Buffer} data - Binary buffer payload to encrypt.
+ * @param {bigint} fingerprint - Unique public key fingerprint ID.
+ * @returns {Buffer} Encrypted binary data buffer.
+ * @throws {Error} Thrown if public key fingerprint is not found.
+ */
+export function encrypt(data: Buffer, fingerprint: bigint): Buffer {
   const key = PublicKey.get(fingerprint);
   if (key == undefined) {
     throw new Error(`unknown fingerprint ${fingerprint}n`);
   }
   return Buffer.from(
-    toBuffer(pow(toBigint(data, false), key.e, key.m), 256, false) as unknown as Uint8Array,
+    Skema.bigintToBuffer(
+      Skema.bigIntPow(Skema.bufferToBigint(data, false), key.e, key.m),
+      256,
+      false,
+    ) as unknown as Uint8Array,
   );
 }
+
+/**
+ * Storage map containing standard Telegram and CDN RSA public keys indexed by fingerprint.
+ */
 export { PublicKey };

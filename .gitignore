@@ -120,5 +120,3 @@ test/**
 # src/raw/All.ts
 # src/errors/exceptions
 browser/**
-
-deno.lock

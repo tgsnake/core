@@ -1,15 +1,14 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software : you can redistribute it and/or modify
  * it under the terms of the GPL v3 License as published.
  */
-import { Raw } from '../raw/index.ts';
-import { crypto, Buffer } from '../platform.deno.ts';
-import { bufferToBigint, bigintToBuffer, bigIntPow, bigIntMod } from '../helpers.ts';
+import { crypto, Buffer, Skema } from '../deps.js';
+import * as Prime from './Prime.js';
 
 /**
  * Create a sha256 hash.
@@ -20,7 +19,7 @@ function sha256(data: Buffer) {
 /**
  * Xor the buffer A with B.
  */
-export function xor(a: Buffer, b: Buffer) {
+export function xor(a: Buffer, b: Buffer): Buffer {
   const length = Math.min(Buffer.byteLength(a), Buffer.byteLength(b));
   for (let i = 0; i < length; i++) {
     (a as unknown as Uint8Array)[i] =
@@ -35,7 +34,7 @@ export function xor(a: Buffer, b: Buffer) {
  */
 
 export function computePasswordHash(
-  algo: Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
+  algo: Skema.Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow,
   password: string,
 ): Buffer {
   const hash1 = sha256(
@@ -67,26 +66,42 @@ export function computePasswordHash(
  * @param {String} password - Plain password will be check with current password.
  */
 export function computePasswordCheck(
-  r: Raw.account.Password,
+  r: Skema.Raw.account.Password,
   password: string,
-): Raw.InputCheckPasswordSRP {
-  const algo =
-    r.currentAlgo as Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow;
+): Skema.Raw.InputCheckPasswordSRP {
+  if (
+    !(
+      r.currentAlgo instanceof
+      Skema.Raw.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow
+    )
+  ) {
+    throw new Skema.SecurityCheckMismatch('Unsupported password KDF algorithm');
+  }
+  const algo = r.currentAlgo;
   const pBytes = algo.p;
   const p = btoi(pBytes);
+  Skema.SecurityCheckMismatch.check(p === Prime.CURRENT_DH_PRIME, 'SRP p is invalid');
   const g = algo.g;
+  Skema.SecurityCheckMismatch.check(
+    BigInt(g) >= BigInt(2) && BigInt(g) <= BigInt(7) && BigInt(g) < p - BigInt(1),
+    'SRP g is invalid',
+  );
+  if (!r.srpB) {
+    throw new Skema.SecurityCheckMismatch('Missing SRP B value');
+  }
   const gBytes = itob(BigInt(g));
   const BBytes = r.srpB;
-  const B = btoi(BBytes!);
+  const B = btoi(BBytes);
+  Skema.SecurityCheckMismatch.check(BigInt(1) < B && B < p - BigInt(1), 'SRP B is out of bounds');
   const srpId = r.srpId;
   const xBytes = computePasswordHash(algo, password);
   const x = btoi(xBytes);
-  const gX = bigIntPow(BigInt(g), x, p);
+  const gX = Skema.bigIntPow(BigInt(g), x, p);
   const kBytes = sha256(
     Buffer.concat([pBytes as unknown as Uint8Array, gBytes as unknown as Uint8Array]),
   );
   const k = btoi(kBytes);
-  const kGX = bigIntMod(k * gX, p);
+  const kGX = Skema.bigIntMod(k * gX, p);
   let aBytes;
   let a;
   let A;
@@ -95,17 +110,23 @@ export function computePasswordCheck(
   while (true) {
     aBytes = crypto.randomBytes(256);
     a = btoi(aBytes);
-    A = bigIntPow(BigInt(g), a, p);
+    A = Skema.bigIntPow(BigInt(g), a, p);
     ABytes = itob(A);
     u = btoi(
       sha256(Buffer.concat([ABytes as unknown as Uint8Array, BBytes as unknown as Uint8Array])),
     );
     if (u > BigInt(0)) break;
   }
-  const gB = bigIntMod(B - kGX, p);
+  Skema.SecurityCheckMismatch.check(BigInt(1) < A && A < p - BigInt(1), 'SRP A is invalid');
+  Skema.SecurityCheckMismatch.check(
+    BigInt(2) ** BigInt(2048 - 64) < A && A < p - BigInt(2) ** BigInt(2048 - 64),
+    'SRP A is out of bounds',
+  );
+  const gB = Skema.bigIntMod(B - kGX, p);
+  Skema.SecurityCheckMismatch.check(gB > BigInt(1) && gB < p - BigInt(1), 'SRP gB is invalid');
   const uX = u * x;
   const aUX = a + uX;
-  const S = bigIntPow(gB, aUX, p);
+  const S = Skema.bigIntPow(gB, aUX, p);
   const SBytes = itob(S);
   const KBytes = sha256(SBytes);
   const M1Bytes = sha256(
@@ -118,7 +139,7 @@ export function computePasswordCheck(
       KBytes as unknown as Uint8Array,
     ]),
   );
-  return new Raw.InputCheckPasswordSRP({
+  return new Skema.Raw.InputCheckPasswordSRP({
     srpId: srpId!,
     a: ABytes,
     m1: M1Bytes,
@@ -129,12 +150,12 @@ export function computePasswordCheck(
  * @param {Buffer} b - Buffer will be converted to big number.
  */
 function btoi(b: Buffer): bigint {
-  return bufferToBigint(b, false);
+  return Skema.bufferToBigint(b, false);
 }
 /**
  * Make a large bytes from big number.
  * @param {BigInt} i - Big Number will be converted to large bytes.
  */
 function itob(i: bigint): Buffer {
-  return bigintToBuffer(i, 256, false);
+  return Skema.bigintToBuffer(i, 256, false);
 }

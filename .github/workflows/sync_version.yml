@@ -1,0 +1,31 @@
+name: Sync version
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+jobs:
+  sync-version:
+    name: Syncing version to package.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2.x'
+      - run: yarn config set enableImmutableInstalls false
+      - run: deno install
+      - run: git add deno.lock
+      - run: |
+          git commit -m "chore: Update deno.lock" || echo "No changes to commit"
+      - run: yarn install
+      - run: yarn build:jsr
+      - run: git config user.email github-actions[bot]@users.noreply.github.com
+      - run: git config user.name github-actions[bot]
+      - run: yarn prettier
+      - run: git add jsr.json
+      - run: git commit -m "Sync JSR version to package.json" || echo "No changes to commit"
+      - run: git push origin master || echo "No changes to push"
