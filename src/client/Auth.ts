@@ -186,7 +186,7 @@ export async function siginUser(
   let _sendCode: Skema.Raw.auth.TypeSentCode;
   let _signedIn: Skema.Raw.User | Skema.Raw.help.TermsOfService | boolean;
   //  @deprecated since Telegram registration now only can be done with official app, no longer used.
-  //  let _signedUp;
+  let _signedUp;
   while (true) {
     try {
       _phoneNumber = await auth.phoneNumber();
@@ -277,37 +277,37 @@ export async function siginUser(
       }
     }
   }
+  if (_signedIn && _signedIn instanceof Skema.Raw.User) {
+    return _signedIn;
+  }
   //  @deprecated since Telegram registration now only can be done with official app, no longer used.
-  // while (true) {
-  //   try {
-  //     _signedUp = await signup.call(
-  //       this,
-  //       _phoneNumber,
-  //       (_sendCode as Skema.Raw.auth.SentCode).phoneCodeHash,
-  //       auth.firstname ? await auth.firstname() : String(Date.now()),
-  //       auth.lastname ? await auth.lastname() : '',
-  //     );
-  //     break;
-  //   } catch (error: unknown) {
-  //     if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
-  //       Logger.error(`[8.client.Auth] Got error when trying to sign up:`, error);
-  //       if (auth.authError) {
-  //         await auth.authError(error);
-  //       }
-  //     } else {
-  //       throw error;
-  //     }
-  //   }
-  // }
+  while (true) {
+    try {
+      _signedUp = await signup.call(
+        this,
+        _phoneNumber,
+        (_sendCode as Skema.Raw.auth.SentCode).phoneCodeHash,
+        auth.firstname ? await auth.firstname() : String(Date.now()),
+        auth.lastname ? await auth.lastname() : '',
+      );
+      break;
+    } catch (error: unknown) {
+      if (error instanceof Skema.Exceptions.BadRequest.BadRequest) {
+        Logger.error(`[8.client.Auth] Got error when trying to sign up:`, error);
+        if (auth.authError) {
+          await auth.authError(error);
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
   if (_signedIn && _signedIn instanceof Skema.Raw.help.TermsOfService) {
     Logger.info(`[9.client.Auth] \n${_signedIn.text}\n`);
     await acceptTOS.call(this, _signedIn.id.data);
   }
   //  @deprecated since Telegram registration now only can be done with official app, no longer used.
-  // return _signedUp;
-  if (_signedIn && _signedIn instanceof Skema.Raw.User) {
-    return _signedIn;
-  }
+  return _signedUp;
 }
 
 /**
