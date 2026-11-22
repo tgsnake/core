@@ -9,6 +9,7 @@
     "build": "tsc",
     "build:license": "node ./generator/license",
     "build:chglog": "node ./generator/chglog",
+    "build:jsr": "node ./generator/jsr_version/index.js",
     "prepare": "yarn build",
     "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."
   },
