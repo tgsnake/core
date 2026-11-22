@@ -41,7 +41,7 @@
     "socks": "^2.8.11"
   },
   "devDependencies": {
-    "@tgsnake/skema": "^2.9.0",
+    "@tgsnake/skema": "^3.0.0",
     "@types/bun": "^1.4.5",
     "@types/node": "^26.6.6",
     "prettier": "^3.10.1",

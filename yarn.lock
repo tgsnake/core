@@ -5,7 +5,7 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"@tgsnake/bytesio@npm:^2.0.1, @tgsnake/bytesio@npm:^2.1.0":
+"@tgsnake/bytesio@npm:^2.1.0":
   version: 2.1.0
   resolution: "@tgsnake/bytesio@npm:2.1.0"
   checksum: 10c0/5ae311a69b7bbdd4775a3e0e08e1327a6829545048f1babfe04baa7a4575aa32bb38f42023d894b2bdead2adc3e3d4c5ad1a94fd9ebe18a98caedcc51dc4df5f
@@ -18,7 +18,7 @@ __metadata:
   dependencies:
     "@tgsnake/bytesio": "npm:^2.1.0"
     "@tgsnake/log": "npm:^2.0.1"
-    "@tgsnake/skema": "npm:^2.9.0"
+    "@tgsnake/skema": "npm:^3.0.0"
     "@types/bun": "npm:^1.4.5"
     "@types/node": "npm:^26.6.6"
     async-mutex: "npm:^0.5.0"
@@ -40,14 +40,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tgsnake/skema@npm:^2.9.0":
-  version: 2.9.0
-  resolution: "@tgsnake/skema@npm:2.9.0"
+"@tgsnake/skema@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@tgsnake/skema@npm:3.0.0"
   dependencies:
-    "@tgsnake/bytesio": "npm:^2.0.1"
+    "@tgsnake/bytesio": "npm:^2.1.0"
     "@tgsnake/log": "npm:^2.0.1"
     big-integer: "npm:^1.6.52"
-  checksum: 10c0/c831540e666b8decef823b2f84403a4130e3f20b4748056c6b6f97047c218cfd9e10cf77ac49e9309876fc844abd34907217ae5a3790ff386e81a5992534ce77
+  checksum: 10c0/f1770a8295b05d5d877c0a35703601a4438c505d24fc187fec967824d31c3943f6f6661225eb0d19999da99a2234f482d83ec6309aa6247826c6d5a2fa3066dc
   languageName: node
   linkType: hard
 
