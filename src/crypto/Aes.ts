@@ -10,7 +10,6 @@
 
 import { crypto, aesjs, Buffer, platform, Skema } from '../deps.js';
 import { Logger } from '../Logger.js';
-import { range } from '../helpers.js';
 
 /**
  * Encrypts a binary payload buffer using the AES-256-IGE symmetric cipher mode.
@@ -101,11 +100,28 @@ export function ctr256Cipher(key: Buffer, iv: Buffer): CtrCipherFn {
  * @returns {Buffer} The resulting byte buffer product.
  */
 export function xor(a: Buffer, b: Buffer): Buffer {
-  return Skema.bigintToBuffer(
-    BigInt(Skema.bufferToBigint(a, false) ^ Skema.bufferToBigint(b, false)),
-    Buffer.byteLength(a),
-    false,
-  ) as unknown as Buffer;
+  const length = Math.min(Buffer.byteLength(a), Buffer.byteLength(b));
+  const out = Buffer.allocUnsafe(length);
+  const rem = length % 4;
+  const words = (length - rem) / 4;
+  if (words > 0 && a.byteOffset % 4 === 0 && b.byteOffset % 4 === 0 && out.byteOffset % 4 === 0) {
+    const vA = new Uint32Array(a.buffer, a.byteOffset, words);
+    const vB = new Uint32Array(b.buffer, b.byteOffset, words);
+    const vOut = new Uint32Array(out.buffer, out.byteOffset, words);
+    for (let i = 0; i < words; i++) {
+      vOut[i] = vA[i] ^ vB[i];
+    }
+    for (let i = length - rem; i < length; i++) {
+      (out as unknown as Uint8Array)[i] =
+        (a as unknown as Uint8Array)[i] ^ (b as unknown as Uint8Array)[i];
+    }
+  } else {
+    for (let i = 0; i < length; i++) {
+      (out as unknown as Uint8Array)[i] =
+        (a as unknown as Uint8Array)[i] ^ (b as unknown as Uint8Array)[i];
+    }
+  }
+  return out;
 }
 
 /**
@@ -150,26 +166,48 @@ export function AES(key: Buffer): {
  */
 function ige(data: Buffer, key: Buffer, iv: Buffer, encrypt: boolean): Buffer {
   const cipher = AES(key);
-  let iv1 = iv.subarray(0, 16);
-  let iv2 = iv.subarray(16, 32);
-  const temp: Array<Buffer> = [];
-  for (const i of range(0, Buffer.byteLength(data), 16)) {
-    temp.push(data.subarray(i, i + 16));
-  }
+  const dataLen = Buffer.byteLength(data);
+  const out = Buffer.allocUnsafe(dataLen);
+  const iv1 = Buffer.allocUnsafe(16);
+  const iv2 = Buffer.allocUnsafe(16);
+  iv.copy(iv1, 0, 0, 16);
+  iv.copy(iv2, 0, 16, 32);
+
+  const blockIn = Buffer.allocUnsafe(16);
+  const numBlocks = Math.floor(dataLen / 16);
+
   if (encrypt) {
-    for (let i = 0; i < temp.length; i++) {
-      const chunk = temp[i];
-      iv1 = temp[i] = xor(cipher.encrypt(xor(chunk, iv1)), iv2);
-      iv2 = chunk;
+    for (let i = 0; i < numBlocks; i++) {
+      const offset = i * 16;
+      for (let j = 0; j < 16; j++) {
+        (blockIn as unknown as Uint8Array)[j] =
+          (data as unknown as Uint8Array)[offset + j] ^ (iv1 as unknown as Uint8Array)[j];
+      }
+      const enc = cipher.encrypt(blockIn);
+      for (let j = 0; j < 16; j++) {
+        const val = (enc as unknown as Uint8Array)[j] ^ (iv2 as unknown as Uint8Array)[j];
+        (out as unknown as Uint8Array)[offset + j] = val;
+        (iv1 as unknown as Uint8Array)[j] = val;
+        (iv2 as unknown as Uint8Array)[j] = (data as unknown as Uint8Array)[offset + j];
+      }
     }
   } else {
-    for (let i = 0; i < temp.length; i++) {
-      const chunk = temp[i];
-      iv2 = temp[i] = xor(cipher.decrypt(xor(chunk, iv2)), iv1);
-      iv1 = chunk;
+    for (let i = 0; i < numBlocks; i++) {
+      const offset = i * 16;
+      for (let j = 0; j < 16; j++) {
+        (blockIn as unknown as Uint8Array)[j] =
+          (data as unknown as Uint8Array)[offset + j] ^ (iv2 as unknown as Uint8Array)[j];
+      }
+      const dec = cipher.decrypt(blockIn);
+      for (let j = 0; j < 16; j++) {
+        const val = (dec as unknown as Uint8Array)[j] ^ (iv1 as unknown as Uint8Array)[j];
+        (out as unknown as Uint8Array)[offset + j] = val;
+        (iv2 as unknown as Uint8Array)[j] = val;
+        (iv1 as unknown as Uint8Array)[j] = (data as unknown as Uint8Array)[offset + j];
+      }
     }
   }
-  return Buffer.concat(temp as unknown as Uint8Array[]);
+  return out;
 }
 /**
  * Make AES-256-CTR mode.
@@ -181,8 +219,10 @@ function ctr(key: Buffer, iv: Buffer, state: Buffer = Buffer.alloc(1)) {
   return {
     update: (data: Buffer) => {
       const out = Buffer.from(data as unknown as Uint8Array);
-      for (const i of range(0, Buffer.byteLength(data), 16)) {
-        for (const j of range(0, Math.min(Buffer.byteLength(data) - i, 16))) {
+      const dataLen = Buffer.byteLength(data);
+      for (let i = 0; i < dataLen; i += 16) {
+        const limit = Math.min(dataLen - i, 16);
+        for (let j = 0; j < limit; j++) {
           (out as unknown as Uint8Array)[i + j] ^= (chunk as unknown as Uint8Array)[
             (state as unknown as Uint8Array)[0]
           ];
@@ -191,7 +231,7 @@ function ctr(key: Buffer, iv: Buffer, state: Buffer = Buffer.alloc(1)) {
             (state as unknown as Uint8Array)[0] = 0;
           }
           if ((state as unknown as Uint8Array)[0] === 0) {
-            for (const k of range(15, -1, -1)) {
+            for (let k = 15; k >= 0; k--) {
               if ((_iv as unknown as Uint8Array)[k] === 255) {
                 (_iv as unknown as Uint8Array)[k] = 0;
               } else {
