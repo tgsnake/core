@@ -139,7 +139,12 @@ export async function siginBot(
           this._ipv6,
           false,
         );
-        const auth = new Auth(typedError.value as unknown as number, this._testMode, this._ipv6);
+        const auth = new Auth(
+          typedError.value as unknown as number,
+          this._testMode,
+          this._ipv6,
+          this._proxy,
+        );
         this._storage.setAddress(typedError.value as unknown as number, ip, port, this._testMode);
         this._storage.setApiId(this._apiId);
         this._storage.setAuthKey(await auth.create(), this._storage.dcId);
@@ -148,6 +153,7 @@ export async function siginBot(
           this._storage.dcId,
           this._storage.authKey,
           this._storage.testMode,
+          this._proxy,
         );
         await this._session.start();
       } else {
@@ -351,7 +357,12 @@ export async function sendCode(
           this._ipv6,
           false,
         );
-        const auth = new Auth(typedError.value as unknown as number, this._testMode, this._ipv6);
+        const auth = new Auth(
+          typedError.value as unknown as number,
+          this._testMode,
+          this._ipv6,
+          this._proxy,
+        );
         this._storage.setAddress(typedError.value as unknown as number, ip, port, this._testMode);
         this._storage.setApiId(this._apiId);
         this._storage.setAuthKey(await auth.create(), this._storage.dcId);
@@ -360,6 +371,7 @@ export async function sendCode(
           this._storage.dcId,
           this._storage.authKey,
           this._storage.testMode,
+          this._proxy,
         );
         await this._session.start();
       } else if (error instanceof Skema.ClientError.ClientDisconnected) {
@@ -609,7 +621,7 @@ export async function signInWithQRCode(
           if (res instanceof Skema.Raw.auth.LoginTokenMigrateTo) {
             await this._session.stop();
             const [ip, port] = DataCenter.DataCenter(res.dcId, this._testMode, this._ipv6, false);
-            const auth = new Auth(res.dcId, this._testMode, this._ipv6);
+            const auth = new Auth(res.dcId, this._testMode, this._ipv6, this._proxy);
             this._storage.setAddress(res.dcId, ip, port, this._testMode);
             this._storage.setApiId(this._apiId);
             this._storage.setAuthKey(await auth.create(), this._storage.dcId);
@@ -618,12 +630,14 @@ export async function signInWithQRCode(
               this._storage.dcId,
               this._storage.authKey,
               this._storage.testMode,
+              this._proxy,
             );
             await this._session.start();
             const migrated = await this.invoke(
               new Skema.Raw.auth.ImportLoginToken({
                 token: res.token,
               }),
+              0,
             );
             if (migrated instanceof Skema.Raw.auth.LoginTokenSuccess) {
               if (migrated.authorization instanceof Skema.Raw.auth.Authorization) {

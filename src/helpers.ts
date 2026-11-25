@@ -273,14 +273,25 @@ export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint): big
 
   return lowBigInt + rand;
 }
-export function normalizeSecretString(secret: string): Buffer {
+export function normalizeSecretString(secret: string | Buffer): Buffer {
   // https://github.com/LonamiWebs/Telethon/blob/494b20db2dc9f1a0d88f9ac0e84717789416cc20/telethon/network/connection/tcpmtproxy.py#L136
-  if (secret.slice(0, 2) === 'dd' || secret.slice(0, 2) === 'ee') {
-    secret = secret.slice(2);
+  if (Buffer.isBuffer(secret)) {
+    return secret;
   }
-  // check if string hex or base64
+  // check if string hex or hex with domain suffix
   if (/^[0-9a-fA-F]+$/.test(secret)) {
     return Buffer.from(secret, 'hex');
   }
-  return Buffer.from(secret, 'base64').subarray(0, 16) as Buffer;
+  if (/^[0-9a-fA-F]{34}/.test(secret)) {
+    return Buffer.from(secret.slice(0, 34), 'hex');
+  }
+  const b64 = secret.replace(/-/g, '+').replace(/_/g, '/');
+  const buf = Buffer.from(b64, 'base64');
+  if (
+    buf.length >= 17 &&
+    ((buf as unknown as Uint8Array)[0] === 0xdd || (buf as unknown as Uint8Array)[0] === 0xee)
+  ) {
+    return buf.subarray(0, 17) as Buffer;
+  }
+  return buf.subarray(0, 16) as Buffer;
 }

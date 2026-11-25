@@ -140,6 +140,9 @@ export class Socket {
           resolve(this);
         });
       } else {
+        const isMtproxy = proxy && 'server' in proxy && 'port' in proxy && 'secret' in proxy;
+        const targetHost = isMtproxy ? proxy.server : ip;
+        const targetPort = isMtproxy ? proxy.port : port;
         this._client = new net.Socket();
         (this._client as net.Socket).setTimeout(this.timeout);
         this._connectionClosed = false;
@@ -147,7 +150,7 @@ export class Socket {
           this._promisedReading = resolve;
         }) as unknown as Promise<boolean>;
         return new Promise((resolve, reject) => {
-          (this._client as net.Socket).connect(port, ip, () => {
+          (this._client as net.Socket).connect(targetPort, targetHost, () => {
             this.recv();
             resolve(this);
           });

@@ -498,6 +498,7 @@ export class Session {
               error.value as unknown as number,
               this._testMode,
               this._client._ipv6,
+              this._proxy,
             ).create();
             const newSession = new Session(
               this._client,
