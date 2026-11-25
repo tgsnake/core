@@ -13,9 +13,9 @@ import path from 'node:path';
 function buildForBrowser() {
   console.log('Changing deps.ts for browser...');
   const root = process.cwd();
-  const deps = path.join(root, 'deps.ts');
-  const depsNode = path.join(root, 'deps.node.ts');
-  const depsBrowser = path.join(root, 'deps.browser.ts');
+  const deps = path.join(root, 'src', 'deps.ts');
+  const depsNode = path.join(root, 'src', 'deps.node.ts');
+  const depsBrowser = path.join(root, 'src', 'deps.browser.ts');
   if (!fs.existsSync(deps) && !fs.existsSync(depsBrowser)) return;
   if (fs.existsSync(deps)) {
     fs.renameSync(deps, depsNode);

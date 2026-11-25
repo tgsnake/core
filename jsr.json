@@ -2,7 +2,7 @@
   "name": "@tgsnake/core",
   "version": "2.0.0",
   "exports": "./mod.ts",
-  "license": "MIT",
+  "license": "(GPL-3.0 OR LGPL-3.0)",
   "publish": {
     "include": ["mod.ts", "src/**/**", "README.md", "LICENSE", "package.json", "yarn.lock"],
     "exclude": ["test/**/**", "dist/**/**"]
