@@ -24,13 +24,19 @@ export class Queue<T> {
   protected _maxsize!: number;
   /** The underlying array storing the queue items. */
   protected _queues!: Array<T>;
-  /** Internal signal or Promise controlling blocked `put` operations. */
+  /** Head pointer for amortized O(1) dequeue operations. */
+  protected _head: number = 0;
+  /** Queue of waiting getters (waiting consumers). */
+  protected _waitingGetters: Array<{ (value: T): void }> = [];
+  /** Queue of waiting putters (waiting producers). */
+  protected _waitingPutters: Array<{ (): void }> = [];
+  /** Internal signal or Promise controlling blocked `put` operations (compatibility). */
   protected _possiblePut!: boolean | Promise<boolean>;
-  /** Resolver function to unblock `put` operations. */
+  /** Resolver function to unblock `put` operations (compatibility). */
   protected _resolvePut!: { (value: boolean): any };
-  /** Promise controlling blocked `get` operations. */
+  /** Promise controlling blocked `get` operations (compatibility). */
   protected _possibleGet!: Promise<boolean>;
-  /** Resolver function to unblock `get` operations. */
+  /** Resolver function to unblock `get` operations (compatibility). */
   protected _resolveGet!: { (value: boolean): any };
 
   /**
@@ -41,11 +47,13 @@ export class Queue<T> {
   constructor(maxsize: number = 0) {
     this._maxsize = maxsize;
     this._queues = [];
-    this._possiblePut = this._queues.length < maxsize;
+    this._head = 0;
+    this._waitingGetters = [];
+    this._waitingPutters = [];
+    this._possiblePut = true;
     this._resolvePut = (_value) => {};
-    this._possibleGet = new Promise((resolve) => {
-      this._resolveGet = resolve;
-    });
+    this._possibleGet = Promise.resolve(true);
+    this._resolveGet = (_value) => {};
   }
 
   /**
@@ -58,12 +66,17 @@ export class Queue<T> {
    * @returns {Promise<void>} A promise that resolves when the item has been successfully added.
    */
   async put(value: T): Promise<void> {
-    if (this.full) await this._possiblePut;
+    if (this._waitingGetters.length > 0) {
+      const getter = this._waitingGetters.shift()!;
+      getter(value);
+      return;
+    }
+    if (this.full) {
+      await new Promise<void>((resolve) => {
+        this._waitingPutters.push(resolve);
+      });
+    }
     this._queues.push(value);
-    this._resolveGet(true);
-    this._possiblePut = new Promise((resolve) => {
-      this._resolvePut = resolve;
-    });
   }
 
   /**
@@ -75,13 +88,21 @@ export class Queue<T> {
    * @returns {Promise<T>} A promise resolving to the item removed from the queue.
    */
   async get(): Promise<T> {
-    if (this.empty) await this._possibleGet;
-    const value = this._queues.shift();
-    this._resolvePut(true);
-    this._possibleGet = new Promise((resolve) => {
-      this._resolveGet = resolve;
+    if (this.size > 0) {
+      const value = this._queues[this._head++];
+      if (this._head > 64 && this._head * 2 >= this._queues.length) {
+        this._queues = this._queues.slice(this._head);
+        this._head = 0;
+      }
+      if (this._waitingPutters.length > 0) {
+        const putter = this._waitingPutters.shift()!;
+        putter();
+      }
+      return value as T;
+    }
+    return new Promise<T>((resolve) => {
+      this._waitingGetters.push(resolve);
     });
-    return value as T;
   }
 
   /**
@@ -101,7 +122,7 @@ export class Queue<T> {
    * @returns {number} The current size of the queue.
    */
   get size(): number {
-    return this._queues.length;
+    return this._queues.length - this._head;
   }
 
   /**
