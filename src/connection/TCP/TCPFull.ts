@@ -28,16 +28,15 @@ export class TCPFull extends TCP {
     this._seq = 0;
   }
   override async send(data: Buffer): Promise<void> {
-    const allocSum = Buffer.alloc(8);
-    allocSum.writeInt32LE(Buffer.byteLength(data) + 12, 0);
-    allocSum.writeInt32LE(this._seq, 4);
-    data = Buffer.concat([allocSum as unknown as Uint8Array, data as unknown as Uint8Array]);
-    const crc = crc32(data);
-    const bcrc = Buffer.alloc(4);
-    bcrc.writeUInt32LE(crc, 0);
-    data = Buffer.concat([data as unknown as Uint8Array, bcrc as unknown as Uint8Array]);
+    const dataLen = Buffer.byteLength(data);
+    const packet = Buffer.allocUnsafe(dataLen + 12);
+    packet.writeInt32LE(dataLen + 12, 0);
+    packet.writeInt32LE(this._seq, 4);
+    data.copy(packet, 8);
+    const crc = crc32(packet.subarray(0, dataLen + 8));
+    packet.writeUInt32LE(crc, dataLen + 8);
     this._seq += 1;
-    await super.send(data);
+    await super.send(packet);
   }
   override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);
