@@ -11,6 +11,8 @@ import { Buffer } from '../../deps.js';
 import { TCP } from './tcp.js';
 import type { ProxyInterface } from '../connection.js';
 
+const INTERMEDIATE_MAGIC = Buffer.from([0xee, 0xee, 0xee, 0xee]);
+
 /**
  * @class TCPIntermediate
  * One of the TCP classes that implements simple level connection.
@@ -27,21 +29,14 @@ export class TCPIntermediate extends TCP {
     dcId?: number,
   ): Promise<void> {
     await super.connect(ip, port, proxy, dcId);
-    await super.send(
-      Buffer.concat([
-        Buffer.from('ee', 'hex') as unknown as Uint8Array,
-        Buffer.from('ee', 'hex') as unknown as Uint8Array,
-        Buffer.from('ee', 'hex') as unknown as Uint8Array,
-        Buffer.from('ee', 'hex') as unknown as Uint8Array,
-      ]),
-    );
+    await super.send(INTERMEDIATE_MAGIC);
   }
   override async send(data: Buffer): Promise<void> {
-    const allocLength = Buffer.alloc(4);
-    allocLength.writeInt32LE(Buffer.byteLength(data), 0);
-    await super.send(
-      Buffer.concat([allocLength as unknown as Uint8Array, data as unknown as Uint8Array]),
-    );
+    const dataLen = Buffer.byteLength(data);
+    const packet = Buffer.allocUnsafe(4 + dataLen);
+    packet.writeInt32LE(dataLen, 0);
+    data.copy(packet, 4);
+    await super.send(packet);
   }
   override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);
