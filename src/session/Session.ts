@@ -219,7 +219,7 @@ export class Session {
       return;
     }
     Logger.debug(
-      `[19.session.Session] Sending msg id ${msgId} (${data.className}), has ${Buffer.byteLength(msg.write())} bytes message.`,
+      `[19.session.Session] Sending msg id ${msgId} (${data.className}), has ${msg.length + 16} bytes message.`,
     );
     const payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
@@ -498,6 +498,7 @@ export class Session {
               error.value as unknown as number,
               this._testMode,
               this._client._ipv6,
+              this._proxy,
             ).create();
             const newSession = new Session(
               this._client,

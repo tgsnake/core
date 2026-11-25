@@ -18,7 +18,7 @@ __metadata:
   dependencies:
     "@tgsnake/bytesio": "npm:^2.1.0"
     "@tgsnake/log": "npm:^2.0.1"
-    "@tgsnake/skema": "npm:^3.0.0"
+    "@tgsnake/skema": "npm:^3.1.0"
     "@types/bun": "npm:^1.4.5"
     "@types/node": "npm:^26.6.6"
     async-mutex: "npm:^0.5.0"
@@ -40,14 +40,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tgsnake/skema@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@tgsnake/skema@npm:3.0.0"
+"@tgsnake/skema@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@tgsnake/skema@npm:3.1.0"
   dependencies:
     "@tgsnake/bytesio": "npm:^2.1.0"
     "@tgsnake/log": "npm:^2.0.1"
     big-integer: "npm:^1.6.52"
-  checksum: 10c0/f1770a8295b05d5d877c0a35703601a4438c505d24fc187fec967824d31c3943f6f6661225eb0d19999da99a2234f482d83ec6309aa6247826c6d5a2fa3066dc
+  checksum: 10c0/7b83eaf33e03cd94148ec675314ebe700b2fac5c4de353ec2b20bd77809b32fac331bd78dcf8fd9a3b52e4073d685e5ce6e92f9d5c39eb349b8d23ea6cc1f712
   languageName: node
   linkType: hard
 

@@ -95,15 +95,18 @@ export class TCP {
    * @returns {Promise<Buffer | undefined>} The requested data chunk, or `undefined` if disconnected.
    */
   async recv(length: number = 0): Promise<Buffer | undefined> {
-    let data: Buffer = Buffer.alloc(0);
-    while (Buffer.byteLength(data) < length) {
+    if (length <= 0) return Buffer.alloc(0);
+    const data = Buffer.allocUnsafe(length);
+    let bytesRead = 0;
+    while (bytesRead < length) {
       const chunk = await this._task.run(
-        this._socks.read(length - Buffer.byteLength(data)),
+        this._socks.read(length - bytesRead),
         this._socks.timeout,
         () => {},
       );
       if (chunk) {
-        data = Buffer.concat([data, chunk]);
+        chunk.copy(data, bytesRead);
+        bytesRead += Buffer.byteLength(chunk);
       } else {
         return;
       }

@@ -8,7 +8,7 @@
  * it under the terms of the GPL v3 License as published.
  */
 
-import { Connection } from '../connection/connection.js';
+import { Connection, type ProxyInterface } from '../connection/connection.js';
 import * as AES from '../crypto/Aes.js';
 import * as Prime from '../crypto/Prime.js';
 import * as RSA from '../crypto/RSA.js';
@@ -22,11 +22,13 @@ export class Auth {
   dcId!: number;
   testMode!: boolean;
   ipv6!: boolean;
+  proxy?: ProxyInterface;
   connection!: Connection;
-  constructor(dcId: number, testMode: boolean, ipv6: boolean) {
+  constructor(dcId: number, testMode: boolean, ipv6: boolean, proxy?: ProxyInterface) {
     this.dcId = dcId;
     this.testMode = testMode;
     this.ipv6 = ipv6;
+    this.proxy = proxy;
   }
   static pack(data: Skema.TLObject): Buffer {
     return Buffer.concat([
@@ -54,7 +56,7 @@ export class Auth {
     // If that happens, just try again up to MAX_RETRIES times.
     while (true) {
       // using TCPIntermediate
-      this.connection = new Connection(this.dcId, this.testMode, this.ipv6);
+      this.connection = new Connection(this.dcId, this.testMode, this.ipv6, this.proxy);
       try {
         Logger.debug(`[1.session.Auth] Start creating a new auth key on DC${this.dcId}`);
         await this.connection.connect();

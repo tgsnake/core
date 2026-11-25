@@ -21,8 +21,12 @@ import type { ProxyInterface } from './connection.js';
 export class Socket {
   /** The underlying WebSocket instance (browser) or TCP Socket instance (Node/Deno). */
   private _client!: WebSocket | net.Socket;
-  /** Internal byte buffer accumulator for incoming stream frames. */
-  private _data!: Buffer;
+  /** Internal byte buffer chunks accumulator for incoming stream frames. */
+  private _chunks: Array<Buffer> = [];
+  /** Read offset within the head chunk of _chunks. */
+  private _chunkOffset: number = 0;
+  /** Total buffered bytes remaining across all chunks. */
+  private _bufferedBytes: number = 0;
   /** Signal Promise controlling asynchronous read block queues. */
   private _read!: boolean | Promise<boolean>;
   /** Resolver function to notify waiting read queues of new buffer data packets. */
@@ -44,7 +48,9 @@ export class Socket {
    * @param {number} timeout - Connection/read timeout limit in milliseconds.
    */
   constructor(timeout: number) {
-    this._data = Buffer.alloc(0);
+    this._chunks = [];
+    this._chunkOffset = 0;
+    this._bufferedBytes = 0;
     this._connectionClosed = true;
     this.timeout = timeout;
     this._mutex = new Mutex();
@@ -140,6 +146,9 @@ export class Socket {
           resolve(this);
         });
       } else {
+        const isMtproxy = proxy && 'server' in proxy && 'port' in proxy && 'secret' in proxy;
+        const targetHost = isMtproxy ? proxy.server : ip;
+        const targetPort = isMtproxy ? proxy.port : port;
         this._client = new net.Socket();
         (this._client as net.Socket).setTimeout(this.timeout);
         this._connectionClosed = false;
@@ -147,7 +156,7 @@ export class Socket {
           this._promisedReading = resolve;
         }) as unknown as Promise<boolean>;
         return new Promise((resolve, reject) => {
-          (this._client as net.Socket).connect(port, ip, () => {
+          (this._client as net.Socket).connect(targetPort, targetHost, () => {
             this.recv();
             resolve(this);
           });
@@ -175,6 +184,9 @@ export class Socket {
   async destroy(): Promise<boolean> {
     if (this._client && !this._connectionClosed) {
       this._connectionClosed = true;
+      this._chunks = [];
+      this._chunkOffset = 0;
+      this._bufferedBytes = 0;
       this._read = new Promise((resolve: { (value?: unknown): void }) => {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
@@ -186,6 +198,19 @@ export class Socket {
       }
     }
     return this._connectionClosed;
+  }
+
+  /**
+   * Internal data buffer compatibility getter.
+   */
+  get _data(): Buffer {
+    if (this._chunks.length === 0) return Buffer.alloc(0);
+    if (this._chunks.length === 1 && this._chunkOffset === 0) return this._chunks[0];
+    const list =
+      this._chunkOffset === 0
+        ? this._chunks
+        : [this._chunks[0].subarray(this._chunkOffset), ...this._chunks.slice(1)];
+    return Buffer.concat(list as unknown as Uint8Array[]);
   }
 
   /**
@@ -201,10 +226,8 @@ export class Socket {
           const release = await this._mutex.acquire();
           try {
             Logger.debug(`[1.connection.WebSocket] Receive ${Buffer.byteLength(_data)} bytes data`);
-            this._data = Buffer.concat([
-              this._data as unknown as Uint8Array,
-              _data as unknown as Uint8Array,
-            ]);
+            this._chunks.push(_data);
+            this._bufferedBytes += Buffer.byteLength(_data);
             if (this._promisedReading) this._promisedReading(true);
           } finally {
             release();
@@ -215,10 +238,8 @@ export class Socket {
           const release = await this._mutex.acquire();
           try {
             Logger.debug(`[2.connection.WebSocket] Receive ${Buffer.byteLength(data)} bytes data`);
-            this._data = Buffer.concat([
-              this._data as unknown as Uint8Array,
-              data as unknown as Uint8Array,
-            ]);
+            this._chunks.push(data);
+            this._bufferedBytes += Buffer.byteLength(data);
             if (this._promisedReading) this._promisedReading(true);
           } finally {
             release();
@@ -268,18 +289,68 @@ export class Socket {
     if (this._connectionClosed) {
       throw new Skema.WSError.ReadClosed();
     }
-    await this._read;
+    if (this._bufferedBytes === 0) {
+      await this._read;
+    }
     if (this._connectionClosed) {
       throw new Skema.WSError.ReadClosed();
     }
-    const toRead = this._data.subarray(0, length);
-    this._data = this._data.subarray(length);
-    if (Buffer.byteLength(this._data) <= 0) {
+    if (this._chunks.length === 0) {
+      return Buffer.alloc(0);
+    }
+
+    const head = this._chunks[0];
+    const availInHead = head.length - this._chunkOffset;
+
+    if (availInHead > length) {
+      const result = head.subarray(this._chunkOffset, this._chunkOffset + length);
+      this._chunkOffset += length;
+      this._bufferedBytes -= length;
+      return result;
+    }
+
+    if (availInHead === length) {
+      const result = this._chunkOffset === 0 ? head : head.subarray(this._chunkOffset);
+      this._chunks.shift();
+      this._chunkOffset = 0;
+      this._bufferedBytes -= length;
+      if (this._bufferedBytes <= 0) {
+        this._read = new Promise((resolve: { (value?: unknown): void }) => {
+          this._promisedReading = resolve;
+        }) as unknown as Promise<boolean>;
+      }
+      return result;
+    }
+
+    // Read spans multiple chunks
+    const toRead = Math.min(length, this._bufferedBytes);
+    const out = Buffer.allocUnsafe(toRead);
+    let bytesCopied = 0;
+
+    while (bytesCopied < toRead && this._chunks.length > 0) {
+      const current = this._chunks[0];
+      const avail = current.length - this._chunkOffset;
+      const needed = toRead - bytesCopied;
+
+      if (avail <= needed) {
+        current.copy(out, bytesCopied, this._chunkOffset, current.length);
+        bytesCopied += avail;
+        this._chunks.shift();
+        this._chunkOffset = 0;
+      } else {
+        current.copy(out, bytesCopied, this._chunkOffset, this._chunkOffset + needed);
+        this._chunkOffset += needed;
+        bytesCopied += needed;
+      }
+    }
+
+    this._bufferedBytes -= toRead;
+    if (this._bufferedBytes <= 0) {
       this._read = new Promise((resolve: { (value?: unknown): void }) => {
         this._promisedReading = resolve;
       }) as unknown as Promise<boolean>;
     }
-    return toRead;
+    return out;
   }
 
   /**
@@ -291,12 +362,13 @@ export class Socket {
    */
   async reading(length: number): Promise<Buffer> {
     if (this._client && !this._connectionClosed) {
-      let data = Buffer.alloc(0);
-      while (!this._connectionClosed) {
-        const readed = await this.read(length);
-        data = Buffer.concat([data as unknown as Uint8Array, readed as unknown as Uint8Array]);
-        length = length - Buffer.byteLength(readed);
-        if (!length) return data;
+      const out = Buffer.allocUnsafe(length);
+      let offset = 0;
+      while (!this._connectionClosed && offset < length) {
+        const chunk = await this.read(length - offset);
+        chunk.copy(out, offset);
+        offset += Buffer.byteLength(chunk);
+        if (offset >= length) return out;
       }
       // if connection closed before reading the required length, throw error
       throw new Skema.WSError.ReadClosed();

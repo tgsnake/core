@@ -200,8 +200,12 @@ export class Connection {
           'port' in this._proxy &&
           'secret' in this._proxy
         ) {
-          const secret = normalizeSecretString(this._proxy.secret as string);
-          if (secret[0] === 0xdd) {
+          const secret = normalizeSecretString(this._proxy.secret);
+          if (
+            secret.length >= 17 &&
+            ((secret as unknown as Uint8Array)[0] === 0xdd ||
+              (secret as unknown as Uint8Array)[0] === 0xee)
+          ) {
             this._mode = TCP.TCPIntermediateO;
           } else {
             this._mode = TCP.TCPAbridgedO;
@@ -219,7 +223,7 @@ export class Connection {
           this._address[0],
           platform === 'Browser' ? (this._local ? 80 : this._address[1]) : this._address[1],
           this._proxy,
-          this._dcId + (this._test ? 10000 : 0) * (this._media ? -1 : 1),
+          this._dcId * (this._media ? -1 : 1) + (this._test ? 10000 : 0),
         );
         this._connected = true;
         break;

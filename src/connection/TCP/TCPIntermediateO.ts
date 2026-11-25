@@ -9,8 +9,8 @@
  */
 
 import { TCP } from './tcp.js';
-import { includesBuffer, normalizeSecretString, sliceBuffer } from '../../helpers.js';
-import { crypto, Buffer, Skema } from '../../deps.js';
+import { includesBuffer, normalizeSecretString } from '../../helpers.js';
+import { crypto, Buffer } from '../../deps.js';
 import { ctr256Cipher, type CtrCipherFn } from '../../crypto/Aes.js';
 import type { ProxyInterface } from '../connection.js';
 
@@ -45,17 +45,17 @@ export class TCPIntermediateO extends TCP {
           ? normalizeSecretString(proxy.secret)
           : Buffer.from(proxy.secret as unknown as Uint8Array);
       secret =
-        Buffer.byteLength(secret) === 17 && (secret as unknown as Uint8Array)[0] === 0xdd
-          ? secret.subarray(1)
+        Buffer.byteLength(secret) >= 17 &&
+        ((secret as unknown as Uint8Array)[0] === 0xdd ||
+          (secret as unknown as Uint8Array)[0] === 0xee)
+          ? secret.subarray(1, 17)
           : secret;
       while (true) {
         nonce = crypto.randomBytes(64);
         if (
-          !Buffer.from([(nonce as unknown as Uint8Array)[0]]).equals(
-            Buffer.from('ef', 'hex') as unknown as Uint8Array,
-          ) &&
+          (nonce as unknown as Uint8Array)[0] !== 0xef &&
           !includesBuffer(this._reserved, nonce) &&
-          !nonce.subarray(4, 8).equals(Buffer.alloc(4) as unknown as Uint8Array)
+          nonce.readUInt32LE(4) !== 0
         ) {
           (nonce as unknown as Uint8Array)[56] =
             (nonce as unknown as Uint8Array)[57] =
@@ -65,7 +65,7 @@ export class TCPIntermediateO extends TCP {
           break;
         }
       }
-      const temp: Buffer = sliceBuffer(nonce, 55, 7, -1);
+      const temp: Buffer = Buffer.from(nonce.subarray(8, 56)).reverse();
       const encryptionKey = sha256(
         Buffer.concat([
           nonce.subarray(8, 40) as unknown as Uint8Array,
@@ -73,17 +73,17 @@ export class TCPIntermediateO extends TCP {
         ]),
       );
       const encryptionIv = nonce.subarray(40, 56);
-      const decryptionIv = sha256(
+      const decryptionKey = sha256(
         Buffer.concat([
           temp.subarray(0, 32) as unknown as Uint8Array,
           secret as unknown as Uint8Array,
         ]),
       );
-      const decryptionKey = temp.subarray(32, 48);
+      const decryptionIv = temp.subarray(32, 48);
       this._encryptor = ctr256Cipher(encryptionKey, encryptionIv);
       this._decryptor = ctr256Cipher(decryptionKey, decryptionIv);
       const _dcId = Buffer.alloc(2);
-      _dcId.writeInt8(dcId, 0);
+      _dcId.writeInt16LE(dcId, 0);
       nonce = Buffer.concat([
         nonce.subarray(0, 60) as unknown as Uint8Array,
         _dcId as unknown as Uint8Array,
@@ -97,11 +97,9 @@ export class TCPIntermediateO extends TCP {
       while (true) {
         nonce = crypto.randomBytes(64);
         if (
-          !Buffer.from([(nonce as unknown as Uint8Array)[0]]).equals(
-            Buffer.from('ef', 'hex') as unknown as Uint8Array,
-          ) &&
+          (nonce as unknown as Uint8Array)[0] !== 0xef &&
           !includesBuffer(this._reserved, nonce) &&
-          !nonce.subarray(4, 8).equals(Buffer.alloc(4) as unknown as Uint8Array)
+          nonce.readUInt32LE(4) !== 0
         ) {
           (nonce as unknown as Uint8Array)[56] =
             (nonce as unknown as Uint8Array)[57] =
@@ -111,7 +109,7 @@ export class TCPIntermediateO extends TCP {
           break;
         }
       }
-      const temp: Buffer = sliceBuffer(nonce, 55, 7, -1);
+      const temp: Buffer = Buffer.from(nonce.subarray(8, 56)).reverse();
       const encryptionKey = nonce.subarray(8, 40);
       const encryptionIv = nonce.subarray(40, 56);
       const decryptionKey = temp.subarray(0, 32);
@@ -126,13 +124,11 @@ export class TCPIntermediateO extends TCP {
     await super.send(nonce);
   }
   override async send(data: Buffer): Promise<void> {
-    const payload = this._encryptor(
-      Buffer.concat([
-        Skema.Primitive.Int.write(Buffer.byteLength(data)) as unknown as Uint8Array,
-        data as unknown as Uint8Array,
-      ]),
-    );
-    return await super.send(payload);
+    const dataLen = Buffer.byteLength(data);
+    const packet = Buffer.allocUnsafe(4 + dataLen);
+    packet.writeInt32LE(dataLen, 0);
+    data.copy(packet, 4);
+    return await super.send(this._encryptor(packet));
   }
   override async recv(_length: number = 0): Promise<Buffer | undefined> {
     let length = await super.recv(4);

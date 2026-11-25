@@ -11,6 +11,8 @@ import { Buffer } from '../../deps.js';
 import { TCP } from './tcp.js';
 import type { ProxyInterface } from '../connection.js';
 
+const PADDED_MAGIC = Buffer.from([0xdd, 0xdd, 0xdd, 0xdd]);
+
 /**
  * @class TCPPaddedIntermediate
  * One of the TCP classes that implements small-medium level connection.
@@ -27,25 +29,15 @@ export class TCPPaddedIntermediate extends TCP {
     dcId?: number,
   ): Promise<void> {
     await super.connect(ip, port, proxy, dcId);
-    await super.send(
-      Buffer.concat([
-        Buffer.from('dd', 'hex') as unknown as Uint8Array,
-        Buffer.from('dd', 'hex') as unknown as Uint8Array,
-        Buffer.from('dd', 'hex') as unknown as Uint8Array,
-        Buffer.from('dd', 'hex') as unknown as Uint8Array,
-      ]),
-    );
+    await super.send(PADDED_MAGIC);
   }
   override async send(data: Buffer): Promise<void> {
-    data = Buffer.concat([
-      data as unknown as Uint8Array,
-      Buffer.alloc(Buffer.byteLength(data) % 4) as unknown as Uint8Array,
-    ]);
-    const allocLength = Buffer.alloc(4);
-    allocLength.writeInt32LE(Buffer.byteLength(data), 0);
-    await super.send(
-      Buffer.concat([allocLength as unknown as Uint8Array, data as unknown as Uint8Array]),
-    );
+    const dataLen = Buffer.byteLength(data);
+    const pad = dataLen % 4;
+    const packet = Buffer.alloc(4 + dataLen + pad);
+    packet.writeInt32LE(dataLen + pad, 0);
+    data.copy(packet, 4);
+    await super.send(packet);
   }
   override async recv(_length: number = 0): Promise<Buffer | undefined> {
     const length = await super.recv(4);

@@ -20,57 +20,58 @@ export function includesBuffer(array: Array<Buffer>, buffer: Buffer): boolean {
 }
 // https://t.me/butthxforward/85
 export function sliceBuffer(buffer: Buffer, start: number, stop: number, step: number = 1): Buffer {
-  let slc = buffer.subarray(start, stop);
-  let res = slc;
   if (step === 0) {
     throw new Error('slice step cannot be zero.');
   }
+  let slc = buffer.subarray(start, stop);
   if (step < 0) {
     slc = Buffer.from(
       buffer.subarray(stop - step, start - step) as unknown as Uint8Array,
     ).reverse();
-    res = slc;
     step = -step;
   }
-  if (step > 1) {
-    res = Buffer.alloc(0);
-    let i = 0;
-    for (const buff of slc as unknown as Uint8Array) {
-      i++;
-      if (i >= step) {
-        i = 0;
-      }
-      if (i === 1) {
-        res = Buffer.concat([
-          res as unknown as Uint8Array,
-          Buffer.from([buff]) as unknown as Uint8Array,
-        ]);
-      }
-    }
+  if (step === 1) {
+    return slc;
   }
-  return res;
+  const slcLen = Buffer.byteLength(slc);
+  const outLen = Math.ceil(slcLen / step);
+  const out = Buffer.allocUnsafe(outLen);
+  let idx = 0;
+  for (let i = 0; i < slcLen; i += step) {
+    (out as unknown as Uint8Array)[idx++] = (slc as unknown as Uint8Array)[i];
+  }
+  return out;
 }
 // https://stackoverflow.com/questions/18638900/javascript-crc32/18639999#18639999
-export function makeCRCTable(): Array<number> {
-  let c;
-  const crcTable: Array<any> = [];
+const CRC_TABLE = (function (): Uint32Array {
+  const table = new Uint32Array(256);
   for (let n = 0; n < 256; n++) {
-    c = n;
+    let c = n;
     for (let k = 0; k < 8; k++) {
       c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
     }
-    crcTable[n] = c;
+    table[n] = c >>> 0;
   }
-  return crcTable;
+  return table;
+})();
+
+export function makeCRCTable(): Array<number> {
+  return Array.from(CRC_TABLE);
 }
+
 export function crc32(str: Buffer | string): number {
-  str = Buffer.isBuffer(str) ? Buffer.from(str as unknown as Uint8Array) : str;
-  const crcTable = makeCRCTable();
-  const length = Buffer.isBuffer(str) ? Buffer.byteLength(str) : str.length;
+  const isBuf = Buffer.isBuffer(str);
+  const length = isBuf ? Buffer.byteLength(str) : str.length;
   let crc = -1;
-  for (let i = 0; i < length; i++) {
-    const bytes: number = Number((str as unknown as Uint8Array)[i]);
-    crc = (crc >>> 8) ^ crcTable[(crc ^ bytes) & 0xff];
+  if (isBuf) {
+    const bytes = str as unknown as Uint8Array;
+    for (let i = 0; i < length; i++) {
+      crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ bytes[i]) & 0xff];
+    }
+  } else {
+    for (let i = 0; i < length; i++) {
+      crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ str.charCodeAt(i)) & 0xff];
+    }
   }
   return (crc ^ -1) >>> 0;
 }
@@ -80,100 +81,37 @@ export function sleep(ms: number): Promise<unknown> {
   });
 }
 export function range(start: number, stop: number, step: number = 1): Array<number> {
-  const temp: Array<number> = [];
-  const results: Array<number> = [];
   if (step === 0) {
     throw new Error('step cannot be zero');
   }
-  if (step < 0) {
-    if (stop < 0) {
-      for (let i = start; i > stop; i--) {
-        temp.push(i);
-      }
-      step = -step;
-      if (step > 1) {
-        let i = 0;
-        for (let num of temp) {
-          i++;
-          if (i >= step) {
-            i = 0;
-          }
-          if (i === 1) {
-            results.push(num);
-          }
-        }
-        return results;
-      } else {
-        return temp;
-      }
+  const results: Array<number> = [];
+  if (step > 0) {
+    for (let i = start; i < stop; i += step) {
+      results.push(i);
     }
-    return results;
-  }
-  for (let i = start; i < stop; i++) {
-    temp.push(i);
-  }
-  if (step > 1) {
-    let i = 0;
-    for (let num of temp) {
-      i++;
-      if (i >= step) {
-        i = 0;
-      }
-      if (i === 1) {
-        results.push(num);
-      }
+  } else {
+    for (let i = start; i > stop; i += step) {
+      results.push(i);
     }
-    return results;
   }
-  return temp;
+  return results;
 }
 export function rangeBigint(start: bigint, stop: bigint, step: number = 1): Array<bigint> {
-  const temp: Array<bigint> = [];
-  const results: Array<bigint> = [];
   if (step === 0) {
     throw new Error('step cannot be zero');
   }
-  if (step < 0) {
-    if (stop < BigInt(0)) {
-      for (let i = start; i > stop; i--) {
-        temp.push(i);
-      }
-      step = -step;
-      if (step > 1) {
-        let i = 0;
-        for (const num of temp) {
-          i++;
-          if (i >= step) {
-            i = 0;
-          }
-          if (i === 1) {
-            results.push(num);
-          }
-        }
-        return results;
-      } else {
-        return temp;
-      }
+  const results: Array<bigint> = [];
+  const bStep = BigInt(step);
+  if (step > 0) {
+    for (let i = start; i < stop; i += bStep) {
+      results.push(i);
     }
-    return results;
-  }
-  for (let i = start; i < stop; i++) {
-    temp.push(i);
-  }
-  if (step > 1) {
-    let i = 0;
-    for (const num of temp) {
-      i++;
-      if (i >= step) {
-        i = 0;
-      }
-      if (i === 1) {
-        results.push(num);
-      }
+  } else {
+    for (let i = start; i > stop; i += bStep) {
+      results.push(i);
     }
-    return results;
   }
-  return temp;
+  return results;
 }
 export function randint(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -273,14 +211,25 @@ export function generateRandomBigInt(lowBigInt: bigint, highBigInt: bigint): big
 
   return lowBigInt + rand;
 }
-export function normalizeSecretString(secret: string): Buffer {
+export function normalizeSecretString(secret: string | Buffer): Buffer {
   // https://github.com/LonamiWebs/Telethon/blob/494b20db2dc9f1a0d88f9ac0e84717789416cc20/telethon/network/connection/tcpmtproxy.py#L136
-  if (secret.slice(0, 2) === 'dd' || secret.slice(0, 2) === 'ee') {
-    secret = secret.slice(2);
+  if (Buffer.isBuffer(secret)) {
+    return secret;
   }
-  // check if string hex or base64
+  // check if string hex or hex with domain suffix
   if (/^[0-9a-fA-F]+$/.test(secret)) {
     return Buffer.from(secret, 'hex');
   }
-  return Buffer.from(secret, 'base64').subarray(0, 16) as Buffer;
+  if (/^[0-9a-fA-F]{34}/.test(secret)) {
+    return Buffer.from(secret.slice(0, 34), 'hex');
+  }
+  const b64 = secret.replace(/-/g, '+').replace(/_/g, '/');
+  const buf = Buffer.from(b64, 'base64');
+  if (
+    buf.length >= 17 &&
+    ((buf as unknown as Uint8Array)[0] === 0xdd || (buf as unknown as Uint8Array)[0] === 0xee)
+  ) {
+    return buf.subarray(0, 17) as Buffer;
+  }
+  return buf.subarray(0, 16) as Buffer;
 }

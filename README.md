@@ -46,13 +46,12 @@ $ npm install @tgsnake/core @tgsnake/skema
 $ bun add @tgsnake/core @tgsnake/skema
 ```
 
-For **Deno**, you can import directly from npm:
+Or with JSR:
 
-```typescript
-import { Client } from 'npm:@tgsnake/core';
+```bash
+# Add the dependency via JSR
+deno add jsr:@tgsnake/core jsr:@tgsnake/skema
 ```
-
-> [!NOTE] The JSR version will be published soon, so you can use the JSR version for deno.
 
 ---
 

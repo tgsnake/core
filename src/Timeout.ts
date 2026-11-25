@@ -31,8 +31,8 @@ export interface OnTimeout {
  * handlers on timeout, and clearing/canceling all active timeout timers.
  */
 export class Timeout {
-  /** Stores a list of active setTimeout timers. */
-  private _task: Array<any> = [];
+  /** Stores a set of active setTimeout timers. */
+  private _task: Set<any> = new Set<any>();
 
   /**
    * Creates an instance of the Timeout manager.
@@ -54,8 +54,9 @@ export class Timeout {
   run(task: Promise<any>, time: number, onTimeout?: OnTimeout): Promise<any> {
     if (time === Infinity) return task;
     return new Promise((res, rej) => {
-      let index = this._task.length;
+      let index = this._task.size;
       let timeout = setTimeout(() => {
+        this._task.delete(timeout);
         if (onTimeout) {
           onTimeout(time, index);
         } else {
@@ -65,13 +66,13 @@ export class Timeout {
           return 'Running timeout';
         });
       }, time);
-      this._task.push(timeout);
+      this._task.add(timeout);
       task
         .then(res)
         .catch(rej)
         .finally(() => {
           clearTimeout(timeout);
-          this._task = this._task.filter((t) => !t._destroyed);
+          this._task.delete(timeout);
         });
     });
   }
@@ -80,12 +81,9 @@ export class Timeout {
    * Cancels and clears all active timeout timers currently managed by this instance.
    */
   clear(): void {
-    for (let i = 0; i < this._task.length; i++) {
-      let task = this._task[i];
-      if (!task._destroyed) {
-        clearTimeout(task);
-      }
-      this._task.splice(i, 1);
+    for (const task of this._task) {
+      clearTimeout(task);
     }
+    this._task.clear();
   }
 }

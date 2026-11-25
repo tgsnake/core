@@ -39,6 +39,7 @@ export async function loadSession(this: Client): Promise<void> {
       (this as Client)._defaultDcId,
       (this as Client)._testMode,
       (this as Client)._ipv6,
+      (this as Client)._proxy,
     );
     (this as Client)._storage.setAddress(
       (this as Client)._defaultDcId,

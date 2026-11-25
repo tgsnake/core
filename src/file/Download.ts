@@ -31,7 +31,7 @@ export async function handleDownload(
     client,
     dcId,
     dcId !== client._storage.dcId
-      ? await new Auth(dcId, client._storage.testMode, client._ipv6).create()
+      ? await new Auth(dcId, client._storage.testMode, client._ipv6, client._proxy).create()
       : client._storage.authKey,
     client._storage.testMode,
     client._proxy,
@@ -85,7 +85,7 @@ export async function handleDownload(
         client,
         dcId,
         dcId !== client._storage.dcId
-          ? await new Auth(dcId, client._storage.testMode, client._ipv6).create()
+          ? await new Auth(dcId, client._storage.testMode, client._ipv6, client._proxy).create()
           : client._storage.authKey,
         client._storage.testMode,
         client._proxy,
