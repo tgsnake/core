@@ -1,4 +1,26 @@
- <a name="1.13.15"></a>
+ <a name="v2.0.0"></a>
+
+## [v2.0.0](https://github.com/tgsnake/core/compare/1.13.15...v2.0.0)
+
+> 2026-11-25
+
+### Add
+
+- jsr generator workflow - sigin with qr code - CLAUDE.md - auth example - [@tgsnake](https://github.com/tgsnake)/bytesio and [@tgsnake](https://github.com/tgsnake)/skema  ### Change
+
+- improve security check - improve addHandler function so the register handler can be dropped with removeHandler or call the dispose function - sync deps - target to es2024 - Update CHANGELOG.md - Update TLSchema - Update TLSchema - Update TLSchema - Update TLSchema - Update TLSchema  ### Deprecated
+
+- auth.signup - since Telegram registration only be done in Telegram App  ### Fix
+
+- proxy bug  ### Remove
+
+- github action to sync the tl schema and tl error  ### Revert
+
+- sign up function but marked as deprecated  ### Update
+
+- readme - deps  ### Pull Requests
+
+- Merge pull request [#12](https://github.com/tgsnake/core/issues/12) from tgsnake/136-proxy-doesnt-works - Merge pull request [#11](https://github.com/tgsnake/core/issues/11) from tgsnake/switch-skema   <a name="1.13.15"></a>
 
 ## [1.13.15](https://github.com/tgsnake/core/compare/1.13.14...1.13.15)
 
