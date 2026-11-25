@@ -219,7 +219,7 @@ export class Session {
       return;
     }
     Logger.debug(
-      `[19.session.Session] Sending msg id ${msgId} (${data.className}), has ${Buffer.byteLength(msg.write())} bytes message.`,
+      `[19.session.Session] Sending msg id ${msgId} (${data.className}), has ${msg.length + 16} bytes message.`,
     );
     const payload = Mtproto.pack(msg, this._salt, this._sessionId, this._authKey, this._authKeyId);
     try {
