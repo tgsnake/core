@@ -22,13 +22,37 @@ function sha256(data: Buffer): Buffer {
   return hash.digest();
 }
 function toBytes(value: bigint): Buffer {
-  const bytesArray: Array<number> = [];
-  for (let i = 0; i < 8; i++) {
-    let shift = value >> BigInt(8 * i);
-    shift &= BigInt(255);
-    bytesArray[i] = Number(String(shift));
+  const buf = Buffer.allocUnsafe(8);
+  buf.writeBigInt64LE(value, 0);
+  return buf;
+}
+
+function binarySearch(arr: Array<bigint>, target: bigint): number {
+  let low = 0;
+  let high = arr.length - 1;
+  while (low <= high) {
+    const mid = (low + high) >>> 1;
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) low = mid + 1;
+    else high = mid - 1;
   }
-  return Buffer.from(bytesArray);
+  return -1;
+}
+
+function insertSorted(arr: Array<bigint>, val: bigint): void {
+  const len = arr.length;
+  if (len === 0 || val >= arr[len - 1]) {
+    arr.push(val);
+    return;
+  }
+  let low = 0;
+  let high = len - 1;
+  while (low <= high) {
+    const mid = (low + high) >>> 1;
+    if (arr[mid] < val) low = mid + 1;
+    else high = mid - 1;
+  }
+  arr.splice(low, 0, val);
 }
 
 /**
@@ -94,23 +118,23 @@ export function pack(
   authKey: Buffer,
   authKeyId: Buffer,
 ): Buffer {
+  const saltBytes = toBytes(salt);
+  const msgBytes = message.write();
   const data = Buffer.concat([
-    Buffer.concat([
-      toBytes(salt) as unknown as Uint8Array,
-      sessionId as unknown as Uint8Array,
-    ]) as unknown as Uint8Array,
-    message.write() as unknown as Uint8Array,
+    saltBytes as unknown as Uint8Array,
+    sessionId as unknown as Uint8Array,
+    msgBytes as unknown as Uint8Array,
   ]);
-  const padding = Buffer.from(
-    crypto.randomBytes(
-      Skema.mod(-(Buffer.byteLength(data) + 12), 16) + 12,
-    ) as unknown as Uint8Array,
-  );
+  const paddingLen = Skema.mod(-(Buffer.byteLength(data) + 12), 16) + 12;
+  const padding = crypto.randomBytes(paddingLen);
+  const dataWithPadding = Buffer.concat([
+    data as unknown as Uint8Array,
+    padding as unknown as Uint8Array,
+  ]);
   const msgKeyLarge = sha256(
     Buffer.concat([
-      authKey.subarray(88, 88 + 32) as unknown as Uint8Array,
-      data as unknown as Uint8Array,
-      padding as unknown as Uint8Array,
+      authKey.subarray(88, 120) as unknown as Uint8Array,
+      dataWithPadding as unknown as Uint8Array,
     ]),
   );
   const msgKey = msgKeyLarge.subarray(8, 24);
@@ -118,11 +142,7 @@ export function pack(
   return Buffer.concat([
     authKeyId as unknown as Uint8Array,
     msgKey as unknown as Uint8Array,
-    ige256Encrypt(
-      Buffer.concat([data as unknown as Uint8Array, padding as unknown as Uint8Array]),
-      aesKey,
-      aesIv,
-    ) as unknown as Uint8Array,
+    ige256Encrypt(dataWithPadding, aesKey, aesIv) as unknown as Uint8Array,
   ]);
 }
 
@@ -214,7 +234,7 @@ export async function unpack(
       return;
     }
     // Ignored message: msg_id is equal to any of the stored values
-    if (storedMsgId.includes(message.msgId)) {
+    if (binarySearch(storedMsgId, message.msgId) !== -1) {
       Logger.warning(`[2.crypto.Mtproto] Ignored message: duplicate msg_id (${message.msgId})`);
       return;
     }
@@ -235,11 +255,6 @@ export async function unpack(
       return;
     }
   }
-  storedMsgId.push(message.msgId);
-  storedMsgId.sort((a, b) => {
-    if (a > b) return 1;
-    if (a < b) return -1;
-    return 0;
-  });
+  insertSorted(storedMsgId, message.msgId);
   return message;
 }
